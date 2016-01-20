@@ -11,6 +11,7 @@ import com.hahaxueche.presenter.signupLogin.SLPresenterImpl;
  */
 public class MyApplication extends Application {
     private SLPresenter sLPresenter;
+
     @Override
     public void onCreate() {
         super.onCreate();
