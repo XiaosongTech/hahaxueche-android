@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">哈哈学车</string>
+    <string name="title_activity_start">start</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+</resources>

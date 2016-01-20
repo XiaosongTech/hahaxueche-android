@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--string-->
+    <string name="sLLogin">登录</string>
+    <string name="sLSignup">注册</string>
+    <string name="sLIsTouristClick">我是游客，点击这里</string>
+</resources>
