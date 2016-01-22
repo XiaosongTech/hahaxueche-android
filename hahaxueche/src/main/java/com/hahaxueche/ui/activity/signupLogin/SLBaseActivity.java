@@ -8,19 +8,21 @@ import com.hahaxueche.MyApplication;
 import com.hahaxueche.presenter.signupLogin.SLPresenter;
 
 /**
- * ×¢²áµÇÂ¼Activity»ùÀà
+ * ActivityæŠ½è±¡åŸºç±»ï¿½ï¿½ï¿½
  * Created by gibxin on 2016/1/19.
  */
 public class SLBaseActivity extends Activity {
-    // ÉÏÏÂÎÄÊµÀı
+    // ä¸Šä¸‹æ–‡å®ä¾‹
     public Context context;
-    // Ó¦ÓÃÈ«¾ÖµÄÊµÀı
+    // åº”ç”¨å®ä¾‹
     public MyApplication application;
-    // ºËĞÄ²ãµÄActionÊµÀı
+    // æ³¨å†Œç™»å½•Presenter
     public SLPresenter slPresenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getApplicationContext();
+        application = (MyApplication) this.getApplication();
+        slPresenter = application.getPresenter();
     }
 }

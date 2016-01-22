@@ -2,6 +2,16 @@
 <resources>
     <!--string-->
     <string name="sLLogin">登录</string>
-    <string name="sLSignup">注册</string>
+    <string name="sLSignUp">注册</string>
     <string name="sLIsTouristClick">我是游客，点击这里</string>
+    <string name="sLPleaseEnterPhoneNumber">请输入手机号</string>
+    <string name="sLPleaseEnterYourName">请输入你的姓名</string>
+    <string name="sLPleaseEnterIdentifyCode">请输入短信验证码</string>
+    <string name="sLPleaseChoseLocation">选择你的所在地</string>
+    <string name="sLGetIdentifyCode">获取验证码</string>
+    <string name="sLReSend">重发</string>
+    <string name="sLPleaseSetPwd">请设置6-20位密码</string>
+    <string name="sLFinish">完成</string>
+    <!--color-->
+    <color name="sLTextHint">#feddaa</color>
 </resources>

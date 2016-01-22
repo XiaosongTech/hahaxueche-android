@@ -6,7 +6,7 @@ import com.hahaxueche.presenter.signupLogin.SLPresenter;
 import com.hahaxueche.presenter.signupLogin.SLPresenterImpl;
 
 /**
- * ”¶”√Application¿‡
+ * ApplicationÁ±ªÔøΩ
  * Created by gibxin on 2016/1/19.
  */
 public class MyApplication extends Application {

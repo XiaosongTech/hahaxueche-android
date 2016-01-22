@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "hahaxueche.com.myapplication"
+        applicationId "com.hahaxueche"
         minSdkVersion 14
         targetSdkVersion 22
         versionCode 1
@@ -22,4 +22,6 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.google.code.gson:gson:2.5'
+    compile 'com.squareup.okhttp3:okhttp:3.0.1'
 }
