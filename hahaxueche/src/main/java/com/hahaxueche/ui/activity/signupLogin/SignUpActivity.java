@@ -1,7 +1,12 @@
 package com.hahaxueche.ui.activity.signupLogin;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,7 +16,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
+import com.hahaxueche.model.signupLogin.CreateUserResponse;
+import com.hahaxueche.model.signupLogin.SessionModel;
+import com.hahaxueche.model.signupLogin.StudentModel;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
+
+import java.lang.ref.WeakReference;
 
 /**
  * 注册Activity
@@ -28,6 +38,8 @@ public class SignUpActivity extends SLBaseActivity {
     private Button btnGetIdentifyCode;//获取验证码按钮
     private Button btnFinish;//完成按钮
     private ProgressDialog pd;//进度框
+    private int sendTime = 60;
+    private final MyHandler mHandler = new MyHandler(this);
 
     public SignUpActivity() {
     }
@@ -66,8 +78,21 @@ public class SignUpActivity extends SLBaseActivity {
     }
 
     /**
+     * 加载已发送验证码状态
+     */
+    private void loadSendCodeState(){
+        llyLoginIdentifyCode.setVisibility(View.VISIBLE);
+        btnGetIdentifyCode.setVisibility(View.GONE);
+        etRegisterSetPwd.setVisibility(View.VISIBLE);
+        btnFinish.setVisibility(View.VISIBLE);
+        sendTime = 60;
+        btnReSendIdentifyCode.setClickable(false);
+        btnReSendIdentifyCode.setText(sendTime-- + "");
+        mHandler.sendEmptyMessage(1);
+    }
+
+    /**
      * 获取验证码
-     *
      * @param view
      */
     public void getIdentifyCode(View view) {
@@ -76,13 +101,13 @@ public class SignUpActivity extends SLBaseActivity {
             pd.dismiss();
         }
         pd = ProgressDialog.show(SignUpActivity.this, null, "验证码发送中，请稍后……");
-        this.slPresenter.getIdentifyCode(phoneNumber, new SLCallbackListener<Void>() {
+        this.slPresenter.getIdentifyCode(phoneNumber,"register" , new SLCallbackListener<Void>() {
             @Override
             public void onSuccess(Void data) {
                 if (pd != null) {
                     pd.dismiss();
                 }
-                Toast.makeText(context, "验证码发送成功！！！", Toast.LENGTH_SHORT).show();
+                loadSendCodeState();
             }
 
             @Override
@@ -93,5 +118,74 @@ public class SignUpActivity extends SLBaseActivity {
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    public void back(View view){
+        this.finish();
+    }
+
+    /**
+     * 注册完成
+     * @param view
+     */
+    public void finish(View view){
+        String phoneNumber = etLoginPhoneNumber.getText().toString();
+        String identifyCode = etIdentifyCode.getText().toString();
+        String pwd = etRegisterSetPwd.getText().toString();
+        if (pd != null) {
+            pd.dismiss();
+        }
+        pd = ProgressDialog.show(SignUpActivity.this, null, "数据提交中，请稍后……");
+        this.slPresenter.createUser(phoneNumber,identifyCode,pwd,"student",new SLCallbackListener<CreateUserResponse>(){
+            @Override
+            public void onSuccess(CreateUserResponse createUserResponse) {
+                if (pd != null) {
+                    pd.dismiss();
+                }
+                SessionModel userSession = createUserResponse.getSession();
+                StudentModel userStudent = createUserResponse.getStudent();
+                SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor=sharedPreferences.edit();
+                editor.putString("access_token",userSession.getAccess_token());
+                editor.putString("student_id", userStudent.getId());
+                editor.commit();
+                Intent intent = new Intent(context, SignUpInfoActivity.class);
+                startActivity(intent);
+                SignUpActivity.this.finish();
+            }
+
+            @Override
+            public void onFailure(String errorEvent, String message) {
+                if (pd != null) {
+                    pd.dismiss();
+                }
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    static class MyHandler extends Handler {
+        private final WeakReference<SignUpActivity> mActivity;
+
+        public MyHandler(SignUpActivity activity) {
+            mActivity = new WeakReference<SignUpActivity>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            final SignUpActivity activity = mActivity.get();
+            if (activity != null) {
+                if (msg.what == 1) {
+                    activity.btnReSendIdentifyCode.setClickable(false);
+                    activity.btnReSendIdentifyCode.setText( activity.sendTime--+"");
+                    if (activity.sendTime > 0) {
+                        activity.mHandler.sendEmptyMessageDelayed(1, 1000);
+                    } else {
+                        activity.mHandler.sendEmptyMessage(2);
+                    }
+                } else if (msg.what == 2) {
+                    activity.btnReSendIdentifyCode.setClickable(true);
+                    activity.btnReSendIdentifyCode.setText(R.string.sLSendIdentifyCode);
+                }
+            }
+        }
     }
 }

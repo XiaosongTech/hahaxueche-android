@@ -21,7 +21,8 @@ public class StartActivity extends SLBaseActivity{
      * @param view
      */
     public void startLogin(View view){
-
+        Intent intent = new Intent(context, LoginActivity.class);
+        startActivity(intent);
     }
 
     /**

@@ -29,6 +29,16 @@ public class HttpEngine {
         return instance;
     }
 
+    /**
+     * post 方法
+     *
+     * @param param
+     * @param typeOfT
+     * @param url
+     * @param <T>
+     * @return
+     * @throws IOException
+     */
     public <T> T postHandle(Map<String, String> param, Type typeOfT, String url) throws IOException {
         String jsonParam = JsonUtils.serialize(param);
         Log.i(TAG, "jsonParam->" + jsonParam);
@@ -37,4 +47,38 @@ public class HttpEngine {
         return JsonUtils.deserialize(response, typeOfT);
     }
 
+    /**
+     * put方法
+     *
+     * @param param
+     * @param typeOfT
+     * @param url
+     * @param accessToken
+     * @param <T>
+     * @return
+     * @throws IOException
+     */
+    public <T> T putHandle(Map<String, String> param, Type typeOfT, String url, String accessToken) throws IOException {
+        String jsonParam = JsonUtils.serialize(param);
+        Log.i(TAG, "jsonParam->" + jsonParam);
+        String response = OkHttpUtils.put(SERVER_URL + url, jsonParam, accessToken);
+        Log.i(TAG, "response:->" + response);
+        return JsonUtils.deserialize(response, typeOfT);
+    }
+
+    /**
+     * get方法
+     *
+     * @param typeOfT
+     * @param url
+     * @param <T>
+     * @return
+     * @throws IOException
+     */
+    public <T> T getHandle(Type typeOfT, String url) throws IOException {
+        Log.i(TAG, "get url ->" + SERVER_URL + url);
+        String response = OkHttpUtils.get(SERVER_URL + url);
+        Log.i(TAG, "response:->" + response);
+        return JsonUtils.deserialize(response, typeOfT);
+    }
 }
