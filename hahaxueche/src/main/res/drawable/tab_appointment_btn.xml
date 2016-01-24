@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/ic_bottombar_date_hold_btn" android:color="@color/app_theme_color" android:state_selected="true"/>
+    <item android:drawable="@drawable/ic_bottombar_date_normal_btn" android:color="@color/tab_bottom_gray"/>
+
+</selector>
