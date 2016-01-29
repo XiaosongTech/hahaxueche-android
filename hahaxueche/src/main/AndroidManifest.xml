@@ -50,13 +50,28 @@
             android:name=".ui.activity.signupLogin.SignUpInfoActivity"
             android:label="@string/sLSignUpInfo">
         </activity>
-        <activity android:name=".ui.fragment.BaseBottomTabFragment"
+        <activity android:name=".ui.fragment.index.IndexActivity"
+            android:theme="@style/NoAnimationTheme"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".ui.fragment.appointment.AppointmentActivity"
+            android:theme="@style/NoAnimationTheme">
+        </activity>
+        <activity android:name=".ui.fragment.findCoach.FindCoachActivity"
+            android:theme="@style/NoAnimationTheme">
+        </activity>
+        <activity android:name=".ui.fragment.mySetting.MySettingActivity"
+            android:theme="@style/NoAnimationTheme">
+        </activity>
+
+        <activity android:name=".ui.fragment.BaseBottomTabFragment"
+            android:label="@string/app_name">
+
         </activity>
     </application>
 

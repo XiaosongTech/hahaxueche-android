@@ -4,4 +4,8 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="index">哈哈学车</string>
+    <string name="findCoach">寻找教练</string>
+    <string name="appointment">预约学车</string>
+    <string name="mySetting">我的页面</string>
 </resources>

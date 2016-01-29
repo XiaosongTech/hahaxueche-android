@@ -1,5 +1,6 @@
 package com.hahaxueche.ui.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
@@ -11,7 +12,7 @@ import android.widget.TextView;
 
 import com.hahaxueche.R;
 import com.hahaxueche.ui.fragment.appointment.AppointmentFragment;
-import com.hahaxueche.ui.fragment.findCoach.FindCoachFrgment;
+import com.hahaxueche.ui.fragment.findCoach.FindCoachFragment;
 import com.hahaxueche.ui.fragment.index.IndexFragment;
 import com.hahaxueche.ui.fragment.mySetting.MySettingFragment;
 
@@ -25,7 +26,7 @@ public class BaseBottomTabFragment extends FragmentActivity {
     //定义一个布局
     private LayoutInflater layoutInflater;
     //定义数组来存放Fragment界面
-    private Class fragmentArray[] = {IndexFragment.class, FindCoachFrgment.class, AppointmentFragment.class, MySettingFragment.class};
+    private Class fragmentArray[] = {IndexFragment.class, FindCoachFragment.class, AppointmentFragment.class, MySettingFragment.class};
     //定义数组来存放按钮图片
     private int mImageViewArray[] = {R.drawable.tab_index_btn, R.drawable.tab_find_coach_btn,
             R.drawable.tab_appointment_btn, R.drawable.tab_my_setting_btn};

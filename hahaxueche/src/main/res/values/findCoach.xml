@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--string-->
+    <string name="fCEnterWantedCoachName">请输入你想选择的教练名字</string>
+    <string name="fCFilter">筛选</string>
+    <string name="fCSort">排序</string>
+    <string name="fCDistanceFilter">距离筛选</string>
+    <string name="fCPriceFilter">价格筛选</string>
+    <string name="fCOnlyShowGoldenCoach">只显示金牌教练</string>
+    <string name="fCOnlyShowGroupBuy">只显示团购</string>
+    <string name="fCManualGear">手动挡（C1）</string>
+    <string name="fCAutoGear">自动挡（C2）</string>
+    <string name="fCSure">确定</string>
+    <string name="fCCancel">取消</string>
+    <!--color-->
+    <color name="fCSearchBackOrangeHeavy">#f68a00</color>
+    <color name="fcSearchTextHintWhiteLight">#fbd099</color>
+    <color name="fCTxtGreen">#77dd00</color>
+    <color name="fCTxtOrange">#ff7200</color>
+</resources>
