@@ -91,7 +91,7 @@ public class ComboSeekBar extends SeekBar {
 		setProgressDrawable(new CustomDrawable(this.getProgressDrawable(),
 				this, mThumb.getRadius(), mDots, mColor, mTextSize,
 				mSelectedLineHeight, mUnselectedLineHeight, mDotRadius,
-				mIsMultiline,mSelectdLineColor));
+				mIsMultiline, mSelectdLineColor));
 
 		setPadding(0, 0, 0, 0);
 		// init the first position when show
@@ -162,19 +162,18 @@ public class ComboSeekBar extends SeekBar {
 				mIsMultiline,mSelectdLineColor));
 	}
 
-	public synchronized void setSelection(int position) {
+	public void setSelection(int position) {
 		if ((position < 0) || (position >= mDots.size())) {
 			throw new IllegalArgumentException("Position is out of bounds:"
 					+ position);
 		}
 		for (Dot dot : mDots) {
-			if (dot.id == position) {
+			if (mDots.indexOf(dot) == position) {
 				dot.isSelected = true;
 			} else {
 				dot.isSelected = false;
 			}
 		}
-
 		invalidate();
 	}
 
@@ -228,10 +227,10 @@ public class ComboSeekBar extends SeekBar {
 				resolveSize(dh, heightMeasureSpec));
 	}
 	
-	private int getSelectedDot() {
-		for(Dot dot: mDots) {
-			if(dot.isSelected)
-				return mDots.indexOf(dot);
+	public int getSelectedDot() {
+		for(int i = 0;i<mDots.size();i++){
+			if(mDots.get(i).isSelected)
+				return i;
 		}
 		return -1;
 	}

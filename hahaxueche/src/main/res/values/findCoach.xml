@@ -12,6 +12,11 @@
     <string name="fCAutoGear">自动挡（C2）</string>
     <string name="fCSure">确定</string>
     <string name="fCCancel">取消</string>
+    <string name="fCAutoSort">智能排序</string>
+    <string name="fCDistanceClose">距离最近</string>
+    <string name="fCCommentNice">评价最好</string>
+    <string name="fCPriceLow">价格最低</string>
+    <string name="fCPopularHot">人气最旺</string>
     <!--color-->
     <color name="fCSearchBackOrangeHeavy">#f68a00</color>
     <color name="fcSearchTextHintWhiteLight">#fbd099</color>

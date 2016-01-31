@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 
 import com.hahaxueche.R;
 import com.hahaxueche.ui.fragment.appointment.AppointmentActivity;
-import com.hahaxueche.ui.fragment.findCoach.FindCoachActivity;
+import com.hahaxueche.ui.activity.findCoach.FindCoachActivity;
 import com.hahaxueche.ui.fragment.index.IndexActivity;
 import com.hahaxueche.utils.Util;
 

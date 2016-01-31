@@ -59,10 +59,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.fragment.appointment.AppointmentActivity"
+        <activity android:name=".ui.activity.findCoach.FindCoachActivity"
             android:theme="@style/NoAnimationTheme">
         </activity>
-        <activity android:name=".ui.fragment.findCoach.FindCoachActivity"
+        <activity android:name=".ui.fragment.appointment.AppointmentActivity"
             android:theme="@style/NoAnimationTheme">
         </activity>
         <activity android:name=".ui.fragment.mySetting.MySettingActivity"

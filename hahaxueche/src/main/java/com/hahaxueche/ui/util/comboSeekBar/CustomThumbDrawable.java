@@ -91,7 +91,7 @@ public class CustomThumbDrawable extends Drawable {
 			Bitmap bm = drawable2Bitmap(mThumbDrawable);
 			Bitmap bitmap = Bitmap.createScaledBitmap(bm, mThumbWidth,
 					mThumbHeight, true);
-			canvas.drawBitmap(bitmap, width - getRadius(), height - getRadius(), circlePaint);
+			canvas.drawBitmap(bitmap, width < getRadius()*2?width:width-getRadius(), height - getRadius(), circlePaint);
 		}
 	}
 

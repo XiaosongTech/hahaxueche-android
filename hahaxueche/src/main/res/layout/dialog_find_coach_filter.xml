@@ -32,54 +32,12 @@
         app:unselectedLineHeight="5dp" />
 
     <LinearLayout
+        android:id="@+id/lly_fc_distance_tvs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_marginTop="10dp">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="0KM"
-            android:textColor="@color/filter_txt_white_heavy"
-            android:textSize="12sp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="3KM"
-            android:textColor="@color/filter_txt_white_heavy"
-            android:textSize="12sp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="5KM"
-            android:textColor="@color/filter_txt_white_heavy"
-            android:textSize="12sp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="10KM"
-            android:textColor="@color/filter_txt_white_heavy"
-            android:textSize="12sp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="15KM"
-            android:textColor="@color/filter_txt_white_heavy"
-            android:textSize="12sp" />
     </LinearLayout>
 
     <View
@@ -181,7 +139,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:thumb="@drawable/switch_button"
-            android:track="@drawable/switch_active_back"
+            android:track="@drawable/ic_screen_switch_bk"
+            android:switchMinWidth="38dp"
             android:textOn=""
             android:textOff=""/>
     </LinearLayout>
@@ -208,7 +167,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:thumb="@drawable/switch_button"
-            android:track="@drawable/switch_active_back"
+            android:switchMinWidth="38dp"
+            android:track="@drawable/ic_screen_switch_bk"
             android:textOn=""
             android:textOff=""/>
     </LinearLayout>
@@ -219,26 +179,40 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
         android:background="@color/app_back_gray_light" />
-    <TableLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TableRow android:gravity="center">
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:textColor="@color/tab_bottom_gray"
-                android:textSize="12sp"
-                android:text="@string/fCManualGear"/>
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:textColor="@color/tab_bottom_gray"
-                android:textSize="12sp"
-                android:text="@string/fCAutoGear"/>
-        </TableRow>
-    </TableLayout>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp">
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/CustomCheckboxTheme"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="40dp"
+            android:textColor="@color/tab_bottom_gray"
+            android:textSize="12sp"
+            android:text="@string/fCManualGear"
+            />
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/CustomCheckboxTheme"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/tab_bottom_gray"
+            android:textSize="12sp"
+            android:text="@string/fCAutoGear"
+            />
+    </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
@@ -250,6 +224,7 @@
         android:gravity="center"
         android:orientation="horizontal">
         <Button
+            android:id="@+id/btn_fc_filter_sure"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

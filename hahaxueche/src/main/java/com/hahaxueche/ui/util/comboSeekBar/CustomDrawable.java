@@ -112,6 +112,7 @@ public class CustomDrawable extends Drawable {
 
 	@Override
 	public final void draw(Canvas canvas) {
+		System.out.println("--------draw");
 		int height = this.getIntrinsicHeight() / 2;
 		if (mDots.size() == 0) {
 			canvas.drawLine(0, height, getBounds().right, height,
@@ -125,6 +126,7 @@ public class CustomDrawable extends Drawable {
 				selectIndex = i;
 			}
 		}
+		System.out.println("--------selected index="+selectIndex);
 		for(int i=0;i<mDots.size();i++){
 			Dot dot = mDots.get(i);
 			drawText(canvas, dot, dot.mX, height);

@@ -3,12 +3,11 @@ package com.hahaxueche.ui.fragment.appointment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.hahaxueche.R;
-import com.hahaxueche.ui.fragment.findCoach.FindCoachActivity;
+import com.hahaxueche.ui.activity.findCoach.FindCoachActivity;
 import com.hahaxueche.ui.fragment.index.IndexActivity;
 import com.hahaxueche.ui.fragment.mySetting.MySettingActivity;
 import com.hahaxueche.utils.Util;
