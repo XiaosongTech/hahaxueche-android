@@ -4,6 +4,7 @@
     <string name="sLLogin">登录</string>
     <string name="sLSignUp">注册</string>
     <string name="sLSure">确定</string>
+    <string name="sLResetPwd">密码重置</string>
     <string name="sLSignUpInfo">完善学生资料</string>
     <string name="sLIsTouristClick">我是游客，点击这里</string>
     <string name="sLPleaseEnterPhoneNumber">请输入手机号</string>
@@ -25,6 +26,7 @@
     <string name="sLForgetPwd">忘记密码</string>
     <string name="sLUsePwdLogin">我想使用密码登录我的账号</string>
     <string name="sLUseIdentifyCodeLogin">我想使用验证码登录我的账号</string>
+    <string name="sLResetPwdSuccess">密码修改成功</string>
 
     <!--color-->
 

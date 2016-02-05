@@ -113,4 +113,21 @@ public class SLApiImpl implements SLApi {
             return null;
         }
     }
+
+    @Override
+    public BaseApiResponse resetPassword(String cell_phone, String password, String auth_token) {
+        Map<String,String> paramMap = new HashMap<String, String>();
+        paramMap.put("auth_token",auth_token);
+        paramMap.put("password",password);
+        paramMap.put("password_confirmation",password);
+        paramMap.put("cell_phone",cell_phone);
+        Type type = new TypeToken<BaseApiResponse>() {
+        }.getType();
+        try {
+            return httpEngine.postHandle(paramMap, type, SLApi.RESET_PASSWORD);
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
 }

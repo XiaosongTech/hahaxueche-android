@@ -38,7 +38,11 @@
         <activity
             android:name=".ui.activity.signupLogin.StartActivity"
             android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ui.activity.signupLogin.SignUpActivity"
@@ -53,11 +57,6 @@
         <activity android:name=".ui.fragment.index.IndexActivity"
             android:theme="@style/NoAnimationTheme"
             android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".ui.activity.findCoach.FindCoachActivity"
             android:theme="@style/NoAnimationTheme">

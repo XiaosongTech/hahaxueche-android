@@ -19,7 +19,9 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.signupLogin.CreateUserResponse;
 import com.hahaxueche.model.signupLogin.SessionModel;
 import com.hahaxueche.model.signupLogin.StudentModel;
+import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
+import com.hahaxueche.ui.fragment.index.IndexActivity;
 
 import java.lang.ref.WeakReference;
 
@@ -37,6 +39,7 @@ public class SignUpActivity extends SLBaseActivity {
     private EditText etRegisterSetPwd;//设置密码输入框
     private Button btnGetIdentifyCode;//获取验证码按钮
     private Button btnFinish;//完成按钮
+    private boolean isResetPwd;//是否重置密码
     private ProgressDialog pd;//进度框
     private int sendTime = 60;
     private final MyHandler mHandler = new MyHandler(this);
@@ -48,6 +51,8 @@ public class SignUpActivity extends SLBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        Intent intent = getIntent();
+        isResetPwd = intent.getBooleanExtra("isResetPwd", false);
         initView();
         loadInitState();
     }
@@ -65,6 +70,9 @@ public class SignUpActivity extends SLBaseActivity {
         etRegisterSetPwd = (EditText) findViewById(R.id.et_register_set_pwd);
         btnGetIdentifyCode = (Button) findViewById(R.id.btn_get_identify_code);
         btnFinish = (Button) findViewById(R.id.btn_finish);
+        if (isResetPwd) {
+            tvRegisterTitle.setText(getResources().getText(R.string.sLResetPwd));//密码重置
+        }
     }
 
     /**
@@ -80,11 +88,14 @@ public class SignUpActivity extends SLBaseActivity {
     /**
      * 加载已发送验证码状态
      */
-    private void loadSendCodeState(){
+    private void loadSendCodeState() {
         llyLoginIdentifyCode.setVisibility(View.VISIBLE);
         btnGetIdentifyCode.setVisibility(View.GONE);
         etRegisterSetPwd.setVisibility(View.VISIBLE);
         btnFinish.setVisibility(View.VISIBLE);
+        if(isResetPwd){
+            btnFinish.setText(getResources().getText(R.string.sLSure));
+        }
         sendTime = 60;
         btnReSendIdentifyCode.setClickable(false);
         btnReSendIdentifyCode.setText(sendTime-- + "");
@@ -93,6 +104,7 @@ public class SignUpActivity extends SLBaseActivity {
 
     /**
      * 获取验证码
+     *
      * @param view
      */
     public void getIdentifyCode(View view) {
@@ -101,7 +113,7 @@ public class SignUpActivity extends SLBaseActivity {
             pd.dismiss();
         }
         pd = ProgressDialog.show(SignUpActivity.this, null, "验证码发送中，请稍后……");
-        this.slPresenter.getIdentifyCode(phoneNumber,"register" , new SLCallbackListener<Void>() {
+        this.slPresenter.getIdentifyCode(phoneNumber, isResetPwd ? "reset" : "register", new SLCallbackListener<Void>() {
             @Override
             public void onSuccess(Void data) {
                 if (pd != null) {
@@ -119,15 +131,17 @@ public class SignUpActivity extends SLBaseActivity {
             }
         });
     }
-    public void back(View view){
+
+    public void back(View view) {
         this.finish();
     }
 
     /**
      * 注册完成
+     *
      * @param view
      */
-    public void finish(View view){
+    public void finish(View view) {
         String phoneNumber = etLoginPhoneNumber.getText().toString();
         String identifyCode = etIdentifyCode.getText().toString();
         String pwd = etRegisterSetPwd.getText().toString();
@@ -135,33 +149,57 @@ public class SignUpActivity extends SLBaseActivity {
             pd.dismiss();
         }
         pd = ProgressDialog.show(SignUpActivity.this, null, "数据提交中，请稍后……");
-        this.slPresenter.createUser(phoneNumber,identifyCode,pwd,"student",new SLCallbackListener<CreateUserResponse>(){
-            @Override
-            public void onSuccess(CreateUserResponse createUserResponse) {
-                if (pd != null) {
-                    pd.dismiss();
+        if(isResetPwd){
+            this.slPresenter.resetPassword(phoneNumber, pwd, identifyCode, new SLCallbackListener<BaseApiResponse>() {
+                @Override
+                public void onSuccess(BaseApiResponse baseApiResponse) {
+                    if (pd != null) {
+                        pd.dismiss();
+                    }
+                    Toast.makeText(context,getResources().getText(R.string.sLResetPwdSuccess),Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, IndexActivity.class);
+                    startActivity(intent);
+                    SignUpActivity.this.finish();
                 }
-                SessionModel userSession = createUserResponse.getSession();
-                StudentModel userStudent = createUserResponse.getStudent();
-                SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
-                SharedPreferences.Editor editor=sharedPreferences.edit();
-                editor.putString("access_token",userSession.getAccess_token());
-                editor.putString("student_id", userStudent.getId());
-                editor.commit();
-                Intent intent = new Intent(context, SignUpInfoActivity.class);
-                startActivity(intent);
-                SignUpActivity.this.finish();
-            }
 
-            @Override
-            public void onFailure(String errorEvent, String message) {
-                if (pd != null) {
-                    pd.dismiss();
+                @Override
+                public void onFailure(String errorEvent, String message) {
+                    if (pd != null) {
+                        pd.dismiss();
+                    }
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-            }
-        });
+            });
+        }else {
+            this.slPresenter.createUser(phoneNumber, identifyCode, pwd, "student", new SLCallbackListener<CreateUserResponse>() {
+                @Override
+                public void onSuccess(CreateUserResponse createUserResponse) {
+                    if (pd != null) {
+                        pd.dismiss();
+                    }
+                    SessionModel userSession = createUserResponse.getSession();
+                    StudentModel userStudent = createUserResponse.getStudent();
+                    SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("access_token", userSession.getAccess_token());
+                    editor.putString("student_id", userStudent.getId());
+                    editor.commit();
+                    Intent intent = new Intent(context, SignUpInfoActivity.class);
+                    startActivity(intent);
+                    SignUpActivity.this.finish();
+                }
+
+                @Override
+                public void onFailure(String errorEvent, String message) {
+                    if (pd != null) {
+                        pd.dismiss();
+                    }
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
+
     static class MyHandler extends Handler {
         private final WeakReference<SignUpActivity> mActivity;
 
@@ -175,7 +213,7 @@ public class SignUpActivity extends SLBaseActivity {
             if (activity != null) {
                 if (msg.what == 1) {
                     activity.btnReSendIdentifyCode.setClickable(false);
-                    activity.btnReSendIdentifyCode.setText( activity.sendTime--+"");
+                    activity.btnReSendIdentifyCode.setText(activity.sendTime-- + "");
                     if (activity.sendTime > 0) {
                         activity.mHandler.sendEmptyMessageDelayed(1, 1000);
                     } else {

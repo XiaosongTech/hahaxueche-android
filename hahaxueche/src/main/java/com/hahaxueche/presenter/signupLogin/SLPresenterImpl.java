@@ -180,6 +180,50 @@ public class SLPresenterImpl implements SLPresenter {
 
     }
 
+    @Override
+    public void resetPassword(final String cell_phone, final String password, final String auth_token,final SLCallbackListener<BaseApiResponse> listener) {
+        if (TextUtils.isEmpty(password)) {
+            if (listener != null) {
+                listener.onFailure(ErrorEvent.PARAM_NULL, "您的密码为空");
+            }
+            return;
+        }
+        if (password.length() < 6 || password.length() > 20) {
+            if (listener != null) {
+                listener.onFailure(ErrorEvent.PARAM_ILLEGAL, "您的密码格式有误");
+            }
+            return;
+        }
+        new AsyncTask<Void, Void, BaseApiResponse>() {
+
+            @Override
+            protected BaseApiResponse doInBackground(Void... params) {
+                return api.resetPassword(cell_phone,password,auth_token);
+            }
+
+            @Override
+            protected void onPostExecute(BaseApiResponse baseApiResponse) {
+                if (listener != null) {
+                    if (baseApiResponse != null) {
+                        if (baseApiResponse.isSuccess()) {
+                            listener.onSuccess(baseApiResponse);
+                        } else {
+                            if (baseApiResponse.getCode().equals("40001")) {
+                                baseApiResponse.setMessage("您的短信验证码有误");
+                                listener.onFailure(baseApiResponse.getCode(), baseApiResponse.getMessage());
+                            } else {
+                                listener.onFailure(baseApiResponse.getCode(), baseApiResponse.getMessage());
+                            }
+                        }
+                    } else {
+                        listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                    }
+                }
+            }
+        }.execute();
+
+    }
+
 
     /**
      * 校验手机号有效性
