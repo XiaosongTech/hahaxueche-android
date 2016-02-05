@@ -7,8 +7,7 @@ import android.content.SharedPreferences;
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.api.net.HttpEngine;
 import com.hahaxueche.api.signupLogin.SLApi;
-import com.hahaxueche.model.signupLogin.CitiesModel;
-import com.hahaxueche.model.util.BaseApiResponse;
+import com.hahaxueche.model.util.ConstantsModel;
 import com.hahaxueche.presenter.signupLogin.SLPresenter;
 import com.hahaxueche.presenter.signupLogin.SLPresenterImpl;
 import com.hahaxueche.utils.JsonUtils;
@@ -32,13 +31,13 @@ public class MyApplication extends Application {
             @Override
             public void run() {
                 HttpEngine httpEngine = HttpEngine.getInstance();
-                Type type = new TypeToken<CitiesModel>() {
+                Type type = new TypeToken<ConstantsModel>() {
                 }.getType();
                 try {
-                    CitiesModel citiesModel = httpEngine.getHandle(type, SLApi.CONSTANTS);
+                    ConstantsModel constantsModel = httpEngine.getHandle(type, SLApi.CONSTANTS);
                     SharedPreferences sharedPreferences = getSharedPreferences("constants", Activity.MODE_PRIVATE);
                     SharedPreferences.Editor editor=sharedPreferences.edit();
-                    editor.putString("constants", JsonUtils.serialize(citiesModel));
+                    editor.putString("constants", JsonUtils.serialize(constantsModel));
                     editor.commit();
                 } catch (IOException e) {
                     e.printStackTrace();
