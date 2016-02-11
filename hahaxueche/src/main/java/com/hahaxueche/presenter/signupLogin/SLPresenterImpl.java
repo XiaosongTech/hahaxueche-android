@@ -103,7 +103,7 @@ public class SLPresenterImpl implements SLPresenter {
 
     @Override
     public void completeStuInfo(final String studentId, final String cityId, final String studentName, final String accessToken,
-                                final SLCallbackListener<CompStuResponse> listener) {
+                                final String photoPath, final SLCallbackListener<CompStuResponse> listener) {
         if (!isValidUserName(studentName, listener)) {
             return;
         }
@@ -114,7 +114,13 @@ public class SLPresenterImpl implements SLPresenter {
 
             @Override
             protected CompStuResponse doInBackground(Void... params) {
-                return api.completeStuInfo(studentId, cityId, studentName, accessToken);
+
+                CompStuResponse compStuResponse = api.completeStuInfo(studentId, cityId, studentName, accessToken);
+                if (compStuResponse.isSuccess()) {
+                    return api.uploadAvatar(accessToken, photoPath, studentId);
+                } else {
+                    return new CompStuResponse();
+                }
             }
 
             @Override
@@ -135,7 +141,7 @@ public class SLPresenterImpl implements SLPresenter {
     }
 
     @Override
-    public void login(final String cell_phone,final String pwd, final int loginType, final SLCallbackListener<CreateUserResponse> listener) {
+    public void login(final String cell_phone, final String pwd, final int loginType, final SLCallbackListener<CreateUserResponse> listener) {
         if (TextUtils.isEmpty(cell_phone)) {
             if (listener != null) {
                 listener.onFailure(ErrorEvent.PARAM_NULL, "您的手机号码不能为空");
@@ -181,7 +187,7 @@ public class SLPresenterImpl implements SLPresenter {
     }
 
     @Override
-    public void resetPassword(final String cell_phone, final String password, final String auth_token,final SLCallbackListener<BaseApiResponse> listener) {
+    public void resetPassword(final String cell_phone, final String password, final String auth_token, final SLCallbackListener<BaseApiResponse> listener) {
         if (TextUtils.isEmpty(password)) {
             if (listener != null) {
                 listener.onFailure(ErrorEvent.PARAM_NULL, "您的密码为空");
@@ -198,7 +204,7 @@ public class SLPresenterImpl implements SLPresenter {
 
             @Override
             protected BaseApiResponse doInBackground(Void... params) {
-                return api.resetPassword(cell_phone,password,auth_token);
+                return api.resetPassword(cell_phone, password, auth_token);
             }
 
             @Override

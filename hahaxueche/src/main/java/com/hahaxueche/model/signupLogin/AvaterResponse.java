@@ -1,17 +1,15 @@
 package com.hahaxueche.model.signupLogin;
 
 /**
- * 完善学生资料数据模型
- * Created by gibxin on 2016/1/23.
+ * 头像上传反馈数据模型
+ * Created by gibxin on 2016/2/6.
  */
-public class CompStuResponse {
+public class AvaterResponse {
     private String id;
     private String cell_phone;
     private String name;
-    private String city;
+    private String city_id;
     private String user_id;
-    private String code;
-    private String message;
     private String avatar;
 
     public String getId() {
@@ -38,12 +36,12 @@ public class CompStuResponse {
         this.name = name;
     }
 
-    public String getCity() {
-        return city;
+    public String getCity_id() {
+        return city_id;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setCity_id(String city_id) {
+        this.city_id = city_id;
     }
 
     public String getUser_id() {
@@ -54,31 +52,11 @@ public class CompStuResponse {
         this.user_id = user_id;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     public String getAvatar() {
         return avatar;
     }
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
-    }
-
-    public boolean isSuccess() {
-        return code == null;
     }
 }

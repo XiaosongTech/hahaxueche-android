@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.api.net.HttpEngine;
+import com.hahaxueche.model.signupLogin.AvaterResponse;
 import com.hahaxueche.model.signupLogin.CompStuResponse;
 import com.hahaxueche.model.signupLogin.CreateUserResponse;
 import com.hahaxueche.model.util.BaseApiResponse;
@@ -99,9 +100,9 @@ public class SLApiImpl implements SLApi {
     public CreateUserResponse login(String cell_phone, String pwd, int loginType) {
         Map<String, String> paramMap = new HashMap<String, String>();
         paramMap.put("cell_phone", cell_phone);
-        if(loginType==1){
+        if (loginType == 1) {
             paramMap.put("auth_token", pwd);
-        }else if(loginType == 2){
+        } else if (loginType == 2) {
             paramMap.put("password", pwd);
         }
         Type type = new TypeToken<CreateUserResponse>() {
@@ -116,15 +117,27 @@ public class SLApiImpl implements SLApi {
 
     @Override
     public BaseApiResponse resetPassword(String cell_phone, String password, String auth_token) {
-        Map<String,String> paramMap = new HashMap<String, String>();
-        paramMap.put("auth_token",auth_token);
-        paramMap.put("password",password);
-        paramMap.put("password_confirmation",password);
-        paramMap.put("cell_phone",cell_phone);
+        Map<String, String> paramMap = new HashMap<String, String>();
+        paramMap.put("auth_token", auth_token);
+        paramMap.put("password", password);
+        paramMap.put("password_confirmation", password);
+        paramMap.put("cell_phone", cell_phone);
         Type type = new TypeToken<BaseApiResponse>() {
         }.getType();
         try {
             return httpEngine.postHandle(paramMap, type, SLApi.RESET_PASSWORD);
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public CompStuResponse uploadAvatar(String access_token, String filePath, String studentId) {
+        Type type = new TypeToken<CompStuResponse>() {
+        }.getType();
+        try {
+            return httpEngine.postHandle(type, SLApi.STUDENTS + "/" + studentId + "/"+SLApi.AVATAR, access_token, filePath);
         } catch (IOException e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;

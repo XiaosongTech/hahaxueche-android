@@ -67,6 +67,24 @@ public class HttpEngine {
     }
 
     /**
+     * post文件上传方法
+     *
+     * @param url
+     * @param accessToken
+     * @param filePath
+     * @param <T>
+     * @return
+     * @throws IOException
+     */
+    public <T> T postHandle(Type typeOfT, String url, String accessToken, String filePath) throws IOException {
+        Log.i(TAG, "file upload request:->" + url);
+        Log.i(TAG, "filePath :->" + filePath);
+        String response = OkHttpUtils.post(SERVER_URL + url, accessToken, filePath);
+        Log.i(TAG, "response:->" + response);
+        return JsonUtils.deserialize(response, typeOfT);
+    }
+
+    /**
      * get方法
      *
      * @param typeOfT

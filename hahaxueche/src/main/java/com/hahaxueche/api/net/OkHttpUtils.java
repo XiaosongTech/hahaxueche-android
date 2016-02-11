@@ -1,8 +1,14 @@
 package com.hahaxueche.api.net;
 
-import java.io.IOException;
+import android.util.Log;
 
+import java.io.File;
+import java.io.IOException;
+import java.math.BigInteger;
+
+import okhttp3.Headers;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -13,6 +19,7 @@ import okhttp3.Response;
  */
 public class OkHttpUtils {
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    private static final MediaType MULTIPART_FORM_DATA = MediaType.parse("multipart/form-data; boundary=__X_PAW_BOUNDARY__");
     private static OkHttpUtils mInstance;
     private OkHttpClient mOkHttpClient;
 
@@ -36,6 +43,19 @@ public class OkHttpUtils {
     private String postRequest(String url, String json) throws IOException {
         RequestBody body = RequestBody.create(JSON, json);
         Request request = new Request.Builder().url(url).post(body).build();
+        Response response = mOkHttpClient.newCall(request).execute();
+        return response.body().string();
+    }
+
+    private String postRequest(String url, String access_token, String filePath) throws IOException {
+        File file = new File(filePath);
+        String fileName =filePath.split("/")[filePath.split("/").length-1];
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("file", fileName, RequestBody.create(MULTIPART_FORM_DATA, file))
+                .build();
+
+        Request request = new Request.Builder().url(url).addHeader("X-Access-Token", access_token).post(requestBody).build();
         Response response = mOkHttpClient.newCall(request).execute();
         return response.body().string();
     }
@@ -83,5 +103,18 @@ public class OkHttpUtils {
      */
     public static String put(String url, String json, String accessToken) throws IOException {
         return getmInstance().putRequest(url, json, accessToken);
+    }
+
+    /**
+     * post文件上传
+     *
+     * @param url
+     * @param access_token
+     * @param filePath
+     * @return
+     * @throws IOException
+     */
+    public static String post(String url, String access_token, String filePath) throws IOException {
+        return getmInstance().postRequest(url, access_token, filePath);
     }
 }

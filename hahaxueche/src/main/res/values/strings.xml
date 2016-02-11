@@ -8,4 +8,7 @@
     <string name="findCoach">寻找教练</string>
     <string name="appointment">预约学车</string>
     <string name="mySetting">我的页面</string>
+    <string name="user_registe_cancel_photo">取消</string>
+    <string name="user_registe_start_camera">拍照</string>
+    <string name="user_registe_start_album">从相册选择</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.hahaxueche.api.signupLogin;
 
+import com.hahaxueche.model.signupLogin.AvaterResponse;
 import com.hahaxueche.model.signupLogin.CompStuResponse;
 import com.hahaxueche.model.signupLogin.CreateUserResponse;
 import com.hahaxueche.model.util.BaseApiResponse;
@@ -14,6 +15,7 @@ public interface SLApi {
     public static final String STUDENTS = "students";
     public static final String SESSIONS = "sessions";
     public static final String RESET_PASSWORD = "users/reset_password";
+    public static final String AVATAR = "avatar";
 
     /**
      * 发送验证码
@@ -65,4 +67,14 @@ public interface SLApi {
      * @return
      */
     public BaseApiResponse resetPassword(String cell_phone, String password, String auth_token);
+
+    /**
+     * 头像上传
+     *
+     * @param access_token
+     * @param filePath
+     * @param studentId
+     * @return
+     */
+    public CompStuResponse uploadAvatar(String access_token, String filePath, String studentId);
 }
