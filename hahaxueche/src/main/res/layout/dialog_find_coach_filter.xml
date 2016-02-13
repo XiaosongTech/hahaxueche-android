@@ -15,7 +15,7 @@
         android:textColor="@color/tab_bottom_gray"
         android:textSize="14sp" />
 
-    <com.hahaxueche.ui.util.comboSeekBar.ComboSeekBar
+    <com.hahaxueche.ui.widget.comboSeekBar.ComboSeekBar
         android:id="@+id/cbs_distinct_filter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
         android:textColor="@color/tab_bottom_gray"
         android:textSize="14sp" />
 
-    <com.hahaxueche.ui.util.comboSeekBar.ComboSeekBar
+    <com.hahaxueche.ui.widget.comboSeekBar.ComboSeekBar
         android:id="@+id/cbs_price_filter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

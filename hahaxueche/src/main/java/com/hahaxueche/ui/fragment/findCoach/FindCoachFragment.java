@@ -1,27 +1,13 @@
 package com.hahaxueche.ui.fragment.findCoach;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
-
-import com.hahaxueche.ui.dialog.FcFilterDialog;
-import com.hahaxueche.ui.util.comboSeekBar.ComboSeekBar;
 
 import com.hahaxueche.R;
-
-import org.w3c.dom.Text;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * 寻找教练Fragment

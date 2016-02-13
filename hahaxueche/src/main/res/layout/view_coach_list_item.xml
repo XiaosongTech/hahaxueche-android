@@ -5,13 +5,13 @@
     android:background="@android:color/white"
     android:orientation="horizontal">
 
-    <com.hahaxueche.ui.util.circleImageView.CircleImageView
+    <com.hahaxueche.ui.widget.circleImageView.CircleImageView
         android:id="@+id/cir_coach_avatar"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_margin="20dp">
 
-    </com.hahaxueche.ui.util.circleImageView.CircleImageView>
+    </com.hahaxueche.ui.widget.circleImageView.CircleImageView>
 
     <LinearLayout
         android:layout_width="wrap_content"

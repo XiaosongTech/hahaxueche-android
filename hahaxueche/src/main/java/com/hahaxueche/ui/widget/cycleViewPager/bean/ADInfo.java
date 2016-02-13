@@ -1,4 +1,4 @@
-package com.hahaxueche.ui.util.cycleViewPager.bean;
+package com.hahaxueche.ui.widget.cycleViewPager.bean;
 
 /**
  * 描述：广告信息

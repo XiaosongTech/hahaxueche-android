@@ -1,4 +1,4 @@
-package com.hahaxueche.ui.util.cycleViewPager;
+package com.hahaxueche.ui.widget.cycleViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.hahaxueche.R;
-import com.hahaxueche.ui.util.cycleViewPager.BaseViewPager;
-import com.hahaxueche.ui.util.cycleViewPager.bean.ADInfo;
+import com.hahaxueche.ui.widget.cycleViewPager.bean.ADInfo;
 /**
  * 实现可循环，可轮播的viewpager
  * Created by gibxin on 2016/1/2.

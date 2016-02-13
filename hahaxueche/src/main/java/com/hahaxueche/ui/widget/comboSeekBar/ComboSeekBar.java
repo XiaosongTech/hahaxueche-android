@@ -1,4 +1,4 @@
-package com.hahaxueche.ui.util.comboSeekBar;
+package com.hahaxueche.ui.widget.comboSeekBar;
 
 import java.util.ArrayList;
 import java.util.List;

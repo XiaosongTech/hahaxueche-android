@@ -1,4 +1,4 @@
-package com.hahaxueche.ui.util.comboSeekBar;
+package com.hahaxueche.ui.widget.comboSeekBar;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 
-import com.hahaxueche.ui.util.comboSeekBar.ComboSeekBar.Dot;
+import com.hahaxueche.ui.widget.comboSeekBar.ComboSeekBar.Dot;
 
 /**
  * seekbar background with text on it.

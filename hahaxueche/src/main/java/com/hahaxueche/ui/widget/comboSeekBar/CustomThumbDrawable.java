@@ -1,4 +1,4 @@
-package com.hahaxueche.ui.util.comboSeekBar;
+package com.hahaxueche.ui.widget.comboSeekBar;
 
 import android.content.Context;
 import android.graphics.Bitmap;

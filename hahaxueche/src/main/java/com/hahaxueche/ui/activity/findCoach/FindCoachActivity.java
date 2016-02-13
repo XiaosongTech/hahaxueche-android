@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 
 import com.hahaxueche.R;
@@ -16,13 +15,12 @@ import com.hahaxueche.ui.dialog.FcSortDialog;
 import com.hahaxueche.ui.fragment.appointment.AppointmentActivity;
 import com.hahaxueche.ui.fragment.index.IndexActivity;
 import com.hahaxueche.ui.fragment.mySetting.MySettingActivity;
-import com.hahaxueche.ui.util.pullToRefreshView.XListView;
+import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
 import com.hahaxueche.utils.Util;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 /**

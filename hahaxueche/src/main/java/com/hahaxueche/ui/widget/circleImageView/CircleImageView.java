@@ -1,4 +1,4 @@
-package com.hahaxueche.ui.util.circleImageView;
+package com.hahaxueche.ui.widget.circleImageView;
 
 import android.content.Context;
 import android.content.res.TypedArray;

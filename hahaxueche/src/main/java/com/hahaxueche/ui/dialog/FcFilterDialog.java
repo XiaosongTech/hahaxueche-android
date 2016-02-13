@@ -15,7 +15,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
-import com.hahaxueche.ui.util.comboSeekBar.ComboSeekBar;
+import com.hahaxueche.ui.widget.comboSeekBar.ComboSeekBar;
 
 import java.util.ArrayList;
 import java.util.Arrays;

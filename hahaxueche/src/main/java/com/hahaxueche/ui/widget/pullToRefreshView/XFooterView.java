@@ -1,4 +1,4 @@
-package com.hahaxueche.ui.util.pullToRefreshView;
+package com.hahaxueche.ui.widget.pullToRefreshView;
 
 import android.content.Context;
 import android.util.AttributeSet;

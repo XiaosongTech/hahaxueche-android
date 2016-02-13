@@ -1,4 +1,4 @@
-package com.hahaxueche.ui.util.cycleViewPager;
+package com.hahaxueche.ui.widget.cycleViewPager;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;

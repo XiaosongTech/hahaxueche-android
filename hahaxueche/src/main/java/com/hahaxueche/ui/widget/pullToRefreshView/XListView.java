@@ -1,22 +1,21 @@
-package com.hahaxueche.ui.util.pullToRefreshView;
+package com.hahaxueche.ui.widget.pullToRefreshView;
 
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Scroller;
 import android.widget.TextView;
 
@@ -25,8 +24,8 @@ import com.hahaxueche.R;
 /**
  * Created by gibxin on 2016/2/12.
  */
-public class XScrollView extends ScrollView implements OnScrollListener {
-    //    private static final String TAG = "XScrollView";
+public class XListView extends ListView implements OnScrollListener {
+    //    private static final String TAG = "XListView";
 
     private final static int SCROLL_BACK_HEADER = 0;
     private final static int SCROLL_BACK_FOOTER = 1;
@@ -49,10 +48,7 @@ public class XScrollView extends ScrollView implements OnScrollListener {
     private int mScrollBack;
 
     // the interface to trigger refresh and load more.
-    private IXScrollViewListener mListener;
-
-    private LinearLayout mLayout;
-    private LinearLayout mContentLayout;
+    private IXListViewListener mListener;
 
     private XHeaderView mHeader;
     // header view content, use it to calculate the Header's height. And hide it when disable pull refresh.
@@ -60,7 +56,9 @@ public class XScrollView extends ScrollView implements OnScrollListener {
     private TextView mHeaderTime;
     private int mHeaderHeight;
 
+    private LinearLayout mFooterLayout;
     private XFooterView mFooterView;
+    private boolean mIsFooterReady = false;
 
     private boolean mEnablePullRefresh = true;
     private boolean mPullRefreshing = false;
@@ -69,55 +67,53 @@ public class XScrollView extends ScrollView implements OnScrollListener {
     private boolean mEnableAutoLoad = false;
     private boolean mPullLoading = false;
 
-    public XScrollView(Context context) {
+    // total list items, used to detect is at the bottom of ListView
+    private int mTotalItemCount;
+
+    public XListView(Context context) {
         super(context);
         initWithContext(context);
     }
 
-    public XScrollView(Context context, AttributeSet attrs) {
+    public XListView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initWithContext(context);
     }
 
-    public XScrollView(Context context, AttributeSet attrs, int defStyle) {
+    public XListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initWithContext(context);
     }
 
     private void initWithContext(Context context) {
-        mLayout = (LinearLayout) View.inflate(context, R.layout.vw_xscrollview_layout, null);
-        mContentLayout = (LinearLayout) mLayout.findViewById(R.id.content_layout);
-
         mScroller = new Scroller(context, new DecelerateInterpolator());
-        // XScrollView need the scroll event, and it will dispatch the event to user's listener (as a proxy).
-        this.setOnScrollListener(this);
+        super.setOnScrollListener(this);
 
         // init header view
         mHeader = new XHeaderView(context);
         mHeaderContent = (RelativeLayout) mHeader.findViewById(R.id.header_content);
         mHeaderTime = (TextView) mHeader.findViewById(R.id.header_hint_time);
-        LinearLayout headerLayout = (LinearLayout) mLayout.findViewById(R.id.header_layout);
-        headerLayout.addView(mHeader);
+        addHeaderView(mHeader);
 
         // init footer view
         mFooterView = new XFooterView(context);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
+        mFooterLayout = new LinearLayout(context);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout
+                .LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         params.gravity = Gravity.CENTER;
-        LinearLayout footLayout = (LinearLayout) mLayout.findViewById(R.id.footer_layout);
-        footLayout.addView(mFooterView, params);
+        mFooterLayout.addView(mFooterView, params);
 
         // init header height
         ViewTreeObserver observer = mHeader.getViewTreeObserver();
         if (null != observer) {
             observer.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-                @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
                 @SuppressWarnings("deprecation")
+                @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
                 @Override
                 public void onGlobalLayout() {
                     mHeaderHeight = mHeaderContent.getHeight();
                     ViewTreeObserver observer = getViewTreeObserver();
+
                     if (null != observer) {
                         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
                             observer.removeGlobalOnLayoutListener(this);
@@ -128,44 +124,17 @@ public class XScrollView extends ScrollView implements OnScrollListener {
                 }
             });
         }
-
-        this.addView(mLayout);
     }
 
-    /**
-     * Set the content ViewGroup for XScrollView.
-     *
-     * @param content
-     */
-    public void setContentView(ViewGroup content) {
-        if (mLayout == null) {
-            return;
+    @Override
+    public void setAdapter(ListAdapter adapter) {
+        // make sure XFooterView is the last footer view, and only add once.
+        if (!mIsFooterReady) {
+            mIsFooterReady = true;
+            addFooterView(mFooterLayout);
         }
 
-        if (mContentLayout == null) {
-            mContentLayout = (LinearLayout) mLayout.findViewById(R.id.content_layout);
-        }
-
-        if (mContentLayout.getChildCount() > 0) {
-            mContentLayout.removeAllViews();
-        }
-        mContentLayout.addView(content);
-    }
-
-    /**
-     * Set the content View for XScrollView.
-     *
-     * @param content
-     */
-    public void setView(View content) {
-        if (mLayout == null) {
-            return;
-        }
-
-        if (mContentLayout == null) {
-            mContentLayout = (LinearLayout) mLayout.findViewById(R.id.content_layout);
-        }
-        mContentLayout.addView(content);
+        super.setAdapter(adapter);
     }
 
     /**
@@ -191,7 +160,7 @@ public class XScrollView extends ScrollView implements OnScrollListener {
         if (!mEnablePullLoad) {
             mFooterView.setBottomMargin(0);
             mFooterView.hide();
-            mFooterView.setPadding(0, 0, 0, mFooterView.getHeight() * (-1));
+            mFooterView.setPadding(0, 0, 0, 0);
             mFooterView.setOnClickListener(null);
 
         } else {
@@ -252,7 +221,7 @@ public class XScrollView extends ScrollView implements OnScrollListener {
      *
      * @param listener
      */
-    public void setIXScrollViewListener(IXScrollViewListener listener) {
+    public void setXListViewListener(IXListViewListener listener) {
         mListener = listener;
     }
 
@@ -278,8 +247,8 @@ public class XScrollView extends ScrollView implements OnScrollListener {
 
     private void invokeOnScrolling() {
         if (mScrollListener instanceof OnXScrollListener) {
-            OnXScrollListener l = (OnXScrollListener) mScrollListener;
-            l.onXScrolling(this);
+            OnXScrollListener listener = (OnXScrollListener) mScrollListener;
+            listener.onXScrolling(this);
         }
     }
 
@@ -296,12 +265,7 @@ public class XScrollView extends ScrollView implements OnScrollListener {
         }
 
         // scroll to top each time
-        post(new Runnable() {
-            @Override
-            public void run() {
-                XScrollView.this.fullScroll(ScrollView.FOCUS_UP);
-            }
-        });
+        setSelection(0);
     }
 
     private void resetHeaderHeight() {
@@ -330,7 +294,7 @@ public class XScrollView extends ScrollView implements OnScrollListener {
 
         if (mEnablePullLoad && !mPullLoading) {
             if (height > PULL_LOAD_MORE_DELTA) {
-                // height enough to invoke load  more.
+                // height enough to invoke load more.
                 mFooterView.setState(XFooterView.STATE_READY);
             } else {
                 mFooterView.setState(XFooterView.STATE_NORMAL);
@@ -340,12 +304,7 @@ public class XScrollView extends ScrollView implements OnScrollListener {
         mFooterView.setBottomMargin(height);
 
         // scroll to bottom
-        post(new Runnable() {
-            @Override
-            public void run() {
-                XScrollView.this.fullScroll(ScrollView.FOCUS_DOWN);
-            }
-        });
+        // setSelection(mTotalItemCount - 1);
     }
 
     private void resetFooterHeight() {
@@ -359,11 +318,9 @@ public class XScrollView extends ScrollView implements OnScrollListener {
     }
 
     private void startLoadMore() {
-        if (!mPullLoading) {
-            mPullLoading = true;
-            mFooterView.setState(XFooterView.STATE_LOADING);
-            loadMore();
-        }
+        mPullLoading = true;
+        mFooterView.setState(XFooterView.STATE_LOADING);
+        loadMore();
     }
 
     @Override
@@ -381,55 +338,42 @@ public class XScrollView extends ScrollView implements OnScrollListener {
                 final float deltaY = ev.getRawY() - mLastY;
                 mLastY = ev.getRawY();
 
-                if (isTop() && (mHeader.getVisibleHeight() > 0 || deltaY > 0)) {
+                if (getFirstVisiblePosition() == 0 && (mHeader.getVisibleHeight() > 0 ||
+                        deltaY > 0)) {
                     // the first item is showing, header has shown or pull down.
                     updateHeaderHeight(deltaY / OFFSET_RADIO);
                     invokeOnScrolling();
 
-                } else if (isBottom() && (mFooterView.getBottomMargin() > 0 || deltaY < 0)) {
+                } else if (getLastVisiblePosition() == mTotalItemCount - 1 && (mFooterView
+                        .getBottomMargin() > 0 || deltaY < 0)) {
                     // last item, already pulled up or want to pull up.
                     updateFooterHeight(-deltaY / OFFSET_RADIO);
-
                 }
                 break;
 
             default:
                 // reset
                 mLastY = -1;
+                if (getFirstVisiblePosition() == 0) {
+                    // invoke refresh
+                    if (mEnablePullRefresh && mHeader.getVisibleHeight() > mHeaderHeight) {
+                        mPullRefreshing = true;
+                        mHeader.setState(XHeaderView.STATE_REFRESHING);
+                        refresh();
+                    }
 
-                resetHeaderOrBottom();
+                    resetHeaderHeight();
+
+                } else if (getLastVisiblePosition() == mTotalItemCount - 1) {
+                    // invoke load more.
+                    if (mEnablePullLoad && mFooterView.getBottomMargin() > PULL_LOAD_MORE_DELTA) {
+                        startLoadMore();
+                    }
+                    resetFooterHeight();
+                }
                 break;
         }
-
         return super.onTouchEvent(ev);
-    }
-
-    private void resetHeaderOrBottom() {
-        if (isTop()) {
-            // invoke refresh
-            if (mEnablePullRefresh && mHeader.getVisibleHeight() > mHeaderHeight) {
-                mPullRefreshing = true;
-                mHeader.setState(XHeaderView.STATE_REFRESHING);
-                refresh();
-            }
-            resetHeaderHeight();
-
-        } else if (isBottom()) {
-            // invoke load more.
-            if (mEnablePullLoad && mFooterView.getBottomMargin() > PULL_LOAD_MORE_DELTA) {
-                startLoadMore();
-            }
-            resetFooterHeight();
-        }
-    }
-
-    private boolean isTop() {
-        return getScrollY() <= 0 || mHeader.getVisibleHeight() > mHeaderHeight || mContentLayout.getTop() > 0;
-    }
-
-    private boolean isBottom() {
-        return Math.abs(getScrollY() + getHeight() - computeVerticalScrollRange()) <= 5 ||
-                (getScrollY() > 0 && null != mFooterView && mFooterView.getBottomMargin() > 0);
     }
 
     @Override
@@ -444,9 +388,11 @@ public class XScrollView extends ScrollView implements OnScrollListener {
             postInvalidate();
             invokeOnScrolling();
         }
+
         super.computeScroll();
     }
 
+    @Override
     public void setOnScrollListener(OnScrollListener l) {
         mScrollListener = l;
     }
@@ -456,31 +402,19 @@ public class XScrollView extends ScrollView implements OnScrollListener {
         if (mScrollListener != null) {
             mScrollListener.onScrollStateChanged(view, scrollState);
         }
-    }
 
-    @Override
-    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
-        // Grab the last child placed in the ScrollView, we need it to determinate the bottom position.
-        View view = getChildAt(getChildCount() - 1);
-
-        if (null != view) {
-            // Calculate the scroll diff
-            int diff = (view.getBottom() - (view.getHeight() + view.getScrollY()));
-
-            // if diff is zero, then the bottom has been reached
-            if (diff == 0 && mEnableAutoLoad) {
-                // notify that we have reached the bottom
+        if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
+            if (mEnableAutoLoad && getLastVisiblePosition() == getCount() - 1) {
                 startLoadMore();
             }
         }
-
-        super.onScrollChanged(l, t, oldl, oldt);
     }
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
                          int totalItemCount) {
         // send to user's listener
+        mTotalItemCount = totalItemCount;
         if (mScrollListener != null) {
             mScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
         }
@@ -508,8 +442,10 @@ public class XScrollView extends ScrollView implements OnScrollListener {
 
     /**
      * Implements this interface to get refresh/load more event.
+     *
+     * @author markmjw
      */
-    public interface IXScrollViewListener {
+    public interface IXListViewListener {
         public void onRefresh();
 
         public void onLoadMore();

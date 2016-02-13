@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.findCoach.CoachModel;
-import com.hahaxueche.ui.util.circleImageView.CircleImageView;
+import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.utils.Util;
 import com.squareup.picasso.Picasso;
 

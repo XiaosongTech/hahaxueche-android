@@ -10,7 +10,7 @@
         android:layout_height="match_parent">
        <!-- <fragment
             android:id="@+id/fragment_cycle_viewpager_content"
-            android:name="com.hahaxueche.ui.util.cycleViewPager.CycleViewPager"
+            android:name="com.hahaxueche.ui.widget.cycleViewPager.CycleViewPager"
             android:layout_gravity="center_horizontal"
             android:layout_width="300dp"
             android:layout_height="300dp" />-->
