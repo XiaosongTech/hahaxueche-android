@@ -31,6 +31,7 @@
             android:gravity="center"
             android:textColor="@android:color/white"
             android:textColorHint="@color/fcSearchTextHintWhiteLight"
+            android:focusable="false"
             android:hint="@string/fCEnterWantedCoachName"
             />
     </LinearLayout>
@@ -97,6 +98,16 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="12">
+        <com.hahaxueche.ui.util.pullToRefreshView.XListView
+            android:id="@+id/xlv_coach_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@drawable/layer_list_divider"
+            android:dividerHeight="1dp"
+            android:headerDividersEnabled="false"
+            android:footerDividersEnabled="false">
+
+        </com.hahaxueche.ui.util.pullToRefreshView.XListView>
 
     </LinearLayout>
 

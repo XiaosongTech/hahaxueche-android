@@ -106,6 +106,8 @@ public class CityChoseDialog extends Dialog implements View.OnClickListener {
             tr.setGravity(Gravity.CENTER);
             for (int j = 0; j < 3; j++) {
                 final int index = i * 3 + j;
+                if(index>cityList.size()-1)
+                    break;
                 Log.v(TAG, "index->" + index);
                 TextView tv = new TextView(mContext);
                 int viewId = Util.generateViewId();

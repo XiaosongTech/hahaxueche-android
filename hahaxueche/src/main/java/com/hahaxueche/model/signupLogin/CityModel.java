@@ -9,6 +9,7 @@ public class CityModel {
     private String name;
     private String zip_code;
     private String available;
+    private FilterModel filters;
 
     public String getId() {
         return id;
@@ -40,5 +41,13 @@ public class CityModel {
 
     public void setAvailable(String available) {
         this.available = available;
+    }
+
+    public FilterModel getFilters() {
+        return filters;
+    }
+
+    public void setFilters(FilterModel filters) {
+        this.filters = filters;
     }
 }

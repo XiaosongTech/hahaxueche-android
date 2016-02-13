@@ -22,4 +22,7 @@
     <color name="fcSearchTextHintWhiteLight">#fbd099</color>
     <color name="fCTxtGreen">#77dd00</color>
     <color name="fCTxtOrange">#ff7200</color>
+    <color name="fCTxtBlack">#616161</color>
+    <color name="fCTxtGray">#929292</color>
+    <color name="fCTxtGrayFade">#bbbbbb</color>
 </resources>

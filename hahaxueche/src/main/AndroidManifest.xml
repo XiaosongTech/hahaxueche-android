@@ -38,11 +38,6 @@
         <activity
             android:name=".ui.activity.signupLogin.StartActivity"
             android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ui.activity.signupLogin.SignUpActivity"
@@ -52,11 +47,18 @@
             android:label="@string/sLLogin"></activity>
         <activity
             android:name=".ui.activity.signupLogin.SignUpInfoActivity"
-            android:label="@string/sLSignUpInfo"></activity>
+            android:label="@string/sLSignUpInfo">
+        </activity>
         <activity
             android:name=".ui.fragment.index.IndexActivity"
             android:label="@string/app_name"
-            android:theme="@style/NoAnimationTheme"></activity>
+            android:theme="@style/NoAnimationTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.activity.findCoach.FindCoachActivity"
             android:theme="@style/NoAnimationTheme"></activity>

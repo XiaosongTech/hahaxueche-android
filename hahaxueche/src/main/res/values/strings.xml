@@ -11,4 +11,12 @@
     <string name="user_registe_cancel_photo">取消</string>
     <string name="user_registe_start_camera">拍照</string>
     <string name="user_registe_start_album">从相册选择</string>
+
+    <string name="header_hint_refresh_normal">下拉刷新</string>
+    <string name="header_hint_refresh_ready">松开刷新</string>
+    <string name="header_hint_refresh_loading">刷新中&#8230;</string>
+    <string name="header_hint_refresh_time">时间：</string>
+    <string name="footer_hint_load_normal">加载更多</string>
+    <string name="footer_hint_load_ready">松开加载更多</string>
+
 </resources>
