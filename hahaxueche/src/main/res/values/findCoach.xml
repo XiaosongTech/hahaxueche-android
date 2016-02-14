@@ -17,6 +17,20 @@
     <string name="fCCommentNice">评价最好</string>
     <string name="fCPriceLow">价格最低</string>
     <string name="fCPopularHot">人气最旺</string>
+    <string name="fCCoachDetail">教练详情</string>
+    <string name="fCTakeCertPrice">拿证价格</string>
+    <string name="fCClassType">课程类型</string>
+    <string name="fCTrainLocation">训练场地</string>
+    <string name="fCStuSatisfactionDegree">学员满意度</string>
+    <string name="fCCoachLevelCert">教练等级认证</string>
+    <string name="fCCoachTrainTime">教练练车时间</string>
+    <string name="fCCooperateCoach">合作教练</string>
+    <string name="fCStuComment">学员评价（12）</string>
+    <string name="fCClickViewMore">点击查看更多</string>
+    <string name="fCAttention">关注</string>
+    <string name="fCShare">分享</string>
+    <string name="fCFreeLearn">免费试学</string>
+    <string name="fCSurePay">确认并付款</string>
     <!--color-->
     <color name="fCSearchBackOrangeHeavy">#f68a00</color>
     <color name="fcSearchTextHintWhiteLight">#fbd099</color>
@@ -25,4 +39,6 @@
     <color name="fCTxtBlack">#616161</color>
     <color name="fCTxtGray">#929292</color>
     <color name="fCTxtGrayFade">#bbbbbb</color>
+    <color name="fCBackgroundGray">#f4f4f4</color>
+    <color name="fCViewGray">#dbdbdb</color>
 </resources>
