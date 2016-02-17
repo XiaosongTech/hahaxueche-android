@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 
 import com.hahaxueche.R;
@@ -94,6 +95,7 @@ public class FindCoachActivity extends Activity implements XListView.IXListViewL
         llyTabMySetting.setOnClickListener(mClickListener);
         llyFcFilter.setOnClickListener(mClickListener);
         llyFcSort.setOnClickListener(mClickListener);
+        xlvCoachList.setOnItemClickListener(mItemClickListener);
     }
 
     View.OnClickListener mClickListener = new View.OnClickListener() {
@@ -117,14 +119,15 @@ public class FindCoachActivity extends Activity implements XListView.IXListViewL
                     finish();
                     break;
                 case R.id.lly_fc_filter:
-                    fcFilterDialog = new FcFilterDialog(FindCoachActivity.this,
+                    /*fcFilterDialog = new FcFilterDialog(FindCoachActivity.this,
                             new FcFilterDialog.OnBtnClickListener() {
 
                                 @Override
                                 public void onFliterCoach(String cityName, String cityId) {
 
                                 }
-                            });
+                            });*/
+                    fcFilterDialog.initFilter();
                     fcFilterDialog.show();
                     break;
                 case R.id.lly_fc_sort:
@@ -139,6 +142,15 @@ public class FindCoachActivity extends Activity implements XListView.IXListViewL
             }
         }
     };
+    AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Intent intent = new Intent(getApplication(), CoachDetailActivity.class);
+            startActivity(intent);
+        }
+    };
+
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -161,7 +173,7 @@ public class FindCoachActivity extends Activity implements XListView.IXListViewL
                 xlvCoachList.setAdapter(mAdapter);
                 onLoad();
             }
-        }, 2500);
+        }, 1500);
     }
 
     @Override
@@ -173,7 +185,7 @@ public class FindCoachActivity extends Activity implements XListView.IXListViewL
                 mAdapter.notifyDataSetChanged();
                 onLoad();
             }
-        }, 2500);
+        }, 1500);
     }
 
     private void geneItems() {

@@ -2,6 +2,8 @@ package com.hahaxueche.ui.activity.findCoach;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
@@ -28,6 +30,7 @@ public class CoachDetailActivity extends Activity implements ImageSwitcher.OnSwi
     private TextView tvCdCoachDescription;//教练描述
     private ImageSwitcher isCdCoachDetail;//教练照片
     private ZoomImgDialog zoomImgDialog = null;
+    private ImageButton  ibtnCoachDetialBack;//回退按钮
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,7 @@ public class CoachDetailActivity extends Activity implements ImageSwitcher.OnSwi
 
         tvCdCoachName = Util.instence(this).$(this, R.id.tv_cd_coach_name);
         tvCdCoachDescription = Util.instence(this).$(this, R.id.tv_cd_coach_description);
+        ibtnCoachDetialBack = Util.instence(this).$(this, R.id.ibtn_coach_detail_back);
 
         tvCdCoachName.setText("张三");
         String coachDescription = "  在练车这种日复一日年复一年的重复性工作中，难免会有教练会遇到各种各样的问题，一些教练可能会控制不好自己的情绪，" +
@@ -73,6 +77,7 @@ public class CoachDetailActivity extends Activity implements ImageSwitcher.OnSwi
         isCdCoachDetail.setIndicatorRadius(Util.instence(this).dip2px(3));
         isCdCoachDetail.setIndicatorDivide(Util.instence(this).dip2px(15));
         isCdCoachDetail.setOnSwitchItemClickListener(this);
+        ibtnCoachDetialBack.setOnClickListener(mClickListener);
     }
 
     private void getCoachAvatar(String url, CircleImageView civCoachAvatar) {
@@ -88,4 +93,16 @@ public class CoachDetailActivity extends Activity implements ImageSwitcher.OnSwi
             zoomImgDialog = new ZoomImgDialog(this, R.style.zoom_dialog);
         zoomImgDialog.setZoomImgeRes(url, urls, "");
     }
+
+    View.OnClickListener mClickListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.ibtn_coach_detail_back:
+                    CoachDetailActivity.this.finish();
+                    break;
+            }
+        }
+    };
 }

@@ -37,45 +37,64 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.activity.signupLogin.StartActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
             android:label="@string/app_name">
         </activity>
         <activity
             android:name=".ui.activity.signupLogin.SignUpActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
             android:label="@string/sLSignUp"></activity>
         <activity
             android:name=".ui.activity.signupLogin.LoginActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
             android:label="@string/sLLogin"></activity>
         <activity
             android:name=".ui.activity.signupLogin.SignUpInfoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
             android:label="@string/sLSignUpInfo">
         </activity>
         <activity
             android:name=".ui.fragment.index.IndexActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:theme="@style/NoAnimationTheme">
-
-        </activity>
-        <activity
-            android:name=".ui.activity.findCoach.FindCoachActivity"
-            android:theme="@style/NoAnimationTheme"></activity>
-        <activity
-            android:name=".ui.fragment.appointment.AppointmentActivity"
-            android:theme="@style/NoAnimationTheme"></activity>
-        <activity
-            android:name=".ui.fragment.mySetting.MySettingActivity"
-            android:theme="@style/NoAnimationTheme"></activity>
-
-        <activity
-            android:name=".ui.fragment.BaseBottomTabFragment"
-            android:label="@string/app_name">
-
-        </activity>
-        <activity android:name=".ui.activity.findCoach.CoachDetailActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.activity.findCoach.FindCoachActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoAnimationTheme"></activity>
+        <activity
+            android:name=".ui.fragment.appointment.AppointmentActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoAnimationTheme"></activity>
+        <activity
+            android:name=".ui.fragment.mySetting.MySettingActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoAnimationTheme"></activity>
+
+        <activity
+            android:name=".ui.fragment.BaseBottomTabFragment"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:label="@string/app_name">
+
+        </activity>
+        <activity android:name=".ui.activity.findCoach.CoachDetailActivity">
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
         </activity>
     </application>
 

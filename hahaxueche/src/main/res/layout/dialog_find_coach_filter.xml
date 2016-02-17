@@ -74,45 +74,13 @@
         app:unselectedLineHeight="5dp" />
 
     <LinearLayout
+        android:id="@+id/lly_fc_price_tvs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_marginTop="10dp">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="￥1000"
-            android:textColor="@color/filter_txt_white_heavy"
-            android:textSize="12sp" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="￥2000"
-            android:textColor="@color/filter_txt_white_heavy"
-            android:textSize="12sp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="￥3000"
-            android:textColor="@color/filter_txt_white_heavy"
-            android:textSize="12sp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="￥4000"
-            android:textColor="@color/filter_txt_white_heavy"
-            android:textSize="12sp" />
     </LinearLayout>
 
     <View
