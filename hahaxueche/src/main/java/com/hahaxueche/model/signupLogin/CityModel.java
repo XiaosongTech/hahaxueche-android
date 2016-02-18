@@ -1,5 +1,7 @@
 package com.hahaxueche.model.signupLogin;
 
+import java.util.List;
+
 /**
  * 城市数据模型
  * Created by gibxin on 2016/1/23.
@@ -10,6 +12,7 @@ public class CityModel {
     private String zip_code;
     private String available;
     private FilterModel filters;
+    private List<CostItem> fixed_cost_itemizer;
 
     public String getId() {
         return id;
@@ -49,5 +52,13 @@ public class CityModel {
 
     public void setFilters(FilterModel filters) {
         this.filters = filters;
+    }
+
+    public List<CostItem> getFixed_cost_itemizer() {
+        return fixed_cost_itemizer;
+    }
+
+    public void setFixed_cost_itemizer(List<CostItem> fixed_cost_itemizer) {
+        this.fixed_cost_itemizer = fixed_cost_itemizer;
     }
 }
