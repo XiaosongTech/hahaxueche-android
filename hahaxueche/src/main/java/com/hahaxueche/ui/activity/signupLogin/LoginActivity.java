@@ -20,6 +20,7 @@ import com.hahaxueche.model.signupLogin.CreateUserResponse;
 import com.hahaxueche.model.signupLogin.SessionModel;
 import com.hahaxueche.model.signupLogin.StudentModel;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
+import com.hahaxueche.ui.fragment.index.IndexActivity;
 import com.hahaxueche.utils.Util;
 
 import java.lang.ref.WeakReference;
@@ -105,6 +106,7 @@ public class LoginActivity extends SLBaseActivity {
                     etLoginPwd.setVisibility(View.GONE);
                     btnGetIdentifyCode.setVisibility(View.GONE);
                     btnLogin.setVisibility(View.VISIBLE);
+                    btnReSendIdentifyCode.requestFocus();
                     break;
             }
         } else if (loginType == 2) {
@@ -127,6 +129,7 @@ public class LoginActivity extends SLBaseActivity {
         ibtnLoginBack.setOnClickListener(mClickListener);
         btnForgetPwd.setOnClickListener(mClickListener);
         btnLogin.setOnClickListener(mClickListener);
+        btnReSendIdentifyCode.setOnClickListener(mClickListener);
     }
 
     /**
@@ -159,6 +162,11 @@ public class LoginActivity extends SLBaseActivity {
                 //登录
                 case R.id.btn_login:
                     login();
+                    break;
+                case R.id.btn_re_send_identify_code:
+                    loginState = 1;
+                    loadView();
+                    getIdentifyCode();
                     break;
             }
         }
@@ -219,8 +227,15 @@ public class LoginActivity extends SLBaseActivity {
                 SharedPreferences.Editor editor=sharedPreferences.edit();
                 editor.putString("access_token",userSession.getAccess_token());
                 editor.putString("student_id", userStudent.getId());
+                editor.putString("cell_phone",userStudent.getCell_phone());
+                editor.putString("name",userStudent.getName());
+                editor.putString("city_id",userStudent.getCity_id());
+                editor.putString("avatar",userStudent.getAvatar());
                 editor.commit();
-                Toast.makeText(context, "登录成功！！！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "登录成功！", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, IndexActivity.class);
+                startActivity(intent);
+                LoginActivity.this.finish();
             }
 
             @Override
@@ -260,7 +275,7 @@ public class LoginActivity extends SLBaseActivity {
                     }
                 } else if (msg.what == 2) {
                     activity.btnReSendIdentifyCode.setClickable(true);
-                    activity.btnReSendIdentifyCode.setText(R.string.sLSendIdentifyCode);
+                    activity.btnReSendIdentifyCode.setText(R.string.sLReSend);
                 }
             }
         }

@@ -25,6 +25,7 @@ import com.hahaxueche.model.signupLogin.CompStuResponse;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
 import com.hahaxueche.ui.dialog.CityChoseDialog;
 import com.hahaxueche.ui.dialog.RegisterInfoPhotoDialog;
+import com.hahaxueche.ui.fragment.index.IndexActivity;
 import com.hahaxueche.ui.util.PhotoUtil;
 import com.hahaxueche.ui.util.PictrueGet;
 import com.hahaxueche.utils.Util;
@@ -146,7 +147,17 @@ public class SignUpInfoActivity extends SLBaseActivity {
                 if (pd != null) {
                     pd.dismiss();
                 }
-                Toast.makeText(context, "完善资料成功！！！", Toast.LENGTH_SHORT).show();
+                SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor=sharedPreferences.edit();
+                editor.putString("cell_phone",compStuResponse.getCell_phone());
+                editor.putString("name",compStuResponse.getName());
+                editor.putString("city_id",compStuResponse.getCity());
+                editor.putString("avatar",compStuResponse.getAvatar());
+                editor.commit();
+                Toast.makeText(context, "完善资料成功！", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, IndexActivity.class);
+                startActivity(intent);
+                SignUpInfoActivity.this.finish();
             }
 
             @Override

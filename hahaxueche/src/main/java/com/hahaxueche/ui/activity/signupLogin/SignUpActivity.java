@@ -183,6 +183,10 @@ public class SignUpActivity extends SLBaseActivity {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("access_token", userSession.getAccess_token());
                     editor.putString("student_id", userStudent.getId());
+                    editor.putString("cell_phone",userStudent.getCell_phone());
+                    editor.putString("name",userStudent.getName());
+                    editor.putString("city_id",userStudent.getCity_id());
+                    editor.putString("avatar",userStudent.getAvatar());
                     editor.commit();
                     Intent intent = new Intent(context, SignUpInfoActivity.class);
                     startActivity(intent);

@@ -10,6 +10,7 @@ public class StudentModel {
     private String name;
     private String city_id;
     private String user_id;
+    private String avatar;
 
     public String getId() {
         return id;
@@ -49,5 +50,13 @@ public class StudentModel {
 
     public void setUser_id(String user_id) {
         this.user_id = user_id;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

@@ -11,6 +11,7 @@ public class SessionModel {
     private String log_off_time;
     private String created_at;
     private String updated_at;
+    private String active;
 
     public String getId() {
         return id;
@@ -58,5 +59,13 @@ public class SessionModel {
 
     public void setUpdated_at(String updated_at) {
         this.updated_at = updated_at;
+    }
+
+    public String getActive() {
+        return active;
+    }
+
+    public void setActive(String active) {
+        this.active = active;
     }
 }
