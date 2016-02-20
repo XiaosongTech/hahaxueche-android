@@ -6,12 +6,14 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import com.ToxicBakery.viewpager.transforms.ABaseTransformer;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.hahaxueche.R;
+import com.hahaxueche.ui.fragment.index.IndexActivity;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
 
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
     };
     private ArrayAdapter transformerArrayAdapter;
     private ArrayList<String> transformerList = new ArrayList<String>();
+    private TextView tvIsTour;
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -50,6 +53,15 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
 //                .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.ALIGN_PARENT_RIGHT)
 //                .setOnPageChangeListener(this)//监听翻页事件
                 .setOnItemClickListener(this);
+        tvIsTour = (TextView)findViewById(R.id.tv_is_tourist);
+        tvIsTour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, IndexActivity.class);
+                startActivity(intent);
+                StartActivity.this.finish();
+            }
+        });
 
     }
 

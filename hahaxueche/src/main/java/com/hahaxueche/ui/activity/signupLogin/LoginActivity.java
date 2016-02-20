@@ -19,6 +19,7 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.signupLogin.CreateUserResponse;
 import com.hahaxueche.model.signupLogin.SessionModel;
 import com.hahaxueche.model.signupLogin.StudentModel;
+import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
 import com.hahaxueche.ui.fragment.index.IndexActivity;
 import com.hahaxueche.utils.Util;
@@ -144,8 +145,6 @@ public class LoginActivity extends SLBaseActivity {
                     break;
                 //获取验证码
                 case R.id.btn_get_identify_code:
-                    loginState = 1;
-                    loadView();
                     getIdentifyCode();
                     break;
                 //切换登录方式
@@ -181,9 +180,9 @@ public class LoginActivity extends SLBaseActivity {
             pd.dismiss();
         }
         pd = ProgressDialog.show(LoginActivity.this, null, "验证码发送中，请稍后……");
-        this.slPresenter.getIdentifyCode(phoneNumber, "login", new SLCallbackListener<Void>() {
+        this.slPresenter.getIdentifyCode(phoneNumber, "login", new SLCallbackListener<BaseApiResponse>() {
             @Override
-            public void onSuccess(Void data) {
+            public void onSuccess(BaseApiResponse data) {
                 if (pd != null) {
                     pd.dismiss();
                 }
@@ -197,7 +196,11 @@ public class LoginActivity extends SLBaseActivity {
                 if (pd != null) {
                     pd.dismiss();
                 }
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                if(errorEvent!=null && errorEvent.equals("40044")){
+                    Toast.makeText(context, "当前用户不存在！", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -243,7 +246,11 @@ public class LoginActivity extends SLBaseActivity {
                 if (pd != null) {
                     pd.dismiss();
                 }
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                if(errorEvent!=null && errorEvent.equals("40044")){
+                    Toast.makeText(context, "当前用户不存在！", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

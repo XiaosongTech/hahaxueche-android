@@ -2,6 +2,7 @@
 <resources>
     <color name="app_theme_color">#ff9e00</color>
     <color name="tab_bottom_gray">#929292</color>
+    <color name="tab_bottom_gray_fade">#dbdbdb</color>
     <color name="app_back_gray_light">#f4f4f4</color>
     <color name="filter_txt_white_heavy">#dbdbdb</color>
     <color name="coach_info_dialog_normal_btn_bg_color">#f5f6f8</color>

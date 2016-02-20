@@ -16,7 +16,7 @@ public interface SLPresenter {
      * @param type     类型(register,login)
      * @param listener 回调监听器
      */
-    public void getIdentifyCode(String phoneNum, String type, SLCallbackListener<Void> listener);
+    public void getIdentifyCode(String phoneNum, String type, SLCallbackListener<BaseApiResponse> listener);
 
     /**
      * @param phoneNum           手机号

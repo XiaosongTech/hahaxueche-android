@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_alignTop="@id/lly_bottom_tab"
-        android:background="@color/tab_bottom_gray" />
+        android:background="@color/tab_bottom_gray_fade" />
 
     <LinearLayout
         android:id="@+id/lly_bottom_tab"
@@ -44,11 +44,6 @@
 
         </LinearLayout>
 
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="@color/tab_bottom_gray" />
 
         <LinearLayout
             android:id="@+id/lly_tab_find_coach"
@@ -76,11 +71,6 @@
 
         </LinearLayout>
 
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="@color/tab_bottom_gray" />
 
         <LinearLayout
             android:id="@+id/lly_tab_appointment"
@@ -108,11 +98,6 @@
 
         </LinearLayout>
 
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="@color/tab_bottom_gray" />
 
         <LinearLayout
             android:id="@+id/lly_tab_my_setting"

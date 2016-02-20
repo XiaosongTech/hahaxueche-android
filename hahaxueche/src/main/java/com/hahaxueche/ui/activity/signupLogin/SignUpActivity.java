@@ -113,9 +113,9 @@ public class SignUpActivity extends SLBaseActivity {
             pd.dismiss();
         }
         pd = ProgressDialog.show(SignUpActivity.this, null, "验证码发送中，请稍后……");
-        this.slPresenter.getIdentifyCode(phoneNumber, isResetPwd ? "reset" : "register", new SLCallbackListener<Void>() {
+        this.slPresenter.getIdentifyCode(phoneNumber, isResetPwd ? "reset" : "register", new SLCallbackListener<BaseApiResponse>() {
             @Override
-            public void onSuccess(Void data) {
+            public void onSuccess(BaseApiResponse data) {
                 if (pd != null) {
                     pd.dismiss();
                 }

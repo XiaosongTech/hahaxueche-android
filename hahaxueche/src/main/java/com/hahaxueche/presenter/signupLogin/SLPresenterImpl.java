@@ -27,7 +27,7 @@ public class SLPresenterImpl implements SLPresenter {
     }
 
     @Override
-    public void getIdentifyCode(final String phoneNum, final String type, final SLCallbackListener<Void> listener) {
+    public void getIdentifyCode(final String phoneNum, final String type, final SLCallbackListener<BaseApiResponse> listener) {
         //参数检查
         if (!isValidPhoneNumber(phoneNum, listener)) {
             return;
@@ -238,7 +238,7 @@ public class SLPresenterImpl implements SLPresenter {
      * @param listener
      * @return
      */
-    private boolean isValidPhoneNumber(String phoneNumber, SLCallbackListener<Void> listener) {
+    private boolean isValidPhoneNumber(String phoneNumber, SLCallbackListener<BaseApiResponse> listener) {
         if (TextUtils.isEmpty(phoneNumber)) {
             if (listener != null) {
                 listener.onFailure(ErrorEvent.PARAM_NULL, "您的手机号码不能为空");
