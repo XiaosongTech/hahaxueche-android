@@ -8,6 +8,8 @@ import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.api.net.HttpEngine;
 import com.hahaxueche.api.signupLogin.SLApi;
 import com.hahaxueche.model.util.ConstantsModel;
+import com.hahaxueche.presenter.findCoach.FCPresenter;
+import com.hahaxueche.presenter.findCoach.FCPresenterImpl;
 import com.hahaxueche.presenter.signupLogin.SLPresenter;
 import com.hahaxueche.presenter.signupLogin.SLPresenterImpl;
 import com.hahaxueche.utils.JsonUtils;
@@ -21,11 +23,13 @@ import java.lang.reflect.Type;
  */
 public class MyApplication extends Application {
     private SLPresenter sLPresenter;
+    private FCPresenter fcPresenter;
 
     @Override
     public void onCreate() {
         super.onCreate();
         sLPresenter = new SLPresenterImpl(this);
+        fcPresenter = new FCPresenterImpl(this);
         new Thread(new Runnable() {
 
             @Override
@@ -36,7 +40,7 @@ public class MyApplication extends Application {
                 try {
                     ConstantsModel constantsModel = httpEngine.getHandle(type, SLApi.CONSTANTS);
                     SharedPreferences sharedPreferences = getSharedPreferences("constants", Activity.MODE_PRIVATE);
-                    SharedPreferences.Editor editor=sharedPreferences.edit();
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("constants", JsonUtils.serialize(constantsModel));
                     editor.commit();
                 } catch (IOException e) {
@@ -46,7 +50,11 @@ public class MyApplication extends Application {
         }).start();
     }
 
-    public SLPresenter getPresenter() {
+    public SLPresenter getSLPresenter() {
         return sLPresenter;
+    }
+
+    public FCPresenter getFCPresenter() {
+        return fcPresenter;
     }
 }

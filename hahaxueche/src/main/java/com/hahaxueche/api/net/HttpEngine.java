@@ -99,4 +99,20 @@ public class HttpEngine {
         Log.i(TAG, "response:->" + response);
         return JsonUtils.deserialize(response, typeOfT);
     }
+
+    /**
+     * get方法（直接根据url获取）
+     *
+     * @param typeOfT
+     * @param url
+     * @param <T>
+     * @return
+     * @throws IOException
+     */
+    public <T> T getHandleByUrl(Type typeOfT, String url) throws IOException {
+        Log.i(TAG, "get url ->" + url);
+        String response = OkHttpUtils.get(url);
+        Log.i(TAG, "response:->" + response);
+        return JsonUtils.deserialize(response, typeOfT);
+    }
 }

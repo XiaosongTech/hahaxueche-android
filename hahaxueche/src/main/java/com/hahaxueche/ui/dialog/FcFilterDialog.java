@@ -11,8 +11,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -37,15 +40,23 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
     private ComboSeekBar cbsDistanceFilter;
     private ComboSeekBar cbsPriceFilter;
     private Button btnFcFilterSure;
+    private Button btnFcFilterCancel;
+    private Switch swGoldenCoachOly;
+    private CheckBox cbLicenseTypeC1;
+    private CheckBox cbLicenseTypeC2;
     private LinearLayout llyFcDistanceTvs;//距离筛选文字
     private LinearLayout llyFcPriceTvs;//价格筛选文字
     private List<String> distanceList;
     private List<String> priceList;
     private List<TextView> distanceTvList = new ArrayList<TextView>();
     private List<TextView> priceTvList = new ArrayList<TextView>();
+    private String goldenCoachOnly;//只显示金牌教练
+    private String licenseType;//C1 还是 C2 后者都行
+    private String price;//薪水
+    private String distance;//距离
 
     public interface OnBtnClickListener {
-        public void onFliterCoach(String cityName, String cityId);
+        public void onFliterCoach(String goldenCoachOnly, String licenseType, String price, String distance);
     }
 
 
@@ -77,6 +88,9 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
      * @param view
      */
     private void initView(View view) {
+        swGoldenCoachOly = (Switch) view.findViewById(R.id.sw_golden_coach_only);
+        cbLicenseTypeC1 = (CheckBox) view.findViewById(R.id.cb_license_type_c1);
+        cbLicenseTypeC2 = (CheckBox) view.findViewById(R.id.cb_license_type_c2);
         cbsDistanceFilter = (ComboSeekBar) view.findViewById(R.id.cbs_distinct_filter);
         cbsDistanceFilter.setAdapter(distanceList);
         cbsDistanceFilter.setOnSeekBarChangeListener(new ComboSeekBar.OnSeekBarChangeListener() {
@@ -107,6 +121,7 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
                         distanceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.filter_txt_white_heavy));
                     }
                 }
+                distance = distanceList.get(position);
             }
         });
         cbsPriceFilter = (ComboSeekBar) view.findViewById(R.id.cbs_price_filter);
@@ -139,10 +154,13 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
                         priceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.filter_txt_white_heavy));
                     }
                 }
+                price = priceList.get(position);
             }
         });
         btnFcFilterSure = (Button) view.findViewById(R.id.btn_fc_filter_sure);
         btnFcFilterSure.setOnClickListener(this);
+        btnFcFilterCancel = (Button) view.findViewById(R.id.btn_fc_filter_cancel);
+        btnFcFilterCancel.setOnClickListener(this);
         llyFcDistanceTvs = (LinearLayout) view.findViewById(R.id.lly_fc_distance_tvs);
         for (String distanceStr : distanceList) {
             TextView tvDistance = new TextView(mContext);
@@ -192,6 +210,8 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
                 priceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.filter_txt_white_heavy));
             }
         }
+        goldenCoachOnly = "0";
+        licenseType = "1";
     }
 
     /**
@@ -214,6 +234,24 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_fc_filter_sure:
+                if (mListener != null) {
+                    if (swGoldenCoachOly.isChecked()) {
+                        goldenCoachOnly = "true";
+                    }
+                    //license_type 1 = C1, 2 = C2, 3 = c1+c2
+                    if (cbLicenseTypeC1.isChecked() && cbLicenseTypeC2.isChecked()) {
+                        licenseType = "3";
+                    } else if (cbLicenseTypeC1.isChecked()) {
+                        licenseType = "1";
+                    } else if (cbLicenseTypeC2.isChecked()) {
+                        licenseType = "2";
+                    }
+                    mListener.onFliterCoach(goldenCoachOnly, licenseType, price, distance);
+                }
+                this.dismiss();
+                break;
+            case R.id.btn_fc_filter_cancel:
+                cancel();
                 break;
         }
     }

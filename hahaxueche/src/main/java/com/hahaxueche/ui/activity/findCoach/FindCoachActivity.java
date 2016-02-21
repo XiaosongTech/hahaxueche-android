@@ -4,12 +4,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.hahaxueche.R;
+import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
+import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.ui.adapter.findCoach.CoachItemAdapter;
 import com.hahaxueche.ui.dialog.FcFilterDialog;
 import com.hahaxueche.ui.dialog.FcSortDialog;
@@ -22,12 +27,13 @@ import com.hahaxueche.utils.Util;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
  * Created by gibxin on 2016/1/27.
  */
-public class FindCoachActivity extends Activity implements XListView.IXListViewListener {
+public class FindCoachActivity extends FCBaseActivity implements XListView.IXListViewListener {
     private LinearLayout llyTabIndex;
     private LinearLayout llyTabFindCoach;
     private LinearLayout llyTabAppointment;
@@ -38,16 +44,29 @@ public class FindCoachActivity extends Activity implements XListView.IXListViewL
     private FcSortDialog fcSortDialog;
     private XListView xlvCoachList;
     private CoachItemAdapter mAdapter;
-    private ArrayList<CoachModel> coachList = new ArrayList<CoachModel>();
+    private List<CoachModel> coachList = new ArrayList<CoachModel>();
     private Handler mHandler;
-    private int mIndex = 0;
     private int mRefreshIndex = 0;
+    private String linkSelf;
+    private String linkNext;
+    private String linkPrevious;
+    private String page;
+    private String per_page;
+    private String golden_coach_only;
+    private String license_type;
+    private String price;
+    private String city_id;
+    private String training_field_ids;
+    private String distance;
+    private String user_location;
+    private String sort_by;
+
+    private String TAG = "FindCoachActivity";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_coach);
-        geneItems();
         initView();
         initEvent();
     }
@@ -63,8 +82,13 @@ public class FindCoachActivity extends Activity implements XListView.IXListViewL
                 new FcFilterDialog.OnBtnClickListener() {
 
                     @Override
-                    public void onFliterCoach(String cityName, String cityId) {
-
+                    public void onFliterCoach(String goldenCoachOnly, String licenseType, String _price, String _distance) {
+                        golden_coach_only = goldenCoachOnly;
+                        license_type = licenseType;
+                        price = _price;
+                        distance = _distance;
+                        Log.v(TAG, "filter -> golden_coach_only=" + golden_coach_only + " license_type=" + license_type
+                                + " price=" + price + " distance=" + distance);
                     }
                 });
         fcSortDialog = new FcSortDialog(this,
@@ -163,42 +187,95 @@ public class FindCoachActivity extends Activity implements XListView.IXListViewL
 
     @Override
     public void onRefresh() {
-        mHandler.postDelayed(new Runnable() {
+        Log.v("gibxin", "onRefresh");
+        if (!TextUtils.isEmpty(linkPrevious)) {
+            getCoachList(linkPrevious);
+        } else {
+            getCoachList();
+        }
+        mAdapter = new CoachItemAdapter(FindCoachActivity.this, coachList, R.layout.view_coach_list_item);
+        xlvCoachList.setAdapter(mAdapter);
+        /*mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mIndex = ++mRefreshIndex;
-                coachList.clear();
-                geneItems();
+                if (!TextUtils.isEmpty(linkPrevious)) {
+                    getCoachList(linkPrevious);
+                } else {
+                    getCoachList();
+                }
                 mAdapter = new CoachItemAdapter(FindCoachActivity.this, coachList, R.layout.view_coach_list_item);
                 xlvCoachList.setAdapter(mAdapter);
                 onLoad();
             }
-        }, 1500);
+        }, 1500);*/
     }
 
     @Override
     public void onLoadMore() {
-        mHandler.postDelayed(new Runnable() {
+        Log.v("gibxin", "onLoadMore");
+        if (!TextUtils.isEmpty(linkNext)) {
+            getCoachList(linkNext);
+        } else {
+            getCoachList();
+        }
+        //mAdapter.notifyDataSetChanged();
+        /*mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                geneItems();
+                if(!TextUtils.isEmpty(linkNext)){
+                    getCoachList(linkNext);
+                }else {
+                    getCoachList();
+                }
                 mAdapter.notifyDataSetChanged();
                 onLoad();
             }
-        }, 1500);
+        }, 1500);*/
     }
 
-    private void geneItems() {
-        for (int i = 0; i < 10; i++) {
-            CoachModel c = new CoachModel();
-            c.setCoachName("张三");
-            c.setCoachTeachTime("9年教龄");
-            c.setCoachPoints("4.8分");
-            c.setCoachActualPrice("￥2850");
-            c.setCoachOldPrice("￥3200");
-            coachList.add(c);
-            mIndex++;
-        }
+    private void getCoachList() {
+        coachList.clear();
+        this.fcPresenter.getCoachList(page, per_page, golden_coach_only, license_type, price, city_id, training_field_ids, distance,
+                user_location, sort_by, new FCCallbackListener<CoachListResponse>() {
+                    @Override
+                    public void onSuccess(CoachListResponse data) {
+                        Log.v("gibxin", "success");
+                        coachList = data.getData();
+                        linkSelf = data.getLinks().getSelf();
+                        linkNext = data.getLinks().getNext();
+                        linkPrevious = data.getLinks().getPrevious();
+                        mAdapter = new CoachItemAdapter(FindCoachActivity.this, coachList, R.layout.view_coach_list_item);
+                        xlvCoachList.setAdapter(mAdapter);
+                        onLoad();
+                    }
+
+                    @Override
+                    public void onFailure(String errorEvent, String message) {
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void getCoachList(String url) {
+        coachList.clear();
+        this.fcPresenter.getCoachList(url, new FCCallbackListener<CoachListResponse>() {
+            @Override
+            public void onSuccess(CoachListResponse data) {
+                coachList = data.getData();
+                linkSelf = data.getLinks().getSelf();
+                linkNext = data.getLinks().getNext();
+                linkPrevious = data.getLinks().getPrevious();
+                mAdapter = new CoachItemAdapter(FindCoachActivity.this, coachList, R.layout.view_coach_list_item);
+                xlvCoachList.setAdapter(mAdapter);
+                onLoad();
+                onLoad();
+            }
+
+            @Override
+            public void onFailure(String errorEvent, String message) {
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void onLoad() {

@@ -65,12 +65,12 @@ public class CoachItemAdapter extends BaseAdapter {
             civCoachAvatar = (CircleImageView) convertView.findViewById(R.id.cir_coach_avatar);
         }
         CoachModel coach = coachList.get(position);
-        tvCoachName.setText(coach.getCoachName());
-        tvCoachTeachTime.setText(coach.getCoachTeachTime());
-        tvCoachPoints.setText(coach.getCoachPoints());
-        tvCoachActualPrice.setText(coach.getCoachActualPrice());
-        tvCoachOldPrice.setText(coach.getCoachOldPrice());
-        getCoachAvatar("http://haha-staging.oss-cn-shanghai.aliyuncs.com/uploads/student/avatar/06812c2b-9dea-4bdc-bbde-b9516627b206/20160213_111453.jpg",civCoachAvatar);
+        tvCoachName.setText(coach.getName());
+        tvCoachTeachTime.setText(coach.getExperiences());
+        tvCoachPoints.setText(coach.getAverage_rating());
+        tvCoachActualPrice.setText(coach.getCoach_group().getTraing_cost());
+        tvCoachOldPrice.setText(coach.getCoach_group().getMarket_price());
+        getCoachAvatar(coach.getAvatar_url(),civCoachAvatar);
         return convertView;
     }
 
