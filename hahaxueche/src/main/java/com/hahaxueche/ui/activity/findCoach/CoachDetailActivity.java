@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
+import com.hahaxueche.ui.dialog.ShareAppDialog;
 import com.hahaxueche.ui.dialog.ZoomImgDialog;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
@@ -31,6 +33,8 @@ public class CoachDetailActivity extends Activity implements ImageSwitcher.OnSwi
     private ImageSwitcher isCdCoachDetail;//教练照片
     private ZoomImgDialog zoomImgDialog = null;
     private ImageButton  ibtnCoachDetialBack;//回退按钮
+    private ImageView ivShare;//分享
+    private ShareAppDialog shareAppDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +75,9 @@ public class CoachDetailActivity extends Activity implements ImageSwitcher.OnSwi
         s.add("http://img2.3lian.com/2014/f5/158/d/90.jpg");
         isCdCoachDetail.updateImages(s);
 
+        ivShare = Util.instence(this).$(this, R.id.iv_share);
+        shareAppDialog = new ShareAppDialog(this);
+
     }
 
     private void initEvent() {
@@ -78,6 +85,7 @@ public class CoachDetailActivity extends Activity implements ImageSwitcher.OnSwi
         isCdCoachDetail.setIndicatorDivide(Util.instence(this).dip2px(15));
         isCdCoachDetail.setOnSwitchItemClickListener(this);
         ibtnCoachDetialBack.setOnClickListener(mClickListener);
+        ivShare.setOnClickListener(mClickListener);
     }
 
     private void getCoachAvatar(String url, CircleImageView civCoachAvatar) {
@@ -101,6 +109,9 @@ public class CoachDetailActivity extends Activity implements ImageSwitcher.OnSwi
             switch (v.getId()) {
                 case R.id.ibtn_coach_detail_back:
                     CoachDetailActivity.this.finish();
+                    break;
+                case R.id.iv_share:
+                    shareAppDialog.show();
                     break;
             }
         }

@@ -13,6 +13,8 @@ import com.hahaxueche.presenter.findCoach.FCPresenterImpl;
 import com.hahaxueche.presenter.signupLogin.SLPresenter;
 import com.hahaxueche.presenter.signupLogin.SLPresenterImpl;
 import com.hahaxueche.utils.JsonUtils;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -57,4 +59,6 @@ public class MyApplication extends Application {
     public FCPresenter getFCPresenter() {
         return fcPresenter;
     }
+
+
 }
