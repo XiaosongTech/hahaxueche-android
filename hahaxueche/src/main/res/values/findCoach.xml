@@ -31,6 +31,7 @@
     <string name="fCShare">分享</string>
     <string name="fCFreeLearn">免费试学</string>
     <string name="fCSurePay">确认并付款</string>
+    <string name="fCShareToFriend">分享给朋友</string>
     <!--color-->
     <color name="fCSearchBackOrangeHeavy">#f68a00</color>
     <color name="fcSearchTextHintWhiteLight">#fbd099</color>

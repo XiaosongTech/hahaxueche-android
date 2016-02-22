@@ -18,7 +18,11 @@
     <string name="header_hint_refresh_time">时间：</string>
     <string name="footer_hint_load_normal">加载更多</string>
     <string name="footer_hint_load_ready">松开加载更多</string>
-    <!-- 微信分享 -->
+    <!-- 分享 -->
+    <string name="qq">QQ</string>
+    <string name="qzone">空间</string>
+    <string name="weixin">微信</string>
+    <string name="friend_circle">朋友圈</string>
     <string name="weixin_errcode_success">发送成功</string>
     <string name="weixin_errcode_cancel">发送取消</string>
     <string name="weixin_errcode_deny">发送被拒绝</string>

@@ -221,6 +221,7 @@
                     android:layout_height="0.5dp"
                     android:background="@color/mSViewBlackFade"/>
                 <RelativeLayout
+                    android:id="@+id/rll_customer_service_qq"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center_vertical">

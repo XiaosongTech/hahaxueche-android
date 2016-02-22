@@ -216,7 +216,8 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         if (!TextUtils.isEmpty(linkNext)) {
             getCoachList(linkNext);
         } else {
-            getCoachList();
+            onLoad();
+            //getCoachList();
         }
         //mAdapter.notifyDataSetChanged();
         /*mHandler.postDelayed(new Runnable() {
@@ -234,11 +235,11 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
     }
 
     private void getCoachList() {
-        coachList.clear();
         this.fcPresenter.getCoachList(page, per_page, golden_coach_only, license_type, price, city_id, training_field_ids, distance,
                 user_location, sort_by, new FCCallbackListener<CoachListResponse>() {
                     @Override
                     public void onSuccess(CoachListResponse data) {
+                        coachList.clear();
                         Log.v("gibxin", "success");
                         coachList = data.getData();
                         linkSelf = data.getLinks().getSelf();
@@ -257,17 +258,16 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
     }
 
     private void getCoachList(String url) {
-        coachList.clear();
         this.fcPresenter.getCoachList(url, new FCCallbackListener<CoachListResponse>() {
             @Override
             public void onSuccess(CoachListResponse data) {
+                coachList.clear();
                 coachList = data.getData();
                 linkSelf = data.getLinks().getSelf();
                 linkNext = data.getLinks().getNext();
                 linkPrevious = data.getLinks().getPrevious();
                 mAdapter = new CoachItemAdapter(FindCoachActivity.this, coachList, R.layout.view_coach_list_item);
                 xlvCoachList.setAdapter(mAdapter);
-                onLoad();
                 onLoad();
             }
 
