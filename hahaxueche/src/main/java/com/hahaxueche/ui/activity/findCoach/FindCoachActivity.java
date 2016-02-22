@@ -94,8 +94,8 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         fcSortDialog = new FcSortDialog(this,
                 new FcSortDialog.OnBtnClickListener() {
                     @Override
-                    public void onFindCoachCort(String cityName, String cityId) {
-
+                    public void onFindCoachCort(String sortby) {
+                        sort_by = sortby;
                     }
                 });
         mHandler = new Handler();
@@ -155,13 +155,6 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                     fcFilterDialog.show();
                     break;
                 case R.id.lly_fc_sort:
-                    fcSortDialog = new FcSortDialog(FindCoachActivity.this,
-                            new FcSortDialog.OnBtnClickListener() {
-                                @Override
-                                public void onFindCoachCort(String cityName, String cityId) {
-
-                                }
-                            });
                     fcSortDialog.show();
             }
         }

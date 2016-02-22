@@ -121,7 +121,12 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
                         distanceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.filter_txt_white_heavy));
                     }
                 }
-                distance = distanceList.get(position);
+                if(position==distanceTvList.size()-1){
+                    distance = "";
+                }else{
+                    distance = distanceList.get(position);
+                }
+
             }
         });
         cbsPriceFilter = (ComboSeekBar) view.findViewById(R.id.cbs_price_filter);
@@ -154,7 +159,11 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
                         priceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.filter_txt_white_heavy));
                     }
                 }
-                price = priceList.get(position);
+                if(position==priceTvList.size()-1){
+                    price = "";
+                }else{
+                    price = priceList.get(position);
+                }
             }
         });
         btnFcFilterSure = (Button) view.findViewById(R.id.btn_fc_filter_sure);
@@ -210,8 +219,6 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
                 priceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.filter_txt_white_heavy));
             }
         }
-        goldenCoachOnly = "0";
-        licenseType = "1";
     }
 
     /**
@@ -240,7 +247,7 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
                     }
                     //license_type 1 = C1, 2 = C2, 3 = c1+c2
                     if (cbLicenseTypeC1.isChecked() && cbLicenseTypeC2.isChecked()) {
-                        licenseType = "3";
+                        licenseType = "";
                     } else if (cbLicenseTypeC1.isChecked()) {
                         licenseType = "1";
                     } else if (cbLicenseTypeC2.isChecked()) {

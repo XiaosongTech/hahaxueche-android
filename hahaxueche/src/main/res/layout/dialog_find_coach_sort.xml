@@ -4,89 +4,124 @@
     android:layout_height="wrap_content"
     android:background="@android:color/white"
     android:orientation="vertical">
+
     <LinearLayout
+        android:id="@+id/lly_smart_sort"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp">
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp">
+
         <ImageView
+            android:id="@+id/iv_smart_sort"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:src="@drawable/ic_sort_auto_normal_btn"/>
+            android:src="@drawable/ic_sort_auto_normal_btn" />
+
         <TextView
+            android:id="@+id/tv_smart_sort"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="22dp"
             android:layout_marginRight="24dp"
-            android:text="@string/fCAutoSort"/>
+            android:text="@string/fCAutoSort"
+            android:textColor="@color/fCTxtGray" />
     </LinearLayout>
+
     <LinearLayout
+        android:id="@+id/lly_distance_close"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp">
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp">
+
         <ImageView
+            android:id="@+id/iv_distance_close"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:src="@drawable/ic_sort_local_normal_btn"/>
+            android:src="@drawable/ic_sort_local_normal_btn" />
+
         <TextView
+            android:id="@+id/tv_distance_close"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="22dp"
             android:layout_marginRight="24dp"
-            android:text="@string/fCDistanceClose"/>
+            android:text="@string/fCDistanceClose"
+            android:textColor="@color/fCTxtGray" />
     </LinearLayout>
+
     <LinearLayout
+        android:id="@+id/lly_comment_nice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp">
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp">
+
         <ImageView
+            android:id="@+id/iv_comment_nice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:src="@drawable/ic_sort_nice_normal_btn"/>
+            android:src="@drawable/ic_sort_nice_normal_btn" />
+
         <TextView
+            android:id="@+id/tv_comment_nice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="22dp"
             android:layout_marginRight="24dp"
-            android:text="@string/fCCommentNice"/>
+            android:text="@string/fCCommentNice"
+            android:textColor="@color/fCTxtGray" />
     </LinearLayout>
+
     <LinearLayout
+        android:id="@+id/lly_price_low"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp">
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp">
+
         <ImageView
+            android:id="@+id/iv_price_low"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:src="@drawable/ic_sort_price_normal_btn"/>
+            android:src="@drawable/ic_sort_price_normal_btn" />
+
         <TextView
+            android:id="@+id/tv_price_low"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="22dp"
             android:layout_marginRight="24dp"
-            android:text="@string/fCPriceLow"/>
+            android:text="@string/fCPriceLow"
+            android:textColor="@color/fCTxtGray" />
     </LinearLayout>
+
     <LinearLayout
+        android:id="@+id/lly_popular_hot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp">
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp">
+
         <ImageView
+            android:id="@+id/iv_popular_hot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:src="@drawable/ic_sort_hot_normal_btn"/>
+            android:src="@drawable/ic_sort_hot_normal_btn" />
+
         <TextView
+            android:id="@+id/tv_popular_hot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="22dp"
             android:layout_marginRight="24dp"
-            android:text="@string/fCPopularHot"/>
+            android:text="@string/fCPopularHot"
+            android:textColor="@color/fCTxtGray" />
     </LinearLayout>
 </LinearLayout>
