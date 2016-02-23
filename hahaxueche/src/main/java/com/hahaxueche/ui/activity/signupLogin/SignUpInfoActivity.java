@@ -25,7 +25,7 @@ import com.hahaxueche.model.signupLogin.CompStuResponse;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
 import com.hahaxueche.ui.dialog.CityChoseDialog;
 import com.hahaxueche.ui.dialog.RegisterInfoPhotoDialog;
-import com.hahaxueche.ui.fragment.index.IndexActivity;
+import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.util.PhotoUtil;
 import com.hahaxueche.ui.util.PictrueGet;
 import com.hahaxueche.utils.Util;

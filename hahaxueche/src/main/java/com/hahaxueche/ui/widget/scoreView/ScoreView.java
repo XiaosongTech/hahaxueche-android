@@ -47,7 +47,6 @@ public class ScoreView extends LinearLayout{
 
     public void setScore(float score,boolean showText){
         float tempScore = score;
-        Log.i("score","set score is " + score);
         this.score = score;
         short temp = (short)(TOTAL - score);
         int i = 0;

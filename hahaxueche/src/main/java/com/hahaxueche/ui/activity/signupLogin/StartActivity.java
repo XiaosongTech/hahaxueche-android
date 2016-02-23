@@ -3,9 +3,12 @@ package com.hahaxueche.ui.activity.signupLogin;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ToxicBakery.viewpager.transforms.ABaseTransformer;
@@ -13,7 +16,7 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.hahaxueche.R;
-import com.hahaxueche.ui.fragment.index.IndexActivity;
+import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
 
 import java.util.ArrayList;
@@ -34,6 +37,7 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
     private ArrayAdapter transformerArrayAdapter;
     private ArrayList<String> transformerList = new ArrayList<String>();
     private TextView tvIsTour;
+    private ImageView ivBack;
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -62,7 +66,22 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
                 StartActivity.this.finish();
             }
         });
-
+        ivBack = (ImageView) findViewById(R.id.iv_back);
+        //是否显示回退按钮
+        String canBack = getIntent().getStringExtra("isBack");
+        if(!TextUtils.isEmpty(canBack)){
+            ivBack.setVisibility(View.VISIBLE);
+            ivBack.setClickable(true);
+            ivBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    StartActivity.this.finish();
+                }
+            });
+        }else{
+            ivBack.setVisibility(View.GONE);
+            ivBack.setClickable(false);
+        }
     }
 
     /**

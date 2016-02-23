@@ -21,7 +21,7 @@ import com.hahaxueche.model.signupLogin.SessionModel;
 import com.hahaxueche.model.signupLogin.StudentModel;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
-import com.hahaxueche.ui.fragment.index.IndexActivity;
+import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.utils.Util;
 
 import java.lang.ref.WeakReference;

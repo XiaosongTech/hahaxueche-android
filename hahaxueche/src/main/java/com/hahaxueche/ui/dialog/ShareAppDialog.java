@@ -19,6 +19,7 @@ import com.hahaxueche.R;
 import com.hahaxueche.share.ShareConstants;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.utils.Util;
+import com.tencent.connect.common.Constants;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzoneShare;
 import com.tencent.mm.sdk.constants.ConstantsAPI;
@@ -118,9 +119,8 @@ public class ShareAppDialog extends Dialog implements IWXAPIEventHandler {
             @Override
             public void onClick(View v) {
                 ShareListener myListener = new ShareListener();
-
                 final Bundle params = new Bundle();
-                params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_APP);
+                params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
                 params.putString(QQShare.SHARE_TO_QQ_TITLE, "哈哈学车");
                 params.putString(QQShare.SHARE_TO_QQ_APP_NAME, "哈哈学车");
                 params.putString(QQShare.SHARE_TO_QQ_SUMMARY, "开启快乐学车之旅吧～");

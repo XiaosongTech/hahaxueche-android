@@ -287,7 +287,6 @@ public class CircleImageView extends ImageView{
     {
         super.setImageDrawable(drawable);
         mBitmap = getBitmapFromDrawable(drawable);
-        System.out.println("setImageDrawable -- setup");
         setup();
     }
 

@@ -2,6 +2,7 @@ package com.hahaxueche.ui.activity.findCoach;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -15,12 +16,13 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
+import com.hahaxueche.ui.activity.signupLogin.StartActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachItemAdapter;
 import com.hahaxueche.ui.dialog.FcFilterDialog;
 import com.hahaxueche.ui.dialog.FcSortDialog;
-import com.hahaxueche.ui.fragment.appointment.AppointmentActivity;
-import com.hahaxueche.ui.fragment.index.IndexActivity;
-import com.hahaxueche.ui.fragment.mySetting.MySettingActivity;
+import com.hahaxueche.ui.activity.appointment.AppointmentActivity;
+import com.hahaxueche.ui.activity.index.IndexActivity;
+import com.hahaxueche.ui.activity.mySetting.MySettingActivity;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
 import com.hahaxueche.utils.Util;
 
@@ -60,6 +62,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
     private String distance;
     private String user_location;
     private String sort_by;
+    private boolean isLogin = false;
 
     private String TAG = "FindCoachActivity";
 
@@ -69,6 +72,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         setContentView(R.layout.activity_find_coach);
         initView();
         initEvent();
+        loadDatas();
     }
 
     private void initView() {
@@ -122,6 +126,14 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         xlvCoachList.setOnItemClickListener(mItemClickListener);
     }
 
+    private void loadDatas() {
+        SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
+        String accessToken = sharedPreferences.getString("access_token", "");
+        if (!TextUtils.isEmpty(accessToken)) {
+            isLogin = true;
+        }
+    }
+
     View.OnClickListener mClickListener = new View.OnClickListener() {
 
         @Override
@@ -137,11 +149,19 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                     startActivity(intent);
                     finish();
                     break;
+                //我的页面
                 case R.id.lly_tab_my_setting:
-                    intent = new Intent(getApplication(), MySettingActivity.class);
-                    startActivity(intent);
-                    finish();
+                    if (isLogin) {
+                        intent = new Intent(getApplication(), MySettingActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        intent = new Intent(getApplication(), StartActivity.class);
+                        intent.putExtra("isBack", "1");
+                        startActivity(intent);
+                    }
                     break;
+                //筛选
                 case R.id.lly_fc_filter:
                     /*fcFilterDialog = new FcFilterDialog(FindCoachActivity.this,
                             new FcFilterDialog.OnBtnClickListener() {
@@ -154,6 +174,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                     fcFilterDialog.initFilter();
                     fcFilterDialog.show();
                     break;
+                //排序
                 case R.id.lly_fc_sort:
                     fcSortDialog.show();
             }
