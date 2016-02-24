@@ -29,7 +29,6 @@
                 android:id="@+id/tv_coach_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="邓亮"
                 android:textColor="@color/fCTxtBlack"
                 android:textSize="18sp" />
 
@@ -52,7 +51,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
-                android:text="11年教龄"
                 android:textColor="@color/fCTxtGray"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -75,7 +73,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
-                android:text="4.8分"
                 android:textColor="@color/app_theme_color"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -96,7 +93,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"
-                android:text="武汉市江夏区"
                 android:textColor="@color/fCTxtGrayFade"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -117,7 +113,6 @@
             android:id="@+id/tv_coach_actual_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="￥2850"
             android:textColor="@color/app_theme_color"
             android:textSize="18sp" />
 
@@ -126,7 +121,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="￥2850"
             android:textColor="@color/fCTxtGrayFade"
             android:textSize="14sp" />
     </LinearLayout>

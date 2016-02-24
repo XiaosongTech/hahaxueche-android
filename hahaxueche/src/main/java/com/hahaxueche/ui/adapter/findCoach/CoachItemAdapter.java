@@ -1,6 +1,8 @@
 package com.hahaxueche.ui.adapter.findCoach;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -10,13 +12,20 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.R;
 import com.hahaxueche.model.findCoach.CoachModel;
+import com.hahaxueche.model.findCoach.FieldModel;
+import com.hahaxueche.model.findCoach.FieldsModel;
+import com.hahaxueche.model.signupLogin.CityModel;
+import com.hahaxueche.model.util.ConstantsModel;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
 import com.hahaxueche.utils.Util;
 import com.squareup.picasso.Picasso;
 
+import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -38,11 +47,22 @@ public class CoachItemAdapter extends BaseAdapter {
     private ImageView ivIsGoldenCoach;//是否金牌教练
     private ScoreView svCoachScore;//得分星
     private TextView tvCoachLocation;//地点
+    private ConstantsModel constantsModel;
+    private List<FieldModel> fieldsList;
+    private List<CityModel> cityList;
 
     public CoachItemAdapter(Context context, List<CoachModel> coachList, int resource) {
         this.context = context;
         this.coachList = coachList;
         this.resource = resource;
+        SharedPreferences sharedPreferences = context.getSharedPreferences("constants", Activity.MODE_PRIVATE);
+        String constants = sharedPreferences.getString("constants", "");
+        Gson gson = new Gson();
+        Type type = new TypeToken<ConstantsModel>() {
+        }.getType();
+        constantsModel = gson.fromJson(constants, type);
+        fieldsList = constantsModel.getFields();
+        cityList = constantsModel.getCities();
     }
 
     @Override
@@ -86,12 +106,12 @@ public class CoachItemAdapter extends BaseAdapter {
         tvCoachPoints.setText(coach.getAverage_rating());
         double traingCost = 0d;
         if (!TextUtils.isEmpty(coach.getCoach_group().getTraing_cost())) {
-            traingCost = Double.parseDouble(coach.getCoach_group().getTraing_cost());
+            traingCost = Double.parseDouble(coach.getCoach_group().getTraing_cost()) / 100;
         }
         tvCoachActualPrice.setText("￥" + dfInt.format(traingCost) + "");
         double marketPrice = 0d;
         if (!TextUtils.isEmpty(coach.getCoach_group().getMarket_price())) {
-            marketPrice = Double.parseDouble(coach.getCoach_group().getMarket_price());
+            marketPrice = Double.parseDouble(coach.getCoach_group().getMarket_price()) / 100;
         }
         tvCoachOldPrice.setText("￥" + dfInt.format(marketPrice));
         tvCoachOldPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
@@ -102,6 +122,18 @@ public class CoachItemAdapter extends BaseAdapter {
             ivIsGoldenCoach.setVisibility(View.GONE);
         }
         svCoachScore.setScore(Float.parseFloat(coach.getAverage_rating()), false);
+        if (fieldsList != null) {
+            for (FieldModel fieldsModel : fieldsList) {
+                if(fieldsModel.getId().equals(coach.getCoach_group().getField_id())){
+                    for (CityModel city :cityList){
+                        if(city.getId().equals(fieldsModel.getCity_id())){
+                            tvCoachLocation.setText(city.getName()+fieldsModel.getSection());
+                            break;
+                        }
+                    }
+                }
+            }
+        }
         return convertView;
     }
 

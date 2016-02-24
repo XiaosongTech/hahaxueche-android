@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.hahaxueche.model.signupLogin.CityModel;
 import com.hahaxueche.ui.widget.comboSeekBar.ComboSeekBar;
 
 import java.lang.reflect.Type;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -81,6 +83,32 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
         dialogWindow.setAttributes(lp);
     }
 
+    public FcFilterDialog(Context context, String _goldenCoachOnly, String _licenseType, String _price, String _distance,
+                          OnBtnClickListener listener) {
+        super(context);
+        mContext = context;
+        mListener = listener;
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_find_coach_filter, null);
+        setContentView(view);
+        initFilterArray();
+        initView(view);
+        goldenCoachOnly = _goldenCoachOnly;
+        licenseType = _licenseType;
+        price = _price;
+        distance = _distance;
+        initFilter();
+        Window dialogWindow = this.getWindow();
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        dialogWindow.setGravity(Gravity.LEFT | Gravity.TOP);
+        lp.x = 100; // 新位置X坐标
+        lp.y = 100; // 新位置Y坐标
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        dialogWindow.setAttributes(lp);
+    }
+
 
     /**
      * 控件初始化
@@ -121,9 +149,9 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
                         distanceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.filter_txt_white_heavy));
                     }
                 }
-                if(position==distanceTvList.size()-1){
+                if (position == distanceTvList.size() - 1) {
                     distance = "";
-                }else{
+                } else {
                     distance = distanceList.get(position);
                 }
 
@@ -159,9 +187,9 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
                         priceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.filter_txt_white_heavy));
                     }
                 }
-                if(position==priceTvList.size()-1){
+                if (position == priceTvList.size() - 1) {
                     price = "";
-                }else{
+                } else {
                     price = priceList.get(position);
                 }
             }
@@ -183,6 +211,7 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
             distanceTvList.add(tvDistance);
         }
         llyFcPriceTvs = (LinearLayout) view.findViewById(R.id.lly_fc_price_tvs);
+        DecimalFormat dfInt = new DecimalFormat("#####");
         for (String priceStr : priceList) {
             TextView tvDistance = new TextView(mContext);
             LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
@@ -190,7 +219,11 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
             tvDistance.setGravity(Gravity.CENTER);
             tvDistance.setTextColor(mContext.getResources().getColor(R.color.filter_txt_white_heavy));
             tvDistance.setTextSize(12);
-            tvDistance.setText("￥" + priceStr);
+            double price = 0d;
+            if (!TextUtils.isEmpty(priceStr)) {
+                price = Double.parseDouble(priceStr) / 100;
+            }
+            tvDistance.setText("￥" + dfInt.format(price));
             llyFcPriceTvs.addView(tvDistance);
             priceTvList.add(tvDistance);
         }
@@ -202,9 +235,27 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
     public void initFilter() {
         //价格、距离默认最大
         int initDistancePosition = distanceList.size() - 1;
-        int initPricePosition = priceList.size() - 1;
+        if (!TextUtils.isEmpty(distance)) {
+            for (int i = 0; i < distanceList.size(); i++) {
+                if (distanceList.get(i).equals(distance)) {
+                    initDistancePosition = i;
+                    break;
+                }
+            }
+        }
         cbsDistanceFilter.setSelection(initDistancePosition);
+
+        int initPricePosition = priceList.size() - 1;
+        if (!TextUtils.isEmpty(price)) {
+            for (int i = 0; i < priceList.size(); i++) {
+                if (priceList.get(i).equals(price)) {
+                    initPricePosition = i;
+                    break;
+                }
+            }
+        }
         cbsPriceFilter.setSelection(initPricePosition);
+
         for (int i = 0; i < distanceTvList.size(); i++) {
             if (i <= initDistancePosition) {
                 distanceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.tab_bottom_gray));
@@ -217,6 +268,18 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
                 priceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.tab_bottom_gray));
             } else {
                 priceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.filter_txt_white_heavy));
+            }
+        }
+
+        if (!TextUtils.isEmpty(goldenCoachOnly)) {
+            swGoldenCoachOly.setChecked(true);
+        }
+        System.out.println("debug licenseType= " + licenseType);
+        if (!TextUtils.isEmpty(licenseType)) {
+            if (licenseType.equals("1")) {
+                cbLicenseTypeC1.setChecked(true);
+            } else if (licenseType.equals("2")) {
+                cbLicenseTypeC2.setChecked(true);
             }
         }
     }
@@ -232,7 +295,17 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
         }.getType();
         CitiesModel cities = gson.fromJson(constants, type);
         List<CityModel> cityList = cities.getCities();
-        CityModel city = cityList.get(0);
+        int myCityCount = 0;
+        //根据城市id加载价格、距离筛选列表
+        SharedPreferences spSession = mContext.getSharedPreferences("session", Activity.MODE_PRIVATE);
+        String city_id = spSession.getString("city_id", "");
+        for (int i = 0; i < cityList.size(); i++) {
+            if (cityList.get(i).getId().equals(city_id)) {
+                myCityCount = i;
+                break;
+            }
+        }
+        CityModel city = cityList.get(myCityCount);
         distanceList = city.getFilters().getRadius();
         priceList = city.getFilters().getPrices();
     }

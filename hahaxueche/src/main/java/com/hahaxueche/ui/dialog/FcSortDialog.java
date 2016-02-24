@@ -3,6 +3,7 @@ package com.hahaxueche.ui.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +47,43 @@ public class FcSortDialog extends Dialog implements View.OnClickListener {
         View view = inflater.inflate(R.layout.dialog_find_coach_sort, null);
         setContentView(view);
         initView(view);
+        Window dialogWindow = this.getWindow();
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        dialogWindow.setGravity(Gravity.RIGHT | Gravity.TOP);
+        lp.x = 20; // 新位置X坐标
+        lp.y = 180; // 新位置Y坐标
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialogWindow.setAttributes(lp);
+    }
+    public FcSortDialog(Context context,String sort_by, OnBtnClickListener listener) {
+        super(context);
+        mContext = context;
+        mListener = listener;
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_find_coach_sort, null);
+        setContentView(view);
+        initView(view);
+        if(!TextUtils.isEmpty(sort_by)) {
+            resetViews();
+            if (sort_by.equals("0")) {
+                ivSmartSort.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_sort_auto_hold_btn));
+                tvSmartSort.setTextColor(mContext.getResources().getColor(R.color.app_theme_color));
+            } else if (sort_by.equals("1")) {
+                ivDistanceClose.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_sort_local_hold_btn));
+                tvDistanceClose.setTextColor(mContext.getResources().getColor(R.color.app_theme_color));
+            } else if (sort_by.equals("2")) {
+                ivCommentNice.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_sort_nice_hold_btn));
+                tvCommentNice.setTextColor(mContext.getResources().getColor(R.color.app_theme_color));
+            } else if (sort_by.equals("3")) {
+                ivPriceLow.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_sort_price_hold_btn));
+                tvPriceLow.setTextColor(mContext.getResources().getColor(R.color.app_theme_color));
+            } else if (sort_by.equals("4")) {
+                ivPopularHot.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_sort_hot_hold_btn));
+                tvPopularHot.setTextColor(mContext.getResources().getColor(R.color.app_theme_color));
+            }
+        }
         Window dialogWindow = this.getWindow();
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         dialogWindow.setGravity(Gravity.RIGHT | Gravity.TOP);

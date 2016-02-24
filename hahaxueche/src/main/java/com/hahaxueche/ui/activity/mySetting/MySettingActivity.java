@@ -2,18 +2,23 @@ package com.hahaxueche.ui.activity.mySetting;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.hahaxueche.R;
 import com.hahaxueche.share.ShareConstants;
 import com.hahaxueche.ui.activity.appointment.AppointmentActivity;
 import com.hahaxueche.ui.activity.findCoach.FindCoachActivity;
 import com.hahaxueche.ui.activity.index.IndexActivity;
+import com.hahaxueche.ui.activity.signupLogin.StartActivity;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
+import com.hahaxueche.ui.widget.monitorScrollView.MonitorScrollView;
 import com.hahaxueche.utils.Util;
 import com.squareup.picasso.Picasso;
 import com.tencent.tauth.Tencent;
@@ -29,6 +34,10 @@ public class MySettingActivity extends Activity {
     private CircleImageView cirMyAvatar;
     private RelativeLayout rllCustomerServiceQQ;
     private Tencent mTencent;//QQ
+    private TextView tvBackLogin;//跳转登录
+    private LinearLayout llyNotLogin;//未登录页面
+    private MonitorScrollView msvMain;
+    private boolean isLogin = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,6 +46,7 @@ public class MySettingActivity extends Activity {
         mTencent = Tencent.createInstance(ShareConstants.APP_ID_QQ, MySettingActivity.this);
         initView();
         initEvent();
+        loadDatas();
     }
 
     private void initView() {
@@ -46,9 +56,14 @@ public class MySettingActivity extends Activity {
         llyTabMySetting = Util.instence(this).$(this, R.id.lly_tab_my_setting);
         cirMyAvatar = Util.instence(this).$(this, R.id.cir_my_avatar);
         rllCustomerServiceQQ = Util.instence(this).$(this, R.id.rll_customer_service_qq);
+        tvBackLogin = Util.instence(this).$(this, R.id.tv_back_login);
+        llyNotLogin = Util.instence(this).$(this, R.id.lly_not_login);
+        msvMain = Util.instence(this).$(this, R.id.msv_main);
         int iconWidth = Util.instence(this).dip2px(90);
         int iconHeight = iconWidth;
         Picasso.with(this).load("http://shanxi.sinaimg.cn/2013/1120/U10195P1196DT20131120151205.png").resize(iconWidth, iconHeight).into(cirMyAvatar);
+
+
     }
 
     private void initEvent() {
@@ -57,6 +72,17 @@ public class MySettingActivity extends Activity {
         llyTabAppointment.setOnClickListener(mClickListener);
         llyTabMySetting.setOnClickListener(mClickListener);
         rllCustomerServiceQQ.setOnClickListener(mClickListener);
+        tvBackLogin.setOnClickListener(mClickListener);
+    }
+
+    private void loadDatas() {
+        SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
+        String accessToken = sharedPreferences.getString("access_token", "");
+        if (!TextUtils.isEmpty(accessToken)) {
+            isLogin = true;
+        }
+        llyNotLogin.setVisibility(isLogin ? View.GONE : View.VISIBLE);
+        msvMain.setVisibility(isLogin ? View.VISIBLE : View.GONE);
     }
 
     View.OnClickListener mClickListener = new View.OnClickListener() {
@@ -80,8 +106,13 @@ public class MySettingActivity extends Activity {
                     finish();
                     break;
                 case R.id.rll_customer_service_qq:
-                    int ret = mTencent.startWPAConversation(MySettingActivity.this,ShareConstants.CUSTOMER_SERVICE_QQ , "");
-                    Log.v("gibxin","打开QQ -> " + ret);
+                    int ret = mTencent.startWPAConversation(MySettingActivity.this, ShareConstants.CUSTOMER_SERVICE_QQ, "");
+                    Log.v("gibxin", "打开QQ -> " + ret);
+                    break;
+                case R.id.tv_back_login:
+                    intent = new Intent(getApplication(), StartActivity.class);
+                    intent.putExtra("isBack", "1");
+                    startActivity(intent);
                     break;
             }
         }

@@ -35,8 +35,8 @@
         android:id="@+id/lly_fc_distance_tvs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
 
     </LinearLayout>
 
@@ -77,8 +77,8 @@
         android:id="@+id/lly_fc_price_tvs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
 
 
     </LinearLayout>
@@ -98,21 +98,24 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/fCOnlyShowGoldenCoach"/>
+            android:text="@string/fCOnlyShowGoldenCoach" />
+
         <Switch
             android:id="@+id/sw_golden_coach_only"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:thumb="@drawable/switch_button"
-            android:track="@drawable/ic_screen_switch_bk"
             android:switchMinWidth="38dp"
+            android:textOff=""
             android:textOn=""
-            android:textOff=""/>
+            android:thumb="@drawable/switch_button"
+            android:track="@drawable/ic_screen_switch_bk" />
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
@@ -120,27 +123,32 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
         android:background="@color/app_back_gray_light" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/fCOnlyShowGroupBuy"/>
+            android:text="@string/fCOnlyShowGroupBuy" />
+
         <Switch
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:thumb="@drawable/switch_button"
             android:switchMinWidth="38dp"
-            android:track="@drawable/ic_screen_switch_bk"
+            android:textOff=""
             android:textOn=""
-            android:textOff=""/>
+            android:thumb="@drawable/switch_button"
+            android:track="@drawable/ic_screen_switch_bk" />
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
@@ -148,75 +156,83 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
         android:background="@color/app_back_gray_light" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
         android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp">
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
         <CheckBox
             android:id="@+id/cb_license_type_c1"
+            style="@style/CustomCheckboxTheme"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/CustomCheckboxTheme"/>
+            android:layout_height="wrap_content" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="40dp"
-            android:textColor="@color/tab_bottom_gray"
-            android:textSize="12sp"
             android:text="@string/fCManualGear"
-            />
+            android:textColor="@color/tab_bottom_gray"
+            android:textSize="12sp" />
+
         <CheckBox
             android:id="@+id/cb_license_type_c2"
+            style="@style/CustomCheckboxTheme"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/CustomCheckboxTheme"/>
+            android:layout_height="wrap_content" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:textColor="@color/tab_bottom_gray"
-            android:textSize="12sp"
             android:text="@string/fCAutoGear"
-            />
+            android:textColor="@color/tab_bottom_gray"
+            android:textSize="12sp" />
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_marginTop="20dp"
         android:background="@color/app_back_gray_light" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center"
         android:orientation="horizontal">
+
         <Button
             android:id="@+id/btn_fc_filter_sure"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
             android:background="@null"
-            android:textSize="14sp"
+            android:gravity="center"
+            android:text="@string/fCSure"
             android:textColor="@color/fCTxtGreen"
-            android:text="@string/fCSure"/>
+            android:textSize="14sp" />
+
         <View
             android:layout_width="0.5dp"
             android:layout_height="24dp"
-            android:background="@color/app_back_gray_light"/>
+            android:background="@color/app_back_gray_light" />
+
         <Button
             android:id="@+id/btn_fc_filter_cancel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
             android:background="@null"
-            android:textSize="14sp"
+            android:gravity="center"
+            android:text="@string/fCCancel"
             android:textColor="@color/fCTxtOrange"
-            android:text="@string/fCCancel"/>
+            android:textSize="14sp" />
     </LinearLayout>
 </LinearLayout>

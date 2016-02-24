@@ -62,7 +62,6 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
     private String distance;
     private String user_location;
     private String sort_by;
-    private boolean isLogin = false;
 
     private String TAG = "FindCoachActivity";
 
@@ -72,7 +71,8 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         setContentView(R.layout.activity_find_coach);
         initView();
         initEvent();
-        loadDatas();
+        if(xlvCoachList!=null)
+            xlvCoachList.autoRefresh();
     }
 
     private void initView() {
@@ -126,13 +126,6 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         xlvCoachList.setOnItemClickListener(mItemClickListener);
     }
 
-    private void loadDatas() {
-        SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
-        String accessToken = sharedPreferences.getString("access_token", "");
-        if (!TextUtils.isEmpty(accessToken)) {
-            isLogin = true;
-        }
-    }
 
     View.OnClickListener mClickListener = new View.OnClickListener() {
 
@@ -151,31 +144,36 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                     break;
                 //我的页面
                 case R.id.lly_tab_my_setting:
-                    if (isLogin) {
-                        intent = new Intent(getApplication(), MySettingActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        intent = new Intent(getApplication(), StartActivity.class);
-                        intent.putExtra("isBack", "1");
-                        startActivity(intent);
-                    }
+                    intent = new Intent(getApplication(), MySettingActivity.class);
+                    startActivity(intent);
+                    finish();
                     break;
                 //筛选
                 case R.id.lly_fc_filter:
-                    /*fcFilterDialog = new FcFilterDialog(FindCoachActivity.this,
+                    fcFilterDialog = new FcFilterDialog(FindCoachActivity.this,golden_coach_only, license_type, price, distance,
                             new FcFilterDialog.OnBtnClickListener() {
 
                                 @Override
-                                public void onFliterCoach(String cityName, String cityId) {
-
+                                public void onFliterCoach(String goldenCoachOnly, String licenseType, String _price, String _distance) {
+                                    golden_coach_only = goldenCoachOnly;
+                                    license_type = licenseType;
+                                    price = _price;
+                                    distance = _distance;
+                                    xlvCoachList.autoRefresh();
                                 }
-                            });*/
+                            });
                     fcFilterDialog.initFilter();
                     fcFilterDialog.show();
                     break;
                 //排序
                 case R.id.lly_fc_sort:
+                    fcSortDialog = new FcSortDialog(FindCoachActivity.this,sort_by, new FcSortDialog.OnBtnClickListener() {
+                        @Override
+                        public void onFindCoachCort(String sortby) {
+                            sort_by = sortby;
+                            xlvCoachList.autoRefresh();
+                        }
+                    });
                     fcSortDialog.show();
             }
         }
@@ -190,14 +188,14 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
     };
 
 
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-
-        if (hasFocus) {
-            xlvCoachList.autoRefresh();
-        }
-    }
+//    @Override
+//    public void onWindowFocusChanged(boolean hasFocus) {
+//        super.onWindowFocusChanged(hasFocus);
+//
+//        if (hasFocus) {
+//            xlvCoachList.autoRefresh();
+//        }
+//    }
 
     @Override
     public void onRefresh() {

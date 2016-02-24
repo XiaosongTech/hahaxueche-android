@@ -22,7 +22,40 @@
             android:textSize="16sp" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/lly_not_login"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/mSBackGray"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mSNotLoginTipHead"
+                android:textColor="@color/mSTextGrayFade"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_back_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mSNotLoginTip"
+                android:textColor="@color/app_theme_color"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </LinearLayout>
+
     <com.hahaxueche.ui.widget.monitorScrollView.MonitorScrollView
+        android:id="@+id/msv_main"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -134,133 +167,79 @@
                 </LinearLayout>
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@android:color/white"
                 android:orientation="vertical">
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center_vertical">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
+                        android:text="@string/mSCoachInfo"
                         android:textColor="@color/app_theme_color"
-                        android:textSize="14sp"
-                        android:text="@string/mSCoachInfo"/>
+                        android:textSize="14sp" />
                 </RelativeLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/mSViewBlackFade"/>
+                    android:background="@color/mSViewBlackFade" />
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center_vertical">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
+                        android:text="@string/mSMyCoach"
                         android:textColor="@color/mSTextBlackFade"
-                        android:textSize="14sp"
-                        android:text="@string/mSMyCoach"/>
+                        android:textSize="14sp" />
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
                         android:layout_alignParentRight="true"
-                        android:src="@drawable/ic_coachmsg_more_arrow"/>
+                        android:layout_marginRight="20dp"
+                        android:src="@drawable/ic_coachmsg_more_arrow" />
                 </RelativeLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginLeft="20dp"
-                    android:background="@color/mSViewBlackFade"/>
+                    android:background="@color/mSViewBlackFade" />
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center_vertical">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
+                        android:text="@string/mSFocusCoach"
                         android:textColor="@color/mSTextBlackFade"
-                        android:textSize="14sp"
-                        android:text="@string/mSFocusCoach"/>
+                        android:textSize="14sp" />
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
                         android:layout_alignParentRight="true"
-                        android:src="@drawable/ic_coachmsg_more_arrow"/>
-                </RelativeLayout>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@android:color/white"
-                android:orientation="vertical">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:gravity="center_vertical">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:textColor="@color/app_theme_color"
-                        android:textSize="14sp"
-                        android:text="@string/mSContactCustomerService"/>
-                </RelativeLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/mSViewBlackFade"/>
-                <RelativeLayout
-                    android:id="@+id/rll_customer_service_qq"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:textColor="@color/mSTextBlackFade"
-                        android:textSize="14sp"
-                        android:text="@string/mSCustomerServiceQQ"/>
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:layout_marginRight="20dp"
-                        android:layout_alignParentRight="true"
-                        android:src="@drawable/ic_coachmsg_more_arrow"/>
-                </RelativeLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginLeft="20dp"
-                    android:background="@color/mSViewBlackFade"/>
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:textColor="@color/mSTextBlackFade"
-                        android:textSize="14sp"
-                        android:text="@string/mSCustomerServiceTel"/>
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
-                        android:layout_alignParentRight="true"
-                        android:src="@drawable/ic_coachmsg_more_arrow"/>
+                        android:src="@drawable/ic_coachmsg_more_arrow" />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -270,80 +249,167 @@
                 android:layout_marginTop="16dp"
                 android:background="@android:color/white"
                 android:orientation="vertical">
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center_vertical">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
+                        android:text="@string/mSContactCustomerService"
                         android:textColor="@color/app_theme_color"
-                        android:textSize="14sp"
-                        android:text="@string/mSUseHelp"/>
+                        android:textSize="14sp" />
                 </RelativeLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/mSViewBlackFade"/>
+                    android:background="@color/mSViewBlackFade" />
+
                 <RelativeLayout
+                    android:id="@+id/rll_customer_service_qq"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center_vertical">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
+                        android:text="@string/mSCustomerServiceQQ"
                         android:textColor="@color/mSTextBlackFade"
-                        android:textSize="14sp"
-                        android:text="@string/mSStudentCommonQuestion"/>
+                        android:textSize="14sp" />
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
                         android:layout_alignParentRight="true"
-                        android:src="@drawable/ic_coachmsg_more_arrow"/>
+                        android:layout_marginRight="20dp"
+                        android:src="@drawable/ic_coachmsg_more_arrow" />
                 </RelativeLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginLeft="20dp"
-                    android:background="@color/mSViewBlackFade"/>
+                    android:background="@color/mSViewBlackFade" />
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center_vertical">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
+                        android:text="@string/mSCustomerServiceTel"
                         android:textColor="@color/mSTextBlackFade"
-                        android:textSize="14sp"
-                        android:text="@string/mSAboutHaha"/>
+                        android:textSize="14sp" />
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
                         android:layout_alignParentRight="true"
-                        android:src="@drawable/ic_coachmsg_more_arrow"/>
+                        android:layout_marginRight="20dp"
+                        android:src="@drawable/ic_coachmsg_more_arrow" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:text="@string/mSUseHelp"
+                        android:textColor="@color/app_theme_color"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/mSViewBlackFade" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:text="@string/mSStudentCommonQuestion"
+                        android:textColor="@color/mSTextBlackFade"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="20dp"
+                        android:src="@drawable/ic_coachmsg_more_arrow" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@color/mSViewBlackFade" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:text="@string/mSAboutHaha"
+                        android:textColor="@color/mSTextBlackFade"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="20dp"
+                        android:src="@drawable/ic_coachmsg_more_arrow" />
                 </RelativeLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
                 android:background="@android:color/white"
                 android:gravity="center"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
+                    android:text="@string/mSLogoutAccount"
                     android:textColor="@color/mSTextRedFade"
-                    android:textSize="16sp"
-                    android:text="@string/mSLogoutAccount"/>
+                    android:textSize="16sp" />
             </LinearLayout>
         </LinearLayout>
     </com.hahaxueche.ui.widget.monitorScrollView.MonitorScrollView>

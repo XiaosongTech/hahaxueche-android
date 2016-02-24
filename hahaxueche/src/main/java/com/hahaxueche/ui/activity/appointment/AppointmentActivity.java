@@ -23,7 +23,6 @@ public class AppointmentActivity extends Activity {
     private LinearLayout llyTabFindCoach;
     private LinearLayout llyTabAppointment;
     private LinearLayout llyTabMySetting;
-    private boolean isLogin = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,7 +30,6 @@ public class AppointmentActivity extends Activity {
         setContentView(R.layout.activity_appointment);
         initView();
         initEvent();
-        loadDatas();
     }
 
     private void initView() {
@@ -46,14 +44,6 @@ public class AppointmentActivity extends Activity {
         llyTabFindCoach.setOnClickListener(mClickListener);
         llyTabAppointment.setOnClickListener(mClickListener);
         llyTabMySetting.setOnClickListener(mClickListener);
-    }
-
-    private void loadDatas() {
-        SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
-        String accessToken = sharedPreferences.getString("access_token", "");
-        if (!TextUtils.isEmpty(accessToken)) {
-            isLogin = true;
-        }
     }
 
     View.OnClickListener mClickListener = new View.OnClickListener() {
@@ -72,15 +62,9 @@ public class AppointmentActivity extends Activity {
                     finish();
                     break;
                 case R.id.lly_tab_my_setting:
-                    if (isLogin) {
-                        intent = new Intent(getApplication(), MySettingActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        intent = new Intent(getApplication(), StartActivity.class);
-                        intent.putExtra("isBack", "1");
-                        startActivity(intent);
-                    }
+                    intent = new Intent(getApplication(), MySettingActivity.class);
+                    startActivity(intent);
+                    finish();
                     break;
 
             }

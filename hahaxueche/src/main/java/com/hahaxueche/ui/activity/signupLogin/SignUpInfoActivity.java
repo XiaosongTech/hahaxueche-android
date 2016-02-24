@@ -74,8 +74,8 @@ public class SignUpInfoActivity extends SLBaseActivity {
         initView();
         initEvent();
         SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
-        accessToken = "95e7ccf91e7e266c79acc0494b48e184";//sharedPreferences.getString("access_token", "");//"95e7ccf91e7e266c79acc0494b48e184";
-        studentId = "06812c2b-9dea-4bdc-bbde-b9516627b206";//sharedPreferences.getString("student_id", "");//"06812c2b-9dea-4bdc-bbde-b9516627b206";
+        accessToken = sharedPreferences.getString("access_token", "");//sharedPreferences.getString("access_token", "");//"95e7ccf91e7e266c79acc0494b48e184";
+        studentId = sharedPreferences.getString("student_id", "");//sharedPreferences.getString("student_id", "");//"06812c2b-9dea-4bdc-bbde-b9516627b206";
         mCityChoseDialog = new CityChoseDialog(this,
                 new CityChoseDialog.OnBtnClickListener() {
                     @Override

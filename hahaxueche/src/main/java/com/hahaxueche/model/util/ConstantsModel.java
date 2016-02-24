@@ -1,5 +1,6 @@
 package com.hahaxueche.model.util;
 
+import com.hahaxueche.model.findCoach.FieldModel;
 import com.hahaxueche.model.findCoach.FieldsModel;
 import com.hahaxueche.model.signupLogin.CitiesModel;
 import com.hahaxueche.model.signupLogin.CityModel;
@@ -12,7 +13,7 @@ import java.util.List;
  */
 public class ConstantsModel {
     private List<CityModel> cities;
-    private List<FieldsModel> fields;
+    private List<FieldModel> fields;
 
     public List<CityModel> getCities() {
         return cities;
@@ -22,11 +23,11 @@ public class ConstantsModel {
         this.cities = cities;
     }
 
-    public List<FieldsModel> getFields() {
+    public List<FieldModel> getFields() {
         return fields;
     }
 
-    public void setFields(List<FieldsModel> fields) {
+    public void setFields(List<FieldModel> fields) {
         this.fields = fields;
     }
 }

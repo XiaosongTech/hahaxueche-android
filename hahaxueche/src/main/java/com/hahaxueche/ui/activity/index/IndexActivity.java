@@ -14,6 +14,7 @@ import com.hahaxueche.ui.activity.appointment.AppointmentActivity;
 import com.hahaxueche.ui.activity.findCoach.FindCoachActivity;
 import com.hahaxueche.ui.activity.mySetting.MySettingActivity;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
+import com.hahaxueche.ui.dialog.CityChoseDialog;
 import com.hahaxueche.utils.Util;
 
 /**
@@ -24,7 +25,7 @@ public class IndexActivity extends Activity {
     private LinearLayout llyTabFindCoach;
     private LinearLayout llyTabAppointment;
     private LinearLayout llyTabMySetting;
-    private boolean isLogin = false;
+    private CityChoseDialog mCityChoseDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,25 @@ public class IndexActivity extends Activity {
         setContentView(R.layout.activity_index);
         initView();
         initEvent();
-        loadDatas();
+        SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
+        String city_id = sharedPreferences.getString("city_id", "");
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        //游客没有city_id，需选择
+        if(TextUtils.isEmpty(city_id)){
+            editor.putString("city_id","0");//默认武汉
+            editor.commit();
+            mCityChoseDialog = new CityChoseDialog(this,
+                    new CityChoseDialog.OnBtnClickListener() {
+                        @Override
+                        public void onCitySelected(String cityName, String cityId) {
+                            mCityChoseDialog.dismiss();
+                            SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
+                            SharedPreferences.Editor editor=sharedPreferences.edit();
+                            editor.putString("city_id",cityId);
+                            editor.commit();
+                        }
+                    });
+        }
     }
 
     private void initView() {
@@ -49,13 +68,6 @@ public class IndexActivity extends Activity {
         llyTabMySetting.setOnClickListener(mClickListener);
     }
 
-    private void loadDatas() {
-        SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
-        String accessToken = sharedPreferences.getString("access_token", "");
-        if (!TextUtils.isEmpty(accessToken)) {
-            isLogin = true;
-        }
-    }
 
     View.OnClickListener mClickListener = new View.OnClickListener() {
 
@@ -73,17 +85,10 @@ public class IndexActivity extends Activity {
                     finish();
                     break;
                 case R.id.lly_tab_my_setting:
-                    if (isLogin) {
-                        intent = new Intent(getApplication(), MySettingActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        intent = new Intent(getApplication(), StartActivity.class);
-                        intent.putExtra("isBack", "1");
-                        startActivity(intent);
-                    }
+                    intent = new Intent(getApplication(), MySettingActivity.class);
+                    startActivity(intent);
+                    finish();
                     break;
-
             }
         }
     };
