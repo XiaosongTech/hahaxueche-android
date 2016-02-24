@@ -53,7 +53,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
     private String linkNext;
     private String linkPrevious;
     private String page;
-    private String per_page;
+    private String per_page = "10";
     private String golden_coach_only;
     private String license_type;
     private String price;
@@ -71,7 +71,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         setContentView(R.layout.activity_find_coach);
         initView();
         initEvent();
-        if(xlvCoachList!=null)
+        if (xlvCoachList != null)
             xlvCoachList.autoRefresh();
     }
 
@@ -150,7 +150,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                     break;
                 //筛选
                 case R.id.lly_fc_filter:
-                    fcFilterDialog = new FcFilterDialog(FindCoachActivity.this,golden_coach_only, license_type, price, distance,
+                    fcFilterDialog = new FcFilterDialog(FindCoachActivity.this, golden_coach_only, license_type, price, distance,
                             new FcFilterDialog.OnBtnClickListener() {
 
                                 @Override
@@ -167,7 +167,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                     break;
                 //排序
                 case R.id.lly_fc_sort:
-                    fcSortDialog = new FcSortDialog(FindCoachActivity.this,sort_by, new FcSortDialog.OnBtnClickListener() {
+                    fcSortDialog = new FcSortDialog(FindCoachActivity.this, sort_by, new FcSortDialog.OnBtnClickListener() {
                         @Override
                         public void onFindCoachCort(String sortby) {
                             sort_by = sortby;
@@ -183,6 +183,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Intent intent = new Intent(getApplication(), CoachDetailActivity.class);
+            intent.putExtra("coach_id", coachList.get(position - 1).getId());
             startActivity(intent);
         }
     };

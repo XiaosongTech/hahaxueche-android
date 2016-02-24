@@ -104,16 +104,8 @@ public class CoachItemAdapter extends BaseAdapter {
         }
         tvCoachTeachTime.setText(dfInt.format(coachExperiences) + "年教龄");
         tvCoachPoints.setText(coach.getAverage_rating());
-        double traingCost = 0d;
-        if (!TextUtils.isEmpty(coach.getCoach_group().getTraing_cost())) {
-            traingCost = Double.parseDouble(coach.getCoach_group().getTraing_cost()) / 100;
-        }
-        tvCoachActualPrice.setText("￥" + dfInt.format(traingCost) + "");
-        double marketPrice = 0d;
-        if (!TextUtils.isEmpty(coach.getCoach_group().getMarket_price())) {
-            marketPrice = Double.parseDouble(coach.getCoach_group().getMarket_price()) / 100;
-        }
-        tvCoachOldPrice.setText("￥" + dfInt.format(marketPrice));
+        tvCoachActualPrice.setText(Util.getMoney(coach.getCoach_group().getTraing_cost()));
+        tvCoachOldPrice.setText(Util.getMoney(coach.getCoach_group().getMarket_price()));
         tvCoachOldPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         getCoachAvatar(coach.getAvatar_url(), civCoachAvatar);
         if (coach.getSkill_level().equals("1")) {

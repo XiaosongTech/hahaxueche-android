@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.text.DecimalFormat;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -167,6 +168,7 @@ public class Util {
             }
         }
     }
+
     public static byte[] bmpToByteArray(final Bitmap bmp, final boolean needRecycle) {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, output);
@@ -182,5 +184,14 @@ public class Util {
         }
 
         return result;
+    }
+
+    public static String getMoney(String price) {
+        DecimalFormat dfInt = new DecimalFormat("#####");
+        double money = 0d;
+        if (!TextUtils.isEmpty(price)) {
+            money = Double.parseDouble(price) / 100;
+        }
+        return "￥" + dfInt.format(money);
     }
 }

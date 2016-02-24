@@ -24,7 +24,9 @@ import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.R;
 import com.hahaxueche.model.signupLogin.CitiesModel;
 import com.hahaxueche.model.signupLogin.CityModel;
+import com.hahaxueche.model.util.ConstantsModel;
 import com.hahaxueche.ui.widget.comboSeekBar.ComboSeekBar;
+import com.hahaxueche.utils.Util;
 
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
@@ -219,11 +221,7 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
             tvDistance.setGravity(Gravity.CENTER);
             tvDistance.setTextColor(mContext.getResources().getColor(R.color.filter_txt_white_heavy));
             tvDistance.setTextSize(12);
-            double price = 0d;
-            if (!TextUtils.isEmpty(priceStr)) {
-                price = Double.parseDouble(priceStr) / 100;
-            }
-            tvDistance.setText("￥" + dfInt.format(price));
+            tvDistance.setText(Util.getMoney(priceStr));
             llyFcPriceTvs.addView(tvDistance);
             priceTvList.add(tvDistance);
         }
@@ -291,10 +289,10 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
         SharedPreferences sharedPreferences = mContext.getSharedPreferences("constants", Activity.MODE_PRIVATE);
         String constants = sharedPreferences.getString("constants", "");
         Gson gson = new Gson();
-        Type type = new TypeToken<CitiesModel>() {
+        Type type = new TypeToken<ConstantsModel>() {
         }.getType();
-        CitiesModel cities = gson.fromJson(constants, type);
-        List<CityModel> cityList = cities.getCities();
+        ConstantsModel constantsModel = gson.fromJson(constants, type);
+        List<CityModel> cityList = constantsModel.getCities();
         int myCityCount = 0;
         //根据城市id加载价格、距离筛选列表
         SharedPreferences spSession = mContext.getSharedPreferences("session", Activity.MODE_PRIVATE);

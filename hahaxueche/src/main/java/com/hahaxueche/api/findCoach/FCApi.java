@@ -1,6 +1,7 @@
 package com.hahaxueche.api.findCoach;
 
 import com.hahaxueche.model.findCoach.CoachListResponse;
+import com.hahaxueche.model.findCoach.CoachModel;
 
 /**
  * 寻找教练api
@@ -28,8 +29,17 @@ public interface FCApi {
 
     /**
      * 获取教练列表，直接根据反馈的links_next或者links_previous获取
-     * @param url    link
+     *
+     * @param url link
      * @return
      */
     public CoachListResponse getCoachList(String url);
+
+    /**
+     * 获取一个教练信息
+     *
+     * @param coach_id 教练id
+     * @return
+     */
+    public CoachModel getCoach(String coach_id);
 }

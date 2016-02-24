@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.api.net.HttpEngine;
 import com.hahaxueche.model.findCoach.CoachListResponse;
+import com.hahaxueche.model.findCoach.CoachModel;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -71,6 +72,18 @@ public class FCApiImpl implements FCApi {
         }.getType();
         try {
             return httpEngine.getHandleByUrl(type, url);
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public CoachModel getCoach(String coach_id) {
+        Type type = new TypeToken<CoachModel>() {
+        }.getType();
+        try {
+            return httpEngine.getHandle(type, FCApi.COACHES + "/" + coach_id);
         } catch (IOException e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;

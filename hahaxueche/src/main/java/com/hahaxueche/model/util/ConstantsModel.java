@@ -14,6 +14,7 @@ import java.util.List;
 public class ConstantsModel {
     private List<CityModel> cities;
     private List<FieldModel> fields;
+    private List<BaseKeyValue> skill_levels;
 
     public List<CityModel> getCities() {
         return cities;
@@ -29,5 +30,13 @@ public class ConstantsModel {
 
     public void setFields(List<FieldModel> fields) {
         this.fields = fields;
+    }
+
+    public List<BaseKeyValue> getSkill_levels() {
+        return skill_levels;
+    }
+
+    public void setSkill_levels(List<BaseKeyValue> skill_levels) {
+        this.skill_levels = skill_levels;
     }
 }

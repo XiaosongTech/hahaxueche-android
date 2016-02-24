@@ -1,6 +1,7 @@
 package com.hahaxueche.presenter.findCoach;
 
 import com.hahaxueche.model.findCoach.CoachListResponse;
+import com.hahaxueche.model.findCoach.CoachModel;
 
 /**
  * 寻找教练presenter
@@ -28,8 +29,17 @@ public interface FCPresenter {
 
     /**
      * 根据url获取教练列表
-     * @param url
-     * @param listener           回调监听器
+     *
+     * @param url      url
+     * @param listener 回调监听器
      */
-    public void getCoachList(String url,FCCallbackListener<CoachListResponse> listener);
+    public void getCoachList(String url, FCCallbackListener<CoachListResponse> listener);
+
+    /**
+     * 获取一个教练信息
+     *
+     * @param coach_id 教练id
+     * @param listener 回调监听器
+     */
+    public void getCoach(String coach_id, FCCallbackListener<CoachModel> listener);
 }

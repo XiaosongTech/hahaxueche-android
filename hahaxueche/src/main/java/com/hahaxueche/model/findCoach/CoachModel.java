@@ -27,6 +27,8 @@ public class CoachModel {
     private String consultant;
     private CoachGroupModel coach_group;
     private List<BriefCoachInfo> peer_coaches;
+    private String code;
+    private String message;
 
     public String getId() {
         return id;
@@ -194,5 +196,25 @@ public class CoachModel {
 
     public void setPeer_coaches(List<BriefCoachInfo> peer_coaches) {
         this.peer_coaches = peer_coaches;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public boolean isSuccess() {
+        return code == null;
     }
 }
