@@ -3,6 +3,7 @@ package com.hahaxueche.api.findCoach;
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.FollowResponse;
+import com.hahaxueche.model.findCoach.TrailResponse;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.model.util.BaseBoolean;
 
@@ -16,6 +17,8 @@ public interface FCApi {
     public static final String FOLLOWS = "follows";
 
     public static final String USERS = "users";
+
+    public static final String TRAIL = "trial";
 
     /**
      * 获取教练列表
@@ -77,4 +80,16 @@ public interface FCApi {
      * @return
      */
     public BaseBoolean isFollow(String followee_user_id, String access_token);
+
+    /**
+     * 创建预约教练试学
+     *
+     * @param coach_id
+     * @param name
+     * @param phone_number
+     * @param first_time_option
+     * @param second_time_option
+     * @return
+     */
+    public TrailResponse createTrail(String coach_id, String name, String phone_number, String first_time_option, String second_time_option);
 }

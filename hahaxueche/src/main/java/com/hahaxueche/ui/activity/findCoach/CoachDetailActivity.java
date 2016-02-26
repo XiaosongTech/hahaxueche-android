@@ -30,6 +30,7 @@ import com.hahaxueche.model.util.BaseKeyValue;
 import com.hahaxueche.model.util.ConstantsModel;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
+import com.hahaxueche.ui.dialog.AppointmentDialog;
 import com.hahaxueche.ui.dialog.FeeDetailDialog;
 import com.hahaxueche.ui.dialog.ShareAppDialog;
 import com.hahaxueche.ui.dialog.ZoomImgDialog;
@@ -84,9 +85,12 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private String access_token;
     private boolean isFollow = false;
     private FeeDetailDialog feeDetailDialog;
+    private AppointmentDialog appointmentDialog;
     private List<CostItem> mCostItemList;
     //确认付款
     private LinearLayout llySurePay;
+    //免费试学
+    private LinearLayout llyFreeLearn;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -127,6 +131,8 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         tvFollow = Util.instence(this).$(this, R.id.tv_follow);
         //确认付款
         llySurePay = Util.instence(this).$(this, R.id.lly_sure_pay);
+        //免费试学
+        llyFreeLearn = Util.instence(this).$(this, R.id.lly_free_learn);
 
         getCoachAvatar("http://img001.21cnimg.com/photos/album/20160204/m600/14F9F83CD7AC2266503030C7620299FE.jpeg", cirCommentStuAvatar1);
         getCoachAvatar("http://i3.sinaimg.cn/gm/cr/2013/0226/3279497539.jpg", cirCommentStuAvatar2);
@@ -152,6 +158,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         llyFollow.setOnClickListener(mClickListener);
         llyTakeCertCost.setOnClickListener(mClickListener);
         llySurePay.setOnClickListener(mClickListener);
+        llyFreeLearn.setOnClickListener(mClickListener);
     }
 
     /**
@@ -339,13 +346,17 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                     break;
                 //确认付款
                 case R.id.lly_sure_pay:
-                    if(isLogin){
+                    if (isLogin) {
                         feeDetailDialog = new FeeDetailDialog(CoachDetailActivity.this, mCostItemList, mCoach.getCoach_group().getTraining_cost(), "2");
                         feeDetailDialog.show();
-                    }else{
+                    } else {
                         alertToLogin();
                     }
                     break;
+                //免费试学
+                case R.id.lly_free_learn:
+                    appointmentDialog = new AppointmentDialog(CoachDetailActivity.this, "", "",mCoach.getId());
+                    appointmentDialog.show();
             }
         }
     };
@@ -398,7 +409,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     /**
      * 提示去登录
      */
-    private void alertToLogin(){
+    private void alertToLogin() {
         AlertDialog.Builder builder = new AlertDialog.Builder(CoachDetailActivity.this);
         builder.setTitle("提示");
         builder.setIcon(R.drawable.ic_launcher);

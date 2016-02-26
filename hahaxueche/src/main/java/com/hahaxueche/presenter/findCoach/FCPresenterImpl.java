@@ -9,6 +9,7 @@ import com.hahaxueche.api.util.ApiError;
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.FollowResponse;
+import com.hahaxueche.model.findCoach.TrailResponse;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.model.util.BaseBoolean;
 
@@ -161,6 +162,35 @@ public class FCPresenterImpl implements FCPresenter {
                         listener.onSuccess(baseBoolean);
                     } else {
                         listener.onFailure(baseBoolean.getCode(), baseBoolean.getMessage());
+                    }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void createTrail(final String coach_id, final String name, final String phone_number, final String first_time_option,
+                            final String second_time_option, final FCCallbackListener<TrailResponse> listener) {
+        new AsyncTask<Void, Void, TrailResponse>() {
+            @Override
+            protected TrailResponse doInBackground(Void... params) {
+                return api.createTrail(coach_id, name, phone_number, first_time_option, second_time_option);
+            }
+
+            @Override
+            protected void onPostExecute(TrailResponse trailResponse) {
+                if (listener != null) {
+                    if (trailResponse.isSuccess()) {
+                        listener.onSuccess(trailResponse);
+                    } else {
+                        if (trailResponse.getCode().equals("400003")) {
+                            trailResponse.setMessage("预约日期需要大于当前日期");
+                            listener.onFailure(trailResponse.getCode(), trailResponse.getMessage());
+                        } else {
+                            listener.onFailure(trailResponse.getCode(), trailResponse.getMessage());
+                        }
                     }
                 } else {
                     listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);

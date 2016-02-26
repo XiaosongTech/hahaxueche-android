@@ -3,6 +3,7 @@ package com.hahaxueche.presenter.findCoach;
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.FollowResponse;
+import com.hahaxueche.model.findCoach.TrailResponse;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.model.util.BaseBoolean;
 
@@ -73,4 +74,17 @@ public interface FCPresenter {
      * @param listener         回调监听器
      */
     public void isFollow(String followee_user_id, String access_token, FCCallbackListener<BaseBoolean> listener);
+
+    /**
+     * 创建预约教练试学
+     *
+     * @param coach_id
+     * @param name
+     * @param phone_number
+     * @param first_time_option
+     * @param second_time_option
+     * @param listener
+     */
+    public void createTrail(String coach_id, String name, String phone_number, String first_time_option,
+                            String second_time_option, FCCallbackListener<TrailResponse> listener);
 }

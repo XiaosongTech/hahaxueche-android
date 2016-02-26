@@ -8,6 +8,7 @@ import com.hahaxueche.api.net.HttpEngine;
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.FollowResponse;
+import com.hahaxueche.model.findCoach.TrailResponse;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.model.util.BaseBoolean;
 
@@ -127,6 +128,23 @@ public class FCApiImpl implements FCApi {
         }.getType();
         try {
             return httpEngine.getHandle(type, FCApi.USERS + "/" + FCApi.FOLLOWS + "/" + followee_user_id, access_token);
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public TrailResponse createTrail(String coach_id, String name, String phone_number, String first_time_option, String second_time_option) {
+        Type type = new TypeToken<TrailResponse>() {
+        }.getType();
+        Map<String, String> paramMap = new HashMap<String, String>();
+        paramMap.put("name", name);
+        paramMap.put("phone_number", phone_number);
+        paramMap.put("first_time_option", first_time_option);
+        paramMap.put("second_time_option", second_time_option);
+        try {
+            return httpEngine.postHandle(paramMap, type,"students/"+ FCApi.TRAIL + "/" + coach_id);
         } catch (IOException e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;

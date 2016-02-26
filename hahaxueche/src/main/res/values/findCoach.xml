@@ -40,6 +40,14 @@
     <string name="fCPayDetail">付款明细</string>
     <string name="fCSurePay">确认付款</string>
     <string name="fCCancelBack">取消返回</string>
+    <string name="fCAppointmentInfo">预约信息</string>
+    <string name="fCAppointmentTime">预约时间</string>
+    <string name="fCAppointmentHintName">您的真实姓名</string>
+    <string name="fCAppointmentContactWay">您的联系方式</string>
+    <string name="fCAppointmentFirstTime">首选时间</string>
+    <string name="fCAppointmentSecondTime">备选时间</string>
+    <string name="fCAppointmentRemarks">学员可直接拨打客服电话400-001-6006\n或联系客服QQ3319762526预约试学</string>
+    <string name="fCAppointmentRightNow">立即预约</string>
     <!--color-->
     <color name="fCSearchBackOrangeHeavy">#f68a00</color>
     <color name="fcSearchTextHintWhiteLight">#fbd099</color>
