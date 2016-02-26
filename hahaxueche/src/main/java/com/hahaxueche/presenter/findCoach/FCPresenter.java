@@ -2,6 +2,9 @@ package com.hahaxueche.presenter.findCoach;
 
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
+import com.hahaxueche.model.findCoach.FollowResponse;
+import com.hahaxueche.model.util.BaseApiResponse;
+import com.hahaxueche.model.util.BaseBoolean;
 
 /**
  * 寻找教练presenter
@@ -42,4 +45,32 @@ public interface FCPresenter {
      * @param listener 回调监听器
      */
     public void getCoach(String coach_id, FCCallbackListener<CoachModel> listener);
+
+    /**
+     * 用户A关注用户B
+     *
+     * @param followee_user_id 被关注的人的user id
+     * @param content          关注内容
+     * @param access_token     关注人的access_token
+     * @param listener         回调监听器
+     */
+    public void follow(String followee_user_id, String content, String access_token, FCCallbackListener<FollowResponse> listener);
+
+    /**
+     * 用户A取消关注用户B
+     *
+     * @param followee_user_id 被关注的人的user id
+     * @param access_token     关注人的access_token
+     * @param listener         回调监听器
+     */
+    public void cancelFollow(String followee_user_id, String access_token, FCCallbackListener<BaseApiResponse> listener);
+
+    /**
+     * 用户A是否关注了用户B
+     *
+     * @param followee_user_id 被关注的人的user id
+     * @param access_token     关注人的access_token
+     * @param listener         回调监听器
+     */
+    public void isFollow(String followee_user_id, String access_token, FCCallbackListener<BaseBoolean> listener);
 }

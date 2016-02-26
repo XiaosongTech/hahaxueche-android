@@ -183,7 +183,9 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Intent intent = new Intent(getApplication(), CoachDetailActivity.class);
-            intent.putExtra("coach_id", coachList.get(position - 1).getId());
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("coach", coachList.get(position - 1));
+            intent.putExtras(bundle);
             startActivity(intent);
         }
     };

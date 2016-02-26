@@ -2,6 +2,9 @@ package com.hahaxueche.api.findCoach;
 
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
+import com.hahaxueche.model.findCoach.FollowResponse;
+import com.hahaxueche.model.util.BaseApiResponse;
+import com.hahaxueche.model.util.BaseBoolean;
 
 /**
  * 寻找教练api
@@ -9,6 +12,10 @@ import com.hahaxueche.model.findCoach.CoachModel;
  */
 public interface FCApi {
     public static final String COACHES = "coaches";
+
+    public static final String FOLLOWS = "follows";
+
+    public static final String USERS = "users";
 
     /**
      * 获取教练列表
@@ -42,4 +49,32 @@ public interface FCApi {
      * @return
      */
     public CoachModel getCoach(String coach_id);
+
+    /**
+     * 用户A关注用户B
+     *
+     * @param followee_user_id 被关注的人的user id
+     * @param content          关注内容
+     * @param access_token     关注人的access_token
+     * @return
+     */
+    public FollowResponse follow(String followee_user_id, String content, String access_token);
+
+    /**
+     * 用户A取消关注用户B
+     *
+     * @param followee_user_id 被关注的人的user id
+     * @param access_token     关注人的access_token
+     * @return
+     */
+    public BaseApiResponse cancelFollow(String followee_user_id, String access_token);
+
+    /**
+     * 用户A是否关注了用户B
+     *
+     * @param followee_user_id 被关注的人的user id
+     * @param access_token     关注人的access_token
+     * @return
+     */
+    public BaseBoolean isFollow(String followee_user_id, String access_token);
 }

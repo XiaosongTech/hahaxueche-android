@@ -66,6 +66,14 @@ public class HttpEngine {
         return JsonUtils.deserialize(response, typeOfT);
     }
 
+    public <T> T postHandleWithX(Map<String, String> param, Type typeOfT, String url, String accessToken) throws IOException {
+        String jsonParam = JsonUtils.serialize(param);
+        Log.i(TAG, "jsonParam->" + jsonParam);
+        String response = OkHttpUtils.postWithX(SERVER_URL + url, jsonParam, accessToken);
+        Log.i(TAG, "response:->" + response);
+        return JsonUtils.deserialize(response, typeOfT);
+    }
+
     /**
      * post文件上传方法
      *
@@ -100,6 +108,13 @@ public class HttpEngine {
         return JsonUtils.deserialize(response, typeOfT);
     }
 
+    public <T> T getHandle(Type typeOfT, String url, String accessToken) throws IOException {
+        Log.i(TAG, "get url ->" + SERVER_URL + url);
+        String response = OkHttpUtils.get(SERVER_URL + url, accessToken);
+        Log.i(TAG, "response:->" + response);
+        return JsonUtils.deserialize(response, typeOfT);
+    }
+
     /**
      * get方法（直接根据url获取）
      *
@@ -112,6 +127,25 @@ public class HttpEngine {
     public <T> T getHandleByUrl(Type typeOfT, String url) throws IOException {
         Log.i(TAG, "get url ->" + url);
         String response = OkHttpUtils.get(url);
+        Log.i(TAG, "response:->" + response);
+        return JsonUtils.deserialize(response, typeOfT);
+    }
+
+    /**
+     * delete方法
+     *
+     * @param param
+     * @param typeOfT
+     * @param url
+     * @param accessToken
+     * @param <T>
+     * @return
+     * @throws IOException
+     */
+    public <T> T deleteHandle(Map<String, String> param, Type typeOfT, String url, String accessToken) throws IOException {
+        String jsonParam = JsonUtils.serialize(param);
+        Log.i(TAG, "jsonParam->" + jsonParam);
+        String response = OkHttpUtils.delete(SERVER_URL + url, jsonParam, accessToken);
         Log.i(TAG, "response:->" + response);
         return JsonUtils.deserialize(response, typeOfT);
     }

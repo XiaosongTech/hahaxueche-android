@@ -8,6 +8,9 @@ import com.hahaxueche.api.findCoach.FCApiImpl;
 import com.hahaxueche.api.util.ApiError;
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
+import com.hahaxueche.model.findCoach.FollowResponse;
+import com.hahaxueche.model.util.BaseApiResponse;
+import com.hahaxueche.model.util.BaseBoolean;
 
 /**
  * Created by gibxin on 2016/2/21.
@@ -88,6 +91,76 @@ public class FCPresenterImpl implements FCPresenter {
                         listener.onSuccess(coachResponse);
                     } else {
                         listener.onFailure(coachResponse.getCode(), coachResponse.getMessage());
+                    }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void follow(final String followee_user_id, final String content, final String access_token, final FCCallbackListener<FollowResponse> listener) {
+        new AsyncTask<Void, Void, FollowResponse>() {
+
+            @Override
+            protected FollowResponse doInBackground(Void... params) {
+                return api.follow(followee_user_id, content, access_token);
+            }
+
+            @Override
+            protected void onPostExecute(FollowResponse followResponse) {
+                if (listener != null) {
+                    if (followResponse.isSuccess()) {
+                        listener.onSuccess(followResponse);
+                    } else {
+                        listener.onFailure(followResponse.getCode(), followResponse.getMessage());
+                    }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void cancelFollow(final String followee_user_id, final String access_token, final FCCallbackListener<BaseApiResponse> listener) {
+        new AsyncTask<Void, Void, BaseApiResponse>() {
+            @Override
+            protected BaseApiResponse doInBackground(Void... params) {
+                return api.cancelFollow(followee_user_id, access_token);
+            }
+
+            @Override
+            protected void onPostExecute(BaseApiResponse baseApiResponse) {
+                if (listener != null) {
+                    if (baseApiResponse.isSuccess()) {
+                        listener.onSuccess(baseApiResponse);
+                    } else {
+                        listener.onFailure(baseApiResponse.getCode(), baseApiResponse.getMessage());
+                    }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void isFollow(final String followee_user_id, final String access_token, final FCCallbackListener<BaseBoolean> listener) {
+        new AsyncTask<Void, Void, BaseBoolean>() {
+            @Override
+            protected BaseBoolean doInBackground(Void... params) {
+                return api.isFollow(followee_user_id, access_token);
+            }
+
+            @Override
+            protected void onPostExecute(BaseBoolean baseBoolean) {
+                if (listener != null) {
+                    if (baseBoolean.isSuccess()) {
+                        listener.onSuccess(baseBoolean);
+                    } else {
+                        listener.onFailure(baseBoolean.getCode(), baseBoolean.getMessage());
                     }
                 } else {
                     listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);

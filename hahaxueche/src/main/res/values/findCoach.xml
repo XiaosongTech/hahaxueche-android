@@ -32,6 +32,9 @@
     <string name="fCFreeLearn">免费试学</string>
     <string name="fCSurePay">确认并付款</string>
     <string name="fCShareToFriend">分享给朋友</string>
+    <string name="fCPleaseLoginFirst">请先登录或者注册</string>
+    <string name="fCGoNow">现在就去</string>
+    <string name="fCLookAround">再看看</string>
     <!--color-->
     <color name="fCSearchBackOrangeHeavy">#f68a00</color>
     <color name="fcSearchTextHintWhiteLight">#fbd099</color>

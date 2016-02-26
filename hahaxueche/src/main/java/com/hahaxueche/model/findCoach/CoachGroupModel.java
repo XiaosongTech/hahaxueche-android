@@ -1,9 +1,11 @@
 package com.hahaxueche.model.findCoach;
 
+import java.io.Serializable;
+
 /**
  * Created by gibxin on 2016/2/21.
  */
-public class CoachGroupModel {
+public class CoachGroupModel implements Serializable {
     private String id;
     private String field_id;
     private String unit_traing_cost;

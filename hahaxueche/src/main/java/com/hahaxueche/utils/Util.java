@@ -187,7 +187,7 @@ public class Util {
     }
 
     public static String getMoney(String price) {
-        DecimalFormat dfInt = new DecimalFormat("#####");
+        DecimalFormat dfInt = new DecimalFormat("#####.##");
         double money = 0d;
         if (!TextUtils.isEmpty(price)) {
             money = Double.parseDouble(price) / 100;

@@ -7,9 +7,14 @@ import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.api.net.HttpEngine;
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
+import com.hahaxueche.model.findCoach.FollowResponse;
+import com.hahaxueche.model.util.BaseApiResponse;
+import com.hahaxueche.model.util.BaseBoolean;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by gibxin on 2016/2/21.
@@ -84,6 +89,44 @@ public class FCApiImpl implements FCApi {
         }.getType();
         try {
             return httpEngine.getHandle(type, FCApi.COACHES + "/" + coach_id);
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public FollowResponse follow(String followee_user_id, String content, String access_token) {
+        Type type = new TypeToken<FollowResponse>() {
+        }.getType();
+        Map<String, String> paramMap = new HashMap<String, String>();
+        try {
+            return httpEngine.postHandleWithX(paramMap, type, FCApi.USERS + "/" + FCApi.FOLLOWS + "/" + followee_user_id, access_token);
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public BaseApiResponse cancelFollow(String followee_user_id, String access_token) {
+        Type type = new TypeToken<BaseApiResponse>() {
+        }.getType();
+        Map<String, String> paramMap = new HashMap<String, String>();
+        try {
+            return httpEngine.deleteHandle(paramMap, type, FCApi.USERS + "/" + FCApi.FOLLOWS + "/" + followee_user_id, access_token);
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public BaseBoolean isFollow(String followee_user_id, String access_token) {
+        Type type = new TypeToken<BaseBoolean>() {
+        }.getType();
+        try {
+            return httpEngine.getHandle(type, FCApi.USERS + "/" + FCApi.FOLLOWS + "/" + followee_user_id, access_token);
         } catch (IOException e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;

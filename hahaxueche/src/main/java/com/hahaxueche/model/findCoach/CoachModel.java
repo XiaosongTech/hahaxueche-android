@@ -1,11 +1,12 @@
 package com.hahaxueche.model.findCoach;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by gibxin on 2016/2/13.
  */
-public class CoachModel {
+public class CoachModel implements Serializable {
     private String id;
     private String cell_phone;
     private String name;
