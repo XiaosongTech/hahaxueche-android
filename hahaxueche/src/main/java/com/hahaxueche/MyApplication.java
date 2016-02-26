@@ -32,6 +32,11 @@ public class MyApplication extends Application {
         super.onCreate();
         sLPresenter = new SLPresenterImpl(this);
         fcPresenter = new FCPresenterImpl(this);
+        //清空session
+        SharedPreferences spSession = getSharedPreferences("session", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor spEditor = spSession.edit();
+        spEditor.clear();
+        spEditor.commit();
         new Thread(new Runnable() {
 
             @Override

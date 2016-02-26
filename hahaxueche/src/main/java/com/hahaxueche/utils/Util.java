@@ -194,4 +194,13 @@ public class Util {
         }
         return "￥" + dfInt.format(money);
     }
+
+    public static String getMoneyYuan(String price) {
+        DecimalFormat dfInt = new DecimalFormat("#####.##");
+        double money = 0d;
+        if (!TextUtils.isEmpty(price)) {
+            money = Double.parseDouble(price) / 100;
+        }
+        return dfInt.format(money) + "元";
+    }
 }

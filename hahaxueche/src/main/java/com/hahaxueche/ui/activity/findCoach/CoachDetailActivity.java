@@ -23,12 +23,14 @@ import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.FieldModel;
 import com.hahaxueche.model.findCoach.FollowResponse;
 import com.hahaxueche.model.signupLogin.CityModel;
+import com.hahaxueche.model.signupLogin.CostItem;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.model.util.BaseBoolean;
 import com.hahaxueche.model.util.BaseKeyValue;
 import com.hahaxueche.model.util.ConstantsModel;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
+import com.hahaxueche.ui.dialog.FeeDetailDialog;
 import com.hahaxueche.ui.dialog.ShareAppDialog;
 import com.hahaxueche.ui.dialog.ZoomImgDialog;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
@@ -37,7 +39,6 @@ import com.hahaxueche.utils.Util;
 import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Type;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +63,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private ImageView ivIsGoldenCoach;
     private ImageView ivIsGoldenCoachSmall;
     private TextView tvSatisfactionRate;//满意度
+    private LinearLayout llyTakeCertCost;//拿证价格
     private ConstantsModel mConstants;
     private TextView tvTakeCertPrice;
     private TextView tvTrainLocation;
@@ -72,6 +74,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private TextView tvPeerCoach2;
     private CircleImageView civPeerCoachAvater1; //合作教练1头像
     private CircleImageView civPeerCoachAvater2; //合作教练2头像
+    private View vwPeerCoach;
     private TextView tvLicenseType;
     //关注
     private LinearLayout llyFollow;
@@ -80,11 +83,16 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private boolean isLogin = false;
     private String access_token;
     private boolean isFollow = false;
+    private FeeDetailDialog feeDetailDialog;
+    private List<CostItem> mCostItemList;
+    //确认付款
+    private LinearLayout llySurePay;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coach_detail);
+        initSharedPreferences();
         initView();
         initEvent();
         loadDatas();
@@ -101,6 +109,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         llyPeerCoach2 = Util.instence(this).$(this, R.id.lly_peer_coach2);
         tvPeerCoach1 = Util.instence(this).$(this, R.id.tv_peer_coach1);
         tvPeerCoach2 = Util.instence(this).$(this, R.id.tv_peer_coach2);
+        vwPeerCoach = Util.instence(this).$(this, R.id.vw_peer_coach);
 
         tvCdCoachName = Util.instence(this).$(this, R.id.tv_cd_coach_name);
         tvCdCoachDescription = Util.instence(this).$(this, R.id.tv_cd_coach_description);
@@ -116,6 +125,8 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         llyFollow = Util.instence(this).$(this, R.id.lly_follow);
         ivFollow = Util.instence(this).$(this, R.id.iv_follow);
         tvFollow = Util.instence(this).$(this, R.id.tv_follow);
+        //确认付款
+        llySurePay = Util.instence(this).$(this, R.id.lly_sure_pay);
 
         getCoachAvatar("http://img001.21cnimg.com/photos/album/20160204/m600/14F9F83CD7AC2266503030C7620299FE.jpeg", cirCommentStuAvatar1);
         getCoachAvatar("http://i3.sinaimg.cn/gm/cr/2013/0226/3279497539.jpg", cirCommentStuAvatar2);
@@ -128,20 +139,8 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         isCdCoachDetail.updateImages(s);
 
         llyShare = Util.instence(this).$(this, R.id.lly_share);
+        llyTakeCertCost = Util.instence(this).$(this, R.id.lly_take_cert_cost);
         shareAppDialog = new ShareAppDialog(this);
-        SharedPreferences sharedPreferences = getSharedPreferences("constants", Activity.MODE_PRIVATE);
-        String constantsStr = sharedPreferences.getString("constants", "");
-        Gson gson = new Gson();
-        Type type = new TypeToken<ConstantsModel>() {
-        }.getType();
-        mConstants = gson.fromJson(constantsStr, type);
-
-        SharedPreferences spSession = getSharedPreferences("session", Activity.MODE_PRIVATE);
-        String accessToken = spSession.getString("access_token", "");
-        if (!TextUtils.isEmpty(accessToken)) {
-            isLogin = true;
-            access_token = accessToken;
-        }
     }
 
     private void initEvent() {
@@ -151,6 +150,8 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         ibtnCoachDetialBack.setOnClickListener(mClickListener);
         llyShare.setOnClickListener(mClickListener);
         llyFollow.setOnClickListener(mClickListener);
+        llyTakeCertCost.setOnClickListener(mClickListener);
+        llySurePay.setOnClickListener(mClickListener);
     }
 
     /**
@@ -230,7 +231,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                 break;
             }
         }
-        tvTakeCertPrice.setText(Util.getMoney(mCoach.getCoach_group().getTraing_cost()));
+        tvTakeCertPrice.setText(Util.getMoney(mCoach.getCoach_group().getTraining_cost()));
         //训练场地址
         List<CityModel> cityList = mConstants.getCities();
         List<FieldModel> fieldList = mConstants.getFields();
@@ -259,6 +260,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
             llyPeerCoachTitle.setVisibility(View.GONE);
             llyPeerCoach1.setVisibility(View.GONE);
             llyPeerCoach2.setVisibility(View.GONE);
+            vwPeerCoach.setVisibility(View.GONE);
         }
         if (mCoach.getLicense_type().equals("1")) {
             tvLicenseType.setText("C1手动档");
@@ -316,7 +318,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                                 @Override
                                 public void onSuccess(FollowResponse data) {
                                     setFollow();
-                                    isFollow=true;
+                                    isFollow = true;
                                     Toast.makeText(context, "关注成功！", Toast.LENGTH_SHORT).show();
                                 }
 
@@ -327,26 +329,23 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                             });
                         }
                     } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(CoachDetailActivity.this);
-                        builder.setTitle("提示");
-                        builder.setIcon(R.drawable.ic_launcher);
-                        builder.setMessage(R.string.fCPleaseLoginFirst);
-                        builder.setPositiveButton(R.string.fCGoNow, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(CoachDetailActivity.this, StartActivity.class);
-                                intent.putExtra("isBack", "1");
-                                startActivity(intent);
-                            }
-                        });
-                        builder.setNegativeButton(R.string.fCLookAround, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        builder.create().show();
+                        alertToLogin();
                     }
+                    break;
+                //拿证价格
+                case R.id.lly_take_cert_cost:
+                    feeDetailDialog = new FeeDetailDialog(CoachDetailActivity.this, mCostItemList, mCoach.getCoach_group().getTraining_cost(), "1");
+                    feeDetailDialog.show();
+                    break;
+                //确认付款
+                case R.id.lly_sure_pay:
+                    if(isLogin){
+                        feeDetailDialog = new FeeDetailDialog(CoachDetailActivity.this, mCostItemList, mCoach.getCoach_group().getTraining_cost(), "2");
+                        feeDetailDialog.show();
+                    }else{
+                        alertToLogin();
+                    }
+                    break;
             }
         }
     };
@@ -365,5 +364,59 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private void setUnFollow() {
         ivFollow.setImageDrawable(getResources().getDrawable(R.drawable.ic_coachmsg_attention_hold));
         tvFollow.setTextColor(getResources().getColor(R.color.fCTxtGrayFade));
+    }
+
+    /**
+     * SharedPreferences 数据，初始化处理
+     */
+    private void initSharedPreferences() {
+        SharedPreferences sharedPreferences = getSharedPreferences("constants", Activity.MODE_PRIVATE);
+        String constantsStr = sharedPreferences.getString("constants", "");
+        Gson gson = new Gson();
+        Type type = new TypeToken<ConstantsModel>() {
+        }.getType();
+        mConstants = gson.fromJson(constantsStr, type);
+
+
+        SharedPreferences spSession = getSharedPreferences("session", Activity.MODE_PRIVATE);
+        String accessToken = spSession.getString("access_token", "");
+        if (!TextUtils.isEmpty(accessToken)) {
+            isLogin = true;
+            access_token = accessToken;
+        }
+        //根据当前登录人的cityid，加载费用明细列表
+        List<CityModel> cityList = mConstants.getCities();
+        String cityId = spSession.getString("city_id", "0");
+        for (CityModel city : cityList) {
+            if (city.getId().equals(cityId)) {
+                mCostItemList = city.getFixed_cost_itemizer();
+                break;
+            }
+        }
+    }
+
+    /**
+     * 提示去登录
+     */
+    private void alertToLogin(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(CoachDetailActivity.this);
+        builder.setTitle("提示");
+        builder.setIcon(R.drawable.ic_launcher);
+        builder.setMessage(R.string.fCPleaseLoginFirst);
+        builder.setPositiveButton(R.string.fCGoNow, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(CoachDetailActivity.this, StartActivity.class);
+                intent.putExtra("isBack", "1");
+                startActivity(intent);
+            }
+        });
+        builder.setNegativeButton(R.string.fCLookAround, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
     }
 }

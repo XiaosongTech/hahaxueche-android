@@ -104,7 +104,7 @@ public class CoachItemAdapter extends BaseAdapter {
         }
         tvCoachTeachTime.setText(dfInt.format(coachExperiences) + "年教龄");
         tvCoachPoints.setText(coach.getAverage_rating());
-        tvCoachActualPrice.setText(Util.getMoney(coach.getCoach_group().getTraing_cost()));
+        tvCoachActualPrice.setText(Util.getMoney(coach.getCoach_group().getTraining_cost()));
         tvCoachOldPrice.setText(Util.getMoney(coach.getCoach_group().getMarket_price()));
         tvCoachOldPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         getCoachAvatar(coach.getAvatar_url(), civCoachAvatar);

@@ -8,8 +8,8 @@ import java.io.Serializable;
 public class CoachGroupModel implements Serializable {
     private String id;
     private String field_id;
-    private String unit_traing_cost;
-    private String traing_cost;
+    private String unit_training_cost;
+    private String training_cost;
     private String other_fee;
     private String deleted_at;
     private String active;
@@ -34,20 +34,20 @@ public class CoachGroupModel implements Serializable {
         this.field_id = field_id;
     }
 
-    public String getUnit_traing_cost() {
-        return unit_traing_cost;
+    public String getUnit_training_cost() {
+        return unit_training_cost;
     }
 
-    public void setUnit_traing_cost(String unit_traing_cost) {
-        this.unit_traing_cost = unit_traing_cost;
+    public void setUnit_training_cost(String unit_training_cost) {
+        this.unit_training_cost = unit_training_cost;
     }
 
-    public String getTraing_cost() {
-        return traing_cost;
+    public String getTraining_cost() {
+        return training_cost;
     }
 
-    public void setTraing_cost(String traing_cost) {
-        this.traing_cost = traing_cost;
+    public void setTraining_cost(String training_cost) {
+        this.training_cost = training_cost;
     }
 
     public String getOther_fee() {

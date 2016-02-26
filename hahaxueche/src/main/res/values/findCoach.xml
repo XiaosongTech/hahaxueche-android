@@ -30,11 +30,16 @@
     <string name="fCAttention">关注</string>
     <string name="fCShare">分享</string>
     <string name="fCFreeLearn">免费试学</string>
-    <string name="fCSurePay">确认并付款</string>
+    <string name="fCSureAndPay">确认并付款</string>
     <string name="fCShareToFriend">分享给朋友</string>
     <string name="fCPleaseLoginFirst">请先登录或者注册</string>
     <string name="fCGoNow">现在就去</string>
     <string name="fCLookAround">再看看</string>
+    <string name="fCTotalCount">合计：</string>
+    <string name="fCAlreadyKnow">我知道了</string>
+    <string name="fCPayDetail">付款明细</string>
+    <string name="fCSurePay">确认付款</string>
+    <string name="fCCancelBack">取消返回</string>
     <!--color-->
     <color name="fCSearchBackOrangeHeavy">#f68a00</color>
     <color name="fcSearchTextHintWhiteLight">#fbd099</color>
@@ -45,4 +50,7 @@
     <color name="fCTxtGrayFade">#bbbbbb</color>
     <color name="fCBackgroundGray">#f4f4f4</color>
     <color name="fCViewGray">#dbdbdb</color>
+    <string name="fCFeeDetailRemark">备注：以下费用根据个人实际需求另外缴纳</string>
+    <string name="fCFeeDetailRemarkMarkUp">补考费（车管所）&#160;--按车管所公示价格收取</string>
+    <string name="fCFeeDetailRemarkMockExam">模拟考试费（考场）&#160;&#160;--按考场公示价格收取</string>
 </resources>
