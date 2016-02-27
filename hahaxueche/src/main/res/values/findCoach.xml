@@ -48,6 +48,7 @@
     <string name="fCAppointmentSecondTime">备选时间</string>
     <string name="fCAppointmentRemarks">学员可直接拨打客服电话400-001-6006\n或联系客服QQ3319762526预约试学</string>
     <string name="fCAppointmentRightNow">立即预约</string>
+    <string name="fCStudentComment">学员评价</string>
     <!--color-->
     <color name="fCSearchBackOrangeHeavy">#f68a00</color>
     <color name="fcSearchTextHintWhiteLight">#fbd099</color>

@@ -9,6 +9,7 @@ import com.hahaxueche.api.util.ApiError;
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.FollowResponse;
+import com.hahaxueche.model.findCoach.GetReviewsResponse;
 import com.hahaxueche.model.findCoach.TrailResponse;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.model.util.BaseBoolean;
@@ -191,6 +192,53 @@ public class FCPresenterImpl implements FCPresenter {
                         } else {
                             listener.onFailure(trailResponse.getCode(), trailResponse.getMessage());
                         }
+                    }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void getReviewList(final String coach_user_id , final String page, final String per_page,
+                              final FCCallbackListener<GetReviewsResponse> listener) {
+        new AsyncTask<Void, Void, GetReviewsResponse>() {
+            @Override
+            protected GetReviewsResponse doInBackground(Void... params) {
+                return api.getReviewList(coach_user_id, page, per_page);
+            }
+
+            @Override
+            protected void onPostExecute(GetReviewsResponse getReviewsResponse) {
+                if (listener != null) {
+                    if (getReviewsResponse.isSuccess()) {
+                        listener.onSuccess(getReviewsResponse);
+                    } else {
+                        listener.onFailure(getReviewsResponse.getCode(), getReviewsResponse.getMessage());
+                    }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+    @Override
+    public void getReviewList(final String url, final FCCallbackListener<GetReviewsResponse> listener) {
+        new AsyncTask<Void, Void, GetReviewsResponse>() {
+
+            @Override
+            protected GetReviewsResponse doInBackground(Void... params) {
+                return api.getReviewList(url);
+            }
+
+            @Override
+            protected void onPostExecute(GetReviewsResponse getReviewsResponse) {
+                if (listener != null) {
+                    if (getReviewsResponse.isSuccess()) {
+                        listener.onSuccess(getReviewsResponse);
+                    } else {
+                        listener.onFailure(getReviewsResponse.getCode(), getReviewsResponse.getMessage());
                     }
                 } else {
                     listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);

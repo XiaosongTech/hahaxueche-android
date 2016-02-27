@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +23,7 @@ import com.hahaxueche.model.findCoach.BriefCoachInfo;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.FieldModel;
 import com.hahaxueche.model.findCoach.FollowResponse;
+import com.hahaxueche.model.findCoach.GetReviewsResponse;
 import com.hahaxueche.model.signupLogin.CityModel;
 import com.hahaxueche.model.signupLogin.CostItem;
 import com.hahaxueche.model.util.BaseApiResponse;
@@ -30,12 +32,14 @@ import com.hahaxueche.model.util.BaseKeyValue;
 import com.hahaxueche.model.util.ConstantsModel;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
+import com.hahaxueche.ui.adapter.findCoach.ReviewItemAdapter;
 import com.hahaxueche.ui.dialog.AppointmentDialog;
 import com.hahaxueche.ui.dialog.FeeDetailDialog;
 import com.hahaxueche.ui.dialog.ShareAppDialog;
 import com.hahaxueche.ui.dialog.ZoomImgDialog;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
+import com.hahaxueche.ui.widget.scoreView.ScoreView;
 import com.hahaxueche.utils.Util;
 import com.squareup.picasso.Picasso;
 
@@ -49,8 +53,6 @@ import java.util.List;
  */
 public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher.OnSwitchItemClickListener {
     private CircleImageView civCdCoachAvatar;//教练头像
-    private CircleImageView cirCommentStuAvatar1;//评价学员1头像
-    private CircleImageView cirCommentStuAvatar2;//评价学员1头像
     private TextView tvCdCoachName;//教练姓名
     private TextView tvCdCoachDescription;//教练描述
     private ImageSwitcher isCdCoachDetail;//教练照片
@@ -87,6 +89,13 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private FeeDetailDialog feeDetailDialog;
     private AppointmentDialog appointmentDialog;
     private List<CostItem> mCostItemList;
+    private TextView tvCommentCounts;//学员评价数量
+    private ScoreView svAverageRating;//综合得分
+    //评论
+    private ListView lvReviewList;
+    private ReviewItemAdapter reviewItemAdapter;
+    private GetReviewsResponse mGetReviewsResponse;
+    private LinearLayout llyMoreReviews;
     //确认付款
     private LinearLayout llySurePay;
     //免费试学
@@ -106,8 +115,6 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         civCdCoachAvatar = Util.instence(this).$(this, R.id.cir_cd_coach_avatar);
         civPeerCoachAvater1 = Util.instence(this).$(this, R.id.cir_peer_coach1);
         civPeerCoachAvater2 = Util.instence(this).$(this, R.id.cir_peer_coach2);
-        cirCommentStuAvatar1 = Util.instence(this).$(this, R.id.cir_cd_comment_stu1);
-        cirCommentStuAvatar2 = Util.instence(this).$(this, R.id.cir_cd_comment_stu2);
         llyPeerCoachTitle = Util.instence(this).$(this, R.id.lly_peer_coach_title);
         llyPeerCoach1 = Util.instence(this).$(this, R.id.lly_peer_coach1);
         llyPeerCoach2 = Util.instence(this).$(this, R.id.lly_peer_coach2);
@@ -125,17 +132,20 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         tvTakeCertPrice = Util.instence(this).$(this, R.id.tv_take_cert_price);
         tvTrainLocation = Util.instence(this).$(this, R.id.tv_train_location);
         tvLicenseType = Util.instence(this).$(this, R.id.tv_license_type);
+        tvCommentCounts = Util.instence(this).$(this, R.id.tv_comments_count);
+        svAverageRating = Util.instence(this).$(this, R.id.sv_average_rating);
         //关注
         llyFollow = Util.instence(this).$(this, R.id.lly_follow);
         ivFollow = Util.instence(this).$(this, R.id.iv_follow);
         tvFollow = Util.instence(this).$(this, R.id.tv_follow);
+        //评论
+        lvReviewList = Util.instence(this).$(this, R.id.lv_reviews_list);
+        llyMoreReviews = Util.instence(this).$(this, R.id.lly_more_reviews);
         //确认付款
         llySurePay = Util.instence(this).$(this, R.id.lly_sure_pay);
         //免费试学
         llyFreeLearn = Util.instence(this).$(this, R.id.lly_free_learn);
 
-        getCoachAvatar("http://img001.21cnimg.com/photos/album/20160204/m600/14F9F83CD7AC2266503030C7620299FE.jpeg", cirCommentStuAvatar1);
-        getCoachAvatar("http://i3.sinaimg.cn/gm/cr/2013/0226/3279497539.jpg", cirCommentStuAvatar2);
         isCdCoachDetail = Util.instence(this).$(this, R.id.is_cd_coach_switcher);
         ArrayList<String> s = new ArrayList<String>();
         s.add("http://img2.3lian.com/2014/f5/158/d/87.jpg");
@@ -159,6 +169,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         llyTakeCertCost.setOnClickListener(mClickListener);
         llySurePay.setOnClickListener(mClickListener);
         llyFreeLearn.setOnClickListener(mClickListener);
+        llyMoreReviews.setOnClickListener(mClickListener);
     }
 
     /**
@@ -169,6 +180,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         if (intent.getSerializableExtra("coach") != null) {
             mCoach = (CoachModel) intent.getSerializableExtra("coach");
             loadDetail();
+            loadReviews();
         } else {
             String coach_id = getIntent().getStringExtra("coach_id");
             if (pd != null) {
@@ -183,6 +195,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                     }
                     mCoach = coachModel;
                     loadDetail();
+                    loadReviews();
                 }
 
                 @Override
@@ -276,6 +289,14 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         } else {
             tvLicenseType.setText("C1手动档，C2自动挡");
         }
+        //学员评价数量
+        tvCommentCounts.setText("学员评价（" + mCoach.getReview_count() + "）");
+        //综合得分
+        float averageRating = 0;
+        if (!TextUtils.isEmpty(mCoach.getAverage_rating())) {
+            averageRating = Float.parseFloat(mCoach.getAverage_rating());
+        }
+        svAverageRating.setScore(averageRating, true);
     }
 
     private void getCoachAvatar(String url, CircleImageView civCoachAvatar) {
@@ -283,6 +304,24 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         final int iconHeight = iconWidth;
         Picasso.with(this).load(url).resize(iconWidth, iconHeight)
                 .into(civCoachAvatar);
+    }
+
+    private void loadReviews() {
+        this.fcPresenter.getReviewList(mCoach.getUser_id(), "", "10", new FCCallbackListener<GetReviewsResponse>() {
+            @Override
+            public void onSuccess(GetReviewsResponse getReviewsResponse) {
+                mGetReviewsResponse = getReviewsResponse;
+                if (getReviewsResponse.getData() != null && getReviewsResponse.getData().size() > 0) {
+                    reviewItemAdapter = new ReviewItemAdapter(CoachDetailActivity.this, getReviewsResponse.getData(), R.layout.view_review_list_item);
+                    lvReviewList.setAdapter(reviewItemAdapter);
+                }
+            }
+
+            @Override
+            public void onFailure(String errorEvent, String message) {
+
+            }
+        });
     }
 
     @Override
@@ -355,8 +394,17 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                     break;
                 //免费试学
                 case R.id.lly_free_learn:
-                    appointmentDialog = new AppointmentDialog(CoachDetailActivity.this, "", "",mCoach.getId());
+                    appointmentDialog = new AppointmentDialog(CoachDetailActivity.this, "", "", mCoach.getId());
                     appointmentDialog.show();
+                    break;
+                case R.id.lly_more_reviews:
+                    Intent intent = new Intent(CoachDetailActivity.this,ReviewListActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("getReviewsResponse",mGetReviewsResponse);
+                    bundle.putString("coach_user_id",mCoach.getUser_id());
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    break;
             }
         }
     };

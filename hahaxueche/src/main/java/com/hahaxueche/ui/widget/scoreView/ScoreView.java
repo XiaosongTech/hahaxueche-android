@@ -87,8 +87,8 @@ public class ScoreView extends LinearLayout{
             LayoutParams params = new LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.leftMargin = 2 * divide;
-            scoreNum.setTextColor(Color.parseColor("#f8a43b"));
-            scoreNum.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+            scoreNum.setTextColor(Color.parseColor("#ff9e00"));
+            scoreNum.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
             TextPaint tp = scoreNum.getPaint();
             tp.setFakeBoldText(true);
             addView(scoreNum,params);

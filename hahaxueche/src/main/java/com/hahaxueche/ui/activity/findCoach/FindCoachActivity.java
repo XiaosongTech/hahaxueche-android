@@ -202,7 +202,6 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
 
     @Override
     public void onRefresh() {
-        Log.v("gibxin", "onRefresh");
         if (!TextUtils.isEmpty(linkPrevious)) {
             getCoachList(linkPrevious);
         } else {
@@ -227,7 +226,6 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
 
     @Override
     public void onLoadMore() {
-        Log.v("gibxin", "onLoadMore");
         if (!TextUtils.isEmpty(linkNext)) {
             getCoachList(linkNext);
         } else {

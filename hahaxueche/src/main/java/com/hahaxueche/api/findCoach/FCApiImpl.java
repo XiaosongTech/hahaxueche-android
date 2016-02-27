@@ -8,6 +8,7 @@ import com.hahaxueche.api.net.HttpEngine;
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.FollowResponse;
+import com.hahaxueche.model.findCoach.GetReviewsResponse;
 import com.hahaxueche.model.findCoach.TrailResponse;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.model.util.BaseBoolean;
@@ -144,10 +145,41 @@ public class FCApiImpl implements FCApi {
         paramMap.put("first_time_option", first_time_option);
         paramMap.put("second_time_option", second_time_option);
         try {
-            return httpEngine.postHandle(paramMap, type,"students/"+ FCApi.TRAIL + "/" + coach_id);
+            return httpEngine.postHandle(paramMap, type, "students/" + FCApi.TRAIL + "/" + coach_id);
         } catch (IOException e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
     }
+
+    @Override
+    public GetReviewsResponse getReviewList(String coach_user_id, String page, String per_page) {
+        Type type = new TypeToken<GetReviewsResponse>() {
+        }.getType();
+        String url = "users/reviews/"+coach_user_id;
+        if (!TextUtils.isEmpty(page)) {
+            url += "?page=" + page;
+        }
+        if (!TextUtils.isEmpty(per_page)) {
+            url += url.indexOf("?") > 0 ? ("&per_page=" + per_page) : ("?per_page=" + per_page);
+        }
+        try {
+            return httpEngine.getHandle(type, url);
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+    @Override
+    public GetReviewsResponse getReviewList(String url){
+        Type type = new TypeToken<GetReviewsResponse>() {
+        }.getType();
+        try {
+            return httpEngine.getHandleByUrl(type,url);
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
 }

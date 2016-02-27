@@ -1,9 +1,11 @@
 package com.hahaxueche.model.util;
 
+import java.io.Serializable;
+
 /**
  * Created by gibxin on 2016/2/21.
  */
-public class LinksModel {
+public class LinksModel implements Serializable {
     private String self;
     private String next;
     private String previous;

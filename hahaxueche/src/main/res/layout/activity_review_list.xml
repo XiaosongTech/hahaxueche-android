@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/white">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.25"
+        android:id="@+id/lly_fc_search_coach"
+        android:orientation="horizontal"
+        android:background="@color/app_theme_color"
+        android:gravity="center_vertical">
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/ic_arrow_back"
+            android:background="@null"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/fCStudentComment"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="12">
+        <com.hahaxueche.ui.widget.pullToRefreshView.XListView
+            android:id="@+id/xlv_review_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@drawable/layer_list_divider"
+            android:dividerHeight="1dp"
+            android:headerDividersEnabled="false"
+            android:footerDividersEnabled="false">
+
+        </com.hahaxueche.ui.widget.pullToRefreshView.XListView>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

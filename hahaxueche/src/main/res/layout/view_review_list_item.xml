@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
+
+    <com.hahaxueche.ui.widget.circleImageView.CircleImageView
+        android:id="@+id/cir_reviewer_avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="14dp">
+
+    </com.hahaxueche.ui.widget.circleImageView.CircleImageView>
+
+    <TextView
+        android:id="@+id/tv_reviewer_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="18dp"
+        android:layout_toRightOf="@id/cir_reviewer_avatar"
+        android:text="刘玲"
+        android:textColor="@color/app_theme_color"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_review_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/tv_reviewer_name"
+        android:layout_marginLeft="6dp"
+        android:layout_toRightOf="@id/tv_reviewer_name"
+        android:text="2016/02/01"
+        android:textColor="@color/fCTxtGrayFade"
+        android:textSize="12sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/tv_reviewer_name"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:gravity="right|center_vertical">
+
+        <com.hahaxueche.ui.widget.scoreView.ScoreView
+            android:id="@+id/sv_review_rating"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical">
+
+        </com.hahaxueche.ui.widget.scoreView.ScoreView>
+    </LinearLayout>
+</RelativeLayout>

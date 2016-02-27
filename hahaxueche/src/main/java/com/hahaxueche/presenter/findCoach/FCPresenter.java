@@ -3,6 +3,7 @@ package com.hahaxueche.presenter.findCoach;
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.FollowResponse;
+import com.hahaxueche.model.findCoach.GetReviewsResponse;
 import com.hahaxueche.model.findCoach.TrailResponse;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.model.util.BaseBoolean;
@@ -87,4 +88,22 @@ public interface FCPresenter {
      */
     public void createTrail(String coach_id, String name, String phone_number, String first_time_option,
                             String second_time_option, FCCallbackListener<TrailResponse> listener);
+
+    /**
+     * 提取一个教练的评价
+     *
+     * @param coach_user_id
+     * @param page
+     * @param per_page
+     * @param listener
+     */
+    public void getReviewList(String coach_user_id, String page, String per_page,
+                              FCCallbackListener<GetReviewsResponse> listener);
+
+    /**
+     *
+     * @param url
+     * @param listener
+     */
+    public void getReviewList(String url, FCCallbackListener<GetReviewsResponse> listener);
 }

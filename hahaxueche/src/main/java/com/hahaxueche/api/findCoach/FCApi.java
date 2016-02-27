@@ -3,6 +3,7 @@ package com.hahaxueche.api.findCoach;
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.FollowResponse;
+import com.hahaxueche.model.findCoach.GetReviewsResponse;
 import com.hahaxueche.model.findCoach.TrailResponse;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.model.util.BaseBoolean;
@@ -92,4 +93,21 @@ public interface FCApi {
      * @return
      */
     public TrailResponse createTrail(String coach_id, String name, String phone_number, String first_time_option, String second_time_option);
+
+    /**
+     * 提取一个教练的评价
+     *
+     * @param coach_user_id
+     * @param page
+     * @param per_page
+     * @return
+     */
+    public GetReviewsResponse getReviewList(String coach_user_id, String page, String per_page);
+
+    /**
+     *
+     * @param url
+     * @return
+     */
+    public GetReviewsResponse getReviewList(String url);
 }
