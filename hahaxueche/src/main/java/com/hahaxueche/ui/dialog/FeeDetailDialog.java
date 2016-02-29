@@ -22,7 +22,7 @@ import java.util.List;
  * 费用明细dialog
  * Created by gibxin on 2016/2/26.
  */
-public class FeeDetailDialog extends Dialog {
+public class FeeDetailDialog extends Dialog implements View.OnClickListener {
     private List<CostItem> mCostItemList;//费用明细列表
     private String mTotalFee;//合计金额
     private Context mContext;
@@ -31,16 +31,23 @@ public class FeeDetailDialog extends Dialog {
     private TextView tvAlreadyKnow;
     private TextView tvTotalCount;
     private TextView tvFeeDialogTitle;
+    private TextView tvSurePay;
+    private TextView tvFeeCancel;
     private LinearLayout llyPayBottom;
+    private OnBtnClickListener mListener;
 
     public FeeDetailDialog(Context context) {
         super(context);
         mContext = context;
     }
 
-    public FeeDetailDialog(Context context, List<CostItem> costItemList, String totalFee, String showType) {
+    public interface OnBtnClickListener {
+        public void onPay();
+    }
+    public FeeDetailDialog(Context context, List<CostItem> costItemList, String totalFee, String showType,OnBtnClickListener listener) {
         super(context);
         mContext = context;
+        mListener = listener;
         mCostItemList = costItemList;
         mTotalFee = totalFee;
         mShowType = showType;
@@ -54,6 +61,8 @@ public class FeeDetailDialog extends Dialog {
         tvTotalCount.setText(Util.getMoneyYuan(mTotalFee));
         tvFeeDialogTitle = (TextView) view.findViewById(R.id.tv_fee_dialog_title);
         llyPayBottom = (LinearLayout) view.findViewById(R.id.lly_pay_bottom);
+        tvSurePay = (TextView) view.findViewById(R.id.tv_sure_pay);
+        tvFeeCancel = (TextView) view.findViewById(R.id.tv_fee_cancel);
         loadCostItemList();
         loadBottomBtn();
         initEvents();
@@ -127,17 +136,25 @@ public class FeeDetailDialog extends Dialog {
      * 事件初始化
      */
     private void initEvents() {
-        tvAlreadyKnow.setOnClickListener(mClickListener);
+        tvAlreadyKnow.setOnClickListener(this);
+        tvFeeCancel.setOnClickListener(this);
+        tvSurePay.setOnClickListener(this);
     }
 
-    View.OnClickListener mClickListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.tv_already_know:
-                    dismiss();
-            }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_already_know:
+                dismiss();
+                break;
+            case R.id.tv_fee_cancel:
+                dismiss();
+                break;
+            case R.id.tv_sure_pay:
+                if (mListener != null) {
+                    mListener.onPay();
+                }
+                break;
         }
-    };
+    }
 }

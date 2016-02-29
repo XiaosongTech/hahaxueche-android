@@ -5,10 +5,12 @@ import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.api.net.HttpEngine;
+import com.hahaxueche.model.findCoach.Charge;
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.FollowResponse;
 import com.hahaxueche.model.findCoach.GetReviewsResponse;
+import com.hahaxueche.model.findCoach.StuPurchaseResponse;
 import com.hahaxueche.model.findCoach.TrailResponse;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.model.util.BaseBoolean;
@@ -156,7 +158,7 @@ public class FCApiImpl implements FCApi {
     public GetReviewsResponse getReviewList(String coach_user_id, String page, String per_page) {
         Type type = new TypeToken<GetReviewsResponse>() {
         }.getType();
-        String url = "users/reviews/"+coach_user_id;
+        String url = "users/reviews/" + coach_user_id;
         if (!TextUtils.isEmpty(page)) {
             url += "?page=" + page;
         }
@@ -170,13 +172,44 @@ public class FCApiImpl implements FCApi {
             return null;
         }
     }
+
     @Override
-    public GetReviewsResponse getReviewList(String url){
+    public GetReviewsResponse getReviewList(String url) {
         Type type = new TypeToken<GetReviewsResponse>() {
         }.getType();
         try {
-            return httpEngine.getHandleByUrl(type,url);
+            return httpEngine.getHandleByUrl(type, url);
         } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public StuPurchaseResponse createPurchaseStu(String coach_id, String access_token, String current_payment_stage, String service_stage, String total_amount) {
+        Type type = new TypeToken<StuPurchaseResponse>() {
+        }.getType();
+        Map<String, String> paramMap = new HashMap<String, String>();
+        paramMap.put("current_payment_stage",current_payment_stage);
+        paramMap.put("service_stage",service_stage);
+        paramMap.put("total_amount",total_amount);
+        try {
+            return httpEngine.postHandleWithX(paramMap, type, "students/purchased_service/" + coach_id, access_token);
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public String createCharge(String coach_id, String access_token) {
+        Type type = new TypeToken<Charge>() {
+        }.getType();
+        Map<String, String> paramMap = new HashMap<String, String>();
+        paramMap.put("coach_id",coach_id);
+        try {
+            return httpEngine.postHandleWithXRaw(paramMap,type,"charges",access_token);
+        }catch (IOException e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }

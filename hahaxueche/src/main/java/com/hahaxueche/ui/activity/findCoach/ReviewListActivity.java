@@ -47,6 +47,13 @@ public class ReviewListActivity extends FCBaseActivity implements XListView.IXLi
         mReviewInfoList = getReviewsResponse.getData();
         initView();
         initEvent();
+        xlvReviewList.setPullRefreshEnable(true);
+        xlvReviewList.setPullLoadEnable(true);
+        xlvReviewList.setAutoLoadEnable(true);
+        xlvReviewList.setXListViewListener(this);
+        xlvReviewList.setRefreshTime(getTime());
+        mReviewItemAdapter = new ReviewItemAdapter(this, mReviewInfoList, R.layout.view_review_list_item);
+        xlvReviewList.setAdapter(mReviewItemAdapter);
     }
 
     private void initView() {
@@ -57,6 +64,7 @@ public class ReviewListActivity extends FCBaseActivity implements XListView.IXLi
     }
     @Override
     public void onRefresh() {
+        System.out.print("onRefresh");
         if (!TextUtils.isEmpty(linkPrevious)) {
             getReviewList(linkPrevious);
         } else {
@@ -67,6 +75,7 @@ public class ReviewListActivity extends FCBaseActivity implements XListView.IXLi
     }
     @Override
     public void onLoadMore() {
+        System.out.print("onLoadMore");
         if (!TextUtils.isEmpty(linkNext)) {
             getReviewList(linkNext);
         } else {

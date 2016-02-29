@@ -113,13 +113,17 @@ public class CoachItemAdapter extends BaseAdapter {
         } else {
             ivIsGoldenCoach.setVisibility(View.GONE);
         }
-        svCoachScore.setScore(Float.parseFloat(coach.getAverage_rating()), false);
+        float score = Float.parseFloat(coach.getAverage_rating());
+        if (score > 5) {
+            score = 5;
+        }
+        svCoachScore.setScore(score, false);
         if (fieldsList != null) {
             for (FieldModel fieldsModel : fieldsList) {
-                if(fieldsModel.getId().equals(coach.getCoach_group().getField_id())){
-                    for (CityModel city :cityList){
-                        if(city.getId().equals(fieldsModel.getCity_id())){
-                            tvCoachLocation.setText(city.getName()+fieldsModel.getSection());
+                if (fieldsModel.getId().equals(coach.getCoach_group().getField_id())) {
+                    for (CityModel city : cityList) {
+                        if (city.getId().equals(fieldsModel.getCity_id())) {
+                            tvCoachLocation.setText(city.getName() + fieldsModel.getSection());
                             break;
                         }
                     }

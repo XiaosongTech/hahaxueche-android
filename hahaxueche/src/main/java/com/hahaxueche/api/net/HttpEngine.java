@@ -73,6 +73,13 @@ public class HttpEngine {
         Log.i(TAG, "response:->" + response);
         return JsonUtils.deserialize(response, typeOfT);
     }
+    public String postHandleWithXRaw(Map<String, String> param, Type typeOfT, String url, String accessToken) throws IOException {
+        String jsonParam = JsonUtils.serialize(param);
+        Log.i(TAG, "jsonParam->" + jsonParam);
+        String response = OkHttpUtils.postWithX(SERVER_URL + url, jsonParam, accessToken);
+        Log.i(TAG, "response:->" + response);
+        return response;
+    }
 
     /**
      * post文件上传方法

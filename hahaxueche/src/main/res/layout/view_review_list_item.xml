@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingBottom="22dp"
     android:background="@android:color/white">
 
     <com.hahaxueche.ui.widget.circleImageView.CircleImageView
@@ -20,7 +21,6 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="18dp"
         android:layout_toRightOf="@id/cir_reviewer_avatar"
-        android:text="刘玲"
         android:textColor="@color/app_theme_color"
         android:textSize="18sp" />
 
@@ -31,7 +31,6 @@
         android:layout_alignBottom="@id/tv_reviewer_name"
         android:layout_marginLeft="6dp"
         android:layout_toRightOf="@id/tv_reviewer_name"
-        android:text="2016/02/01"
         android:textColor="@color/fCTxtGrayFade"
         android:textSize="12sp" />
 
@@ -53,4 +52,14 @@
 
         </com.hahaxueche.ui.widget.scoreView.ScoreView>
     </LinearLayout>
+    <TextView
+        android:id="@+id/tv_review_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_reviewer_name"
+        android:layout_alignLeft="@id/tv_reviewer_name"
+        android:paddingRight="20dp"
+        android:layout_marginTop="10dp"
+        android:textSize="12sp"
+        android:textColor="@color/fCTxtGray"/>
 </RelativeLayout>

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -74,6 +75,9 @@ public class AppointmentDialog extends Dialog {
                 etRealName.setBackgroundResource(R.drawable.edittext_corner_orange);
             }
         });
+        if(!TextUtils.isEmpty(name)){
+            etRealName.setText(name);
+        }
         etContactPhone = (EditText) view.findViewById(R.id.et_contact_phone);
         etContactPhone.addTextChangedListener(new TextWatcher() {
             @Override
@@ -91,6 +95,9 @@ public class AppointmentDialog extends Dialog {
                 etContactPhone.setBackgroundResource(R.drawable.edittext_corner_orange);
             }
         });
+        if(!TextUtils.isEmpty(phoneNumber)){
+            etContactPhone.setText(phoneNumber);
+        }
         tvTrail = (TextView) view.findViewById(R.id.tv_trail);
         tvTrail.setOnClickListener(mClickListener);
         tvCancel = (TextView) view.findViewById(R.id.tv_cancel);

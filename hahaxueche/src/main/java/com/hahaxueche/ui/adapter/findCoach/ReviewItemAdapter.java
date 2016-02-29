@@ -31,6 +31,7 @@ public class ReviewItemAdapter extends BaseAdapter {
     private CircleImageView civReviewerAvatar;//评论人头像
     private TextView tvReviewDate;//评论日期
     private ScoreView svReviewRating;//评分
+    private TextView tvReviewComment;//评论
 
     public ReviewItemAdapter(Context context, List<ReviewInfo> reviewInfoList, int resource) {
         mContext = context;
@@ -62,9 +63,11 @@ public class ReviewItemAdapter extends BaseAdapter {
             civReviewerAvatar = (CircleImageView) convertView.findViewById(R.id.cir_reviewer_avatar);//评论人头像
             tvReviewDate = (TextView) convertView.findViewById(R.id.tv_review_date);//评论日期
             svReviewRating = (ScoreView) convertView.findViewById(R.id.sv_review_rating);//评分
+            tvReviewComment = (TextView) convertView.findViewById(R.id.tv_review_comment);
         }
         ReviewInfo reviewInfo = mReviewInfoList.get(position);
         tvReviewerName.setText(reviewInfo.getReviewer().getName());
+        tvReviewComment.setText(reviewInfo.getComment());
         final int iconWidth = Util.instence(mContext).dip2px(40);
         final int iconHeight = iconWidth;
         Picasso.with(mContext).load(reviewInfo.getReviewer().getAvatar_url()).resize(iconWidth, iconHeight)
@@ -77,6 +80,9 @@ public class ReviewItemAdapter extends BaseAdapter {
         float reviewerRating = 0;
         if (!TextUtils.isEmpty(reviewInfo.getRating())) {
             reviewerRating = Float.parseFloat(reviewInfo.getRating());
+        }
+        if (reviewerRating > 5) {
+            reviewerRating = 5;
         }
         svReviewRating.setScore(reviewerRating, false);
         return convertView;

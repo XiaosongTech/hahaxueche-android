@@ -9,9 +9,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,10 +22,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.R;
 import com.hahaxueche.model.findCoach.BriefCoachInfo;
+import com.hahaxueche.model.findCoach.Charge;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.FieldModel;
 import com.hahaxueche.model.findCoach.FollowResponse;
 import com.hahaxueche.model.findCoach.GetReviewsResponse;
+import com.hahaxueche.model.findCoach.ReviewInfo;
 import com.hahaxueche.model.signupLogin.CityModel;
 import com.hahaxueche.model.signupLogin.CostItem;
 import com.hahaxueche.model.util.BaseApiResponse;
@@ -39,8 +43,10 @@ import com.hahaxueche.ui.dialog.ShareAppDialog;
 import com.hahaxueche.ui.dialog.ZoomImgDialog;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
+import com.hahaxueche.ui.widget.monitorScrollView.MonitorScrollView;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
 import com.hahaxueche.utils.Util;
+import com.pingplusplus.android.PaymentActivity;
 import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Type;
@@ -52,6 +58,7 @@ import java.util.List;
  * Created by gibxin on 2016/2/13.
  */
 public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher.OnSwitchItemClickListener {
+    private MonitorScrollView msvCoachDetail;
     private CircleImageView civCdCoachAvatar;//教练头像
     private TextView tvCdCoachName;//教练姓名
     private TextView tvCdCoachDescription;//教练描述
@@ -78,13 +85,17 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private CircleImageView civPeerCoachAvater1; //合作教练1头像
     private CircleImageView civPeerCoachAvater2; //合作教练2头像
     private View vwPeerCoach;
+    private View vwMoreReviews;
     private TextView tvLicenseType;
+    private TextView tvMoreReviews;
     //关注
     private LinearLayout llyFollow;
     private ImageView ivFollow;
     private TextView tvFollow;
     private boolean isLogin = false;
     private String access_token;
+    private String mName = "";
+    private String mPhoneNumber = "";
     private boolean isFollow = false;
     private FeeDetailDialog feeDetailDialog;
     private AppointmentDialog appointmentDialog;
@@ -112,6 +123,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     }
 
     private void initView() {
+        msvCoachDetail = Util.instence(this).$(this, R.id.msv_coach_detail);
         civCdCoachAvatar = Util.instence(this).$(this, R.id.cir_cd_coach_avatar);
         civPeerCoachAvater1 = Util.instence(this).$(this, R.id.cir_peer_coach1);
         civPeerCoachAvater2 = Util.instence(this).$(this, R.id.cir_peer_coach2);
@@ -121,6 +133,8 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         tvPeerCoach1 = Util.instence(this).$(this, R.id.tv_peer_coach1);
         tvPeerCoach2 = Util.instence(this).$(this, R.id.tv_peer_coach2);
         vwPeerCoach = Util.instence(this).$(this, R.id.vw_peer_coach);
+        vwMoreReviews = Util.instence(this).$(this, R.id.vw_more_reviews);
+        tvMoreReviews = Util.instence(this).$(this, R.id.tv_more_reviews);
 
         tvCdCoachName = Util.instence(this).$(this, R.id.tv_cd_coach_name);
         tvCdCoachDescription = Util.instence(this).$(this, R.id.tv_cd_coach_description);
@@ -170,6 +184,8 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         llySurePay.setOnClickListener(mClickListener);
         llyFreeLearn.setOnClickListener(mClickListener);
         llyMoreReviews.setOnClickListener(mClickListener);
+        llyPeerCoach1.setOnClickListener(mClickListener);
+        llyPeerCoach2.setOnClickListener(mClickListener);
     }
 
     /**
@@ -296,6 +312,9 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         if (!TextUtils.isEmpty(mCoach.getAverage_rating())) {
             averageRating = Float.parseFloat(mCoach.getAverage_rating());
         }
+        if (averageRating > 5) {
+            averageRating = 5;
+        }
         svAverageRating.setScore(averageRating, true);
     }
 
@@ -312,8 +331,22 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
             public void onSuccess(GetReviewsResponse getReviewsResponse) {
                 mGetReviewsResponse = getReviewsResponse;
                 if (getReviewsResponse.getData() != null && getReviewsResponse.getData().size() > 0) {
-                    reviewItemAdapter = new ReviewItemAdapter(CoachDetailActivity.this, getReviewsResponse.getData(), R.layout.view_review_list_item);
+                    List<ReviewInfo> reviewInfos = new ArrayList<ReviewInfo>();
+                    for (int i = 0; i < getReviewsResponse.getData().size(); i++) {
+                        if (i == 2) break;
+                        reviewInfos.add(getReviewsResponse.getData().get(i));
+                    }
+
+                    reviewItemAdapter = new ReviewItemAdapter(CoachDetailActivity.this, reviewInfos, R.layout.view_review_list_item);
                     lvReviewList.setAdapter(reviewItemAdapter);
+                    setListViewHeightBasedOnChildren(lvReviewList);
+                    msvCoachDetail.smoothScrollTo(0, 0);
+
+                } else {
+                    vwMoreReviews.setVisibility(View.GONE);
+                    tvMoreReviews.setText(mCoach.getName() + "教练目前还没有评价");
+                    tvMoreReviews.setTextColor(getResources().getColor(R.color.fCTxtGray));
+                    llyMoreReviews.setClickable(false);
                 }
             }
 
@@ -380,13 +413,40 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                     break;
                 //拿证价格
                 case R.id.lly_take_cert_cost:
-                    feeDetailDialog = new FeeDetailDialog(CoachDetailActivity.this, mCostItemList, mCoach.getCoach_group().getTraining_cost(), "1");
+                    feeDetailDialog = new FeeDetailDialog(CoachDetailActivity.this, mCostItemList, mCoach.getCoach_group().getTraining_cost(), "1",
+                            new FeeDetailDialog.OnBtnClickListener() {
+                                @Override
+                                public void onPay() {
+                                    feeDetailDialog.dismiss();
+                                }
+                            });
                     feeDetailDialog.show();
                     break;
                 //确认付款
                 case R.id.lly_sure_pay:
                     if (isLogin) {
-                        feeDetailDialog = new FeeDetailDialog(CoachDetailActivity.this, mCostItemList, mCoach.getCoach_group().getTraining_cost(), "2");
+                        feeDetailDialog = new FeeDetailDialog(CoachDetailActivity.this, mCostItemList, mCoach.getCoach_group().getTraining_cost(), "2",
+                                new FeeDetailDialog.OnBtnClickListener() {
+                                    @Override
+                                    public void onPay() {
+                                        feeDetailDialog.dismiss();
+                                        //调用获取charge
+                                        fcPresenter.createCharge(mCoach.getId(), access_token, new FCCallbackListener<String>() {
+                                            @Override
+                                            public void onSuccess(String charge) {
+                                                //调用ping++
+                                                Intent intent = new Intent(CoachDetailActivity.this, PaymentActivity.class);
+                                                intent.putExtra(PaymentActivity.EXTRA_CHARGE, charge);
+                                                startActivityForResult(intent, 1);
+                                            }
+
+                                            @Override
+                                            public void onFailure(String errorEvent, String message) {
+
+                                            }
+                                        });
+                                    }
+                                });
                         feeDetailDialog.show();
                     } else {
                         alertToLogin();
@@ -394,15 +454,28 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                     break;
                 //免费试学
                 case R.id.lly_free_learn:
-                    appointmentDialog = new AppointmentDialog(CoachDetailActivity.this, "", "", mCoach.getId());
+                    appointmentDialog = new AppointmentDialog(CoachDetailActivity.this, mName, mPhoneNumber, mCoach.getId());
                     appointmentDialog.show();
                     break;
+                //加载评论列表页面
                 case R.id.lly_more_reviews:
-                    Intent intent = new Intent(CoachDetailActivity.this,ReviewListActivity.class);
+                    Intent intent = new Intent(CoachDetailActivity.this, ReviewListActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("getReviewsResponse",mGetReviewsResponse);
-                    bundle.putString("coach_user_id",mCoach.getUser_id());
+                    bundle.putSerializable("getReviewsResponse", mGetReviewsResponse);
+                    bundle.putString("coach_user_id", mCoach.getUser_id());
                     intent.putExtras(bundle);
+                    startActivity(intent);
+                    break;
+                //合作教练1
+                case R.id.lly_peer_coach1:
+                    intent = new Intent(CoachDetailActivity.this, CoachDetailActivity.class);
+                    intent.putExtra("coach_id", mCoach.getPeer_coaches().get(0).getId());
+                    startActivity(intent);
+                    break;
+                //合作教练2
+                case R.id.lly_peer_coach2:
+                    intent = new Intent(CoachDetailActivity.this, CoachDetailActivity.class);
+                    intent.putExtra("coach_id", mCoach.getPeer_coaches().get(1).getId());
                     startActivity(intent);
                     break;
             }
@@ -442,6 +515,8 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         if (!TextUtils.isEmpty(accessToken)) {
             isLogin = true;
             access_token = accessToken;
+            mName = spSession.getString("name", "");
+            mPhoneNumber = spSession.getString("cell_phone", "");
         }
         //根据当前登录人的cityid，加载费用明细列表
         List<CityModel> cityList = mConstants.getCities();
@@ -477,5 +552,54 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
             }
         });
         builder.create().show();
+    }
+
+    public void setListViewHeightBasedOnChildren(ListView listView) {
+        // 获取ListView对应的Adapter
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0, len = listAdapter.getCount(); i < len; i++) {
+            // listAdapter.getCount()返回数据项的数目
+            View listItem = listAdapter.getView(i, null, listView);
+            // 计算子项View 的宽高
+            listItem.measure(0, 0);
+            // 统计所有子项的总高度
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        // listView.getDividerHeight()获取子项间分隔符占用的高度
+        // params.height最后得到整个ListView完整显示需要的高度
+        listView.setLayoutParams(params);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //支付页面返回处理
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                String result = data.getExtras().getString("pay_result");
+                /* 处理返回值
+                 * "success" - 支付成功
+                 * "fail"    - 支付失败
+                 * "cancel"  - 取消支付
+                 * "invalid" - 支付插件未安装（一般是微信客户端未安装的情况）
+                 */
+                String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
+                String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
+//                Log.v("ping++", "result -> " + result);
+//                Log.v("ping++", "errorMsg -> " + errorMsg);
+//                Log.v("ping++", "extraMsg -> " + extraMsg);
+                if(result.equals("success")){
+                    Toast.makeText(context, "支付成功", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(context, "支付失败", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 }

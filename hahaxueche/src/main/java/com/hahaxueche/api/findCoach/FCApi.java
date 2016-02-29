@@ -1,9 +1,11 @@
 package com.hahaxueche.api.findCoach;
 
+import com.hahaxueche.model.findCoach.Charge;
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.FollowResponse;
 import com.hahaxueche.model.findCoach.GetReviewsResponse;
+import com.hahaxueche.model.findCoach.StuPurchaseResponse;
 import com.hahaxueche.model.findCoach.TrailResponse;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.model.util.BaseBoolean;
@@ -105,9 +107,28 @@ public interface FCApi {
     public GetReviewsResponse getReviewList(String coach_user_id, String page, String per_page);
 
     /**
-     *
      * @param url
      * @return
      */
     public GetReviewsResponse getReviewList(String url);
+
+    /**
+     * 学生创建教练和学员的Purchased Service
+     *
+     * @param coach_id
+     * @param access_token
+     * @param current_payment_stage
+     * @param service_stage
+     * @param total_amount
+     * @return
+     */
+    public StuPurchaseResponse createPurchaseStu(String coach_id, String access_token, String current_payment_stage,
+                                                 String service_stage, String total_amount);
+
+    /**
+     * @param coach_id
+     * @param access_token
+     * @return
+     */
+    public String createCharge(String coach_id, String access_token);
 }

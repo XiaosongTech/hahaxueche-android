@@ -2,14 +2,17 @@ package com.hahaxueche.presenter.findCoach;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 
 import com.hahaxueche.api.findCoach.FCApi;
 import com.hahaxueche.api.findCoach.FCApiImpl;
 import com.hahaxueche.api.util.ApiError;
+import com.hahaxueche.model.findCoach.Charge;
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.FollowResponse;
 import com.hahaxueche.model.findCoach.GetReviewsResponse;
+import com.hahaxueche.model.findCoach.StuPurchaseResponse;
 import com.hahaxueche.model.findCoach.TrailResponse;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.model.util.BaseBoolean;
@@ -201,7 +204,7 @@ public class FCPresenterImpl implements FCPresenter {
     }
 
     @Override
-    public void getReviewList(final String coach_user_id , final String page, final String per_page,
+    public void getReviewList(final String coach_user_id, final String page, final String per_page,
                               final FCCallbackListener<GetReviewsResponse> listener) {
         new AsyncTask<Void, Void, GetReviewsResponse>() {
             @Override
@@ -223,6 +226,7 @@ public class FCPresenterImpl implements FCPresenter {
             }
         }.execute();
     }
+
     @Override
     public void getReviewList(final String url, final FCCallbackListener<GetReviewsResponse> listener) {
         new AsyncTask<Void, Void, GetReviewsResponse>() {
@@ -239,6 +243,55 @@ public class FCPresenterImpl implements FCPresenter {
                         listener.onSuccess(getReviewsResponse);
                     } else {
                         listener.onFailure(getReviewsResponse.getCode(), getReviewsResponse.getMessage());
+                    }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void createPurchaseStu(final String coach_id, final String access_token, final String current_payment_stage, final String service_stage,
+                                  final String total_amount, final FCCallbackListener<StuPurchaseResponse> listener) {
+        new AsyncTask<Void, Void, StuPurchaseResponse>() {
+
+            @Override
+            protected StuPurchaseResponse doInBackground(Void... params) {
+                return api.createPurchaseStu(coach_id, access_token, current_payment_stage, service_stage, total_amount);
+            }
+
+            @Override
+            protected void onPostExecute(StuPurchaseResponse stuPurchaseResponse) {
+                if (listener != null) {
+                    if (stuPurchaseResponse.isSuccess()) {
+                        listener.onSuccess(stuPurchaseResponse);
+                    } else {
+                        listener.onFailure(stuPurchaseResponse.getCode(), stuPurchaseResponse.getMessage());
+                    }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void createCharge(final String coach_id,final String access_token,final FCCallbackListener<String> listener) {
+        new AsyncTask<Void, Void, String>() {
+
+            @Override
+            protected String doInBackground(Void... params) {
+                return api.createCharge(coach_id, access_token);
+            }
+
+            @Override
+            protected void onPostExecute(String charge) {
+                if (listener != null) {
+                    if (!TextUtils.isEmpty(charge)) {
+                        listener.onSuccess(charge);
+                    } else {
+                        listener.onFailure("400", "获取charge失败");
                     }
                 } else {
                     listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);

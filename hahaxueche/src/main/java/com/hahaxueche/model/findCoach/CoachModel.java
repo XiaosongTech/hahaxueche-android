@@ -28,6 +28,7 @@ public class CoachModel implements Serializable {
     private String consultant;
     private CoachGroupModel coach_group;
     private List<BriefCoachInfo> peer_coaches;
+    private String assigned_coaches;
     private String code;
     private String message;
 
@@ -197,6 +198,14 @@ public class CoachModel implements Serializable {
 
     public void setPeer_coaches(List<BriefCoachInfo> peer_coaches) {
         this.peer_coaches = peer_coaches;
+    }
+
+    public String getAssigned_coaches() {
+        return assigned_coaches;
+    }
+
+    public void setAssigned_coaches(String assigned_coaches) {
+        this.assigned_coaches = assigned_coaches;
     }
 
     public String getCode() {

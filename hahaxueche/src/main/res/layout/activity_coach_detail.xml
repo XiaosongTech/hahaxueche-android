@@ -32,6 +32,7 @@
     </RelativeLayout>
 
     <com.hahaxueche.ui.widget.monitorScrollView.MonitorScrollView
+        android:id="@+id/msv_coach_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -44,8 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
-                android:paddingBottom="20dp"
-                android:visibility="gone">
+                android:paddingBottom="20dp">
 
                 <com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher
                     android:id="@+id/is_cd_coach_switcher"
@@ -502,12 +502,6 @@
                         android:src="@drawable/ic_coachmsg_more_arrow" />
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginTop="14dp"
-                    android:background="@color/fCViewGray" />
-
                 <LinearLayout
                     android:id="@+id/lly_peer_coach2"
                     android:layout_width="match_parent"
@@ -588,16 +582,18 @@
                     android:layout_height="0.5dp"
                     android:layout_marginTop="14dp"
                     android:background="@color/fCViewGray" />
+
                 <ListView
                     android:id="@+id/lv_reviews_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:divider="@drawable/layer_list_divider"
+                    android:divider="@drawable/layer_list_divider_review"
                     android:dividerHeight="1dp"
-                    android:headerDividersEnabled="false"
-                    android:footerDividersEnabled="false"></ListView>
+                    android:footerDividersEnabled="false"
+                    android:headerDividersEnabled="false"></ListView>
 
                 <View
+                    android:id="@+id/vw_more_reviews"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginTop="14dp"
@@ -611,6 +607,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/tv_more_reviews"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="14dp"

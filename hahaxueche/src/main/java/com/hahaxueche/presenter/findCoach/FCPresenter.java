@@ -1,9 +1,11 @@
 package com.hahaxueche.presenter.findCoach;
 
+import com.hahaxueche.model.findCoach.Charge;
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.FollowResponse;
 import com.hahaxueche.model.findCoach.GetReviewsResponse;
+import com.hahaxueche.model.findCoach.StuPurchaseResponse;
 import com.hahaxueche.model.findCoach.TrailResponse;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.model.util.BaseBoolean;
@@ -101,9 +103,18 @@ public interface FCPresenter {
                               FCCallbackListener<GetReviewsResponse> listener);
 
     /**
-     *
      * @param url
      * @param listener
      */
     public void getReviewList(String url, FCCallbackListener<GetReviewsResponse> listener);
+
+    public void createPurchaseStu(String coach_id, String access_token, String current_payment_stage, String service_stage,
+                                  String total_amount, FCCallbackListener<StuPurchaseResponse> listener);
+
+    /**
+     * @param coach_id
+     * @param access_token
+     * @param listener
+     */
+    public void createCharge(String coach_id, String access_token, FCCallbackListener<String> listener);
 }
