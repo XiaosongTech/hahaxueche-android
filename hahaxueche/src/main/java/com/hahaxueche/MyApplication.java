@@ -10,6 +10,8 @@ import com.hahaxueche.api.signupLogin.SLApi;
 import com.hahaxueche.model.util.ConstantsModel;
 import com.hahaxueche.presenter.findCoach.FCPresenter;
 import com.hahaxueche.presenter.findCoach.FCPresenterImpl;
+import com.hahaxueche.presenter.mySetting.MSPresenter;
+import com.hahaxueche.presenter.mySetting.MSPresenterImpl;
 import com.hahaxueche.presenter.signupLogin.SLPresenter;
 import com.hahaxueche.presenter.signupLogin.SLPresenterImpl;
 import com.hahaxueche.utils.JsonUtils;
@@ -26,12 +28,14 @@ import java.lang.reflect.Type;
 public class MyApplication extends Application {
     private SLPresenter sLPresenter;
     private FCPresenter fcPresenter;
+    private MSPresenter msPresenter;
 
     @Override
     public void onCreate() {
         super.onCreate();
         sLPresenter = new SLPresenterImpl(this);
         fcPresenter = new FCPresenterImpl(this);
+        msPresenter = new MSPresenterImpl(this);
         //清空session
         SharedPreferences spSession = getSharedPreferences("session", Activity.MODE_PRIVATE);
         SharedPreferences.Editor spEditor = spSession.edit();
@@ -63,6 +67,10 @@ public class MyApplication extends Application {
 
     public FCPresenter getFCPresenter() {
         return fcPresenter;
+    }
+
+    public MSPresenter getMsPresenter() {
+        return msPresenter;
     }
 
 

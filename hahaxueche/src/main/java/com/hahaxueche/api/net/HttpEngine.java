@@ -73,7 +73,8 @@ public class HttpEngine {
         Log.i(TAG, "response:->" + response);
         return JsonUtils.deserialize(response, typeOfT);
     }
-    public String postHandleWithXRaw(Map<String, String> param, Type typeOfT, String url, String accessToken) throws IOException {
+
+    public String postHandleWithXRaw(Map<String, String> param, String url, String accessToken) throws IOException {
         String jsonParam = JsonUtils.serialize(param);
         Log.i(TAG, "jsonParam->" + jsonParam);
         String response = OkHttpUtils.postWithX(SERVER_URL + url, jsonParam, accessToken);
@@ -134,6 +135,22 @@ public class HttpEngine {
     public <T> T getHandleByUrl(Type typeOfT, String url) throws IOException {
         Log.i(TAG, "get url ->" + url);
         String response = OkHttpUtils.get(url);
+        Log.i(TAG, "response:->" + response);
+        return JsonUtils.deserialize(response, typeOfT);
+    }
+
+    /**
+     *
+     * @param typeOfT
+     * @param url
+     * @param accessToken
+     * @param <T>
+     * @return
+     * @throws IOException
+     */
+    public <T> T getHandleByUrl(Type typeOfT, String url, String accessToken) throws IOException {
+        Log.i(TAG, "get url ->" + url);
+        String response = OkHttpUtils.get(url, accessToken);
         Log.i(TAG, "response:->" + response);
         return JsonUtils.deserialize(response, typeOfT);
     }

@@ -100,6 +100,9 @@ public class ReviewListActivity extends FCBaseActivity implements XListView.IXLi
                 linkSelf = data.getLinks().getSelf();
                 linkNext = data.getLinks().getNext();
                 linkPrevious = data.getLinks().getPrevious();
+                if(mReviewInfoList.size()!=Integer.parseInt(per_page)){
+                    xlvReviewList.setPullLoadEnable(false);
+                }
                 mReviewItemAdapter = new ReviewItemAdapter(ReviewListActivity.this, mReviewInfoList, R.layout.view_review_list_item);
                 xlvReviewList.setAdapter(mReviewItemAdapter);
                 onLoad();
@@ -120,6 +123,9 @@ public class ReviewListActivity extends FCBaseActivity implements XListView.IXLi
                 linkSelf = data.getLinks().getSelf();
                 linkNext = data.getLinks().getNext();
                 linkPrevious = data.getLinks().getPrevious();
+                if(mReviewInfoList.size()!=Integer.parseInt(per_page)){
+                    xlvReviewList.setPullLoadEnable(false);
+                }
                 mReviewItemAdapter = new ReviewItemAdapter(ReviewListActivity.this, mReviewInfoList, R.layout.view_review_list_item);
                 xlvReviewList.setAdapter(mReviewItemAdapter);
                 onLoad();

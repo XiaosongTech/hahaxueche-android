@@ -96,10 +96,10 @@
                 </RelativeLayout>
 
                 <TextView
+                    android:id="@+id/tv_stu_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="安妮"
                     android:textColor="@color/mSTextBlack"
                     android:textSize="18sp" />
 
@@ -125,11 +125,11 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/tv_unpaid_amount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="14dp"
                             android:layout_marginTop="14dp"
-                            android:text="￥0"
                             android:textColor="@color/mSTextBlackFade"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -140,30 +140,42 @@
                         android:layout_gravity="center"
                         android:background="@color/mSViewBlackFade" />
 
-                    <LinearLayout
+                    <RelativeLayout
+                        android:id="@+id/rly_payment_stage"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        android:layout_weight="1">
 
                         <TextView
+                            android:id="@+id/tv_ms_transfer_state_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
                             android:layout_marginTop="12dp"
                             android:text="@string/mSTransferState"
                             android:textColor="@color/app_theme_color"
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/tv_payment_stage"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@id/tv_ms_transfer_state_title"
+                            android:layout_centerHorizontal="true"
                             android:layout_marginBottom="14dp"
                             android:layout_marginTop="14dp"
                             android:text="未选择教练"
                             android:textColor="@color/mSTextBlackFade"
                             android:textSize="16sp" />
-                    </LinearLayout>
+                        <ImageView
+                            android:id="@+id/iv_payment_stage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="20dp"
+                            android:src="@drawable/ic_coachmsg_more_arrow" />
+                    </RelativeLayout>
                 </LinearLayout>
 
             </LinearLayout>
@@ -195,6 +207,7 @@
                     android:background="@color/mSViewBlackFade" />
 
                 <RelativeLayout
+                    android:id="@+id/rly_my_coach"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center_vertical">
@@ -222,6 +235,7 @@
                     android:background="@color/mSViewBlackFade" />
 
                 <RelativeLayout
+                    android:id="@+id/rly_my_follow_coach"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center_vertical">

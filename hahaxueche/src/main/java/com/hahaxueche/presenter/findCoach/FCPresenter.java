@@ -1,6 +1,5 @@
 package com.hahaxueche.presenter.findCoach;
 
-import com.hahaxueche.model.findCoach.Charge;
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.FollowResponse;

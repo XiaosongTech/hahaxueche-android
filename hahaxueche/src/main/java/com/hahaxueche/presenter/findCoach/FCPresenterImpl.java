@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import com.hahaxueche.api.findCoach.FCApi;
 import com.hahaxueche.api.findCoach.FCApiImpl;
 import com.hahaxueche.api.util.ApiError;
-import com.hahaxueche.model.findCoach.Charge;
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.FollowResponse;

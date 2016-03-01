@@ -129,7 +129,11 @@
             android:exported="false"
             android:screenOrientation="behind" >
         </activity>
-
+        <activity
+            android:name=".ui.activity.mySetting.FollowCoachListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

@@ -22,6 +22,7 @@ import com.hahaxueche.model.signupLogin.StudentModel;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
 import com.hahaxueche.ui.activity.index.IndexActivity;
+import com.hahaxueche.utils.JsonUtils;
 
 import java.lang.ref.WeakReference;
 
@@ -182,11 +183,12 @@ public class SignUpActivity extends SLBaseActivity {
                     SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("access_token", userSession.getAccess_token());
-                    editor.putString("student_id", userStudent.getId());
+                    editor.putString("id", userStudent.getId());
                     editor.putString("cell_phone",userStudent.getCell_phone());
                     editor.putString("name",userStudent.getName());
                     editor.putString("city_id",userStudent.getCity_id());
                     editor.putString("avatar",userStudent.getAvatar());
+                    editor.putString("student", JsonUtils.serialize(userStudent));
                     editor.commit();
                     Intent intent = new Intent(context, SignUpInfoActivity.class);
                     startActivity(intent);

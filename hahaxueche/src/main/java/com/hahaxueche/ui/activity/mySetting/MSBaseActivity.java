@@ -1,25 +1,21 @@
-package com.hahaxueche.ui.activity.findCoach;
+package com.hahaxueche.ui.activity.mySetting;
 
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
 import com.hahaxueche.MyApplication;
-import com.hahaxueche.presenter.findCoach.FCPresenter;
 import com.hahaxueche.presenter.mySetting.MSPresenter;
-import com.hahaxueche.presenter.signupLogin.SLPresenter;
 
 /**
- * 寻找教练基本Activity
- * Created by gibxin on 2016/2/21.
+ * Created by gibxin on 2016/2/29.
  */
-public class FCBaseActivity extends Activity {
+public class MSBaseActivity extends Activity {
     // 上下文实例
     public Context context;
     // 应用实例
     public MyApplication application;
-    // 寻找教练Presenter
-    public FCPresenter fcPresenter;
+    // 我的页面Presenter
     public MSPresenter msPresenter;
 
     @Override
@@ -27,7 +23,6 @@ public class FCBaseActivity extends Activity {
         super.onCreate(savedInstanceState);
         context = getApplicationContext();
         application = (MyApplication) this.getApplication();
-        fcPresenter = application.getFCPresenter();
         msPresenter = application.getMsPresenter();
     }
 }

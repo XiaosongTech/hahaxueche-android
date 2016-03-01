@@ -22,7 +22,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.R;
 import com.hahaxueche.model.findCoach.BriefCoachInfo;
-import com.hahaxueche.model.findCoach.Charge;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.FieldModel;
 import com.hahaxueche.model.findCoach.FollowResponse;
@@ -30,11 +29,13 @@ import com.hahaxueche.model.findCoach.GetReviewsResponse;
 import com.hahaxueche.model.findCoach.ReviewInfo;
 import com.hahaxueche.model.signupLogin.CityModel;
 import com.hahaxueche.model.signupLogin.CostItem;
+import com.hahaxueche.model.signupLogin.StudentModel;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.model.util.BaseBoolean;
 import com.hahaxueche.model.util.BaseKeyValue;
 import com.hahaxueche.model.util.ConstantsModel;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
+import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
 import com.hahaxueche.ui.adapter.findCoach.ReviewItemAdapter;
 import com.hahaxueche.ui.dialog.AppointmentDialog;
@@ -45,6 +46,7 @@ import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
 import com.hahaxueche.ui.widget.monitorScrollView.MonitorScrollView;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
+import com.hahaxueche.utils.JsonUtils;
 import com.hahaxueche.utils.Util;
 import com.pingplusplus.android.PaymentActivity;
 import com.squareup.picasso.Picasso;
@@ -111,6 +113,8 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private LinearLayout llySurePay;
     //免费试学
     private LinearLayout llyFreeLearn;
+    //学员
+    private StudentModel mStudent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -197,6 +201,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
             mCoach = (CoachModel) intent.getSerializableExtra("coach");
             loadDetail();
             loadReviews();
+            loadFollow();
         } else {
             String coach_id = getIntent().getStringExtra("coach_id");
             if (pd != null) {
@@ -212,6 +217,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                     mCoach = coachModel;
                     loadDetail();
                     loadReviews();
+                    loadFollow();
                 }
 
                 @Override
@@ -223,24 +229,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                 }
             });
         }
-        //显示关注按钮
-        if (isLogin) {
-            this.fcPresenter.isFollow(mCoach.getUser_id(), access_token, new FCCallbackListener<BaseBoolean>() {
-                @Override
-                public void onSuccess(BaseBoolean baseBoolean) {
-                    //已经关注
-                    if (baseBoolean.isTrue()) {
-                        setFollow();
-                        isFollow = true;
-                    }
-                }
 
-                @Override
-                public void onFailure(String errorEvent, String message) {
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
     }
 
     /**
@@ -355,6 +344,27 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
 
             }
         });
+    }
+
+    private void loadFollow() {
+        //显示关注按钮
+        if (isLogin) {
+            this.fcPresenter.isFollow(mCoach.getUser_id(), access_token, new FCCallbackListener<BaseBoolean>() {
+                @Override
+                public void onSuccess(BaseBoolean baseBoolean) {
+                    //已经关注
+                    if (baseBoolean.isTrue()) {
+                        setFollow();
+                        isFollow = true;
+                    }
+                }
+
+                @Override
+                public void onFailure(String errorEvent, String message) {
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     @Override
@@ -513,10 +523,15 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         SharedPreferences spSession = getSharedPreferences("session", Activity.MODE_PRIVATE);
         String accessToken = spSession.getString("access_token", "");
         if (!TextUtils.isEmpty(accessToken)) {
-            isLogin = true;
             access_token = accessToken;
             mName = spSession.getString("name", "");
             mPhoneNumber = spSession.getString("cell_phone", "");
+            Type stuType = new TypeToken<StudentModel>() {
+            }.getType();
+            mStudent = JsonUtils.deserialize(spSession.getString("student", ""), stuType);
+            if (mStudent != null && !TextUtils.isEmpty(mStudent.getId())) {
+                isLogin = true;
+            }
         }
         //根据当前登录人的cityid，加载费用明细列表
         List<CityModel> cityList = mConstants.getCities();
@@ -594,9 +609,25 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
 //                Log.v("ping++", "result -> " + result);
 //                Log.v("ping++", "errorMsg -> " + errorMsg);
 //                Log.v("ping++", "extraMsg -> " + extraMsg);
-                if(result.equals("success")){
+                if (result.equals("success")) {
                     Toast.makeText(context, "支付成功", Toast.LENGTH_SHORT).show();
-                }else{
+                    //更新SharedPreferences中的student
+                    this.msPresenter.getStudent(mStudent.getId(), access_token, new MSCallbackListener<StudentModel>() {
+                        @Override
+                        public void onSuccess(StudentModel data) {
+                            mStudent = data;
+                            SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("student", JsonUtils.serialize(mStudent));
+                            editor.commit();
+                        }
+
+                        @Override
+                        public void onFailure(String errorEvent, String message) {
+
+                        }
+                    });
+                } else {
                     Toast.makeText(context, "支付失败", Toast.LENGTH_SHORT).show();
                 }
             }

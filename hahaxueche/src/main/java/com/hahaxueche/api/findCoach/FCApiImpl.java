@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.api.net.HttpEngine;
-import com.hahaxueche.model.findCoach.Charge;
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.FollowResponse;
@@ -203,12 +202,10 @@ public class FCApiImpl implements FCApi {
 
     @Override
     public String createCharge(String coach_id, String access_token) {
-        Type type = new TypeToken<Charge>() {
-        }.getType();
         Map<String, String> paramMap = new HashMap<String, String>();
         paramMap.put("coach_id",coach_id);
         try {
-            return httpEngine.postHandleWithXRaw(paramMap,type,"charges",access_token);
+            return httpEngine.postHandleWithXRaw(paramMap,"charges",access_token);
         }catch (IOException e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;

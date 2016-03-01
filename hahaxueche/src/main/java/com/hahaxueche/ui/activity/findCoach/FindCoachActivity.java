@@ -253,11 +253,13 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                     @Override
                     public void onSuccess(CoachListResponse data) {
                         coachList.clear();
-                        Log.v("gibxin", "success");
                         coachList = data.getData();
                         linkSelf = data.getLinks().getSelf();
                         linkNext = data.getLinks().getNext();
                         linkPrevious = data.getLinks().getPrevious();
+                        if(coachList.size()!=Integer.parseInt(per_page)){
+                            xlvCoachList.setPullLoadEnable(false);
+                        }
                         mAdapter = new CoachItemAdapter(FindCoachActivity.this, coachList, R.layout.view_coach_list_item);
                         xlvCoachList.setAdapter(mAdapter);
                         onLoad();
@@ -279,6 +281,9 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                 linkSelf = data.getLinks().getSelf();
                 linkNext = data.getLinks().getNext();
                 linkPrevious = data.getLinks().getPrevious();
+                if(coachList.size()!=Integer.parseInt(per_page)){
+                    xlvCoachList.setPullLoadEnable(false);
+                }
                 mAdapter = new CoachItemAdapter(FindCoachActivity.this, coachList, R.layout.view_coach_list_item);
                 xlvCoachList.setAdapter(mAdapter);
                 onLoad();
