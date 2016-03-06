@@ -3,9 +3,11 @@ package com.hahaxueche.ui.activity.mySetting;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,6 +19,8 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.mySetting.PaymentStage;
 import com.hahaxueche.model.mySetting.PurchasedService;
 import com.hahaxueche.model.signupLogin.StudentModel;
+import com.hahaxueche.model.util.BaseApiResponse;
+import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.share.ShareConstants;
 import com.hahaxueche.ui.activity.appointment.AppointmentActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
@@ -36,7 +40,7 @@ import java.util.List;
 /**
  * Created by gibxin on 2016/1/27.
  */
-public class MySettingActivity extends Activity {
+public class MySettingActivity extends MSBaseActivity {
     private LinearLayout llyTabIndex;
     private LinearLayout llyTabFindCoach;
     private LinearLayout llyTabAppointment;
@@ -51,6 +55,7 @@ public class MySettingActivity extends Activity {
     private StudentModel mStudent;
     private PurchasedService mPurchasedService;
     private String accessToken;
+    private String session_id;
     private TextView tvStuName;
     private TextView tvUnpaidAmount;
     private RelativeLayout rlyMyFollowCoach;
@@ -58,6 +63,8 @@ public class MySettingActivity extends Activity {
     private RelativeLayout rlyPaymentStage;
     private TextView tvPaymentStage;
     private ImageView ivPaymentStage;
+    private LinearLayout llyLoginOff;
+    private RelativeLayout rlyCustomerPhone;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,6 +93,8 @@ public class MySettingActivity extends Activity {
         rlyPaymentStage = Util.instence(this).$(this, R.id.rly_payment_stage);
         tvPaymentStage = Util.instence(this).$(this, R.id.tv_payment_stage);
         ivPaymentStage = Util.instence(this).$(this, R.id.iv_payment_stage);
+        llyLoginOff  = Util.instence(this).$(this, R.id.lly_login_off);
+        rlyCustomerPhone = Util.instence(this).$(this, R.id.rly_customer_phone);
     }
 
     private void initEvent() {
@@ -98,11 +107,14 @@ public class MySettingActivity extends Activity {
         rlyMyFollowCoach.setOnClickListener(mClickListener);
         rlyMyCoach.setOnClickListener(mClickListener);
         rlyPaymentStage.setOnClickListener(mClickListener);
+        llyLoginOff.setOnClickListener(mClickListener);
+        rlyCustomerPhone.setOnClickListener(mClickListener);
     }
 
     private void loadDatas() {
         SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
         accessToken = sharedPreferences.getString("access_token", "");
+        session_id = sharedPreferences.getString("session_id", "");
         if (!TextUtils.isEmpty(accessToken)) {
             Type stuType = new TypeToken<StudentModel>() {
             }.getType();
@@ -125,12 +137,21 @@ public class MySettingActivity extends Activity {
                 //账户余额
                 tvUnpaidAmount.setText(Util.getMoney(mPurchasedService.getUnpaid_amount()));
                 List<PaymentStage> paymentStageList = mPurchasedService.getPayment_stages();
+                String tempPaymentStageStr = "";
                 for (PaymentStage paymentStage : paymentStageList) {
                     if(paymentStage.getStage_number().equals(mPurchasedService.getCurrent_payment_stage())){
-                        tvPaymentStage.setText(paymentStage.getStage_name());
+                        tempPaymentStageStr = paymentStage.getStage_name();
                         break;
                     }
                 }
+                if(TextUtils.isEmpty(tempPaymentStageStr)){
+                    if(paymentStageList.size()+1 == Integer.parseInt(mPurchasedService.getCurrent_payment_stage())){
+                        tempPaymentStageStr ="已全部付款";
+                    }
+                }
+                tvPaymentStage.setText(tempPaymentStageStr);
+                ivPaymentStage.setVisibility(View.VISIBLE);
+                rlyPaymentStage.setClickable(true);
             } else {
                 tvPaymentStage.setText("未选择教练");
                 ivPaymentStage.setVisibility(View.GONE);
@@ -186,7 +207,44 @@ public class MySettingActivity extends Activity {
                     intent = new Intent(getApplication(), FollowCoachListActivity.class);
                     startActivity(intent);
                     break;
+                case R.id.rly_payment_stage:
+                    intent = new Intent(getApplication(), PaymentStageActivity.class);
+                    startActivity(intent);
+                    break;
+                //退出登录
+                case R.id.lly_login_off:
+                    msPresenter.loginOff(session_id, accessToken, new MSCallbackListener<BaseApiResponse>() {
+                        @Override
+                        public void onSuccess(BaseApiResponse data) {
+                            SharedPreferences spSession = getSharedPreferences("session", Activity.MODE_PRIVATE);
+                            SharedPreferences.Editor spEditor = spSession.edit();
+                            spEditor.clear();
+                            spEditor.commit();
+                            Intent intent = new Intent(getApplication(), StartActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+
+                        @Override
+                        public void onFailure(String errorEvent, String message) {
+
+                        }
+                    });
+                    break;
+                //客服热线
+                case R.id.rly_customer_phone:
+                    intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:4000016006"));
+                    startActivity(intent);
+                    break;
             }
         }
     };
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            return  true;
+        }
+        return  super.onKeyDown(keyCode, event);
+
+    }
 }

@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.signupLogin.CompStuResponse;
+import com.hahaxueche.model.signupLogin.StudentModel;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
 import com.hahaxueche.ui.dialog.CityChoseDialog;
 import com.hahaxueche.ui.dialog.RegisterInfoPhotoDialog;
@@ -141,18 +142,18 @@ public class SignUpInfoActivity extends SLBaseActivity {
             pd.dismiss();
         }
         pd = ProgressDialog.show(SignUpInfoActivity.this, null, "数据提交中，请稍后……");
-        this.slPresenter.completeStuInfo(studentId, cityId, studentName, accessToken, mPhotoPath, new SLCallbackListener<CompStuResponse>() {
+        this.slPresenter.completeStuInfo(studentId, cityId, studentName, accessToken, mPhotoPath, new SLCallbackListener<StudentModel>() {
             @Override
-            public void onSuccess(CompStuResponse compStuResponse) {
+            public void onSuccess(StudentModel studentModel) {
                 if (pd != null) {
                     pd.dismiss();
                 }
                 SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
                 SharedPreferences.Editor editor=sharedPreferences.edit();
-                editor.putString("cell_phone",compStuResponse.getCell_phone());
-                editor.putString("name",compStuResponse.getName());
-                editor.putString("city_id",compStuResponse.getCity());
-                editor.putString("avatar",compStuResponse.getAvatar());
+                editor.putString("cell_phone",studentModel.getCell_phone());
+                editor.putString("name",studentModel.getName());
+                editor.putString("city_id",studentModel.getCity_id());
+                editor.putString("avatar",studentModel.getAvatar());
                 editor.commit();
                 Toast.makeText(context, "完善资料成功！", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(context, IndexActivity.class);

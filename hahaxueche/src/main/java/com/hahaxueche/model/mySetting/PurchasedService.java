@@ -18,6 +18,8 @@ public class PurchasedService {
     private String paid_at;
     private CoachGroupModel coach_group;
     private List<PaymentStage> payment_stages;
+    private String code;
+    private String message;
 
     public String getId() {
         return id;
@@ -97,5 +99,25 @@ public class PurchasedService {
 
     public void setPayment_stages(List<PaymentStage> payment_stages) {
         this.payment_stages = payment_stages;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public boolean isSuccess(){
+        return null==code;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

@@ -5,16 +5,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
+import com.hahaxueche.model.findCoach.FieldModel;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachItemAdapter;
@@ -58,10 +62,12 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
     private String license_type;
     private String price;
     private String city_id;
-    private String training_field_ids;
+    private ArrayList<String> training_field_ids;
     private String distance;
     private String user_location;
     private String sort_by;
+    private ImageButton ibtnFcMap;
+    private ArrayList<FieldModel> selFieldList;
 
     private String TAG = "FindCoachActivity";
 
@@ -110,10 +116,15 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         xlvCoachList.setAutoLoadEnable(true);
         xlvCoachList.setXListViewListener(this);
         xlvCoachList.setRefreshTime(getTime());
-
+        if (TextUtils.isEmpty(linkNext)) {
+            xlvCoachList.setPullLoadEnable(false);
+        } else {
+            xlvCoachList.setPullLoadEnable(true);
+        }
         mAdapter = new CoachItemAdapter(this, coachList, R.layout.view_coach_list_item);
         //mAdapter = new ArrayAdapter<String>(this, R.layout.view_coach_list_item, items);
         xlvCoachList.setAdapter(mAdapter);
+        ibtnFcMap = Util.instence(this).$(this, R.id.ibtn_fc_map);
     }
 
     private void initEvent() {
@@ -124,6 +135,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         llyFcFilter.setOnClickListener(mClickListener);
         llyFcSort.setOnClickListener(mClickListener);
         xlvCoachList.setOnItemClickListener(mItemClickListener);
+        ibtnFcMap.setOnClickListener(mClickListener);
     }
 
 
@@ -175,6 +187,12 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                         }
                     });
                     fcSortDialog.show();
+                    break;
+                //地图
+                case R.id.ibtn_fc_map:
+                    intent = new Intent(getApplication(), FindCoachMapFilterActivity.class);
+                    startActivityForResult(intent, 0);
+                    break;
             }
         }
     };
@@ -202,10 +220,16 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
 
     @Override
     public void onRefresh() {
+        System.out.println("onRefresh");
         if (!TextUtils.isEmpty(linkPrevious)) {
             getCoachList(linkPrevious);
         } else {
             getCoachList();
+        }
+        if (TextUtils.isEmpty(linkNext)) {
+            xlvCoachList.setPullLoadEnable(false);
+        } else {
+            xlvCoachList.setPullLoadEnable(true);
         }
         mAdapter = new CoachItemAdapter(FindCoachActivity.this, coachList, R.layout.view_coach_list_item);
         xlvCoachList.setAdapter(mAdapter);
@@ -226,6 +250,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
 
     @Override
     public void onLoadMore() {
+        System.out.println("onLoadMore");
         if (!TextUtils.isEmpty(linkNext)) {
             getCoachList(linkNext);
         } else {
@@ -248,6 +273,12 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
     }
 
     private void getCoachList() {
+        if(selFieldList!=null && selFieldList.size()>0){
+            training_field_ids = new ArrayList<>();
+            for(FieldModel selField:selFieldList){
+                training_field_ids.add(selField.getId());
+            }
+        }
         this.fcPresenter.getCoachList(page, per_page, golden_coach_only, license_type, price, city_id, training_field_ids, distance,
                 user_location, sort_by, new FCCallbackListener<CoachListResponse>() {
                     @Override
@@ -257,8 +288,10 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                         linkSelf = data.getLinks().getSelf();
                         linkNext = data.getLinks().getNext();
                         linkPrevious = data.getLinks().getPrevious();
-                        if(coachList.size()!=Integer.parseInt(per_page)){
+                        if (TextUtils.isEmpty(linkNext)) {
                             xlvCoachList.setPullLoadEnable(false);
+                        } else {
+                            xlvCoachList.setPullLoadEnable(true);
                         }
                         mAdapter = new CoachItemAdapter(FindCoachActivity.this, coachList, R.layout.view_coach_list_item);
                         xlvCoachList.setAdapter(mAdapter);
@@ -281,8 +314,10 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                 linkSelf = data.getLinks().getSelf();
                 linkNext = data.getLinks().getNext();
                 linkPrevious = data.getLinks().getPrevious();
-                if(coachList.size()!=Integer.parseInt(per_page)){
+                if (TextUtils.isEmpty(linkNext)) {
                     xlvCoachList.setPullLoadEnable(false);
+                } else {
+                    xlvCoachList.setPullLoadEnable(true);
                 }
                 mAdapter = new CoachItemAdapter(FindCoachActivity.this, coachList, R.layout.view_coach_list_item);
                 xlvCoachList.setAdapter(mAdapter);
@@ -304,6 +339,35 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
 
     private String getTime() {
         return new SimpleDateFormat("MM-dd HH:mm:ss", Locale.CHINA).format(new Date());
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0) {
+            switch (resultCode) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
+                case RESULT_OK:
+                    Bundle bundle = data.getExtras(); //data为B中回传的Intent
+                    if (bundle.getSerializable("selFieldList") != null) {
+                        selFieldList = (ArrayList<FieldModel>) bundle.getSerializable("selFieldList");
+                        getCoachList();
+                    }else {
+                        selFieldList = new ArrayList<>();
+                        getCoachList();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
 }

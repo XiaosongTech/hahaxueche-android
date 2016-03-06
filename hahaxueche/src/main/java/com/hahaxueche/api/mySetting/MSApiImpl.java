@@ -7,10 +7,14 @@ import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.api.net.HttpEngine;
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.GetReviewsResponse;
+import com.hahaxueche.model.findCoach.ReviewInfo;
 import com.hahaxueche.model.signupLogin.StudentModel;
+import com.hahaxueche.model.util.BaseApiResponse;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by gibxin on 2016/2/29.
@@ -60,6 +64,35 @@ public class MSApiImpl implements MSApi {
         }.getType();
         try {
             return httpEngine.getHandleByUrl(type, url, access_token);
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public ReviewInfo makeReview(String coach_user_id, String payment_stage, String rating, String comment, String access_token) {
+        Type type = new TypeToken<ReviewInfo>() {
+        }.getType();
+        Map<String, String> paramMap = new HashMap<String, String>();
+        paramMap.put("payment_stage", payment_stage);
+        paramMap.put("rating", rating);
+        paramMap.put("comment", comment);
+        try {
+            return httpEngine.postHandleWithX(paramMap, type, "/users/reviews/" + coach_user_id, access_token);
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public BaseApiResponse loginOff(String session_id, String access_token) {
+        Type type = new TypeToken<BaseApiResponse>() {
+        }.getType();
+        Map<String, String> paramMap = new HashMap<String, String>();
+        try {
+            return httpEngine.deleteHandle(paramMap, type, "sessions/" + session_id, access_token);
         } catch (IOException e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;

@@ -13,8 +13,11 @@ import com.hahaxueche.model.findCoach.FollowResponse;
 import com.hahaxueche.model.findCoach.GetReviewsResponse;
 import com.hahaxueche.model.findCoach.StuPurchaseResponse;
 import com.hahaxueche.model.findCoach.TrailResponse;
+import com.hahaxueche.model.mySetting.PurchasedService;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.model.util.BaseBoolean;
+
+import java.util.ArrayList;
 
 /**
  * Created by gibxin on 2016/2/21.
@@ -30,7 +33,7 @@ public class FCPresenterImpl implements FCPresenter {
 
     @Override
     public void getCoachList(final String page, final String per_page, final String golden_coach_only, final String license_type, final String price,
-                             final String city_id, final String training_field_ids, final String distance, final String user_location, final String sort_by,
+                             final String city_id, final ArrayList<String> training_field_ids, final String distance, final String user_location, final String sort_by,
                              final FCCallbackListener<CoachListResponse> listener) {
         new AsyncTask<Void, Void, CoachListResponse>() {
 
@@ -276,7 +279,7 @@ public class FCPresenterImpl implements FCPresenter {
     }
 
     @Override
-    public void createCharge(final String coach_id,final String access_token,final FCCallbackListener<String> listener) {
+    public void createCharge(final String coach_id, final String access_token, final FCCallbackListener<String> listener) {
         new AsyncTask<Void, Void, String>() {
 
             @Override
@@ -291,6 +294,30 @@ public class FCPresenterImpl implements FCPresenter {
                         listener.onSuccess(charge);
                     } else {
                         listener.onFailure("400", "获取charge失败");
+                    }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void purchasedService(final String payment_stage, final String access_token, final FCCallbackListener<PurchasedService> listener) {
+        new AsyncTask<Void, Void, PurchasedService>() {
+
+            @Override
+            protected PurchasedService doInBackground(Void... params) {
+                return api.purchasedService(payment_stage, access_token);
+            }
+
+            @Override
+            protected void onPostExecute(PurchasedService purchasedService) {
+                if (listener != null) {
+                    if (purchasedService.isSuccess()) {
+                        listener.onSuccess(purchasedService);
+                    } else {
+                        listener.onFailure(purchasedService.getCode(), purchasedService.getMessage());
                     }
                 } else {
                     listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);

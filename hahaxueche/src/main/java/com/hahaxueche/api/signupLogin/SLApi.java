@@ -3,6 +3,7 @@ package com.hahaxueche.api.signupLogin;
 import com.hahaxueche.model.signupLogin.AvaterResponse;
 import com.hahaxueche.model.signupLogin.CompStuResponse;
 import com.hahaxueche.model.signupLogin.CreateUserResponse;
+import com.hahaxueche.model.signupLogin.StudentModel;
 import com.hahaxueche.model.util.BaseApiResponse;
 
 /**
@@ -46,7 +47,7 @@ public interface SLApi {
      * @param accessToken Access Token
      * @return
      */
-    public CompStuResponse completeStuInfo(String studentId, String cityId, String studentName, String accessToken);
+    public StudentModel completeStuInfo(String studentId, String cityId, String studentName, String accessToken);
 
     /**
      * 登录
@@ -76,5 +77,5 @@ public interface SLApi {
      * @param studentId
      * @return
      */
-    public CompStuResponse uploadAvatar(String access_token, String filePath, String studentId);
+    public StudentModel uploadAvatar(String access_token, String filePath, String studentId);
 }

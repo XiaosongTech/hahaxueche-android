@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/lly_review_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_ps_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_assess_paysuccess" />
+
+        <TextView
+            android:id="@+id/tv_review_info_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="资料费打款成功！"
+            android:textColor="@color/fCTxtGreen"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="18dp"
+        android:background="@color/fCViewGray" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="20dp"
+            android:text="@string/myScoreToCoach"
+            android:textColor="@color/fCTxtBlack"
+            android:textSize="18sp" />
+
+        <com.hahaxueche.ui.widget.scoreView.ClickScoreView
+            android:id="@+id/clv_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp">
+
+        </com.hahaxueche.ui.widget.scoreView.ClickScoreView>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="18dp"
+        android:background="@color/fCViewGray" />
+
+    <EditText
+        android:id="@+id/et_review"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:background="@android:color/transparent"
+        android:gravity="top|left"
+        android:hint="@string/myReviewHint"
+        android:lineSpacingMultiplier="1.2"
+        android:maxLength="100"
+        android:padding="18dp"
+        android:textColor="@color/fCTxtGray"
+        android:textColorHint="@color/fCViewGray"
+        android:textSize="14sp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/fCViewGray" />
+    <LinearLayout
+        android:id="@+id/lly_pay_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_sure_review"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:text="@string/mySureReview"
+            android:textColor="@color/fCTxtGreen"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/fCViewGray" />
+
+        <TextView
+            android:id="@+id/tv_later_review"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:text="@string/myLaterReview"
+            android:textColor="@color/fCTxtOrange"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+</LinearLayout>

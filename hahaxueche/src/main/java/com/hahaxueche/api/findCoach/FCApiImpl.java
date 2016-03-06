@@ -11,11 +11,13 @@ import com.hahaxueche.model.findCoach.FollowResponse;
 import com.hahaxueche.model.findCoach.GetReviewsResponse;
 import com.hahaxueche.model.findCoach.StuPurchaseResponse;
 import com.hahaxueche.model.findCoach.TrailResponse;
+import com.hahaxueche.model.mySetting.PurchasedService;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.model.util.BaseBoolean;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +34,7 @@ public class FCApiImpl implements FCApi {
 
     @Override
     public CoachListResponse getCoachList(String page, String per_page, String golden_coach_only, String license_type, String price,
-                                          String city_id, String training_field_ids, String distance, String user_location, String sort_by) {
+                                          String city_id, ArrayList<String> training_field_ids, String distance, String user_location, String sort_by) {
         Type type = new TypeToken<CoachListResponse>() {
         }.getType();
         String url = FCApi.COACHES;
@@ -54,8 +56,10 @@ public class FCApiImpl implements FCApi {
         if (!TextUtils.isEmpty(city_id)) {
             url += url.indexOf("?") > 0 ? ("&city_id=" + city_id) : ("?city_id=" + city_id);
         }
-        if (!TextUtils.isEmpty(training_field_ids)) {
-            url += url.indexOf("?") > 0 ? ("&training_field_ids=" + training_field_ids) : ("?training_field_ids=" + training_field_ids);
+        if(training_field_ids!=null && training_field_ids.size()>0){
+            for(String field_id:training_field_ids){
+                url += url.indexOf("?") > 0 ? ("&training_field_ids[]=" + field_id) : ("?training_field_ids[]=" + field_id);
+            }
         }
         if (!TextUtils.isEmpty(distance)) {
             url += url.indexOf("?") > 0 ? ("&distance=" + distance) : ("?distance=" + distance);
@@ -211,5 +215,20 @@ public class FCApiImpl implements FCApi {
             return null;
         }
     }
+
+    @Override
+    public PurchasedService purchasedService(String payment_stage, String access_token) {
+        Type type = new TypeToken<PurchasedService>() {
+        }.getType();
+        Map<String, String> paramMap = new HashMap<String, String>();
+        paramMap.put("payment_stage",payment_stage);
+        try {
+            return httpEngine.putHandle(paramMap,type,"students/purchased_service",access_token);
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
 
 }

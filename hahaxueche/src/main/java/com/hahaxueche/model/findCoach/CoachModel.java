@@ -12,7 +12,7 @@ public class CoachModel implements Serializable {
     private String name;
     private String city_id;
     private String user_id;
-    private String avatar_url;
+    private String avatar;
     private String bio;
     private String review_count;
     private String average_rating;
@@ -28,6 +28,7 @@ public class CoachModel implements Serializable {
     private String consultant;
     private CoachGroupModel coach_group;
     private List<BriefCoachInfo> peer_coaches;
+    private List<String> images;
     private String assigned_coaches;
     private String code;
     private String message;
@@ -72,12 +73,12 @@ public class CoachModel implements Serializable {
         this.user_id = user_id;
     }
 
-    public String getAvatar_url() {
-        return avatar_url;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setAvatar_url(String avatar_url) {
-        this.avatar_url = avatar_url;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getBio() {
@@ -206,6 +207,14 @@ public class CoachModel implements Serializable {
 
     public void setAssigned_coaches(String assigned_coaches) {
         this.assigned_coaches = assigned_coaches;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
     }
 
     public String getCode() {

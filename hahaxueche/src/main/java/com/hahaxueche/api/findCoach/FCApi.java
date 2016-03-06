@@ -6,8 +6,11 @@ import com.hahaxueche.model.findCoach.FollowResponse;
 import com.hahaxueche.model.findCoach.GetReviewsResponse;
 import com.hahaxueche.model.findCoach.StuPurchaseResponse;
 import com.hahaxueche.model.findCoach.TrailResponse;
+import com.hahaxueche.model.mySetting.PurchasedService;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.model.util.BaseBoolean;
+
+import java.util.ArrayList;
 
 /**
  * 寻找教练api
@@ -37,7 +40,7 @@ public interface FCApi {
      * @param sort_by            排序依据
      */
     public CoachListResponse getCoachList(String page, String per_page, String golden_coach_only, String license_type, String price,
-                                          String city_id, String training_field_ids, String distance, String user_location, String sort_by);
+                                          String city_id, ArrayList<String> training_field_ids, String distance, String user_location, String sort_by);
 
     /**
      * 获取教练列表，直接根据反馈的links_next或者links_previous获取
@@ -130,4 +133,12 @@ public interface FCApi {
      * @return
      */
     public String createCharge(String coach_id, String access_token);
+
+    /**
+     *
+     * @param payment_stage
+     * @param access_token
+     * @return
+     */
+    public PurchasedService purchasedService(String payment_stage,String access_token);
 }

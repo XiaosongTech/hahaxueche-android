@@ -7,6 +7,7 @@ import com.hahaxueche.api.net.HttpEngine;
 import com.hahaxueche.model.signupLogin.AvaterResponse;
 import com.hahaxueche.model.signupLogin.CompStuResponse;
 import com.hahaxueche.model.signupLogin.CreateUserResponse;
+import com.hahaxueche.model.signupLogin.StudentModel;
 import com.hahaxueche.model.util.BaseApiResponse;
 
 import java.io.IOException;
@@ -82,11 +83,11 @@ public class SLApiImpl implements SLApi {
      * @return
      */
     @Override
-    public CompStuResponse completeStuInfo(String studentId, String cityId, String studentName, String accessToken) {
+    public StudentModel completeStuInfo(String studentId, String cityId, String studentName, String accessToken) {
         Map<String, String> paramMap = new HashMap<String, String>();
         paramMap.put("name", studentName);
         paramMap.put("city_id", cityId);
-        Type type = new TypeToken<CompStuResponse>() {
+        Type type = new TypeToken<StudentModel>() {
         }.getType();
         try {
             return httpEngine.putHandle(paramMap, type, SLApi.STUDENTS + "/" + studentId, accessToken);
@@ -133,8 +134,8 @@ public class SLApiImpl implements SLApi {
     }
 
     @Override
-    public CompStuResponse uploadAvatar(String access_token, String filePath, String studentId) {
-        Type type = new TypeToken<CompStuResponse>() {
+    public StudentModel uploadAvatar(String access_token, String filePath, String studentId) {
+        Type type = new TypeToken<StudentModel>() {
         }.getType();
         try {
             return httpEngine.postHandle(type, SLApi.STUDENTS + "/" + studentId + "/"+SLApi.AVATAR, access_token, filePath);

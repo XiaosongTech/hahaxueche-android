@@ -5,6 +5,7 @@ import com.hahaxueche.model.findCoach.FieldsModel;
 import com.hahaxueche.model.signupLogin.CitiesModel;
 import com.hahaxueche.model.signupLogin.CityModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,6 +16,8 @@ public class ConstantsModel {
     private List<CityModel> cities;
     private List<FieldModel> fields;
     private List<BaseKeyValue> skill_levels;
+    private ArrayList<String> login_banners;
+    private ArrayList<String> home_page_banners;
 
     public List<CityModel> getCities() {
         return cities;
@@ -38,5 +41,21 @@ public class ConstantsModel {
 
     public void setSkill_levels(List<BaseKeyValue> skill_levels) {
         this.skill_levels = skill_levels;
+    }
+
+    public ArrayList<String> getLogin_banners() {
+        return login_banners;
+    }
+
+    public void setLogin_banners(ArrayList<String> login_banners) {
+        this.login_banners = login_banners;
+    }
+
+    public ArrayList<String> getHome_page_banners() {
+        return home_page_banners;
+    }
+
+    public void setHome_page_banners(ArrayList<String> home_page_banners) {
+        this.home_page_banners = home_page_banners;
     }
 }

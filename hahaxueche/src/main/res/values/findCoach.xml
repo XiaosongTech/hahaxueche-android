@@ -51,6 +51,42 @@
     <string name="fCStudentComment">学员评价</string>
     <!--我的页面-->
     <string name="myFollowCoach">我关注的教练</string>
+    <string name="myPaymentStage">打款状态</string>
+    <string name="myCoach">教练</string>
+    <string name="myOrderCode">订单编号：</string>
+    <string name="myTotalAmount">总金额</string>
+    <string name="myPaidAmount">已打款</string>
+    <string name="myUnPaidAmount">待打款</string>
+    <string name="myPaymentRemarks">学员支付的学费将由平台保管，每个阶段结束后，学员可以根据情况，点击确认打款按钮，点击后，
+    平台将阶段对应金额转给教练，然后进入下个阶段。每个阶段的金额会在点击付款后转到教练账号。</string>
+    <string name="mySureTransfer">确认打款</string>
+    <string name="myReviewed">已评价</string>
+    <string name="myReadyForReviewed">待评价</string>
+    <string name="myScoreToCoach">给教练打分</string>
+    <string name="myReviewHint">恭喜通过%1$s！您对哈哈学车的教练还满意吗？在这里写下给教练的评价吧！~\n（100字以内）</string>
+    <string name="mySureReview">确认评价</string>
+    <string name="myLaterReview">稍后评价</string>
+    <string name="myCongratulation">恭喜您拿到驾照！</string>
+    <string name="myPayNotice">打款提醒</string>
+    <string name="myTransferNotNow">暂不打款</string>
+    <string name="hahaxueche">哈哈学车</string>
+    <string name="aboutXiaoha">关于小哈</string>
+    <string name="aboutCoach">关于教练</string>
+    <string name="clickToKnow">点击了解</string>
+    <string name="onkeyFindCoach">一键找教练</string>
+    <string name="trainingFieldMap">训练场地图</string>
+    <string name="selectAll">全选</string>
+    <string name="fCMapSelectHint1"><Data><![CDATA[<font color="#ff9e00">图标可多选</font><font color="#bbbbbb">，请选择地图上的图标</font>]]></Data></string>
+    <string name="fCMapSelectHint2"><Data><![CDATA[<font color="#bbbbbb">选中后点击</font>
+    <font color="#ff9e00">“查看训练场地址”</font>
+    <font color="#bbbbbb">，可查看教练场教练列表</font>
+    ]]></Data></string>
+    <string name="appointmentDrive">预约学车</string>
+    <string name="noClasses">目前还没有新课程，请耐心等待~</string>
+    <string name="noCoach">您还没有选择教练哦~\n快去寻找好教练，开启愉快的学车之旅吧！</string>
+    <string name="coachClasses">教练课程</string>
+    <string name="classReviewed">已预约</string>
+    <string name="classFinished">已完成</string>
     <!--color-->
     <color name="fCSearchBackOrangeHeavy">#f68a00</color>
     <color name="fcSearchTextHintWhiteLight">#fbd099</color>
@@ -61,6 +97,7 @@
     <color name="fCTxtGrayFade">#bbbbbb</color>
     <color name="fCBackgroundGray">#f4f4f4</color>
     <color name="fCViewGray">#dbdbdb</color>
+    <color name="fCTxtTitleGrayFade">#ffd899</color>
     <string name="fCFeeDetailRemark">备注：以下费用根据个人实际需求另外缴纳</string>
     <string name="fCFeeDetailRemarkMarkUp">补考费（车管所）&#160;--按车管所公示价格收取</string>
     <string name="fCFeeDetailRemarkMockExam">模拟考试费（考场）&#160;&#160;--按考场公示价格收取</string>

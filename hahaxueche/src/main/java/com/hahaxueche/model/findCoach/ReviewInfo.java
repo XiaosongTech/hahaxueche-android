@@ -16,6 +16,8 @@ public class ReviewInfo implements Serializable {
     private String created_at;
     private String updated_at;
     private String service_type;
+    private String code;
+    private String message;
 
     public String getId() {
         return id;
@@ -87,5 +89,25 @@ public class ReviewInfo implements Serializable {
 
     public void setService_type(String service_type) {
         this.service_type = service_type;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public boolean isSuccess() {
+        return null == code;
     }
 }

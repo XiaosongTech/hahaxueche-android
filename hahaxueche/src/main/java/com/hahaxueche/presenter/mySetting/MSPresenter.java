@@ -1,7 +1,9 @@
 package com.hahaxueche.presenter.mySetting;
 
 import com.hahaxueche.model.findCoach.CoachListResponse;
+import com.hahaxueche.model.findCoach.ReviewInfo;
 import com.hahaxueche.model.signupLogin.StudentModel;
+import com.hahaxueche.model.util.BaseApiResponse;
 
 /**
  * Created by gibxin on 2016/2/29.
@@ -28,4 +30,22 @@ public interface MSPresenter {
      * @param listener
      */
     public void getFollowCoachList(String url, String access_token, MSCallbackListener<CoachListResponse> listener);
+
+    /**
+     * @param coach_user_id
+     * @param payment_stage
+     * @param rating
+     * @param comment
+     * @param access_token
+     * @param listener
+     */
+    public void makeReview(String coach_user_id, String payment_stage, String rating, String comment,
+                           String access_token, MSCallbackListener<ReviewInfo> listener);
+
+    /**
+     * @param session_id
+     * @param access_token
+     * @param listener
+     */
+    public void loginOff(String session_id, String access_token, MSCallbackListener<BaseApiResponse> listener);
 }

@@ -115,6 +115,9 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private LinearLayout llyFreeLearn;
     //学员
     private StudentModel mStudent;
+    //训练场地
+    private LinearLayout llyTrainLoaction;
+    private FieldModel mFieldModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -165,15 +168,10 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         llyFreeLearn = Util.instence(this).$(this, R.id.lly_free_learn);
 
         isCdCoachDetail = Util.instence(this).$(this, R.id.is_cd_coach_switcher);
-        ArrayList<String> s = new ArrayList<String>();
-        s.add("http://img2.3lian.com/2014/f5/158/d/87.jpg");
-        s.add("http://img2.3lian.com/2014/f5/158/d/88.jpg");
-        s.add("http://img2.3lian.com/2014/f5/158/d/89.jpg");
-        s.add("http://img2.3lian.com/2014/f5/158/d/90.jpg");
-        isCdCoachDetail.updateImages(s);
 
         llyShare = Util.instence(this).$(this, R.id.lly_share);
         llyTakeCertCost = Util.instence(this).$(this, R.id.lly_take_cert_cost);
+        llyTrainLoaction = Util.instence(this).$(this, R.id.lly_training_location);
         shareAppDialog = new ShareAppDialog(this);
     }
 
@@ -190,6 +188,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         llyMoreReviews.setOnClickListener(mClickListener);
         llyPeerCoach1.setOnClickListener(mClickListener);
         llyPeerCoach2.setOnClickListener(mClickListener);
+        llyTrainLoaction.setOnClickListener(mClickListener);
     }
 
     /**
@@ -238,7 +237,8 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private void loadDetail() {
         tvCdCoachName.setText(mCoach.getName());
         tvCdCoachDescription.setText(mCoach.getBio());
-        getCoachAvatar(mCoach.getAvatar_url(), civCdCoachAvatar);
+        getCoachAvatar(mCoach.getAvatar(), civCdCoachAvatar);
+        isCdCoachDetail.updateImages(mCoach.getImages());
         //金牌教练显示
         if (mCoach.getSkill_level().equals("1")) {
             ivIsGoldenCoach.setVisibility(View.VISIBLE);
@@ -265,6 +265,8 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                 for (CityModel city : cityList) {
                     if (city.getId().equals(field.getCity_id())) {
                         tvTrainLocation.setText(city.getName() + field.getSection() + field.getStreet());
+                        mFieldModel = field;
+                        break;
                     }
                 }
             }
@@ -488,6 +490,14 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                     intent.putExtra("coach_id", mCoach.getPeer_coaches().get(1).getId());
                     startActivity(intent);
                     break;
+                //训练场
+                case R.id.lly_training_location:
+                    intent = new Intent(CoachDetailActivity.this, FieldMapActivity.class);
+                    bundle = new Bundle();
+                    bundle.putSerializable("fieldModel", mFieldModel);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    break;
             }
         }
     };
@@ -620,6 +630,22 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("student", JsonUtils.serialize(mStudent));
                             editor.commit();
+                            if (!TextUtils.isEmpty(data.getCurrent_coach_id())) {
+                                fcPresenter.getCoach(data.getCurrent_coach_id(), new FCCallbackListener<CoachModel>() {
+                                    @Override
+                                    public void onSuccess(CoachModel coachModel) {
+                                        SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.putString("current_coach", JsonUtils.serialize(coachModel));
+                                        editor.commit();
+                                    }
+
+                                    @Override
+                                    public void onFailure(String errorEvent, String message) {
+
+                                    }
+                                });
+                            }
                         }
 
                         @Override

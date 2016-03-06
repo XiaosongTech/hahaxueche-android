@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -20,6 +21,7 @@ import com.hahaxueche.model.findCoach.FieldModel;
 import com.hahaxueche.model.findCoach.FieldsModel;
 import com.hahaxueche.model.signupLogin.CityModel;
 import com.hahaxueche.model.util.ConstantsModel;
+import com.hahaxueche.ui.dialog.MapDialog;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
 import com.hahaxueche.utils.Util;
@@ -50,6 +52,9 @@ public class CoachItemAdapter extends BaseAdapter {
     private ConstantsModel constantsModel;
     private List<FieldModel> fieldsList;
     private List<CityModel> cityList;
+    private LinearLayout lllyCoachLocation;
+    private MapDialog mapDialog;
+    private FieldModel mFieldModel;
 
     public CoachItemAdapter(Context context, List<CoachModel> coachList, int resource) {
         this.context = context;
@@ -94,6 +99,7 @@ public class CoachItemAdapter extends BaseAdapter {
             ivIsGoldenCoach = (ImageView) convertView.findViewById(R.id.iv_is_golden_coach);
             svCoachScore = (ScoreView) convertView.findViewById(R.id.sv_coach_score);
             tvCoachLocation = (TextView) convertView.findViewById(R.id.tv_coach_location);
+            lllyCoachLocation = (LinearLayout) convertView.findViewById(R.id.lly_coach_location);
         }
         DecimalFormat dfInt = new DecimalFormat("#####");
         CoachModel coach = coachList.get(position);
@@ -107,7 +113,7 @@ public class CoachItemAdapter extends BaseAdapter {
         tvCoachActualPrice.setText(Util.getMoney(coach.getCoach_group().getTraining_cost()));
         tvCoachOldPrice.setText(Util.getMoney(coach.getCoach_group().getMarket_price()));
         tvCoachOldPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-        getCoachAvatar(coach.getAvatar_url(), civCoachAvatar);
+        getCoachAvatar(coach.getAvatar(), civCoachAvatar);
         if (coach.getSkill_level().equals("1")) {
             ivIsGoldenCoach.setVisibility(View.VISIBLE);
         } else {
@@ -127,9 +133,19 @@ public class CoachItemAdapter extends BaseAdapter {
                             break;
                         }
                     }
+                    mFieldModel = fieldsModel;
+                    break;
                 }
             }
         }
+        lllyCoachLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int id = v.getId();
+                mapDialog = new MapDialog(context, R.style.map_dialog,mFieldModel,v);
+                mapDialog.show();
+            }
+        });
         return convertView;
     }
 

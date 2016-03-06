@@ -62,6 +62,11 @@ public class FollowCoachListActivity extends MSBaseActivity implements XListView
         xlvCoachList.setAutoLoadEnable(true);
         xlvCoachList.setXListViewListener(this);
         xlvCoachList.setRefreshTime(getTime());
+        if(TextUtils.isEmpty(linkNext)){
+            xlvCoachList.setPullLoadEnable(false);
+        }else {
+            xlvCoachList.setPullLoadEnable(true);
+        }
         mAdapter = new CoachItemAdapter(this, coachList, R.layout.view_coach_list_item);
         xlvCoachList.setAdapter(mAdapter);
         ibtnFclBack = (ImageButton) findViewById(R.id.ibtn_fcl_back);
@@ -125,8 +130,10 @@ public class FollowCoachListActivity extends MSBaseActivity implements XListView
                 linkSelf = data.getLinks().getSelf();
                 linkNext = data.getLinks().getNext();
                 linkPrevious = data.getLinks().getPrevious();
-                if(coachList.size()!=Integer.parseInt(per_page)){
+                if(TextUtils.isEmpty(linkNext)){
                     xlvCoachList.setPullLoadEnable(false);
+                }else {
+                    xlvCoachList.setPullLoadEnable(true);
                 }
                 mAdapter = new CoachItemAdapter(FollowCoachListActivity.this, coachList, R.layout.view_coach_list_item);
                 xlvCoachList.setAdapter(mAdapter);
@@ -149,8 +156,10 @@ public class FollowCoachListActivity extends MSBaseActivity implements XListView
                 linkSelf = data.getLinks().getSelf();
                 linkNext = data.getLinks().getNext();
                 linkPrevious = data.getLinks().getPrevious();
-                if(coachList.size()!=Integer.parseInt(per_page)){
+                if(TextUtils.isEmpty(linkNext)){
                     xlvCoachList.setPullLoadEnable(false);
+                }else {
+                    xlvCoachList.setPullLoadEnable(true);
                 }
                 mAdapter = new CoachItemAdapter(FollowCoachListActivity.this, coachList, R.layout.view_coach_list_item);
                 xlvCoachList.setAdapter(mAdapter);

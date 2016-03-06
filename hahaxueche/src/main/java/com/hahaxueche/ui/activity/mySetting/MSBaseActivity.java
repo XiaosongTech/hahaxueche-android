@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.hahaxueche.MyApplication;
+import com.hahaxueche.presenter.findCoach.FCPresenter;
 import com.hahaxueche.presenter.mySetting.MSPresenter;
 
 /**
@@ -17,6 +18,7 @@ public class MSBaseActivity extends Activity {
     public MyApplication application;
     // 我的页面Presenter
     public MSPresenter msPresenter;
+    public FCPresenter fcPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,5 +26,6 @@ public class MSBaseActivity extends Activity {
         context = getApplicationContext();
         application = (MyApplication) this.getApplication();
         msPresenter = application.getMsPresenter();
+        fcPresenter = application.getFCPresenter();
     }
 }

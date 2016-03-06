@@ -65,9 +65,9 @@ public class CityChoseDialog extends Dialog implements View.OnClickListener {
         initCityData();
         Window dialogWindow = this.getWindow();
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-        dialogWindow.setGravity(Gravity.LEFT | Gravity.TOP);
-        lp.x = 100; // 新位置X坐标
-        lp.y = 300; // 新位置Y坐标
+        dialogWindow.setGravity(Gravity.CENTER);
+        //lp.x = 100; // 新位置X坐标
+        //lp.y = 300; // 新位置Y坐标
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
         dialogWindow.setAttributes(lp);

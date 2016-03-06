@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.hahaxueche.MyApplication;
+import com.hahaxueche.presenter.findCoach.FCPresenter;
 import com.hahaxueche.presenter.signupLogin.SLPresenter;
 
 /**
@@ -18,11 +19,14 @@ public class SLBaseActivity extends Activity {
     public MyApplication application;
     // 注册登录Presenter
     public SLPresenter slPresenter;
+    //
+    public FCPresenter fcPresenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getApplicationContext();
         application = (MyApplication) this.getApplication();
         slPresenter = application.getSLPresenter();
+        fcPresenter = application.getFCPresenter();
     }
 }

@@ -1,0 +1,5 @@
+<resources>
+    <dimen name="padding12dp">10dp</dimen>
+    <dimen name="height260dp">220dp</dimen>
+    <dimen name="padding10dp">6dp</dimen>
+</resources>

@@ -2,6 +2,7 @@ package com.hahaxueche.presenter.signupLogin;
 
 import com.hahaxueche.model.signupLogin.CompStuResponse;
 import com.hahaxueche.model.signupLogin.CreateUserResponse;
+import com.hahaxueche.model.signupLogin.StudentModel;
 import com.hahaxueche.model.util.BaseApiResponse;
 
 /**
@@ -36,7 +37,7 @@ public interface SLPresenter {
      * @param accessToken Access Token
      * @param photoPath   头像
      */
-    public void completeStuInfo(String studentId, String cityId, String studentName, String accessToken, String photoPath, SLCallbackListener<CompStuResponse> slCallbackListener);
+    public void completeStuInfo(String studentId, String cityId, String studentName, String accessToken, String photoPath, SLCallbackListener<StudentModel> slCallbackListener);
 
     /**
      * 登录

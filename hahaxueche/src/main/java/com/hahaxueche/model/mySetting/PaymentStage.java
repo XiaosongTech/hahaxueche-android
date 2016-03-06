@@ -16,6 +16,7 @@ public class PaymentStage {
     private String paid_at;
     private String deleted_at;
     private String ready_for_review;
+    private String coach_user_id;
 
     public String getId() {
         return id;
@@ -111,5 +112,13 @@ public class PaymentStage {
 
     public void setReady_for_review(String ready_for_review) {
         this.ready_for_review = ready_for_review;
+    }
+
+    public String getCoach_user_id() {
+        return coach_user_id;
+    }
+
+    public void setCoach_user_id(String coach_user_id) {
+        this.coach_user_id = coach_user_id;
     }
 }

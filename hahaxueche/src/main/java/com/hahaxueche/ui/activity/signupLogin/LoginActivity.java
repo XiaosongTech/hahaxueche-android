@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,10 +17,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
+import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.signupLogin.CreateUserResponse;
 import com.hahaxueche.model.signupLogin.SessionModel;
 import com.hahaxueche.model.signupLogin.StudentModel;
 import com.hahaxueche.model.util.BaseApiResponse;
+import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.utils.JsonUtils;
@@ -197,9 +200,9 @@ public class LoginActivity extends SLBaseActivity {
                 if (pd != null) {
                     pd.dismiss();
                 }
-                if(errorEvent!=null && errorEvent.equals("40044")){
+                if (errorEvent != null && errorEvent.equals("40044")) {
                     Toast.makeText(context, "当前用户不存在！", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -209,10 +212,10 @@ public class LoginActivity extends SLBaseActivity {
     /**
      * 登录
      */
-    private void login(){
+    private void login() {
         String cell_phone = etLoginPhoneNumber.getText().toString();
         String pwd = etIdentifyCode.getText().toString();
-        if(loginType == 2){
+        if (loginType == 2) {
             pwd = etLoginPwd.getText().toString();
         }
         if (pd != null) {
@@ -228,19 +231,41 @@ public class LoginActivity extends SLBaseActivity {
                 SessionModel userSession = createUserResponse.getSession();
                 StudentModel userStudent = createUserResponse.getStudent();
                 SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
-                SharedPreferences.Editor editor=sharedPreferences.edit();
-                editor.putString("access_token",userSession.getAccess_token());
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("session_id", userSession.getId());
+                editor.putString("access_token", userSession.getAccess_token());
                 editor.putString("id", userStudent.getId());
-                editor.putString("cell_phone",userStudent.getCell_phone());
-                editor.putString("name",userStudent.getName());
-                editor.putString("city_id",userStudent.getCity_id());
-                editor.putString("avatar",userStudent.getAvatar());
+                editor.putString("cell_phone", userStudent.getCell_phone());
+                editor.putString("name", userStudent.getName());
+                editor.putString("city_id", userStudent.getCity_id());
+                editor.putString("avatar", userStudent.getAvatar());
                 editor.putString("student", JsonUtils.serialize(userStudent));
                 editor.commit();
-                Toast.makeText(context, "登录成功！", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(context, IndexActivity.class);
-                startActivity(intent);
-                LoginActivity.this.finish();
+                if (TextUtils.isEmpty(userStudent.getCurrent_coach_id())) {
+                    Toast.makeText(context, "登录成功！", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, IndexActivity.class);
+                    startActivity(intent);
+                    LoginActivity.this.finish();
+                } else {
+                    fcPresenter.getCoach(userStudent.getCurrent_coach_id(), new FCCallbackListener<CoachModel>() {
+                        @Override
+                        public void onSuccess(CoachModel coachModel) {
+                            SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("current_coach", JsonUtils.serialize(coachModel));
+                            editor.commit();
+                            Toast.makeText(context, "登录成功！", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(context, IndexActivity.class);
+                            startActivity(intent);
+                            LoginActivity.this.finish();
+                        }
+
+                        @Override
+                        public void onFailure(String errorEvent, String message) {
+
+                        }
+                    });
+                }
             }
 
             @Override
@@ -248,15 +273,16 @@ public class LoginActivity extends SLBaseActivity {
                 if (pd != null) {
                     pd.dismiss();
                 }
-                if(errorEvent!=null && errorEvent.equals("40044")){
+                if (errorEvent != null && errorEvent.equals("40044")) {
                     Toast.makeText(context, "当前用户不存在！", Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
-    private void startCountDown(){
+
+    private void startCountDown() {
         sendTime = 60;
         btnReSendIdentifyCode.setClickable(false);
         btnReSendIdentifyCode.setText(sendTime-- + "");
@@ -276,7 +302,7 @@ public class LoginActivity extends SLBaseActivity {
             if (activity != null) {
                 if (msg.what == 1) {
                     activity.btnReSendIdentifyCode.setClickable(false);
-                    activity.btnReSendIdentifyCode.setText( activity.sendTime--+"");
+                    activity.btnReSendIdentifyCode.setText(activity.sendTime-- + "");
                     if (activity.sendTime > 0) {
                         activity.mHandler.sendEmptyMessageDelayed(1, 1000);
                     } else {

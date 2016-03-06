@@ -164,17 +164,20 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="14dp"
                             android:layout_marginTop="14dp"
+                            android:clickable="false"
                             android:text="未选择教练"
                             android:textColor="@color/mSTextBlackFade"
                             android:textSize="16sp" />
+
                         <ImageView
                             android:id="@+id/iv_payment_stage"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
                             android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
                             android:layout_marginRight="20dp"
-                            android:src="@drawable/ic_coachmsg_more_arrow" />
+                            android:src="@drawable/ic_coachmsg_more_arrow"
+                            android:visibility="gone" />
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -312,6 +315,7 @@
                     android:background="@color/mSViewBlackFade" />
 
                 <RelativeLayout
+                    android:id="@+id/rly_customer_phone"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center_vertical">
@@ -409,6 +413,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/lly_login_off"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginBottom="16dp"

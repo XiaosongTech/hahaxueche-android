@@ -2,7 +2,9 @@ package com.hahaxueche.api.mySetting;
 
 
 import com.hahaxueche.model.findCoach.CoachListResponse;
+import com.hahaxueche.model.findCoach.ReviewInfo;
 import com.hahaxueche.model.signupLogin.StudentModel;
+import com.hahaxueche.model.util.BaseApiResponse;
 
 /**
  * Created by gibxin on 2016/2/29.
@@ -29,4 +31,21 @@ public interface MSApi {
      * @return
      */
     public CoachListResponse getFollowCoachList(String url, String access_token);
+
+    /**
+     * @param coach_user_id
+     * @param payment_stage
+     * @param rating
+     * @param comment
+     * @param access_token
+     * @return
+     */
+    public ReviewInfo makeReview(String coach_user_id, String payment_stage, String rating, String comment, String access_token);
+
+    /**
+     * @param session_id
+     * @param access_token
+     * @return
+     */
+    public BaseApiResponse loginOff(String session_id, String access_token);
 }

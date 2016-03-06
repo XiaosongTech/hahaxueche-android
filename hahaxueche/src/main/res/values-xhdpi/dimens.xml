@@ -1,0 +1,5 @@
+<resources>
+    <dimen name="padding12dp">12dp</dimen>
+    <dimen name="margin12dp">12dp</dimen>
+    <dimen name="height260dp">260dp</dimen>
+</resources>

@@ -17,7 +17,14 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -202,5 +209,33 @@ public class Util {
             money = Double.parseDouble(price) / 100;
         }
         return dfInt.format(money) + "元";
+    }
+
+    public static String getDateFromUTC(String UTCTime) {
+        String localTimeStr = null;
+        DateFormat UTCformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date UTCDate = UTCformat.parse(UTCTime);
+            //format.setTimeZone(TimeZone.getTimeZone("GMT-8")) ;
+            localTimeStr = format.format(UTCDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return localTimeStr;
+    }
+
+    public static String getMonthDayFromUTC(String UTCTime) {
+        String localTimeStr = null;
+        DateFormat UTCformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        DateFormat format = new SimpleDateFormat("MM-dd");
+        try {
+            Date UTCDate = UTCformat.parse(UTCTime);
+            //format.setTimeZone(TimeZone.getTimeZone("GMT-8")) ;
+            localTimeStr = format.format(UTCDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return localTimeStr;
     }
 }

@@ -6,8 +6,11 @@ import com.hahaxueche.model.findCoach.FollowResponse;
 import com.hahaxueche.model.findCoach.GetReviewsResponse;
 import com.hahaxueche.model.findCoach.StuPurchaseResponse;
 import com.hahaxueche.model.findCoach.TrailResponse;
+import com.hahaxueche.model.mySetting.PurchasedService;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.model.util.BaseBoolean;
+
+import java.util.ArrayList;
 
 /**
  * 寻找教练presenter
@@ -30,7 +33,7 @@ public interface FCPresenter {
      * @param listener           回调监听器
      */
     public void getCoachList(String page, String per_page, String golden_coach_only, String license_type, String price,
-                             String city_id, String training_field_ids, String distance, String user_location, String sort_by,
+                             String city_id, ArrayList<String> training_field_ids, String distance, String user_location, String sort_by,
                              FCCallbackListener<CoachListResponse> listener);
 
     /**
@@ -116,4 +119,11 @@ public interface FCPresenter {
      * @param listener
      */
     public void createCharge(String coach_id, String access_token, FCCallbackListener<String> listener);
+
+    /**
+     * @param payment_stage
+     * @param access_token
+     * @param listener
+     */
+    public void purchasedService(String payment_stage, String access_token, FCCallbackListener<PurchasedService> listener);
 }

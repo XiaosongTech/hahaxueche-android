@@ -1,10 +1,12 @@
 package com.hahaxueche.model.findCoach;
 
+import java.io.Serializable;
+
 /**
  * 训练场地数据模型
  * Created by gibxin on 2016/2/3.
  */
-public class FieldModel {
+public class FieldModel  implements Serializable {
     private String id;
     private String name;
     private String description;

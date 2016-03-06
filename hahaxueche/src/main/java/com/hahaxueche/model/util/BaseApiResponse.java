@@ -25,6 +25,6 @@ public class BaseApiResponse {
     }
 
     public boolean isSuccess(){
-        return code.equals("20000");
+        return code.equals("20000")||code.equals("1000");
     }
 }

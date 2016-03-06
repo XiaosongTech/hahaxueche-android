@@ -5,15 +5,25 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.R;
+import com.hahaxueche.model.findCoach.CoachModel;
+import com.hahaxueche.model.signupLogin.StudentModel;
 import com.hahaxueche.ui.activity.findCoach.FindCoachActivity;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.activity.mySetting.MySettingActivity;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
+import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
+import com.hahaxueche.utils.JsonUtils;
 import com.hahaxueche.utils.Util;
+import com.squareup.picasso.Picasso;
+
+import java.lang.reflect.Type;
 
 /**
  * Created by gibxin on 2016/1/27.
@@ -23,6 +33,13 @@ public class AppointmentActivity extends Activity {
     private LinearLayout llyTabFindCoach;
     private LinearLayout llyTabAppointment;
     private LinearLayout llyTabMySetting;
+    private LinearLayout llyApHasCoach;
+    private LinearLayout llyApNoCoach;
+    private TextView tvHasCoach;
+    private TextView tvNoCoach;
+    private CircleImageView cirApCoachAvatar;
+    private StudentModel mStudent;
+    private CoachModel mCurrentCoach;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,6 +47,7 @@ public class AppointmentActivity extends Activity {
         setContentView(R.layout.activity_appointment);
         initView();
         initEvent();
+        loadDatas();
     }
 
     private void initView() {
@@ -37,6 +55,11 @@ public class AppointmentActivity extends Activity {
         llyTabFindCoach = Util.instence(this).$(this, R.id.lly_tab_find_coach);
         llyTabAppointment = Util.instence(this).$(this, R.id.lly_tab_appointment);
         llyTabMySetting = Util.instence(this).$(this, R.id.lly_tab_my_setting);
+        llyApHasCoach = Util.instence(this).$(this, R.id.lly_ap_has_coach);
+        llyApNoCoach = Util.instence(this).$(this, R.id.lly_ap_no_coach);
+        tvHasCoach = Util.instence(this).$(this, R.id.tv_has_coach);
+        tvNoCoach = Util.instence(this).$(this, R.id.tv_no_coach);
+        cirApCoachAvatar = Util.instence(this).$(this, R.id.cir_ap_coach_avatar);
     }
 
     private void initEvent() {
@@ -70,4 +93,38 @@ public class AppointmentActivity extends Activity {
             }
         }
     };
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+
+    }
+
+    private void loadDatas() {
+        SharedPreferences spSession = getSharedPreferences("session", Activity.MODE_PRIVATE);
+        Type stuType = new TypeToken<StudentModel>() {
+        }.getType();
+        mStudent = JsonUtils.deserialize(spSession.getString("student", ""), stuType);
+        Type coachType = new TypeToken<CoachModel>() {
+        }.getType();
+        mCurrentCoach = JsonUtils.deserialize(spSession.getString("current_coach", ""), coachType);
+        if (mStudent != null && mStudent.getPurchased_services() != null && mStudent.getPurchased_services().size() > 0 && mCurrentCoach != null) {
+            llyApHasCoach.setVisibility(View.VISIBLE);
+            tvHasCoach.setVisibility(View.VISIBLE);
+            llyApNoCoach.setVisibility(View.GONE);
+            tvNoCoach.setVisibility(View.GONE);
+            //头像
+            int iconWidth = Util.instence(this).dip2px(30);
+            int iconHeight = iconWidth;
+            Picasso.with(this).load(mCurrentCoach.getAvatar()).resize(iconWidth, iconHeight).into(cirApCoachAvatar);
+        } else {
+            llyApHasCoach.setVisibility(View.GONE);
+            tvHasCoach.setVisibility(View.GONE);
+            llyApNoCoach.setVisibility(View.VISIBLE);
+            tvNoCoach.setVisibility(View.VISIBLE);
+        }
+    }
 }

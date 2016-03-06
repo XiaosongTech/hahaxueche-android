@@ -2,110 +2,124 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
     <LinearLayout
+        android:id="@+id/lly_fc_search_coach"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1.25"
-        android:id="@+id/lly_fc_search_coach"
-        android:orientation="horizontal"
         android:background="@color/app_theme_color"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
         <ImageButton
+            android:id="@+id/ibtn_fc_map"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/ic_maplist_btn"
-            android:onClick="back"
+            android:layout_marginLeft="10dp"
             android:background="@null"
-            />
+            android:onClick="back"
+            android:padding="5dp"
+            android:src="@drawable/ic_maplist_btn" />
+
         <EditText
             android:layout_width="270dp"
             android:layout_height="30dp"
-            android:background="@drawable/edittext_search_area"
-            android:textSize="12sp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
             android:layout_marginLeft="20dp"
+            android:background="@drawable/edittext_search_area"
+            android:focusable="false"
             android:gravity="center"
+            android:hint="@string/fCEnterWantedCoachName"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
             android:textColor="@android:color/white"
             android:textColorHint="@color/fcSearchTextHintWhiteLight"
-            android:focusable="false"
-            android:hint="@string/fCEnterWantedCoachName"
-            />
+            android:textSize="12sp" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:layout_alignBottom="@+id/lly_fc_search_coach"
-        android:orientation="horizontal"
-        android:background="@android:color/white">
+        android:layout_weight="1"
+        android:background="@android:color/white"
+        android:orientation="horizontal">
+
         <LinearLayout
             android:id="@+id/lly_fc_filter"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/tv_fc_filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
                 android:text="@string/fCFilter"
-                android:textColor="@drawable/tab_text"/>
+                android:textColor="@drawable/tab_text"
+                android:textSize="14sp" />
+
             <ImageView
                 android:id="@+id/iv_fc_filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:src="@drawable/ic_screen_normal_btn"/>
+                android:src="@drawable/ic_screen_normal_btn" />
         </LinearLayout>
+
         <View
             android:layout_width="0.5dp"
             android:layout_height="20dp"
             android:layout_gravity="center"
-            android:background="@color/filter_txt_white_heavy"/>
+            android:background="@color/filter_txt_white_heavy" />
+
         <LinearLayout
             android:id="@+id/lly_fc_sort"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/tv_fc_sort"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
                 android:text="@string/fCSort"
-                android:textColor="@drawable/tab_text"/>
+                android:textColor="@drawable/tab_text"
+                android:textSize="14sp" />
+
             <ImageView
                 android:id="@+id/iv_fc_sort"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:src="@drawable/ic_sort_normal_btn"/>
+                android:src="@drawable/ic_sort_normal_btn" />
         </LinearLayout>
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@color/filter_txt_white_heavy" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="12">
+
         <com.hahaxueche.ui.widget.pullToRefreshView.XListView
             android:id="@+id/xlv_coach_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@drawable/layer_list_divider"
             android:dividerHeight="1dp"
-            android:headerDividersEnabled="false"
-            android:footerDividersEnabled="false">
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="false">
 
         </com.hahaxueche.ui.widget.pullToRefreshView.XListView>
 

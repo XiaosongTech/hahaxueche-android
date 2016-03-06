@@ -1,8 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@color/fCBackgroundGray">
+
+    <LinearLayout
+        android:id="@+id/lly_ap_no_coach"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/app_theme_color"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/appointmentDrive"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lly_ap_has_coach"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/app_theme_color"
+        android:gravity="center_vertical|right"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:text="@string/coachClasses"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:text="@string/classReviewed"
+            android:textColor="@color/fCTxtTitleGrayFade"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:text="@string/classFinished"
+            android:textColor="@color/fCTxtTitleGrayFade"
+            android:textSize="16sp" />
+
+        <com.hahaxueche.ui.widget.circleImageView.CircleImageView
+            android:id="@+id/cir_ap_coach_avatar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="20dp"
+            app:border_color="@android:color/white"
+            app:border_width="1dp"></com.hahaxueche.ui.widget.circleImageView.CircleImageView>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_ap_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_nolist_bk_pic" />
+
+    <TextView
+        android:id="@+id/tv_no_coach"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_ap_back"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.2"
+        android:text="@string/noCoach"
+        android:textColor="@color/fCTxtGrayFade"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_has_coach"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_ap_back"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="@string/noClasses"
+        android:textColor="@color/fCTxtGrayFade"
+        android:textSize="14sp"
+        android:visibility="gone" />
 
     <View
         android:layout_width="match_parent"
@@ -16,6 +107,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
+        android:background="@android:color/white"
         android:orientation="horizontal">
 
         <LinearLayout

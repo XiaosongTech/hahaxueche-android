@@ -9,6 +9,7 @@ import com.hahaxueche.api.signupLogin.SLApiImpl;
 import com.hahaxueche.api.util.ApiError;
 import com.hahaxueche.model.signupLogin.CompStuResponse;
 import com.hahaxueche.model.signupLogin.CreateUserResponse;
+import com.hahaxueche.model.signupLogin.StudentModel;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.presenter.util.ErrorEvent;
 
@@ -103,28 +104,28 @@ public class SLPresenterImpl implements SLPresenter {
 
     @Override
     public void completeStuInfo(final String studentId, final String cityId, final String studentName, final String accessToken,
-                                final String photoPath, final SLCallbackListener<CompStuResponse> listener) {
+                                final String photoPath, final SLCallbackListener<StudentModel> listener) {
         if (!isValidUserName(studentName, listener)) {
             return;
         }
         if (!isValidCity(cityId, listener)) {
             return;
         }
-        new AsyncTask<Void, Void, CompStuResponse>() {
+        new AsyncTask<Void, Void, StudentModel>() {
 
             @Override
-            protected CompStuResponse doInBackground(Void... params) {
+            protected StudentModel doInBackground(Void... params) {
 
-                CompStuResponse compStuResponse = api.completeStuInfo(studentId, cityId, studentName, accessToken);
+                StudentModel compStuResponse = api.completeStuInfo(studentId, cityId, studentName, accessToken);
                 if (compStuResponse.isSuccess()) {
                     return api.uploadAvatar(accessToken, photoPath, studentId);
                 } else {
-                    return new CompStuResponse();
+                    return new StudentModel();
                 }
             }
 
             @Override
-            protected void onPostExecute(CompStuResponse compStuResponse) {
+            protected void onPostExecute(StudentModel compStuResponse) {
                 if (listener != null) {
                     if (compStuResponse != null) {
                         if (compStuResponse.isSuccess()) {
@@ -302,7 +303,7 @@ public class SLPresenterImpl implements SLPresenter {
      * @param listener
      * @return
      */
-    private boolean isValidUserName(String userName, SLCallbackListener<CompStuResponse> listener) {
+    private boolean isValidUserName(String userName, SLCallbackListener<StudentModel> listener) {
         if (TextUtils.isEmpty(userName)) {
             if (listener != null) {
                 listener.onFailure(ErrorEvent.PARAM_NULL, "您的姓名不能为空");
@@ -319,7 +320,7 @@ public class SLPresenterImpl implements SLPresenter {
      * @param listener
      * @return
      */
-    private boolean isValidCity(String cityId, SLCallbackListener<CompStuResponse> listener) {
+    private boolean isValidCity(String cityId, SLCallbackListener<StudentModel> listener) {
         if (TextUtils.isEmpty(cityId)) {
             if (listener != null) {
                 listener.onFailure(ErrorEvent.PARAM_NULL, "您的所在地不能为空");

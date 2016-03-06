@@ -97,7 +97,7 @@ public class PhotoAdapter extends PagerAdapter{
         imageView.setLayoutParams(params);
 //        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         Util.instence(context).loadImgToView(context, url,
-                Util.instence(context).getDm().widthPixels, Util.instence(context).dip2px(200), imageView);
+                Util.instence(context).getDm().widthPixels, Util.instence(context).dip2px(220), imageView);
 //        Picasso.with(context).load(url).into(imageView);
         return imageView;
     }

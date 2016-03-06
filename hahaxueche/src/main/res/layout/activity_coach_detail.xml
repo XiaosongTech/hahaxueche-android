@@ -50,7 +50,7 @@
                 <com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher
                     android:id="@+id/is_cd_coach_switcher"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"></com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher>
+                    android:layout_height="220dp"></com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher>
 
                 <LinearLayout
                     android:id="@+id/fl_cd_coach_name"
@@ -233,6 +233,7 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
+                        android:id="@+id/lly_training_location"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
