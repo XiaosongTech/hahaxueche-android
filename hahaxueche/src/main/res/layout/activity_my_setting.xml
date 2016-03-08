@@ -366,7 +366,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -391,6 +392,7 @@
                     android:background="@color/mSViewBlackFade" />
 
                 <RelativeLayout
+                    android:id="@+id/rly_about_haha"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center_vertical">

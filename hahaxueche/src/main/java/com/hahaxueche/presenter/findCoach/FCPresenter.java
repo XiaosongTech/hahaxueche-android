@@ -126,4 +126,11 @@ public interface FCPresenter {
      * @param listener
      */
     public void purchasedService(String payment_stage, String access_token, FCCallbackListener<PurchasedService> listener);
+
+    /**
+     * @param lat
+     * @param lng
+     * @param listener
+     */
+    public void oneKeyFindCoach(String lat, String lng, FCCallbackListener<CoachModel> listener);
 }

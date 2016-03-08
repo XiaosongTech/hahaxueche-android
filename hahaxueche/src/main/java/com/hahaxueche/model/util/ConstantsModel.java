@@ -18,6 +18,7 @@ public class ConstantsModel {
     private List<BaseKeyValue> skill_levels;
     private ArrayList<String> login_banners;
     private ArrayList<String> home_page_banners;
+    private List<BaseKeyValue> service_types;
 
     public List<CityModel> getCities() {
         return cities;
@@ -57,5 +58,13 @@ public class ConstantsModel {
 
     public void setHome_page_banners(ArrayList<String> home_page_banners) {
         this.home_page_banners = home_page_banners;
+    }
+
+    public List<BaseKeyValue> getService_types() {
+        return service_types;
+    }
+
+    public void setService_types(List<BaseKeyValue> service_types) {
+        this.service_types = service_types;
     }
 }

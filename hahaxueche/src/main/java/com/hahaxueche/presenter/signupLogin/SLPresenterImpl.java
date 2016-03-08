@@ -151,12 +151,12 @@ public class SLPresenterImpl implements SLPresenter {
         }
         // "[1]"代表第1位为数字1，"[358]"代表第二位可以为3、5、8中的一个，"\\d{9}"代表后面是可以是0～9的数字，有9位。
         String telRegex = "[1][358]\\d{9}";
-//        if (!phoneNumber.matches(telRegex)) {
-//            if (listener != null) {
-//                listener.onFailure(ErrorEvent.PARAM_ILLEGAL, "您的手机号码格式有误");
-//            }
-//            return;
-//        }
+        if (!cell_phone.matches(telRegex)) {
+            if (listener != null) {
+                listener.onFailure(ErrorEvent.PARAM_ILLEGAL, "您的手机号码格式有误");
+            }
+            return;
+        }
         new AsyncTask<Void, Void, CreateUserResponse>() {
 
             @Override
@@ -248,12 +248,12 @@ public class SLPresenterImpl implements SLPresenter {
         }
         // "[1]"代表第1位为数字1，"[358]"代表第二位可以为3、5、8中的一个，"\\d{9}"代表后面是可以是0～9的数字，有9位。
         String telRegex = "[1][358]\\d{9}";
-//        if (!phoneNumber.matches(telRegex)) {
-//            if (listener != null) {
-//                listener.onFailure(ErrorEvent.PARAM_ILLEGAL, "您的手机号码格式有误");
-//            }
-//            return false;
-//        }
+        if (!phoneNumber.matches(telRegex)) {
+            if (listener != null) {
+                listener.onFailure(ErrorEvent.PARAM_ILLEGAL, "您的手机号码格式有误");
+            }
+            return false;
+        }
         return true;
     }
 

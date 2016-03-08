@@ -1,6 +1,7 @@
 package com.hahaxueche.ui.activity.mySetting;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -25,6 +26,7 @@ import com.hahaxueche.share.ShareConstants;
 import com.hahaxueche.ui.activity.appointment.AppointmentActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.FindCoachActivity;
+import com.hahaxueche.ui.activity.findCoach.MyCoachActivity;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
@@ -65,6 +67,8 @@ public class MySettingActivity extends MSBaseActivity {
     private ImageView ivPaymentStage;
     private LinearLayout llyLoginOff;
     private RelativeLayout rlyCustomerPhone;
+    private RelativeLayout rlyAboutHaha;
+    private ProgressDialog pd;//进度框
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,8 +97,9 @@ public class MySettingActivity extends MSBaseActivity {
         rlyPaymentStage = Util.instence(this).$(this, R.id.rly_payment_stage);
         tvPaymentStage = Util.instence(this).$(this, R.id.tv_payment_stage);
         ivPaymentStage = Util.instence(this).$(this, R.id.iv_payment_stage);
-        llyLoginOff  = Util.instence(this).$(this, R.id.lly_login_off);
+        llyLoginOff = Util.instence(this).$(this, R.id.lly_login_off);
         rlyCustomerPhone = Util.instence(this).$(this, R.id.rly_customer_phone);
+        rlyAboutHaha = Util.instence(this).$(this, R.id.rly_about_haha);
     }
 
     private void initEvent() {
@@ -109,6 +114,7 @@ public class MySettingActivity extends MSBaseActivity {
         rlyPaymentStage.setOnClickListener(mClickListener);
         llyLoginOff.setOnClickListener(mClickListener);
         rlyCustomerPhone.setOnClickListener(mClickListener);
+        rlyAboutHaha.setOnClickListener(mClickListener);
     }
 
     private void loadDatas() {
@@ -139,14 +145,14 @@ public class MySettingActivity extends MSBaseActivity {
                 List<PaymentStage> paymentStageList = mPurchasedService.getPayment_stages();
                 String tempPaymentStageStr = "";
                 for (PaymentStage paymentStage : paymentStageList) {
-                    if(paymentStage.getStage_number().equals(mPurchasedService.getCurrent_payment_stage())){
+                    if (paymentStage.getStage_number().equals(mPurchasedService.getCurrent_payment_stage())) {
                         tempPaymentStageStr = paymentStage.getStage_name();
                         break;
                     }
                 }
-                if(TextUtils.isEmpty(tempPaymentStageStr)){
-                    if(paymentStageList.size()+1 == Integer.parseInt(mPurchasedService.getCurrent_payment_stage())){
-                        tempPaymentStageStr ="已全部付款";
+                if (TextUtils.isEmpty(tempPaymentStageStr)) {
+                    if (paymentStageList.size() + 1 == Integer.parseInt(mPurchasedService.getCurrent_payment_stage())) {
+                        tempPaymentStageStr = "已拿证";
                     }
                 }
                 tvPaymentStage.setText(tempPaymentStageStr);
@@ -197,7 +203,7 @@ public class MySettingActivity extends MSBaseActivity {
                 //我的教练
                 case R.id.rly_my_coach:
                     if (mStudent != null && !TextUtils.isEmpty(mStudent.getCurrent_coach_id())) {
-                        intent = new Intent(getApplication(), CoachDetailActivity.class);
+                        intent = new Intent(getApplication(), MyCoachActivity.class);
                         intent.putExtra("coach_id", mStudent.getCurrent_coach_id());
                         startActivity(intent);
                     }
@@ -213,9 +219,16 @@ public class MySettingActivity extends MSBaseActivity {
                     break;
                 //退出登录
                 case R.id.lly_login_off:
+                    if (pd != null) {
+                        pd.dismiss();
+                    }
+                    pd = ProgressDialog.show(MySettingActivity.this, null, "退出中，请稍后……");
                     msPresenter.loginOff(session_id, accessToken, new MSCallbackListener<BaseApiResponse>() {
                         @Override
                         public void onSuccess(BaseApiResponse data) {
+                            if (pd != null) {
+                                pd.dismiss();
+                            }
                             SharedPreferences spSession = getSharedPreferences("session", Activity.MODE_PRIVATE);
                             SharedPreferences.Editor spEditor = spSession.edit();
                             spEditor.clear();
@@ -227,7 +240,9 @@ public class MySettingActivity extends MSBaseActivity {
 
                         @Override
                         public void onFailure(String errorEvent, String message) {
-
+                            if (pd != null) {
+                                pd.dismiss();
+                            }
                         }
                     });
                     break;
@@ -236,15 +251,22 @@ public class MySettingActivity extends MSBaseActivity {
                     intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:4000016006"));
                     startActivity(intent);
                     break;
+                //关于哈哈
+                case R.id.rly_about_haha:
+                    Uri uri = Uri.parse("http://staging.hahaxueche.net/#/student");
+                    Intent it = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(it);
+                    break;
             }
         }
     };
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK){
-            return  true;
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
         }
-        return  super.onKeyDown(keyCode, event);
+        return super.onKeyDown(keyCode, event);
 
     }
 }

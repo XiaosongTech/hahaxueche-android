@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -446,6 +447,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                                         fcPresenter.createCharge(mCoach.getId(), access_token, new FCCallbackListener<String>() {
                                             @Override
                                             public void onSuccess(String charge) {
+                                                Log.v("gibxin","charge-> "+ charge);
                                                 //调用ping++
                                                 Intent intent = new Intent(CoachDetailActivity.this, PaymentActivity.class);
                                                 intent.putExtra(PaymentActivity.EXTRA_CHARGE, charge);
@@ -604,9 +606,10 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.v("gibxin","requestCode="+requestCode);
         //支付页面返回处理
         if (requestCode == 1) {
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK) {//resultCode == Activity.RESULT_OK
                 String result = data.getExtras().getString("pay_result");
                 /* 处理返回值
                  * "success" - 支付成功

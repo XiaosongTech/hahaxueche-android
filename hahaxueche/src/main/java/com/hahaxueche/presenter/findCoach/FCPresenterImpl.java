@@ -16,6 +16,7 @@ import com.hahaxueche.model.findCoach.TrailResponse;
 import com.hahaxueche.model.mySetting.PurchasedService;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.model.util.BaseBoolean;
+import com.hahaxueche.presenter.util.ErrorEvent;
 
 import java.util.ArrayList;
 
@@ -179,6 +180,14 @@ public class FCPresenterImpl implements FCPresenter {
     @Override
     public void createTrail(final String coach_id, final String name, final String phone_number, final String first_time_option,
                             final String second_time_option, final FCCallbackListener<TrailResponse> listener) {
+        // "[1]"代表第1位为数字1，"[358]"代表第二位可以为3、5、8中的一个，"\\d{9}"代表后面是可以是0～9的数字，有9位。
+        String telRegex = "[1][358]\\d{9}";
+        if (!phone_number.matches(telRegex)) {
+            if (listener != null) {
+                listener.onFailure(ErrorEvent.PARAM_ILLEGAL, "您的手机号码格式有误");
+            }
+            return;
+        }
         new AsyncTask<Void, Void, TrailResponse>() {
             @Override
             protected TrailResponse doInBackground(Void... params) {
@@ -318,6 +327,34 @@ public class FCPresenterImpl implements FCPresenter {
                         listener.onSuccess(purchasedService);
                     } else {
                         listener.onFailure(purchasedService.getCode(), purchasedService.getMessage());
+                    }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void oneKeyFindCoach(final String lat, final String lng, final FCCallbackListener<CoachModel> listener) {
+        new AsyncTask<Void, Void, CoachModel>() {
+
+            @Override
+            protected CoachModel doInBackground(Void... params) {
+                return api.oneKeyFindCoach(lat,lng);
+            }
+
+            @Override
+            protected void onPostExecute(CoachModel coachModel) {
+                if (listener != null) {
+                    if(coachModel!=null) {
+                        if (coachModel.isSuccess()) {
+                            listener.onSuccess(coachModel);
+                        } else {
+                            listener.onFailure(coachModel.getCode(), coachModel.getMessage());
+                        }
+                    }else {
+                        listener.onFailure("0000", "未找到合适的教练");
                     }
                 } else {
                     listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);

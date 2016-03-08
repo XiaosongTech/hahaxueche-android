@@ -230,5 +230,18 @@ public class FCApiImpl implements FCApi {
         }
     }
 
+    @Override
+    public CoachModel oneKeyFindCoach(String lat, String lng) {
+        Type type = new TypeToken<CoachModel>() {
+        }.getType();
+        String url = "students/best_match_coach?user_location[]="+lat+"&user_location[]="+lng;
+        try {
+            return httpEngine.getHandle(type,url);
+        }catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
 
 }

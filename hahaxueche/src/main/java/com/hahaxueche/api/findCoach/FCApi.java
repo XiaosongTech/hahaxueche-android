@@ -135,10 +135,16 @@ public interface FCApi {
     public String createCharge(String coach_id, String access_token);
 
     /**
-     *
      * @param payment_stage
      * @param access_token
      * @return
      */
-    public PurchasedService purchasedService(String payment_stage,String access_token);
+    public PurchasedService purchasedService(String payment_stage, String access_token);
+
+    /**
+     * @param lat
+     * @param lng
+     * @return
+     */
+    public CoachModel oneKeyFindCoach(String lat, String lng);
 }

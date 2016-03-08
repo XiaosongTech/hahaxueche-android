@@ -1,6 +1,7 @@
 package com.hahaxueche.ui.activity.index;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,8 +31,11 @@ import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.R;
+import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.util.ConstantsModel;
+import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.ui.activity.appointment.AppointmentActivity;
+import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.FindCoachActivity;
 import com.hahaxueche.ui.activity.mySetting.MySettingActivity;
 import com.hahaxueche.ui.dialog.CityChoseDialog;
@@ -49,7 +53,7 @@ import java.util.List;
 /**
  * Created by gibxin on 2016/1/27.
  */
-public class IndexActivity extends Activity implements AdapterView.OnItemClickListener, ViewPager.OnPageChangeListener,
+public class IndexActivity extends IndexBaseActivity implements AdapterView.OnItemClickListener, ViewPager.OnPageChangeListener,
         OnItemClickListener {
     private LinearLayout llyTabIndex;
     private LinearLayout llyTabFindCoach;
@@ -71,6 +75,7 @@ public class IndexActivity extends Activity implements AdapterView.OnItemClickLi
     private double mLat;
     private double mLng;
     private TextView tvOneKeyFindCoach;
+    private ProgressDialog pd;//进度框
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,6 +113,9 @@ public class IndexActivity extends Activity implements AdapterView.OnItemClickLi
                         //定位成功回调信息，设置相关消息
                         mLat = aMapLocation.getLatitude();//获取纬度
                         mLng = aMapLocation.getLongitude();//获取经度
+                        if(mLat!=0d && mLng!=0d){
+                            mLocationClient.stopLocation();
+                        }
                     } else {
                         //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
                         Log.e("AmapError", "location Error, ErrCode:"
@@ -124,7 +132,7 @@ public class IndexActivity extends Activity implements AdapterView.OnItemClickLi
         //设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
         mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
         //设置是否只定位一次,默认为false
-        mLocationOption.setOnceLocation(true);
+        mLocationOption.setOnceLocation(false);
         //设置是否允许模拟位置,默认为false，不允许模拟位置
         mLocationOption.setMockEnable(false);
         //设置定位间隔,单位毫秒,默认为2000ms
@@ -132,7 +140,7 @@ public class IndexActivity extends Activity implements AdapterView.OnItemClickLi
         //给定位客户端对象设置定位参数
         mLocationClient.setLocationOption(mLocationOption);
         //启动定位
-        //mLocationClient.startLocation();
+        mLocationClient.startLocation();
     }
 
     private void initView() {
@@ -203,18 +211,43 @@ public class IndexActivity extends Activity implements AdapterView.OnItemClickLi
                     finish();
                     break;
                 case R.id.rly_xiaoha_more:
-                    Uri uri = Uri.parse("http://staging-api.hahaxueche.net:9000/#/student");
+                    Uri uri = Uri.parse("http://staging.hahaxueche.net/#/student");
                     Intent it = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(it);
                     break;
                 case R.id.rly_coach_more:
-                    uri = Uri.parse("http://staging-api.hahaxueche.net:9000/#/coach");
+                    uri = Uri.parse("http://staging.hahaxueche.net/#/coach");
                     it = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(it);
                     break;
                 case R.id.tv_onekey_find_coach:
-                    //tvOneKeyFindCoach.setText("--------lat ->" + mLat + " lng -> " + mLng);
-                    System.out.println("--------lat ->" + mLat + " lng -> " + mLng);
+                    if (pd != null) {
+                        pd.dismiss();
+                    }
+                    pd = ProgressDialog.show(IndexActivity.this, null, "教练寻找中，请稍后……");
+                    fcPresenter.oneKeyFindCoach(mLat + "", mLng + "", new FCCallbackListener<CoachModel>() {
+                        @Override
+                        public void onSuccess(CoachModel data) {
+                            if (pd != null) {
+                                pd.dismiss();
+                            }
+                            if (data != null && !TextUtils.isEmpty(data.getId())) {
+                                Intent intent = new Intent(getApplication(), CoachDetailActivity.class);
+                                intent.putExtra("coach_id", data.getId());
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(IndexActivity.this, "未找到合适的教练", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(String errorEvent, String message) {
+                            if (pd != null) {
+                                pd.dismiss();
+                            }
+                            Toast.makeText(IndexActivity.this, message, Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     break;
             }
         }

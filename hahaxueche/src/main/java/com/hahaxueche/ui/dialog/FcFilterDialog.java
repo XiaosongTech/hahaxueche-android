@@ -315,6 +315,8 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
                 if (mListener != null) {
                     if (swGoldenCoachOly.isChecked()) {
                         goldenCoachOnly = "true";
+                    }else {
+                        goldenCoachOnly = "";
                     }
                     //license_type 1 = C1, 2 = C2, 3 = c1+c2
                     if (cbLicenseTypeC1.isChecked() && cbLicenseTypeC2.isChecked()) {

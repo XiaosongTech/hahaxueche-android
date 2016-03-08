@@ -49,6 +49,13 @@
     <string name="fCAppointmentRemarks">学员可直接拨打客服电话400-001-6006\n或联系客服QQ3319762526预约试学</string>
     <string name="fCAppointmentRightNow">立即预约</string>
     <string name="fCStudentComment">学员评价</string>
+    <string name="baseInfo">基本信息</string>
+    <string name="contactWay">联系方式</string>
+    <string name="trainFieldAddress">训练场地址</string>
+    <string name="courseInfo">课程信息</string>
+    <string name="courseType">课程类型</string>
+    <string name="teachCourse">教授科目</string>
+    <string name="courseFeeAndDetail">费用及明细</string>
     <!--我的页面-->
     <string name="myFollowCoach">我关注的教练</string>
     <string name="myPaymentStage">打款状态</string>

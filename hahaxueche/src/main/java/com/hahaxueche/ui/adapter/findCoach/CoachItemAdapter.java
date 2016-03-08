@@ -40,19 +40,9 @@ public class CoachItemAdapter extends BaseAdapter {
     private int resource;   //item的布局
     private Context context;
     private LayoutInflater inflator;
-    private TextView tvCoachName;//教练姓名
-    private TextView tvCoachTeachTime;//教龄
-    private TextView tvCoachPoints;//教练评分
-    private TextView tvCoachActualPrice;//实际价格
-    private TextView tvCoachOldPrice;//原价
-    private CircleImageView civCoachAvatar;//教练头像
-    private ImageView ivIsGoldenCoach;//是否金牌教练
-    private ScoreView svCoachScore;//得分星
-    private TextView tvCoachLocation;//地点
     private ConstantsModel constantsModel;
     private List<FieldModel> fieldsList;
     private List<CityModel> cityList;
-    private LinearLayout lllyCoachLocation;
     private MapDialog mapDialog;
     private FieldModel mFieldModel;
 
@@ -87,49 +77,55 @@ public class CoachItemAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
+        View view = convertView;
+        ViewHolder holder;
+        if (view == null) {
             inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflator.inflate(resource, null);
-            tvCoachName = (TextView) convertView.findViewById(R.id.tv_coach_name);   //为了减少开销，则只在第一页时调用findViewById
-            tvCoachTeachTime = (TextView) convertView.findViewById(R.id.tv_coach_teach_time);
-            tvCoachPoints = (TextView) convertView.findViewById(R.id.tv_coach_points);
-            tvCoachActualPrice = (TextView) convertView.findViewById(R.id.tv_coach_actual_price);
-            tvCoachOldPrice = (TextView) convertView.findViewById(R.id.tv_coach_old_price);
-            civCoachAvatar = (CircleImageView) convertView.findViewById(R.id.cir_coach_avatar);
-            ivIsGoldenCoach = (ImageView) convertView.findViewById(R.id.iv_is_golden_coach);
-            svCoachScore = (ScoreView) convertView.findViewById(R.id.sv_coach_score);
-            tvCoachLocation = (TextView) convertView.findViewById(R.id.tv_coach_location);
-            lllyCoachLocation = (LinearLayout) convertView.findViewById(R.id.lly_coach_location);
+            view = inflator.inflate(resource, null);
+            holder = new ViewHolder();
+            holder.tvCoachName = (TextView) view.findViewById(R.id.tv_coach_name);   //为了减少开销，则只在第一页时调用findViewById
+            holder.tvCoachTeachTime = (TextView) view.findViewById(R.id.tv_coach_teach_time);
+            holder.tvCoachPoints = (TextView) view.findViewById(R.id.tv_coach_points);
+            holder.tvCoachActualPrice = (TextView) view.findViewById(R.id.tv_coach_actual_price);
+            holder.tvCoachOldPrice = (TextView) view.findViewById(R.id.tv_coach_old_price);
+            holder.civCoachAvatar = (CircleImageView) view.findViewById(R.id.cir_coach_avatar);
+            holder.ivIsGoldenCoach = (ImageView) view.findViewById(R.id.iv_is_golden_coach);
+            holder.svCoachScore = (ScoreView) view.findViewById(R.id.sv_coach_score);
+            holder.tvCoachLocation = (TextView) view.findViewById(R.id.tv_coach_location);
+            holder.llyCoachLocation = (LinearLayout) view.findViewById(R.id.lly_coach_location);
+            view.setTag(holder);
+        } else {
+            holder = (ViewHolder) view.getTag();
         }
         DecimalFormat dfInt = new DecimalFormat("#####");
         CoachModel coach = coachList.get(position);
-        tvCoachName.setText(coach.getName());
+        holder.tvCoachName.setText(coach.getName());
         double coachExperiences = 0d;
         if (!TextUtils.isEmpty(coach.getExperiences())) {
             coachExperiences = Double.parseDouble(coach.getExperiences());
         }
-        tvCoachTeachTime.setText(dfInt.format(coachExperiences) + "年教龄");
-        tvCoachPoints.setText(coach.getAverage_rating());
-        tvCoachActualPrice.setText(Util.getMoney(coach.getCoach_group().getTraining_cost()));
-        tvCoachOldPrice.setText(Util.getMoney(coach.getCoach_group().getMarket_price()));
-        tvCoachOldPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-        getCoachAvatar(coach.getAvatar(), civCoachAvatar);
+        holder.tvCoachTeachTime.setText(dfInt.format(coachExperiences) + "年教龄");
+        holder.tvCoachPoints.setText(coach.getAverage_rating());
+        holder.tvCoachActualPrice.setText(Util.getMoney(coach.getCoach_group().getTraining_cost()));
+        holder.tvCoachOldPrice.setText(Util.getMoney(coach.getCoach_group().getMarket_price()));
+        holder.tvCoachOldPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        getCoachAvatar(coach.getAvatar(), holder.civCoachAvatar);
         if (coach.getSkill_level().equals("1")) {
-            ivIsGoldenCoach.setVisibility(View.VISIBLE);
+            holder.ivIsGoldenCoach.setVisibility(View.VISIBLE);
         } else {
-            ivIsGoldenCoach.setVisibility(View.GONE);
+            holder.ivIsGoldenCoach.setVisibility(View.GONE);
         }
         float score = Float.parseFloat(coach.getAverage_rating());
         if (score > 5) {
             score = 5;
         }
-        svCoachScore.setScore(score, false);
+        holder.svCoachScore.setScore(score, false);
         if (fieldsList != null) {
             for (FieldModel fieldsModel : fieldsList) {
                 if (fieldsModel.getId().equals(coach.getCoach_group().getField_id())) {
                     for (CityModel city : cityList) {
                         if (city.getId().equals(fieldsModel.getCity_id())) {
-                            tvCoachLocation.setText(city.getName() + fieldsModel.getSection());
+                            holder.tvCoachLocation.setText(city.getName() + fieldsModel.getSection());
                             break;
                         }
                     }
@@ -138,15 +134,15 @@ public class CoachItemAdapter extends BaseAdapter {
                 }
             }
         }
-        lllyCoachLocation.setOnClickListener(new View.OnClickListener() {
+        holder.llyCoachLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int id = v.getId();
-                mapDialog = new MapDialog(context, R.style.map_dialog,mFieldModel,v);
+                mapDialog = new MapDialog(context, R.style.map_dialog, mFieldModel, v);
                 mapDialog.show();
             }
         });
-        return convertView;
+        return view;
     }
 
     private void getCoachAvatar(String url, CircleImageView civCoachAvatar) {
@@ -154,5 +150,18 @@ public class CoachItemAdapter extends BaseAdapter {
         final int iconHeight = iconWidth;
         Picasso.with(context).load(url).resize(iconWidth, iconHeight)
                 .into(civCoachAvatar);
+    }
+
+    static class ViewHolder {
+        TextView tvCoachName;
+        TextView tvCoachTeachTime;
+        TextView tvCoachPoints;
+        TextView tvCoachActualPrice;
+        TextView tvCoachOldPrice;
+        CircleImageView civCoachAvatar;
+        ImageView ivIsGoldenCoach;
+        ScoreView svCoachScore;
+        TextView tvCoachLocation;
+        LinearLayout llyCoachLocation;
     }
 }

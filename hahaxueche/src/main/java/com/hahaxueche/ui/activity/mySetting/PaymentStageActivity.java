@@ -2,6 +2,7 @@ package com.hahaxueche.ui.activity.mySetting;
 
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
@@ -56,6 +57,7 @@ public class PaymentStageActivity extends MSBaseActivity {
     private PaymentStage mPaymentStage;
     private TransferConfirmDialog transferConfirmDialog;
     private ReviewDialog reviewDialog;
+    private ProgressDialog pd;//进度框
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,6 +83,9 @@ public class PaymentStageActivity extends MSBaseActivity {
     }
 
     private void refreshUI() {
+        if (pd != null) {
+            pd.dismiss();
+        }
         SharedPreferences spSession = getSharedPreferences("session", Activity.MODE_PRIVATE);
         access_token = spSession.getString("access_token", "");
         Type stuType = new TypeToken<StudentModel>() {
@@ -146,6 +151,10 @@ public class PaymentStageActivity extends MSBaseActivity {
                         @Override
                         public void onTransfer() {
                             transferConfirmDialog.dismiss();
+                            if (pd != null) {
+                                pd.dismiss();
+                            }
+                            pd = ProgressDialog.show(PaymentStageActivity.this, null, "付款中，请稍后……");
                             fcPresenter.purchasedService(mPaymentStage.getStage_number(), access_token, new FCCallbackListener<PurchasedService>() {
                                 @Override
                                 public void onSuccess(PurchasedService purchasedService) {
@@ -170,6 +179,9 @@ public class PaymentStageActivity extends MSBaseActivity {
 
                                 @Override
                                 public void onFailure(String errorEvent, String message) {
+                                    if (pd != null) {
+                                        pd.dismiss();
+                                    }
                                     Toast.makeText(PaymentStageActivity.this, "打款失败", Toast.LENGTH_SHORT);
                                 }
                             });
@@ -251,7 +263,6 @@ public class PaymentStageActivity extends MSBaseActivity {
             @Override
             public void dismiss() {
                 super.dismiss();
-                System.out.println("---------dismiss---------");
                 Toast.makeText(PaymentStageActivity.this, "取消评论", Toast.LENGTH_SHORT);
                 refreshStuCache();
                 refreshUI();
