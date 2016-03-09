@@ -64,8 +64,8 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     private List<String> networkImages;
     private ArrayAdapter transformerArrayAdapter;
     private ArrayList<String> transformerList = new ArrayList<String>();
-    private RelativeLayout rlyXiaohaMore;
-    private RelativeLayout rlyCoachMore;
+    private LinearLayout llyXiaohaMore;
+    private LinearLayout llyCoachMore;
     //声明AMapLocationClient类对象
     private AMapLocationClient mLocationClient;
     //声明定位回调监听器
@@ -113,6 +113,11 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                         //定位成功回调信息，设置相关消息
                         mLat = aMapLocation.getLatitude();//获取纬度
                         mLng = aMapLocation.getLongitude();//获取经度
+                        SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("lat", mLat + "");
+                        editor.putString("lng",mLng+"");
+                        editor.commit();
                         if(mLat!=0d && mLng!=0d){
                             mLocationClient.stopLocation();
                         }
@@ -148,8 +153,8 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         llyTabFindCoach = Util.instence(this).$(this, R.id.lly_tab_find_coach);
         llyTabAppointment = Util.instence(this).$(this, R.id.lly_tab_appointment);
         llyTabMySetting = Util.instence(this).$(this, R.id.lly_tab_my_setting);
-        rlyCoachMore = Util.instence(this).$(this, R.id.rly_coach_more);
-        rlyXiaohaMore = Util.instence(this).$(this, R.id.rly_xiaoha_more);
+        llyCoachMore = Util.instence(this).$(this, R.id.lly_coach_more);
+        llyXiaohaMore = Util.instence(this).$(this, R.id.lly_xiaoha_more);
         tvOneKeyFindCoach = Util.instence(this).$(this, R.id.tv_onekey_find_coach);
         cbannerIndex = (ConvenientBanner) findViewById(R.id.indexBanner);
         WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
@@ -184,8 +189,8 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         llyTabFindCoach.setOnClickListener(mClickListener);
         llyTabAppointment.setOnClickListener(mClickListener);
         llyTabMySetting.setOnClickListener(mClickListener);
-        rlyCoachMore.setOnClickListener(mClickListener);
-        rlyXiaohaMore.setOnClickListener(mClickListener);
+        llyCoachMore.setOnClickListener(mClickListener);
+        llyXiaohaMore.setOnClickListener(mClickListener);
         tvOneKeyFindCoach.setOnClickListener(mClickListener);
     }
 
@@ -210,12 +215,12 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                     startActivity(intent);
                     finish();
                     break;
-                case R.id.rly_xiaoha_more:
+                case R.id.lly_xiaoha_more:
                     Uri uri = Uri.parse("http://staging.hahaxueche.net/#/student");
                     Intent it = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(it);
                     break;
-                case R.id.rly_coach_more:
+                case R.id.lly_coach_more:
                     uri = Uri.parse("http://staging.hahaxueche.net/#/coach");
                     it = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(it);
@@ -302,6 +307,35 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+    // 开始自动翻页
+
+    @Override
+
+    protected void onResume() {
+
+        super.onResume();
+
+        //开始自动翻页
+
+        cbannerIndex.startTurning(2500);
+
+    }
+
+
+
+    // 停止自动翻页
+
+    @Override
+
+    protected void onPause() {
+
+        super.onPause();
+
+        //停止翻页
+
+        cbannerIndex.stopTurning();
+
     }
 
 

@@ -42,6 +42,7 @@
             android:padding="@dimen/padding12dp">
 
             <LinearLayout
+                android:id="@+id/lly_xiaoha_more"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -58,7 +59,6 @@
                     android:src="@drawable/ic_homepage_hahahere" />
 
                 <RelativeLayout
-                    android:id="@+id/rly_xiaoha_more"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin12dp">
@@ -97,6 +97,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/lly_coach_more"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -112,7 +113,6 @@
                     android:src="@drawable/ic_homepage_coachhere" />
 
                 <RelativeLayout
-                    android:id="@+id/rly_coach_more"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin12dp">

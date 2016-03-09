@@ -93,7 +93,7 @@ public class ScoreView extends LinearLayout{
             tp.setFakeBoldText(true);
             addView(scoreNum,params);
         }
-        DecimalFormat df2  = new DecimalFormat("###.0");
+        DecimalFormat df2  = new DecimalFormat("##0.0");
         scoreNum.setText(String.valueOf(df2.format(score)));
     }
 

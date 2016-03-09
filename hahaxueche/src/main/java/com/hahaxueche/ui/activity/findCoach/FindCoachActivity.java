@@ -64,10 +64,12 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
     private String city_id;
     private ArrayList<String> training_field_ids;
     private String distance;
-    private String user_location;
-    private String sort_by;
+    private ArrayList<String> user_location;
+    private String sort_by = "0";
     private ImageButton ibtnFcMap;
     private ArrayList<FieldModel> selFieldList;
+    private String mlat;
+    private String mlng;
 
     private String TAG = "FindCoachActivity";
 
@@ -77,6 +79,9 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         setContentView(R.layout.activity_find_coach);
         initView();
         initEvent();
+        SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
+        mlat = sharedPreferences.getString("lat", "");
+        mlng = sharedPreferences.getString("lng", "");
         if (xlvCoachList != null)
             xlvCoachList.autoRefresh();
     }
@@ -220,7 +225,6 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
 
     @Override
     public void onRefresh() {
-        System.out.println("onRefresh");
         if (!TextUtils.isEmpty(linkPrevious)) {
             getCoachList(linkPrevious);
         } else {
@@ -250,7 +254,6 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
 
     @Override
     public void onLoadMore() {
-        System.out.println("onLoadMore");
         if (!TextUtils.isEmpty(linkNext)) {
             getCoachList(linkNext);
         } else {
@@ -273,11 +276,16 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
     }
 
     private void getCoachList() {
-        if(selFieldList!=null && selFieldList.size()>0){
+        if (selFieldList != null && selFieldList.size() > 0) {
             training_field_ids = new ArrayList<>();
-            for(FieldModel selField:selFieldList){
+            for (FieldModel selField : selFieldList) {
                 training_field_ids.add(selField.getId());
             }
+        }
+        if(!TextUtils.isEmpty(mlat)&&!TextUtils.isEmpty(mlng)){
+            user_location = new ArrayList<>();
+            user_location.add(mlat);
+            user_location.add(mlng);
         }
         this.fcPresenter.getCoachList(page, per_page, golden_coach_only, license_type, price, city_id, training_field_ids, distance,
                 user_location, sort_by, new FCCallbackListener<CoachListResponse>() {
@@ -359,7 +367,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                     if (bundle.getSerializable("selFieldList") != null) {
                         selFieldList = (ArrayList<FieldModel>) bundle.getSerializable("selFieldList");
                         getCoachList();
-                    }else {
+                    } else {
                         selFieldList = new ArrayList<>();
                         getCoachList();
                     }

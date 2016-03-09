@@ -3,6 +3,7 @@ package com.hahaxueche.ui.activity.findCoach;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,11 +12,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -119,6 +122,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     //训练场地
     private LinearLayout llyTrainLoaction;
     private FieldModel mFieldModel;
+    private LinearLayout llyFlCdCoachName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -174,6 +178,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         llyTakeCertCost = Util.instence(this).$(this, R.id.lly_take_cert_cost);
         llyTrainLoaction = Util.instence(this).$(this, R.id.lly_training_location);
         shareAppDialog = new ShareAppDialog(this);
+        llyFlCdCoachName = Util.instence(this).$(this, R.id.fl_cd_coach_name);
     }
 
     private void initEvent() {
@@ -238,8 +243,19 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private void loadDetail() {
         tvCdCoachName.setText(mCoach.getName());
         tvCdCoachDescription.setText(mCoach.getBio());
+        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        int width = wm.getDefaultDisplay().getWidth();
+        int height = Math.round(width * 4 / 5);
         getCoachAvatar(mCoach.getAvatar(), civCdCoachAvatar);
-        isCdCoachDetail.updateImages(mCoach.getImages());
+        isCdCoachDetail.updateImages(mCoach.getImages(), height);
+        RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
+        isCdCoachDetail.setLayoutParams(p);
+        RelativeLayout.LayoutParams paramAvatar = new RelativeLayout.LayoutParams(Util.instence(this).dip2px(70), Util.instence(this).dip2px(70));
+        paramAvatar.setMargins(Util.instence(this).dip2px(30),height-Util.instence(this).dip2px(35),0,0);
+        civCdCoachAvatar.setLayoutParams(paramAvatar);
+        RelativeLayout.LayoutParams paramLlyFlCd = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        paramLlyFlCd.addRule(RelativeLayout.ALIGN_BOTTOM,civCdCoachAvatar.getId());
+        llyFlCdCoachName.setLayoutParams(paramLlyFlCd);
         //金牌教练显示
         if (mCoach.getSkill_level().equals("1")) {
             ivIsGoldenCoach.setVisibility(View.VISIBLE);
@@ -275,12 +291,13 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         List<BriefCoachInfo> peerCoachList = mCoach.getPeer_coaches();
         if (peerCoachList != null && peerCoachList.size() > 0) {
             if (peerCoachList.size() > 1) {
-                getCoachAvatar(peerCoachList.get(0).getAvatar_url(), civPeerCoachAvater1);
+                getCoachAvatar(peerCoachList.get(0).getAvatar(), civPeerCoachAvater1);
                 tvPeerCoach1.setText(peerCoachList.get(0).getName());
-                getCoachAvatar(peerCoachList.get(1).getAvatar_url(), civPeerCoachAvater2);
+                getCoachAvatar(peerCoachList.get(1).getAvatar(), civPeerCoachAvater2);
                 tvPeerCoach2.setText(peerCoachList.get(1).getName());
             } else {
-                getCoachAvatar(peerCoachList.get(0).getAvatar_url(), civPeerCoachAvater2);
+                System.out.println("peer coach 1 avatar " + peerCoachList.get(0).getAvatar());
+                getCoachAvatar(peerCoachList.get(0).getAvatar(), civPeerCoachAvater2);
                 tvPeerCoach1.setText(peerCoachList.get(0).getName());
                 llyPeerCoach2.setVisibility(View.GONE);
             }
@@ -311,7 +328,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     }
 
     private void getCoachAvatar(String url, CircleImageView civCoachAvatar) {
-        final int iconWidth = Util.instence(this).dip2px(60);
+        final int iconWidth = Util.instence(this).dip2px(70);
         final int iconHeight = iconWidth;
         Picasso.with(this).load(url).resize(iconWidth, iconHeight)
                 .into(civCoachAvatar);
@@ -447,7 +464,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                                         fcPresenter.createCharge(mCoach.getId(), access_token, new FCCallbackListener<String>() {
                                             @Override
                                             public void onSuccess(String charge) {
-                                                Log.v("gibxin","charge-> "+ charge);
+                                                Log.v("gibxin", "charge-> " + charge);
                                                 //调用ping++
                                                 Intent intent = new Intent(CoachDetailActivity.this, PaymentActivity.class);
                                                 intent.putExtra(PaymentActivity.EXTRA_CHARGE, charge);
@@ -606,7 +623,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.v("gibxin","requestCode="+requestCode);
+        Log.v("gibxin", "requestCode=" + requestCode);
         //支付页面返回处理
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {//resultCode == Activity.RESULT_OK

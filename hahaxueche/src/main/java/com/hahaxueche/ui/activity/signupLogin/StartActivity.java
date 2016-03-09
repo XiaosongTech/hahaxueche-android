@@ -171,4 +171,33 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
         }
 
     }
+    // 开始自动翻页
+
+    @Override
+
+    protected void onResume() {
+
+        super.onResume();
+
+        //开始自动翻页
+
+        convenientBanner.startTurning(2500);
+
+    }
+
+
+
+    // 停止自动翻页
+
+    @Override
+
+    protected void onPause() {
+
+        super.onPause();
+
+        //停止翻页
+
+        convenientBanner.stopTurning();
+
+    }
 }

@@ -111,6 +111,10 @@ public class SLPresenterImpl implements SLPresenter {
         if (!isValidCity(cityId, listener)) {
             return;
         }
+        if (TextUtils.isEmpty(photoPath)) {
+            listener.onFailure("000", "亲，请上传头像哦~");
+            return;
+        }
         new AsyncTask<Void, Void, StudentModel>() {
 
             @Override
@@ -157,6 +161,12 @@ public class SLPresenterImpl implements SLPresenter {
             }
             return;
         }
+        if (TextUtils.isEmpty(pwd)) {
+            if (listener != null) {
+                listener.onFailure(ErrorEvent.PARAM_NULL, loginType == 1 ? "您的验证码不能为空" : "您的密码不能为空");
+            }
+            return;
+        }
         new AsyncTask<Void, Void, CreateUserResponse>() {
 
             @Override
@@ -172,8 +182,9 @@ public class SLPresenterImpl implements SLPresenter {
                             listener.onSuccess(createUserResponse);
                         } else {
                             if (createUserResponse.getCode().equals("40011")) {
-                                createUserResponse.setMessage("您的短信验证码有误");
-                                listener.onFailure(createUserResponse.getCode(), createUserResponse.getMessage());
+                                listener.onFailure(createUserResponse.getCode(), loginType == 1?"您的短信验证码有误":"您的密码有误");
+                            } else if (createUserResponse.getCode().equals("40001")) {
+                                listener.onFailure(createUserResponse.getCode(), loginType == 1?"您的短信验证码有误":"您的密码有误");
                             } else {
                                 listener.onFailure(createUserResponse.getCode(), createUserResponse.getMessage());
                             }

@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_map_gradient"
+        android:background="@color/app_theme_color"
         android:paddingBottom="10dp"
         android:paddingTop="10dp">
 

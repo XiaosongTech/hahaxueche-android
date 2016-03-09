@@ -81,6 +81,7 @@ public class FeeDetailDialog extends Dialog implements View.OnClickListener {
      */
     private void loadCostItemList() {
         if (mCostItemList != null && mCostItemList.size() > 0) {
+            double totalFeeDouble = Double.parseDouble(mTotalFee);
             for (CostItem costItem : mCostItemList) {
                 RelativeLayout rly = new RelativeLayout(mContext);
                 LinearLayout.LayoutParams flParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
@@ -108,12 +109,41 @@ public class FeeDetailDialog extends Dialog implements View.OnClickListener {
                     tvCostFee.setText("免费赠送");
                 } else {
                     tvCostFee.setText(Util.getMoneyYuan(costItem.getCost()));
+                    totalFeeDouble -= Double.parseDouble(costItem.getCost());
                 }
                 tvCostFee.setTextColor(mContext.getResources().getColor(R.color.app_theme_color));
                 tvCostFee.setTextSize(16);
                 rly.addView(tvCostFee);
                 llyCostItemList.addView(rly);
             }
+            //添加培训费
+            RelativeLayout rly = new RelativeLayout(mContext);
+            LinearLayout.LayoutParams flParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            rly.setPadding(Util.instence(mContext).dip2px(15), Util.instence(mContext).dip2px(10), Util.instence(mContext).dip2px(15),
+                    Util.instence(mContext).dip2px(10));
+            rly.setLayoutParams(flParams);
+            //收费项目名称
+            TextView tvCostName = new TextView(mContext);
+            RelativeLayout.LayoutParams tvNameParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+            tvNameParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            tvCostName.setLayoutParams(tvNameParams);
+            tvCostName.setText("培训费（您的教练）");
+            tvCostName.setTextColor(mContext.getResources().getColor(R.color.fCTxtGray));
+            tvCostName.setTextSize(16);
+            rly.addView(tvCostName);
+            //收费金额
+            RelativeLayout.LayoutParams tvCostParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+            TextView tvCostFee = new TextView(mContext);
+            tvCostParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            tvCostFee.setLayoutParams(tvCostParams);
+            tvCostFee.setText(Util.getMoneyYuan(totalFeeDouble+""));
+            tvCostFee.setTextColor(mContext.getResources().getColor(R.color.app_theme_color));
+            tvCostFee.setTextSize(16);
+            rly.addView(tvCostFee);
+            llyCostItemList.addView(rly);
         }
     }
 

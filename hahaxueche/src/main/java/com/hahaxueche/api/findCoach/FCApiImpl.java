@@ -34,7 +34,7 @@ public class FCApiImpl implements FCApi {
 
     @Override
     public CoachListResponse getCoachList(String page, String per_page, String golden_coach_only, String license_type, String price,
-                                          String city_id, ArrayList<String> training_field_ids, String distance, String user_location, String sort_by) {
+                                          String city_id, ArrayList<String> training_field_ids, String distance,  ArrayList<String> user_location, String sort_by) {
         Type type = new TypeToken<CoachListResponse>() {
         }.getType();
         String url = FCApi.COACHES;
@@ -64,8 +64,12 @@ public class FCApiImpl implements FCApi {
         if (!TextUtils.isEmpty(distance)) {
             url += url.indexOf("?") > 0 ? ("&distance=" + distance) : ("?distance=" + distance);
         }
-        if (!TextUtils.isEmpty(user_location)) {
-            url += url.indexOf("?") > 0 ? ("&user_location=" + user_location) : ("?user_location=" + user_location);
+        if (user_location!=null && user_location.size()>1) {
+            if(url.indexOf("?")>0){
+                url += "&user_location[]="+user_location.get(0)+"&user_location[]="+user_location.get(1);
+            }else {
+                url += "?user_location[]="+user_location.get(0)+"&user_location[]="+user_location.get(1);
+            }
         }
         if (!TextUtils.isEmpty(sort_by)) {
             url += url.indexOf("?") > 0 ? ("&sort_by=" + sort_by) : ("?sort_by=" + sort_by);

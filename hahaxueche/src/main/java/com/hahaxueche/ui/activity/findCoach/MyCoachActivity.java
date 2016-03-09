@@ -4,11 +4,13 @@ import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -146,8 +148,18 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
     private void loadDetail() {
         tvCdCoachName.setText(mCoach.getName());
         tvCdCoachDescription.setText(mCoach.getBio());
+        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        int width = wm.getDefaultDisplay().getWidth();
+        int height = Math.round(width * 4 / 5);
         getCoachAvatar(mCoach.getAvatar(), civCdCoachAvatar);
-        isCdCoachDetail.updateImages(mCoach.getImages());
+        isCdCoachDetail.updateImages(mCoach.getImages(), height);
+        RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
+        isCdCoachDetail.setLayoutParams(p);
+        RelativeLayout.LayoutParams paramAvatar = new RelativeLayout.LayoutParams(Util.instence(this).dip2px(70), Util.instence(this).dip2px(70));
+        paramAvatar.setMargins(Util.instence(this).dip2px(30), height - Util.instence(this).dip2px(35), 0, 0);
+        civCdCoachAvatar.setLayoutParams(paramAvatar);
+        RelativeLayout.LayoutParams paramLlyFlCd = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        paramLlyFlCd.addRule(RelativeLayout.ALIGN_BOTTOM, civCdCoachAvatar.getId());
         tvMyCoachContact.setText(mCoach.getCell_phone());
         //金牌教练显示
         if (mCoach.getSkill_level().equals("1")) {
@@ -188,7 +200,7 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
     }
 
     private void getCoachAvatar(String url, CircleImageView civCoachAvatar) {
-        final int iconWidth = Util.instence(this).dip2px(60);
+        final int iconWidth = Util.instence(this).dip2px(70);
         final int iconHeight = iconWidth;
         Picasso.with(this).load(url).resize(iconWidth, iconHeight)
                 .into(civCoachAvatar);

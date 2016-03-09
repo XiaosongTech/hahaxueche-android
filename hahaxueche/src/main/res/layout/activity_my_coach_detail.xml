@@ -47,17 +47,27 @@
                 android:background="@android:color/white"
                 android:paddingBottom="20dp">
 
+
                 <com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher
                     android:id="@+id/is_my_cd_coach_switcher"
                     android:layout_width="match_parent"
-                    android:layout_height="220dp"></com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher>
+                    android:layout_height="wrap_content"></com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher>
 
+
+                <com.hahaxueche.ui.widget.circleImageView.CircleImageView
+                    android:id="@+id/cir_my_cd_coach_avatar"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginLeft="30dp"
+                    app:border_color="@android:color/white"
+                    app:border_width="3dp">
+
+                </com.hahaxueche.ui.widget.circleImageView.CircleImageView>
                 <LinearLayout
                     android:id="@+id/fl_my_cd_coach_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/is_my_cd_coach_switcher"
-                    android:layout_marginTop="10dp"
+                    android:layout_alignBottom="@id/cir_my_cd_coach_avatar"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -65,7 +75,7 @@
                         android:id="@+id/tv_my_cd_coach_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="90dp"
+                        android:layout_marginLeft="100dp"
                         android:textColor="@color/fCTxtBlack"
                         android:textSize="20sp" />
 
@@ -89,16 +99,6 @@
                     android:textColor="@color/fCTxtGray"
                     android:textSize="14sp" />
 
-                <com.hahaxueche.ui.widget.circleImageView.CircleImageView
-                    android:id="@+id/cir_my_cd_coach_avatar"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="170dp"
-                    app:border_color="@android:color/white"
-                    app:border_width="3dp">
-
-                </com.hahaxueche.ui.widget.circleImageView.CircleImageView>
             </RelativeLayout>
 
             <LinearLayout

@@ -68,6 +68,7 @@ public class MySettingActivity extends MSBaseActivity {
     private LinearLayout llyLoginOff;
     private RelativeLayout rlyCustomerPhone;
     private RelativeLayout rlyAboutHaha;
+    private View vwMyCoach;
     private ProgressDialog pd;//进度框
 
     @Override
@@ -100,6 +101,7 @@ public class MySettingActivity extends MSBaseActivity {
         llyLoginOff = Util.instence(this).$(this, R.id.lly_login_off);
         rlyCustomerPhone = Util.instence(this).$(this, R.id.rly_customer_phone);
         rlyAboutHaha = Util.instence(this).$(this, R.id.rly_about_haha);
+        vwMyCoach = Util.instence(this).$(this, R.id.vw_my_coach);
     }
 
     private void initEvent() {
@@ -156,12 +158,18 @@ public class MySettingActivity extends MSBaseActivity {
                     }
                 }
                 tvPaymentStage.setText(tempPaymentStageStr);
+                rlyMyCoach.setVisibility(View.VISIBLE);
                 ivPaymentStage.setVisibility(View.VISIBLE);
+                vwMyCoach.setVisibility(View.VISIBLE);
+                rlyMyCoach.setClickable(true);
                 rlyPaymentStage.setClickable(true);
             } else {
                 tvPaymentStage.setText("未选择教练");
+                rlyMyCoach.setVisibility(View.GONE);
                 ivPaymentStage.setVisibility(View.GONE);
+                vwMyCoach.setVisibility(View.GONE);
                 rlyPaymentStage.setClickable(false);
+                rlyMyCoach.setClickable(false);
             }
         } else {
             llyNotLogin.setVisibility(View.VISIBLE);
