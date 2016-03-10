@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,10 +17,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
+import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.signupLogin.CreateUserResponse;
 import com.hahaxueche.model.signupLogin.SessionModel;
 import com.hahaxueche.model.signupLogin.StudentModel;
 import com.hahaxueche.model.util.BaseApiResponse;
+import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.utils.JsonUtils;
@@ -143,9 +146,9 @@ public class SignUpActivity extends SLBaseActivity {
      * @param view
      */
     public void finish(View view) {
-        String phoneNumber = etLoginPhoneNumber.getText().toString();
+        final String phoneNumber = etLoginPhoneNumber.getText().toString();
         String identifyCode = etIdentifyCode.getText().toString();
-        String pwd = etRegisterSetPwd.getText().toString();
+        final String pwd = etRegisterSetPwd.getText().toString();
         if (pd != null) {
             pd.dismiss();
         }
@@ -154,13 +157,66 @@ public class SignUpActivity extends SLBaseActivity {
             this.slPresenter.resetPassword(phoneNumber, pwd, identifyCode, new SLCallbackListener<BaseApiResponse>() {
                 @Override
                 public void onSuccess(BaseApiResponse baseApiResponse) {
-                    if (pd != null) {
-                        pd.dismiss();
-                    }
-                    Toast.makeText(context,getResources().getText(R.string.sLResetPwdSuccess),Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(context, IndexActivity.class);
-                    startActivity(intent);
-                    SignUpActivity.this.finish();
+                   //密码修改成功，直接登录
+                    slPresenter.login(phoneNumber, pwd, 2, new SLCallbackListener<CreateUserResponse>() {
+                        @Override
+                        public void onSuccess(CreateUserResponse createUserResponse) {
+                            Toast.makeText(context, getResources().getText(R.string.sLResetPwdSuccess), Toast.LENGTH_SHORT).show();
+                            SessionModel userSession = createUserResponse.getSession();
+                            StudentModel userStudent = createUserResponse.getStudent();
+                            SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("session_id", userSession.getId());
+                            editor.putString("access_token", userSession.getAccess_token());
+                            editor.putString("id", userStudent.getId());
+                            editor.putString("cell_phone", userStudent.getCell_phone());
+                            editor.putString("name", userStudent.getName());
+                            editor.putString("city_id", userStudent.getCity_id());
+                            editor.putString("avatar", userStudent.getAvatar());
+                            editor.putString("student", JsonUtils.serialize(userStudent));
+                            editor.commit();
+                            if (TextUtils.isEmpty(userStudent.getCurrent_coach_id())) {
+                                if (pd != null) {
+                                    pd.dismiss();
+                                }
+                                Intent intent = new Intent(context, IndexActivity.class);
+                                startActivity(intent);
+                                SignUpActivity.this.finish();
+                            } else {
+                                fcPresenter.getCoach(userStudent.getCurrent_coach_id(), new FCCallbackListener<CoachModel>() {
+                                    @Override
+                                    public void onSuccess(CoachModel coachModel) {
+                                        if (pd != null) {
+                                            pd.dismiss();
+                                        }
+                                        SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.putString("current_coach", JsonUtils.serialize(coachModel));
+                                        editor.commit();
+                                        Intent intent = new Intent(context, IndexActivity.class);
+                                        startActivity(intent);
+                                        SignUpActivity.this.finish();
+                                    }
+
+                                    @Override
+                                    public void onFailure(String errorEvent, String message) {
+                                        if (pd != null) {
+                                            pd.dismiss();
+                                        }
+                                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(String errorEvent, String message) {
+                            if (pd != null) {
+                                pd.dismiss();
+                            }
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
 
                 @Override
@@ -184,10 +240,10 @@ public class SignUpActivity extends SLBaseActivity {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("access_token", userSession.getAccess_token());
                     editor.putString("id", userStudent.getId());
-                    editor.putString("cell_phone",userStudent.getCell_phone());
-                    editor.putString("name",userStudent.getName());
-                    editor.putString("city_id",userStudent.getCity_id());
-                    editor.putString("avatar",userStudent.getAvatar());
+                    editor.putString("cell_phone", userStudent.getCell_phone());
+                    editor.putString("name", userStudent.getName());
+                    editor.putString("city_id", userStudent.getCity_id());
+                    editor.putString("avatar", userStudent.getAvatar());
                     editor.putString("student", JsonUtils.serialize(userStudent));
                     editor.commit();
                     Intent intent = new Intent(context, SignUpInfoActivity.class);
