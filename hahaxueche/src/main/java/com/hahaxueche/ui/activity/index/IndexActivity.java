@@ -35,6 +35,7 @@ import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.util.ConstantsModel;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.ui.activity.appointment.AppointmentActivity;
+import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.FindCoachActivity;
 import com.hahaxueche.ui.activity.mySetting.MySettingActivity;
@@ -116,9 +117,9 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                         SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("lat", mLat + "");
-                        editor.putString("lng",mLng+"");
+                        editor.putString("lng", mLng + "");
                         editor.commit();
-                        if(mLat!=0d && mLng!=0d){
+                        if (mLat != 0d && mLng != 0d) {
                             mLocationClient.stopLocation();
                         }
                     } else {
@@ -216,14 +217,22 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                     finish();
                     break;
                 case R.id.lly_xiaoha_more:
-                    Uri uri = Uri.parse("http://staging.hahaxueche.net/#/student");
-                    Intent it = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(it);
+                    //Uri uri = Uri.parse("http://staging.hahaxueche.net/#/student");
+                    //Intent it = new Intent(Intent.ACTION_VIEW, uri);
+                    intent = new Intent(getApplication(), BaseWebViewActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("url", "http://staging.hahaxueche.net/#/student");
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                     break;
                 case R.id.lly_coach_more:
-                    uri = Uri.parse("http://staging.hahaxueche.net/#/coach");
-                    it = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(it);
+                    //uri = Uri.parse("http://staging.hahaxueche.net/#/coach");
+                    //it = new Intent(Intent.ACTION_VIEW, uri);
+                    intent = new Intent(getApplication(), BaseWebViewActivity.class);
+                    bundle = new Bundle();
+                    bundle.putString("url", "http://staging.hahaxueche.net/#/coach");
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                     break;
                 case R.id.tv_onekey_find_coach:
                     if (pd != null) {
@@ -321,7 +330,6 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         cbannerIndex.startTurning(2500);
 
     }
-
 
 
     // 停止自动翻页

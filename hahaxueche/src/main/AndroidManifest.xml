@@ -161,6 +161,9 @@
             android:name=".ui.activity.findCoach.MyCoachActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.base.BaseWebViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"></activity>
 
         <service android:name="com.amap.api.location.APSService"></service>
     </application>

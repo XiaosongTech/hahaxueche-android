@@ -24,6 +24,7 @@ import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.share.ShareConstants;
 import com.hahaxueche.ui.activity.appointment.AppointmentActivity;
+import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.FindCoachActivity;
 import com.hahaxueche.ui.activity.findCoach.MyCoachActivity;
@@ -261,9 +262,11 @@ public class MySettingActivity extends MSBaseActivity {
                     break;
                 //关于哈哈
                 case R.id.rly_about_haha:
-                    Uri uri = Uri.parse("http://staging.hahaxueche.net/#/student");
-                    Intent it = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(it);
+                    intent = new Intent(getApplication(), BaseWebViewActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("url", "http://staging.hahaxueche.net/#/student");
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                     break;
             }
         }

@@ -18,7 +18,7 @@ public class HttpEngine {
      * prod -> http://api.hahaxueche.net/api/v1/
      * staging -> http://staging-api.hahaxueche.net/api/v1/
      */
-    private final static String SERVER_URL = "http://api.hahaxueche.net/api/v1/";
+    private final static String SERVER_URL = "http://staging-api.hahaxueche.net/api/v1/";
     private final static int TIME_OUT = 20000;
     private static HttpEngine instance = null;
 
