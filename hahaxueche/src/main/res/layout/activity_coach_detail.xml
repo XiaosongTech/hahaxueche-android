@@ -34,6 +34,7 @@
     <com.hahaxueche.ui.widget.monitorScrollView.MonitorScrollView
         android:id="@+id/msv_coach_detail"
         android:layout_width="match_parent"
+        android:layout_marginBottom="14dp"
         android:layout_height="0dp"
         android:layout_weight="1">
 
@@ -626,7 +627,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
         android:background="@android:color/white"
         android:orientation="horizontal">
 

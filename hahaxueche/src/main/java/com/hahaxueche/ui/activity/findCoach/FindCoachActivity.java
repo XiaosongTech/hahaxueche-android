@@ -50,7 +50,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
     private FcSortDialog fcSortDialog;
     private XListView xlvCoachList;
     private CoachItemAdapter mAdapter;
-    private List<CoachModel> coachList = new ArrayList<CoachModel>();
+    private ArrayList<CoachModel> coachList = new ArrayList<CoachModel>();
     private Handler mHandler;
     private int mRefreshIndex = 0;
     private String linkSelf;
@@ -126,9 +126,9 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         } else {
             xlvCoachList.setPullLoadEnable(true);
         }
-        mAdapter = new CoachItemAdapter(this, coachList, R.layout.view_coach_list_item);
+        //mAdapter = new CoachItemAdapter(this, coachList, R.layout.view_coach_list_item);
         //mAdapter = new ArrayAdapter<String>(this, R.layout.view_coach_list_item, items);
-        xlvCoachList.setAdapter(mAdapter);
+        //xlvCoachList.setAdapter(mAdapter);
         ibtnFcMap = Util.instence(this).$(this, R.id.ibtn_fc_map);
     }
 
@@ -225,18 +225,12 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
 
     @Override
     public void onRefresh() {
-        if (!TextUtils.isEmpty(linkPrevious)) {
-            getCoachList(linkPrevious);
-        } else {
-            getCoachList();
-        }
+        getCoachList();
         if (TextUtils.isEmpty(linkNext)) {
             xlvCoachList.setPullLoadEnable(false);
         } else {
             xlvCoachList.setPullLoadEnable(true);
         }
-        mAdapter = new CoachItemAdapter(FindCoachActivity.this, coachList, R.layout.view_coach_list_item);
-        xlvCoachList.setAdapter(mAdapter);
         /*mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -291,7 +285,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                 user_location, sort_by, new FCCallbackListener<CoachListResponse>() {
                     @Override
                     public void onSuccess(CoachListResponse data) {
-                        coachList.clear();
+                        //.clear();
                         coachList = data.getData();
                         linkSelf = data.getLinks().getSelf();
                         linkNext = data.getLinks().getNext();
@@ -317,8 +311,10 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         this.fcPresenter.getCoachList(url, new FCCallbackListener<CoachListResponse>() {
             @Override
             public void onSuccess(CoachListResponse data) {
-                coachList.clear();
-                coachList = data.getData();
+                ArrayList<CoachModel> newCoachList =  data.getData();
+                if(newCoachList!=null && newCoachList.size()>0){
+                    coachList.addAll(newCoachList);
+                }
                 linkSelf = data.getLinks().getSelf();
                 linkNext = data.getLinks().getNext();
                 linkPrevious = data.getLinks().getPrevious();
@@ -327,8 +323,12 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                 } else {
                     xlvCoachList.setPullLoadEnable(true);
                 }
-                mAdapter = new CoachItemAdapter(FindCoachActivity.this, coachList, R.layout.view_coach_list_item);
-                xlvCoachList.setAdapter(mAdapter);
+                if(mAdapter!=null) {
+                    mAdapter.notifyDataSetChanged();
+                }else {
+                    mAdapter = new CoachItemAdapter(FindCoachActivity.this, coachList, R.layout.view_coach_list_item);
+                    xlvCoachList.setAdapter(mAdapter);
+                }
                 onLoad();
             }
 

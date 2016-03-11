@@ -2,6 +2,7 @@ package com.hahaxueche.model.findCoach;
 
 import com.hahaxueche.model.util.LinksModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,7 +10,7 @@ import java.util.List;
  */
 public class CoachListResponse {
     private LinksModel links;
-    private List<CoachModel> data;
+    private ArrayList<CoachModel> data;
     private String message;
     private String code;
 
@@ -21,11 +22,11 @@ public class CoachListResponse {
         this.links = links;
     }
 
-    public List<CoachModel> getData() {
+    public ArrayList<CoachModel> getData() {
         return data;
     }
 
-    public void setData(List<CoachModel> data) {
+    public void setData(ArrayList<CoachModel> data) {
         this.data = data;
     }
 

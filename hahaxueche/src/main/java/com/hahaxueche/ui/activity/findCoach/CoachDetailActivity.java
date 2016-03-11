@@ -636,9 +636,9 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                  */
                 String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
                 String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
-//                Log.v("ping++", "result -> " + result);
-//                Log.v("ping++", "errorMsg -> " + errorMsg);
-//                Log.v("ping++", "extraMsg -> " + extraMsg);
+                Log.v("ping++", "result -> " + result);
+                Log.v("ping++", "errorMsg -> " + errorMsg);
+                Log.v("ping++", "extraMsg -> " + extraMsg);
                 if (result.equals("success")) {
                     Toast.makeText(context, "支付成功", Toast.LENGTH_SHORT).show();
                     //更新SharedPreferences中的student
