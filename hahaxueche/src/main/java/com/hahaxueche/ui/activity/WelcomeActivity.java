@@ -2,11 +2,15 @@ package com.hahaxueche.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Window;
 
 import com.hahaxueche.R;
+import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
 
 /**
@@ -24,7 +28,14 @@ public class WelcomeActivity extends Activity{
             @Override
             public void run()
             {
-                Intent intent=new Intent(WelcomeActivity.this,StartActivity.class);
+                SharedPreferences spSession = getSharedPreferences("session", Activity.MODE_PRIVATE);
+                String session_id = spSession.getString("session_id", "");
+                Intent intent;
+                if(TextUtils.isEmpty(session_id)){
+                    intent=new Intent(WelcomeActivity.this,StartActivity.class);
+                }else{
+                    intent=new Intent(WelcomeActivity.this,IndexActivity.class);
+                }
                 startActivity(intent);
                 WelcomeActivity.this.finish();
             }

@@ -102,6 +102,11 @@ public class MSPresenterImpl implements MSPresenter {
 
             @Override
             protected ReviewInfo doInBackground(Void... params) {
+                try {
+                    Thread.sleep(2000);//ping++有延迟
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 return api.makeReview(coach_user_id, payment_stage, rating, comment, access_token);
             }
 

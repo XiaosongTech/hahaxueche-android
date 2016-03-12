@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -239,6 +240,7 @@ public class SignUpActivity extends SLBaseActivity {
                     SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("access_token", userSession.getAccess_token());
+                    editor.putString("session_id", userSession.getId());
                     editor.putString("id", userStudent.getId());
                     editor.putString("cell_phone", userStudent.getCell_phone());
                     editor.putString("name", userStudent.getName());

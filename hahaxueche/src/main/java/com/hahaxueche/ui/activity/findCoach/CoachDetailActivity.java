@@ -624,6 +624,10 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.v("gibxin", "requestCode=" + requestCode);
+        if (pd != null) {
+            pd.dismiss();
+        }
+        pd = ProgressDialog.show(CoachDetailActivity.this, null, "数据加载中，请稍后……");
         //支付页面返回处理
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {//resultCode == Activity.RESULT_OK
@@ -639,8 +643,10 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                 Log.v("ping++", "result -> " + result);
                 Log.v("ping++", "errorMsg -> " + errorMsg);
                 Log.v("ping++", "extraMsg -> " + extraMsg);
+                SharedPreferences spSession = getSharedPreferences("session", Activity.MODE_PRIVATE);
+                String session_id = spSession.getString("session_id", "");
+                Log.v("gibxin","session_id1 ->" +session_id);
                 if (result.equals("success")) {
-                    Toast.makeText(context, "支付成功", Toast.LENGTH_SHORT).show();
                     //更新SharedPreferences中的student
                     this.msPresenter.getStudent(mStudent.getId(), access_token, new MSCallbackListener<StudentModel>() {
                         @Override
@@ -654,6 +660,10 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                                 fcPresenter.getCoach(data.getCurrent_coach_id(), new FCCallbackListener<CoachModel>() {
                                     @Override
                                     public void onSuccess(CoachModel coachModel) {
+                                        if (pd != null) {
+                                            pd.dismiss();
+                                        }
+                                        Toast.makeText(context, "支付成功", Toast.LENGTH_SHORT).show();
                                         SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
                                         SharedPreferences.Editor editor = sharedPreferences.edit();
                                         editor.putString("current_coach", JsonUtils.serialize(coachModel));
@@ -665,12 +675,19 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
 
                                     }
                                 });
+                            }else{
+                                if (pd != null) {
+                                    pd.dismiss();
+                                }
+                                Toast.makeText(context, "支付成功", Toast.LENGTH_SHORT).show();
                             }
                         }
 
                         @Override
                         public void onFailure(String errorEvent, String message) {
-
+                            if (pd != null) {
+                                pd.dismiss();
+                            }
                         }
                     });
                 } else {
