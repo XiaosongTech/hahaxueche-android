@@ -175,14 +175,10 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
 
     @Override
 
-    protected void onResume() {
-
+    public void onResume() {
         super.onResume();
-
         //开始自动翻页
-
         convenientBanner.startTurning(2500);
-
     }
 
 
@@ -191,12 +187,9 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
 
     @Override
 
-    protected void onPause() {
-
+    public void onPause() {
         super.onPause();
-
         //停止翻页
-
         convenientBanner.stopTurning();
 
     }

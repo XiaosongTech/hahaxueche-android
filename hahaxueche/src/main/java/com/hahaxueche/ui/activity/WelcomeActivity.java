@@ -12,6 +12,7 @@ import android.view.Window;
 import com.hahaxueche.R;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by gibxin on 2016/3/6.
@@ -40,5 +41,13 @@ public class WelcomeActivity extends Activity{
                 WelcomeActivity.this.finish();
             }
         }, 2000);
+    }
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

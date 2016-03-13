@@ -328,29 +328,20 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
 
     @Override
 
-    protected void onResume() {
-
+    public void onResume() {
         super.onResume();
-
         //开始自动翻页
-
         cbannerIndex.startTurning(2500);
-
     }
 
 
     // 停止自动翻页
 
     @Override
-
-    protected void onPause() {
-
+    public void onPause() {
         super.onPause();
-
         //停止翻页
-
         cbannerIndex.stopTurning();
-
     }
 
 

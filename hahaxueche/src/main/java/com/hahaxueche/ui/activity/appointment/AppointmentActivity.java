@@ -23,6 +23,7 @@ import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.utils.JsonUtils;
 import com.hahaxueche.utils.Util;
 import com.squareup.picasso.Picasso;
+import com.umeng.analytics.MobclickAgent;
 
 import java.lang.reflect.Type;
 
@@ -135,5 +136,13 @@ public class AppointmentActivity extends Activity {
             llyApNoCoach.setVisibility(View.VISIBLE);
             tvNoCoach.setVisibility(View.VISIBLE);
         }
+    }
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

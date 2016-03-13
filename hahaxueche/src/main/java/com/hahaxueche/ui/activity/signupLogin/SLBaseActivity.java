@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.hahaxueche.MyApplication;
 import com.hahaxueche.presenter.findCoach.FCPresenter;
 import com.hahaxueche.presenter.signupLogin.SLPresenter;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Activity抽象基类���
@@ -28,5 +29,13 @@ public class SLBaseActivity extends Activity {
         application = (MyApplication) this.getApplication();
         slPresenter = application.getSLPresenter();
         fcPresenter = application.getFCPresenter();
+    }
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

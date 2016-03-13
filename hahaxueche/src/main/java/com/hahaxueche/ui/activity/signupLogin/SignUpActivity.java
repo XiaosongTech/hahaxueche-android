@@ -27,6 +27,7 @@ import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.utils.JsonUtils;
+import com.umeng.analytics.MobclickAgent;
 
 import java.lang.ref.WeakReference;
 
@@ -248,6 +249,8 @@ public class SignUpActivity extends SLBaseActivity {
                     editor.putString("avatar", userStudent.getAvatar());
                     editor.putString("student", JsonUtils.serialize(userStudent));
                     editor.commit();
+                    MobclickAgent.onProfileSignIn(userStudent.getId());
+                    MobclickAgent.onEvent(context, "did_register");
                     Intent intent = new Intent(context, SignUpInfoActivity.class);
                     startActivity(intent);
                     SignUpActivity.this.finish();

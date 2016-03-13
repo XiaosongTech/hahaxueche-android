@@ -28,6 +28,7 @@ import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.utils.JsonUtils;
 import com.hahaxueche.utils.Util;
+import com.umeng.analytics.MobclickAgent;
 
 import java.lang.ref.WeakReference;
 
@@ -242,6 +243,7 @@ public class LoginActivity extends SLBaseActivity {
                 editor.putString("avatar", userStudent.getAvatar());
                 editor.putString("student", JsonUtils.serialize(userStudent));
                 editor.commit();
+                MobclickAgent.onProfileSignIn(userStudent.getId());
                 if (TextUtils.isEmpty(userStudent.getCurrent_coach_id())) {
                     Toast.makeText(context, "登录成功！", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(context, IndexActivity.class);

@@ -89,6 +89,7 @@
                         android:layout_height="90dp"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="90dp"
+                        android:src="@drawable/ic_mypage_ava"
                         app:border_color="@android:color/white"
                         app:border_width="4dp">
 

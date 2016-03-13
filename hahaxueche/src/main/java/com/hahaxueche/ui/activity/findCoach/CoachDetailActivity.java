@@ -54,6 +54,7 @@ import com.hahaxueche.utils.JsonUtils;
 import com.hahaxueche.utils.Util;
 import com.pingplusplus.android.PaymentActivity;
 import com.squareup.picasso.Picasso;
+import com.umeng.analytics.MobclickAgent;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -663,6 +664,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                                         if (pd != null) {
                                             pd.dismiss();
                                         }
+                                        MobclickAgent.onEvent(context, "did_purchase_coach");
                                         Toast.makeText(context, "支付成功", Toast.LENGTH_SHORT).show();
                                         SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
                                         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -679,6 +681,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                                 if (pd != null) {
                                     pd.dismiss();
                                 }
+                                MobclickAgent.onEvent(context, "did_purchase_coach");
                                 Toast.makeText(context, "支付成功", Toast.LENGTH_SHORT).show();
                             }
                         }

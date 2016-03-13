@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.hahaxueche.MyApplication;
 import com.hahaxueche.presenter.findCoach.FCPresenter;
 import com.hahaxueche.presenter.mySetting.MSPresenter;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by gibxin on 2016/2/29.
@@ -27,5 +28,13 @@ public class MSBaseActivity extends Activity {
         application = (MyApplication) this.getApplication();
         msPresenter = application.getMsPresenter();
         fcPresenter = application.getFCPresenter();
+    }
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

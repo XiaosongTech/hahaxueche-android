@@ -46,7 +46,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected void onPostExecute(CoachListResponse coachListResponse) {
-                if (listener != null) {
+                if (listener != null && coachListResponse!=null) {
                     if (coachListResponse.isSuccess()) {
                         listener.onSuccess(coachListResponse);
                     } else {
