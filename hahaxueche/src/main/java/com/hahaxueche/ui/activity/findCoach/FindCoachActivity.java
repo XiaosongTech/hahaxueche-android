@@ -72,6 +72,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
     private String mlng;
 
     private String TAG = "FindCoachActivity";
+    private boolean isOnLoadMore = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -225,6 +226,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
 
     @Override
     public void onRefresh() {
+        isOnLoadMore = false;
         getCoachList();
         if (TextUtils.isEmpty(linkNext)) {
             xlvCoachList.setPullLoadEnable(false);
@@ -248,7 +250,8 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
 
     @Override
     public void onLoadMore() {
-        if (!TextUtils.isEmpty(linkNext)) {
+        if (!TextUtils.isEmpty(linkNext) && !isOnLoadMore) {
+            isOnLoadMore = true;
             getCoachList(linkNext);
         } else {
             onLoad();
@@ -276,7 +279,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                 training_field_ids.add(selField.getId());
             }
         }
-        if(!TextUtils.isEmpty(mlat)&&!TextUtils.isEmpty(mlng)){
+        if (!TextUtils.isEmpty(mlat) && !TextUtils.isEmpty(mlng)) {
             user_location = new ArrayList<>();
             user_location.add(mlat);
             user_location.add(mlng);
@@ -311,8 +314,8 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         this.fcPresenter.getCoachList(url, new FCCallbackListener<CoachListResponse>() {
             @Override
             public void onSuccess(CoachListResponse data) {
-                ArrayList<CoachModel> newCoachList =  data.getData();
-                if(newCoachList!=null && newCoachList.size()>0){
+                ArrayList<CoachModel> newCoachList = data.getData();
+                if (newCoachList != null && newCoachList.size() > 0) {
                     coachList.addAll(newCoachList);
                 }
                 linkSelf = data.getLinks().getSelf();
@@ -323,12 +326,13 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                 } else {
                     xlvCoachList.setPullLoadEnable(true);
                 }
-                if(mAdapter!=null) {
+                if (mAdapter != null) {
                     mAdapter.notifyDataSetChanged();
-                }else {
+                } else {
                     mAdapter = new CoachItemAdapter(FindCoachActivity.this, coachList, R.layout.view_coach_list_item);
                     xlvCoachList.setAdapter(mAdapter);
                 }
+                isOnLoadMore = false;
                 onLoad();
             }
 
@@ -350,10 +354,11 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
     }
 
     private long exitTime = 0;
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
-            if((System.currentTimeMillis()-exitTime) > 2000){
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if ((System.currentTimeMillis() - exitTime) > 2000) {
                 Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
             } else {

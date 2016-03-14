@@ -93,61 +93,63 @@ public class CityChoseDialog extends Dialog implements View.OnClickListener {
         Type type = new TypeToken<CitiesModel>() {
         }.getType();
         CitiesModel cities = gson.fromJson(citiesStr, type);
-        final List<CityModel> cityList = cities.getCities();
-        int rowCount = cityList.size() / 4 + 1;
-        viewIds = new int[cityList.size()];
-        //int colCount = 3;
-        for (int i = 0; i < rowCount; i++) {
-            TableRow tr = new TableRow(mContext);
-            TableLayout.LayoutParams trLayoutParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
-                    TableLayout.LayoutParams.WRAP_CONTENT);
-            trLayoutParams.setMargins(0, Util.instence(mContext).dip2px(10), 0, 0);
-            tr.setLayoutParams(trLayoutParams);
-            tr.setGravity(Gravity.CENTER);
-            for (int j = 0; j < 3; j++) {
-                final int index = i * 3 + j;
-                if(index>cityList.size()-1)
-                    break;
-                Log.v(TAG, "index->" + index);
-                TextView tv = new TextView(mContext);
-                int viewId = Util.generateViewId();
-                tv.setId(viewId);
-                viewIds[index] = viewId;
-                tv.setText(cityList.get(index).getName());
-                tv.setTextSize(16);
-                TableRow.LayoutParams tvLayoutParams = new TableRow.LayoutParams(Util.instence(mContext).dip2px(80),
-                        TableRow.LayoutParams.WRAP_CONTENT);
-                //tvLayoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-                //tvLayoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                //tv.setWidth(80);
-                //tv.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-                tvLayoutParams.setMargins(0, 0, Util.instence(mContext).dip2px(10), 0);
-                tv.setLayoutParams(tvLayoutParams);
-                tv.setPadding(0, Util.instence(mContext).dip2px(10), 0, Util.instence(mContext).dip2px(10));
-                tv.setGravity(Gravity.CENTER);
-                tv.setBackgroundColor(Color.WHITE);
-                tv.setTextColor(mContext.getResources().getColor(R.color.sLFadeBlack));
-                tv.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        TextView choseTv = (TextView) v;
-                        if (mCurrentCityId != null && mCurrentCityId.equals(cityList.get(index).getId())) {
-                            choseTv.setBackgroundColor(Color.WHITE);
-                            choseTv.setTextColor(mContext.getResources().getColor(R.color.sLFadeBlack));
-                        } else {
-                            setAllTvUnselected();
-                            mCurrentCityId = "";
-                            mCurrentCityName = "";
-                            choseTv.setBackgroundColor(mContext.getResources().getColor(R.color.app_theme_color));
-                            choseTv.setTextColor(Color.WHITE);
+        if(cities!=null) {
+            final List<CityModel> cityList = cities.getCities();
+            int rowCount = cityList.size() / 4 + 1;
+            viewIds = new int[cityList.size()];
+            //int colCount = 3;
+            for (int i = 0; i < rowCount; i++) {
+                TableRow tr = new TableRow(mContext);
+                TableLayout.LayoutParams trLayoutParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
+                        TableLayout.LayoutParams.WRAP_CONTENT);
+                trLayoutParams.setMargins(0, Util.instence(mContext).dip2px(10), 0, 0);
+                tr.setLayoutParams(trLayoutParams);
+                tr.setGravity(Gravity.CENTER);
+                for (int j = 0; j < 3; j++) {
+                    final int index = i * 3 + j;
+                    if (index > cityList.size() - 1)
+                        break;
+                    Log.v(TAG, "index->" + index);
+                    TextView tv = new TextView(mContext);
+                    int viewId = Util.generateViewId();
+                    tv.setId(viewId);
+                    viewIds[index] = viewId;
+                    tv.setText(cityList.get(index).getName());
+                    tv.setTextSize(16);
+                    TableRow.LayoutParams tvLayoutParams = new TableRow.LayoutParams(Util.instence(mContext).dip2px(80),
+                            TableRow.LayoutParams.WRAP_CONTENT);
+                    //tvLayoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    //tvLayoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    //tv.setWidth(80);
+                    //tv.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+                    tvLayoutParams.setMargins(0, 0, Util.instence(mContext).dip2px(10), 0);
+                    tv.setLayoutParams(tvLayoutParams);
+                    tv.setPadding(0, Util.instence(mContext).dip2px(10), 0, Util.instence(mContext).dip2px(10));
+                    tv.setGravity(Gravity.CENTER);
+                    tv.setBackgroundColor(Color.WHITE);
+                    tv.setTextColor(mContext.getResources().getColor(R.color.sLFadeBlack));
+                    tv.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            TextView choseTv = (TextView) v;
+                            if (mCurrentCityId != null && mCurrentCityId.equals(cityList.get(index).getId())) {
+                                choseTv.setBackgroundColor(Color.WHITE);
+                                choseTv.setTextColor(mContext.getResources().getColor(R.color.sLFadeBlack));
+                            } else {
+                                setAllTvUnselected();
+                                mCurrentCityId = "";
+                                mCurrentCityName = "";
+                                choseTv.setBackgroundColor(mContext.getResources().getColor(R.color.app_theme_color));
+                                choseTv.setTextColor(Color.WHITE);
+                            }
+                            mCurrentCityId = cityList.get(index).getId();
+                            mCurrentCityName = cityList.get(index).getName();
                         }
-                        mCurrentCityId = cityList.get(index).getId();
-                        mCurrentCityName = cityList.get(index).getName();
-                    }
-                });
-                tr.addView(tv);
+                    });
+                    tr.addView(tv);
+                }
+                tableLayout.addView(tr);
             }
-            tableLayout.addView(tr);
         }
     }
 

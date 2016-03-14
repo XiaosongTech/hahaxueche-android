@@ -38,8 +38,8 @@ public class AppointmentDialog extends Dialog {
     private Context mContext;
     private EditText etRealName;
     private EditText etContactPhone;
-    private EditText tvFirstTime;
-    private EditText tvSecondTime;
+    private EditText etFirstTime;
+    private EditText etSecondTime;
     private String mCoachId;
     private TextView tvTrail;
     private TextView tvCancel;
@@ -55,10 +55,10 @@ public class AppointmentDialog extends Dialog {
         LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_appointment, null);
         setContentView(view);
-        tvFirstTime = (EditText) view.findViewById(R.id.tv_first_time);
-        tvSecondTime = (EditText) view.findViewById(R.id.tv_second_time);
-        tvFirstTime.setOnTouchListener(new TimeChooseListener());
-        tvSecondTime.setOnTouchListener(new TimeChooseListener());
+        etFirstTime = (EditText) view.findViewById(R.id.tv_first_time);
+        etSecondTime = (EditText) view.findViewById(R.id.tv_second_time);
+        etFirstTime.setOnTouchListener(new TimeChooseListener());
+        etSecondTime.setOnTouchListener(new TimeChooseListener());
         etRealName = (EditText) view.findViewById(R.id.et_real_name);
         etRealName.addTextChangedListener(new TextWatcher() {
             @Override
@@ -128,11 +128,11 @@ public class AppointmentDialog extends Dialog {
                 datePicker.init(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), null);
 
                 if (v.getId() == R.id.tv_first_time) {
-                    final int inType = tvFirstTime.getInputType();
-                    tvFirstTime.setInputType(InputType.TYPE_NULL);
-                    tvFirstTime.onTouchEvent(event);
-                    tvFirstTime.setInputType(inType);
-                    tvFirstTime.setSelection(tvFirstTime.getText().length());
+                    final int inType = etFirstTime.getInputType();
+                    etFirstTime.setInputType(InputType.TYPE_NULL);
+                    etFirstTime.onTouchEvent(event);
+                    etFirstTime.setInputType(inType);
+                    etFirstTime.setSelection(etFirstTime.getText().length());
                     builder.setPositiveButton("确  定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -141,19 +141,19 @@ public class AppointmentDialog extends Dialog {
                                     datePicker.getYear(),
                                     datePicker.getMonth() + 1,
                                     datePicker.getDayOfMonth()));
-                            tvFirstTime.setText(sb);
-                            tvFirstTime.setTextColor(mContext.getResources().getColor(R.color.app_theme_color));
-                            tvFirstTime.setBackgroundResource(R.drawable.edittext_corner_orange);
+                            etFirstTime.setText(sb);
+                            etFirstTime.setTextColor(mContext.getResources().getColor(R.color.app_theme_color));
+                            etFirstTime.setBackgroundResource(R.drawable.edittext_corner_orange);
 
                             dialog.cancel();
                         }
                     });
                 } else if (v.getId() == R.id.tv_second_time) {
-                    int inType = tvSecondTime.getInputType();
-                    tvSecondTime.setInputType(InputType.TYPE_NULL);
-                    tvSecondTime.onTouchEvent(event);
-                    tvSecondTime.setInputType(inType);
-                    tvSecondTime.setSelection(tvSecondTime.getText().length());
+                    int inType = etSecondTime.getInputType();
+                    etSecondTime.setInputType(InputType.TYPE_NULL);
+                    etSecondTime.onTouchEvent(event);
+                    etSecondTime.setInputType(inType);
+                    etSecondTime.setSelection(etSecondTime.getText().length());
                     builder.setPositiveButton("确  定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -162,9 +162,9 @@ public class AppointmentDialog extends Dialog {
                                     datePicker.getYear(),
                                     datePicker.getMonth() + 1,
                                     datePicker.getDayOfMonth()));
-                            tvSecondTime.setText(sb);
-                            tvSecondTime.setTextColor(mContext.getResources().getColor(R.color.app_theme_color));
-                            tvSecondTime.setBackgroundResource(R.drawable.edittext_corner_orange);
+                            etSecondTime.setText(sb);
+                            etSecondTime.setTextColor(mContext.getResources().getColor(R.color.app_theme_color));
+                            etSecondTime.setBackgroundResource(R.drawable.edittext_corner_orange);
                             dialog.cancel();
                         }
                     });
@@ -182,8 +182,8 @@ public class AppointmentDialog extends Dialog {
                 case R.id.tv_trail:
                     String name = etRealName.getText().toString();
                     String contactPhone = etContactPhone.getText().toString();
-                    String firstTime = tvFirstTime.getText().toString();
-                    String secondTime = tvSecondTime.getText().toString();
+                    String firstTime = etFirstTime.getText().toString();
+                    String secondTime = etSecondTime.getText().toString();
                     if (pd != null) {
                         pd.dismiss();
                     }

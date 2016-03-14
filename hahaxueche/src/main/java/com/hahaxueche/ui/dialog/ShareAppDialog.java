@@ -48,6 +48,7 @@ public class ShareAppDialog extends Dialog implements IWXAPIEventHandler {
     private TextView tvShareWeixin;
     private TextView tvShareFriendCircle;
     private Tencent mTencent;//QQ
+    private TextView tvShareCancel;
 
     public ShareAppDialog(Context context) {
         super(context);
@@ -143,6 +144,13 @@ public class ShareAppDialog extends Dialog implements IWXAPIEventHandler {
                 //params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, "图片链接ArrayList");
                 mTencent.shareToQzone((CoachDetailActivity) mContext, params, myListener);
 
+            }
+        });
+        tvShareCancel = (TextView) view.findViewById(R.id.tv_share_cancel);
+        tvShareCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
             }
         });
     }

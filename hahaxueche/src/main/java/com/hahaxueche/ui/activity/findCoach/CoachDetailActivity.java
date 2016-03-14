@@ -624,13 +624,12 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.v("gibxin", "requestCode=" + requestCode);
-        if (pd != null) {
-            pd.dismiss();
-        }
-        pd = ProgressDialog.show(CoachDetailActivity.this, null, "数据加载中，请稍后……");
         //支付页面返回处理
         if (requestCode == 1) {
+            if (pd != null) {
+                pd.dismiss();
+            }
+            pd = ProgressDialog.show(CoachDetailActivity.this, null, "数据加载中，请稍后……");
             if (resultCode == Activity.RESULT_OK) {//resultCode == Activity.RESULT_OK
                 String result = data.getExtras().getString("pay_result");
                 /* 处理返回值

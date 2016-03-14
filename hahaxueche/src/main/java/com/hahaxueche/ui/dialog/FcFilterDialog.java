@@ -13,7 +13,6 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
@@ -22,7 +21,6 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.R;
-import com.hahaxueche.model.signupLogin.CitiesModel;
 import com.hahaxueche.model.signupLogin.CityModel;
 import com.hahaxueche.model.util.ConstantsModel;
 import com.hahaxueche.ui.widget.comboSeekBar.ComboSeekBar;
@@ -31,7 +29,6 @@ import com.hahaxueche.utils.Util;
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -122,108 +119,115 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
         cbLicenseTypeC1 = (CheckBox) view.findViewById(R.id.cb_license_type_c1);
         cbLicenseTypeC2 = (CheckBox) view.findViewById(R.id.cb_license_type_c2);
         cbsDistanceFilter = (ComboSeekBar) view.findViewById(R.id.cbs_distinct_filter);
-        cbsDistanceFilter.setAdapter(distanceList);
-        cbsDistanceFilter.setOnSeekBarChangeListener(new ComboSeekBar.OnSeekBarChangeListener() {
+        if (distanceList != null) {
+            cbsDistanceFilter.setAdapter(distanceList);
+            cbsDistanceFilter.setOnSeekBarChangeListener(new ComboSeekBar.OnSeekBarChangeListener() {
 
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-            }
+                }
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
 
-            }
+                }
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
 
-            }
-        });
-        cbsDistanceFilter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println("-----distance position=" + position);
-                for (int i = 0; i < distanceTvList.size(); i++) {
-                    if (i <= position) {
-                        distanceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.tab_bottom_gray));
-                    } else {
-                        distanceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.filter_txt_white_heavy));
+                }
+            });
+            cbsDistanceFilter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    System.out.println("-----distance position=" + position);
+                    for (int i = 0; i < distanceTvList.size(); i++) {
+                        if (i <= position) {
+                            distanceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.tab_bottom_gray));
+                        } else {
+                            distanceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.filter_txt_white_heavy));
+                        }
                     }
-                }
-                if (position == distanceTvList.size() - 1) {
-                    distance = "";
-                } else {
-                    distance = distanceList.get(position);
-                }
+                    if (position == distanceTvList.size() - 1) {
+                        distance = "";
+                    } else {
+                        distance = distanceList.get(position);
+                    }
 
-            }
-        });
+                }
+            });
+        }
         cbsPriceFilter = (ComboSeekBar) view.findViewById(R.id.cbs_price_filter);
-        cbsPriceFilter.setAdapter(priceList);
-        cbsPriceFilter.setOnSeekBarChangeListener(new ComboSeekBar.OnSeekBarChangeListener() {
+        if (priceList != null) {
+            cbsPriceFilter.setAdapter(priceList);
+            cbsPriceFilter.setOnSeekBarChangeListener(new ComboSeekBar.OnSeekBarChangeListener() {
 
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-            }
+                }
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
 
-            }
+                }
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
 
-            }
-        });
-        cbsPriceFilter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println("-----price position=" + position);
-                for (int i = 0; i < priceTvList.size(); i++) {
-                    if (i <= position) {
-                        priceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.tab_bottom_gray));
+                }
+            });
+            cbsPriceFilter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    for (int i = 0; i < priceTvList.size(); i++) {
+                        if (i <= position) {
+                            priceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.tab_bottom_gray));
+                        } else {
+                            priceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.filter_txt_white_heavy));
+                        }
+                    }
+                    if (position == priceTvList.size() - 1) {
+                        price = "";
                     } else {
-                        priceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.filter_txt_white_heavy));
+                        price = priceList.get(position);
                     }
                 }
-                if (position == priceTvList.size() - 1) {
-                    price = "";
-                } else {
-                    price = priceList.get(position);
-                }
-            }
-        });
+            });
+        }
         btnFcFilterSure = (Button) view.findViewById(R.id.btn_fc_filter_sure);
         btnFcFilterSure.setOnClickListener(this);
         btnFcFilterCancel = (Button) view.findViewById(R.id.btn_fc_filter_cancel);
         btnFcFilterCancel.setOnClickListener(this);
         llyFcDistanceTvs = (LinearLayout) view.findViewById(R.id.lly_fc_distance_tvs);
-        for (String distanceStr : distanceList) {
-            TextView tvDistance = new TextView(mContext);
-            LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
-            tvDistance.setLayoutParams(p);
-            tvDistance.setGravity(Gravity.CENTER);
-            tvDistance.setTextColor(mContext.getResources().getColor(R.color.filter_txt_white_heavy));
-            tvDistance.setTextSize(12);
-            tvDistance.setText(distanceStr + "KM");
-            llyFcDistanceTvs.addView(tvDistance);
-            distanceTvList.add(tvDistance);
+        if (distanceList != null) {
+            for (String distanceStr : distanceList) {
+                TextView tvDistance = new TextView(mContext);
+                LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
+                tvDistance.setLayoutParams(p);
+                tvDistance.setGravity(Gravity.CENTER);
+                tvDistance.setTextColor(mContext.getResources().getColor(R.color.filter_txt_white_heavy));
+                tvDistance.setTextSize(12);
+                tvDistance.setText(distanceStr + "KM");
+                llyFcDistanceTvs.addView(tvDistance);
+                distanceTvList.add(tvDistance);
+            }
         }
         llyFcPriceTvs = (LinearLayout) view.findViewById(R.id.lly_fc_price_tvs);
         DecimalFormat dfInt = new DecimalFormat("#####");
-        for (String priceStr : priceList) {
-            TextView tvDistance = new TextView(mContext);
-            LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
-            tvDistance.setLayoutParams(p);
-            tvDistance.setGravity(Gravity.CENTER);
-            tvDistance.setTextColor(mContext.getResources().getColor(R.color.filter_txt_white_heavy));
-            tvDistance.setTextSize(12);
-            tvDistance.setText(Util.getMoney(priceStr));
-            llyFcPriceTvs.addView(tvDistance);
-            priceTvList.add(tvDistance);
+        if (priceList != null) {
+            for (String priceStr : priceList) {
+                TextView tvDistance = new TextView(mContext);
+                LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
+                tvDistance.setLayoutParams(p);
+                tvDistance.setGravity(Gravity.CENTER);
+                tvDistance.setTextColor(mContext.getResources().getColor(R.color.filter_txt_white_heavy));
+                tvDistance.setTextSize(12);
+                tvDistance.setText(Util.getMoney(priceStr));
+                llyFcPriceTvs.addView(tvDistance);
+                priceTvList.add(tvDistance);
+            }
         }
     }
 
@@ -232,43 +236,44 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
      */
     public void initFilter() {
         //价格、距离默认最大
-        int initDistancePosition = distanceList.size() - 1;
-        if (!TextUtils.isEmpty(distance)) {
-            for (int i = 0; i < distanceList.size(); i++) {
-                if (distanceList.get(i).equals(distance)) {
-                    initDistancePosition = i;
-                    break;
+        if (distanceList != null) {
+            int initDistancePosition = distanceList.size() - 1;
+            if (!TextUtils.isEmpty(distance)) {
+                for (int i = 0; i < distanceList.size(); i++) {
+                    if (distanceList.get(i).equals(distance)) {
+                        initDistancePosition = i;
+                        break;
+                    }
+                }
+            }
+            cbsDistanceFilter.setSelection(initDistancePosition);
+            for (int i = 0; i < distanceTvList.size(); i++) {
+                if (i <= initDistancePosition) {
+                    distanceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.tab_bottom_gray));
+                } else {
+                    distanceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.filter_txt_white_heavy));
                 }
             }
         }
-        cbsDistanceFilter.setSelection(initDistancePosition);
-
-        int initPricePosition = priceList.size() - 1;
-        if (!TextUtils.isEmpty(price)) {
-            for (int i = 0; i < priceList.size(); i++) {
-                if (priceList.get(i).equals(price)) {
-                    initPricePosition = i;
-                    break;
+        if (priceList != null) {
+            int initPricePosition = priceList.size() - 1;
+            if (!TextUtils.isEmpty(price)) {
+                for (int i = 0; i < priceList.size(); i++) {
+                    if (priceList.get(i).equals(price)) {
+                        initPricePosition = i;
+                        break;
+                    }
+                }
+            }
+            cbsPriceFilter.setSelection(initPricePosition);
+            for (int i = 0; i < priceTvList.size(); i++) {
+                if (i <= initPricePosition) {
+                    priceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.tab_bottom_gray));
+                } else {
+                    priceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.filter_txt_white_heavy));
                 }
             }
         }
-        cbsPriceFilter.setSelection(initPricePosition);
-
-        for (int i = 0; i < distanceTvList.size(); i++) {
-            if (i <= initDistancePosition) {
-                distanceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.tab_bottom_gray));
-            } else {
-                distanceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.filter_txt_white_heavy));
-            }
-        }
-        for (int i = 0; i < priceTvList.size(); i++) {
-            if (i <= initPricePosition) {
-                priceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.tab_bottom_gray));
-            } else {
-                priceTvList.get(i).setTextColor(mContext.getResources().getColor(R.color.filter_txt_white_heavy));
-            }
-        }
-
         if (!TextUtils.isEmpty(goldenCoachOnly)) {
             swGoldenCoachOly.setChecked(true);
         }
@@ -292,20 +297,22 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
         Type type = new TypeToken<ConstantsModel>() {
         }.getType();
         ConstantsModel constantsModel = gson.fromJson(constants, type);
-        List<CityModel> cityList = constantsModel.getCities();
-        int myCityCount = 0;
-        //根据城市id加载价格、距离筛选列表
-        SharedPreferences spSession = mContext.getSharedPreferences("session", Activity.MODE_PRIVATE);
-        String city_id = spSession.getString("city_id", "");
-        for (int i = 0; i < cityList.size(); i++) {
-            if (cityList.get(i).getId().equals(city_id)) {
-                myCityCount = i;
-                break;
+        if (constantsModel != null) {
+            List<CityModel> cityList = constantsModel.getCities();
+            int myCityCount = 0;
+            //根据城市id加载价格、距离筛选列表
+            SharedPreferences spSession = mContext.getSharedPreferences("session", Activity.MODE_PRIVATE);
+            String city_id = spSession.getString("city_id", "");
+            for (int i = 0; i < cityList.size(); i++) {
+                if (cityList.get(i).getId().equals(city_id)) {
+                    myCityCount = i;
+                    break;
+                }
             }
+            CityModel city = cityList.get(myCityCount);
+            distanceList = city.getFilters().getRadius();
+            priceList = city.getFilters().getPrices();
         }
-        CityModel city = cityList.get(myCityCount);
-        distanceList = city.getFilters().getRadius();
-        priceList = city.getFilters().getPrices();
     }
 
     @Override
@@ -315,7 +322,7 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
                 if (mListener != null) {
                     if (swGoldenCoachOly.isChecked()) {
                         goldenCoachOnly = "true";
-                    }else {
+                    } else {
                         goldenCoachOnly = "";
                     }
                     //license_type 1 = C1, 2 = C2, 3 = c1+c2
