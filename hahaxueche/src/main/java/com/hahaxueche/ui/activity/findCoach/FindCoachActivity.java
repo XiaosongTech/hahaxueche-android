@@ -233,19 +233,6 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         } else {
             xlvCoachList.setPullLoadEnable(true);
         }
-        /*mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!TextUtils.isEmpty(linkPrevious)) {
-                    getCoachList(linkPrevious);
-                } else {
-                    getCoachList();
-                }
-                mAdapter = new CoachItemAdapter(FindCoachActivity.this, coachList, R.layout.view_coach_list_item);
-                xlvCoachList.setAdapter(mAdapter);
-                onLoad();
-            }
-        }, 1500);*/
     }
 
     @Override
@@ -255,21 +242,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
             getCoachList(linkNext);
         } else {
             onLoad();
-            //getCoachList();
         }
-        //mAdapter.notifyDataSetChanged();
-        /*mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(!TextUtils.isEmpty(linkNext)){
-                    getCoachList(linkNext);
-                }else {
-                    getCoachList();
-                }
-                mAdapter.notifyDataSetChanged();
-                onLoad();
-            }
-        }, 1500);*/
     }
 
     private void getCoachList() {
@@ -288,7 +261,6 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                 user_location, sort_by, new FCCallbackListener<CoachListResponse>() {
                     @Override
                     public void onSuccess(CoachListResponse data) {
-                        //.clear();
                         coachList = data.getData();
                         linkSelf = data.getLinks().getSelf();
                         linkNext = data.getLinks().getNext();

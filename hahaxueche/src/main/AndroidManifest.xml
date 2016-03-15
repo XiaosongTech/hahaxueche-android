@@ -31,6 +31,7 @@
     <!--amap permission-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>
 
     <application
         android:name=".MyApplication"
@@ -112,7 +113,7 @@
         </activity>
         <activity
             android:name=".ui.activity.findCoach.CoachDetailActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:configChanges="orientation|keyboardHidden|screenSize|locale"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity

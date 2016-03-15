@@ -3,6 +3,7 @@ package com.hahaxueche.model.findCoach;
 import com.hahaxueche.model.util.LinksModel;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  */
 public class GetReviewsResponse implements Serializable {
     private LinksModel links;
-    private List<ReviewInfo> data;
+    private ArrayList<ReviewInfo> data;
     private String code;
     private String message;
 
@@ -22,11 +23,11 @@ public class GetReviewsResponse implements Serializable {
         this.links = links;
     }
 
-    public List<ReviewInfo> getData() {
+    public ArrayList<ReviewInfo> getData() {
         return data;
     }
 
-    public void setData(List<ReviewInfo> data) {
+    public void setData(ArrayList<ReviewInfo> data) {
         this.data = data;
     }
 

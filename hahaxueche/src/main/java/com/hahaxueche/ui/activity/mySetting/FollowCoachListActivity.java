@@ -42,6 +42,7 @@ public class FollowCoachListActivity extends MSBaseActivity implements XListView
     private String page;
     private String per_page = "10";
     private String access_token;
+    private boolean isOnLoadMore = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,9 +63,9 @@ public class FollowCoachListActivity extends MSBaseActivity implements XListView
         xlvCoachList.setAutoLoadEnable(true);
         xlvCoachList.setXListViewListener(this);
         xlvCoachList.setRefreshTime(getTime());
-        if(TextUtils.isEmpty(linkNext)){
+        if (TextUtils.isEmpty(linkNext)) {
             xlvCoachList.setPullLoadEnable(false);
-        }else {
+        } else {
             xlvCoachList.setPullLoadEnable(true);
         }
         mAdapter = new CoachItemAdapter(this, coachList, R.layout.view_coach_list_item);
@@ -102,22 +103,22 @@ public class FollowCoachListActivity extends MSBaseActivity implements XListView
 
     @Override
     public void onRefresh() {
-        if (!TextUtils.isEmpty(linkPrevious)) {
-            getCoachList(linkPrevious);
+        isOnLoadMore = false;
+        getCoachList();
+        if (TextUtils.isEmpty(linkNext)) {
+            xlvCoachList.setPullLoadEnable(false);
         } else {
-            getCoachList();
+            xlvCoachList.setPullLoadEnable(true);
         }
-        mAdapter = new CoachItemAdapter(FollowCoachListActivity.this, coachList, R.layout.view_coach_list_item);
-        xlvCoachList.setAdapter(mAdapter);
     }
 
     @Override
     public void onLoadMore() {
-        if (!TextUtils.isEmpty(linkNext)) {
+        if (!TextUtils.isEmpty(linkNext) && !isOnLoadMore) {
+            isOnLoadMore = true;
             getCoachList(linkNext);
         } else {
             onLoad();
-            //getCoachList();
         }
     }
 
@@ -125,14 +126,13 @@ public class FollowCoachListActivity extends MSBaseActivity implements XListView
         this.msPresenter.getFollowCoachList(page, per_page, access_token, new MSCallbackListener<CoachListResponse>() {
             @Override
             public void onSuccess(CoachListResponse data) {
-                coachList.clear();
                 coachList = data.getData();
                 linkSelf = data.getLinks().getSelf();
                 linkNext = data.getLinks().getNext();
                 linkPrevious = data.getLinks().getPrevious();
-                if(TextUtils.isEmpty(linkNext)){
+                if (TextUtils.isEmpty(linkNext)) {
                     xlvCoachList.setPullLoadEnable(false);
-                }else {
+                } else {
                     xlvCoachList.setPullLoadEnable(true);
                 }
                 mAdapter = new CoachItemAdapter(FollowCoachListActivity.this, coachList, R.layout.view_coach_list_item);
@@ -151,19 +151,25 @@ public class FollowCoachListActivity extends MSBaseActivity implements XListView
         this.msPresenter.getFollowCoachList(url, access_token, new MSCallbackListener<CoachListResponse>() {
             @Override
             public void onSuccess(CoachListResponse data) {
-                coachList.clear();
-                coachList = data.getData();
+                ArrayList<CoachModel> newCoachList = data.getData();
+                if (newCoachList != null && newCoachList.size() > 0) {
+                    coachList.addAll(newCoachList);
+                }
                 linkSelf = data.getLinks().getSelf();
                 linkNext = data.getLinks().getNext();
                 linkPrevious = data.getLinks().getPrevious();
-                if(TextUtils.isEmpty(linkNext)){
+                if (TextUtils.isEmpty(linkNext)) {
                     xlvCoachList.setPullLoadEnable(false);
-                }else {
+                } else {
                     xlvCoachList.setPullLoadEnable(true);
                 }
-                mAdapter = new CoachItemAdapter(FollowCoachListActivity.this, coachList, R.layout.view_coach_list_item);
-                xlvCoachList.setAdapter(mAdapter);
-
+                if (mAdapter != null) {
+                    mAdapter.notifyDataSetChanged();
+                } else {
+                    mAdapter = new CoachItemAdapter(FollowCoachListActivity.this, coachList, R.layout.view_coach_list_item);
+                    xlvCoachList.setAdapter(mAdapter);
+                }
+                isOnLoadMore = false;
                 onLoad();
             }
 

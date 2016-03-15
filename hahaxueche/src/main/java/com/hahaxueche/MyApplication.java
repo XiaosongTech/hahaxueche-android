@@ -3,6 +3,8 @@ package com.hahaxueche;
 import android.app.Activity;
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.util.DisplayMetrics;
 
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.api.net.HttpEngine;
@@ -20,6 +22,7 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Locale;
 
 /**
  * Application类�

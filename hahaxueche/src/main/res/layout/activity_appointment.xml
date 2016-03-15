@@ -8,7 +8,7 @@
     <LinearLayout
         android:id="@+id/lly_ap_no_coach"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_height="50dp"
         android:background="@color/app_theme_color"
         android:gravity="center"
         android:orientation="horizontal">

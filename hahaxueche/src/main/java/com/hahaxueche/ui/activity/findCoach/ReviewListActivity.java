@@ -15,6 +15,7 @@ import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
 import com.hahaxueche.utils.Util;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -33,6 +34,7 @@ public class ReviewListActivity extends FCBaseActivity implements XListView.IXLi
     private String page;
     private String per_page = "10";
     private String coach_user_id;
+    private boolean isOnLoadMore = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,19 +71,18 @@ public class ReviewListActivity extends FCBaseActivity implements XListView.IXLi
     }
     @Override
     public void onRefresh() {
-        System.out.print("onRefresh");
-        if (!TextUtils.isEmpty(linkPrevious)) {
-            getReviewList(linkPrevious);
+        isOnLoadMore = false;
+        getReviewList();
+        if (TextUtils.isEmpty(linkNext)) {
+            xlvReviewList.setPullLoadEnable(false);
         } else {
-            getReviewList();
+            xlvReviewList.setPullLoadEnable(true);
         }
-        mReviewItemAdapter = new ReviewItemAdapter(ReviewListActivity.this,mReviewInfoList , R.layout.view_review_list_item);
-        xlvReviewList.setAdapter(mReviewItemAdapter);
     }
     @Override
     public void onLoadMore() {
-        System.out.print("onLoadMore");
-        if (!TextUtils.isEmpty(linkNext)) {
+        if (!TextUtils.isEmpty(linkNext)&& !isOnLoadMore) {
+            isOnLoadMore = true;
             getReviewList(linkNext);
         } else {
             onLoad();
@@ -100,7 +101,6 @@ public class ReviewListActivity extends FCBaseActivity implements XListView.IXLi
         this.fcPresenter.getReviewList(coach_user_id, page, per_page, new FCCallbackListener<GetReviewsResponse>() {
             @Override
             public void onSuccess(GetReviewsResponse data) {
-                mReviewInfoList.clear();
                 mReviewInfoList = data.getData();
                 linkSelf = data.getLinks().getSelf();
                 linkNext = data.getLinks().getNext();
@@ -125,8 +125,10 @@ public class ReviewListActivity extends FCBaseActivity implements XListView.IXLi
         this.fcPresenter.getReviewList(url, new FCCallbackListener<GetReviewsResponse>() {
             @Override
             public void onSuccess(GetReviewsResponse data) {
-                mReviewInfoList.clear();
-                mReviewInfoList = data.getData();
+                ArrayList<ReviewInfo> newReviewList = data.getData();
+                if (newReviewList != null && newReviewList.size() > 0) {
+                    mReviewInfoList.addAll(newReviewList);
+                }
                 linkSelf = data.getLinks().getSelf();
                 linkNext = data.getLinks().getNext();
                 linkPrevious = data.getLinks().getPrevious();
@@ -135,8 +137,12 @@ public class ReviewListActivity extends FCBaseActivity implements XListView.IXLi
                 }else {
                     xlvReviewList.setPullLoadEnable(true);
                 }
-                mReviewItemAdapter = new ReviewItemAdapter(ReviewListActivity.this, mReviewInfoList, R.layout.view_review_list_item);
-                xlvReviewList.setAdapter(mReviewItemAdapter);
+                if (mReviewItemAdapter != null) {
+                    mReviewItemAdapter.notifyDataSetChanged();
+                }else {
+                    mReviewItemAdapter = new ReviewItemAdapter(ReviewListActivity.this, mReviewInfoList, R.layout.view_review_list_item);
+                    xlvReviewList.setAdapter(mReviewItemAdapter);
+                }
                 onLoad();
             }
 

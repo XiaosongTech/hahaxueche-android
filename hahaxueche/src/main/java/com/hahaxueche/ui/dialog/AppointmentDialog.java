@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -29,6 +30,7 @@ import com.hahaxueche.presenter.findCoach.FCPresenter;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * 预约dialog
@@ -118,12 +120,11 @@ public class AppointmentDialog extends Dialog {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext,AlertDialog.THEME_HOLO_DARK);
                 View view = View.inflate(mContext, R.layout.date_dialog, null);
                 final DatePicker datePicker = (DatePicker) view.findViewById(R.id.date_picker);
                 builder.setView(view);
-                Calendar cal = Calendar.getInstance();
+                Calendar cal = Calendar.getInstance(Locale.CHINA);
                 cal.setTimeInMillis(System.currentTimeMillis());
                 datePicker.init(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), null);
 
