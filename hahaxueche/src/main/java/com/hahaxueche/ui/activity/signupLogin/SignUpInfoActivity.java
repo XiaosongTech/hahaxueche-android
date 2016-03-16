@@ -1,9 +1,7 @@
 package com.hahaxueche.ui.activity.signupLogin;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -21,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.signupLogin.CompStuResponse;
+import com.hahaxueche.model.signupLogin.SessionModel;
 import com.hahaxueche.model.signupLogin.StudentModel;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
 import com.hahaxueche.ui.dialog.CityChoseDialog;
@@ -29,6 +27,7 @@ import com.hahaxueche.ui.dialog.RegisterInfoPhotoDialog;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.util.PhotoUtil;
 import com.hahaxueche.ui.util.PictrueGet;
+import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 
 import java.io.File;
@@ -62,21 +61,24 @@ public class SignUpInfoActivity extends SLBaseActivity {
 
     private ProgressDialog pd;//进度框
 
-    private String mCurCityId = "", mCurCityName = "", studentId = "", accessToken = "";
+    private String mCurCityId = "", mCurCityName = "";
 
     private CityChoseDialog mCityChoseDialog;
     private String TAG = "SignUpInfoActivity";
+    private SharedPreferencesUtil spUtil;
+    private SessionModel mSession;
+    private StudentModel mStudent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_info);
         mPhotoUtil = new PhotoUtil(this);
+        spUtil = new SharedPreferencesUtil(this);
+        mSession = spUtil.getSession();
+        mStudent = spUtil.getStudent();
         initView();
         initEvent();
-        SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
-        accessToken = sharedPreferences.getString("access_token", "");//sharedPreferences.getString("access_token", "");//"95e7ccf91e7e266c79acc0494b48e184";
-        studentId = sharedPreferences.getString("id", "");//sharedPreferences.getString("id", "");//"06812c2b-9dea-4bdc-bbde-b9516627b206";
         mCityChoseDialog = new CityChoseDialog(this,
                 new CityChoseDialog.OnBtnClickListener() {
                     @Override
@@ -142,19 +144,13 @@ public class SignUpInfoActivity extends SLBaseActivity {
             pd.dismiss();
         }
         pd = ProgressDialog.show(SignUpInfoActivity.this, null, "数据提交中，请稍后……");
-        this.slPresenter.completeStuInfo(studentId, cityId, studentName, accessToken, mPhotoPath, new SLCallbackListener<StudentModel>() {
+        this.slPresenter.completeStuInfo(mStudent.getId(), cityId, studentName, mSession.getAccess_token(), mPhotoPath, new SLCallbackListener<StudentModel>() {
             @Override
             public void onSuccess(StudentModel studentModel) {
                 if (pd != null) {
                     pd.dismiss();
                 }
-                SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
-                SharedPreferences.Editor editor=sharedPreferences.edit();
-                editor.putString("cell_phone",studentModel.getCell_phone());
-                editor.putString("name",studentModel.getName());
-                editor.putString("city_id",studentModel.getCity_id());
-                editor.putString("avatar",studentModel.getAvatar());
-                editor.commit();
+                spUtil.setStudent(studentModel);
                 Toast.makeText(context, "完善资料成功！", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(context, IndexActivity.class);
                 startActivity(intent);

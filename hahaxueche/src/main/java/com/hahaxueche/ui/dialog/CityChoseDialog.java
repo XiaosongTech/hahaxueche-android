@@ -1,35 +1,26 @@
 package com.hahaxueche.ui.dialog;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ActionMenuView;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.R;
-import com.hahaxueche.model.signupLogin.CitiesModel;
 import com.hahaxueche.model.signupLogin.CityModel;
+import com.hahaxueche.model.util.ConstantsModel;
+import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -87,14 +78,10 @@ public class CityChoseDialog extends Dialog implements View.OnClickListener {
     }
 
     private void initCityData() {
-        SharedPreferences sharedPreferences = mContext.getSharedPreferences("constants", Activity.MODE_PRIVATE);
-        String citiesStr = sharedPreferences.getString("constants", "");
-        Gson gson = new Gson();
-        Type type = new TypeToken<CitiesModel>() {
-        }.getType();
-        CitiesModel cities = gson.fromJson(citiesStr, type);
-        if(cities!=null) {
-            final List<CityModel> cityList = cities.getCities();
+        SharedPreferencesUtil spUtil = new SharedPreferencesUtil(mContext);
+        ConstantsModel constants = spUtil.getConstants();
+        if(constants!=null) {
+            final List<CityModel> cityList = constants.getCities();
             int rowCount = cityList.size() / 4 + 1;
             viewIds = new int[cityList.size()];
             //int colCount = 3;

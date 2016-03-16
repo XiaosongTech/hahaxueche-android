@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -24,8 +23,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.R;
 import com.hahaxueche.model.findCoach.BriefCoachInfo;
 import com.hahaxueche.model.findCoach.CoachModel;
@@ -35,6 +32,7 @@ import com.hahaxueche.model.findCoach.GetReviewsResponse;
 import com.hahaxueche.model.findCoach.ReviewInfo;
 import com.hahaxueche.model.signupLogin.CityModel;
 import com.hahaxueche.model.signupLogin.CostItem;
+import com.hahaxueche.model.signupLogin.SessionModel;
 import com.hahaxueche.model.signupLogin.StudentModel;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.model.util.BaseBoolean;
@@ -53,6 +51,7 @@ import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
 import com.hahaxueche.ui.widget.monitorScrollView.MonitorScrollView;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
 import com.hahaxueche.utils.JsonUtils;
+import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 import com.pingplusplus.android.PaymentActivity;
 import com.squareup.picasso.Picasso;
@@ -85,6 +84,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private TextView tvSatisfactionRate;//满意度
     private LinearLayout llyTakeCertCost;//拿证价格
     private ConstantsModel mConstants;
+    private SessionModel mSession;
     private TextView tvTakeCertPrice;
     private TextView tvTrainLocation;
     private LinearLayout llyPeerCoachTitle;
@@ -103,9 +103,6 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private ImageView ivFollow;
     private TextView tvFollow;
     private boolean isLogin = false;
-    private String access_token;
-    private String mName = "";
-    private String mPhoneNumber = "";
     private boolean isFollow = false;
     private FeeDetailDialog feeDetailDialog;
     private AppointmentDialog appointmentDialog;
@@ -127,6 +124,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private LinearLayout llyTrainLoaction;
     private FieldModel mFieldModel;
     private LinearLayout llyFlCdCoachName;
+    private SharedPreferencesUtil spUtil;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -138,7 +136,27 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         config.locale = Locale.SIMPLIFIED_CHINESE;
         getResources().updateConfiguration(config, metrics);
         setContentView(R.layout.activity_coach_detail);
-        initSharedPreferences();
+        SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
+        mConstants = spUtil.getConstants();
+        mSession = spUtil.getSession();
+        mStudent = spUtil.getStudent();
+        if (mSession != null && mStudent != null) {
+            isLogin = true;
+        }
+        //根据当前登录人的cityid，加载费用明细列表
+        if (mConstants != null) {
+            List<CityModel> cityList = mConstants.getCities();
+            String cityId = "0";
+            if (mStudent != null) {
+                cityId = mStudent.getCity_id();
+            }
+            for (CityModel city : cityList) {
+                if (city.getId().equals(cityId)) {
+                    mCostItemList = city.getFixed_cost_itemizer();
+                    break;
+                }
+            }
+        }
         initView();
         initEvent();
         loadDatas();
@@ -261,10 +279,10 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
         isCdCoachDetail.setLayoutParams(p);
         RelativeLayout.LayoutParams paramAvatar = new RelativeLayout.LayoutParams(Util.instence(this).dip2px(70), Util.instence(this).dip2px(70));
-        paramAvatar.setMargins(Util.instence(this).dip2px(30),height-Util.instence(this).dip2px(35),0,0);
+        paramAvatar.setMargins(Util.instence(this).dip2px(30), height - Util.instence(this).dip2px(35), 0, 0);
         civCdCoachAvatar.setLayoutParams(paramAvatar);
         RelativeLayout.LayoutParams paramLlyFlCd = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        paramLlyFlCd.addRule(RelativeLayout.ALIGN_BOTTOM,civCdCoachAvatar.getId());
+        paramLlyFlCd.addRule(RelativeLayout.ALIGN_BOTTOM, civCdCoachAvatar.getId());
         llyFlCdCoachName.setLayoutParams(paramLlyFlCd);
         //金牌教练显示
         if (mCoach.getSkill_level().equals("1")) {
@@ -379,7 +397,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private void loadFollow() {
         //显示关注按钮
         if (isLogin) {
-            this.fcPresenter.isFollow(mCoach.getUser_id(), access_token, new FCCallbackListener<BaseBoolean>() {
+            this.fcPresenter.isFollow(mCoach.getUser_id(), mSession.getAccess_token(), new FCCallbackListener<BaseBoolean>() {
                 @Override
                 public void onSuccess(BaseBoolean baseBoolean) {
                     //已经关注
@@ -419,7 +437,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                 case R.id.lly_follow:
                     if (isLogin) {
                         if (isFollow) {
-                            CoachDetailActivity.this.fcPresenter.cancelFollow(mCoach.getUser_id(), access_token, new FCCallbackListener<BaseApiResponse>() {
+                            CoachDetailActivity.this.fcPresenter.cancelFollow(mCoach.getUser_id(), mSession.getAccess_token(), new FCCallbackListener<BaseApiResponse>() {
                                 @Override
                                 public void onSuccess(BaseApiResponse data) {
                                     setUnFollow();
@@ -433,7 +451,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                                 }
                             });
                         } else {
-                            CoachDetailActivity.this.fcPresenter.follow(mCoach.getUser_id(), "", access_token, new FCCallbackListener<FollowResponse>() {
+                            CoachDetailActivity.this.fcPresenter.follow(mCoach.getUser_id(), "", mSession.getAccess_token(), new FCCallbackListener<FollowResponse>() {
                                 @Override
                                 public void onSuccess(FollowResponse data) {
                                     setFollow();
@@ -465,13 +483,17 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                 //确认付款
                 case R.id.lly_sure_pay:
                     if (isLogin) {
+                        if(mStudent.getPurchased_services()!=null && mStudent.getPurchased_services().size()>0){
+                            Toast.makeText(context, "您已经选择过教练", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         feeDetailDialog = new FeeDetailDialog(CoachDetailActivity.this, mCostItemList, mCoach.getCoach_group().getTraining_cost(), "2",
                                 new FeeDetailDialog.OnBtnClickListener() {
                                     @Override
                                     public void onPay() {
                                         feeDetailDialog.dismiss();
                                         //调用获取charge
-                                        fcPresenter.createCharge(mCoach.getId(), access_token, new FCCallbackListener<String>() {
+                                        fcPresenter.createCharge(mCoach.getId(), mSession.getAccess_token(), new FCCallbackListener<String>() {
                                             @Override
                                             public void onSuccess(String charge) {
                                                 Log.v("gibxin", "charge-> " + charge);
@@ -495,7 +517,13 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                     break;
                 //免费试学
                 case R.id.lly_free_learn:
-                    appointmentDialog = new AppointmentDialog(CoachDetailActivity.this, mName, mPhoneNumber, mCoach.getId());
+                    String name = "";
+                    String phoneNumber = "";
+                    if (mStudent != null) {
+                        name = mStudent.getName();
+                        phoneNumber = mStudent.getCell_phone();
+                    }
+                    appointmentDialog = new AppointmentDialog(CoachDetailActivity.this, name, phoneNumber, mCoach.getId());
                     appointmentDialog.show();
                     break;
                 //加载评论列表页面
@@ -503,7 +531,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                     Intent intent = new Intent(CoachDetailActivity.this, ReviewListActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("getReviewsResponse", mGetReviewsResponse);
-                    bundle.putString("coach_user_id", mCoach.getUser_id());
+                    bundle.putSerializable("coach",mCoach);
                     intent.putExtras(bundle);
                     startActivity(intent);
                     break;
@@ -547,41 +575,6 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         tvFollow.setTextColor(getResources().getColor(R.color.fCTxtGrayFade));
     }
 
-    /**
-     * SharedPreferences 数据，初始化处理
-     */
-    private void initSharedPreferences() {
-        SharedPreferences sharedPreferences = getSharedPreferences("constants", Activity.MODE_PRIVATE);
-        String constantsStr = sharedPreferences.getString("constants", "");
-        Gson gson = new Gson();
-        Type type = new TypeToken<ConstantsModel>() {
-        }.getType();
-        mConstants = gson.fromJson(constantsStr, type);
-
-
-        SharedPreferences spSession = getSharedPreferences("session", Activity.MODE_PRIVATE);
-        String accessToken = spSession.getString("access_token", "");
-        if (!TextUtils.isEmpty(accessToken)) {
-            access_token = accessToken;
-            mName = spSession.getString("name", "");
-            mPhoneNumber = spSession.getString("cell_phone", "");
-            Type stuType = new TypeToken<StudentModel>() {
-            }.getType();
-            mStudent = JsonUtils.deserialize(spSession.getString("student", ""), stuType);
-            if (mStudent != null && !TextUtils.isEmpty(mStudent.getId())) {
-                isLogin = true;
-            }
-        }
-        //根据当前登录人的cityid，加载费用明细列表
-        List<CityModel> cityList = mConstants.getCities();
-        String cityId = spSession.getString("city_id", "0");
-        for (CityModel city : cityList) {
-            if (city.getId().equals(cityId)) {
-                mCostItemList = city.getFixed_cost_itemizer();
-                break;
-            }
-        }
-    }
 
     /**
      * 提示去登录
@@ -639,7 +632,10 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                 pd.dismiss();
             }
             pd = ProgressDialog.show(CoachDetailActivity.this, null, "数据加载中，请稍后……");
-            if (resultCode == Activity.RESULT_OK) {//resultCode == Activity.RESULT_OK
+            if (resultCode == Activity.RESULT_OK) {
+                if(null == spUtil){
+                    spUtil = new SharedPreferencesUtil(this);
+                }
                 String result = data.getExtras().getString("pay_result");
                 /* 处理返回值
                  * "success" - 支付成功
@@ -649,22 +645,13 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                  */
                 String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
                 String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
-                Log.v("ping++", "result -> " + result);
-                Log.v("ping++", "errorMsg -> " + errorMsg);
-                Log.v("ping++", "extraMsg -> " + extraMsg);
-                SharedPreferences spSession = getSharedPreferences("session", Activity.MODE_PRIVATE);
-                String session_id = spSession.getString("session_id", "");
-                Log.v("gibxin","session_id1 ->" +session_id);
                 if (result.equals("success")) {
                     //更新SharedPreferences中的student
-                    this.msPresenter.getStudent(mStudent.getId(), access_token, new MSCallbackListener<StudentModel>() {
+                    this.msPresenter.getStudent(mStudent.getId(), mSession.getAccess_token(), new MSCallbackListener<StudentModel>() {
                         @Override
                         public void onSuccess(StudentModel data) {
                             mStudent = data;
-                            SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("student", JsonUtils.serialize(mStudent));
-                            editor.commit();
+                            spUtil.setStudent(mStudent);
                             if (!TextUtils.isEmpty(data.getCurrent_coach_id())) {
                                 fcPresenter.getCoach(data.getCurrent_coach_id(), new FCCallbackListener<CoachModel>() {
                                     @Override
@@ -674,10 +661,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                                         }
                                         MobclickAgent.onEvent(context, "did_purchase_coach");
                                         Toast.makeText(context, "支付成功", Toast.LENGTH_SHORT).show();
-                                        SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                                        editor.putString("current_coach", JsonUtils.serialize(coachModel));
-                                        editor.commit();
+                                        spUtil.setCurrentCoach(coachModel);
                                     }
 
                                     @Override
@@ -687,7 +671,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                                         }
                                     }
                                 });
-                            }else{
+                            } else {
                                 if (pd != null) {
                                     pd.dismiss();
                                 }

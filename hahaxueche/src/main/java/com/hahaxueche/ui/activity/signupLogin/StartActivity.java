@@ -1,15 +1,11 @@
 package com.hahaxueche.ui.activity.signupLogin;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,17 +17,14 @@ import com.ToxicBakery.viewpager.transforms.ABaseTransformer;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
-import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.R;
+import com.hahaxueche.model.signupLogin.StudentModel;
 import com.hahaxueche.model.util.ConstantsModel;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
-import com.hahaxueche.utils.JsonUtils;
-import com.hahaxueche.utils.Util;
+import com.hahaxueche.utils.SharedPreferencesUtil;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -45,24 +38,23 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
     private ArrayList<String> transformerList = new ArrayList<String>();
     private TextView tvIsTour;
     private ImageView ivBack;
+    private SharedPreferencesUtil spUtil;
+    private ConstantsModel mConstants;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_start);
+        spUtil = new SharedPreferencesUtil(this);
+        mConstants = spUtil.getConstants();
         convenientBanner = (ConvenientBanner) findViewById(R.id.convenientBanner);
         WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
         int width = wm.getDefaultDisplay().getWidth();
         RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, width);
         convenientBanner.setLayoutParams(p);
         transformerArrayAdapter = new ArrayAdapter(this, R.layout.adapter_transformer, transformerList);
-        SharedPreferences spConstants = getSharedPreferences("constants", Activity.MODE_PRIVATE);
-        String constantsStr = spConstants.getString("constants", "");
-        Type type = new TypeToken<ConstantsModel>() {
-        }.getType();
-        ConstantsModel constantsModel = JsonUtils.deserialize(constantsStr, type);
-        if (constantsModel != null) {
-            networkImages = constantsModel.getLogin_banners();
+        if (mConstants != null) {
+            networkImages = mConstants.getLogin_banners();
         }
         //网络加载例子
         //networkImages= Arrays.asList(images);
@@ -82,10 +74,12 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
             @Override
             public void onClick(View v) {
                 //清空session
-                SharedPreferences spSession = getSharedPreferences("session", Activity.MODE_PRIVATE);
-                SharedPreferences.Editor spEditor = spSession.edit();
-                spEditor.clear();
-                spEditor.commit();
+                spUtil.clearCurrentCoach();
+                spUtil.clearStudent();
+                spUtil.clearSession();
+                //游客登录，虚拟用户
+                StudentModel fakeStudent = new StudentModel();
+                spUtil.setStudent(fakeStudent);
                 Intent intent = new Intent(context, IndexActivity.class);
                 startActivity(intent);
                 StartActivity.this.finish();

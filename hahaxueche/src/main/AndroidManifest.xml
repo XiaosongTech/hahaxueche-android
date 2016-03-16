@@ -54,6 +54,7 @@
             android:name=".ui.activity.WelcomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -65,21 +66,25 @@
         <activity
             android:name=".ui.activity.signupLogin.StartActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
             android:label="@string/app_name"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activity.signupLogin.SignUpActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
             android:label="@string/sLSignUp"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activity.signupLogin.LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
             android:label="@string/sLLogin"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activity.signupLogin.SignUpInfoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
             android:label="@string/sLSignUpInfo"
             android:screenOrientation="portrait"></activity>
         <activity
@@ -87,27 +92,32 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:theme="@style/NoAnimationTheme"></activity>
         <activity
             android:name=".ui.activity.findCoach.FindCoachActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:theme="@style/NoAnimationTheme"></activity>
         <activity
             android:name=".ui.activity.appointment.AppointmentActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:theme="@style/NoAnimationTheme"></activity>
         <activity
             android:name=".ui.activity.mySetting.MySettingActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:theme="@style/NoAnimationTheme"></activity>
 
         <activity
             android:name=".ui.fragment.BaseBottomTabFragment"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait">
 
         </activity>
@@ -136,6 +146,7 @@
         <activity
             android:name=".ui.activity.findCoach.ReviewListActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <!-- Ping++ SDK -->
         <activity
@@ -152,26 +163,34 @@
         <activity
             android:name=".ui.activity.mySetting.FollowCoachListActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activity.mySetting.PaymentStageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activity.findCoach.FindCoachMapFilterActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activity.findCoach.FieldMapActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activity.findCoach.MyCoachActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activity.base.BaseWebViewActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"></activity>
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask">
+
+        </activity>
 
         <service android:name="com.amap.api.location.APSService"></service>
     </application>

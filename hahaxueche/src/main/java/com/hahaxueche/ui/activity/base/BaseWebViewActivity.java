@@ -57,7 +57,6 @@ public class BaseWebViewActivity extends Activity {
         webSettings.setSupportZoom(true); // 支持缩放
 
 
-
         webSettings.setLoadWithOverviewMode(true);
 
         DisplayMetrics metrics = new DisplayMetrics();
@@ -67,13 +66,13 @@ public class BaseWebViewActivity extends Activity {
             webSettings.setDefaultZoom(WebSettings.ZoomDensity.FAR);
         } else if (mDensity == 160) {
             webSettings.setDefaultZoom(WebSettings.ZoomDensity.MEDIUM);
-        } else if(mDensity == 120) {
+        } else if (mDensity == 120) {
             webSettings.setDefaultZoom(WebSettings.ZoomDensity.CLOSE);
-        }else if(mDensity == DisplayMetrics.DENSITY_XHIGH){
+        } else if (mDensity == DisplayMetrics.DENSITY_XHIGH) {
             webSettings.setDefaultZoom(WebSettings.ZoomDensity.FAR);
-        }else if (mDensity == DisplayMetrics.DENSITY_TV){
+        } else if (mDensity == DisplayMetrics.DENSITY_TV) {
             webSettings.setDefaultZoom(WebSettings.ZoomDensity.FAR);
-        }else{
+        } else {
             webSettings.setDefaultZoom(WebSettings.ZoomDensity.MEDIUM);
         }
 
@@ -86,11 +85,15 @@ public class BaseWebViewActivity extends Activity {
         baseWebView.setInitialScale(80);
         baseWebView.loadUrl(url);
     }
-    public void onResume() {
+
+    @Override
+    protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
     }
-    public void onPause() {
+
+    @Override
+    protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
     }

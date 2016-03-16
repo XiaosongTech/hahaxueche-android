@@ -22,6 +22,7 @@ public class SLBaseActivity extends Activity {
     public SLPresenter slPresenter;
     //
     public FCPresenter fcPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,11 +31,15 @@ public class SLBaseActivity extends Activity {
         slPresenter = application.getSLPresenter();
         fcPresenter = application.getFCPresenter();
     }
-    public void onResume() {
+
+    @Override
+    protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
     }
-    public void onPause() {
+
+    @Override
+    protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
     }

@@ -1,15 +1,12 @@
 package com.hahaxueche.ui.activity.findCoach;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.MapView;
@@ -17,13 +14,11 @@ import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.R;
 import com.hahaxueche.model.findCoach.FieldModel;
 import com.hahaxueche.model.util.ConstantsModel;
+import com.hahaxueche.utils.SharedPreferencesUtil;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -158,18 +153,15 @@ public class FindCoachMapFilterActivity extends FCBaseActivity implements AMap.O
     }
 
     private void initFieldList() {
-        SharedPreferences spSession = getSharedPreferences("session", Activity.MODE_PRIVATE);
-        String city_id = spSession.getString("city_id", "");
-        SharedPreferences sharedPreferences = getSharedPreferences("constants", Activity.MODE_PRIVATE);
-        String constantsStr = sharedPreferences.getString("constants", "");
-        Gson gson = new Gson();
-        Type type = new TypeToken<ConstantsModel>() {
-        }.getType();
-        ConstantsModel constantsModel = gson.fromJson(constantsStr, type);
-        for (FieldModel fieldsModel : constantsModel.getFields()) {
-            if (fieldsModel.getCity_id().equals(city_id)) {
-                fieldList.add(fieldsModel);
-                continue;
+        SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
+        String city_id = spUtil.getStudent().getCity_id();
+        ConstantsModel constants = spUtil.getConstants();
+        if (constants != null && constants.getFields() != null && constants.getFields().size() > 0) {
+            for (FieldModel fieldsModel : constants.getFields()) {
+                if (fieldsModel.getCity_id().equals(city_id)) {
+                    fieldList.add(fieldsModel);
+                    continue;
+                }
             }
         }
     }

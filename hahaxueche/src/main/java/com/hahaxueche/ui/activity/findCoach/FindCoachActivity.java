@@ -19,6 +19,7 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.FieldModel;
+import com.hahaxueche.model.findCoach.Location;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachItemAdapter;
@@ -28,6 +29,7 @@ import com.hahaxueche.ui.activity.appointment.AppointmentActivity;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.activity.mySetting.MySettingActivity;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
+import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 
 import java.text.SimpleDateFormat;
@@ -68,8 +70,6 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
     private String sort_by = "0";
     private ImageButton ibtnFcMap;
     private ArrayList<FieldModel> selFieldList;
-    private String mlat;
-    private String mlng;
 
     private String TAG = "FindCoachActivity";
     private boolean isOnLoadMore = false;
@@ -81,8 +81,6 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         initView();
         initEvent();
         SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
-        mlat = sharedPreferences.getString("lat", "");
-        mlng = sharedPreferences.getString("lng", "");
         if (xlvCoachList != null)
             xlvCoachList.autoRefresh();
     }
@@ -252,10 +250,12 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                 training_field_ids.add(selField.getId());
             }
         }
-        if (!TextUtils.isEmpty(mlat) && !TextUtils.isEmpty(mlng)) {
+        SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
+        Location location = spUtil.getLocation();
+        if (location != null && !TextUtils.isEmpty(location.getLat()) && !TextUtils.isEmpty(location.getLng())) {
             user_location = new ArrayList<>();
-            user_location.add(mlat);
-            user_location.add(mlng);
+            user_location.add(location.getLat());
+            user_location.add(location.getLng());
         }
         this.fcPresenter.getCoachList(page, per_page, golden_coach_only, license_type, price, city_id, training_field_ids, distance,
                 user_location, sort_by, new FCCallbackListener<CoachListResponse>() {

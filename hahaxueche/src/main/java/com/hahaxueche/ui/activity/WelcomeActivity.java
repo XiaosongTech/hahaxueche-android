@@ -1,52 +1,68 @@
 package com.hahaxueche.ui.activity;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Window;
 
 import com.hahaxueche.R;
+import com.hahaxueche.model.signupLogin.SessionModel;
+import com.hahaxueche.model.signupLogin.StudentModel;
+import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.activity.index.IndexActivity;
+import com.hahaxueche.ui.activity.mySetting.MSBaseActivity;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
+import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by gibxin on 2016/3/6.
  */
-public class WelcomeActivity extends Activity{
+public class WelcomeActivity extends MSBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);// 声明使用自定义标题
         setContentView(R.layout.activity_welcome);
-        new Handler().postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                SharedPreferences spSession = getSharedPreferences("session", Activity.MODE_PRIVATE);
-                String session_id = spSession.getString("session_id", "");
-                Intent intent;
-                if(TextUtils.isEmpty(session_id)){
-                    intent=new Intent(WelcomeActivity.this,StartActivity.class);
-                }else{
-                    intent=new Intent(WelcomeActivity.this,IndexActivity.class);
+        //根据sp中是否有session和student，判断打开页面
+        final SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
+        SessionModel curSession = spUtil.getSession();
+        StudentModel curStudent = spUtil.getStudent();
+        if (curSession != null && curStudent != null &&
+                !TextUtils.isEmpty(curStudent.getId()) &&
+                !TextUtils.isEmpty(curSession.getAccess_token())) {
+            this.msPresenter.getStudent(curStudent.getId(), curSession.getAccess_token(), new MSCallbackListener<StudentModel>() {
+                @Override
+                public void onSuccess(StudentModel student) {
+                    spUtil.setStudent(student);
+                    Intent intent = new Intent(WelcomeActivity.this, IndexActivity.class);
+                    startActivity(intent);
+                    WelcomeActivity.this.finish();
                 }
-                startActivity(intent);
-                WelcomeActivity.this.finish();
-            }
-        }, 2000);
+
+                @Override
+                public void onFailure(String errorEvent, String message) {
+                    Intent intent = new Intent(WelcomeActivity.this, StartActivity.class);
+                    startActivity(intent);
+                    WelcomeActivity.this.finish();
+                }
+            });
+        } else {
+            Intent intent = new Intent(WelcomeActivity.this, StartActivity.class);
+            startActivity(intent);
+            WelcomeActivity.this.finish();
+        }
     }
-    public void onResume() {
+
+    @Override
+    protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
     }
-    public void onPause() {
+
+    @Override
+    protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
     }

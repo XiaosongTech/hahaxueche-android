@@ -1,12 +1,11 @@
 package com.hahaxueche.ui.activity.findCoach;
 
+import com.hahaxueche.model.signupLogin.StudentModel;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -17,8 +16,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.R;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.FieldModel;
@@ -31,11 +28,12 @@ import com.hahaxueche.ui.dialog.FeeDetailDialog;
 import com.hahaxueche.ui.dialog.ZoomImgDialog;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.ui.widget.monitorScrollView.MonitorScrollView;
+import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 import com.squareup.picasso.Picasso;
 
-import java.lang.reflect.Type;
 import java.util.List;
+
 /**
  * Created by gibxin on 2016/3/7.
  */
@@ -93,7 +91,7 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
         llyTrainLoaction = Util.instence(this).$(this, R.id.rly_my_coach_location);
         tvTeachCourse = Util.instence(this).$(this, R.id.tv_my_coach_teach_course);
         rlyMyCoachContact = Util.instence(this).$(this, R.id.rly_my_coach_contact);
-        tvMyCoachContact =  Util.instence(this).$(this, R.id.tv_my_cd_coach_phone);
+        tvMyCoachContact = Util.instence(this).$(this, R.id.tv_my_cd_coach_phone);
     }
 
     private void initEvent() {
@@ -192,7 +190,7 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
         //教授课程
         List<BaseKeyValue> serviceTypeList = mConstants.getService_types();
         for (BaseKeyValue serviceType : serviceTypeList) {
-            if(serviceType.getId().equals(mCoach.getService_type())){
+            if (serviceType.getId().equals(mCoach.getService_type())) {
                 tvTeachCourse.setText(serviceType.getReadable_name());
                 break;
             }
@@ -242,7 +240,7 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
                     break;
                 //联系方式
                 case R.id.rly_my_coach_contact:
-                    intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+mCoach.getCell_phone()));
+                    intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mCoach.getCell_phone()));
                     startActivity(intent);
                     break;
             }
@@ -254,20 +252,20 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
      * SharedPreferences 数据，初始化处理
      */
     private void initSharedPreferences() {
-        SharedPreferences sharedPreferences = getSharedPreferences("constants", Activity.MODE_PRIVATE);
-        String constantsStr = sharedPreferences.getString("constants", "");
-        Gson gson = new Gson();
-        Type type = new TypeToken<ConstantsModel>() {
-        }.getType();
-        mConstants = gson.fromJson(constantsStr, type);
-        SharedPreferences spSession = getSharedPreferences("session", Activity.MODE_PRIVATE);
+        SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
         //根据当前登录人的cityid，加载费用明细列表
-        List<CityModel> cityList = mConstants.getCities();
-        String cityId = spSession.getString("city_id", "0");
-        for (CityModel city : cityList) {
-            if (city.getId().equals(cityId)) {
-                mCostItemList = city.getFixed_cost_itemizer();
-                break;
+        StudentModel student = spUtil.getStudent();
+        String cityId = student.getCity_id();
+        mConstants = spUtil.getConstants();
+        if (mConstants != null) {
+            List<CityModel> cityList = mConstants.getCities();
+            if (cityList != null && cityList.size() > 0) {
+                for (CityModel city : cityList) {
+                    if (city.getId().equals(cityId)) {
+                        mCostItemList = city.getFixed_cost_itemizer();
+                        break;
+                    }
+                }
             }
         }
     }

@@ -1,11 +1,8 @@
 package com.hahaxueche.ui.activity.index;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -15,9 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,9 +24,11 @@ import com.amap.api.location.AMapLocationListener;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
-import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.R;
 import com.hahaxueche.model.findCoach.CoachModel;
+import com.hahaxueche.model.findCoach.Location;
+import com.hahaxueche.model.signupLogin.SessionModel;
+import com.hahaxueche.model.signupLogin.StudentModel;
 import com.hahaxueche.model.util.ConstantsModel;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.ui.activity.appointment.AppointmentActivity;
@@ -41,14 +38,10 @@ import com.hahaxueche.ui.activity.findCoach.FindCoachActivity;
 import com.hahaxueche.ui.activity.mySetting.MySettingActivity;
 import com.hahaxueche.ui.dialog.CityChoseDialog;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
-import com.hahaxueche.utils.JsonUtils;
+import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 
-import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -77,29 +70,32 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     private double mLng;
     private TextView tvOneKeyFindCoach;
     private ProgressDialog pd;//进度框
+    private SharedPreferencesUtil spUtil;
+    private SessionModel mSession;
+    private StudentModel mStudent;
+    private ConstantsModel mConstants;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
+        spUtil = new SharedPreferencesUtil(this);
+        mSession = spUtil.getSession();
+        mStudent = spUtil.getStudent();
+        mConstants = spUtil.getConstants();
         initView();
         initEvent();
-        SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
-        String city_id = sharedPreferences.getString("city_id", "");
-        SharedPreferences.Editor editor = sharedPreferences.edit();
         //游客没有city_id，需选择
-        if (TextUtils.isEmpty(city_id)) {
-            editor.putString("city_id", "0");//默认武汉
-            editor.commit();
+        if (TextUtils.isEmpty(mStudent.getCity_id())) {
+            mStudent.setCity_id("0");
+            spUtil.setStudent(mStudent);
             mCityChoseDialog = new CityChoseDialog(this,
                     new CityChoseDialog.OnBtnClickListener() {
                         @Override
                         public void onCitySelected(String cityName, String cityId) {
                             mCityChoseDialog.dismiss();
-                            SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("city_id", cityId);
-                            editor.commit();
+                            mStudent.setCity_id(cityId);
+                            spUtil.setStudent(mStudent);
                         }
                     });
             //mCityChoseDialog.show();
@@ -114,11 +110,10 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                         //定位成功回调信息，设置相关消息
                         mLat = aMapLocation.getLatitude();//获取纬度
                         mLng = aMapLocation.getLongitude();//获取经度
-                        SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("lat", mLat + "");
-                        editor.putString("lng", mLng + "");
-                        editor.commit();
+                        Location location = new Location();
+                        location.setLat(mLat + "");
+                        location.setLng(mLng + "");
+                        spUtil.setLocation(location);
                         if (mLat != 0d && mLng != 0d) {
                             mLocationClient.stopLocation();
                         }
@@ -164,13 +159,8 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         cbannerIndex.setLayoutParams(p);
         transformerArrayAdapter = new ArrayAdapter(this, R.layout.adapter_transformer, transformerList);
         //网络加载例子
-        SharedPreferences spConstants = getSharedPreferences("constants", Activity.MODE_PRIVATE);
-        String constantsStr = spConstants.getString("constants", "");
-        Type type = new TypeToken<ConstantsModel>() {
-        }.getType();
-        ConstantsModel constantsModel = JsonUtils.deserialize(constantsStr, type);
-        if (constantsModel != null) {
-            networkImages = constantsModel.getHome_page_banners();
+        if (mConstants != null) {
+            networkImages = mConstants.getHome_page_banners();
         }
         cbannerIndex.setPages(new CBViewHolderCreator<NetworkImageHolderView>() {
             @Override
@@ -267,10 +257,11 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         }
     };
     private long exitTime = 0;
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
-            if((System.currentTimeMillis()-exitTime) > 2000){
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if ((System.currentTimeMillis() - exitTime) > 2000) {
                 Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
             } else {

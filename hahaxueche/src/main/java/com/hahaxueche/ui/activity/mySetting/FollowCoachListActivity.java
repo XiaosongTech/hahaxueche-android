@@ -1,24 +1,22 @@
 package com.hahaxueche.ui.activity.mySetting;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
+import com.hahaxueche.model.signupLogin.SessionModel;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachItemAdapter;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
+import com.hahaxueche.utils.SharedPreferencesUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,15 +39,15 @@ public class FollowCoachListActivity extends MSBaseActivity implements XListView
     private String linkPrevious;
     private String page;
     private String per_page = "10";
-    private String access_token;
     private boolean isOnLoadMore = false;
+    private SessionModel mSession;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_follow_coach_list);
-        SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
-        access_token = sharedPreferences.getString("access_token", "");
+        SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
+        mSession = spUtil.getSession();
         initView();
         initEvent();
         if (xlvCoachList != null)
@@ -123,7 +121,7 @@ public class FollowCoachListActivity extends MSBaseActivity implements XListView
     }
 
     private void getCoachList() {
-        this.msPresenter.getFollowCoachList(page, per_page, access_token, new MSCallbackListener<CoachListResponse>() {
+        this.msPresenter.getFollowCoachList(page, per_page, mSession.getAccess_token(), new MSCallbackListener<CoachListResponse>() {
             @Override
             public void onSuccess(CoachListResponse data) {
                 coachList = data.getData();
@@ -142,13 +140,12 @@ public class FollowCoachListActivity extends MSBaseActivity implements XListView
 
             @Override
             public void onFailure(String errorEvent, String message) {
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void getCoachList(String url) {
-        this.msPresenter.getFollowCoachList(url, access_token, new MSCallbackListener<CoachListResponse>() {
+        this.msPresenter.getFollowCoachList(url, mSession.getAccess_token(), new MSCallbackListener<CoachListResponse>() {
             @Override
             public void onSuccess(CoachListResponse data) {
                 ArrayList<CoachModel> newCoachList = data.getData();
@@ -175,7 +172,6 @@ public class FollowCoachListActivity extends MSBaseActivity implements XListView
 
             @Override
             public void onFailure(String errorEvent, String message) {
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
             }
         });
     }

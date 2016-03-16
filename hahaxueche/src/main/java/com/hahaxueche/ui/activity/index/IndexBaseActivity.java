@@ -12,7 +12,7 @@ import com.umeng.analytics.MobclickAgent;
 /**
  * Created by gibxin on 2016/3/7.
  */
-public class IndexBaseActivity extends Activity{
+public class IndexBaseActivity extends Activity {
     // 上下文实例
     public Context context;
     // 应用实例
@@ -29,11 +29,15 @@ public class IndexBaseActivity extends Activity{
         fcPresenter = application.getFCPresenter();
         msPresenter = application.getMsPresenter();
     }
-    public void onResume() {
+
+    @Override
+    protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
     }
-    public void onPause() {
+
+    @Override
+    protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
     }

@@ -2,6 +2,7 @@ package com.hahaxueche.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -14,9 +15,14 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.google.gson.reflect.TypeToken;
+import com.hahaxueche.model.signupLogin.SessionModel;
+import com.hahaxueche.model.signupLogin.StudentModel;
+import com.hahaxueche.model.util.ConstantsModel;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;

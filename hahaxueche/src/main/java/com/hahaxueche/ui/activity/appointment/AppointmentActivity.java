@@ -2,9 +2,7 @@ package com.hahaxueche.ui.activity.appointment;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -21,6 +19,7 @@ import com.hahaxueche.ui.activity.mySetting.MySettingActivity;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.utils.JsonUtils;
+import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
@@ -97,10 +96,11 @@ public class AppointmentActivity extends Activity {
     };
 
     private long exitTime = 0;
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
-            if((System.currentTimeMillis()-exitTime) > 2000){
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if ((System.currentTimeMillis() - exitTime) > 2000) {
                 Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
             } else {
@@ -114,13 +114,11 @@ public class AppointmentActivity extends Activity {
     }
 
     private void loadDatas() {
-        SharedPreferences spSession = getSharedPreferences("session", Activity.MODE_PRIVATE);
-        Type stuType = new TypeToken<StudentModel>() {
-        }.getType();
-        mStudent = JsonUtils.deserialize(spSession.getString("student", ""), stuType);
+        SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
+        mStudent = spUtil.getStudent();
         Type coachType = new TypeToken<CoachModel>() {
         }.getType();
-        mCurrentCoach = JsonUtils.deserialize(spSession.getString("current_coach", ""), coachType);
+        mCurrentCoach = spUtil.getCurrentCoach();
         if (mStudent != null && mStudent.getPurchased_services() != null && mStudent.getPurchased_services().size() > 0 && mCurrentCoach != null) {
             llyApHasCoach.setVisibility(View.VISIBLE);
             tvHasCoach.setVisibility(View.VISIBLE);
@@ -137,11 +135,15 @@ public class AppointmentActivity extends Activity {
             tvNoCoach.setVisibility(View.VISIBLE);
         }
     }
-    public void onResume() {
+
+    @Override
+    protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
     }
-    public void onPause() {
+
+    @Override
+    protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
     }

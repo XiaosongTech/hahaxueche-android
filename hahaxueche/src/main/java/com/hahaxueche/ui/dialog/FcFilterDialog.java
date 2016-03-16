@@ -3,7 +3,6 @@ package com.hahaxueche.ui.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,15 +17,14 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.R;
 import com.hahaxueche.model.signupLogin.CityModel;
+import com.hahaxueche.model.signupLogin.StudentModel;
 import com.hahaxueche.model.util.ConstantsModel;
 import com.hahaxueche.ui.widget.comboSeekBar.ComboSeekBar;
+import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 
-import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -291,18 +289,14 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
      * 价格和距离array初始化
      */
     private void initFilterArray() {
-        SharedPreferences sharedPreferences = mContext.getSharedPreferences("constants", Activity.MODE_PRIVATE);
-        String constants = sharedPreferences.getString("constants", "");
-        Gson gson = new Gson();
-        Type type = new TypeToken<ConstantsModel>() {
-        }.getType();
-        ConstantsModel constantsModel = gson.fromJson(constants, type);
-        if (constantsModel != null) {
-            List<CityModel> cityList = constantsModel.getCities();
+        SharedPreferencesUtil spUtil = new SharedPreferencesUtil(mContext);
+        ConstantsModel constants = spUtil.getConstants();
+        if (constants != null) {
+            List<CityModel> cityList = constants.getCities();
             int myCityCount = 0;
             //根据城市id加载价格、距离筛选列表
-            SharedPreferences spSession = mContext.getSharedPreferences("session", Activity.MODE_PRIVATE);
-            String city_id = spSession.getString("city_id", "");
+            StudentModel student = spUtil.getStudent();
+            String city_id = student.getCity_id();
             for (int i = 0; i < cityList.size(); i++) {
                 if (cityList.get(i).getId().equals(city_id)) {
                     myCityCount = i;

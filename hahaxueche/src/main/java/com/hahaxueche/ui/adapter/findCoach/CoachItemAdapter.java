@@ -1,8 +1,6 @@
 package com.hahaxueche.ui.adapter.findCoach;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,21 +11,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.R;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.FieldModel;
-import com.hahaxueche.model.findCoach.FieldsModel;
 import com.hahaxueche.model.signupLogin.CityModel;
 import com.hahaxueche.model.util.ConstantsModel;
 import com.hahaxueche.ui.dialog.MapDialog;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
+import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 import com.squareup.picasso.Picasso;
 
-import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -40,24 +35,23 @@ public class CoachItemAdapter extends BaseAdapter {
     private int resource;   //item的布局
     private Context context;
     private LayoutInflater inflator;
-    private ConstantsModel constantsModel;
+    private ConstantsModel mConstants;
     private List<FieldModel> fieldsList;
     private List<CityModel> cityList;
     private MapDialog mapDialog;
     private FieldModel mFieldModel;
+    private SharedPreferencesUtil spUtil;
 
     public CoachItemAdapter(Context context, List<CoachModel> coachList, int resource) {
         this.context = context;
         this.coachList = coachList;
         this.resource = resource;
-        SharedPreferences sharedPreferences = context.getSharedPreferences("constants", Activity.MODE_PRIVATE);
-        String constants = sharedPreferences.getString("constants", "");
-        Gson gson = new Gson();
-        Type type = new TypeToken<ConstantsModel>() {
-        }.getType();
-        constantsModel = gson.fromJson(constants, type);
-        fieldsList = constantsModel.getFields();
-        cityList = constantsModel.getCities();
+        spUtil = new SharedPreferencesUtil(context);
+        mConstants = spUtil.getConstants();
+        if (mConstants != null) {
+            fieldsList = mConstants.getFields();
+            cityList = mConstants.getCities();
+        }
     }
 
     @Override

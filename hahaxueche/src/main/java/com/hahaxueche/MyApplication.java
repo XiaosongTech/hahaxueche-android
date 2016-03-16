@@ -17,6 +17,7 @@ import com.hahaxueche.presenter.mySetting.MSPresenterImpl;
 import com.hahaxueche.presenter.signupLogin.SLPresenter;
 import com.hahaxueche.presenter.signupLogin.SLPresenterImpl;
 import com.hahaxueche.utils.JsonUtils;
+import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
@@ -39,6 +40,7 @@ public class MyApplication extends Application {
         sLPresenter = new SLPresenterImpl(this);
         fcPresenter = new FCPresenterImpl(this);
         msPresenter = new MSPresenterImpl(this);
+        final SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
         new Thread(new Runnable() {
 
             @Override
@@ -47,11 +49,8 @@ public class MyApplication extends Application {
                 Type type = new TypeToken<ConstantsModel>() {
                 }.getType();
                 try {
-                    ConstantsModel constantsModel = httpEngine.getHandle(type, SLApi.CONSTANTS);
-                    SharedPreferences sharedPreferences = getSharedPreferences("constants", Activity.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("constants", JsonUtils.serialize(constantsModel));
-                    editor.commit();
+                    ConstantsModel constants = httpEngine.getHandle(type, SLApi.CONSTANTS);
+                    spUtil.setConstants(constants);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

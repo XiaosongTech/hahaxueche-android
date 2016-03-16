@@ -1,14 +1,11 @@
 package com.hahaxueche.ui.activity.signupLogin;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,7 +23,7 @@ import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
 import com.hahaxueche.ui.activity.index.IndexActivity;
-import com.hahaxueche.utils.JsonUtils;
+import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.umeng.analytics.MobclickAgent;
 
 import java.lang.ref.WeakReference;
@@ -49,6 +46,7 @@ public class SignUpActivity extends SLBaseActivity {
     private ProgressDialog pd;//进度框
     private int sendTime = 60;
     private final MyHandler mHandler = new MyHandler(this);
+    private SharedPreferencesUtil spUtil;
 
     public SignUpActivity() {
     }
@@ -57,6 +55,7 @@ public class SignUpActivity extends SLBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        spUtil = new SharedPreferencesUtil(this);
         Intent intent = getIntent();
         isResetPwd = intent.getBooleanExtra("isResetPwd", false);
         initView();
@@ -99,7 +98,7 @@ public class SignUpActivity extends SLBaseActivity {
         btnGetIdentifyCode.setVisibility(View.GONE);
         etRegisterSetPwd.setVisibility(View.VISIBLE);
         btnFinish.setVisibility(View.VISIBLE);
-        if(isResetPwd){
+        if (isResetPwd) {
             btnFinish.setText(getResources().getText(R.string.sLSure));
         }
         sendTime = 60;
@@ -155,28 +154,19 @@ public class SignUpActivity extends SLBaseActivity {
             pd.dismiss();
         }
         pd = ProgressDialog.show(SignUpActivity.this, null, "数据提交中，请稍后……");
-        if(isResetPwd){
+        if (isResetPwd) {
             this.slPresenter.resetPassword(phoneNumber, pwd, identifyCode, new SLCallbackListener<BaseApiResponse>() {
                 @Override
                 public void onSuccess(BaseApiResponse baseApiResponse) {
-                   //密码修改成功，直接登录
+                    //密码修改成功，直接登录
                     slPresenter.login(phoneNumber, pwd, 2, new SLCallbackListener<CreateUserResponse>() {
                         @Override
                         public void onSuccess(CreateUserResponse createUserResponse) {
                             Toast.makeText(context, getResources().getText(R.string.sLResetPwdSuccess), Toast.LENGTH_SHORT).show();
                             SessionModel userSession = createUserResponse.getSession();
                             StudentModel userStudent = createUserResponse.getStudent();
-                            SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("session_id", userSession.getId());
-                            editor.putString("access_token", userSession.getAccess_token());
-                            editor.putString("id", userStudent.getId());
-                            editor.putString("cell_phone", userStudent.getCell_phone());
-                            editor.putString("name", userStudent.getName());
-                            editor.putString("city_id", userStudent.getCity_id());
-                            editor.putString("avatar", userStudent.getAvatar());
-                            editor.putString("student", JsonUtils.serialize(userStudent));
-                            editor.commit();
+                            spUtil.setSession(userSession);
+                            spUtil.setStudent(userStudent);
                             if (TextUtils.isEmpty(userStudent.getCurrent_coach_id())) {
                                 if (pd != null) {
                                     pd.dismiss();
@@ -191,10 +181,7 @@ public class SignUpActivity extends SLBaseActivity {
                                         if (pd != null) {
                                             pd.dismiss();
                                         }
-                                        SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                                        editor.putString("current_coach", JsonUtils.serialize(coachModel));
-                                        editor.commit();
+                                        spUtil.setCurrentCoach(coachModel);
                                         Intent intent = new Intent(context, IndexActivity.class);
                                         startActivity(intent);
                                         SignUpActivity.this.finish();
@@ -229,7 +216,7 @@ public class SignUpActivity extends SLBaseActivity {
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                 }
             });
-        }else {
+        } else {
             this.slPresenter.createUser(phoneNumber, identifyCode, pwd, "student", new SLCallbackListener<CreateUserResponse>() {
                 @Override
                 public void onSuccess(CreateUserResponse createUserResponse) {
@@ -238,17 +225,8 @@ public class SignUpActivity extends SLBaseActivity {
                     }
                     SessionModel userSession = createUserResponse.getSession();
                     StudentModel userStudent = createUserResponse.getStudent();
-                    SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("access_token", userSession.getAccess_token());
-                    editor.putString("session_id", userSession.getId());
-                    editor.putString("id", userStudent.getId());
-                    editor.putString("cell_phone", userStudent.getCell_phone());
-                    editor.putString("name", userStudent.getName());
-                    editor.putString("city_id", userStudent.getCity_id());
-                    editor.putString("avatar", userStudent.getAvatar());
-                    editor.putString("student", JsonUtils.serialize(userStudent));
-                    editor.commit();
+                    spUtil.setSession(userSession);
+                    spUtil.setStudent(userStudent);
                     MobclickAgent.onProfileSignIn(userStudent.getId());
                     MobclickAgent.onEvent(context, "did_register");
                     Intent intent = new Intent(context, SignUpInfoActivity.class);

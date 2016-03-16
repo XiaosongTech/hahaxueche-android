@@ -1,13 +1,10 @@
 package com.hahaxueche.ui.activity.mySetting;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,29 +13,27 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.R;
 import com.hahaxueche.model.mySetting.PaymentStage;
 import com.hahaxueche.model.mySetting.PurchasedService;
+import com.hahaxueche.model.signupLogin.SessionModel;
 import com.hahaxueche.model.signupLogin.StudentModel;
 import com.hahaxueche.model.util.BaseApiResponse;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.share.ShareConstants;
 import com.hahaxueche.ui.activity.appointment.AppointmentActivity;
 import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
-import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.FindCoachActivity;
 import com.hahaxueche.ui.activity.findCoach.MyCoachActivity;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.ui.widget.monitorScrollView.MonitorScrollView;
-import com.hahaxueche.utils.JsonUtils;
+import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 import com.squareup.picasso.Picasso;
 import com.tencent.tauth.Tencent;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -58,8 +53,6 @@ public class MySettingActivity extends MSBaseActivity {
     private boolean isLogin = false;
     private StudentModel mStudent;
     private PurchasedService mPurchasedService;
-    private String accessToken;
-    private String session_id;
     private TextView tvStuName;
     private TextView tvUnpaidAmount;
     private RelativeLayout rlyMyFollowCoach;
@@ -72,11 +65,16 @@ public class MySettingActivity extends MSBaseActivity {
     private RelativeLayout rlyAboutHaha;
     private View vwMyCoach;
     private ProgressDialog pd;//进度框
+    private SessionModel mSession;
+    private SharedPreferencesUtil spUtil;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_setting);
+        spUtil = new SharedPreferencesUtil(this);
+        mSession = spUtil.getSession();
+        mStudent = spUtil.getStudent();
         mTencent = Tencent.createInstance(ShareConstants.APP_ID_QQ, MySettingActivity.this);
         initView();
         initEvent();
@@ -122,16 +120,8 @@ public class MySettingActivity extends MSBaseActivity {
     }
 
     private void loadDatas() {
-        SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
-        accessToken = sharedPreferences.getString("access_token", "");
-        session_id = sharedPreferences.getString("session_id", "");
-        if (!TextUtils.isEmpty(accessToken)) {
-            Type stuType = new TypeToken<StudentModel>() {
-            }.getType();
-            mStudent = JsonUtils.deserialize(sharedPreferences.getString("student", ""), stuType);
-            if (mStudent != null && !TextUtils.isEmpty(mStudent.getId())) {
-                isLogin = true;
-            }
+        if (mSession != null && mStudent != null && mSession.getId() != null && mStudent.getId() != null) {
+            isLogin = true;
         }
         if (isLogin) {
             llyNotLogin.setVisibility(View.GONE);
@@ -233,18 +223,15 @@ public class MySettingActivity extends MSBaseActivity {
                         pd.dismiss();
                     }
                     pd = ProgressDialog.show(MySettingActivity.this, null, "退出中，请稍后……");
-                    Log.v("gibxin","session_id ->"+ session_id);
-                    Log.v("gibxin","accessToken ->"+ accessToken);
-                    msPresenter.loginOff(session_id, accessToken, new MSCallbackListener<BaseApiResponse>() {
+                    msPresenter.loginOff(mSession.getId(), mSession.getAccess_token(), new MSCallbackListener<BaseApiResponse>() {
                         @Override
                         public void onSuccess(BaseApiResponse data) {
                             if (pd != null) {
                                 pd.dismiss();
                             }
-                            SharedPreferences spSession = getSharedPreferences("session", Activity.MODE_PRIVATE);
-                            SharedPreferences.Editor spEditor = spSession.edit();
-                            spEditor.clear();
-                            spEditor.commit();
+                            spUtil.clearSession();
+                            spUtil.clearStudent();
+                            spUtil.clearCurrentCoach();
                             Intent intent = new Intent(getApplication(), StartActivity.class);
                             startActivity(intent);
                             finish();
@@ -276,10 +263,11 @@ public class MySettingActivity extends MSBaseActivity {
     };
 
     private long exitTime = 0;
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
-            if((System.currentTimeMillis()-exitTime) > 2000){
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if ((System.currentTimeMillis() - exitTime) > 2000) {
                 Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
             } else {

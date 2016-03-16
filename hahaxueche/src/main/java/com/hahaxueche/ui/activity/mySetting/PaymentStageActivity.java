@@ -1,9 +1,7 @@
 package com.hahaxueche.ui.activity.mySetting;
 
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
@@ -13,13 +11,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.R;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.ReviewInfo;
-import com.hahaxueche.model.findCoach.StuPurchaseResponse;
 import com.hahaxueche.model.mySetting.PaymentStage;
 import com.hahaxueche.model.mySetting.PurchasedService;
+import com.hahaxueche.model.signupLogin.SessionModel;
 import com.hahaxueche.model.signupLogin.StudentModel;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
@@ -27,11 +24,10 @@ import com.hahaxueche.ui.adapter.mySetting.PaymentStageAdapter;
 import com.hahaxueche.ui.dialog.ReviewDialog;
 import com.hahaxueche.ui.dialog.TransferConfirmDialog;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
-import com.hahaxueche.utils.JsonUtils;
+import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 import com.squareup.picasso.Picasso;
 
-import java.lang.reflect.Type;
 
 /**
  * Created by gibxin on 2016/3/2.
@@ -50,7 +46,7 @@ public class PaymentStageActivity extends MSBaseActivity {
     private TextView tvCongratulation;
     private ListView lvPurchasedServices;
     private PaymentStageAdapter mPaymentStageAdapter;
-    private String access_token;
+    private SessionModel mSession;
     private StudentModel mStudent;
     private PurchasedService mPurchasedService;
     private CoachModel mCurrentCoach;
@@ -58,11 +54,13 @@ public class PaymentStageActivity extends MSBaseActivity {
     private TransferConfirmDialog transferConfirmDialog;
     private ReviewDialog reviewDialog;
     private ProgressDialog pd;//进度框
+    private SharedPreferencesUtil spUtil;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_stage);
+        spUtil = new SharedPreferencesUtil(this);
         initViews();
         refreshUI();
     }
@@ -86,14 +84,9 @@ public class PaymentStageActivity extends MSBaseActivity {
         if (pd != null) {
             pd.dismiss();
         }
-        SharedPreferences spSession = getSharedPreferences("session", Activity.MODE_PRIVATE);
-        access_token = spSession.getString("access_token", "");
-        Type stuType = new TypeToken<StudentModel>() {
-        }.getType();
-        mStudent = JsonUtils.deserialize(spSession.getString("student", ""), stuType);
-        Type coachType = new TypeToken<CoachModel>() {
-        }.getType();
-        mCurrentCoach = JsonUtils.deserialize(spSession.getString("current_coach", ""), coachType);
+        mSession = spUtil.getSession();
+        mStudent = spUtil.getStudent();
+        mCurrentCoach = spUtil.getCurrentCoach();
         mPurchasedService = mStudent.getPurchased_services().get(0);
         for (PaymentStage paymentStage : mPurchasedService.getPayment_stages()) {
             if (paymentStage.getStage_number().equals(mPurchasedService.getCurrent_payment_stage())) {
@@ -101,7 +94,7 @@ public class PaymentStageActivity extends MSBaseActivity {
                 break;
             }
         }
-        if(null!=mCurrentCoach) {
+        if (null != mCurrentCoach) {
             //教练姓名
             tvPsCoachName.setText(mCurrentCoach.getName());
             //头像
@@ -125,7 +118,7 @@ public class PaymentStageActivity extends MSBaseActivity {
                 mPurchasedService.getCurrent_payment_stage(), R.layout.view_payment_stage_list_item);
         lvPurchasedServices.setAdapter(mPaymentStageAdapter);
         //已全部打款
-        if (Integer.parseInt(mPurchasedService.getCurrent_payment_stage()) == mPurchasedService.getPayment_stages().size()+1) {
+        if (Integer.parseInt(mPurchasedService.getCurrent_payment_stage()) == mPurchasedService.getPayment_stages().size() + 1) {
             tvCurrentPayAmount.setVisibility(View.GONE);
             tvSureTransfer.setVisibility(View.GONE);
             tvCongratulation.setVisibility(View.VISIBLE);
@@ -155,7 +148,7 @@ public class PaymentStageActivity extends MSBaseActivity {
                                 pd.dismiss();
                             }
                             pd = ProgressDialog.show(PaymentStageActivity.this, null, "付款中，请稍后……");
-                            fcPresenter.purchasedService(mPaymentStage.getStage_number(), access_token, new FCCallbackListener<PurchasedService>() {
+                            fcPresenter.purchasedService(mPaymentStage.getStage_number(), mSession.getAccess_token(), new FCCallbackListener<PurchasedService>() {
                                 @Override
                                 public void onSuccess(PurchasedService purchasedService) {
                                     /**
@@ -170,7 +163,7 @@ public class PaymentStageActivity extends MSBaseActivity {
                                      * 2.2加载评论dialog
                                      */
                                     if (mPaymentStage.getReviewable().equals("true")) {
-                                        showReview(true,mPaymentStage);
+                                        showReview(true, mPaymentStage);
                                     } else {
                                         refreshStuCache();
                                         refreshUI();
@@ -198,22 +191,16 @@ public class PaymentStageActivity extends MSBaseActivity {
      */
     private void refreshStuCache() {
         //更新SharedPreferences中的student
-        msPresenter.getStudent(mStudent.getId(), access_token, new MSCallbackListener<StudentModel>() {
+        msPresenter.getStudent(mStudent.getId(), mSession.getAccess_token(), new MSCallbackListener<StudentModel>() {
             @Override
             public void onSuccess(StudentModel data) {
                 mStudent = data;
-                SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("student", JsonUtils.serialize(mStudent));
-                editor.commit();
+                spUtil.setStudent(mStudent);
                 if (!TextUtils.isEmpty(data.getCurrent_coach_id())) {
                     fcPresenter.getCoach(data.getCurrent_coach_id(), new FCCallbackListener<CoachModel>() {
                         @Override
                         public void onSuccess(CoachModel coachModel) {
-                            SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("current_coach", JsonUtils.serialize(coachModel));
-                            editor.commit();
+                            spUtil.setCurrentCoach(coachModel);
                             refreshUI();
                         }
 
@@ -236,14 +223,15 @@ public class PaymentStageActivity extends MSBaseActivity {
 
     /**
      * 显示评价dialog
+     *
      * @param isShowTitle
      */
-    public void showReview(boolean isShowTitle,PaymentStage paymentStage) {
+    public void showReview(boolean isShowTitle, PaymentStage paymentStage) {
         reviewDialog = new ReviewDialog(PaymentStageActivity.this, isShowTitle, paymentStage.getStage_number(), paymentStage.getCoach_user_id(), paymentStage.getStage_name(), new ReviewDialog.OnBtnClickListener() {
             @Override
             public void onReview(String review, float score, String paymentStageNumber, String coachUserId) {
                 reviewDialog.dismiss();
-                msPresenter.makeReview(coachUserId, paymentStageNumber, score + "", review, access_token, new MSCallbackListener<ReviewInfo>() {
+                msPresenter.makeReview(coachUserId, paymentStageNumber, score + "", review, mSession.getAccess_token(), new MSCallbackListener<ReviewInfo>() {
                     @Override
                     public void onSuccess(ReviewInfo reviewInfo) {
                         Toast.makeText(PaymentStageActivity.this, "评论成功", Toast.LENGTH_SHORT);
