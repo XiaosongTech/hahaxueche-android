@@ -17,11 +17,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingRight="10dp"
             android:background="@null"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
             android:src="@drawable/ic_arrow_back" />
 
         <TextView
@@ -65,6 +65,7 @@
                     app:border_width="3dp">
 
                 </com.hahaxueche.ui.widget.circleImageView.CircleImageView>
+
                 <LinearLayout
                     android:id="@+id/fl_cd_coach_name"
                     android:layout_width="match_parent"
@@ -473,68 +474,15 @@
                         android:textSize="16sp" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/lly_peer_coach1"
+                <ListView
+                    android:id="@+id/lv_peer_coach_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:divider="@drawable/layer_list_divider_review"
+                    android:dividerHeight="1dp"
+                    android:footerDividersEnabled="false"
+                    android:headerDividersEnabled="false"></ListView>
 
-                    <com.hahaxueche.ui.widget.circleImageView.CircleImageView
-                        android:id="@+id/cir_peer_coach1"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginLeft="30dp">
-
-                    </com.hahaxueche.ui.widget.circleImageView.CircleImageView>
-
-                    <TextView
-                        android:id="@+id/tv_peer_coach1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
-                        android:textColor="@color/fCTxtGray"
-                        android:textSize="16sp" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
-                        android:src="@drawable/ic_coachmsg_more_arrow" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/lly_peer_coach2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <com.hahaxueche.ui.widget.circleImageView.CircleImageView
-                        android:id="@+id/cir_peer_coach2"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginLeft="30dp">
-
-                    </com.hahaxueche.ui.widget.circleImageView.CircleImageView>
-
-                    <TextView
-                        android:id="@+id/tv_peer_coach2"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
-                        android:textColor="@color/fCTxtGray"
-                        android:textSize="16sp" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
-                        android:src="@drawable/ic_coachmsg_more_arrow" />
-                </LinearLayout>
 
             </LinearLayout>
 
@@ -619,12 +567,14 @@
                         android:textSize="14sp" />
                 </LinearLayout>
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
-                android:layout_height="14dp"/>
+                android:layout_height="14dp" />
         </LinearLayout>
 
     </com.hahaxueche.ui.widget.monitorScrollView.MonitorScrollView>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -27,6 +27,7 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.findCoach.TrailResponse;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.findCoach.FCPresenter;
+import com.hahaxueche.ui.widget.wheel.CustomWheelDialog;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.Calendar;
@@ -52,7 +53,7 @@ public class AppointmentDialog extends Dialog {
         super(context);
         mContext = context;
         mCoachId = coachId;
-        fcPresenter = ((MyApplication)mContext.getApplicationContext()).getFCPresenter();
+        fcPresenter = ((MyApplication) mContext.getApplicationContext()).getFCPresenter();
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_appointment, null);
@@ -78,7 +79,7 @@ public class AppointmentDialog extends Dialog {
                 etRealName.setBackgroundResource(R.drawable.edittext_corner_orange);
             }
         });
-        if(!TextUtils.isEmpty(name)){
+        if (!TextUtils.isEmpty(name)) {
             etRealName.setText(name);
         }
         etContactPhone = (EditText) view.findViewById(R.id.et_contact_phone);
@@ -98,7 +99,7 @@ public class AppointmentDialog extends Dialog {
                 etContactPhone.setBackgroundResource(R.drawable.edittext_corner_orange);
             }
         });
-        if(!TextUtils.isEmpty(phoneNumber)){
+        if (!TextUtils.isEmpty(phoneNumber)) {
             etContactPhone.setText(phoneNumber);
         }
         tvTrail = (TextView) view.findViewById(R.id.tv_trail);
@@ -120,66 +121,61 @@ public class AppointmentDialog extends Dialog {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext,AlertDialog.THEME_HOLO_DARK);
-                View view = View.inflate(mContext, R.layout.date_dialog, null);
-                final DatePicker datePicker = (DatePicker) view.findViewById(R.id.date_picker);
-                builder.setView(view);
-                Calendar cal = Calendar.getInstance(Locale.CHINA);
-                cal.setTimeInMillis(System.currentTimeMillis());
-                datePicker.init(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), null);
-
+                Calendar calendar = Calendar.getInstance();
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                int[] position = {0, month, day - 1};
+                String[][] datas = getDate();
                 if (v.getId() == R.id.tv_first_time) {
-                    final int inType = etFirstTime.getInputType();
-                    etFirstTime.setInputType(InputType.TYPE_NULL);
-                    etFirstTime.onTouchEvent(event);
-                    etFirstTime.setInputType(inType);
-                    etFirstTime.setSelection(etFirstTime.getText().length());
-                    builder.setPositiveButton("确  定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            StringBuffer sb = new StringBuffer();
-                            sb.append(String.format("%d-%02d-%02d",
-                                    datePicker.getYear(),
-                                    datePicker.getMonth() + 1,
-                                    datePicker.getDayOfMonth()));
-                            etFirstTime.setText(sb);
-                            etFirstTime.setTextColor(mContext.getResources().getColor(R.color.app_theme_color));
-                            etFirstTime.setBackgroundResource(R.drawable.edittext_corner_orange);
-
-                            dialog.cancel();
-                        }
-                    });
+                    String firstTime = etFirstTime.getText().toString();
+                    if (!TextUtils.isEmpty(firstTime)) {
+                        position[1] = Integer.parseInt(firstTime.split("-")[1]) - 1;
+                        position[2] = Integer.parseInt(firstTime.split("-")[2]) - 1;
+                    }
+                    CustomWheelDialog dialog = new CustomWheelDialog(mContext, firstConfirm, datas);
+                    dialog.setSelect(position);
+                    dialog.show();
                 } else if (v.getId() == R.id.tv_second_time) {
-                    int inType = etSecondTime.getInputType();
-                    etSecondTime.setInputType(InputType.TYPE_NULL);
-                    etSecondTime.onTouchEvent(event);
-                    etSecondTime.setInputType(inType);
-                    etSecondTime.setSelection(etSecondTime.getText().length());
-                    builder.setPositiveButton("确  定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            StringBuffer sb = new StringBuffer();
-                            sb.append(String.format("%d-%02d-%02d",
-                                    datePicker.getYear(),
-                                    datePicker.getMonth() + 1,
-                                    datePicker.getDayOfMonth()));
-                            etSecondTime.setText(sb);
-                            etSecondTime.setTextColor(mContext.getResources().getColor(R.color.app_theme_color));
-                            etSecondTime.setBackgroundResource(R.drawable.edittext_corner_orange);
-                            dialog.cancel();
-                        }
-                    });
+                    String secondTime = etFirstTime.getText().toString();
+                    if (!TextUtils.isEmpty(secondTime)) {
+                        position[1] = Integer.parseInt(secondTime.split("-")[1]) - 1;
+                        position[2] = Integer.parseInt(secondTime.split("-")[2]) - 1;
+                    }
+                    CustomWheelDialog dialog = new CustomWheelDialog(mContext, secondConfirm, datas);
+                    dialog.setSelect(position);
+                    dialog.show();
                 }
-                Dialog dialog = builder.create();
-                dialog.show();
             }
             return true;
         }
     }
+
+    private String[][] getDate() {
+        String[][] datas = new String[3][];
+        Calendar calendar = Calendar.getInstance();
+        int y = calendar.get(Calendar.YEAR);
+        String[] year = new String[10];
+        for (int i = y, j = 0; i < y + 10; i++, j++) {
+            year[j] = String.valueOf(i);
+        }
+        String[] month = new String[12];
+        for (int i = 0; i < 12; i++) {
+            month[i] = String.valueOf(i + 1);
+        }
+        String[] day = new String[31];
+        for (int i = 0; i < 31; i++) {
+            day[i] = String.valueOf(i + 1);
+        }
+        datas[0] = year;
+        datas[1] = month;
+        datas[2] = day;
+        return datas;
+    }
+
     View.OnClickListener mClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.tv_trail:
                     String name = etRealName.getText().toString();
                     String contactPhone = etContactPhone.getText().toString();
@@ -192,10 +188,10 @@ public class AppointmentDialog extends Dialog {
                     fcPresenter.createTrail(mCoachId, name, contactPhone, firstTime, secondTime, new FCCallbackListener<TrailResponse>() {
                         @Override
                         public void onSuccess(TrailResponse data) {
-                            if(pd!=null){
+                            if (pd != null) {
                                 pd.dismiss();
                             }
-                            Toast.makeText(mContext,"预约成功！",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "预约成功！", Toast.LENGTH_SHORT).show();
                             MobclickAgent.onEvent(mContext, "did_try_coach");
                             dismiss();
                         }
@@ -213,6 +209,26 @@ public class AppointmentDialog extends Dialog {
                     dismiss();
                     break;
             }
+        }
+    };
+
+    CustomWheelDialog.OnConfirmListener firstConfirm = new CustomWheelDialog.OnConfirmListener() {
+        @Override
+        public boolean onConfirm(String[] data) {
+            etFirstTime.setText(data[0] + "-" + data[1] + "-" + data[2]);
+            etFirstTime.setTextColor(mContext.getResources().getColor(R.color.app_theme_color));
+            etFirstTime.setBackgroundResource(R.drawable.edittext_corner_orange);
+            return true;
+        }
+    };
+
+    CustomWheelDialog.OnConfirmListener secondConfirm = new CustomWheelDialog.OnConfirmListener() {
+        @Override
+        public boolean onConfirm(String[] data) {
+            etSecondTime.setText(data[0] + "-" + data[1] + "-" + data[2]);
+            etSecondTime.setTextColor(mContext.getResources().getColor(R.color.app_theme_color));
+            etSecondTime.setBackgroundResource(R.drawable.edittext_corner_orange);
+            return true;
         }
     };
 }

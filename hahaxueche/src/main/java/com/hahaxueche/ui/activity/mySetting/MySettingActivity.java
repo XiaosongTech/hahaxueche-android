@@ -71,10 +71,10 @@ public class MySettingActivity extends MSBaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_setting);
         spUtil = new SharedPreferencesUtil(this);
         mSession = spUtil.getSession();
         mStudent = spUtil.getStudent();
+        setContentView(R.layout.activity_my_setting);
         mTencent = Tencent.createInstance(ShareConstants.APP_ID_QQ, MySettingActivity.this);
         initView();
         initEvent();

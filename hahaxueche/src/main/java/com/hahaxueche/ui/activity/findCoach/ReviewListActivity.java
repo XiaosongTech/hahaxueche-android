@@ -3,11 +3,9 @@ package com.hahaxueche.ui.activity.findCoach;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.findCoach.CoachModel;
@@ -145,7 +143,6 @@ public class ReviewListActivity extends FCBaseActivity implements XListView.IXLi
 
             @Override
             public void onFailure(String errorEvent, String message) {
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -177,7 +174,6 @@ public class ReviewListActivity extends FCBaseActivity implements XListView.IXLi
 
             @Override
             public void onFailure(String errorEvent, String message) {
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,6 +42,7 @@ import com.hahaxueche.model.util.ConstantsModel;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
+import com.hahaxueche.ui.adapter.findCoach.PeerCoachItemAdapter;
 import com.hahaxueche.ui.adapter.findCoach.ReviewItemAdapter;
 import com.hahaxueche.ui.dialog.AppointmentDialog;
 import com.hahaxueche.ui.dialog.FeeDetailDialog;
@@ -50,14 +52,12 @@ import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
 import com.hahaxueche.ui.widget.monitorScrollView.MonitorScrollView;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
-import com.hahaxueche.utils.JsonUtils;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 import com.pingplusplus.android.PaymentActivity;
 import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -88,13 +88,6 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private TextView tvTakeCertPrice;
     private TextView tvTrainLocation;
     private LinearLayout llyPeerCoachTitle;
-    private LinearLayout llyPeerCoach1;
-    private LinearLayout llyPeerCoach2;
-    private TextView tvPeerCoach1;
-    private TextView tvPeerCoach2;
-    private CircleImageView civPeerCoachAvater1; //合作教练1头像
-    private CircleImageView civPeerCoachAvater2; //合作教练2头像
-    private View vwPeerCoach;
     private View vwMoreReviews;
     private TextView tvLicenseType;
     private TextView tvMoreReviews;
@@ -112,6 +105,10 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     //评论
     private ListView lvReviewList;
     private ReviewItemAdapter reviewItemAdapter;
+    //合作教练
+    private List<BriefCoachInfo> peerCoachList;
+    private ListView lvPeerCoach;
+    private PeerCoachItemAdapter peerCoachItemAdapter;
     private GetReviewsResponse mGetReviewsResponse;
     private LinearLayout llyMoreReviews;
     //确认付款
@@ -165,14 +162,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private void initView() {
         msvCoachDetail = Util.instence(this).$(this, R.id.msv_coach_detail);
         civCdCoachAvatar = Util.instence(this).$(this, R.id.cir_cd_coach_avatar);
-        civPeerCoachAvater1 = Util.instence(this).$(this, R.id.cir_peer_coach1);
-        civPeerCoachAvater2 = Util.instence(this).$(this, R.id.cir_peer_coach2);
         llyPeerCoachTitle = Util.instence(this).$(this, R.id.lly_peer_coach_title);
-        llyPeerCoach1 = Util.instence(this).$(this, R.id.lly_peer_coach1);
-        llyPeerCoach2 = Util.instence(this).$(this, R.id.lly_peer_coach2);
-        tvPeerCoach1 = Util.instence(this).$(this, R.id.tv_peer_coach1);
-        tvPeerCoach2 = Util.instence(this).$(this, R.id.tv_peer_coach2);
-        vwPeerCoach = Util.instence(this).$(this, R.id.vw_peer_coach);
         vwMoreReviews = Util.instence(this).$(this, R.id.vw_more_reviews);
         tvMoreReviews = Util.instence(this).$(this, R.id.tv_more_reviews);
 
@@ -195,6 +185,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         //评论
         lvReviewList = Util.instence(this).$(this, R.id.lv_reviews_list);
         llyMoreReviews = Util.instence(this).$(this, R.id.lly_more_reviews);
+        lvPeerCoach = Util.instence(this).$(this,R.id.lv_peer_coach_list);
         //确认付款
         llySurePay = Util.instence(this).$(this, R.id.lly_sure_pay);
         //免费试学
@@ -220,9 +211,8 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         llySurePay.setOnClickListener(mClickListener);
         llyFreeLearn.setOnClickListener(mClickListener);
         llyMoreReviews.setOnClickListener(mClickListener);
-        llyPeerCoach1.setOnClickListener(mClickListener);
-        llyPeerCoach2.setOnClickListener(mClickListener);
         llyTrainLoaction.setOnClickListener(mClickListener);
+        lvPeerCoach.setOnItemClickListener(mItemClickListener);
     }
 
     /**
@@ -316,25 +306,17 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                 }
             }
         }
-        List<BriefCoachInfo> peerCoachList = mCoach.getPeer_coaches();
-        if (peerCoachList != null && peerCoachList.size() > 0) {
-            if (peerCoachList.size() > 1) {
-                getCoachAvatar(peerCoachList.get(0).getAvatar(), civPeerCoachAvater1);
-                tvPeerCoach1.setText(peerCoachList.get(0).getName());
-                getCoachAvatar(peerCoachList.get(1).getAvatar(), civPeerCoachAvater2);
-                tvPeerCoach2.setText(peerCoachList.get(1).getName());
-            } else {
-                System.out.println("peer coach 1 avatar " + peerCoachList.get(0).getAvatar());
-                getCoachAvatar(peerCoachList.get(0).getAvatar(), civPeerCoachAvater2);
-                tvPeerCoach1.setText(peerCoachList.get(0).getName());
-                llyPeerCoach2.setVisibility(View.GONE);
-            }
-        } else {
+        peerCoachList = mCoach.getPeer_coaches();
+        if(peerCoachList!=null && peerCoachList.size()>0) {
+            peerCoachItemAdapter = new PeerCoachItemAdapter(CoachDetailActivity.this, peerCoachList, R.layout.view_peer_coach_item);
+            lvPeerCoach.setAdapter(peerCoachItemAdapter);
+            setListViewHeightBasedOnChildren(lvPeerCoach);
+            msvCoachDetail.smoothScrollTo(0, 0);
+        }else{
             llyPeerCoachTitle.setVisibility(View.GONE);
-            llyPeerCoach1.setVisibility(View.GONE);
-            llyPeerCoach2.setVisibility(View.GONE);
-            vwPeerCoach.setVisibility(View.GONE);
         }
+
+
         if (mCoach.getLicense_type().equals("1")) {
             tvLicenseType.setText("C1手动档");
         } else if (mCoach.getLicense_type().equals("2")) {
@@ -409,7 +391,6 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
 
                 @Override
                 public void onFailure(String errorEvent, String message) {
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -447,7 +428,6 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
 
                                 @Override
                                 public void onFailure(String errorEvent, String message) {
-                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                                 }
                             });
                         } else {
@@ -461,7 +441,6 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
 
                                 @Override
                                 public void onFailure(String errorEvent, String message) {
-                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -533,18 +512,6 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                     bundle.putSerializable("getReviewsResponse", mGetReviewsResponse);
                     bundle.putSerializable("coach",mCoach);
                     intent.putExtras(bundle);
-                    startActivity(intent);
-                    break;
-                //合作教练1
-                case R.id.lly_peer_coach1:
-                    intent = new Intent(CoachDetailActivity.this, CoachDetailActivity.class);
-                    intent.putExtra("coach_id", mCoach.getPeer_coaches().get(0).getId());
-                    startActivity(intent);
-                    break;
-                //合作教练2
-                case R.id.lly_peer_coach2:
-                    intent = new Intent(CoachDetailActivity.this, CoachDetailActivity.class);
-                    intent.putExtra("coach_id", mCoach.getPeer_coaches().get(1).getId());
                     startActivity(intent);
                     break;
                 //训练场
@@ -696,4 +663,14 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
             }
         }
     }
+
+    AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Intent intent = new Intent(CoachDetailActivity.this, CoachDetailActivity.class);
+            intent.putExtra("coach_id",  peerCoachList.get(position).getId());
+            startActivity(intent);
+        }
+    };
 }
