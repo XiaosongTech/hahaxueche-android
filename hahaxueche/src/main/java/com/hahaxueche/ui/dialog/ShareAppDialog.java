@@ -150,7 +150,7 @@ public class ShareAppDialog extends Dialog implements IWXAPIEventHandler {
         tvShareCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
+                cancel();
             }
         });
     }
@@ -214,4 +214,5 @@ public class ShareAppDialog extends Dialog implements IWXAPIEventHandler {
         }
 
     }
+
 }

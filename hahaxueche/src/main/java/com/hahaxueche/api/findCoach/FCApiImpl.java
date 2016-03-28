@@ -64,18 +64,15 @@ public class FCApiImpl implements FCApi {
         if (!TextUtils.isEmpty(distance)) {
             url += url.indexOf("?") > 0 ? ("&distance=" + distance) : ("?distance=" + distance);
         }
-
+        if (user_location!=null && user_location.size()>1) {
+            if(url.indexOf("?")>0){
+                url += "&user_location[]="+user_location.get(0)+"&user_location[]="+user_location.get(1);
+            }else {
+                url += "?user_location[]="+user_location.get(0)+"&user_location[]="+user_location.get(1);
+            }
+        }
         if (!TextUtils.isEmpty(sort_by)) {
             url += url.indexOf("?") > 0 ? ("&sort_by=" + sort_by) : ("?sort_by=" + sort_by);
-            if(sort_by.equals("1")){
-                if (user_location!=null && user_location.size()>1  && sort_by.equals("1")) {
-                    if(url.indexOf("?")>0){
-                        url += "&user_location[]="+user_location.get(0)+"&user_location[]="+user_location.get(1);
-                    }else {
-                        url += "?user_location[]="+user_location.get(0)+"&user_location[]="+user_location.get(1);
-                    }
-                }
-            }
         }
         try {
             return httpEngine.getHandle(type, url);

@@ -17,6 +17,8 @@ public interface MSApi {
      */
     public StudentModel getStudent(String student_id, String access_token);
 
+    public StudentModel getStudentForever(String student_id, String access_token );
+
     /**
      * @param page
      * @param per_page

@@ -101,7 +101,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
             //mCityChoseDialog.show();
         }
         //初始化定位
-        mLocationClient = new AMapLocationClient(getApplicationContext());
+        mLocationClient = new AMapLocationClient(IndexActivity.this);
         mLocationListener = new AMapLocationListener() {
             @Override
             public void onLocationChanged(AMapLocation aMapLocation) {
@@ -335,5 +335,11 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         cbannerIndex.stopTurning();
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (null != mLocationClient) {
+            mLocationClient.onDestroy();
+        }
+    }
 }

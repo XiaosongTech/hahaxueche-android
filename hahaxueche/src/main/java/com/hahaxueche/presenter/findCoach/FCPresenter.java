@@ -133,4 +133,5 @@ public interface FCPresenter {
      * @param listener
      */
     public void oneKeyFindCoach(String lat, String lng, FCCallbackListener<CoachModel> listener);
+
 }

@@ -16,6 +16,8 @@ public interface MSPresenter {
      */
     public void getStudent(String student_id, String access_token, MSCallbackListener<StudentModel> listener);
 
+    public void getStudentForever(String student_id, String access_token, MSCallbackListener<StudentModel> listener);
+
     /**
      * @param page
      * @param per_page

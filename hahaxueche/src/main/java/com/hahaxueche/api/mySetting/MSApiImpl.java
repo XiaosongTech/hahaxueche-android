@@ -40,6 +40,30 @@ public class MSApiImpl implements MSApi {
     }
 
     @Override
+    public StudentModel getStudentForever(String student_id, String access_token) {
+        Type type = new TypeToken<StudentModel>() {
+        }.getType();
+        StudentModel retStudent = new StudentModel();
+        try {
+            while (true) {
+                if(retStudent != null && !TextUtils.isEmpty(retStudent.getCurrent_coach_id())){
+                    break;
+                }
+                retStudent = httpEngine.getHandle(type, "students/" + student_id, access_token);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return retStudent;
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
     public CoachListResponse getFollowCoachList(String page, String per_page, String access_token) {
         String url = "users/follows/";
         if (!TextUtils.isEmpty(page)) {

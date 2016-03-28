@@ -78,6 +78,7 @@ public class PaymentStageActivity extends MSBaseActivity {
         tvSureTransfer = Util.instence(this).$(this, R.id.tv_sure_transfer);
         tvCongratulation = Util.instence(this).$(this, R.id.tv_congratulation);
         lvPurchasedServices = Util.instence(this).$(this, R.id.lv_purchased_services);
+        ibtnPsBack.setOnClickListener(mClickListener);
     }
 
     private void refreshUI() {
@@ -181,6 +182,9 @@ public class PaymentStageActivity extends MSBaseActivity {
                         }
                     });
                     transferConfirmDialog.show();
+                    break;
+                case R.id.ibtn_ps_back:
+                    PaymentStageActivity.this.finish();
                     break;
             }
         }

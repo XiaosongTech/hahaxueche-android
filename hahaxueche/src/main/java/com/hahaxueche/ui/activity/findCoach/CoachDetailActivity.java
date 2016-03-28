@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -614,7 +615,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                 String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
                 if (result.equals("success")) {
                     //更新SharedPreferences中的student
-                    this.msPresenter.getStudent(mStudent.getId(), mSession.getAccess_token(), new MSCallbackListener<StudentModel>() {
+                    this.msPresenter.getStudentForever(mStudent.getId(), mSession.getAccess_token(), new MSCallbackListener<StudentModel>() {
                         @Override
                         public void onSuccess(StudentModel data) {
                             mStudent = data;
@@ -673,4 +674,10 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
             startActivity(intent);
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        shareAppDialog = null;
+    }
 }

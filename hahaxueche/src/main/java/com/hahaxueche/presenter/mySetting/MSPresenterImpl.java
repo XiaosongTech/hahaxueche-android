@@ -48,6 +48,30 @@ public class MSPresenterImpl implements MSPresenter {
     }
 
     @Override
+    public void getStudentForever(final String student_id, final String access_token, final MSCallbackListener<StudentModel> listener) {
+        new AsyncTask<Void, Void, StudentModel>() {
+
+            @Override
+            protected StudentModel doInBackground(Void... params) {
+                return api.getStudentForever(student_id, access_token);
+            }
+
+            @Override
+            protected void onPostExecute(StudentModel studentModel) {
+                if (listener != null) {
+                    if (studentModel.isSuccess()) {
+                        listener.onSuccess(studentModel);
+                    } else {
+                        listener.onFailure(studentModel.getCode(), studentModel.getMessage());
+                    }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
     public void getFollowCoachList(final String page, final String per_page, final String access_token, final MSCallbackListener<CoachListResponse> listener) {
         new AsyncTask<Void, Void, CoachListResponse>() {
 
