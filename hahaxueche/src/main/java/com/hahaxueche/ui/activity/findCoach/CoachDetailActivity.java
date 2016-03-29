@@ -186,7 +186,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         //评论
         lvReviewList = Util.instence(this).$(this, R.id.lv_reviews_list);
         llyMoreReviews = Util.instence(this).$(this, R.id.lly_more_reviews);
-        lvPeerCoach = Util.instence(this).$(this,R.id.lv_peer_coach_list);
+        lvPeerCoach = Util.instence(this).$(this, R.id.lv_peer_coach_list);
         //确认付款
         llySurePay = Util.instence(this).$(this, R.id.lly_sure_pay);
         //免费试学
@@ -220,28 +220,31 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
      * 数据加载
      */
     private void loadDatas() {
+        if (pd != null) {
+            pd.dismiss();
+        }
+        pd = ProgressDialog.show(CoachDetailActivity.this, null, "数据加载中，请稍后……");
         Intent intent = getIntent();
         if (intent.getSerializableExtra("coach") != null) {
             mCoach = (CoachModel) intent.getSerializableExtra("coach");
             loadDetail();
             loadReviews();
             loadFollow();
-        } else {
-            String coach_id = getIntent().getStringExtra("coach_id");
             if (pd != null) {
                 pd.dismiss();
             }
-            pd = ProgressDialog.show(CoachDetailActivity.this, null, "数据加载中，请稍后……");
+        } else {
+            String coach_id = getIntent().getStringExtra("coach_id");
             this.fcPresenter.getCoach(coach_id, new FCCallbackListener<CoachModel>() {
                 @Override
                 public void onSuccess(CoachModel coachModel) {
-                    if (pd != null) {
-                        pd.dismiss();
-                    }
                     mCoach = coachModel;
                     loadDetail();
                     loadReviews();
                     loadFollow();
+                    if (pd != null) {
+                        pd.dismiss();
+                    }
                 }
 
                 @Override
@@ -308,12 +311,12 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
             }
         }
         peerCoachList = mCoach.getPeer_coaches();
-        if(peerCoachList!=null && peerCoachList.size()>0) {
+        if (peerCoachList != null && peerCoachList.size() > 0) {
             peerCoachItemAdapter = new PeerCoachItemAdapter(CoachDetailActivity.this, peerCoachList, R.layout.view_peer_coach_item);
             lvPeerCoach.setAdapter(peerCoachItemAdapter);
             setListViewHeightBasedOnChildren(lvPeerCoach);
             msvCoachDetail.smoothScrollTo(0, 0);
-        }else{
+        } else {
             llyPeerCoachTitle.setVisibility(View.GONE);
         }
 
@@ -357,7 +360,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                         reviewInfos.add(getReviewsResponse.getData().get(i));
                     }
 
-                    reviewItemAdapter = new ReviewItemAdapter(CoachDetailActivity.this, reviewInfos, R.layout.view_review_list_item);
+                    reviewItemAdapter = new ReviewItemAdapter(CoachDetailActivity.this, reviewInfos, R.layout.view_review_list_item, true);
                     lvReviewList.setAdapter(reviewItemAdapter);
                     setListViewHeightBasedOnChildren(lvReviewList);
                     msvCoachDetail.smoothScrollTo(0, 0);
@@ -463,7 +466,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                 //确认付款
                 case R.id.lly_sure_pay:
                     if (isLogin) {
-                        if(mStudent.getPurchased_services()!=null && mStudent.getPurchased_services().size()>0){
+                        if (mStudent.getPurchased_services() != null && mStudent.getPurchased_services().size() > 0) {
                             Toast.makeText(context, "您已经选择过教练", Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -511,7 +514,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                     Intent intent = new Intent(CoachDetailActivity.this, ReviewListActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("getReviewsResponse", mGetReviewsResponse);
-                    bundle.putSerializable("coach",mCoach);
+                    bundle.putSerializable("coach", mCoach);
                     intent.putExtras(bundle);
                     startActivity(intent);
                     break;
@@ -588,6 +591,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
 
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        //params.height = Util.instence(this).dip2px(height) * listAdapter.getCount() + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         // listView.getDividerHeight()获取子项间分隔符占用的高度
         // params.height最后得到整个ListView完整显示需要的高度
         listView.setLayoutParams(params);
@@ -601,7 +605,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
             }
             pd = ProgressDialog.show(CoachDetailActivity.this, null, "数据加载中，请稍后……");
             if (resultCode == Activity.RESULT_OK) {
-                if(null == spUtil){
+                if (null == spUtil) {
                     spUtil = new SharedPreferencesUtil(this);
                 }
                 String result = data.getExtras().getString("pay_result");
@@ -670,7 +674,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Intent intent = new Intent(CoachDetailActivity.this, CoachDetailActivity.class);
-            intent.putExtra("coach_id",  peerCoachList.get(position).getId());
+            intent.putExtra("coach_id", peerCoachList.get(position).getId());
             startActivity(intent);
         }
     };

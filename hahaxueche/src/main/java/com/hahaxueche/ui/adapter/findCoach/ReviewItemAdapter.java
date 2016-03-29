@@ -27,11 +27,13 @@ public class ReviewItemAdapter extends BaseAdapter {
     private int mResource;   //item的布局
     private Context mContext;
     private LayoutInflater inflator;
+    private boolean mIsShort = false;
 
-    public ReviewItemAdapter(Context context, List<ReviewInfo> reviewInfoList, int resource) {
+    public ReviewItemAdapter(Context context, List<ReviewInfo> reviewInfoList, int resource, boolean isShort) {
         mContext = context;
         mReviewInfoList = reviewInfoList;
         mResource = resource;
+        mIsShort = isShort;
     }
 
     @Override
@@ -63,12 +65,16 @@ public class ReviewItemAdapter extends BaseAdapter {
             holder.svReviewRating = (ScoreView) view.findViewById(R.id.sv_review_rating);//评分
             holder.tvReviewComment = (TextView) view.findViewById(R.id.tv_review_comment);
             view.setTag(holder);
-        }else{
+        } else {
             holder = (ViewHolder) view.getTag();
         }
         ReviewInfo reviewInfo = mReviewInfoList.get(position);
         holder.tvReviewerName.setText(reviewInfo.getReviewer().getName());
         holder.tvReviewComment.setText(reviewInfo.getComment());
+        if (mIsShort) {
+            holder.tvReviewComment.setSingleLine();
+            holder.tvReviewComment.setEllipsize(TextUtils.TruncateAt.valueOf("END"));
+        }
         final int iconWidth = Util.instence(mContext).dip2px(40);
         final int iconHeight = iconWidth;
         Picasso.with(mContext).load(reviewInfo.getReviewer().getAvatar_url()).resize(iconWidth, iconHeight)
@@ -88,6 +94,7 @@ public class ReviewItemAdapter extends BaseAdapter {
         holder.svReviewRating.setScore(reviewerRating, false);
         return view;
     }
+
     static class ViewHolder {
         TextView tvReviewerName;
         CircleImageView civReviewerAvatar;

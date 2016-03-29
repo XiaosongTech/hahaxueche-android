@@ -34,7 +34,7 @@ public class MSPresenterImpl implements MSPresenter {
 
             @Override
             protected void onPostExecute(StudentModel studentModel) {
-                if (listener != null) {
+                if (studentModel != null) {
                     if (studentModel.isSuccess()) {
                         listener.onSuccess(studentModel);
                     } else {
@@ -58,7 +58,7 @@ public class MSPresenterImpl implements MSPresenter {
 
             @Override
             protected void onPostExecute(StudentModel studentModel) {
-                if (listener != null) {
+                if (studentModel != null) {
                     if (studentModel.isSuccess()) {
                         listener.onSuccess(studentModel);
                     } else {

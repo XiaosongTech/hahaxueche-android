@@ -50,6 +50,7 @@ public class ReviewListActivity extends FCBaseActivity implements XListView.IXLi
         Intent intent = getIntent();
         GetReviewsResponse getReviewsResponse = (GetReviewsResponse) intent.getSerializableExtra("getReviewsResponse");
         mCoach = (CoachModel) intent.getSerializableExtra("coach");
+        coach_user_id = mCoach.getUser_id();
         linkSelf = getReviewsResponse.getLinks().getSelf();
         linkNext = getReviewsResponse.getLinks().getNext();
         linkPrevious = getReviewsResponse.getLinks().getPrevious();
@@ -66,7 +67,7 @@ public class ReviewListActivity extends FCBaseActivity implements XListView.IXLi
         } else {
             xlvReviewList.setPullLoadEnable(true);
         }
-        mReviewItemAdapter = new ReviewItemAdapter(this, mReviewInfoList, R.layout.view_review_list_item);
+        mReviewItemAdapter = new ReviewItemAdapter(this, mReviewInfoList, R.layout.view_review_list_item, false);
         xlvReviewList.setAdapter(mReviewItemAdapter);
     }
 
@@ -94,6 +95,7 @@ public class ReviewListActivity extends FCBaseActivity implements XListView.IXLi
 
     @Override
     public void onRefresh() {
+        System.out.println("---------onRefresh");
         isOnLoadMore = false;
         getReviewList();
         if (TextUtils.isEmpty(linkNext)) {
@@ -136,7 +138,7 @@ public class ReviewListActivity extends FCBaseActivity implements XListView.IXLi
                 } else {
                     xlvReviewList.setPullLoadEnable(true);
                 }
-                mReviewItemAdapter = new ReviewItemAdapter(ReviewListActivity.this, mReviewInfoList, R.layout.view_review_list_item);
+                mReviewItemAdapter = new ReviewItemAdapter(ReviewListActivity.this, mReviewInfoList, R.layout.view_review_list_item, false);
                 xlvReviewList.setAdapter(mReviewItemAdapter);
                 onLoad();
             }
@@ -166,7 +168,7 @@ public class ReviewListActivity extends FCBaseActivity implements XListView.IXLi
                 if (mReviewItemAdapter != null) {
                     mReviewItemAdapter.notifyDataSetChanged();
                 } else {
-                    mReviewItemAdapter = new ReviewItemAdapter(ReviewListActivity.this, mReviewInfoList, R.layout.view_review_list_item);
+                    mReviewItemAdapter = new ReviewItemAdapter(ReviewListActivity.this, mReviewInfoList, R.layout.view_review_list_item, false);
                     xlvReviewList.setAdapter(mReviewItemAdapter);
                 }
                 onLoad();

@@ -70,7 +70,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected void onPostExecute(CoachListResponse coachListResponse) {
-                if (listener != null) {
+                if (coachListResponse != null) {
                     if (coachListResponse.isSuccess()) {
                         listener.onSuccess(coachListResponse);
                     } else {
@@ -94,7 +94,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected void onPostExecute(CoachModel coachResponse) {
-                if (listener != null) {
+                if (coachResponse != null) {
                     if (coachResponse.isSuccess()) {
                         listener.onSuccess(coachResponse);
                     } else {
@@ -118,7 +118,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected void onPostExecute(FollowResponse followResponse) {
-                if (listener != null) {
+                if (followResponse != null) {
                     if (followResponse.isSuccess()) {
                         listener.onSuccess(followResponse);
                     } else {
@@ -141,7 +141,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected void onPostExecute(BaseApiResponse baseApiResponse) {
-                if (listener != null) {
+                if (baseApiResponse != null) {
                     if (baseApiResponse.isSuccess()) {
                         listener.onSuccess(baseApiResponse);
                     } else {
@@ -164,7 +164,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected void onPostExecute(BaseBoolean baseBoolean) {
-                if (listener != null) {
+                if (baseBoolean != null) {
                     if (baseBoolean.isSuccess()) {
                         listener.onSuccess(baseBoolean);
                     } else {
@@ -196,7 +196,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected void onPostExecute(TrailResponse trailResponse) {
-                if (listener != null) {
+                if (trailResponse != null) {
                     if (trailResponse.isSuccess()) {
                         listener.onSuccess(trailResponse);
                     } else {
@@ -225,7 +225,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected void onPostExecute(GetReviewsResponse getReviewsResponse) {
-                if (listener != null) {
+                if (getReviewsResponse != null) {
                     if (getReviewsResponse.isSuccess()) {
                         listener.onSuccess(getReviewsResponse);
                     } else {
@@ -249,7 +249,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected void onPostExecute(GetReviewsResponse getReviewsResponse) {
-                if (listener != null) {
+                if (getReviewsResponse != null) {
                     if (getReviewsResponse.isSuccess()) {
                         listener.onSuccess(getReviewsResponse);
                     } else {
@@ -274,7 +274,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected void onPostExecute(StuPurchaseResponse stuPurchaseResponse) {
-                if (listener != null) {
+                if (stuPurchaseResponse != null) {
                     if (stuPurchaseResponse.isSuccess()) {
                         listener.onSuccess(stuPurchaseResponse);
                     } else {
@@ -298,7 +298,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected void onPostExecute(String charge) {
-                if (listener != null) {
+                if (charge != null) {
                     if (!TextUtils.isEmpty(charge)) {
                         listener.onSuccess(charge);
                     } else {
@@ -322,7 +322,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected void onPostExecute(PurchasedService purchasedService) {
-                if (listener != null) {
+                if (purchasedService != null) {
                     if (purchasedService.isSuccess()) {
                         listener.onSuccess(purchasedService);
                     } else {
@@ -346,7 +346,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected void onPostExecute(CoachModel coachModel) {
-                if (listener != null) {
+                if (coachModel != null) {
                     if(coachModel!=null) {
                         if (coachModel.isSuccess()) {
                             listener.onSuccess(coachModel);
