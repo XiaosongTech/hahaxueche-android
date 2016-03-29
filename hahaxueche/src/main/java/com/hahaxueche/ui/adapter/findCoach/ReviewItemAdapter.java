@@ -27,11 +27,6 @@ public class ReviewItemAdapter extends BaseAdapter {
     private int mResource;   //item的布局
     private Context mContext;
     private LayoutInflater inflator;
-    private TextView tvReviewerName;//评论人名称
-    private CircleImageView civReviewerAvatar;//评论人头像
-    private TextView tvReviewDate;//评论日期
-    private ScoreView svReviewRating;//评分
-    private TextView tvReviewComment;//评论
 
     public ReviewItemAdapter(Context context, List<ReviewInfo> reviewInfoList, int resource) {
         mContext = context;
@@ -56,27 +51,33 @@ public class ReviewItemAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
+        View view = convertView;
+        ViewHolder holder;
+        if (view == null) {
             inflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflator.inflate(mResource, null);
-            tvReviewerName = (TextView) convertView.findViewById(R.id.tv_reviewer_name);//评论人名称
-            civReviewerAvatar = (CircleImageView) convertView.findViewById(R.id.cir_reviewer_avatar);//评论人头像
-            tvReviewDate = (TextView) convertView.findViewById(R.id.tv_review_date);//评论日期
-            svReviewRating = (ScoreView) convertView.findViewById(R.id.sv_review_rating);//评分
-            tvReviewComment = (TextView) convertView.findViewById(R.id.tv_review_comment);
+            view = inflator.inflate(mResource, null);
+            holder = new ViewHolder();
+            holder.tvReviewerName = (TextView) view.findViewById(R.id.tv_reviewer_name);//评论人名称
+            holder.civReviewerAvatar = (CircleImageView) view.findViewById(R.id.cir_reviewer_avatar);//评论人头像
+            holder.tvReviewDate = (TextView) view.findViewById(R.id.tv_review_date);//评论日期
+            holder.svReviewRating = (ScoreView) view.findViewById(R.id.sv_review_rating);//评分
+            holder.tvReviewComment = (TextView) view.findViewById(R.id.tv_review_comment);
+            view.setTag(holder);
+        }else{
+            holder = (ViewHolder) view.getTag();
         }
         ReviewInfo reviewInfo = mReviewInfoList.get(position);
-        tvReviewerName.setText(reviewInfo.getReviewer().getName());
-        tvReviewComment.setText(reviewInfo.getComment());
+        holder.tvReviewerName.setText(reviewInfo.getReviewer().getName());
+        holder.tvReviewComment.setText(reviewInfo.getComment());
         final int iconWidth = Util.instence(mContext).dip2px(40);
         final int iconHeight = iconWidth;
         Picasso.with(mContext).load(reviewInfo.getReviewer().getAvatar_url()).resize(iconWidth, iconHeight)
-                .into(civReviewerAvatar);
+                .into(holder.civReviewerAvatar);
         String reviewDate = "";
         if (!TextUtils.isEmpty(reviewInfo.getUpdated_at())) {
             reviewDate = reviewInfo.getUpdated_at().substring(0, 10);
         }
-        tvReviewDate.setText(reviewDate);
+        holder.tvReviewDate.setText(reviewDate);
         float reviewerRating = 0;
         if (!TextUtils.isEmpty(reviewInfo.getRating())) {
             reviewerRating = Float.parseFloat(reviewInfo.getRating());
@@ -84,7 +85,14 @@ public class ReviewItemAdapter extends BaseAdapter {
         if (reviewerRating > 5) {
             reviewerRating = 5;
         }
-        svReviewRating.setScore(reviewerRating, false);
-        return convertView;
+        holder.svReviewRating.setScore(reviewerRating, false);
+        return view;
+    }
+    static class ViewHolder {
+        TextView tvReviewerName;
+        CircleImageView civReviewerAvatar;
+        TextView tvReviewDate;
+        ScoreView svReviewRating;
+        TextView tvReviewComment;
     }
 }
