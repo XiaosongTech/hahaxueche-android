@@ -4,6 +4,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import com.hahaxueche.api.findCoach.FCApi;
 import com.hahaxueche.api.findCoach.FCApiImpl;
 import com.hahaxueche.api.util.ApiError;
@@ -34,7 +37,7 @@ public class FCPresenterImpl implements FCPresenter {
 
     @Override
     public void getCoachList(final String page, final String per_page, final String golden_coach_only, final String license_type, final String price,
-                             final String city_id, final ArrayList<String> training_field_ids, final String distance, final  ArrayList<String> user_location, final String sort_by,
+                             final String city_id, final ArrayList<String> training_field_ids, final String distance, final ArrayList<String> user_location, final String sort_by,
                              final FCCallbackListener<CoachListResponse> listener) {
         new AsyncTask<Void, Void, CoachListResponse>() {
 
@@ -46,7 +49,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected void onPostExecute(CoachListResponse coachListResponse) {
-                if (listener != null && coachListResponse!=null) {
+                if (listener != null && coachListResponse != null) {
                     if (coachListResponse.isSuccess()) {
                         listener.onSuccess(coachListResponse);
                     } else {
@@ -180,12 +183,17 @@ public class FCPresenterImpl implements FCPresenter {
     @Override
     public void createTrail(final String coach_id, final String name, final String phone_number, final String first_time_option,
                             final String second_time_option, final FCCallbackListener<TrailResponse> listener) {
-        // "[1]"代表第1位为数字1，"[358]"代表第二位可以为3、5、8中的一个，"\\d{9}"代表后面是可以是0～9的数字，有9位。
-        String telRegex = "[1][358]\\d{9}";
-        if (!phone_number.matches(telRegex)) {
-            if (listener != null) {
-                listener.onFailure(ErrorEvent.PARAM_ILLEGAL, "您的手机号码格式有误");
-            }
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+        boolean isValidPhoneNumber;
+        try {
+            Phonenumber.PhoneNumber chNumberProto = phoneUtil.parse(phone_number, "CN");
+            isValidPhoneNumber = phoneUtil.isValidNumber(chNumberProto);
+        } catch (NumberParseException e) {
+            listener.onFailure(ErrorEvent.PARAM_ILLEGAL, "您的手机号码格式有误");
+            return;
+        }
+        if (!isValidPhoneNumber) {
+            listener.onFailure(ErrorEvent.PARAM_ILLEGAL, "您的手机号码格式有误");
             return;
         }
         new AsyncTask<Void, Void, TrailResponse>() {
@@ -341,19 +349,19 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected CoachModel doInBackground(Void... params) {
-                return api.oneKeyFindCoach(lat,lng);
+                return api.oneKeyFindCoach(lat, lng);
             }
 
             @Override
             protected void onPostExecute(CoachModel coachModel) {
                 if (coachModel != null) {
-                    if(coachModel!=null) {
+                    if (coachModel != null) {
                         if (coachModel.isSuccess()) {
                             listener.onSuccess(coachModel);
                         } else {
                             listener.onFailure(coachModel.getCode(), coachModel.getMessage());
                         }
-                    }else {
+                    } else {
                         listener.onFailure("0000", "未找到合适的教练");
                     }
                 } else {

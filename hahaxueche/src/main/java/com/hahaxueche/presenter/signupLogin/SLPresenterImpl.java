@@ -4,6 +4,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import com.hahaxueche.api.signupLogin.SLApi;
 import com.hahaxueche.api.signupLogin.SLApiImpl;
 import com.hahaxueche.api.util.ApiError;
@@ -153,13 +156,16 @@ public class SLPresenterImpl implements SLPresenter {
             }
             return;
         }
-        // "[1]"代表第1位为数字1，"[3758]"代表第二位可以为3、5、7、8中的一个，"\\d{9}"代表后面是可以是0～9的数字，有9位。
-        String telRegex = "[1][3758]\\d{9}";
-        if (!cell_phone.matches(telRegex)) {
-            if (listener != null) {
-                listener.onFailure(ErrorEvent.PARAM_ILLEGAL, "您的手机号码格式有误");
-            }
-            return;
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+        boolean isValidPhoneNumber = false;
+        try {
+            Phonenumber.PhoneNumber chNumberProto = phoneUtil.parse(cell_phone, "CN");
+            isValidPhoneNumber = phoneUtil.isValidNumber(chNumberProto);
+        } catch (NumberParseException e) {
+            listener.onFailure(ErrorEvent.PARAM_ILLEGAL, "您的手机号码格式有误");
+        }
+        if (!isValidPhoneNumber) {
+            listener.onFailure(ErrorEvent.PARAM_ILLEGAL, "您的手机号码格式有误");
         }
         if (TextUtils.isEmpty(pwd)) {
             if (listener != null) {
@@ -182,9 +188,9 @@ public class SLPresenterImpl implements SLPresenter {
                             listener.onSuccess(createUserResponse);
                         } else {
                             if (createUserResponse.getCode().equals("40011")) {
-                                listener.onFailure(createUserResponse.getCode(), loginType == 1?"您的短信验证码有误":"您的密码有误");
+                                listener.onFailure(createUserResponse.getCode(), loginType == 1 ? "您的短信验证码有误" : "您的密码有误");
                             } else if (createUserResponse.getCode().equals("40001")) {
-                                listener.onFailure(createUserResponse.getCode(), loginType == 1?"您的短信验证码有误":"您的密码有误");
+                                listener.onFailure(createUserResponse.getCode(), loginType == 1 ? "您的短信验证码有误" : "您的密码有误");
                             } else {
                                 listener.onFailure(createUserResponse.getCode(), createUserResponse.getMessage());
                             }
@@ -257,12 +263,15 @@ public class SLPresenterImpl implements SLPresenter {
             }
             return false;
         }
-        // "[1]"代表第1位为数字1，"[358]"代表第二位可以为3、5、8中的一个，"\\d{9}"代表后面是可以是0～9的数字，有9位。
-        String telRegex = "[1][3578]\\d{9}";
-        if (!phoneNumber.matches(telRegex)) {
-            if (listener != null) {
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+        try {
+            Phonenumber.PhoneNumber chNumberProto = phoneUtil.parse(phoneNumber, "CN");
+            if(!phoneUtil.isValidNumber(chNumberProto)){
                 listener.onFailure(ErrorEvent.PARAM_ILLEGAL, "您的手机号码格式有误");
+                return false;
             }
+        } catch (NumberParseException e) {
+            listener.onFailure(ErrorEvent.PARAM_ILLEGAL, "您的手机号码格式有误");
             return false;
         }
         return true;
