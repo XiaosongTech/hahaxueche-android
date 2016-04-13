@@ -345,14 +345,18 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.v("gibxin", "requestCode -> " + requestCode);
+        Log.v("gibxin", "resultCode -> " + resultCode);
         if (requestCode == 0) {
             switch (resultCode) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
                 case RESULT_OK:
                     Bundle bundle = data.getExtras(); //data为B中回传的Intent
                     if (bundle.getSerializable("selFieldList") != null) {
                         selFieldList = (ArrayList<FieldModel>) bundle.getSerializable("selFieldList");
+                        Log.v("gibxin", "selFieldList.size() -> " + selFieldList.size());
                         getCoachList();
                     } else {
+                        Log.v("gibxin", "new ArrayList");
                         selFieldList = new ArrayList<>();
                         getCoachList();
                     }

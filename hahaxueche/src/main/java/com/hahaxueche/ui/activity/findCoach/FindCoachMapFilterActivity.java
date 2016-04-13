@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -178,6 +179,7 @@ public class FindCoachMapFilterActivity extends FCBaseActivity implements AMap.O
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("selFieldList", selFieldList);
                     intent.putExtras(bundle);
+                    Log.v("gibxin", "setResult -> " + RESULT_OK);
                     setResult(RESULT_OK, intent);
                     FindCoachMapFilterActivity.this.finish();
                     break;

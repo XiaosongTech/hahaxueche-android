@@ -98,7 +98,6 @@
             android:name=".ui.activity.findCoach.FindCoachActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:launchMode="singleTask"
             android:theme="@style/NoAnimationTheme"></activity>
         <activity
             android:name=".ui.activity.appointment.AppointmentActivity"
@@ -173,7 +172,6 @@
         <activity
             android:name=".ui.activity.findCoach.FindCoachMapFilterActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activity.findCoach.FieldMapActivity"

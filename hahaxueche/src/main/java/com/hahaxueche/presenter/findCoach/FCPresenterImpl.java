@@ -250,6 +250,7 @@ public class FCPresenterImpl implements FCPresenter {
     public void getReviewList(final String url, final FCCallbackListener<GetReviewsResponse> listener) {
         new AsyncTask<Void, Void, GetReviewsResponse>() {
 
+
             @Override
             protected GetReviewsResponse doInBackground(Void... params) {
                 return api.getReviewList(url);
