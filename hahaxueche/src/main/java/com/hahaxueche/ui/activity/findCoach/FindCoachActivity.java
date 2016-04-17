@@ -20,6 +20,8 @@ import com.hahaxueche.model.findCoach.CoachListResponse;
 import com.hahaxueche.model.findCoach.CoachModel;
 import com.hahaxueche.model.findCoach.FieldModel;
 import com.hahaxueche.model.findCoach.Location;
+import com.hahaxueche.model.signupLogin.CityModel;
+import com.hahaxueche.model.signupLogin.StudentModel;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachItemAdapter;
@@ -73,6 +75,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
 
     private String TAG = "FindCoachActivity";
     private boolean isOnLoadMore = false;
+    private SharedPreferencesUtil spUtil;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,32 +89,13 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
     }
 
     private void initView() {
+        spUtil = new SharedPreferencesUtil(FindCoachActivity.this);
         llyTabIndex = Util.instence(this).$(this, R.id.lly_tab_index);
         llyTabFindCoach = Util.instence(this).$(this, R.id.lly_tab_find_coach);
         llyTabAppointment = Util.instence(this).$(this, R.id.lly_tab_appointment);
         llyTabMySetting = Util.instence(this).$(this, R.id.lly_tab_my_setting);
         llyFcFilter = Util.instence(this).$(this, R.id.lly_fc_filter);
         llyFcSort = Util.instence(this).$(this, R.id.lly_fc_sort);
-        fcFilterDialog = new FcFilterDialog(this,
-                new FcFilterDialog.OnBtnClickListener() {
-
-                    @Override
-                    public void onFliterCoach(String goldenCoachOnly, String licenseType, String _price, String _distance) {
-                        golden_coach_only = goldenCoachOnly;
-                        license_type = licenseType;
-                        price = _price;
-                        distance = _distance;
-                        Log.v(TAG, "filter -> golden_coach_only=" + golden_coach_only + " license_type=" + license_type
-                                + " price=" + price + " distance=" + distance);
-                    }
-                });
-        fcSortDialog = new FcSortDialog(this,
-                new FcSortDialog.OnBtnClickListener() {
-                    @Override
-                    public void onFindCoachCort(String sortby) {
-                        sort_by = sortby;
-                    }
-                });
         mHandler = new Handler();
 
         xlvCoachList = (XListView) findViewById(R.id.xlv_coach_list);
@@ -129,6 +113,21 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         //mAdapter = new ArrayAdapter<String>(this, R.layout.view_coach_list_item, items);
         //xlvCoachList.setAdapter(mAdapter);
         ibtnFcMap = Util.instence(this).$(this, R.id.ibtn_fc_map);
+        city_id = spUtil.getStudent().getCity_id();
+        StudentModel student = spUtil.getStudent();
+        List<CityModel> cityList = spUtil.getConstants().getCities();
+        int myCityCount = 0;
+        for (int i = 0; i < cityList.size(); i++) {
+            if (cityList.get(i).getId().equals(city_id)) {
+                myCityCount = i;
+                break;
+            }
+        }
+        CityModel city = cityList.get(myCityCount);
+        List<String> distanceList = city.getFilters().getRadius();
+        distance = distanceList.get(distanceList.size() - 2);
+        List<String> priceList = city.getFilters().getPrices();
+        price = priceList.get(priceList.size() - 1);
     }
 
     private void initEvent() {
@@ -166,30 +165,34 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                     break;
                 //筛选
                 case R.id.lly_fc_filter:
-                    fcFilterDialog = new FcFilterDialog(FindCoachActivity.this, golden_coach_only, license_type, price, distance,
-                            new FcFilterDialog.OnBtnClickListener() {
+                    if (fcFilterDialog == null) {
+                        fcFilterDialog = new FcFilterDialog(FindCoachActivity.this, golden_coach_only, license_type, price, distance,
+                                new FcFilterDialog.OnBtnClickListener() {
 
-                                @Override
-                                public void onFliterCoach(String goldenCoachOnly, String licenseType, String _price, String _distance) {
-                                    golden_coach_only = goldenCoachOnly;
-                                    license_type = licenseType;
-                                    price = _price;
-                                    distance = _distance;
-                                    xlvCoachList.autoRefresh();
-                                }
-                            });
-                    fcFilterDialog.initFilter();
+                                    @Override
+                                    public void onFliterCoach(String goldenCoachOnly, String licenseType, String _price, String _distance) {
+                                        golden_coach_only = goldenCoachOnly;
+                                        license_type = licenseType;
+                                        price = _price;
+                                        distance = _distance;
+                                        xlvCoachList.autoRefresh();
+                                    }
+                                });
+                        fcFilterDialog.initFilter();
+                    }
                     fcFilterDialog.show();
                     break;
                 //排序
                 case R.id.lly_fc_sort:
-                    fcSortDialog = new FcSortDialog(FindCoachActivity.this, sort_by, new FcSortDialog.OnBtnClickListener() {
-                        @Override
-                        public void onFindCoachCort(String sortby) {
-                            sort_by = sortby;
-                            xlvCoachList.autoRefresh();
-                        }
-                    });
+                    if (null == fcSortDialog) {
+                        fcSortDialog = new FcSortDialog(FindCoachActivity.this, sort_by, new FcSortDialog.OnBtnClickListener() {
+                            @Override
+                            public void onFindCoachCort(String sortby) {
+                                sort_by = sortby;
+                                xlvCoachList.autoRefresh();
+                            }
+                        });
+                    }
                     fcSortDialog.show();
                     break;
                 //地图

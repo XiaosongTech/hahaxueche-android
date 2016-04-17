@@ -235,7 +235,7 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
     public void initFilter() {
         //价格、距离默认最大
         if (distanceList != null) {
-            int initDistancePosition = distanceList.size() - 1;
+            int initDistancePosition = distanceList.size() - 2;
             if (!TextUtils.isEmpty(distance)) {
                 for (int i = 0; i < distanceList.size(); i++) {
                     if (distanceList.get(i).equals(distance)) {

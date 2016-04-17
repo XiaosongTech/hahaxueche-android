@@ -219,7 +219,7 @@ public class Util {
 
     public static String getDateFromUTC(String UTCTime) {
         String localTimeStr = null;
-        DateFormat UTCformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        DateFormat UTCformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date UTCDate = UTCformat.parse(UTCTime);
@@ -233,7 +233,7 @@ public class Util {
 
     public static String getMonthDayFromUTC(String UTCTime) {
         String localTimeStr = null;
-        DateFormat UTCformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        DateFormat UTCformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         DateFormat format = new SimpleDateFormat("MM-dd");
         try {
             Date UTCDate = UTCformat.parse(UTCTime);
