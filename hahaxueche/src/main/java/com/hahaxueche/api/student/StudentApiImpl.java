@@ -5,7 +5,9 @@ import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.api.net.HttpEngine;
+import com.hahaxueche.model.coach.ScheduleEvent;
 import com.hahaxueche.model.response.CoachListResponse;
+import com.hahaxueche.model.response.ScheduleEventListResponse;
 import com.hahaxueche.model.review.ReviewInfo;
 import com.hahaxueche.model.student.StudentModel;
 import com.hahaxueche.model.base.BaseApiResponse;
@@ -184,4 +186,134 @@ public class StudentApiImpl implements StudentApi {
             return null;
         }
     }
+
+    @Override
+    public ScheduleEvent bookScheduleEvent(String studentId, String courseScheduleEventId, String accessToken) {
+        Type type = new TypeToken<ScheduleEvent>() {
+        }.getType();
+        Map<String, String> paramMap = new HashMap<String, String>();
+        try {
+            Response response = httpEngine.postHandle(paramMap, "students/" + studentId + "/" + courseScheduleEventId + "/schedule", accessToken);
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                ScheduleEvent retModel = new ScheduleEvent();
+                retModel.setCode(String.valueOf(response.code()));
+                retModel.setMessage(response.message());
+                retModel.setIsSuccess(false);
+                return retModel;
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public ScheduleEventListResponse fetchCourseSchedule(String studentId, String page, String perPage, String booked, String accessToken) {
+        Type type = new TypeToken<ScheduleEventListResponse>() {
+        }.getType();
+        String url = "students/" + studentId + "/course_schedules";
+        if (!TextUtils.isEmpty(page)) {
+            url += url.indexOf("?") > 0 ? ("&page=" + page) : ("?page=" + page);
+        }
+        if (!TextUtils.isEmpty(perPage)) {
+            url += url.indexOf("?") > 0 ? ("&per_page=" + perPage) : ("?per_page=" + perPage);
+        }
+        if (!TextUtils.isEmpty(booked)) {
+            url += url.indexOf("?") > 0 ? ("&booked=" + booked) : ("?booked=" + booked);
+        }
+        try {
+            Response response = httpEngine.getHandle(url, accessToken);
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                ScheduleEventListResponse retModel = new ScheduleEventListResponse();
+                retModel.setCode(String.valueOf(response.code()));
+                retModel.setMessage(response.message());
+                retModel.setIsSuccess(false);
+                return retModel;
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public ScheduleEventListResponse fetchCourseSchedule(String url, String accessToken) {
+        Type type = new TypeToken<ScheduleEventListResponse>() {
+        }.getType();
+        try {
+            Response response = httpEngine.getHandleByUrl(url, accessToken);
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                ScheduleEventListResponse retModel = new ScheduleEventListResponse();
+                retModel.setCode(String.valueOf(response.code()));
+                retModel.setMessage(response.message());
+                retModel.setIsSuccess(false);
+                return retModel;
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public BaseApiResponse cancelCourseSchedule(String studentId, String scheduleEventId, String accessToken) {
+        Type type = new TypeToken<BaseApiResponse>() {
+        }.getType();
+        Map<String, String> paramMap = new HashMap<String, String>();
+        try {
+            Response response = httpEngine.postHandle(paramMap, "students/" + studentId + "/" + scheduleEventId + "/unschedule", accessToken);
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                BaseApiResponse retModel = new BaseApiResponse();
+                retModel.setCode(String.valueOf(response.code()));
+                retModel.setMessage(response.message());
+                retModel.setIsSuccess(false);
+                return retModel;
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public ReviewInfo reviewSchedule(String studentId, String scheduleEventId, String rating, String accessToken) {
+        Type type = new TypeToken<ReviewInfo>() {
+        }.getType();
+        Map<String, String> paramMap = new HashMap<String, String>();
+        try {
+            Response response = httpEngine.postHandle(paramMap, "students/" + studentId + "/" + scheduleEventId + "/review_schedule_event?rating=" + rating, accessToken);
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                ReviewInfo retModel = new ReviewInfo();
+                retModel.setCode(String.valueOf(response.code()));
+                retModel.setMessage(response.message());
+                retModel.setIsSuccess(false);
+                return retModel;
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+
 }
