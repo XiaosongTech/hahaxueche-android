@@ -1,30 +1,22 @@
 package com.hahaxueche;
 
-import android.app.Activity;
 import android.app.Application;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.util.DisplayMetrics;
 
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.api.net.HttpEngine;
 import com.hahaxueche.api.signupLogin.SLApi;
-import com.hahaxueche.model.util.ConstantsModel;
+import com.hahaxueche.model.base.ConstantsModel;
 import com.hahaxueche.presenter.findCoach.FCPresenter;
 import com.hahaxueche.presenter.findCoach.FCPresenterImpl;
 import com.hahaxueche.presenter.mySetting.MSPresenter;
 import com.hahaxueche.presenter.mySetting.MSPresenterImpl;
 import com.hahaxueche.presenter.signupLogin.SLPresenter;
 import com.hahaxueche.presenter.signupLogin.SLPresenterImpl;
-import com.hahaxueche.utils.JsonUtils;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.squareup.leakcanary.LeakCanary;
-import com.tencent.mm.sdk.openapi.IWXAPI;
-import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.Locale;
 
 /**
  * Application类�

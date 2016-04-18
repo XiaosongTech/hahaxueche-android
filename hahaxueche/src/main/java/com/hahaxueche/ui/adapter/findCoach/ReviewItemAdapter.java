@@ -9,14 +9,12 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.findCoach.ReviewInfo;
+import com.hahaxueche.model.review.ReviewInfo;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
 import com.hahaxueche.utils.Util;
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**

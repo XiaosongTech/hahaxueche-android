@@ -8,16 +8,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.findCoach.ReviewInfo;
-import com.hahaxueche.model.mySetting.PaymentStage;
-import com.hahaxueche.presenter.mySetting.MSCallbackListener;
-import com.hahaxueche.presenter.mySetting.MSPresenter;
+import com.hahaxueche.model.student.PaymentStage;
 import com.hahaxueche.ui.activity.mySetting.PaymentStageActivity;
 import com.hahaxueche.ui.dialog.PaymentStageInfoDialog;
-import com.hahaxueche.ui.dialog.ReviewDialog;
 import com.hahaxueche.utils.Util;
 
 import java.util.List;

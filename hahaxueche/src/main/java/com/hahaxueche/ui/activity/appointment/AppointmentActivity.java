@@ -11,14 +11,12 @@ import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.R;
-import com.hahaxueche.model.findCoach.CoachModel;
-import com.hahaxueche.model.signupLogin.StudentModel;
+import com.hahaxueche.model.coach.CoachModel;
+import com.hahaxueche.model.student.StudentModel;
 import com.hahaxueche.ui.activity.findCoach.FindCoachActivity;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.activity.mySetting.MySettingActivity;
-import com.hahaxueche.ui.activity.signupLogin.StartActivity;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
-import com.hahaxueche.utils.JsonUtils;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 import com.squareup.picasso.Picasso;

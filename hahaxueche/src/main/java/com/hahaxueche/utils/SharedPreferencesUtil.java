@@ -5,11 +5,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.reflect.TypeToken;
-import com.hahaxueche.model.findCoach.CoachModel;
-import com.hahaxueche.model.findCoach.Location;
-import com.hahaxueche.model.signupLogin.SessionModel;
-import com.hahaxueche.model.signupLogin.StudentModel;
-import com.hahaxueche.model.util.ConstantsModel;
+import com.hahaxueche.model.coach.CoachModel;
+import com.hahaxueche.model.city.Location;
+import com.hahaxueche.model.user.SessionModel;
+import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.base.ConstantsModel;
 
 import java.lang.reflect.Type;
 

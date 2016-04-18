@@ -16,8 +16,8 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.hahaxueche.R;
-import com.hahaxueche.model.findCoach.FieldModel;
-import com.hahaxueche.model.util.ConstantsModel;
+import com.hahaxueche.model.city.FieldModel;
+import com.hahaxueche.model.base.ConstantsModel;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 
 import java.util.ArrayList;

@@ -8,10 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.findCoach.BriefCoachInfo;
-import com.hahaxueche.model.findCoach.CoachModel;
+import com.hahaxueche.model.coach.BriefCoachInfo;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
-import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 import com.squareup.picasso.Picasso;
 

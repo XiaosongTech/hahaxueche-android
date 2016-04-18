@@ -16,8 +16,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.signupLogin.CityModel;
-import com.hahaxueche.model.util.ConstantsModel;
+import com.hahaxueche.model.city.CityModel;
+import com.hahaxueche.model.base.ConstantsModel;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 

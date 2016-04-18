@@ -5,15 +5,15 @@ import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.api.net.HttpEngine;
-import com.hahaxueche.model.findCoach.CoachListResponse;
-import com.hahaxueche.model.findCoach.CoachModel;
-import com.hahaxueche.model.findCoach.FollowResponse;
-import com.hahaxueche.model.findCoach.GetReviewsResponse;
-import com.hahaxueche.model.findCoach.StuPurchaseResponse;
-import com.hahaxueche.model.findCoach.TrailResponse;
-import com.hahaxueche.model.mySetting.PurchasedService;
-import com.hahaxueche.model.util.BaseApiResponse;
-import com.hahaxueche.model.util.BaseBoolean;
+import com.hahaxueche.model.response.CoachListResponse;
+import com.hahaxueche.model.coach.CoachModel;
+import com.hahaxueche.model.response.FollowResponse;
+import com.hahaxueche.model.response.GetReviewsResponse;
+import com.hahaxueche.model.response.StuPurchaseResponse;
+import com.hahaxueche.model.response.TrailResponse;
+import com.hahaxueche.model.student.PurchasedService;
+import com.hahaxueche.model.base.BaseApiResponse;
+import com.hahaxueche.model.base.BaseBoolean;
 
 import java.io.IOException;
 import java.lang.reflect.Type;

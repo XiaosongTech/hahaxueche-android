@@ -6,8 +6,8 @@ import android.text.TextUtils;
 import android.view.Window;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.signupLogin.SessionModel;
-import com.hahaxueche.model.signupLogin.StudentModel;
+import com.hahaxueche.model.user.SessionModel;
+import com.hahaxueche.model.student.StudentModel;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.activity.mySetting.MSBaseActivity;

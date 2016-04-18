@@ -12,10 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.findCoach.CoachModel;
-import com.hahaxueche.model.findCoach.FieldModel;
-import com.hahaxueche.model.signupLogin.CityModel;
-import com.hahaxueche.model.util.ConstantsModel;
+import com.hahaxueche.model.coach.CoachModel;
+import com.hahaxueche.model.city.FieldModel;
+import com.hahaxueche.model.city.CityModel;
+import com.hahaxueche.model.base.ConstantsModel;
 import com.hahaxueche.ui.dialog.MapDialog;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;

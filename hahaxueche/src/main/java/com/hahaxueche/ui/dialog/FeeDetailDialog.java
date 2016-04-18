@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.signupLogin.CostItem;
+import com.hahaxueche.model.city.CostItem;
 import com.hahaxueche.utils.Util;
 
 import java.util.List;

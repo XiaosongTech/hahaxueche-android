@@ -1,14 +1,10 @@
 package com.hahaxueche.ui.dialog;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.res.Configuration;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -17,21 +13,19 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.MyApplication;
 import com.hahaxueche.R;
-import com.hahaxueche.model.findCoach.TrailResponse;
+import com.hahaxueche.model.response.TrailResponse;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.findCoach.FCPresenter;
 import com.hahaxueche.ui.widget.wheel.CustomWheelDialog;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.Calendar;
-import java.util.Locale;
 
 /**
  * 预约dialog

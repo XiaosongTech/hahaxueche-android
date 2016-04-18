@@ -8,9 +8,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.findCoach.CoachModel;
-import com.hahaxueche.model.findCoach.GetReviewsResponse;
-import com.hahaxueche.model.findCoach.ReviewInfo;
+import com.hahaxueche.model.coach.CoachModel;
+import com.hahaxueche.model.response.GetReviewsResponse;
+import com.hahaxueche.model.review.ReviewInfo;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.ui.adapter.findCoach.ReviewItemAdapter;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;

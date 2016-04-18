@@ -19,8 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.signupLogin.SessionModel;
-import com.hahaxueche.model.signupLogin.StudentModel;
+import com.hahaxueche.model.user.SessionModel;
+import com.hahaxueche.model.student.StudentModel;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
 import com.hahaxueche.ui.dialog.CityChoseDialog;
 import com.hahaxueche.ui.dialog.RegisterInfoPhotoDialog;

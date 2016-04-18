@@ -15,11 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.findCoach.CoachModel;
-import com.hahaxueche.model.signupLogin.CreateUserResponse;
-import com.hahaxueche.model.signupLogin.SessionModel;
-import com.hahaxueche.model.signupLogin.StudentModel;
-import com.hahaxueche.model.util.BaseApiResponse;
+import com.hahaxueche.model.coach.CoachModel;
+import com.hahaxueche.model.response.CreateUserResponse;
+import com.hahaxueche.model.user.SessionModel;
+import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.base.BaseApiResponse;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
 import com.hahaxueche.ui.activity.index.IndexActivity;

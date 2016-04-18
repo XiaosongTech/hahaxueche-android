@@ -1,9 +1,8 @@
 package com.hahaxueche.presenter.signupLogin;
 
-import com.hahaxueche.model.signupLogin.CompStuResponse;
-import com.hahaxueche.model.signupLogin.CreateUserResponse;
-import com.hahaxueche.model.signupLogin.StudentModel;
-import com.hahaxueche.model.util.BaseApiResponse;
+import com.hahaxueche.model.response.CreateUserResponse;
+import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.base.BaseApiResponse;
 
 /**
  * 注册登录Presenter

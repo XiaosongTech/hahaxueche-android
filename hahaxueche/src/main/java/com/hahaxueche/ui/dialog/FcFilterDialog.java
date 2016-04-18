@@ -18,9 +18,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.signupLogin.CityModel;
-import com.hahaxueche.model.signupLogin.StudentModel;
-import com.hahaxueche.model.util.ConstantsModel;
+import com.hahaxueche.model.city.CityModel;
+import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.base.ConstantsModel;
 import com.hahaxueche.ui.widget.comboSeekBar.ComboSeekBar;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;

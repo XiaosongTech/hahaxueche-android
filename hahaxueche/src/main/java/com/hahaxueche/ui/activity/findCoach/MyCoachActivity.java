@@ -1,6 +1,6 @@
 package com.hahaxueche.ui.activity.findCoach;
 
-import com.hahaxueche.model.signupLogin.StudentModel;
+import com.hahaxueche.model.student.StudentModel;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
 
 import android.app.ProgressDialog;
@@ -17,12 +17,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.findCoach.CoachModel;
-import com.hahaxueche.model.findCoach.FieldModel;
-import com.hahaxueche.model.signupLogin.CityModel;
-import com.hahaxueche.model.signupLogin.CostItem;
-import com.hahaxueche.model.util.BaseKeyValue;
-import com.hahaxueche.model.util.ConstantsModel;
+import com.hahaxueche.model.coach.CoachModel;
+import com.hahaxueche.model.city.FieldModel;
+import com.hahaxueche.model.city.CityModel;
+import com.hahaxueche.model.city.CostItem;
+import com.hahaxueche.model.base.BaseKeyValue;
+import com.hahaxueche.model.base.ConstantsModel;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.ui.dialog.FeeDetailDialog;
 import com.hahaxueche.ui.dialog.ZoomImgDialog;

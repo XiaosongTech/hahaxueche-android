@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.MapView;
@@ -14,7 +13,7 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.hahaxueche.R;
-import com.hahaxueche.model.findCoach.FieldModel;
+import com.hahaxueche.model.city.FieldModel;
 
 import java.util.ArrayList;
 import java.util.List;

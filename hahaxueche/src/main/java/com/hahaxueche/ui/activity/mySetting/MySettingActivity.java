@@ -14,11 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.mySetting.PaymentStage;
-import com.hahaxueche.model.mySetting.PurchasedService;
-import com.hahaxueche.model.signupLogin.SessionModel;
-import com.hahaxueche.model.signupLogin.StudentModel;
-import com.hahaxueche.model.util.BaseApiResponse;
+import com.hahaxueche.model.student.PaymentStage;
+import com.hahaxueche.model.student.PurchasedService;
+import com.hahaxueche.model.user.SessionModel;
+import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.base.BaseApiResponse;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.share.ShareConstants;
 import com.hahaxueche.ui.activity.appointment.AppointmentActivity;

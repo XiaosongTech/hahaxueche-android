@@ -4,11 +4,9 @@ import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.api.net.HttpEngine;
-import com.hahaxueche.model.signupLogin.AvaterResponse;
-import com.hahaxueche.model.signupLogin.CompStuResponse;
-import com.hahaxueche.model.signupLogin.CreateUserResponse;
-import com.hahaxueche.model.signupLogin.StudentModel;
-import com.hahaxueche.model.util.BaseApiResponse;
+import com.hahaxueche.model.response.CreateUserResponse;
+import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.base.BaseApiResponse;
 
 import java.io.IOException;
 import java.lang.reflect.Type;

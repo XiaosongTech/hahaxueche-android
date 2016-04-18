@@ -9,9 +9,9 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.findCoach.CoachListResponse;
-import com.hahaxueche.model.findCoach.CoachModel;
-import com.hahaxueche.model.signupLogin.SessionModel;
+import com.hahaxueche.model.response.CoachListResponse;
+import com.hahaxueche.model.coach.CoachModel;
+import com.hahaxueche.model.user.SessionModel;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachItemAdapter;

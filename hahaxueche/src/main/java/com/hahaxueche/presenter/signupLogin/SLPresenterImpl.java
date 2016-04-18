@@ -10,10 +10,9 @@ import com.google.i18n.phonenumbers.Phonenumber;
 import com.hahaxueche.api.signupLogin.SLApi;
 import com.hahaxueche.api.signupLogin.SLApiImpl;
 import com.hahaxueche.api.util.ApiError;
-import com.hahaxueche.model.signupLogin.CompStuResponse;
-import com.hahaxueche.model.signupLogin.CreateUserResponse;
-import com.hahaxueche.model.signupLogin.StudentModel;
-import com.hahaxueche.model.util.BaseApiResponse;
+import com.hahaxueche.model.response.CreateUserResponse;
+import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.base.BaseApiResponse;
 import com.hahaxueche.presenter.util.ErrorEvent;
 
 

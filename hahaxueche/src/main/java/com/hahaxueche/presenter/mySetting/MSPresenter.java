@@ -1,9 +1,9 @@
 package com.hahaxueche.presenter.mySetting;
 
-import com.hahaxueche.model.findCoach.CoachListResponse;
-import com.hahaxueche.model.findCoach.ReviewInfo;
-import com.hahaxueche.model.signupLogin.StudentModel;
-import com.hahaxueche.model.util.BaseApiResponse;
+import com.hahaxueche.model.response.CoachListResponse;
+import com.hahaxueche.model.review.ReviewInfo;
+import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.base.BaseApiResponse;
 
 /**
  * Created by gibxin on 2016/2/29.
