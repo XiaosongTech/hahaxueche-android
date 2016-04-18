@@ -13,6 +13,7 @@ public class CoachListResponse {
     private ArrayList<CoachModel> data;
     private String message;
     private String code;
+    private boolean isSuccess = true;
 
     public LinksModel getLinks() {
         return links;
@@ -46,7 +47,11 @@ public class CoachListResponse {
         this.code = code;
     }
 
-    public boolean isSuccess(){
-        return code == null;
+    public boolean isSuccess() {
+        return isSuccess;
+    }
+
+    public void setIsSuccess(boolean isSuccess) {
+        this.isSuccess = isSuccess;
     }
 }

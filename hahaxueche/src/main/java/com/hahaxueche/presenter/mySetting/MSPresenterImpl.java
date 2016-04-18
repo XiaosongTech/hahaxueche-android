@@ -3,8 +3,8 @@ package com.hahaxueche.presenter.mySetting;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.hahaxueche.api.mySetting.MSApi;
-import com.hahaxueche.api.mySetting.MSApiImpl;
+import com.hahaxueche.api.student.StudentApi;
+import com.hahaxueche.api.student.StudentApiImpl;
 import com.hahaxueche.api.util.ApiError;
 import com.hahaxueche.model.response.CoachListResponse;
 import com.hahaxueche.model.review.ReviewInfo;
@@ -16,11 +16,11 @@ import com.hahaxueche.model.base.BaseApiResponse;
  */
 public class MSPresenterImpl implements MSPresenter {
     private Context context;
-    private MSApi api;
+    private StudentApi studentApi;
 
     public MSPresenterImpl(Context context) {
         this.context = context;
-        this.api = new MSApiImpl();
+        this.studentApi = new StudentApiImpl();
     }
 
     @Override
@@ -29,7 +29,7 @@ public class MSPresenterImpl implements MSPresenter {
 
             @Override
             protected StudentModel doInBackground(Void... params) {
-                return api.getStudent(student_id, access_token);
+                return studentApi.getStudent(student_id, access_token);
             }
 
             @Override
@@ -53,7 +53,7 @@ public class MSPresenterImpl implements MSPresenter {
 
             @Override
             protected StudentModel doInBackground(Void... params) {
-                return api.getStudentForever(student_id, access_token);
+                return studentApi.getStudentForever(student_id, access_token);
             }
 
             @Override
@@ -77,7 +77,7 @@ public class MSPresenterImpl implements MSPresenter {
 
             @Override
             protected CoachListResponse doInBackground(Void... params) {
-                return api.getFollowCoachList(page, per_page, access_token);
+                return studentApi.getFollowCoachList(page, per_page, access_token);
             }
 
             @Override
@@ -101,7 +101,7 @@ public class MSPresenterImpl implements MSPresenter {
 
             @Override
             protected CoachListResponse doInBackground(Void... params) {
-                return api.getFollowCoachList(url, access_token);
+                return studentApi.getFollowCoachList(url, access_token);
             }
 
             @Override
@@ -131,7 +131,7 @@ public class MSPresenterImpl implements MSPresenter {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                return api.makeReview(coach_user_id, payment_stage, rating, comment, access_token);
+                return studentApi.makeReview(coach_user_id, payment_stage, rating, comment, access_token);
             }
 
             @Override
@@ -155,7 +155,7 @@ public class MSPresenterImpl implements MSPresenter {
 
             @Override
             protected BaseApiResponse doInBackground(Void... params) {
-                return api.loginOff(session_id, access_token);
+                return studentApi.loginOff(session_id, access_token);
             }
 
             @Override

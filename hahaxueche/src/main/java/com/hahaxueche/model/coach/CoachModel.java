@@ -32,6 +32,7 @@ public class CoachModel implements Serializable {
     private String assigned_coaches;
     private String code;
     private String message;
+    private boolean isSuccess;
 
     public String getId() {
         return id;
@@ -234,6 +235,10 @@ public class CoachModel implements Serializable {
     }
 
     public boolean isSuccess() {
-        return code == null;
+        return isSuccess;
+    }
+
+    public void setIsSuccess(boolean isSuccess) {
+        this.isSuccess = isSuccess;
     }
 }

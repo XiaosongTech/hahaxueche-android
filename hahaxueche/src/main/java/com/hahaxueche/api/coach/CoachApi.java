@@ -1,4 +1,4 @@
-package com.hahaxueche.api.findCoach;
+package com.hahaxueche.api.coach;
 
 import com.hahaxueche.model.response.CoachListResponse;
 import com.hahaxueche.model.coach.CoachModel;
@@ -16,14 +16,8 @@ import java.util.ArrayList;
  * 寻找教练api
  * Created by gibxin on 2016/2/21.
  */
-public interface FCApi {
+public interface CoachApi {
     public static final String COACHES = "coaches";
-
-    public static final String FOLLOWS = "follows";
-
-    public static final String USERS = "users";
-
-    public static final String TRAIL = "trial";
 
     /**
      * 获取教练列表

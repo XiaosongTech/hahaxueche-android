@@ -17,6 +17,7 @@ public class StudentModel {
     private List<PurchasedService> purchased_services;
     private String code;
     private String message;
+    private boolean isSuccess = true;
 
     public String getId() {
         return id;
@@ -99,6 +100,10 @@ public class StudentModel {
     }
 
     public boolean isSuccess() {
-        return null == code;
+        return isSuccess;
+    }
+
+    public void setIsSuccess(boolean isSuccess) {
+        this.isSuccess = isSuccess;
     }
 }

@@ -15,6 +15,7 @@ public class TrailResponse {
     private CoachModel coach;
     private String code;
     private String message;
+    private boolean isSuccess;
 
     public String getId() {
         return id;
@@ -81,6 +82,10 @@ public class TrailResponse {
     }
 
     public boolean isSuccess() {
-        return null == code || code.equals("0");
+        return isSuccess;
+    }
+
+    public void setIsSuccess(boolean isSuccess) {
+        this.isSuccess = isSuccess;
     }
 }

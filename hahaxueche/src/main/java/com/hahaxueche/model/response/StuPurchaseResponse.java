@@ -20,6 +20,7 @@ public class StuPurchaseResponse {
     private StudentModel student;
     private String code;
     private String message;
+    private boolean isSuccess = true;
 
     public String getId() {
         return id;
@@ -102,6 +103,10 @@ public class StuPurchaseResponse {
     }
 
     public boolean isSuccess() {
-        return null == code;
+        return isSuccess;
+    }
+
+    public void setIsSuccess(boolean isSuccess) {
+        this.isSuccess = isSuccess;
     }
 }

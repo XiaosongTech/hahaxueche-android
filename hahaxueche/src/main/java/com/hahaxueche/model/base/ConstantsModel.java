@@ -18,6 +18,9 @@ public class ConstantsModel {
     private ArrayList<String> home_page_banners;
     private List<BaseKeyValue> service_types;
     private ArrayList<ConstantsModel> banner_highlights;
+    private String message;
+    private String code;
+    private boolean isSuccess;
 
     public List<CityModel> getCities() {
         return cities;
@@ -73,5 +76,29 @@ public class ConstantsModel {
 
     public void setBanner_highlights(ArrayList<ConstantsModel> banner_highlights) {
         this.banner_highlights = banner_highlights;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public boolean isSuccess() {
+        return isSuccess;
+    }
+
+    public void setIsSuccess(boolean isSuccess) {
+        this.isSuccess = isSuccess;
     }
 }

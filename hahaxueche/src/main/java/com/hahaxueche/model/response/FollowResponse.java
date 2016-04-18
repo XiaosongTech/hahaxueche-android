@@ -15,6 +15,7 @@ public class FollowResponse {
     private String updated_at;
     private String code;
     private String message;
+    private boolean isSuccess = true;
 
     public String getId() {
         return id;
@@ -97,6 +98,10 @@ public class FollowResponse {
     }
 
     public boolean isSuccess() {
-        return code == null;
+        return isSuccess;
+    }
+
+    public void setIsSuccess(boolean isSuccess) {
+        this.isSuccess = isSuccess;
     }
 }

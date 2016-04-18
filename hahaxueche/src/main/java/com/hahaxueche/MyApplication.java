@@ -1,10 +1,11 @@
 package com.hahaxueche;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.api.net.HttpEngine;
-import com.hahaxueche.api.signupLogin.SLApi;
+import com.hahaxueche.api.auth.AuthApi;
 import com.hahaxueche.model.base.ConstantsModel;
 import com.hahaxueche.presenter.findCoach.FCPresenter;
 import com.hahaxueche.presenter.findCoach.FCPresenterImpl;
@@ -12,11 +13,15 @@ import com.hahaxueche.presenter.mySetting.MSPresenter;
 import com.hahaxueche.presenter.mySetting.MSPresenterImpl;
 import com.hahaxueche.presenter.signupLogin.SLPresenter;
 import com.hahaxueche.presenter.signupLogin.SLPresenterImpl;
+import com.hahaxueche.utils.JsonUtils;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.squareup.leakcanary.LeakCanary;
+import com.tencent.connect.common.Constants;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+
+import okhttp3.Response;
 
 /**
  * Application类�
@@ -42,8 +47,20 @@ public class MyApplication extends Application {
                 HttpEngine httpEngine = HttpEngine.getInstance();
                 Type type = new TypeToken<ConstantsModel>() {
                 }.getType();
+                ConstantsModel constants;
                 try {
-                    ConstantsModel constants = httpEngine.getHandle(type, SLApi.CONSTANTS);
+                    Response response = httpEngine.getHandle("constants", "");
+                    String body = response.body().string();
+                    Log.v("gibxin", "body -> " + body);
+                    if (response.isSuccessful()) {
+                        constants = JsonUtils.deserialize(body, type);
+                    } else {
+                        ConstantsModel retModel = new ConstantsModel();
+                        retModel.setCode(String.valueOf(response.code()));
+                        retModel.setMessage(response.message());
+                        retModel.setIsSuccess(false);
+                        constants = retModel;
+                    }
                     spUtil.setConstants(constants);
                 } catch (IOException e) {
                     e.printStackTrace();

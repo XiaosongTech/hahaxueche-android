@@ -1,4 +1,4 @@
-package com.hahaxueche.api.signupLogin;
+package com.hahaxueche.api.auth;
 
 import com.hahaxueche.model.response.CreateUserResponse;
 import com.hahaxueche.model.student.StudentModel;
@@ -7,15 +7,7 @@ import com.hahaxueche.model.base.BaseApiResponse;
 /**
  * Created by gibxin on 2016/1/22.
  */
-public interface SLApi {
-    public static final String SEND_AUTH_TOKEN = "send_auth_token";
-    public static final String CREATE_USER = "users";
-    public static final String CONSTANTS = "constants";
-    public static final String STUDENTS = "students";
-    public static final String SESSIONS = "sessions";
-    public static final String RESET_PASSWORD = "users/reset_password";
-    public static final String AVATAR = "avatar";
-
+public interface AuthApi {
     /**
      * 发送验证码
      *

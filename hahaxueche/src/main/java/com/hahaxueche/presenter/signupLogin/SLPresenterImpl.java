@@ -7,8 +7,8 @@ import android.text.TextUtils;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
-import com.hahaxueche.api.signupLogin.SLApi;
-import com.hahaxueche.api.signupLogin.SLApiImpl;
+import com.hahaxueche.api.auth.AuthApi;
+import com.hahaxueche.api.auth.AuthApiImpl;
 import com.hahaxueche.api.util.ApiError;
 import com.hahaxueche.model.response.CreateUserResponse;
 import com.hahaxueche.model.student.StudentModel;
@@ -22,11 +22,11 @@ import com.hahaxueche.presenter.util.ErrorEvent;
  */
 public class SLPresenterImpl implements SLPresenter {
     private Context context;
-    private SLApi api;
+    private AuthApi authApi;
 
     public SLPresenterImpl(Context context) {
         this.context = context;
-        this.api = new SLApiImpl();
+        this.authApi = new AuthApiImpl();
     }
 
     @Override
@@ -38,7 +38,7 @@ public class SLPresenterImpl implements SLPresenter {
         new AsyncTask<Void, Void, BaseApiResponse>() {
             @Override
             protected BaseApiResponse doInBackground(Void... voids) {
-                return api.sendAuthToken(phoneNum, type);
+                return authApi.sendAuthToken(phoneNum, type);
             }
 
             @Override
@@ -78,7 +78,7 @@ public class SLPresenterImpl implements SLPresenter {
 
             @Override
             protected CreateUserResponse doInBackground(Void... params) {
-                return api.createUser(phoneNum, identifyCode, pwd, type);
+                return authApi.createUser(phoneNum, identifyCode, pwd, type);
             }
 
             @Override
@@ -122,9 +122,9 @@ public class SLPresenterImpl implements SLPresenter {
             @Override
             protected StudentModel doInBackground(Void... params) {
 
-                StudentModel compStuResponse = api.completeStuInfo(studentId, cityId, studentName, accessToken);
+                StudentModel compStuResponse = authApi.completeStuInfo(studentId, cityId, studentName, accessToken);
                 if (compStuResponse.isSuccess()) {
-                    return api.uploadAvatar(accessToken, photoPath, studentId);
+                    return authApi.uploadAvatar(accessToken, photoPath, studentId);
                 } else {
                     return new StudentModel();
                 }
@@ -176,7 +176,7 @@ public class SLPresenterImpl implements SLPresenter {
 
             @Override
             protected CreateUserResponse doInBackground(Void... params) {
-                return api.login(cell_phone, pwd, loginType);
+                return authApi.login(cell_phone, pwd, loginType);
             }
 
             @Override
@@ -221,7 +221,7 @@ public class SLPresenterImpl implements SLPresenter {
 
             @Override
             protected BaseApiResponse doInBackground(Void... params) {
-                return api.resetPassword(cell_phone, password, auth_token);
+                return authApi.resetPassword(cell_phone, password, auth_token);
             }
 
             @Override

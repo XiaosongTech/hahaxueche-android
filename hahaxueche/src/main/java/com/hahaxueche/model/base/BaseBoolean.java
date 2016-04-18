@@ -7,6 +7,7 @@ public class BaseBoolean {
     private String result;
     private String code;
     private String message;
+    private boolean isSuccess = true;
 
     public String getResult() {
         return result;
@@ -33,7 +34,11 @@ public class BaseBoolean {
     }
 
     public boolean isSuccess() {
-        return code == null;
+        return isSuccess;
+    }
+
+    public void setIsSuccess(boolean isSuccess) {
+        this.isSuccess = isSuccess;
     }
 
     public boolean isTrue() {

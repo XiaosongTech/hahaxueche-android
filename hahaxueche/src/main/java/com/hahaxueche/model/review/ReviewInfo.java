@@ -18,6 +18,7 @@ public class ReviewInfo implements Serializable {
     private String service_type;
     private String code;
     private String message;
+    private boolean isSuccess;
 
     public String getId() {
         return id;
@@ -108,6 +109,10 @@ public class ReviewInfo implements Serializable {
     }
 
     public boolean isSuccess() {
-        return null == code;
+        return isSuccess;
+    }
+
+    public void setIsSuccess(boolean isSuccess) {
+        this.isSuccess = isSuccess;
     }
 }

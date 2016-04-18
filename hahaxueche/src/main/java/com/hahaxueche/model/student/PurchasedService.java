@@ -20,6 +20,7 @@ public class PurchasedService {
     private List<PaymentStage> payment_stages;
     private String code;
     private String message;
+    private boolean isSuccess = true;
 
     public String getId() {
         return id;
@@ -109,15 +110,19 @@ public class PurchasedService {
         this.message = message;
     }
 
-    public boolean isSuccess(){
-        return null==code;
-    }
-
     public String getCode() {
         return code;
     }
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public boolean isSuccess() {
+        return isSuccess;
+    }
+
+    public void setIsSuccess(boolean isSuccess) {
+        this.isSuccess = isSuccess;
     }
 }

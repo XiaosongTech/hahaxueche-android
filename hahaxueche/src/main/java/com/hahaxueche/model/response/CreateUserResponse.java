@@ -13,6 +13,7 @@ public class CreateUserResponse {
     private StudentModel student;
     private String code;
     private String message;
+    private boolean isSuccess = true;
 
     public String getId() {
         return id;
@@ -61,7 +62,12 @@ public class CreateUserResponse {
     public void setMessage(String message) {
         this.message = message;
     }
-    public boolean isSuccess(){
-        return code==null;
+
+    public boolean isSuccess() {
+        return isSuccess;
+    }
+
+    public void setIsSuccess(boolean isSuccess) {
+        this.isSuccess = isSuccess;
     }
 }

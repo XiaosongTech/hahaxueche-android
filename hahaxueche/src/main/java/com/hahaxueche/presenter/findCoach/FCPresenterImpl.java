@@ -7,8 +7,8 @@ import android.text.TextUtils;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
-import com.hahaxueche.api.findCoach.FCApi;
-import com.hahaxueche.api.findCoach.FCApiImpl;
+import com.hahaxueche.api.coach.CoachApi;
+import com.hahaxueche.api.coach.CoachApiImpl;
 import com.hahaxueche.api.util.ApiError;
 import com.hahaxueche.model.response.CoachListResponse;
 import com.hahaxueche.model.coach.CoachModel;
@@ -28,11 +28,11 @@ import java.util.ArrayList;
  */
 public class FCPresenterImpl implements FCPresenter {
     private Context context;
-    private FCApi api;
+    private CoachApi coachApi;
 
     public FCPresenterImpl(Context context) {
         this.context = context;
-        this.api = new FCApiImpl();
+        this.coachApi = new CoachApiImpl();
     }
 
     @Override
@@ -43,7 +43,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected CoachListResponse doInBackground(Void... params) {
-                return api.getCoachList(page, per_page, golden_coach_only, license_type, price, city_id, training_field_ids,
+                return coachApi.getCoachList(page, per_page, golden_coach_only, license_type, price, city_id, training_field_ids,
                         distance, user_location, sort_by);
             }
 
@@ -68,7 +68,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected CoachListResponse doInBackground(Void... params) {
-                return api.getCoachList(url);
+                return coachApi.getCoachList(url);
             }
 
             @Override
@@ -92,7 +92,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected CoachModel doInBackground(Void... params) {
-                return api.getCoach(coach_id);
+                return coachApi.getCoach(coach_id);
             }
 
             @Override
@@ -116,7 +116,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected FollowResponse doInBackground(Void... params) {
-                return api.follow(followee_user_id, content, access_token);
+                return coachApi.follow(followee_user_id, content, access_token);
             }
 
             @Override
@@ -139,7 +139,7 @@ public class FCPresenterImpl implements FCPresenter {
         new AsyncTask<Void, Void, BaseApiResponse>() {
             @Override
             protected BaseApiResponse doInBackground(Void... params) {
-                return api.cancelFollow(followee_user_id, access_token);
+                return coachApi.cancelFollow(followee_user_id, access_token);
             }
 
             @Override
@@ -162,7 +162,7 @@ public class FCPresenterImpl implements FCPresenter {
         new AsyncTask<Void, Void, BaseBoolean>() {
             @Override
             protected BaseBoolean doInBackground(Void... params) {
-                return api.isFollow(followee_user_id, access_token);
+                return coachApi.isFollow(followee_user_id, access_token);
             }
 
             @Override
@@ -199,7 +199,7 @@ public class FCPresenterImpl implements FCPresenter {
         new AsyncTask<Void, Void, TrailResponse>() {
             @Override
             protected TrailResponse doInBackground(Void... params) {
-                return api.createTrail(coach_id, name, phone_number, first_time_option, second_time_option);
+                return coachApi.createTrail(coach_id, name, phone_number, first_time_option, second_time_option);
             }
 
             @Override
@@ -228,7 +228,7 @@ public class FCPresenterImpl implements FCPresenter {
         new AsyncTask<Void, Void, GetReviewsResponse>() {
             @Override
             protected GetReviewsResponse doInBackground(Void... params) {
-                return api.getReviewList(coach_user_id, page, per_page);
+                return coachApi.getReviewList(coach_user_id, page, per_page);
             }
 
             @Override
@@ -253,7 +253,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected GetReviewsResponse doInBackground(Void... params) {
-                return api.getReviewList(url);
+                return coachApi.getReviewList(url);
             }
 
             @Override
@@ -278,7 +278,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected StuPurchaseResponse doInBackground(Void... params) {
-                return api.createPurchaseStu(coach_id, access_token, current_payment_stage, service_stage, total_amount);
+                return coachApi.createPurchaseStu(coach_id, access_token, current_payment_stage, service_stage, total_amount);
             }
 
             @Override
@@ -302,7 +302,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected String doInBackground(Void... params) {
-                return api.createCharge(coach_id, access_token);
+                return coachApi.createCharge(coach_id, access_token);
             }
 
             @Override
@@ -326,7 +326,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected PurchasedService doInBackground(Void... params) {
-                return api.purchasedService(payment_stage, access_token);
+                return coachApi.purchasedService(payment_stage, access_token);
             }
 
             @Override
@@ -350,7 +350,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected CoachModel doInBackground(Void... params) {
-                return api.oneKeyFindCoach(lat, lng);
+                return coachApi.oneKeyFindCoach(lat, lng);
             }
 
             @Override

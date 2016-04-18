@@ -14,6 +14,7 @@ public class GetReviewsResponse implements Serializable {
     private ArrayList<ReviewInfo> data;
     private String code;
     private String message;
+    private boolean isSuccess;
 
     public LinksModel getLinks() {
         return links;
@@ -48,6 +49,10 @@ public class GetReviewsResponse implements Serializable {
     }
 
     public boolean isSuccess() {
-        return code == null;
+        return isSuccess;
+    }
+
+    public void setIsSuccess(boolean isSuccess) {
+        this.isSuccess = isSuccess;
     }
 }

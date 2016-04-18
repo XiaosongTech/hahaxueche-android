@@ -1,4 +1,4 @@
-package com.hahaxueche.api.signupLogin;
+package com.hahaxueche.api.auth;
 
 import android.util.Log;
 
@@ -7,20 +7,23 @@ import com.hahaxueche.api.net.HttpEngine;
 import com.hahaxueche.model.response.CreateUserResponse;
 import com.hahaxueche.model.student.StudentModel;
 import com.hahaxueche.model.base.BaseApiResponse;
+import com.hahaxueche.utils.JsonUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.Response;
+
 /**
  * Created by gibxin on 2016/1/22.
  */
-public class SLApiImpl implements SLApi {
+public class AuthApiImpl implements AuthApi {
     private HttpEngine httpEngine;
-    private String TAG = "SLApiImpl";
+    private String TAG = "AuthApiImpl";
 
-    public SLApiImpl() {
+    public AuthApiImpl() {
         httpEngine = HttpEngine.getInstance();
     }
 
@@ -39,7 +42,18 @@ public class SLApiImpl implements SLApi {
         Type type = new TypeToken<BaseApiResponse>() {
         }.getType();
         try {
-            return httpEngine.postHandle(paramMap, type, SLApi.SEND_AUTH_TOKEN);
+            Response response = httpEngine.postHandle(paramMap, "send_auth_token", "");
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                BaseApiResponse retModel = new BaseApiResponse();
+                retModel.setCode(String.valueOf(response.code()));
+                retModel.setMessage(response.message());
+                retModel.setIsSuccess(false);
+                return retModel;
+            }
         } catch (IOException e) {
             return null;
         }
@@ -64,7 +78,18 @@ public class SLApiImpl implements SLApi {
         Type type = new TypeToken<CreateUserResponse>() {
         }.getType();
         try {
-            return httpEngine.postHandle(paramMap, type, SLApi.CREATE_USER);
+            Response response = httpEngine.postHandle(paramMap, "users", "");
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                CreateUserResponse retModel = new CreateUserResponse();
+                retModel.setCode(String.valueOf(response.code()));
+                retModel.setMessage(response.message());
+                retModel.setIsSuccess(false);
+                return retModel;
+            }
         } catch (IOException e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
@@ -88,7 +113,18 @@ public class SLApiImpl implements SLApi {
         Type type = new TypeToken<StudentModel>() {
         }.getType();
         try {
-            return httpEngine.putHandle(paramMap, type, SLApi.STUDENTS + "/" + studentId, accessToken);
+            Response response = httpEngine.putHandle(paramMap, "students/" + studentId, accessToken);
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                StudentModel retModel = new StudentModel();
+                retModel.setCode(String.valueOf(response.code()));
+                retModel.setMessage(response.message());
+                retModel.setIsSuccess(false);
+                return retModel;
+            }
         } catch (IOException e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
@@ -107,7 +143,18 @@ public class SLApiImpl implements SLApi {
         Type type = new TypeToken<CreateUserResponse>() {
         }.getType();
         try {
-            return httpEngine.postHandle(paramMap, type, SLApi.SESSIONS);
+            Response response = httpEngine.postHandle(paramMap, "sessions", "");
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                CreateUserResponse retModel = new CreateUserResponse();
+                retModel.setCode(String.valueOf(response.code()));
+                retModel.setMessage(response.message());
+                retModel.setIsSuccess(false);
+                return retModel;
+            }
         } catch (IOException e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
@@ -124,7 +171,18 @@ public class SLApiImpl implements SLApi {
         Type type = new TypeToken<BaseApiResponse>() {
         }.getType();
         try {
-            return httpEngine.postHandle(paramMap, type, SLApi.RESET_PASSWORD);
+            Response response = httpEngine.postHandle(paramMap, "users/reset_password", "");
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                BaseApiResponse retModel = new BaseApiResponse();
+                retModel.setCode(String.valueOf(response.code()));
+                retModel.setMessage(response.message());
+                retModel.setIsSuccess(false);
+                return retModel;
+            }
         } catch (IOException e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
@@ -136,7 +194,18 @@ public class SLApiImpl implements SLApi {
         Type type = new TypeToken<StudentModel>() {
         }.getType();
         try {
-            return httpEngine.postHandle(type, SLApi.STUDENTS + "/" + studentId + "/"+SLApi.AVATAR, access_token, filePath);
+            Response response = httpEngine.postFileHandle("students/" + studentId + "/avatar", access_token, filePath);
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                StudentModel retModel = new StudentModel();
+                retModel.setCode(String.valueOf(response.code()));
+                retModel.setMessage(response.message());
+                retModel.setIsSuccess(false);
+                return retModel;
+            }
         } catch (IOException e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;

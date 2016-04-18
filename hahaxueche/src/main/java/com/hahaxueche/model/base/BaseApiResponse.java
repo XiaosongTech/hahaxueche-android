@@ -7,6 +7,7 @@ package com.hahaxueche.model.base;
 public class BaseApiResponse {
     private String code;
     private String message;
+    private boolean isSuccess = true;
 
     public String getCode() {
         return code;
@@ -24,7 +25,11 @@ public class BaseApiResponse {
         this.message = message;
     }
 
-    public boolean isSuccess(){
-        return code.equals("20000")||code.equals("1000");
+    public boolean isSuccess() {
+        return isSuccess;
+    }
+
+    public void setIsSuccess(boolean isSuccess) {
+        this.isSuccess = isSuccess;
     }
 }

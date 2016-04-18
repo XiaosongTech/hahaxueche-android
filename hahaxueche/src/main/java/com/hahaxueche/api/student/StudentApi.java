@@ -1,4 +1,4 @@
-package com.hahaxueche.api.mySetting;
+package com.hahaxueche.api.student;
 
 
 import com.hahaxueche.model.response.CoachListResponse;
@@ -9,7 +9,7 @@ import com.hahaxueche.model.base.BaseApiResponse;
 /**
  * Created by gibxin on 2016/2/29.
  */
-public interface MSApi {
+public interface StudentApi {
     /**
      * @param student_id
      * @param access_token

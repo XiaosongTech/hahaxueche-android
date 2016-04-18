@@ -1,5 +1,6 @@
 package com.hahaxueche.api.net;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.File;
@@ -34,26 +35,54 @@ public class OkHttpUtils {
         return mInstance;
     }
 
-    private String getRequest(String url) throws IOException {
-        Request request = new Request.Builder().url(url).build();
-        Response response = mOkHttpClient.newCall(request).execute();
-        return response.body().string();
+    private Response getRequest(String url, String accessToken) throws IOException {
+        Request.Builder builder = new Request.Builder().url(url);
+        Request request;
+        if (!TextUtils.isEmpty(accessToken)) {
+            request = builder.addHeader("X-Access-Token", accessToken).build();
+        } else {
+            request = builder.build();
+        }
+        return mOkHttpClient.newCall(request).execute();
     }
 
-    private String getRequest(String url, String access_token) throws IOException {
-        Request request = new Request.Builder().url(url).addHeader("X-Access-Token", access_token).build();
-        Response response = mOkHttpClient.newCall(request).execute();
-        return response.body().string();
+    private Response postRequest(String url, String jsonParam, String accessToken) throws IOException {
+        RequestBody body = RequestBody.create(JSON, jsonParam);
+        Request.Builder builder = new Request.Builder().url(url);
+        Request request;
+        if (!TextUtils.isEmpty(accessToken)) {
+            request = builder.addHeader("X-Access-Token", accessToken).post(body).build();
+        } else {
+            request = builder.post(body).build();
+        }
+        return mOkHttpClient.newCall(request).execute();
     }
 
-    private String postRequest(String url, String json) throws IOException {
-        RequestBody body = RequestBody.create(JSON, json);
-        Request request = new Request.Builder().url(url).post(body).build();
-        Response response = mOkHttpClient.newCall(request).execute();
-        return response.body().string();
+    private Response putRequest(String url, String jsonParam, String accessToken) throws IOException {
+        RequestBody body = RequestBody.create(JSON, jsonParam);
+        Request.Builder builder = new Request.Builder().url(url);
+        Request request;
+        if (!TextUtils.isEmpty(accessToken)) {
+            request = builder.addHeader("X-Access-Token", accessToken).put(body).build();
+        } else {
+            request = builder.put(body).build();
+        }
+        return mOkHttpClient.newCall(request).execute();
     }
 
-    private String postRequest(String url, String access_token, String filePath) throws IOException {
+    private Response deleteRequest(String url, String jsonParam, String accessToken) throws IOException {
+        RequestBody body = RequestBody.create(JSON, jsonParam);
+        Request.Builder builder = new Request.Builder().url(url);
+        Request request;
+        if (!TextUtils.isEmpty(accessToken)) {
+            request = builder.addHeader("X-Access-Token", accessToken).delete(body).build();
+        } else {
+            request = builder.put(body).build();
+        }
+        return mOkHttpClient.newCall(request).execute();
+    }
+
+    private Response postRequestFile(String url, String access_token, String filePath) throws IOException {
         File file = new File(filePath);
         String fileName = filePath.split("/")[filePath.split("/").length - 1];
         RequestBody requestBody = new MultipartBody.Builder()
@@ -62,30 +91,9 @@ public class OkHttpUtils {
                 .build();
 
         Request request = new Request.Builder().url(url).addHeader("X-Access-Token", access_token).post(requestBody).build();
-        Response response = mOkHttpClient.newCall(request).execute();
-        return response.body().string();
+        return mOkHttpClient.newCall(request).execute();
     }
 
-    private String postRequestWithX(String url, String jsonParam, String accessToken) throws IOException {
-        RequestBody body = RequestBody.create(JSON, jsonParam);
-        Request request = new Request.Builder().url(url).addHeader("X-Access-Token", accessToken).post(body).build();
-        Response response = mOkHttpClient.newCall(request).execute();
-        return response.body().string();
-    }
-
-    private String putRequest(String url, String json, String access_token) throws IOException {
-        RequestBody body = RequestBody.create(JSON, json);
-        Request request = new Request.Builder().url(url).addHeader("X-Access-Token", access_token).put(body).build();
-        Response response = mOkHttpClient.newCall(request).execute();
-        return response.body().string();
-    }
-
-    private String deleteRequest(String url, String json, String access_token) throws IOException {
-        RequestBody body = RequestBody.create(JSON, json);
-        Request request = new Request.Builder().url(url).addHeader("X-Access-Token", access_token).delete(body).build();
-        Response response = mOkHttpClient.newCall(request).execute();
-        return response.body().string();
-    }
 
     /**********************对外接口************************/
 
@@ -93,35 +101,25 @@ public class OkHttpUtils {
      * get请求
      *
      * @param url
+     * @param accessToken
      * @return
      * @throws IOException
      */
-    public static String get(String url) throws IOException {
-        return getmInstance().getRequest(url);
-    }
-
-    /**
-     * get请求(access_token)
-     *
-     * @param url
-     * @param access_token
-     * @return
-     * @throws IOException
-     */
-    public static String get(String url, String access_token) throws IOException {
-        return getmInstance().getRequest(url, access_token);
+    public static Response get(String url, String accessToken) throws IOException {
+        Response response = getmInstance().getRequest(url, accessToken);
+        return response.newBuilder().build();
     }
 
     /**
      * post请求
      *
      * @param url
-     * @param json
+     * @param jsonParam
+     * @param accessToken
      * @return
-     * @throws IOException
      */
-    public static String post(String url, String json) throws IOException {
-        return getmInstance().postRequest(url, json);
+    public static Response post(String url, String jsonParam, String accessToken) throws IOException {
+        return getmInstance().postRequest(url, jsonParam, accessToken);
     }
 
     /**
@@ -133,34 +131,8 @@ public class OkHttpUtils {
      * @return
      * @throws IOException
      */
-    public static String put(String url, String json, String accessToken) throws IOException {
+    public static Response put(String url, String json, String accessToken) throws IOException {
         return getmInstance().putRequest(url, json, accessToken);
-    }
-
-    /**
-     * post文件上传
-     *
-     * @param url
-     * @param access_token
-     * @param filePath
-     * @return
-     * @throws IOException
-     */
-    public static String post(String url, String access_token, String filePath) throws IOException {
-        return getmInstance().postRequest(url, access_token, filePath);
-    }
-
-
-    /**
-     * 带X-Access-Token的post方法
-     *
-     * @param url
-     * @param jsonParam
-     * @param accessToken
-     * @return
-     */
-    public static String postWithX(String url, String jsonParam, String accessToken) throws IOException {
-        return getmInstance().postRequestWithX(url, jsonParam, accessToken);
     }
 
     /**
@@ -172,8 +144,22 @@ public class OkHttpUtils {
      * @return
      * @throws IOException
      */
-    public static String delete(String url, String jsonParam, String accessToken) throws IOException {
+    public static Response delete(String url, String jsonParam, String accessToken) throws IOException {
         return getmInstance().deleteRequest(url, jsonParam, accessToken);
     }
+
+    /**
+     * post文件上传
+     *
+     * @param url
+     * @param access_token
+     * @param filePath
+     * @return
+     * @throws IOException
+     */
+    public static Response postFile(String url, String access_token, String filePath) throws IOException {
+        return getmInstance().postRequestFile(url, access_token, filePath);
+    }
+
 
 }
