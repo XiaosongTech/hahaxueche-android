@@ -7,6 +7,8 @@ import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.api.net.HttpEngine;
 import com.hahaxueche.api.auth.AuthApi;
 import com.hahaxueche.model.base.ConstantsModel;
+import com.hahaxueche.presenter.appointment.APPresenter;
+import com.hahaxueche.presenter.appointment.APPresenterImpl;
 import com.hahaxueche.presenter.findCoach.FCPresenter;
 import com.hahaxueche.presenter.findCoach.FCPresenterImpl;
 import com.hahaxueche.presenter.mySetting.MSPresenter;
@@ -31,6 +33,7 @@ public class MyApplication extends Application {
     private SLPresenter sLPresenter;
     private FCPresenter fcPresenter;
     private MSPresenter msPresenter;
+    private APPresenter apPresenter;
 
     @Override
     public void onCreate() {
@@ -39,6 +42,7 @@ public class MyApplication extends Application {
         sLPresenter = new SLPresenterImpl(this);
         fcPresenter = new FCPresenterImpl(this);
         msPresenter = new MSPresenterImpl(this);
+        apPresenter = new APPresenterImpl(this);
         final SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
         new Thread(new Runnable() {
 
@@ -79,6 +83,10 @@ public class MyApplication extends Application {
 
     public MSPresenter getMsPresenter() {
         return msPresenter;
+    }
+
+    public APPresenter getApPresenter() {
+        return apPresenter;
     }
 
 

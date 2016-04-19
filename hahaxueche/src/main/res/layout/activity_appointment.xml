@@ -36,7 +36,8 @@
         android:layout_weight="1"
         android:background="@color/haha_white"
         android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
 
         <ListView
@@ -102,27 +103,47 @@
         android:layout_weight="1"
         android:background="@color/fCBackgroundGray"
         android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:orientation="vertical">
+        <com.hahaxueche.ui.widget.pullToRefreshView.XListView
+            android:id="@+id/xlv_schedule_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@drawable/layer_list_divider"
+            android:dividerHeight="1dp"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="false">
 
-        <ImageView
-            android:id="@+id/iv_ap_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/ic_nolist_bk_pic" />
+        </com.hahaxueche.ui.widget.pullToRefreshView.XListView>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/iv_ap_back"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
+        <LinearLayout
+            android:id="@+id/lly_no_schedule"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:lineSpacingMultiplier="1.2"
-            android:text="@string/noScheduleTips"
-            android:textColor="@color/fCTxtGrayFade"
-            android:textSize="14sp" />
+            android:visibility="gone"
+            android:orientation="vertical">
+
+
+            <ImageView
+                android:id="@+id/iv_ap_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_nolist_bk_pic" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_ap_back"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:lineSpacingMultiplier="1.2"
+                android:text="@string/noScheduleTips"
+                android:textColor="@color/fCTxtGrayFade"
+                android:textSize="14sp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

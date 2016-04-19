@@ -1,30 +1,19 @@
 package com.hahaxueche.ui.adapter.appointment;
 
 import android.content.Context;
-import android.graphics.Paint;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.BannerHighlight;
-import com.hahaxueche.model.city.CityModel;
-import com.hahaxueche.model.city.FieldModel;
-import com.hahaxueche.model.coach.CoachModel;
-import com.hahaxueche.ui.dialog.MapDialog;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
-import com.hahaxueche.ui.widget.scoreView.ScoreView;
 import com.hahaxueche.utils.Util;
 import com.squareup.picasso.Picasso;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by gibxin on 2016/4/19.

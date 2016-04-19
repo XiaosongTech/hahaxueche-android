@@ -13,7 +13,7 @@ public class ScheduleEventListResponse {
     private ArrayList<ScheduleEvent> data;
     private String code;
     private String message;
-    private boolean isSuccess;
+    private boolean isSuccess = true;
 
     public LinksModel getLinks() {
         return links;

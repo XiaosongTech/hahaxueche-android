@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.hahaxueche.MyApplication;
+import com.hahaxueche.presenter.appointment.APPresenter;
 import com.hahaxueche.presenter.findCoach.FCPresenter;
 import com.hahaxueche.presenter.mySetting.MSPresenter;
 import com.hahaxueche.presenter.signupLogin.SLPresenter;
@@ -22,6 +23,7 @@ public class FCBaseActivity extends Activity {
     // 寻找教练Presenter
     public FCPresenter fcPresenter;
     public MSPresenter msPresenter;
+    public APPresenter apPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,7 @@ public class FCBaseActivity extends Activity {
         application = (MyApplication) this.getApplication();
         fcPresenter = application.getFCPresenter();
         msPresenter = application.getMsPresenter();
+        apPresenter = application.getApPresenter();
     }
 
     @Override
