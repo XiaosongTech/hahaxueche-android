@@ -9,5 +9,16 @@
     <color name="coach_info_blue">#1883FF</color>
     <color name="title_color">#333333</color>
     <color name="province_line_border">#C7C7C7</color>
+    <color name="haha_white">#ffffff</color>
+    <color name="haha_white_light">#ccffffff</color>
+    <color name="haha_pink">#feddaa</color>
+    <color name="haha_gray_light">#dbdbdb</color>
+    <color name="haha_gray">#f4f4f4</color>
+    <color name="haha_gray_heavier">#bbbbbb</color>
+    <color name="haha_gray_heavy">#929292</color>
+    <color name="haha_black_light">#616161</color>
+    <color name="haha_green">#77dd00</color>
+    <color name="haha_orange">#ff7200</color>
+    <color name="haha_black">#000000</color>
 
 </resources>

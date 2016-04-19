@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fCBackgroundGray">
+    android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/lly_ap_no_coach"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/app_theme_color"
@@ -14,91 +12,123 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/tv_ap_coach_schedule"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/appointmentDrive"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
+            android:layout_marginRight="22dp"
+            android:text="@string/coachSchedule"
+            android:textColor="@color/haha_white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_ap_my_schedule"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mySchedule"
+            android:textColor="@color/haha_white_light"
+            android:textSize="18sp" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rly_no_coach"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/haha_white"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+
+        <ListView
+            android:id="@+id/lv_loop_student"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/layer_list_divider_review"
+            android:dividerHeight="1dp"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="false"></ListView>
+
+        <LinearLayout
+            android:id="@+id/lly_select_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/haha_white"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/NotHavingCoachTips"
+                android:textColor="@color/app_theme_color"
+                android:textSize="22dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/FindCoachTips"
+                android:textColor="@color/haha_gray_heavier"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="22dp"
+                android:background="@drawable/corner_bg_orange_textview"
+                android:gravity="center"
+                android:paddingBottom="15dp"
+                android:paddingTop="15dp"
+                android:text="@string/choseCoach"
+                android:textColor="@color/haha_white"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_above="@id/lly_select_area"
+            android:background="@drawable/rect_gradient_white" />
+    </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/lly_ap_has_coach"
+        android:id="@+id/lly_has_coach"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/app_theme_color"
-        android:gravity="center_vertical|right"
-        android:orientation="horizontal"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/fCBackgroundGray"
+        android:gravity="center"
+        android:orientation="vertical"
         android:visibility="gone">
 
-        <TextView
+        <ImageView
+            android:id="@+id/iv_ap_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
-            android:text="@string/coachClasses"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_nolist_bk_pic" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
-            android:text="@string/classReviewed"
-            android:textColor="@color/fCTxtTitleGrayFade"
-            android:textSize="16sp" />
+            android:layout_below="@id/iv_ap_back"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.2"
+            android:text="@string/noScheduleTips"
+            android:textColor="@color/fCTxtGrayFade"
+            android:textSize="14sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:text="@string/classFinished"
-            android:textColor="@color/fCTxtTitleGrayFade"
-            android:textSize="16sp" />
-
-        <com.hahaxueche.ui.widget.circleImageView.CircleImageView
-            android:id="@+id/cir_ap_coach_avatar"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginRight="20dp"
-            app:border_color="@android:color/white"
-            app:border_width="1dp"></com.hahaxueche.ui.widget.circleImageView.CircleImageView>
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/iv_ap_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:src="@drawable/ic_nolist_bk_pic" />
-
-    <TextView
-        android:id="@+id/tv_no_coach"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/iv_ap_back"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:lineSpacingMultiplier="1.2"
-        android:text="@string/noCoach"
-        android:textColor="@color/fCTxtGrayFade"
-        android:textSize="14sp" />
-
-    <TextView
-        android:id="@+id/tv_has_coach"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/iv_ap_back"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:text="@string/noClasses"
-        android:textColor="@color/fCTxtGrayFade"
-        android:textSize="14sp"
-        android:visibility="gone" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_alignTop="@+id/lly_bottom_tab"
         android:background="@color/tab_bottom_gray_fade" />
 
     <LinearLayout
@@ -218,4 +248,4 @@
         </LinearLayout>
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

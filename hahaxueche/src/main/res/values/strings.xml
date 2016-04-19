@@ -30,5 +30,12 @@
     <string name="weixin_errcode_unknown">发送返回</string>
 
     <string name="user_registe_down">完成</string>
+    <string name="coachSchedule">教练课程</string>
+    <string name="mySchedule">我的课程</string>
+    <string name="noScheduleTips">目前还没有新的课程，请您耐心等候哦~</string>
+    <string name="IKnow">我知道了</string>
+    <string name="NotHavingCoachTips">您还没有选择教练哦~</string>
+    <string name="FindCoachTips">赶快寻找属于自己的好教练，加入他们吧！</string>
+    <string name="choseCoach">选择教练</string>
 
 </resources>

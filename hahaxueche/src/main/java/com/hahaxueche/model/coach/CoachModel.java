@@ -32,7 +32,7 @@ public class CoachModel implements Serializable {
     private String assigned_coaches;
     private String code;
     private String message;
-    private boolean isSuccess;
+    private boolean isSuccess = true;
 
     public String getId() {
         return id;

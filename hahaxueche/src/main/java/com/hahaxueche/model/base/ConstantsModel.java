@@ -17,7 +17,7 @@ public class ConstantsModel {
     private ArrayList<String> login_banners;
     private ArrayList<String> home_page_banners;
     private List<BaseKeyValue> service_types;
-    private ArrayList<ConstantsModel> banner_highlights;
+    private ArrayList<BannerHighlight> banner_highlights;
     private String message;
     private String code;
     private boolean isSuccess;
@@ -70,11 +70,11 @@ public class ConstantsModel {
         this.service_types = service_types;
     }
 
-    public ArrayList<ConstantsModel> getBanner_highlights() {
+    public ArrayList<BannerHighlight> getBanner_highlights() {
         return banner_highlights;
     }
 
-    public void setBanner_highlights(ArrayList<ConstantsModel> banner_highlights) {
+    public void setBanner_highlights(ArrayList<BannerHighlight> banner_highlights) {
         this.banner_highlights = banner_highlights;
     }
 
