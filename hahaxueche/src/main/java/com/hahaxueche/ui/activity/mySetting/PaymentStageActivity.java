@@ -18,6 +18,7 @@ import com.hahaxueche.model.student.PaymentStage;
 import com.hahaxueche.model.student.PurchasedService;
 import com.hahaxueche.model.user.Session;
 import com.hahaxueche.model.student.Student;
+import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.adapter.mySetting.PaymentStageAdapter;
@@ -199,7 +200,9 @@ public class PaymentStageActivity extends MSBaseActivity {
             @Override
             public void onSuccess(Student data) {
                 mStudent = data;
-                spUtil.getUser().setStudent(mStudent);
+                User user = spUtil.getUser();
+                user.setStudent(mStudent);
+                spUtil.setUser(user);
                 if (!TextUtils.isEmpty(data.getCurrent_coach_id())) {
                     fcPresenter.getCoach(data.getCurrent_coach_id(), new FCCallbackListener<Coach>() {
                         @Override

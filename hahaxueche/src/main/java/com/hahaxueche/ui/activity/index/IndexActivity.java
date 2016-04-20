@@ -93,6 +93,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                         public void onCitySelected(String cityName, String cityId) {
                             mCityChoseDialog.dismiss();
                             mUser.getStudent().setCity_id(cityId);
+                            spUtil.setUser(mUser);
                         }
                     });
             //mCityChoseDialog.show();

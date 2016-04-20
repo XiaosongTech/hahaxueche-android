@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.hahaxueche.R;
 import com.hahaxueche.model.user.Session;
 import com.hahaxueche.model.student.Student;
+import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
 import com.hahaxueche.ui.dialog.CityChoseDialog;
 import com.hahaxueche.ui.dialog.RegisterInfoPhotoDialog;
@@ -150,7 +151,9 @@ public class SignUpInfoActivity extends SLBaseActivity {
                 if (pd != null) {
                     pd.dismiss();
                 }
-                spUtil.getUser().setStudent(student);
+                User user = spUtil.getUser();
+                user.setStudent(student);
+                spUtil.setUser(user);
                 Toast.makeText(context, "完善资料成功！", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(context, IndexActivity.class);
                 startActivity(intent);

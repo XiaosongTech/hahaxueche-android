@@ -111,11 +111,6 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         //mAdapter = new ArrayAdapter<String>(this, R.layout.view_coach_list_item, items);
         //xlvCoachList.setAdapter(mAdapter);
         ibtnFcMap = Util.instence(this).$(this, R.id.ibtn_fc_map);
-        List<City> cityList = spUtil.getConstants().getCities();
-        int myCityCount = 0;
-        if (null != spUtil.getUser().getStudent() && !TextUtils.isEmpty(spUtil.getUser().getStudent().getCity_id())) {
-            myCityCount = Integer.parseInt(spUtil.getUser().getStudent().getCity_id());
-        }
         City city = spUtil.getMyCity();
         List<String> distanceList = city.getFilters().getRadius();
         distance = distanceList.get(distanceList.size() - 2);

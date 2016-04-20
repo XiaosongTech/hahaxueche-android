@@ -39,6 +39,7 @@ import com.hahaxueche.model.base.BaseApiResponse;
 import com.hahaxueche.model.base.BaseBoolean;
 import com.hahaxueche.model.base.BaseKeyValue;
 import com.hahaxueche.model.base.Constants;
+import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
@@ -622,7 +623,9 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                         @Override
                         public void onSuccess(Student data) {
                             mStudent = data;
-                            spUtil.getUser().setStudent(mStudent);
+                            User user = spUtil.getUser();
+                            user.setStudent(mStudent);
+                            spUtil.setUser(user);
                             if (!TextUtils.isEmpty(data.getCurrent_coach_id())) {
                                 fcPresenter.getCoach(data.getCurrent_coach_id(), new FCCallbackListener<Coach>() {
                                     @Override

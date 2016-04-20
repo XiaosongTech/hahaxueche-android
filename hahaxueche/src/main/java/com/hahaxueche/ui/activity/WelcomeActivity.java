@@ -50,7 +50,7 @@ public class WelcomeActivity extends MSBaseActivity {
 
         public void run() {
             User user = spUtil.getUser();
-            if (null != user && null != user.getStudent()) {//内存中有用户信息，自动登录
+            if (null != user && null != user.getStudent() && null != user.getSession()) {//内存中有用户信息，自动登录
                 doAutoLogin(spUtil.getUser());
             } else {
                 startActivity(new Intent(getApplication(), StartActivity.class));
@@ -62,6 +62,7 @@ public class WelcomeActivity extends MSBaseActivity {
 
     /**
      * 自动登录
+     *
      * @param user
      */
     private void doAutoLogin(final User user) {
