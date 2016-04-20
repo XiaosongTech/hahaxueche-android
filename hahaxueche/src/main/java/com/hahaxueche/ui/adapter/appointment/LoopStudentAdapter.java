@@ -1,6 +1,12 @@
 package com.hahaxueche.ui.adapter.appointment;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,7 +67,15 @@ public class LoopStudentAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
         BannerHighlight student = mStudentList.get(position);
-        holder.tvStudentText.setText(student.getText());
+        String infoText = student.getText();
+        ArrayList<String> highlightsTextList = student.getHighlights();
+        SpannableStringBuilder style = new SpannableStringBuilder(infoText);
+        for (String highlight : highlightsTextList) {
+            int index = infoText.indexOf(highlight);
+            int length = highlight.length();
+            style.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.app_theme_color)), index, index + length, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        }
+        holder.tvStudentText.setText(style);
         holder.tvStudentName.setText(student.getName());
         getStudentAvatar(student.getAvatar_url(), holder.civStudentAvatar);
         return view;
