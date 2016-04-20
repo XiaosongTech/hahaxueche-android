@@ -63,11 +63,11 @@ public class BaseConfirmDialog {
     }
 
     private void initView() {
-        contentView = View.inflate(mContext, R.layout.dialog_base_alert, null);
+        contentView = View.inflate(mContext, R.layout.dialog_base_confirm, null);
         mTvTitle = (TextView) contentView.findViewById(R.id.tv_base_confirm_title);
         mTvSubtile = (TextView) contentView.findViewById(R.id.tv_base_confirm_subtitle);
         mTvContent = (TextView) contentView.findViewById(R.id.tv_base_confirm_content);
-        mTvTip = (TextView) contentView.findViewById(R.id.tv_base_confirm_content);
+        mTvTip = (TextView) contentView.findViewById(R.id.vw_base_confirm_tips);
         mVwTipLine = contentView.findViewById(R.id.vw_base_confirm_tip_line);
         mTvConfirm = (TextView) contentView.findViewById(R.id.tv_base_confirm_sure);
         mTvCancel = (TextView) contentView.findViewById(R.id.tv_base_confirm_cancel);
@@ -85,6 +85,8 @@ public class BaseConfirmDialog {
             mTvTip.setVisibility(View.GONE);
             mVwTipLine.setVisibility(View.GONE);
         } else {
+            mTvTip.setVisibility(View.VISIBLE);
+            mVwTipLine.setVisibility(View.VISIBLE);
             mTvTip.setText(mTip);
         }
         mTvTitle.setText(mTitle);

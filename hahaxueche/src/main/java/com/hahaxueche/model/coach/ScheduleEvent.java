@@ -18,6 +18,7 @@ public class ScheduleEvent implements Serializable{
     private ArrayList<Student> registered_students;
     private int service_type;
     private int student_phase;
+    private String status;
     private Coach coach;
     private String code;
     private String message;
@@ -101,6 +102,14 @@ public class ScheduleEvent implements Serializable{
 
     public void setCoach(Coach coach) {
         this.coach = coach;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getCode() {

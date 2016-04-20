@@ -35,6 +35,8 @@ public class StudentApiImpl implements StudentApi {
     public Student getStudent(String student_id, String access_token) {
         Type type = new TypeToken<Student>() {
         }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
+        }.getType();
         try {
             Response response = httpEngine.getHandle("students/" + student_id, access_token);
             String body = response.body().string();
@@ -43,8 +45,9 @@ public class StudentApiImpl implements StudentApi {
                 return JsonUtils.deserialize(body, type);
             } else {
                 Student retModel = new Student();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -94,6 +97,8 @@ public class StudentApiImpl implements StudentApi {
         }
         Type type = new TypeToken<CoachListResponse>() {
         }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
+        }.getType();
         try {
             Response response = httpEngine.getHandle(url, access_token);
             String body = response.body().string();
@@ -102,8 +107,9 @@ public class StudentApiImpl implements StudentApi {
                 return JsonUtils.deserialize(body, type);
             } else {
                 CoachListResponse retModel = new CoachListResponse();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -117,6 +123,8 @@ public class StudentApiImpl implements StudentApi {
     public CoachListResponse getFollowCoachList(String url, String access_token) {
         Type type = new TypeToken<CoachListResponse>() {
         }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
+        }.getType();
         try {
             Response response = httpEngine.getHandleByUrl(url, access_token);
             String body = response.body().string();
@@ -124,9 +132,10 @@ public class StudentApiImpl implements StudentApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
                 CoachListResponse retModel = new CoachListResponse();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -140,6 +149,8 @@ public class StudentApiImpl implements StudentApi {
     public ReviewInfo makeReview(String coach_user_id, String payment_stage, String rating, String comment, String access_token) {
         Type type = new TypeToken<ReviewInfo>() {
         }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
+        }.getType();
         Map<String, String> paramMap = new HashMap<String, String>();
         paramMap.put("payment_stage", payment_stage);
         paramMap.put("rating", rating);
@@ -151,9 +162,10 @@ public class StudentApiImpl implements StudentApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
                 ReviewInfo retModel = new ReviewInfo();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -167,6 +179,8 @@ public class StudentApiImpl implements StudentApi {
     public BaseApiResponse loginOff(String session_id, String access_token) {
         Type type = new TypeToken<BaseApiResponse>() {
         }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
+        }.getType();
         Map<String, String> paramMap = new HashMap<String, String>();
         try {
             Response response = httpEngine.deleteHandle(paramMap, "sessions/" + session_id, access_token);
@@ -175,9 +189,10 @@ public class StudentApiImpl implements StudentApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
                 BaseApiResponse retModel = new BaseApiResponse();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -191,6 +206,8 @@ public class StudentApiImpl implements StudentApi {
     public ScheduleEvent bookScheduleEvent(String studentId, String courseScheduleEventId, String accessToken) {
         Type type = new TypeToken<ScheduleEvent>() {
         }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
+        }.getType();
         Map<String, String> paramMap = new HashMap<String, String>();
         try {
             Response response = httpEngine.postHandle(paramMap, "students/" + studentId + "/" + courseScheduleEventId + "/schedule", accessToken);
@@ -199,9 +216,10 @@ public class StudentApiImpl implements StudentApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
                 ScheduleEvent retModel = new ScheduleEvent();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -214,6 +232,8 @@ public class StudentApiImpl implements StudentApi {
     @Override
     public ScheduleEventListResponse fetchCourseSchedule(String studentId, String page, String perPage, String booked, String accessToken) {
         Type type = new TypeToken<ScheduleEventListResponse>() {
+        }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
         }.getType();
         String url = "students/" + studentId + "/course_schedules";
         if (!TextUtils.isEmpty(page)) {
@@ -233,8 +253,9 @@ public class StudentApiImpl implements StudentApi {
                 return JsonUtils.deserialize(body, type);
             } else {
                 ScheduleEventListResponse retModel = new ScheduleEventListResponse();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -248,6 +269,8 @@ public class StudentApiImpl implements StudentApi {
     public ScheduleEventListResponse fetchCourseSchedule(String url, String accessToken) {
         Type type = new TypeToken<ScheduleEventListResponse>() {
         }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
+        }.getType();
         try {
             Response response = httpEngine.getHandleByUrl(url, accessToken);
             String body = response.body().string();
@@ -256,8 +279,9 @@ public class StudentApiImpl implements StudentApi {
                 return JsonUtils.deserialize(body, type);
             } else {
                 ScheduleEventListResponse retModel = new ScheduleEventListResponse();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -279,9 +303,7 @@ public class StudentApiImpl implements StudentApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
-                BaseApiResponse retModel = new BaseApiResponse();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                BaseApiResponse retModel =JsonUtils.deserialize(body, type);
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -295,6 +317,8 @@ public class StudentApiImpl implements StudentApi {
     public ReviewInfo reviewSchedule(String studentId, String scheduleEventId, String rating, String accessToken) {
         Type type = new TypeToken<ReviewInfo>() {
         }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
+        }.getType();
         Map<String, String> paramMap = new HashMap<String, String>();
         try {
             Response response = httpEngine.postHandle(paramMap, "students/" + studentId + "/" + scheduleEventId + "/review_schedule_event?rating=" + rating, accessToken);
@@ -304,8 +328,9 @@ public class StudentApiImpl implements StudentApi {
                 return JsonUtils.deserialize(body, type);
             } else {
                 ReviewInfo retModel = new ReviewInfo();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }

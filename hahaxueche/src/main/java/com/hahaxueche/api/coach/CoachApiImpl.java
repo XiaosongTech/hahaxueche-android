@@ -40,6 +40,8 @@ public class CoachApiImpl implements CoachApi {
                                           String city_id, ArrayList<String> training_field_ids, String distance, ArrayList<String> user_location, String sort_by) {
         Type type = new TypeToken<CoachListResponse>() {
         }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
+        }.getType();
         String url = CoachApi.COACHES;
         if (!TextUtils.isEmpty(page)) {
             url += "?page=" + page;
@@ -84,9 +86,10 @@ public class CoachApiImpl implements CoachApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
                 CoachListResponse retModel = new CoachListResponse();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -100,6 +103,8 @@ public class CoachApiImpl implements CoachApi {
     public CoachListResponse getCoachList(String url) {
         Type type = new TypeToken<CoachListResponse>() {
         }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
+        }.getType();
         try {
             Response response = httpEngine.getHandleByUrl(url, "");
             String body = response.body().string();
@@ -107,9 +112,10 @@ public class CoachApiImpl implements CoachApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
                 CoachListResponse retModel = new CoachListResponse();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -123,6 +129,8 @@ public class CoachApiImpl implements CoachApi {
     public Coach getCoach(String coach_id) {
         Type type = new TypeToken<Coach>() {
         }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
+        }.getType();
         try {
             Response response = httpEngine.getHandle("coaches/" + coach_id, "");
             String body = response.body().string();
@@ -130,9 +138,10 @@ public class CoachApiImpl implements CoachApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
                 Coach retModel = new Coach();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -146,6 +155,8 @@ public class CoachApiImpl implements CoachApi {
     public FollowResponse follow(String followee_user_id, String content, String access_token) {
         Type type = new TypeToken<FollowResponse>() {
         }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
+        }.getType();
         Map<String, String> paramMap = new HashMap<String, String>();
         try {
             Response response = httpEngine.postHandle(paramMap, "users/follows/" + followee_user_id, access_token);
@@ -154,9 +165,10 @@ public class CoachApiImpl implements CoachApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
                 FollowResponse retModel = new FollowResponse();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -178,9 +190,7 @@ public class CoachApiImpl implements CoachApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
-                BaseApiResponse retModel = new BaseApiResponse();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                BaseApiResponse retModel = JsonUtils.deserialize(body, type);
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -194,6 +204,8 @@ public class CoachApiImpl implements CoachApi {
     public BaseBoolean isFollow(String followee_user_id, String access_token) {
         Type type = new TypeToken<BaseBoolean>() {
         }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
+        }.getType();
         try {
             Response response = httpEngine.getHandle("users/follows/" + followee_user_id, access_token);
             String body = response.body().string();
@@ -201,9 +213,10 @@ public class CoachApiImpl implements CoachApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
                 BaseBoolean retModel = new BaseBoolean();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -217,6 +230,8 @@ public class CoachApiImpl implements CoachApi {
     public TrailResponse createTrail(String coach_id, String name, String phone_number, String first_time_option, String second_time_option) {
         Type type = new TypeToken<TrailResponse>() {
         }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
+        }.getType();
         Map<String, String> paramMap = new HashMap<String, String>();
         paramMap.put("name", name);
         paramMap.put("phone_number", phone_number);
@@ -229,9 +244,10 @@ public class CoachApiImpl implements CoachApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
                 TrailResponse retModel = new TrailResponse();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -244,6 +260,8 @@ public class CoachApiImpl implements CoachApi {
     @Override
     public GetReviewsResponse getReviewList(String coach_user_id, String page, String per_page) {
         Type type = new TypeToken<GetReviewsResponse>() {
+        }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
         }.getType();
         String url = "users/reviews/" + coach_user_id;
         if (!TextUtils.isEmpty(page)) {
@@ -259,9 +277,10 @@ public class CoachApiImpl implements CoachApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
                 GetReviewsResponse retModel = new GetReviewsResponse();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -275,6 +294,8 @@ public class CoachApiImpl implements CoachApi {
     public GetReviewsResponse getReviewList(String url) {
         Type type = new TypeToken<GetReviewsResponse>() {
         }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
+        }.getType();
         try {
             Response response = httpEngine.getHandleByUrl(url, "");
             String body = response.body().string();
@@ -283,8 +304,9 @@ public class CoachApiImpl implements CoachApi {
                 return JsonUtils.deserialize(body, type);
             } else {
                 GetReviewsResponse retModel = new GetReviewsResponse();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -298,6 +320,8 @@ public class CoachApiImpl implements CoachApi {
     public StuPurchaseResponse createPurchaseStu(String coach_id, String access_token, String current_payment_stage, String service_stage, String total_amount) {
         Type type = new TypeToken<StuPurchaseResponse>() {
         }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
+        }.getType();
         Map<String, String> paramMap = new HashMap<String, String>();
         paramMap.put("current_payment_stage", current_payment_stage);
         paramMap.put("service_stage", service_stage);
@@ -310,8 +334,9 @@ public class CoachApiImpl implements CoachApi {
                 return JsonUtils.deserialize(body, type);
             } else {
                 StuPurchaseResponse retModel = new StuPurchaseResponse();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -344,6 +369,8 @@ public class CoachApiImpl implements CoachApi {
     public PurchasedService purchasedService(String payment_stage, String access_token) {
         Type type = new TypeToken<PurchasedService>() {
         }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
+        }.getType();
         Map<String, String> paramMap = new HashMap<String, String>();
         paramMap.put("payment_stage", payment_stage);
         try {
@@ -354,8 +381,9 @@ public class CoachApiImpl implements CoachApi {
                 return JsonUtils.deserialize(body, type);
             } else {
                 PurchasedService retModel = new PurchasedService();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -369,6 +397,8 @@ public class CoachApiImpl implements CoachApi {
     public Coach oneKeyFindCoach(String lat, String lng) {
         Type type = new TypeToken<Coach>() {
         }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
+        }.getType();
         String url = "students/best_match_coach?user_location[]=" + lat + "&user_location[]=" + lng;
         try {
             Response response = httpEngine.getHandle(url, "");
@@ -378,8 +408,9 @@ public class CoachApiImpl implements CoachApi {
                 return JsonUtils.deserialize(body, type);
             } else {
                 Coach retModel = new Coach();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }

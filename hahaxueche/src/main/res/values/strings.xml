@@ -37,5 +37,8 @@
     <string name="NotHavingCoachTips">您还没有选择教练哦~</string>
     <string name="FindCoachTips">赶快寻找属于自己的好教练，加入他们吧！</string>
     <string name="choseCoach">选择教练</string>
+    <string name="scoreYourCoach">快来给你的教练评个分吧！</string>
+    <string name="confirmScore">确认评分</string>
+    <string name="laterScore">稍后评分</string>
 
 </resources>

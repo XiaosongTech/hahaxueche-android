@@ -48,9 +48,7 @@ public class AuthApiImpl implements AuthApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
-                BaseApiResponse retModel = new BaseApiResponse();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                BaseApiResponse retModel = JsonUtils.deserialize(body, type);
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -77,6 +75,8 @@ public class AuthApiImpl implements AuthApi {
         paramMap.put("user_type", user_type);
         Type type = new TypeToken<User>() {
         }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
+        }.getType();
         try {
             Response response = httpEngine.postHandle(paramMap, "users", "");
             String body = response.body().string();
@@ -85,8 +85,9 @@ public class AuthApiImpl implements AuthApi {
                 return JsonUtils.deserialize(body, type);
             } else {
                 User retModel = new User();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -112,6 +113,8 @@ public class AuthApiImpl implements AuthApi {
         paramMap.put("city_id", cityId);
         Type type = new TypeToken<Student>() {
         }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
+        }.getType();
         try {
             Response response = httpEngine.putHandle(paramMap, "students/" + studentId, accessToken);
             String body = response.body().string();
@@ -120,8 +123,9 @@ public class AuthApiImpl implements AuthApi {
                 return JsonUtils.deserialize(body, type);
             } else {
                 Student retModel = new Student();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -142,6 +146,8 @@ public class AuthApiImpl implements AuthApi {
         }
         Type type = new TypeToken<User>() {
         }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
+        }.getType();
         try {
             Response response = httpEngine.postHandle(paramMap, "sessions", "");
             String body = response.body().string();
@@ -149,9 +155,10 @@ public class AuthApiImpl implements AuthApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
                 User retModel = new User();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -177,9 +184,7 @@ public class AuthApiImpl implements AuthApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
-                BaseApiResponse retModel = new BaseApiResponse();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                BaseApiResponse retModel = JsonUtils.deserialize(body, type);
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -193,6 +198,8 @@ public class AuthApiImpl implements AuthApi {
     public Student uploadAvatar(String access_token, String filePath, String studentId) {
         Type type = new TypeToken<Student>() {
         }.getType();
+        Type typeBase = new TypeToken<BaseApiResponse>() {
+        }.getType();
         try {
             Response response = httpEngine.postFileHandle("students/" + studentId + "/avatar", access_token, filePath);
             String body = response.body().string();
@@ -200,9 +207,10 @@ public class AuthApiImpl implements AuthApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
                 Student retModel = new Student();
-                retModel.setCode(String.valueOf(response.code()));
-                retModel.setMessage(response.message());
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
             }

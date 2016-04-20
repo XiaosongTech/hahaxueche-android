@@ -2,6 +2,7 @@ package com.hahaxueche.presenter.appointment;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.hahaxueche.api.student.StudentApi;
 import com.hahaxueche.api.student.StudentApiImpl;
@@ -38,8 +39,6 @@ public class APPresenterImpl implements APPresenter {
                     if (scheduleEvent.isSuccess()) {
                         listener.onSuccess(scheduleEvent);
                     } else {
-                        //40006 有未完成的课程
-                        //40005 有待评级的课程
                         listener.onFailure(scheduleEvent.getCode(), scheduleEvent.getMessage());
                     }
                 } else {

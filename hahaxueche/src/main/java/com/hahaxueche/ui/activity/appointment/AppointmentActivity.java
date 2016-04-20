@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -96,6 +97,11 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
         mLlySelectArea = Util.instence(this).$(this, R.id.lly_select_area);
         mLlyNoSchedule = Util.instence(this).$(this, R.id.lly_no_schedule);
         xlvScheduleList = Util.instence(this).$(this, R.id.xlv_schedule_list);
+        xlvScheduleList.setPullRefreshEnable(true);
+        xlvScheduleList.setPullLoadEnable(true);
+        xlvScheduleList.setAutoLoadEnable(true);
+        xlvScheduleList.setXListViewListener(this);
+        xlvScheduleList.setRefreshTime(getTime());
     }
 
     private void initEvent() {
@@ -129,14 +135,14 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
                     break;
                 case R.id.tv_ap_coach_schedule:
                     booked = "0";
-                    if (TextUtils.isEmpty(mCurrentCoachId)) {
+                    if (!TextUtils.isEmpty(mCurrentCoachId)) {
                         getScheduleList();
                     }
                     refreshUI();
                     break;
                 case R.id.tv_ap_my_schedule:
                     booked = "1";
-                    if (TextUtils.isEmpty(mCurrentCoachId)) {
+                    if (!TextUtils.isEmpty(mCurrentCoachId)) {
                         getScheduleList();
                     }
                     refreshUI();
@@ -291,7 +297,12 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
                 } else {
                     xlvScheduleList.setPullLoadEnable(true);
                 }
-                mAdapter = new ScheduleAdapter(AppointmentActivity.this, scheduleList, R.layout.adapter_schedule_event);
+                mAdapter = new ScheduleAdapter(AppointmentActivity.this, scheduleList, R.layout.adapter_schedule_event, booked, mUser, new ScheduleAdapter.onRefreshActivityUIListener() {
+                    @Override
+                    public void refreshActivityUI() {
+                        loadDatas();
+                    }
+                });
                 xlvScheduleList.setAdapter(mAdapter);
                 onLoad();
                 refreshUI();
@@ -323,7 +334,12 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
                 if (mAdapter != null) {
                     mAdapter.notifyDataSetChanged();
                 } else {
-                    mAdapter = new ScheduleAdapter(AppointmentActivity.this, scheduleList, R.layout.adapter_schedule_event);
+                    mAdapter = new ScheduleAdapter(AppointmentActivity.this, scheduleList, R.layout.adapter_schedule_event, booked, mUser, new ScheduleAdapter.onRefreshActivityUIListener() {
+                        @Override
+                        public void refreshActivityUI() {
+                            loadDatas();
+                        }
+                    });
                     xlvScheduleList.setAdapter(mAdapter);
                 }
                 isOnLoadMore = false;
