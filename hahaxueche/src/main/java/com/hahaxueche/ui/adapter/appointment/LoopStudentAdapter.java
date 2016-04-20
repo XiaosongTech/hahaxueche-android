@@ -1,15 +1,15 @@
 package com.hahaxueche.ui.adapter.appointment;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -78,6 +78,13 @@ public class LoopStudentAdapter extends BaseAdapter {
         holder.tvStudentText.setText(style);
         holder.tvStudentName.setText(student.getName());
         getStudentAvatar(student.getAvatar_url(), holder.civStudentAvatar);
+        if(position==0) {
+            Animation animation = AnimationUtils.loadAnimation(context, R.anim.listview_roll_in);
+            view.startAnimation(animation);
+        }else {
+            Animation animation = AnimationUtils.loadAnimation(context, R.anim.listview_roll_down);
+            view.startAnimation(animation);
+        }
         return view;
     }
 

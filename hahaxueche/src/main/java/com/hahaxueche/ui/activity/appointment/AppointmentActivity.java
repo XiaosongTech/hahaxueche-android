@@ -64,6 +64,7 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
     private String booked = "0";//0:教练将来的；1:自己已经booked的了 default to 0
     private BaseAlertDialog mAlertDialog;
     private ListView mLvLoopStudent;
+    private TextView mTvChoseCoach;
     private LoopStudentAdapter mLoopStudentAdapter;
     private ArrayList<BannerHighlight> mBannerHightList;
     private ArrayList<BannerHighlight> mLoopBannerHightList = new ArrayList<>();
@@ -97,6 +98,7 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
         mLlySelectArea = Util.instence(this).$(this, R.id.lly_select_area);
         mLlyNoSchedule = Util.instence(this).$(this, R.id.lly_no_schedule);
         xlvScheduleList = Util.instence(this).$(this, R.id.xlv_schedule_list);
+        mTvChoseCoach = Util.instence(this).$(this, R.id.tv_chose_coach);
         xlvScheduleList.setPullRefreshEnable(true);
         xlvScheduleList.setPullLoadEnable(true);
         xlvScheduleList.setAutoLoadEnable(true);
@@ -111,6 +113,7 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
         llyTabMySetting.setOnClickListener(mClickListener);
         mTvCoachSchedule.setOnClickListener(mClickListener);
         mTvMySchedule.setOnClickListener(mClickListener);
+        mTvChoseCoach.setOnClickListener(mClickListener);
     }
 
     View.OnClickListener mClickListener = new View.OnClickListener() {
@@ -146,6 +149,11 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
                         getScheduleList();
                     }
                     refreshUI();
+                    break;
+                case R.id.tv_chose_coach:
+                    intent = new Intent(getApplication(), FindCoachActivity.class);
+                    startActivity(intent);
+                    finish();
                     break;
                 default:
                     break;
