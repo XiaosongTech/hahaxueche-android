@@ -1,14 +1,11 @@
 package com.hahaxueche.ui.activity.appointment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -17,13 +14,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.BannerHighlight;
-import com.hahaxueche.model.coach.CoachModel;
 import com.hahaxueche.model.coach.ScheduleEvent;
 import com.hahaxueche.model.response.ScheduleEventListResponse;
-import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.BaseCallbackListener;
 import com.hahaxueche.ui.activity.findCoach.FCBaseActivity;
 import com.hahaxueche.ui.activity.findCoach.FindCoachActivity;
@@ -32,16 +27,12 @@ import com.hahaxueche.ui.activity.mySetting.MySettingActivity;
 import com.hahaxueche.ui.adapter.appointment.LoopStudentAdapter;
 import com.hahaxueche.ui.adapter.appointment.ScheduleAdapter;
 import com.hahaxueche.ui.dialog.BaseAlertDialog;
-import com.hahaxueche.ui.fragment.appointment.AppointmentFragment;
-import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
-import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
 
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -64,13 +55,11 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
     private XListView xlvScheduleList;
     private ScheduleAdapter mAdapter;
     private ArrayList<ScheduleEvent> scheduleList = new ArrayList<ScheduleEvent>();
-    private StudentModel mStudent;
     private String linkSelf;
     private String linkNext;
     private String linkPrevious;
     private String page;
     private String per_page = "10";
-    private CoachModel mCurrentCoach;
     private String booked = "0";//0:教练将来的；1:自己已经booked的了 default to 0
     private BaseAlertDialog mAlertDialog;
     private ListView mLvLoopStudent;
@@ -80,7 +69,9 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
     private int loopIndex = 0;
     private final MyHandler mHandler = new MyHandler(this);
     private boolean isOnLoadMore = false;
-    private String accessToken;
+    private User mUser;
+    private String mCurrentCoachId;
+    private String mAccessToken;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -138,14 +129,14 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
                     break;
                 case R.id.tv_ap_coach_schedule:
                     booked = "0";
-                    if (mCurrentCoach != null) {
+                    if (TextUtils.isEmpty(mCurrentCoachId)) {
                         getScheduleList();
                     }
                     refreshUI();
                     break;
                 case R.id.tv_ap_my_schedule:
                     booked = "1";
-                    if (mCurrentCoach != null) {
+                    if (TextUtils.isEmpty(mCurrentCoachId)) {
                         getScheduleList();
                     }
                     refreshUI();
@@ -177,9 +168,13 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
 
     private void loadDatas() {
         SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
-        mStudent = spUtil.getStudent();
-        mCurrentCoach = spUtil.getCurrentCoach();
-        accessToken = spUtil.getSession() != null ? spUtil.getSession().getAccess_token() : "";
+        mUser = spUtil.getUser();
+        if (null != mUser.getSession()) {
+            mAccessToken = mUser.getSession().getAccess_token();
+        }
+        if (null != mUser.getStudent()) {
+            mCurrentCoachId = mUser.getStudent().getCurrent_coach_id();
+        }
         mBannerHightList = spUtil.getConstants().getBanner_highlights();
         for (int i = 0; i < 5; i++) {
             mLoopBannerHightList.add(mBannerHightList.get(i));
@@ -187,13 +182,13 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
         }
         mLoopStudentAdapter = new LoopStudentAdapter(AppointmentActivity.this, mLoopBannerHightList, R.layout.adapter_loop_student_schedule);
         mLvLoopStudent.setAdapter(mLoopStudentAdapter);
-        if (mCurrentCoach != null) {
+        if (!TextUtils.isEmpty(mCurrentCoachId)) {
             getScheduleList();
         }
     }
 
     private void refreshUI() {
-        if (mCurrentCoach != null) {
+        if (!TextUtils.isEmpty(mCurrentCoachId)) {
             mRlyNoCoach.setVisibility(View.GONE);
             mLlyHasCoach.setVisibility(View.VISIBLE);
             if (booked.equals("0")) {
@@ -284,7 +279,7 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
     }
 
     private void getScheduleList() {
-        this.apPresenter.fetchCourseSchedule(mStudent.getId(), page, per_page, booked, accessToken, new BaseCallbackListener<ScheduleEventListResponse>() {
+        this.apPresenter.fetchCourseSchedule(mUser.getStudent().getId(), page, per_page, booked, mAccessToken, new BaseCallbackListener<ScheduleEventListResponse>() {
             @Override
             public void onSuccess(ScheduleEventListResponse data) {
                 scheduleList = data.getData();
@@ -310,7 +305,7 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
     }
 
     private void getScheduleList(String url) {
-        this.apPresenter.fetchCourseSchedule(url, accessToken, new BaseCallbackListener<ScheduleEventListResponse>() {
+        this.apPresenter.fetchCourseSchedule(url, mAccessToken, new BaseCallbackListener<ScheduleEventListResponse>() {
             @Override
             public void onSuccess(ScheduleEventListResponse data) {
                 ArrayList<ScheduleEvent> newScheduleList = data.getData();

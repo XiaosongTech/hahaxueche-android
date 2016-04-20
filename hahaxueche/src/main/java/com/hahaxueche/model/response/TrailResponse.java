@@ -1,6 +1,6 @@
 package com.hahaxueche.model.response;
 
-import com.hahaxueche.model.coach.CoachModel;
+import com.hahaxueche.model.coach.Coach;
 
 /**
  * 创建预约教练试学反馈
@@ -12,7 +12,7 @@ public class TrailResponse {
     private String phone_number;
     private String first_time_option;
     private String second_time_option;
-    private CoachModel coach;
+    private Coach coach;
     private String code;
     private String message;
     private boolean isSuccess;
@@ -57,11 +57,11 @@ public class TrailResponse {
         this.second_time_option = second_time_option;
     }
 
-    public CoachModel getCoach() {
+    public Coach getCoach() {
         return coach;
     }
 
-    public void setCoach(CoachModel coach) {
+    public void setCoach(Coach coach) {
         this.coach = coach;
     }
 

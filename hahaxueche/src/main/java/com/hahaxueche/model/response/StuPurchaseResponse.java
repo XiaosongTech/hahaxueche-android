@@ -1,8 +1,8 @@
 package com.hahaxueche.model.response;
 
 import com.hahaxueche.model.coach.CoachGroupModel;
-import com.hahaxueche.model.coach.CoachModel;
-import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.coach.Coach;
+import com.hahaxueche.model.student.Student;
 
 import java.util.List;
 
@@ -12,12 +12,12 @@ import java.util.List;
 public class StuPurchaseResponse {
     private String id;
     private String transaction_id;
-    private List<CoachModel> coaches;
+    private List<Coach> coaches;
     private String total_amount;
     private String current_payment_stage;
     private String service_stage;
     private CoachGroupModel coach_group;
-    private StudentModel student;
+    private Student student;
     private String code;
     private String message;
     private boolean isSuccess = true;
@@ -38,11 +38,11 @@ public class StuPurchaseResponse {
         this.transaction_id = transaction_id;
     }
 
-    public List<CoachModel> getCoaches() {
+    public List<Coach> getCoaches() {
         return coaches;
     }
 
-    public void setCoaches(List<CoachModel> coaches) {
+    public void setCoaches(List<Coach> coaches) {
         this.coaches = coaches;
     }
 
@@ -78,11 +78,11 @@ public class StuPurchaseResponse {
         this.coach_group = coach_group;
     }
 
-    public StudentModel getStudent() {
+    public Student getStudent() {
         return student;
     }
 
-    public void setStudent(StudentModel student) {
+    public void setStudent(Student student) {
         this.student = student;
     }
 

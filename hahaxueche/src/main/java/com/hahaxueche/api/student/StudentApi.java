@@ -5,7 +5,7 @@ import com.hahaxueche.model.coach.ScheduleEvent;
 import com.hahaxueche.model.response.CoachListResponse;
 import com.hahaxueche.model.response.ScheduleEventListResponse;
 import com.hahaxueche.model.review.ReviewInfo;
-import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
 
 /**
@@ -17,9 +17,9 @@ public interface StudentApi {
      * @param access_token
      * @return
      */
-    public StudentModel getStudent(String student_id, String access_token);
+    public Student getStudent(String student_id, String access_token);
 
-    public StudentModel getStudentForever(String student_id, String access_token);
+    public Student getStudentForever(String student_id, String access_token);
 
     /**
      * @param page

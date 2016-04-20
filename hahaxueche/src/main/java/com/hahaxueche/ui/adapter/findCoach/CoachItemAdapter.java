@@ -12,10 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.coach.CoachModel;
+import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.model.city.FieldModel;
-import com.hahaxueche.model.city.CityModel;
-import com.hahaxueche.model.base.ConstantsModel;
+import com.hahaxueche.model.city.City;
+import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.ui.dialog.MapDialog;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
@@ -31,18 +31,18 @@ import java.util.List;
  * Created by gibxin on 2016/2/13.
  */
 public class CoachItemAdapter extends BaseAdapter {
-    private List<CoachModel> coachList;
+    private List<Coach> coachList;
     private int resource;   //item的布局
     private Context context;
     private LayoutInflater inflator;
-    private ConstantsModel mConstants;
+    private Constants mConstants;
     private List<FieldModel> fieldsList;
-    private List<CityModel> cityList;
+    private List<City> cityList;
     private MapDialog mapDialog;
     private FieldModel mFieldModel;
     private SharedPreferencesUtil spUtil;
 
-    public CoachItemAdapter(Context context, List<CoachModel> coachList, int resource) {
+    public CoachItemAdapter(Context context, List<Coach> coachList, int resource) {
         this.context = context;
         this.coachList = coachList;
         this.resource = resource;
@@ -92,7 +92,7 @@ public class CoachItemAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
         DecimalFormat dfInt = new DecimalFormat("#####");
-        CoachModel coach = coachList.get(position);
+        Coach coach = coachList.get(position);
         holder.tvCoachName.setText(coach.getName());
         double coachExperiences = 0d;
         if (!TextUtils.isEmpty(coach.getExperiences())) {
@@ -117,7 +117,7 @@ public class CoachItemAdapter extends BaseAdapter {
         if (fieldsList != null) {
             for (FieldModel fieldsModel : fieldsList) {
                 if (fieldsModel.getId().equals(coach.getCoach_group().getField_id())) {
-                    for (CityModel city : cityList) {
+                    for (City city : cityList) {
                         if (city.getId().equals(fieldsModel.getCity_id())) {
                             holder.tvCoachLocation.setText(city.getName() + fieldsModel.getSection());
                             break;

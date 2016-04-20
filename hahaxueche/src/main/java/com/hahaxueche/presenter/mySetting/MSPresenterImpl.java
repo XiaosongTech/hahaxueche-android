@@ -8,7 +8,7 @@ import com.hahaxueche.api.student.StudentApiImpl;
 import com.hahaxueche.api.util.ApiError;
 import com.hahaxueche.model.response.CoachListResponse;
 import com.hahaxueche.model.review.ReviewInfo;
-import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
 
 /**
@@ -24,21 +24,21 @@ public class MSPresenterImpl implements MSPresenter {
     }
 
     @Override
-    public void getStudent(final String student_id, final String access_token, final MSCallbackListener<StudentModel> listener) {
-        new AsyncTask<Void, Void, StudentModel>() {
+    public void getStudent(final String student_id, final String access_token, final MSCallbackListener<Student> listener) {
+        new AsyncTask<Void, Void, Student>() {
 
             @Override
-            protected StudentModel doInBackground(Void... params) {
+            protected Student doInBackground(Void... params) {
                 return studentApi.getStudent(student_id, access_token);
             }
 
             @Override
-            protected void onPostExecute(StudentModel studentModel) {
-                if (studentModel != null) {
-                    if (studentModel.isSuccess()) {
-                        listener.onSuccess(studentModel);
+            protected void onPostExecute(Student student) {
+                if (student != null) {
+                    if (student.isSuccess()) {
+                        listener.onSuccess(student);
                     } else {
-                        listener.onFailure(studentModel.getCode(), studentModel.getMessage());
+                        listener.onFailure(student.getCode(), student.getMessage());
                     }
                 } else {
                     listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
@@ -48,21 +48,21 @@ public class MSPresenterImpl implements MSPresenter {
     }
 
     @Override
-    public void getStudentForever(final String student_id, final String access_token, final MSCallbackListener<StudentModel> listener) {
-        new AsyncTask<Void, Void, StudentModel>() {
+    public void getStudentForever(final String student_id, final String access_token, final MSCallbackListener<Student> listener) {
+        new AsyncTask<Void, Void, Student>() {
 
             @Override
-            protected StudentModel doInBackground(Void... params) {
+            protected Student doInBackground(Void... params) {
                 return studentApi.getStudentForever(student_id, access_token);
             }
 
             @Override
-            protected void onPostExecute(StudentModel studentModel) {
-                if (studentModel != null) {
-                    if (studentModel.isSuccess()) {
-                        listener.onSuccess(studentModel);
+            protected void onPostExecute(Student student) {
+                if (student != null) {
+                    if (student.isSuccess()) {
+                        listener.onSuccess(student);
                     } else {
-                        listener.onFailure(studentModel.getCode(), studentModel.getMessage());
+                        listener.onFailure(student.getCode(), student.getMessage());
                     }
                 } else {
                     listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);

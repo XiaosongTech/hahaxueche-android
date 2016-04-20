@@ -2,12 +2,14 @@ package com.hahaxueche.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.Window;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.user.SessionModel;
-import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.user.Session;
+import com.hahaxueche.model.student.Student;
+import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.activity.mySetting.MSBaseActivity;
@@ -19,40 +21,17 @@ import com.umeng.analytics.MobclickAgent;
  * Created by gibxin on 2016/3/6.
  */
 public class WelcomeActivity extends MSBaseActivity {
+    private SharedPreferencesUtil spUtil;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);// 声明使用自定义标题
         setContentView(R.layout.activity_welcome);
-        //根据sp中是否有session和student，判断打开页面
-        final SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
-        SessionModel curSession = spUtil.getSession();
-        StudentModel curStudent = spUtil.getStudent();
-        if (curSession != null && curStudent != null &&
-                !TextUtils.isEmpty(curStudent.getId()) &&
-                !TextUtils.isEmpty(curSession.getAccess_token())) {
-            this.msPresenter.getStudent(curStudent.getId(), curSession.getAccess_token(), new MSCallbackListener<StudentModel>() {
-                @Override
-                public void onSuccess(StudentModel student) {
-                    spUtil.setStudent(student);
-                    Intent intent = new Intent(WelcomeActivity.this, IndexActivity.class);
-                    startActivity(intent);
-                    WelcomeActivity.this.finish();
-                }
-
-                @Override
-                public void onFailure(String errorEvent, String message) {
-                    Intent intent = new Intent(WelcomeActivity.this, StartActivity.class);
-                    startActivity(intent);
-                    WelcomeActivity.this.finish();
-                }
-            });
-        } else {
-            Intent intent = new Intent(WelcomeActivity.this, StartActivity.class);
-            startActivity(intent);
-            WelcomeActivity.this.finish();
-        }
+        spUtil = new SharedPreferencesUtil(this);
+        Handler x = new Handler();
+        x.postDelayed(new splashhandler(), 2000);
     }
 
     @Override
@@ -65,5 +44,43 @@ public class WelcomeActivity extends MSBaseActivity {
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+    }
+
+    class splashhandler implements Runnable {
+
+        public void run() {
+            User user = spUtil.getUser();
+            if (null != user && null != user.getStudent()) {//内存中有用户信息，自动登录
+                doAutoLogin(spUtil.getUser());
+            } else {
+                startActivity(new Intent(getApplication(), StartActivity.class));
+                WelcomeActivity.this.finish();
+            }
+        }
+
+    }
+
+    /**
+     * 自动登录
+     * @param user
+     */
+    private void doAutoLogin(final User user) {
+        this.msPresenter.getStudent(user.getStudent().getId(), user.getSession().getAccess_token(), new MSCallbackListener<Student>() {
+            @Override
+            public void onSuccess(Student student) {
+                user.setStudent(student);
+                spUtil.setUser(user);
+                Intent intent = new Intent(WelcomeActivity.this, IndexActivity.class);
+                startActivity(intent);
+                WelcomeActivity.this.finish();
+            }
+
+            @Override
+            public void onFailure(String errorEvent, String message) {
+                Intent intent = new Intent(WelcomeActivity.this, StartActivity.class);
+                startActivity(intent);
+                WelcomeActivity.this.finish();
+            }
+        });
     }
 }

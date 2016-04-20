@@ -1,7 +1,7 @@
 package com.hahaxueche.presenter.findCoach;
 
 import com.hahaxueche.model.response.CoachListResponse;
-import com.hahaxueche.model.coach.CoachModel;
+import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.model.response.FollowResponse;
 import com.hahaxueche.model.response.GetReviewsResponse;
 import com.hahaxueche.model.response.StuPurchaseResponse;
@@ -50,7 +50,7 @@ public interface FCPresenter {
      * @param coach_id 教练id
      * @param listener 回调监听器
      */
-    public void getCoach(String coach_id, FCCallbackListener<CoachModel> listener);
+    public void getCoach(String coach_id, FCCallbackListener<Coach> listener);
 
     /**
      * 用户A关注用户B
@@ -132,6 +132,6 @@ public interface FCPresenter {
      * @param lng
      * @param listener
      */
-    public void oneKeyFindCoach(String lat, String lng, FCCallbackListener<CoachModel> listener);
+    public void oneKeyFindCoach(String lat, String lng, FCCallbackListener<Coach> listener);
 
 }

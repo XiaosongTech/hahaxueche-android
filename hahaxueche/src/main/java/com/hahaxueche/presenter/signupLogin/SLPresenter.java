@@ -1,7 +1,7 @@
 package com.hahaxueche.presenter.signupLogin;
 
-import com.hahaxueche.model.response.CreateUserResponse;
-import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
 
 /**
@@ -25,7 +25,7 @@ public interface SLPresenter {
      * @param type               类型
      * @param slCallbackListener 回调监听器
      */
-    public void createUser(String phoneNum, String identifyCode, String pwd, String type, SLCallbackListener<CreateUserResponse> slCallbackListener);
+    public void createUser(String phoneNum, String identifyCode, String pwd, String type, SLCallbackListener<User> slCallbackListener);
 
     /**
      * 完善学生资料
@@ -36,7 +36,7 @@ public interface SLPresenter {
      * @param accessToken Access Token
      * @param photoPath   头像
      */
-    public void completeStuInfo(String studentId, String cityId, String studentName, String accessToken, String photoPath, SLCallbackListener<StudentModel> slCallbackListener);
+    public void completeStuInfo(String studentId, String cityId, String studentName, String accessToken, String photoPath, SLCallbackListener<Student> slCallbackListener);
 
     /**
      * 登录
@@ -46,7 +46,7 @@ public interface SLPresenter {
      * @param loginType          登录类型(1,验证码登录;2,密码登录)
      * @param slCallbackListener 回调监听器
      */
-    public void login(String cell_phone, String pwd, int loginType, SLCallbackListener<CreateUserResponse> slCallbackListener);
+    public void login(String cell_phone, String pwd, int loginType, SLCallbackListener<User> slCallbackListener);
 
     /**
      * 重置密码

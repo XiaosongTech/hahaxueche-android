@@ -1,6 +1,6 @@
 package com.hahaxueche.model.coach;
 
-import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.student.Student;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,10 +15,10 @@ public class ScheduleEvent implements Serializable{
     private int max_st_count;
     private int registered_st_count;
     private int reviewed_st_count;
-    private ArrayList<StudentModel> registered_students;
+    private ArrayList<Student> registered_students;
     private int service_type;
     private int student_phase;
-    private CoachModel coach;
+    private Coach coach;
     private String code;
     private String message;
     private boolean isSuccess = true;
@@ -71,11 +71,11 @@ public class ScheduleEvent implements Serializable{
         this.reviewed_st_count = reviewed_st_count;
     }
 
-    public ArrayList<StudentModel> getRegistered_students() {
+    public ArrayList<Student> getRegistered_students() {
         return registered_students;
     }
 
-    public void setRegistered_students(ArrayList<StudentModel> registered_students) {
+    public void setRegistered_students(ArrayList<Student> registered_students) {
         this.registered_students = registered_students;
     }
 
@@ -95,11 +95,11 @@ public class ScheduleEvent implements Serializable{
         this.student_phase = student_phase;
     }
 
-    public CoachModel getCoach() {
+    public Coach getCoach() {
         return coach;
     }
 
-    public void setCoach(CoachModel coach) {
+    public void setCoach(Coach coach) {
         this.coach = coach;
     }
 

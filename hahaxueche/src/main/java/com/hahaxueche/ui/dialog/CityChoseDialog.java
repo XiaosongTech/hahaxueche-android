@@ -16,8 +16,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.city.CityModel;
-import com.hahaxueche.model.base.ConstantsModel;
+import com.hahaxueche.model.city.City;
+import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 
@@ -79,9 +79,9 @@ public class CityChoseDialog extends Dialog implements View.OnClickListener {
 
     private void initCityData() {
         SharedPreferencesUtil spUtil = new SharedPreferencesUtil(mContext);
-        ConstantsModel constants = spUtil.getConstants();
+        Constants constants = spUtil.getConstants();
         if(constants!=null) {
-            final List<CityModel> cityList = constants.getCities();
+            final List<City> cityList = constants.getCities();
             int rowCount = cityList.size() / 4 + 1;
             viewIds = new int[cityList.size()];
             //int colCount = 3;

@@ -6,7 +6,7 @@ import java.util.List;
  * 学生数据模型
  * Created by gibxin on 2016/1/22.
  */
-public class StudentModel {
+public class Student {
     private String id;
     private String cell_phone;
     private String name;
@@ -15,6 +15,11 @@ public class StudentModel {
     private String avatar;
     private String current_coach_id;
     private List<PurchasedService> purchased_services;
+    private String phase;
+    private String current_course;
+    private String reviewed;
+    private String reviewed_at;
+    private String status;
     private String code;
     private String message;
     private boolean isSuccess = true;
@@ -81,6 +86,46 @@ public class StudentModel {
 
     public void setPurchased_services(List<PurchasedService> purchased_services) {
         this.purchased_services = purchased_services;
+    }
+
+    public String getPhase() {
+        return phase;
+    }
+
+    public void setPhase(String phase) {
+        this.phase = phase;
+    }
+
+    public String getCurrent_course() {
+        return current_course;
+    }
+
+    public void setCurrent_course(String current_course) {
+        this.current_course = current_course;
+    }
+
+    public String getReviewed() {
+        return reviewed;
+    }
+
+    public void setReviewed(String reviewed) {
+        this.reviewed = reviewed;
+    }
+
+    public String getReviewed_at() {
+        return reviewed_at;
+    }
+
+    public void setReviewed_at(String reviewed_at) {
+        this.reviewed_at = reviewed_at;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getCode() {

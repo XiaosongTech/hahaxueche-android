@@ -1,18 +1,24 @@
 package com.hahaxueche.model.city;
 
+import com.hahaxueche.model.course.Course;
+import com.hahaxueche.model.student.StudentPhase;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 城市数据模型
  * Created by gibxin on 2016/1/23.
  */
-public class CityModel {
+public class City {
     private String id;
     private String name;
     private String zip_code;
     private String available;
     private FilterModel filters;
     private List<CostItem> fixed_cost_itemizer;
+    private ArrayList<StudentPhase> student_phases;
+    private ArrayList<Course> courses;
 
     public String getId() {
         return id;
@@ -60,5 +66,21 @@ public class CityModel {
 
     public void setFixed_cost_itemizer(List<CostItem> fixed_cost_itemizer) {
         this.fixed_cost_itemizer = fixed_cost_itemizer;
+    }
+
+    public ArrayList<StudentPhase> getStudent_phases() {
+        return student_phases;
+    }
+
+    public void setStudent_phases(ArrayList<StudentPhase> student_phases) {
+        this.student_phases = student_phases;
+    }
+
+    public ArrayList<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(ArrayList<Course> courses) {
+        this.courses = courses;
     }
 }

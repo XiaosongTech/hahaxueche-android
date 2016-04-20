@@ -16,8 +16,8 @@ import android.widget.Toast;
 import com.hahaxueche.R;
 import com.hahaxueche.model.student.PaymentStage;
 import com.hahaxueche.model.student.PurchasedService;
-import com.hahaxueche.model.user.SessionModel;
-import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.user.Session;
+import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.share.ShareConstants;
@@ -51,7 +51,7 @@ public class MySettingActivity extends MSBaseActivity {
     private LinearLayout llyNotLogin;//未登录页面
     private MonitorScrollView msvMain;
     private boolean isLogin = false;
-    private StudentModel mStudent;
+    private Student mStudent;
     private PurchasedService mPurchasedService;
     private TextView tvStuName;
     private TextView tvUnpaidAmount;
@@ -65,15 +65,15 @@ public class MySettingActivity extends MSBaseActivity {
     private RelativeLayout rlyAboutHaha;
     private View vwMyCoach;
     private ProgressDialog pd;//进度框
-    private SessionModel mSession;
+    private Session mSession;
     private SharedPreferencesUtil spUtil;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         spUtil = new SharedPreferencesUtil(this);
-        mSession = spUtil.getSession();
-        mStudent = spUtil.getStudent();
+        mSession = spUtil.getUser().getSession();
+        mStudent = spUtil.getUser().getStudent();
         setContentView(R.layout.activity_my_setting);
         mTencent = Tencent.createInstance(ShareConstants.APP_ID_QQ, MySettingActivity.this);
         initView();
@@ -229,8 +229,7 @@ public class MySettingActivity extends MSBaseActivity {
                             if (pd != null) {
                                 pd.dismiss();
                             }
-                            spUtil.clearSession();
-                            spUtil.clearStudent();
+                            spUtil.clearUser();
                             spUtil.clearCurrentCoach();
                             Intent intent = new Intent(getApplication(), StartActivity.class);
                             startActivity(intent);

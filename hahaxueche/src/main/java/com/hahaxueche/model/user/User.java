@@ -1,16 +1,15 @@
-package com.hahaxueche.model.response;
+package com.hahaxueche.model.user;
 
-import com.hahaxueche.model.user.SessionModel;
-import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.student.Student;
 
 /**
  * Created by gibxin on 2016/1/22.
  */
-public class CreateUserResponse {
+public class User {
     private String id;
     private String cell_phone;
-    private SessionModel session;
-    private StudentModel student;
+    private Session session;
+    private Student student;
     private String code;
     private String message;
     private boolean isSuccess = true;
@@ -31,19 +30,19 @@ public class CreateUserResponse {
         this.cell_phone = cell_phone;
     }
 
-    public SessionModel getSession() {
+    public Session getSession() {
         return session;
     }
 
-    public void setSession(SessionModel session) {
+    public void setSession(Session session) {
         this.session = session;
     }
 
-    public StudentModel getStudent() {
+    public Student getStudent() {
         return student;
     }
 
-    public void setStudent(StudentModel student) {
+    public void setStudent(Student student) {
         this.student = student;
     }
 

@@ -10,8 +10,8 @@ import android.widget.ImageButton;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.response.CoachListResponse;
-import com.hahaxueche.model.coach.CoachModel;
-import com.hahaxueche.model.user.SessionModel;
+import com.hahaxueche.model.coach.Coach;
+import com.hahaxueche.model.user.Session;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachItemAdapter;
@@ -31,7 +31,7 @@ public class FollowCoachListActivity extends MSBaseActivity implements XListView
     private XListView xlvCoachList;
     private ImageButton ibtnFclBack;
     private CoachItemAdapter mAdapter;
-    private List<CoachModel> coachList = new ArrayList<CoachModel>();
+    private List<Coach> coachList = new ArrayList<Coach>();
     private Handler mHandler;
     private int mRefreshIndex = 0;
     private String linkSelf;
@@ -40,14 +40,14 @@ public class FollowCoachListActivity extends MSBaseActivity implements XListView
     private String page;
     private String per_page = "10";
     private boolean isOnLoadMore = false;
-    private SessionModel mSession;
+    private Session mSession;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_follow_coach_list);
         SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
-        mSession = spUtil.getSession();
+        mSession = spUtil.getUser().getSession();
         initView();
         initEvent();
         if (xlvCoachList != null)
@@ -148,7 +148,7 @@ public class FollowCoachListActivity extends MSBaseActivity implements XListView
         this.msPresenter.getFollowCoachList(url, mSession.getAccess_token(), new MSCallbackListener<CoachListResponse>() {
             @Override
             public void onSuccess(CoachListResponse data) {
-                ArrayList<CoachModel> newCoachList = data.getData();
+                ArrayList<Coach> newCoachList = data.getData();
                 if (newCoachList != null && newCoachList.size() > 0) {
                     coachList.addAll(newCoachList);
                 }

@@ -9,7 +9,7 @@ import com.hahaxueche.model.coach.ScheduleEvent;
 import com.hahaxueche.model.response.CoachListResponse;
 import com.hahaxueche.model.response.ScheduleEventListResponse;
 import com.hahaxueche.model.review.ReviewInfo;
-import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
 import com.hahaxueche.utils.JsonUtils;
 
@@ -32,8 +32,8 @@ public class StudentApiImpl implements StudentApi {
     }
 
     @Override
-    public StudentModel getStudent(String student_id, String access_token) {
-        Type type = new TypeToken<StudentModel>() {
+    public Student getStudent(String student_id, String access_token) {
+        Type type = new TypeToken<Student>() {
         }.getType();
         try {
             Response response = httpEngine.getHandle("students/" + student_id, access_token);
@@ -42,7 +42,7 @@ public class StudentApiImpl implements StudentApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
-                StudentModel retModel = new StudentModel();
+                Student retModel = new Student();
                 retModel.setCode(String.valueOf(response.code()));
                 retModel.setMessage(response.message());
                 retModel.setIsSuccess(false);
@@ -55,10 +55,10 @@ public class StudentApiImpl implements StudentApi {
     }
 
     @Override
-    public StudentModel getStudentForever(String student_id, String access_token) {
-        Type type = new TypeToken<StudentModel>() {
+    public Student getStudentForever(String student_id, String access_token) {
+        Type type = new TypeToken<Student>() {
         }.getType();
-        StudentModel retStudent = new StudentModel();
+        Student retStudent = new Student();
         try {
             while (true) {
                 if (retStudent != null && !TextUtils.isEmpty(retStudent.getCurrent_coach_id())) {

@@ -1,6 +1,6 @@
 package com.hahaxueche.model.response;
 
-import com.hahaxueche.model.coach.CoachModel;
+import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.model.base.LinksModel;
 
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public class CoachListResponse {
     private LinksModel links;
-    private ArrayList<CoachModel> data;
+    private ArrayList<Coach> data;
     private String message;
     private String code;
     private boolean isSuccess = true;
@@ -23,11 +23,11 @@ public class CoachListResponse {
         this.links = links;
     }
 
-    public ArrayList<CoachModel> getData() {
+    public ArrayList<Coach> getData() {
         return data;
     }
 
-    public void setData(ArrayList<CoachModel> data) {
+    public void setData(ArrayList<Coach> data) {
         this.data = data;
     }
 

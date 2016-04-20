@@ -17,7 +17,7 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.hahaxueche.R;
 import com.hahaxueche.model.city.FieldModel;
-import com.hahaxueche.model.base.ConstantsModel;
+import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 
 import java.util.ArrayList;
@@ -155,8 +155,8 @@ public class FindCoachMapFilterActivity extends FCBaseActivity implements AMap.O
 
     private void initFieldList() {
         SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
-        String city_id = spUtil.getStudent().getCity_id();
-        ConstantsModel constants = spUtil.getConstants();
+        String city_id = spUtil.getMyCity().getId();
+        Constants constants = spUtil.getConstants();
         if (constants != null && constants.getFields() != null && constants.getFields().size() > 0) {
             for (FieldModel fieldsModel : constants.getFields()) {
                 if (fieldsModel.getCity_id().equals(city_id)) {

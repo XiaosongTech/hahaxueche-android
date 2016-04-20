@@ -2,7 +2,7 @@ package com.hahaxueche.presenter.mySetting;
 
 import com.hahaxueche.model.response.CoachListResponse;
 import com.hahaxueche.model.review.ReviewInfo;
-import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
 
 /**
@@ -14,9 +14,9 @@ public interface MSPresenter {
      * @param access_token
      * @param listener
      */
-    public void getStudent(String student_id, String access_token, MSCallbackListener<StudentModel> listener);
+    public void getStudent(String student_id, String access_token, MSCallbackListener<Student> listener);
 
-    public void getStudentForever(String student_id, String access_token, MSCallbackListener<StudentModel> listener);
+    public void getStudentForever(String student_id, String access_token, MSCallbackListener<Student> listener);
 
     /**
      * @param page

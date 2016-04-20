@@ -11,7 +11,7 @@ import com.hahaxueche.api.coach.CoachApi;
 import com.hahaxueche.api.coach.CoachApiImpl;
 import com.hahaxueche.api.util.ApiError;
 import com.hahaxueche.model.response.CoachListResponse;
-import com.hahaxueche.model.coach.CoachModel;
+import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.model.response.FollowResponse;
 import com.hahaxueche.model.response.GetReviewsResponse;
 import com.hahaxueche.model.response.StuPurchaseResponse;
@@ -87,16 +87,16 @@ public class FCPresenterImpl implements FCPresenter {
     }
 
     @Override
-    public void getCoach(final String coach_id, final FCCallbackListener<CoachModel> listener) {
-        new AsyncTask<Void, Void, CoachModel>() {
+    public void getCoach(final String coach_id, final FCCallbackListener<Coach> listener) {
+        new AsyncTask<Void, Void, Coach>() {
 
             @Override
-            protected CoachModel doInBackground(Void... params) {
+            protected Coach doInBackground(Void... params) {
                 return coachApi.getCoach(coach_id);
             }
 
             @Override
-            protected void onPostExecute(CoachModel coachResponse) {
+            protected void onPostExecute(Coach coachResponse) {
                 if (coachResponse != null) {
                     if (coachResponse.isSuccess()) {
                         listener.onSuccess(coachResponse);
@@ -345,22 +345,22 @@ public class FCPresenterImpl implements FCPresenter {
     }
 
     @Override
-    public void oneKeyFindCoach(final String lat, final String lng, final FCCallbackListener<CoachModel> listener) {
-        new AsyncTask<Void, Void, CoachModel>() {
+    public void oneKeyFindCoach(final String lat, final String lng, final FCCallbackListener<Coach> listener) {
+        new AsyncTask<Void, Void, Coach>() {
 
             @Override
-            protected CoachModel doInBackground(Void... params) {
+            protected Coach doInBackground(Void... params) {
                 return coachApi.oneKeyFindCoach(lat, lng);
             }
 
             @Override
-            protected void onPostExecute(CoachModel coachModel) {
-                if (coachModel != null) {
-                    if (coachModel != null) {
-                        if (coachModel.isSuccess()) {
-                            listener.onSuccess(coachModel);
+            protected void onPostExecute(Coach coach) {
+                if (coach != null) {
+                    if (coach != null) {
+                        if (coach.isSuccess()) {
+                            listener.onSuccess(coach);
                         } else {
-                            listener.onFailure(coachModel.getCode(), coachModel.getMessage());
+                            listener.onFailure(coach.getCode(), coach.getMessage());
                         }
                     } else {
                         listener.onFailure("0000", "未找到合适的教练");

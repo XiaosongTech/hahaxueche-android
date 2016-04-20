@@ -1,7 +1,7 @@
 package com.hahaxueche.model.base;
 
 import com.hahaxueche.model.city.FieldModel;
-import com.hahaxueche.model.city.CityModel;
+import com.hahaxueche.model.city.City;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +10,8 @@ import java.util.List;
  * 常量数据模型
  * Created by gibxin on 2016/2/3.
  */
-public class ConstantsModel {
-    private List<CityModel> cities;
+public class Constants {
+    private List<City> cities;
     private List<FieldModel> fields;
     private List<BaseKeyValue> skill_levels;
     private ArrayList<String> login_banners;
@@ -22,11 +22,11 @@ public class ConstantsModel {
     private String code;
     private boolean isSuccess;
 
-    public List<CityModel> getCities() {
+    public List<City> getCities() {
         return cities;
     }
 
-    public void setCities(List<CityModel> cities) {
+    public void setCities(List<City> cities) {
         this.cities = cities;
     }
 

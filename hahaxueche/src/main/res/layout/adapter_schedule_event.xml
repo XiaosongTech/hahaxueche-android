@@ -50,7 +50,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:layout_marginTop="22dp"
-            android:text="李勇"
             android:textColor="@color/haha_black_light"
             android:textSize="20sp" />
 
@@ -61,7 +60,6 @@
             android:layout_alignBottom="@id/tv_adapter_schedule_coach_name"
             android:layout_marginLeft="15dp"
             android:layout_toRightOf="@id/tv_adapter_schedule_coach_name"
-            android:text="(18:00-19:00)"
             android:textColor="@color/haha_gray_heavier"
             android:textSize="14sp" />
 

@@ -1,7 +1,7 @@
 package com.hahaxueche.api.auth;
 
-import com.hahaxueche.model.response.CreateUserResponse;
-import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
 
 /**
@@ -26,7 +26,7 @@ public interface AuthApi {
      * @param user_type    类型(coach,student)
      * @return
      */
-    public CreateUserResponse createUser(String phoneNum, String identifyCode, String pwd, String user_type);
+    public User createUser(String phoneNum, String identifyCode, String pwd, String user_type);
 
     /**
      * 完善学生资料
@@ -37,7 +37,7 @@ public interface AuthApi {
      * @param accessToken Access Token
      * @return
      */
-    public StudentModel completeStuInfo(String studentId, String cityId, String studentName, String accessToken);
+    public Student completeStuInfo(String studentId, String cityId, String studentName, String accessToken);
 
     /**
      * 登录
@@ -47,7 +47,7 @@ public interface AuthApi {
      * @param loginType  登录类型(1,验证码登录;2,密码登录)
      * @return
      */
-    public CreateUserResponse login(String cell_phone, String pwd, int loginType);
+    public User login(String cell_phone, String pwd, int loginType);
 
     /**
      * 重置密码
@@ -67,5 +67,5 @@ public interface AuthApi {
      * @param studentId
      * @return
      */
-    public StudentModel uploadAvatar(String access_token, String filePath, String studentId);
+    public Student uploadAvatar(String access_token, String filePath, String studentId);
 }

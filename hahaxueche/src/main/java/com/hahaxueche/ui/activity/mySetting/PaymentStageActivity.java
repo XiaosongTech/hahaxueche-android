@@ -12,12 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.coach.CoachModel;
+import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.model.review.ReviewInfo;
 import com.hahaxueche.model.student.PaymentStage;
 import com.hahaxueche.model.student.PurchasedService;
-import com.hahaxueche.model.user.SessionModel;
-import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.user.Session;
+import com.hahaxueche.model.student.Student;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.adapter.mySetting.PaymentStageAdapter;
@@ -46,10 +46,10 @@ public class PaymentStageActivity extends MSBaseActivity {
     private TextView tvCongratulation;
     private ListView lvPurchasedServices;
     private PaymentStageAdapter mPaymentStageAdapter;
-    private SessionModel mSession;
-    private StudentModel mStudent;
+    private Session mSession;
+    private Student mStudent;
     private PurchasedService mPurchasedService;
-    private CoachModel mCurrentCoach;
+    private Coach mCurrentCoach;
     private PaymentStage mPaymentStage;
     private TransferConfirmDialog transferConfirmDialog;
     private ReviewDialog reviewDialog;
@@ -85,8 +85,8 @@ public class PaymentStageActivity extends MSBaseActivity {
         if (pd != null) {
             pd.dismiss();
         }
-        mSession = spUtil.getSession();
-        mStudent = spUtil.getStudent();
+        mSession = spUtil.getUser().getSession();
+        mStudent = spUtil.getUser().getStudent();
         mCurrentCoach = spUtil.getCurrentCoach();
         mPurchasedService = mStudent.getPurchased_services().get(0);
         for (PaymentStage paymentStage : mPurchasedService.getPayment_stages()) {
@@ -195,16 +195,16 @@ public class PaymentStageActivity extends MSBaseActivity {
      */
     private void refreshStuCache() {
         //更新SharedPreferences中的student
-        msPresenter.getStudent(mStudent.getId(), mSession.getAccess_token(), new MSCallbackListener<StudentModel>() {
+        msPresenter.getStudent(mStudent.getId(), mSession.getAccess_token(), new MSCallbackListener<Student>() {
             @Override
-            public void onSuccess(StudentModel data) {
+            public void onSuccess(Student data) {
                 mStudent = data;
-                spUtil.setStudent(mStudent);
+                spUtil.getUser().setStudent(mStudent);
                 if (!TextUtils.isEmpty(data.getCurrent_coach_id())) {
-                    fcPresenter.getCoach(data.getCurrent_coach_id(), new FCCallbackListener<CoachModel>() {
+                    fcPresenter.getCoach(data.getCurrent_coach_id(), new FCCallbackListener<Coach>() {
                         @Override
-                        public void onSuccess(CoachModel coachModel) {
-                            spUtil.setCurrentCoach(coachModel);
+                        public void onSuccess(Coach coach) {
+                            spUtil.setCurrentCoach(coach);
                             refreshUI();
                         }
 

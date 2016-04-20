@@ -15,10 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.coach.CoachModel;
-import com.hahaxueche.model.response.CreateUserResponse;
-import com.hahaxueche.model.user.SessionModel;
-import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.coach.Coach;
+import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.user.Session;
+import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
@@ -223,27 +223,24 @@ public class LoginActivity extends SLBaseActivity {
             pd.dismiss();
         }
         pd = ProgressDialog.show(LoginActivity.this, null, "登录中，请稍后……");
-        this.slPresenter.login(cell_phone, pwd, loginType, new SLCallbackListener<CreateUserResponse>() {
+        this.slPresenter.login(cell_phone, pwd, loginType, new SLCallbackListener<User>() {
             @Override
-            public void onSuccess(CreateUserResponse createUserResponse) {
+            public void onSuccess(User user) {
                 if (pd != null) {
                     pd.dismiss();
                 }
-                SessionModel userSession = createUserResponse.getSession();
-                StudentModel userStudent = createUserResponse.getStudent();
-                spUtil.setSession(userSession);
-                spUtil.setStudent(userStudent);
-                MobclickAgent.onProfileSignIn(userStudent.getId());
-                if (TextUtils.isEmpty(userStudent.getCurrent_coach_id())) {
+                spUtil.setUser(user);
+                MobclickAgent.onProfileSignIn(user.getStudent().getId());
+                if (TextUtils.isEmpty(user.getStudent().getCurrent_coach_id())) {
                     Toast.makeText(context, "登录成功！", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(context, IndexActivity.class);
                     startActivity(intent);
                     LoginActivity.this.finish();
                 } else {
-                    fcPresenter.getCoach(userStudent.getCurrent_coach_id(), new FCCallbackListener<CoachModel>() {
+                    fcPresenter.getCoach(user.getStudent().getCurrent_coach_id(), new FCCallbackListener<Coach>() {
                         @Override
-                        public void onSuccess(CoachModel coachModel) {
-                            spUtil.setCurrentCoach(coachModel);
+                        public void onSuccess(Coach coach) {
+                            spUtil.setCurrentCoach(coach);
                             Toast.makeText(context, "登录成功！", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(context, IndexActivity.class);
                             startActivity(intent);

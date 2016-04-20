@@ -1,6 +1,6 @@
 package com.hahaxueche.ui.activity.findCoach;
 
-import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.student.Student;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
 
 import android.app.ProgressDialog;
@@ -17,12 +17,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.coach.CoachModel;
+import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.model.city.FieldModel;
-import com.hahaxueche.model.city.CityModel;
+import com.hahaxueche.model.city.City;
 import com.hahaxueche.model.city.CostItem;
 import com.hahaxueche.model.base.BaseKeyValue;
-import com.hahaxueche.model.base.ConstantsModel;
+import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.ui.dialog.FeeDetailDialog;
 import com.hahaxueche.ui.dialog.ZoomImgDialog;
@@ -45,11 +45,11 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
     private ImageSwitcher isCdCoachDetail;//教练照片
     private ZoomImgDialog zoomImgDialog = null;
     private ImageButton ibtnCoachDetialBack;//回退按钮
-    private CoachModel mCoach;//教练
+    private Coach mCoach;//教练
     private ProgressDialog pd;//进度框
     private ImageView ivIsGoldenCoach;
     private RelativeLayout llyTakeCertCost;//拿证价格
-    private ConstantsModel mConstants;
+    private Constants mConstants;
     private TextView tvTakeCertPrice;
     private TextView tvTrainLocation;
     private TextView tvLicenseType;
@@ -110,7 +110,7 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
     private void loadDatas() {
         Intent intent = getIntent();
         if (intent.getSerializableExtra("coach") != null) {
-            mCoach = (CoachModel) intent.getSerializableExtra("coach");
+            mCoach = (Coach) intent.getSerializableExtra("coach");
             loadDetail();
         } else {
             String coach_id = getIntent().getStringExtra("coach_id");
@@ -118,13 +118,13 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
                 pd.dismiss();
             }
             pd = ProgressDialog.show(MyCoachActivity.this, null, "数据加载中，请稍后……");
-            this.fcPresenter.getCoach(coach_id, new FCCallbackListener<CoachModel>() {
+            this.fcPresenter.getCoach(coach_id, new FCCallbackListener<Coach>() {
                 @Override
-                public void onSuccess(CoachModel coachModel) {
+                public void onSuccess(Coach coach) {
                     if (pd != null) {
                         pd.dismiss();
                     }
-                    mCoach = coachModel;
+                    mCoach = coach;
                     loadDetail();
                 }
 
@@ -167,11 +167,11 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
         }
         tvTakeCertPrice.setText(Util.getMoney(mCoach.getCoach_group().getTraining_cost()));
         //训练场地址
-        List<CityModel> cityList = mConstants.getCities();
+        List<City> cityList = mConstants.getCities();
         List<FieldModel> fieldList = mConstants.getFields();
         for (FieldModel field : fieldList) {
             if (field.getId().equals(mCoach.getCoach_group().getField_id())) {
-                for (CityModel city : cityList) {
+                for (City city : cityList) {
                     if (city.getId().equals(field.getCity_id())) {
                         tvTrainLocation.setText(city.getName() + field.getSection() + field.getStreet());
                         mFieldModel = field;
@@ -254,20 +254,7 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
     private void initSharedPreferences() {
         SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
         //根据当前登录人的cityid，加载费用明细列表
-        StudentModel student = spUtil.getStudent();
-        String cityId = student.getCity_id();
-        mConstants = spUtil.getConstants();
-        if (mConstants != null) {
-            List<CityModel> cityList = mConstants.getCities();
-            if (cityList != null && cityList.size() > 0) {
-                for (CityModel city : cityList) {
-                    if (city.getId().equals(cityId)) {
-                        mCostItemList = city.getFixed_cost_itemizer();
-                        break;
-                    }
-                }
-            }
-        }
+        mCostItemList = spUtil.getMyCity().getFixed_cost_itemizer();
     }
 
 }

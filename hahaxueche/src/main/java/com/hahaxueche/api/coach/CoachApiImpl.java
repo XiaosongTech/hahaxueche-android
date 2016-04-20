@@ -6,7 +6,7 @@ import android.util.Log;
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.api.net.HttpEngine;
 import com.hahaxueche.model.response.CoachListResponse;
-import com.hahaxueche.model.coach.CoachModel;
+import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.model.response.FollowResponse;
 import com.hahaxueche.model.response.GetReviewsResponse;
 import com.hahaxueche.model.response.StuPurchaseResponse;
@@ -120,8 +120,8 @@ public class CoachApiImpl implements CoachApi {
     }
 
     @Override
-    public CoachModel getCoach(String coach_id) {
-        Type type = new TypeToken<CoachModel>() {
+    public Coach getCoach(String coach_id) {
+        Type type = new TypeToken<Coach>() {
         }.getType();
         try {
             Response response = httpEngine.getHandle("coaches/" + coach_id, "");
@@ -130,7 +130,7 @@ public class CoachApiImpl implements CoachApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
-                CoachModel retModel = new CoachModel();
+                Coach retModel = new Coach();
                 retModel.setCode(String.valueOf(response.code()));
                 retModel.setMessage(response.message());
                 retModel.setIsSuccess(false);
@@ -366,8 +366,8 @@ public class CoachApiImpl implements CoachApi {
     }
 
     @Override
-    public CoachModel oneKeyFindCoach(String lat, String lng) {
-        Type type = new TypeToken<CoachModel>() {
+    public Coach oneKeyFindCoach(String lat, String lng) {
+        Type type = new TypeToken<Coach>() {
         }.getType();
         String url = "students/best_match_coach?user_location[]=" + lat + "&user_location[]=" + lng;
         try {
@@ -377,7 +377,7 @@ public class CoachApiImpl implements CoachApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
-                CoachModel retModel = new CoachModel();
+                Coach retModel = new Coach();
                 retModel.setCode(String.valueOf(response.code()));
                 retModel.setMessage(response.message());
                 retModel.setIsSuccess(false);

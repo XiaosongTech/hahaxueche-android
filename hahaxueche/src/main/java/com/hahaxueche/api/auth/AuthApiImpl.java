@@ -4,8 +4,8 @@ import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.api.net.HttpEngine;
-import com.hahaxueche.model.response.CreateUserResponse;
-import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
 import com.hahaxueche.utils.JsonUtils;
 
@@ -69,13 +69,13 @@ public class AuthApiImpl implements AuthApi {
      * @return
      */
     @Override
-    public CreateUserResponse createUser(String phoneNum, String identifyCode, String pwd, String user_type) {
+    public User createUser(String phoneNum, String identifyCode, String pwd, String user_type) {
         Map<String, String> paramMap = new HashMap<String, String>();
         paramMap.put("cell_phone", phoneNum);
         paramMap.put("auth_token", identifyCode);
         paramMap.put("password", pwd);
         paramMap.put("user_type", user_type);
-        Type type = new TypeToken<CreateUserResponse>() {
+        Type type = new TypeToken<User>() {
         }.getType();
         try {
             Response response = httpEngine.postHandle(paramMap, "users", "");
@@ -84,7 +84,7 @@ public class AuthApiImpl implements AuthApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
-                CreateUserResponse retModel = new CreateUserResponse();
+                User retModel = new User();
                 retModel.setCode(String.valueOf(response.code()));
                 retModel.setMessage(response.message());
                 retModel.setIsSuccess(false);
@@ -106,11 +106,11 @@ public class AuthApiImpl implements AuthApi {
      * @return
      */
     @Override
-    public StudentModel completeStuInfo(String studentId, String cityId, String studentName, String accessToken) {
+    public Student completeStuInfo(String studentId, String cityId, String studentName, String accessToken) {
         Map<String, String> paramMap = new HashMap<String, String>();
         paramMap.put("name", studentName);
         paramMap.put("city_id", cityId);
-        Type type = new TypeToken<StudentModel>() {
+        Type type = new TypeToken<Student>() {
         }.getType();
         try {
             Response response = httpEngine.putHandle(paramMap, "students/" + studentId, accessToken);
@@ -119,7 +119,7 @@ public class AuthApiImpl implements AuthApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
-                StudentModel retModel = new StudentModel();
+                Student retModel = new Student();
                 retModel.setCode(String.valueOf(response.code()));
                 retModel.setMessage(response.message());
                 retModel.setIsSuccess(false);
@@ -132,7 +132,7 @@ public class AuthApiImpl implements AuthApi {
     }
 
     @Override
-    public CreateUserResponse login(String cell_phone, String pwd, int loginType) {
+    public User login(String cell_phone, String pwd, int loginType) {
         Map<String, String> paramMap = new HashMap<String, String>();
         paramMap.put("cell_phone", cell_phone);
         if (loginType == 1) {
@@ -140,7 +140,7 @@ public class AuthApiImpl implements AuthApi {
         } else if (loginType == 2) {
             paramMap.put("password", pwd);
         }
-        Type type = new TypeToken<CreateUserResponse>() {
+        Type type = new TypeToken<User>() {
         }.getType();
         try {
             Response response = httpEngine.postHandle(paramMap, "sessions", "");
@@ -149,7 +149,7 @@ public class AuthApiImpl implements AuthApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
-                CreateUserResponse retModel = new CreateUserResponse();
+                User retModel = new User();
                 retModel.setCode(String.valueOf(response.code()));
                 retModel.setMessage(response.message());
                 retModel.setIsSuccess(false);
@@ -190,8 +190,8 @@ public class AuthApiImpl implements AuthApi {
     }
 
     @Override
-    public StudentModel uploadAvatar(String access_token, String filePath, String studentId) {
-        Type type = new TypeToken<StudentModel>() {
+    public Student uploadAvatar(String access_token, String filePath, String studentId) {
+        Type type = new TypeToken<Student>() {
         }.getType();
         try {
             Response response = httpEngine.postFileHandle("students/" + studentId + "/avatar", access_token, filePath);
@@ -200,7 +200,7 @@ public class AuthApiImpl implements AuthApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
-                StudentModel retModel = new StudentModel();
+                Student retModel = new Student();
                 retModel.setCode(String.valueOf(response.code()));
                 retModel.setMessage(response.message());
                 retModel.setIsSuccess(false);

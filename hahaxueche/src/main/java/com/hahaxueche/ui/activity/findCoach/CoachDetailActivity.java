@@ -26,19 +26,19 @@ import android.widget.Toast;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.coach.BriefCoachInfo;
-import com.hahaxueche.model.coach.CoachModel;
+import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.model.city.FieldModel;
 import com.hahaxueche.model.response.FollowResponse;
 import com.hahaxueche.model.response.GetReviewsResponse;
 import com.hahaxueche.model.review.ReviewInfo;
-import com.hahaxueche.model.city.CityModel;
+import com.hahaxueche.model.city.City;
 import com.hahaxueche.model.city.CostItem;
-import com.hahaxueche.model.user.SessionModel;
-import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.user.Session;
+import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
 import com.hahaxueche.model.base.BaseBoolean;
 import com.hahaxueche.model.base.BaseKeyValue;
-import com.hahaxueche.model.base.ConstantsModel;
+import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
@@ -77,14 +77,14 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private LinearLayout llyShare;//分享
     private TextView tvSkillLevel;
     private ShareAppDialog shareAppDialog;
-    private CoachModel mCoach;//教练
+    private Coach mCoach;//教练
     private ProgressDialog pd;//进度框
     private ImageView ivIsGoldenCoach;
     private ImageView ivIsGoldenCoachSmall;
     private TextView tvSatisfactionRate;//满意度
     private LinearLayout llyTakeCertCost;//拿证价格
-    private ConstantsModel mConstants;
-    private SessionModel mSession;
+    private Constants mConstants;
+    private Session mSession;
     private TextView tvTakeCertPrice;
     private TextView tvTrainLocation;
     private LinearLayout llyPeerCoachTitle;
@@ -116,7 +116,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     //免费试学
     private LinearLayout llyFreeLearn;
     //学员
-    private StudentModel mStudent;
+    private Student mStudent;
     //训练场地
     private LinearLayout llyTrainLoaction;
     private FieldModel mFieldModel;
@@ -135,19 +135,19 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         setContentView(R.layout.activity_coach_detail);
         SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
         mConstants = spUtil.getConstants();
-        mSession = spUtil.getSession();
-        mStudent = spUtil.getStudent();
+        mSession = spUtil.getUser().getSession();
+        mStudent = spUtil.getUser().getStudent();
         if (mSession != null && mStudent != null) {
             isLogin = true;
         }
         //根据当前登录人的cityid，加载费用明细列表
         if (mConstants != null) {
-            List<CityModel> cityList = mConstants.getCities();
+            List<City> cityList = mConstants.getCities();
             String cityId = "0";
             if (mStudent != null) {
                 cityId = mStudent.getCity_id();
             }
-            for (CityModel city : cityList) {
+            for (City city : cityList) {
                 if (city.getId().equals(cityId)) {
                     mCostItemList = city.getFixed_cost_itemizer();
                     break;
@@ -225,7 +225,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         pd = ProgressDialog.show(CoachDetailActivity.this, null, "数据加载中，请稍后……");
         Intent intent = getIntent();
         if (intent.getSerializableExtra("coach") != null) {
-            mCoach = (CoachModel) intent.getSerializableExtra("coach");
+            mCoach = (Coach) intent.getSerializableExtra("coach");
             loadDetail();
             loadReviews();
             loadFollow();
@@ -234,10 +234,10 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
             }
         } else {
             String coach_id = getIntent().getStringExtra("coach_id");
-            this.fcPresenter.getCoach(coach_id, new FCCallbackListener<CoachModel>() {
+            this.fcPresenter.getCoach(coach_id, new FCCallbackListener<Coach>() {
                 @Override
-                public void onSuccess(CoachModel coachModel) {
-                    mCoach = coachModel;
+                public void onSuccess(Coach coach) {
+                    mCoach = coach;
                     loadDetail();
                     loadReviews();
                     loadFollow();
@@ -296,11 +296,11 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         }
         tvTakeCertPrice.setText(Util.getMoney(mCoach.getCoach_group().getTraining_cost()));
         //训练场地址
-        List<CityModel> cityList = mConstants.getCities();
+        List<City> cityList = mConstants.getCities();
         List<FieldModel> fieldList = mConstants.getFields();
         for (FieldModel field : fieldList) {
             if (field.getId().equals(mCoach.getCoach_group().getField_id())) {
-                for (CityModel city : cityList) {
+                for (City city : cityList) {
                     if (city.getId().equals(field.getCity_id())) {
                         tvTrainLocation.setText(city.getName() + field.getSection() + field.getStreet());
                         mFieldModel = field;
@@ -618,21 +618,21 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                 String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
                 if (result.equals("success")) {
                     //更新SharedPreferences中的student
-                    this.msPresenter.getStudentForever(mStudent.getId(), mSession.getAccess_token(), new MSCallbackListener<StudentModel>() {
+                    this.msPresenter.getStudentForever(mStudent.getId(), mSession.getAccess_token(), new MSCallbackListener<Student>() {
                         @Override
-                        public void onSuccess(StudentModel data) {
+                        public void onSuccess(Student data) {
                             mStudent = data;
-                            spUtil.setStudent(mStudent);
+                            spUtil.getUser().setStudent(mStudent);
                             if (!TextUtils.isEmpty(data.getCurrent_coach_id())) {
-                                fcPresenter.getCoach(data.getCurrent_coach_id(), new FCCallbackListener<CoachModel>() {
+                                fcPresenter.getCoach(data.getCurrent_coach_id(), new FCCallbackListener<Coach>() {
                                     @Override
-                                    public void onSuccess(CoachModel coachModel) {
+                                    public void onSuccess(Coach coach) {
                                         if (pd != null) {
                                             pd.dismiss();
                                         }
                                         MobclickAgent.onEvent(context, "did_purchase_coach");
                                         Toast.makeText(context, "支付成功", Toast.LENGTH_SHORT).show();
-                                        spUtil.setCurrentCoach(coachModel);
+                                        spUtil.setCurrentCoach(coach);
                                     }
 
                                     @Override

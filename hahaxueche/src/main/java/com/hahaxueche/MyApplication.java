@@ -5,8 +5,7 @@ import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.api.net.HttpEngine;
-import com.hahaxueche.api.auth.AuthApi;
-import com.hahaxueche.model.base.ConstantsModel;
+import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.presenter.appointment.APPresenter;
 import com.hahaxueche.presenter.appointment.APPresenterImpl;
 import com.hahaxueche.presenter.findCoach.FCPresenter;
@@ -18,7 +17,6 @@ import com.hahaxueche.presenter.signupLogin.SLPresenterImpl;
 import com.hahaxueche.utils.JsonUtils;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.squareup.leakcanary.LeakCanary;
-import com.tencent.connect.common.Constants;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -49,9 +47,9 @@ public class MyApplication extends Application {
             @Override
             public void run() {
                 HttpEngine httpEngine = HttpEngine.getInstance();
-                Type type = new TypeToken<ConstantsModel>() {
+                Type type = new TypeToken<Constants>() {
                 }.getType();
-                ConstantsModel constants;
+                Constants constants;
                 try {
                     Response response = httpEngine.getHandle("constants", "");
                     String body = response.body().string();
@@ -59,7 +57,7 @@ public class MyApplication extends Application {
                     if (response.isSuccessful()) {
                         constants = JsonUtils.deserialize(body, type);
                     } else {
-                        ConstantsModel retModel = new ConstantsModel();
+                        Constants retModel = new Constants();
                         retModel.setCode(String.valueOf(response.code()));
                         retModel.setMessage(response.message());
                         retModel.setIsSuccess(false);

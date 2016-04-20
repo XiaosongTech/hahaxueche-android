@@ -19,8 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.user.SessionModel;
-import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.user.Session;
+import com.hahaxueche.model.student.Student;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
 import com.hahaxueche.ui.dialog.CityChoseDialog;
 import com.hahaxueche.ui.dialog.RegisterInfoPhotoDialog;
@@ -66,8 +66,8 @@ public class SignUpInfoActivity extends SLBaseActivity {
     private CityChoseDialog mCityChoseDialog;
     private String TAG = "SignUpInfoActivity";
     private SharedPreferencesUtil spUtil;
-    private SessionModel mSession;
-    private StudentModel mStudent;
+    private Session mSession;
+    private Student mStudent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +75,8 @@ public class SignUpInfoActivity extends SLBaseActivity {
         setContentView(R.layout.activity_sign_up_info);
         mPhotoUtil = new PhotoUtil(this);
         spUtil = new SharedPreferencesUtil(this);
-        mSession = spUtil.getSession();
-        mStudent = spUtil.getStudent();
+        mSession = spUtil.getUser().getSession();
+        mStudent = spUtil.getUser().getStudent();
         initView();
         initEvent();
         mCityChoseDialog = new CityChoseDialog(this,
@@ -144,13 +144,13 @@ public class SignUpInfoActivity extends SLBaseActivity {
             pd.dismiss();
         }
         pd = ProgressDialog.show(SignUpInfoActivity.this, null, "数据提交中，请稍后……");
-        this.slPresenter.completeStuInfo(mStudent.getId(), cityId, studentName, mSession.getAccess_token(), mPhotoPath, new SLCallbackListener<StudentModel>() {
+        this.slPresenter.completeStuInfo(mStudent.getId(), cityId, studentName, mSession.getAccess_token(), mPhotoPath, new SLCallbackListener<Student>() {
             @Override
-            public void onSuccess(StudentModel studentModel) {
+            public void onSuccess(Student student) {
                 if (pd != null) {
                     pd.dismiss();
                 }
-                spUtil.setStudent(studentModel);
+                spUtil.getUser().setStudent(student);
                 Toast.makeText(context, "完善资料成功！", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(context, IndexActivity.class);
                 startActivity(intent);

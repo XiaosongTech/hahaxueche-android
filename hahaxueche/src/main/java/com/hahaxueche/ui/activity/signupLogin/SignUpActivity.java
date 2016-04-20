@@ -15,10 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.coach.CoachModel;
-import com.hahaxueche.model.response.CreateUserResponse;
-import com.hahaxueche.model.user.SessionModel;
-import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.coach.Coach;
+import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.user.Session;
+import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
@@ -159,15 +159,12 @@ public class SignUpActivity extends SLBaseActivity {
                 @Override
                 public void onSuccess(BaseApiResponse baseApiResponse) {
                     //密码修改成功，直接登录
-                    slPresenter.login(phoneNumber, pwd, 2, new SLCallbackListener<CreateUserResponse>() {
+                    slPresenter.login(phoneNumber, pwd, 2, new SLCallbackListener<User>() {
                         @Override
-                        public void onSuccess(CreateUserResponse createUserResponse) {
+                        public void onSuccess(User user) {
                             Toast.makeText(context, getResources().getText(R.string.sLResetPwdSuccess), Toast.LENGTH_SHORT).show();
-                            SessionModel userSession = createUserResponse.getSession();
-                            StudentModel userStudent = createUserResponse.getStudent();
-                            spUtil.setSession(userSession);
-                            spUtil.setStudent(userStudent);
-                            if (TextUtils.isEmpty(userStudent.getCurrent_coach_id())) {
+                            spUtil.setUser(user);
+                            if (TextUtils.isEmpty(user.getStudent().getCurrent_coach_id())) {
                                 if (pd != null) {
                                     pd.dismiss();
                                 }
@@ -175,13 +172,13 @@ public class SignUpActivity extends SLBaseActivity {
                                 startActivity(intent);
                                 SignUpActivity.this.finish();
                             } else {
-                                fcPresenter.getCoach(userStudent.getCurrent_coach_id(), new FCCallbackListener<CoachModel>() {
+                                fcPresenter.getCoach(user.getStudent().getCurrent_coach_id(), new FCCallbackListener<Coach>() {
                                     @Override
-                                    public void onSuccess(CoachModel coachModel) {
+                                    public void onSuccess(Coach coach) {
                                         if (pd != null) {
                                             pd.dismiss();
                                         }
-                                        spUtil.setCurrentCoach(coachModel);
+                                        spUtil.setCurrentCoach(coach);
                                         Intent intent = new Intent(context, IndexActivity.class);
                                         startActivity(intent);
                                         SignUpActivity.this.finish();
@@ -217,17 +214,14 @@ public class SignUpActivity extends SLBaseActivity {
                 }
             });
         } else {
-            this.slPresenter.createUser(phoneNumber, identifyCode, pwd, "student", new SLCallbackListener<CreateUserResponse>() {
+            this.slPresenter.createUser(phoneNumber, identifyCode, pwd, "student", new SLCallbackListener<User>() {
                 @Override
-                public void onSuccess(CreateUserResponse createUserResponse) {
+                public void onSuccess(User user) {
                     if (pd != null) {
                         pd.dismiss();
                     }
-                    SessionModel userSession = createUserResponse.getSession();
-                    StudentModel userStudent = createUserResponse.getStudent();
-                    spUtil.setSession(userSession);
-                    spUtil.setStudent(userStudent);
-                    MobclickAgent.onProfileSignIn(userStudent.getId());
+                    spUtil.setUser(user);
+                    MobclickAgent.onProfileSignIn(user.getStudent().getId());
                     MobclickAgent.onEvent(context, "did_register");
                     Intent intent = new Intent(context, SignUpInfoActivity.class);
                     startActivity(intent);

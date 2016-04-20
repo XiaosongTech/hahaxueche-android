@@ -18,9 +18,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.city.CityModel;
-import com.hahaxueche.model.student.StudentModel;
-import com.hahaxueche.model.base.ConstantsModel;
+import com.hahaxueche.model.city.City;
+import com.hahaxueche.model.student.Student;
+import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.ui.widget.comboSeekBar.ComboSeekBar;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
@@ -290,20 +290,12 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
      */
     private void initFilterArray() {
         SharedPreferencesUtil spUtil = new SharedPreferencesUtil(mContext);
-        ConstantsModel constants = spUtil.getConstants();
+        Constants constants = spUtil.getConstants();
         if (constants != null) {
-            List<CityModel> cityList = constants.getCities();
+            List<City> cityList = constants.getCities();
             int myCityCount = 0;
             //根据城市id加载价格、距离筛选列表
-            StudentModel student = spUtil.getStudent();
-            String city_id = student.getCity_id();
-            for (int i = 0; i < cityList.size(); i++) {
-                if (cityList.get(i).getId().equals(city_id)) {
-                    myCityCount = i;
-                    break;
-                }
-            }
-            CityModel city = cityList.get(myCityCount);
+            City city = spUtil.getMyCity();
             distanceList = city.getFilters().getRadius();
             priceList = city.getFilters().getPrices();
         }

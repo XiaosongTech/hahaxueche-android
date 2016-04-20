@@ -10,8 +10,8 @@ import com.google.i18n.phonenumbers.Phonenumber;
 import com.hahaxueche.api.auth.AuthApi;
 import com.hahaxueche.api.auth.AuthApiImpl;
 import com.hahaxueche.api.util.ApiError;
-import com.hahaxueche.model.response.CreateUserResponse;
-import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
 import com.hahaxueche.presenter.util.ErrorEvent;
 
@@ -66,7 +66,7 @@ public class SLPresenterImpl implements SLPresenter {
 
     @Override
     public void createUser(final String phoneNum, final String identifyCode, final String pwd, final String type,
-                           final SLCallbackListener<CreateUserResponse> listener) {
+                           final SLCallbackListener<User> listener) {
         //参数检查
         if (!isValidIdentifyCode(identifyCode, listener)) {
             return;
@@ -74,25 +74,25 @@ public class SLPresenterImpl implements SLPresenter {
         if (!isValidPwd(pwd, listener)) {
             return;
         }
-        new AsyncTask<Void, Void, CreateUserResponse>() {
+        new AsyncTask<Void, Void, User>() {
 
             @Override
-            protected CreateUserResponse doInBackground(Void... params) {
+            protected User doInBackground(Void... params) {
                 return authApi.createUser(phoneNum, identifyCode, pwd, type);
             }
 
             @Override
-            protected void onPostExecute(CreateUserResponse createUserResponse) {
+            protected void onPostExecute(User user) {
                 if (listener != null) {
-                    if (createUserResponse != null) {
-                        if (createUserResponse.isSuccess()) {
-                            listener.onSuccess(createUserResponse);
+                    if (user != null) {
+                        if (user.isSuccess()) {
+                            listener.onSuccess(user);
                         } else {
-                            if (createUserResponse.getCode().equals("40011")) {
-                                createUserResponse.setMessage("您的短信验证码有误");
-                                listener.onFailure(createUserResponse.getCode(), createUserResponse.getMessage());
+                            if (user.getCode().equals("40011")) {
+                                user.setMessage("您的短信验证码有误");
+                                listener.onFailure(user.getCode(), user.getMessage());
                             } else {
-                                listener.onFailure(createUserResponse.getCode(), createUserResponse.getMessage());
+                                listener.onFailure(user.getCode(), user.getMessage());
                             }
                         }
                     } else {
@@ -106,7 +106,7 @@ public class SLPresenterImpl implements SLPresenter {
 
     @Override
     public void completeStuInfo(final String studentId, final String cityId, final String studentName, final String accessToken,
-                                final String photoPath, final SLCallbackListener<StudentModel> listener) {
+                                final String photoPath, final SLCallbackListener<Student> listener) {
         if (!isValidUserName(studentName, listener)) {
             return;
         }
@@ -117,21 +117,21 @@ public class SLPresenterImpl implements SLPresenter {
             listener.onFailure("000", "亲，请上传头像哦~");
             return;
         }
-        new AsyncTask<Void, Void, StudentModel>() {
+        new AsyncTask<Void, Void, Student>() {
 
             @Override
-            protected StudentModel doInBackground(Void... params) {
+            protected Student doInBackground(Void... params) {
 
-                StudentModel compStuResponse = authApi.completeStuInfo(studentId, cityId, studentName, accessToken);
+                Student compStuResponse = authApi.completeStuInfo(studentId, cityId, studentName, accessToken);
                 if (compStuResponse.isSuccess()) {
                     return authApi.uploadAvatar(accessToken, photoPath, studentId);
                 } else {
-                    return new StudentModel();
+                    return new Student();
                 }
             }
 
             @Override
-            protected void onPostExecute(StudentModel compStuResponse) {
+            protected void onPostExecute(Student compStuResponse) {
                 if (listener != null) {
                     if (compStuResponse != null) {
                         if (compStuResponse.isSuccess()) {
@@ -148,7 +148,7 @@ public class SLPresenterImpl implements SLPresenter {
     }
 
     @Override
-    public void login(final String cell_phone, final String pwd, final int loginType, final SLCallbackListener<CreateUserResponse> listener) {
+    public void login(final String cell_phone, final String pwd, final int loginType, final SLCallbackListener<User> listener) {
         if (TextUtils.isEmpty(cell_phone)) {
             if (listener != null) {
                 listener.onFailure(ErrorEvent.PARAM_NULL, "您的手机号码不能为空");
@@ -172,26 +172,26 @@ public class SLPresenterImpl implements SLPresenter {
             }
             return;
         }
-        new AsyncTask<Void, Void, CreateUserResponse>() {
+        new AsyncTask<Void, Void, User>() {
 
             @Override
-            protected CreateUserResponse doInBackground(Void... params) {
+            protected User doInBackground(Void... params) {
                 return authApi.login(cell_phone, pwd, loginType);
             }
 
             @Override
-            protected void onPostExecute(CreateUserResponse createUserResponse) {
+            protected void onPostExecute(User user) {
                 if (listener != null) {
-                    if (createUserResponse != null) {
-                        if (createUserResponse.isSuccess()) {
-                            listener.onSuccess(createUserResponse);
+                    if (user != null) {
+                        if (user.isSuccess()) {
+                            listener.onSuccess(user);
                         } else {
-                            if (createUserResponse.getCode().equals("40011")) {
-                                listener.onFailure(createUserResponse.getCode(), loginType == 1 ? "您的短信验证码有误" : "您的密码有误");
-                            } else if (createUserResponse.getCode().equals("40001")) {
-                                listener.onFailure(createUserResponse.getCode(), loginType == 1 ? "您的短信验证码有误" : "您的密码有误");
+                            if (user.getCode().equals("40011")) {
+                                listener.onFailure(user.getCode(), loginType == 1 ? "您的短信验证码有误" : "您的密码有误");
+                            } else if (user.getCode().equals("40001")) {
+                                listener.onFailure(user.getCode(), loginType == 1 ? "您的短信验证码有误" : "您的密码有误");
                             } else {
-                                listener.onFailure(createUserResponse.getCode(), createUserResponse.getMessage());
+                                listener.onFailure(user.getCode(), user.getMessage());
                             }
                         }
                     } else {
@@ -283,7 +283,7 @@ public class SLPresenterImpl implements SLPresenter {
      * @param listener
      * @return
      */
-    private boolean isValidIdentifyCode(String identifyCode, SLCallbackListener<CreateUserResponse> listener) {
+    private boolean isValidIdentifyCode(String identifyCode, SLCallbackListener<User> listener) {
         if (TextUtils.isEmpty(identifyCode)) {
             if (listener != null) {
                 listener.onFailure(ErrorEvent.PARAM_NULL, "您的短信验证码不能为空");
@@ -299,7 +299,7 @@ public class SLPresenterImpl implements SLPresenter {
      * @param pwd
      * @return
      */
-    private boolean isValidPwd(String pwd, SLCallbackListener<CreateUserResponse> listener) {
+    private boolean isValidPwd(String pwd, SLCallbackListener<User> listener) {
         if (TextUtils.isEmpty(pwd)) {
             if (listener != null) {
                 listener.onFailure(ErrorEvent.PARAM_NULL, "您的密码为空");
@@ -322,7 +322,7 @@ public class SLPresenterImpl implements SLPresenter {
      * @param listener
      * @return
      */
-    private boolean isValidUserName(String userName, SLCallbackListener<StudentModel> listener) {
+    private boolean isValidUserName(String userName, SLCallbackListener<Student> listener) {
         if (TextUtils.isEmpty(userName)) {
             if (listener != null) {
                 listener.onFailure(ErrorEvent.PARAM_NULL, "您的姓名不能为空");
@@ -339,7 +339,7 @@ public class SLPresenterImpl implements SLPresenter {
      * @param listener
      * @return
      */
-    private boolean isValidCity(String cityId, SLCallbackListener<StudentModel> listener) {
+    private boolean isValidCity(String cityId, SLCallbackListener<Student> listener) {
         if (TextUtils.isEmpty(cityId)) {
             if (listener != null) {
                 listener.onFailure(ErrorEvent.PARAM_NULL, "您的所在地不能为空");

@@ -16,11 +16,11 @@ import android.widget.Toast;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.response.CoachListResponse;
-import com.hahaxueche.model.coach.CoachModel;
+import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.model.city.FieldModel;
 import com.hahaxueche.model.city.Location;
-import com.hahaxueche.model.city.CityModel;
-import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.city.City;
+import com.hahaxueche.model.student.Student;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.ui.adapter.findCoach.CoachItemAdapter;
 import com.hahaxueche.ui.dialog.FcFilterDialog;
@@ -52,7 +52,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
     private FcSortDialog fcSortDialog;
     private XListView xlvCoachList;
     private CoachItemAdapter mAdapter;
-    private ArrayList<CoachModel> coachList = new ArrayList<CoachModel>();
+    private ArrayList<Coach> coachList = new ArrayList<Coach>();
     private Handler mHandler;
     private int mRefreshIndex = 0;
     private String linkSelf;
@@ -111,17 +111,12 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         //mAdapter = new ArrayAdapter<String>(this, R.layout.view_coach_list_item, items);
         //xlvCoachList.setAdapter(mAdapter);
         ibtnFcMap = Util.instence(this).$(this, R.id.ibtn_fc_map);
-        city_id = spUtil.getStudent().getCity_id();
-        StudentModel student = spUtil.getStudent();
-        List<CityModel> cityList = spUtil.getConstants().getCities();
+        List<City> cityList = spUtil.getConstants().getCities();
         int myCityCount = 0;
-        for (int i = 0; i < cityList.size(); i++) {
-            if (cityList.get(i).getId().equals(city_id)) {
-                myCityCount = i;
-                break;
-            }
+        if (null != spUtil.getUser().getStudent() && !TextUtils.isEmpty(spUtil.getUser().getStudent().getCity_id())) {
+            myCityCount = Integer.parseInt(spUtil.getUser().getStudent().getCity_id());
         }
-        CityModel city = cityList.get(myCityCount);
+        City city = spUtil.getMyCity();
         List<String> distanceList = city.getFilters().getRadius();
         distance = distanceList.get(distanceList.size() - 2);
         List<String> priceList = city.getFilters().getPrices();
@@ -287,7 +282,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         this.fcPresenter.getCoachList(url, new FCCallbackListener<CoachListResponse>() {
             @Override
             public void onSuccess(CoachListResponse data) {
-                ArrayList<CoachModel> newCoachList = data.getData();
+                ArrayList<Coach> newCoachList = data.getData();
                 if (newCoachList != null && newCoachList.size() > 0) {
                     coachList.addAll(newCoachList);
                 }

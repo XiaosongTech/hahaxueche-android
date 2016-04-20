@@ -8,7 +8,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.coach.CoachModel;
+import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.model.response.GetReviewsResponse;
 import com.hahaxueche.model.review.ReviewInfo;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
@@ -40,7 +40,7 @@ public class ReviewListActivity extends FCBaseActivity implements XListView.IXLi
     private boolean isOnLoadMore = false;
     private TextView tvRlCommentCounts;//学员评价数量
     private ScoreView svRlAverageRating;//综合得分
-    private CoachModel mCoach;
+    private Coach mCoach;
     private ImageButton ibtnReviewListBack;
 
     @Override
@@ -49,7 +49,7 @@ public class ReviewListActivity extends FCBaseActivity implements XListView.IXLi
         setContentView(R.layout.activity_review_list);
         Intent intent = getIntent();
         GetReviewsResponse getReviewsResponse = (GetReviewsResponse) intent.getSerializableExtra("getReviewsResponse");
-        mCoach = (CoachModel) intent.getSerializableExtra("coach");
+        mCoach = (Coach) intent.getSerializableExtra("coach");
         coach_user_id = mCoach.getUser_id();
         linkSelf = getReviewsResponse.getLinks().getSelf();
         linkNext = getReviewsResponse.getLinks().getNext();

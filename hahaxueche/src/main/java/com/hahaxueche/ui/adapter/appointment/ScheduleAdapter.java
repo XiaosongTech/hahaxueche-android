@@ -1,7 +1,6 @@
 package com.hahaxueche.ui.adapter.appointment;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,7 @@ import android.widget.TextView;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.coach.ScheduleEvent;
-import com.hahaxueche.model.student.StudentModel;
+import com.hahaxueche.model.student.Student;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.utils.Util;
 import com.squareup.picasso.Picasso;
@@ -102,7 +101,7 @@ public class ScheduleAdapter extends BaseAdapter {
                     cirAvatarParams.setMargins(Util.instence(context).dip2px(10), 0, 0, 0);
                 }
                 if (registerStudentCount > i * 4 + j) {
-                    StudentModel student = scheduleEvent.getRegistered_students().get(i * 4 + j);
+                    Student student = scheduleEvent.getRegistered_students().get(i * 4 + j);
                     getStudentAvatar(student.getAvatar(), civStudentAvatar);
                     llyAvatar.addView(civStudentAvatar, cirAvatarParams);
                 } else if (scheduleEvent.getMax_st_count() > i * 4 + j) {

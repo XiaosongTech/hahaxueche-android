@@ -25,11 +25,12 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.hahaxueche.R;
-import com.hahaxueche.model.coach.CoachModel;
+import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.model.city.Location;
-import com.hahaxueche.model.user.SessionModel;
-import com.hahaxueche.model.student.StudentModel;
-import com.hahaxueche.model.base.ConstantsModel;
+import com.hahaxueche.model.user.Session;
+import com.hahaxueche.model.student.Student;
+import com.hahaxueche.model.base.Constants;
+import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.ui.activity.appointment.AppointmentActivity;
 import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
@@ -71,31 +72,27 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     private TextView tvOneKeyFindCoach;
     private ProgressDialog pd;//进度框
     private SharedPreferencesUtil spUtil;
-    private SessionModel mSession;
-    private StudentModel mStudent;
-    private ConstantsModel mConstants;
+    private Constants mConstants;
+    private User mUser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
         spUtil = new SharedPreferencesUtil(this);
-        mSession = spUtil.getSession();
-        mStudent = spUtil.getStudent();
         mConstants = spUtil.getConstants();
+        mUser = spUtil.getUser();
         initView();
         initEvent();
         //游客没有city_id，需选择
-        if (TextUtils.isEmpty(mStudent.getCity_id())) {
-            mStudent.setCity_id("0");
-            spUtil.setStudent(mStudent);
+        if (TextUtils.isEmpty(mUser.getStudent().getCity_id())) {
+            mUser.getStudent().setCity_id("0");
             mCityChoseDialog = new CityChoseDialog(this,
                     new CityChoseDialog.OnBtnClickListener() {
                         @Override
                         public void onCitySelected(String cityName, String cityId) {
                             mCityChoseDialog.dismiss();
-                            mStudent.setCity_id(cityId);
-                            spUtil.setStudent(mStudent);
+                            mUser.getStudent().setCity_id(cityId);
                         }
                     });
             //mCityChoseDialog.show();
@@ -229,9 +226,9 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                         pd.dismiss();
                     }
                     pd = ProgressDialog.show(IndexActivity.this, null, "教练寻找中，请稍后……");
-                    fcPresenter.oneKeyFindCoach(mLat + "", mLng + "", new FCCallbackListener<CoachModel>() {
+                    fcPresenter.oneKeyFindCoach(mLat + "", mLng + "", new FCCallbackListener<Coach>() {
                         @Override
-                        public void onSuccess(CoachModel data) {
+                        public void onSuccess(Coach data) {
                             if (pd != null) {
                                 pd.dismiss();
                             }

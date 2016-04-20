@@ -4,7 +4,7 @@ package com.hahaxueche.model.user;
  * 用户session数据模型
  * Created by gibxin on 2016/1/22.
  */
-public class SessionModel {
+public class Session {
     private String id;
     private String user_id;
     private String access_token;

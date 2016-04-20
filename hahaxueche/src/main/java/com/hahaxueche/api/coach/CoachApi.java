@@ -1,7 +1,7 @@
 package com.hahaxueche.api.coach;
 
 import com.hahaxueche.model.response.CoachListResponse;
-import com.hahaxueche.model.coach.CoachModel;
+import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.model.response.FollowResponse;
 import com.hahaxueche.model.response.GetReviewsResponse;
 import com.hahaxueche.model.response.StuPurchaseResponse;
@@ -50,7 +50,7 @@ public interface CoachApi {
      * @param coach_id 教练id
      * @return
      */
-    public CoachModel getCoach(String coach_id);
+    public Coach getCoach(String coach_id);
 
     /**
      * 用户A关注用户B
@@ -140,5 +140,5 @@ public interface CoachApi {
      * @param lng
      * @return
      */
-    public CoachModel oneKeyFindCoach(String lat, String lng);
+    public Coach oneKeyFindCoach(String lat, String lng);
 }

@@ -18,8 +18,9 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.hahaxueche.R;
-import com.hahaxueche.model.student.StudentModel;
-import com.hahaxueche.model.base.ConstantsModel;
+import com.hahaxueche.model.student.Student;
+import com.hahaxueche.model.base.Constants;
+import com.hahaxueche.model.user.User;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
 import com.hahaxueche.utils.SharedPreferencesUtil;
@@ -39,7 +40,7 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
     private TextView tvIsTour;
     private ImageView ivBack;
     private SharedPreferencesUtil spUtil;
-    private ConstantsModel mConstants;
+    private Constants mConstants;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,11 +76,13 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
             public void onClick(View v) {
                 //清空session
                 spUtil.clearCurrentCoach();
-                spUtil.clearStudent();
-                spUtil.clearSession();
+                spUtil.clearUser();
+                ;
                 //游客登录，虚拟用户
-                StudentModel fakeStudent = new StudentModel();
-                spUtil.setStudent(fakeStudent);
+                User fakeUser = new User();
+                Student fakeStudent = new Student();
+                fakeUser.setStudent(fakeStudent);
+                spUtil.setUser(fakeUser);
                 Intent intent = new Intent(context, IndexActivity.class);
                 startActivity(intent);
                 StartActivity.this.finish();
@@ -174,7 +177,6 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
         //开始自动翻页
         convenientBanner.startTurning(2500);
     }
-
 
 
     // 停止自动翻页
