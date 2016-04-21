@@ -5,6 +5,7 @@
     android:background="@color/haha_gray"
     android:orientation="horizontal">
 
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
@@ -43,6 +44,11 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@color/haha_white">
+        <View
+            android:id="@+id/vw_schedule_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/haha_gray_light"/>
 
         <TextView
             android:id="@+id/tv_adapter_schedule_coach_name"

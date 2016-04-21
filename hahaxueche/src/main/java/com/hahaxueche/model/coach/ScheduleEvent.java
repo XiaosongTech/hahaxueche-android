@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * Created by gibxin on 2016/4/13.
  */
-public class ScheduleEvent implements Serializable{
+public class ScheduleEvent implements Serializable {
     private String id;
     private String start_time;
     private String end_time;
@@ -23,6 +23,7 @@ public class ScheduleEvent implements Serializable{
     private String code;
     private String message;
     private boolean isSuccess = true;
+    private boolean isShowDay;
 
     public String getId() {
         return id;
@@ -134,5 +135,13 @@ public class ScheduleEvent implements Serializable{
 
     public void setIsSuccess(boolean isSuccess) {
         this.isSuccess = isSuccess;
+    }
+
+    public boolean isShowDay() {
+        return isShowDay;
+    }
+
+    public void setIsShowDay(boolean isShowDay) {
+        this.isShowDay = isShowDay;
     }
 }

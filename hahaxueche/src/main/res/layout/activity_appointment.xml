@@ -109,8 +109,7 @@
             android:id="@+id/xlv_schedule_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@drawable/layer_list_divider"
-            android:dividerHeight="1dp"
+            android:divider="@null"
             android:footerDividersEnabled="false"
             android:headerDividersEnabled="false">
 

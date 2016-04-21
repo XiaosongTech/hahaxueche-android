@@ -90,7 +90,7 @@ public class ScoreCoachDialog {
                     mDialog.dismiss();
                     mOnScoreListener.onScore(score);
                     break;
-                case R.id.tv_base_confirm_cancel:
+                case R.id.tv_dialog_score_cancel:
                     mDialog.dismiss();
                     break;
                 default:

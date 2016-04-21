@@ -42,7 +42,7 @@
             android:gravity="center"
             android:paddingBottom="15dp"
             android:paddingTop="15dp"
-            android:text="@string/confirmScore"
+            android:text="@string/laterScore"
             android:textColor="@color/fCTxtOrange"
             android:textSize="14sp" />
 
@@ -61,7 +61,7 @@
             android:gravity="center"
             android:paddingBottom="15dp"
             android:paddingTop="15dp"
-            android:text="@string/laterScore"
+            android:text="@string/confirmScore"
             android:textColor="@color/fCTxtGreen"
             android:textSize="14sp" />
     </LinearLayout>

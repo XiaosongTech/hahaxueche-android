@@ -34,6 +34,7 @@ import com.hahaxueche.utils.Util;
 import com.umeng.analytics.MobclickAgent;
 
 import java.lang.ref.WeakReference;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -305,6 +306,7 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
                 } else {
                     xlvScheduleList.setPullLoadEnable(true);
                 }
+                groupScheduleList(scheduleList);
                 mAdapter = new ScheduleAdapter(AppointmentActivity.this, scheduleList, R.layout.adapter_schedule_event, booked, mUser, new ScheduleAdapter.onRefreshActivityUIListener() {
                     @Override
                     public void refreshActivityUI() {
@@ -339,6 +341,7 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
                 } else {
                     xlvScheduleList.setPullLoadEnable(true);
                 }
+                groupScheduleList(scheduleList);
                 if (mAdapter != null) {
                     mAdapter.notifyDataSetChanged();
                 } else {
@@ -365,5 +368,24 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
         xlvScheduleList.stopRefresh();
         xlvScheduleList.stopLoadMore();
         xlvScheduleList.setRefreshTime(getTime());
+    }
+
+    private void groupScheduleList(ArrayList<ScheduleEvent> scheduleList) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdfDay = new SimpleDateFormat("yyyy-MM-dd");
+        ArrayList<String> dateStringList = new ArrayList<>();
+        try {
+            for (ScheduleEvent scheduleEvent : scheduleList) {
+                String scheduleDay = sdfDay.format(sdf.parse(scheduleEvent.getStart_time()));
+                if (dateStringList.contains(scheduleDay)) {
+                    scheduleEvent.setIsShowDay(false);
+                } else {
+                    scheduleEvent.setIsShowDay(true);
+                    dateStringList.add(scheduleDay);
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }

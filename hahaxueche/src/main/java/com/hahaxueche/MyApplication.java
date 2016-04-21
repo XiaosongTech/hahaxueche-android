@@ -3,7 +3,6 @@ package com.hahaxueche;
 import android.app.Application;
 import android.util.Log;
 
-import com.facebook.stetho.Stetho;
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.api.net.HttpEngine;
 import com.hahaxueche.model.base.Constants;
@@ -38,7 +37,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         LeakCanary.install(this);
-        Stetho.initializeWithDefaults(this);
+        //Stetho.initializeWithDefaults(this);
         sLPresenter = new SLPresenterImpl(this);
         fcPresenter = new FCPresenterImpl(this);
         msPresenter = new MSPresenterImpl(this);

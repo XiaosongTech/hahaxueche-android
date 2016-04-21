@@ -100,6 +100,7 @@ public class ScheduleAdapter extends BaseAdapter {
             holder.tvScheduleInfo = (TextView) view.findViewById(R.id.tv_adapter_schedule_course_info);
             holder.llyAvatar = (LinearLayout) view.findViewById(R.id.lly_adapter_schedule_avatar);
             holder.tvMainButton = (TextView) view.findViewById(R.id.tv_adapter_main_button);
+            holder.vwDivider = view.findViewById(R.id.vw_schedule_divider);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -115,36 +116,50 @@ public class ScheduleAdapter extends BaseAdapter {
             Date endTime = sdf.parse(scheduleEvent.getEnd_time());
             holder.tvYearMonth.setText(sdfYearMonth.format(startTime));
             holder.tvDay.setText(sdfDay.format(startTime));
-            holder.tvTime.setText("(" + sdfTime.format(startTime) + "-" + sdfTime.format(endTime) + ")");
+            holder.tvTime.setText("(" + sdfTime.format(startTime) + " - " + sdfTime.format(endTime) + ")");
 
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        if (scheduleEvent.isShowDay()) {
+            holder.flIcon.setVisibility(View.VISIBLE);
+            holder.tvYearMonth.setVisibility(View.VISIBLE);
+            holder.tvDay.setVisibility(View.VISIBLE);
+            holder.vwDivider.setVisibility(View.VISIBLE);
+        } else {
+            holder.flIcon.setVisibility(View.INVISIBLE);
+            holder.tvYearMonth.setVisibility(View.INVISIBLE);
+            holder.tvDay.setVisibility(View.INVISIBLE);
+            holder.vwDivider.setVisibility(View.GONE);
+        }
         phaseName = spUtil.getPhaseName(String.valueOf(scheduleEvent.getStudent_phase()), mCityId);
         courseName = spUtil.getCourseName(String.valueOf(scheduleEvent.getService_type()), mCityId);
         holder.tvScheduleInfo.setText(courseName + "，" + phaseName + "，" + scheduleEvent.getRegistered_st_count() + "人/" + scheduleEvent.getMax_st_count() + "人");
-        int registerStudentCount = scheduleEvent.getRegistered_students().size();
-        for (int i = 0; i < scheduleEvent.getMax_st_count() / 4 + 1; i++) {
-            LinearLayout.LayoutParams llyAvatarParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            llyAvatarParams.setMargins(0, Util.instence(context).dip2px(10), 0, 0);
-            LinearLayout llyAvatar = new LinearLayout(context);
-            llyAvatar.setOrientation(LinearLayout.HORIZONTAL);
-            for (int j = 0; j < 4; j++) {
-                CircleImageView civStudentAvatar = new CircleImageView(context);
-                LinearLayout.LayoutParams cirAvatarParams = new LinearLayout.LayoutParams(Util.instence(context).dip2px(50), Util.instence(context).dip2px(50));
-                if (j != 0) {
-                    cirAvatarParams.setMargins(Util.instence(context).dip2px(10), 0, 0, 0);
+        if (!holder.isLoadedLly) {
+            int registerStudentCount = scheduleEvent.getRegistered_students().size();
+            for (int i = 0; i < scheduleEvent.getMax_st_count() / 4 + 1; i++) {
+                LinearLayout.LayoutParams llyAvatarParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                llyAvatarParams.setMargins(0, Util.instence(context).dip2px(10), 0, 0);
+                LinearLayout llyAvatar = new LinearLayout(context);
+                llyAvatar.setOrientation(LinearLayout.HORIZONTAL);
+                for (int j = 0; j < 4; j++) {
+                    CircleImageView civStudentAvatar = new CircleImageView(context);
+                    LinearLayout.LayoutParams cirAvatarParams = new LinearLayout.LayoutParams(Util.instence(context).dip2px(50), Util.instence(context).dip2px(50));
+                    if (j != 0) {
+                        cirAvatarParams.setMargins(Util.instence(context).dip2px(10), 0, 0, 0);
+                    }
+                    if (registerStudentCount > i * 4 + j) {
+                        Student student = scheduleEvent.getRegistered_students().get(i * 4 + j);
+                        getStudentAvatar(student.getAvatar(), civStudentAvatar);
+                        llyAvatar.addView(civStudentAvatar, cirAvatarParams);
+                    } else if (scheduleEvent.getMax_st_count() > i * 4 + j) {
+                        civStudentAvatar.setBackgroundResource(R.drawable.ic_class_emptyava);
+                        llyAvatar.addView(civStudentAvatar, cirAvatarParams);
+                    }
                 }
-                if (registerStudentCount > i * 4 + j) {
-                    Student student = scheduleEvent.getRegistered_students().get(i * 4 + j);
-                    getStudentAvatar(student.getAvatar(), civStudentAvatar);
-                    llyAvatar.addView(civStudentAvatar, cirAvatarParams);
-                } else if (scheduleEvent.getMax_st_count() > i * 4 + j) {
-                    civStudentAvatar.setBackgroundResource(R.drawable.ic_class_emptyava);
-                    llyAvatar.addView(civStudentAvatar, cirAvatarParams);
-                }
+                holder.llyAvatar.addView(llyAvatar, llyAvatarParams);
             }
-            holder.llyAvatar.addView(llyAvatar, llyAvatarParams);
+            holder.isLoadedLly = true;
         }
         setMainButton(holder.tvMainButton, scheduleEvent);
         return view;
@@ -307,5 +322,7 @@ public class ScheduleAdapter extends BaseAdapter {
         TextView tvMainButton;
         FrameLayout flIcon;
         LinearLayout llyAvatar;
+        boolean isLoadedLly = false;
+        View vwDivider;
     }
 }
