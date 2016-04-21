@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
+import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.share.ShareConstants;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.utils.Util;
@@ -35,6 +36,9 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 /**
  * 分享dialog页面
  * Created by gibxin on 2016/2/21.
@@ -49,10 +53,19 @@ public class ShareAppDialog extends Dialog implements IWXAPIEventHandler {
     private TextView tvShareFriendCircle;
     private Tencent mTencent;//QQ
     private TextView tvShareCancel;
+    private String mShareUrl;
+    private Coach mCoach;
+    private String mTitle;
+    private String mDescription;
+    private String mImageUrl;
 
-    public ShareAppDialog(Context context) {
+    public ShareAppDialog(Context context, String branchUrl, Coach coach) {
         super(context);
         mContext = context;
+        mCoach = coach;
+        mTitle = "哈哈学车-开启快乐学车之旅吧～";
+        mDescription = "好友力荐:\n哈哈学车优秀教练" + mCoach.getName();
+        mImageUrl = "http://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_share_app, null);
@@ -68,6 +81,13 @@ public class ShareAppDialog extends Dialog implements IWXAPIEventHandler {
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
         dialogWindow.setAttributes(lp);
         mTencent = Tencent.createInstance(ShareConstants.APP_ID_QQ, mContext);
+        try {
+            mShareUrl = "http://staging-api.hahaxueche.net/share/coaches/" + mCoach.getId() + "?target=" + URLEncoder.encode(branchUrl, "utf-8");
+            Log.v("gibxin", mShareUrl);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -81,13 +101,12 @@ public class ShareAppDialog extends Dialog implements IWXAPIEventHandler {
             @Override
             public void onClick(View v) {
                 WXWebpageObject webpage = new WXWebpageObject();
-                webpage.webpageUrl = "http://a.app.qq.com/o/simple.jsp?pkgname=com.hahaxueche";
+                webpage.webpageUrl = mShareUrl;
                 WXMediaMessage msg = new WXMediaMessage(webpage);
-                msg.title = "哈哈学车";
-                msg.description = "开启快乐学车之旅吧～";
-                Bitmap thumb = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_launcher);
+                msg.title = mTitle;
+                msg.description = mDescription;
+                Bitmap thumb = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_share);
                 msg.thumbData = Util.bmpToByteArray(thumb, true);
-
                 SendMessageToWX.Req req = new SendMessageToWX.Req();
                 req.transaction = buildTransaction("webpage");
                 req.message = msg;
@@ -101,13 +120,12 @@ public class ShareAppDialog extends Dialog implements IWXAPIEventHandler {
             @Override
             public void onClick(View v) {
                 WXWebpageObject webpage = new WXWebpageObject();
-                webpage.webpageUrl = "http://a.app.qq.com/o/simple.jsp?pkgname=com.hahaxueche";
+                webpage.webpageUrl = mShareUrl;
                 WXMediaMessage msg = new WXMediaMessage(webpage);
-                msg.title = "哈哈学车";
-                msg.description = "开启快乐学车之旅吧～";
-                Bitmap thumb = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_launcher);
+                msg.title = mTitle;
+                msg.description = mDescription;
+                Bitmap thumb = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_share);
                 msg.thumbData = Util.bmpToByteArray(thumb, true);
-
                 SendMessageToWX.Req req = new SendMessageToWX.Req();
                 req.transaction = buildTransaction("webpage");
                 req.message = msg;
@@ -122,10 +140,11 @@ public class ShareAppDialog extends Dialog implements IWXAPIEventHandler {
                 ShareListener myListener = new ShareListener();
                 final Bundle params = new Bundle();
                 params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
-                params.putString(QQShare.SHARE_TO_QQ_TITLE, "哈哈学车");
+                params.putString(QQShare.SHARE_TO_QQ_TITLE, mTitle);
                 params.putString(QQShare.SHARE_TO_QQ_APP_NAME, "哈哈学车");
-                params.putString(QQShare.SHARE_TO_QQ_SUMMARY, "开启快乐学车之旅吧～");
-                params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, "http://a.app.qq.com/o/simple.jsp?pkgname=com.hahaxueche");
+                params.putString(QQShare.SHARE_TO_QQ_SUMMARY, mDescription);
+                params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, mImageUrl);
+                params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, mShareUrl);
                 mTencent.shareToQQ((CoachDetailActivity) mContext, params, myListener);
             }
         });
@@ -138,9 +157,10 @@ public class ShareAppDialog extends Dialog implements IWXAPIEventHandler {
                 final Bundle params = new Bundle();
                 //分享类型
                 params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT);
-                params.putString(QzoneShare.SHARE_TO_QQ_TITLE, "哈哈学车");//必填
-                params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, "开启快乐学车之旅吧～");//选填
-                params.putString(QzoneShare.SHARE_TO_QQ_AUDIO_URL, "http://a.app.qq.com/o/simple.jsp?pkgname=com.hahaxueche");//必填
+                params.putString(QzoneShare.SHARE_TO_QQ_TITLE, mTitle);//必填
+                params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, mDescription);//选填
+                params.putString(QzoneShare.SHARE_TO_QQ_AUDIO_URL, mShareUrl);//必填
+                params.putString(QzoneShare.SHARE_TO_QQ_IMAGE_URL, mImageUrl);
                 //params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, "图片链接ArrayList");
                 mTencent.shareToQzone((CoachDetailActivity) mContext, params, myListener);
 

@@ -21,6 +21,7 @@ import com.squareup.leakcanary.LeakCanary;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
+import io.branch.referral.Branch;
 import okhttp3.Response;
 
 /**
@@ -38,6 +39,7 @@ public class MyApplication extends Application {
         super.onCreate();
         LeakCanary.install(this);
         //Stetho.initializeWithDefaults(this);
+        Branch.getAutoInstance(this);
         sLPresenter = new SLPresenterImpl(this);
         fcPresenter = new FCPresenterImpl(this);
         msPresenter = new MSPresenterImpl(this);

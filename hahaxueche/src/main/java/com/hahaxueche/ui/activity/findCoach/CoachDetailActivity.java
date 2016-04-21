@@ -59,9 +59,17 @@ import com.pingplusplus.android.PaymentActivity;
 import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import io.branch.indexing.BranchUniversalObject;
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
+import io.branch.referral.util.LinkProperties;
 
 /**
  * 教练详情Activity
@@ -123,6 +131,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private FieldModel mFieldModel;
     private LinearLayout llyFlCdCoachName;
     private SharedPreferencesUtil spUtil;
+    private String coach_id;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -197,7 +206,6 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         llyShare = Util.instence(this).$(this, R.id.lly_share);
         llyTakeCertCost = Util.instence(this).$(this, R.id.lly_take_cert_cost);
         llyTrainLoaction = Util.instence(this).$(this, R.id.lly_training_location);
-        shareAppDialog = new ShareAppDialog(this);
         llyFlCdCoachName = Util.instence(this).$(this, R.id.fl_cd_coach_name);
     }
 
@@ -234,7 +242,11 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                 pd.dismiss();
             }
         } else {
-            String coach_id = getIntent().getStringExtra("coach_id");
+            if (intent.getSerializableExtra("coachId") != null) {
+                coach_id = (String) intent.getSerializableExtra("coachId");
+            } else {
+                coach_id = getIntent().getStringExtra("coach_id");
+            }
             this.fcPresenter.getCoach(coach_id, new FCCallbackListener<Coach>() {
                 @Override
                 public void onSuccess(Coach coach) {
@@ -416,7 +428,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                     break;
                 //分享
                 case R.id.lly_share:
-                    shareAppDialog.show();
+                    showShareAppDialog();
                     break;
                 //关注
                 case R.id.lly_follow:
@@ -686,4 +698,45 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         super.onDestroy();
         shareAppDialog = null;
     }
+
+    private void showShareAppDialog() {
+        if (pd != null) {
+            pd.dismiss();
+        }
+        pd = ProgressDialog.show(CoachDetailActivity.this, null, "数据加载中，请稍后……");
+        BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
+                .setCanonicalIdentifier("coach/" + mCoach.getId())
+                .setTitle("Share Coach")
+                .setContentDescription("Share coach link")
+                .setContentIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
+                .addContentMetadata("coachId", mCoach.getId());
+        LinkProperties linkProperties = new LinkProperties().setChannel("android").setFeature("sharing");
+        branchUniversalObject.generateShortUrl(this, linkProperties, new Branch.BranchLinkCreateListener() {
+            @Override
+            public void onLinkCreate(String url, BranchError error) {
+                pd.dismiss();
+                if (error == null) {
+                    Log.i("gibxin", "got my Branch link to share: " + url);
+                    shareAppDialog = new ShareAppDialog(CoachDetailActivity.this, url, mCoach);
+                    shareAppDialog.show();
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (Branch.isAutoDeepLinkLaunch(this)) {
+            try {
+                String autoDeeplinkedValue = Branch.getInstance().getLatestReferringParams().getString("coachId");
+                coach_id = autoDeeplinkedValue;
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+        }
+    }
+
 }

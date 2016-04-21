@@ -17,6 +17,7 @@ android {
         _360 {}
         xiaomi {}
         yingyongbao {}
+        haha {}
     }
 
     productFlavors.all { flavor ->
@@ -56,4 +57,5 @@ dependencies {
     compile 'com.googlecode.libphonenumber:libphonenumber:7.3.0'
     //compile 'com.facebook.stetho:stetho:1.3.1'
     //compile 'com.facebook.stetho:stetho-okhttp3:1.3.1'
+    compile 'io.branch.sdk.android:library:1.+'
 }
