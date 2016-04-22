@@ -1,6 +1,7 @@
 package com.hahaxueche.ui.activity.findCoach;
 
 import com.hahaxueche.model.student.Student;
+import com.hahaxueche.ui.dialog.ShareAppDialog;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
 
 import android.app.ProgressDialog;
@@ -8,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -33,6 +35,11 @@ import com.hahaxueche.utils.Util;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import io.branch.indexing.BranchUniversalObject;
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
+import io.branch.referral.util.LinkProperties;
 
 /**
  * Created by gibxin on 2016/3/7.
@@ -63,6 +70,8 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
     private TextView tvTeachCourse;
     private RelativeLayout rlyMyCoachContact;
     private TextView tvMyCoachContact;
+    private ImageView mIvShare;
+    private ShareAppDialog shareAppDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,6 +101,7 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
         tvTeachCourse = Util.instence(this).$(this, R.id.tv_my_coach_teach_course);
         rlyMyCoachContact = Util.instence(this).$(this, R.id.rly_my_coach_contact);
         tvMyCoachContact = Util.instence(this).$(this, R.id.tv_my_cd_coach_phone);
+        mIvShare = Util.instence(this).$(this, R.id.iv_my_coach_share);
     }
 
     private void initEvent() {
@@ -102,6 +112,7 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
         llyTakeCertCost.setOnClickListener(mClickListener);
         llyTrainLoaction.setOnClickListener(mClickListener);
         rlyMyCoachContact.setOnClickListener(mClickListener);
+        mIvShare.setOnClickListener(mClickListener);
     }
 
     /**
@@ -243,6 +254,11 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
                     intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mCoach.getCell_phone()));
                     startActivity(intent);
                     break;
+                case R.id.iv_my_coach_share:
+                    showShareAppDialog();
+                    break;
+                default:
+                    break;
             }
         }
     };
@@ -255,6 +271,32 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
         SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
         //根据当前登录人的cityid，加载费用明细列表
         mCostItemList = spUtil.getMyCity().getFixed_cost_itemizer();
+        mConstants = spUtil.getConstants();
+    }
+
+    private void showShareAppDialog() {
+        if (pd != null) {
+            pd.dismiss();
+        }
+        pd = ProgressDialog.show(MyCoachActivity.this, null, "数据加载中，请稍后……");
+        BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
+                .setCanonicalIdentifier("coach/" + mCoach.getId())
+                .setTitle("Share Coach")
+                .setContentDescription("Share coach link")
+                .setContentIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
+                .addContentMetadata("coachId", mCoach.getId());
+        LinkProperties linkProperties = new LinkProperties().setChannel("android").setFeature("sharing");
+        branchUniversalObject.generateShortUrl(this, linkProperties, new Branch.BranchLinkCreateListener() {
+            @Override
+            public void onLinkCreate(String url, BranchError error) {
+                pd.dismiss();
+                if (error == null) {
+                    Log.i("gibxin", "got my Branch link to share: " + url);
+                    shareAppDialog = new ShareAppDialog(MyCoachActivity.this, url, mCoach);
+                    shareAppDialog.show();
+                }
+            }
+        });
     }
 
 }

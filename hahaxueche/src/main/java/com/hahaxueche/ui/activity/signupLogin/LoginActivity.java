@@ -204,7 +204,7 @@ public class LoginActivity extends SLBaseActivity {
                 if (errorEvent != null && errorEvent.equals("40044")) {
                     Toast.makeText(context, "当前用户不存在！", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "请求失败", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -263,7 +263,7 @@ public class LoginActivity extends SLBaseActivity {
                 if (errorEvent != null && errorEvent.equals("40044")) {
                     Toast.makeText(context, "当前用户不存在！", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "请求失败", Toast.LENGTH_SHORT).show();
                 }
             }
         });

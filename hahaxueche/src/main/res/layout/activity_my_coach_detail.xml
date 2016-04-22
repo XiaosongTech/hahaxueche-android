@@ -17,11 +17,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingRight="10dp"
             android:background="@null"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
             android:src="@drawable/ic_arrow_back" />
 
         <TextView
@@ -32,6 +32,18 @@
             android:text="@string/fCCoachDetail"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/iv_my_coach_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            android:src="@drawable/ic_mycoach_sharecoach" />
     </RelativeLayout>
 
     <com.hahaxueche.ui.widget.monitorScrollView.MonitorScrollView
@@ -66,6 +78,7 @@
                     app:border_width="3dp">
 
                 </com.hahaxueche.ui.widget.circleImageView.CircleImageView>
+
                 <LinearLayout
                     android:id="@+id/fl_my_cd_coach_name"
                     android:layout_width="match_parent"

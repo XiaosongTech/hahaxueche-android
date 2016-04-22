@@ -20,7 +20,7 @@ public class Constants {
     private ArrayList<BannerHighlight> banner_highlights;
     private String message;
     private String code;
-    private boolean isSuccess;
+    private boolean isSuccess = true;
 
     public List<City> getCities() {
         return cities;

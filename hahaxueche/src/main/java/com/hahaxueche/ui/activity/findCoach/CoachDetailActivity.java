@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -380,7 +381,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                 } else {
                     vwMoreReviews.setVisibility(View.GONE);
                     tvMoreReviews.setText(mCoach.getName() + "教练目前还没有评价");
-                    tvMoreReviews.setTextColor(getResources().getColor(R.color.fCTxtGray));
+                    tvMoreReviews.setTextColor(ContextCompat.getColor(CoachDetailActivity.this, R.color.haha_gray_heavy));
                     llyMoreReviews.setClickable(false);
                 }
             }

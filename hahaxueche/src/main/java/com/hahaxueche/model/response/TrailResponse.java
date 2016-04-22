@@ -15,7 +15,7 @@ public class TrailResponse {
     private Coach coach;
     private String code;
     private String message;
-    private boolean isSuccess;
+    private boolean isSuccess = true;
 
     public String getId() {
         return id;

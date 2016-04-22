@@ -189,7 +189,7 @@ public class SignUpActivity extends SLBaseActivity {
                                         if (pd != null) {
                                             pd.dismiss();
                                         }
-                                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, "请求失败", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }
@@ -200,7 +200,7 @@ public class SignUpActivity extends SLBaseActivity {
                             if (pd != null) {
                                 pd.dismiss();
                             }
-                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "请求失败", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -210,7 +210,7 @@ public class SignUpActivity extends SLBaseActivity {
                     if (pd != null) {
                         pd.dismiss();
                     }
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "请求失败", Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
@@ -233,7 +233,7 @@ public class SignUpActivity extends SLBaseActivity {
                     if (pd != null) {
                         pd.dismiss();
                     }
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "请求失败", Toast.LENGTH_SHORT).show();
                 }
             });
         }

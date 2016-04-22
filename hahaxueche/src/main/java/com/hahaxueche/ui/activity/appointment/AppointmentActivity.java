@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +31,7 @@ import com.hahaxueche.ui.adapter.appointment.LoopStudentAdapter;
 import com.hahaxueche.ui.adapter.appointment.ScheduleAdapter;
 import com.hahaxueche.ui.dialog.BaseAlertDialog;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
+import com.hahaxueche.ui.widget.pullToRefreshView.XScrollView;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 import com.umeng.analytics.MobclickAgent;
@@ -54,6 +57,8 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
     private LinearLayout mLlyHasCoach;
     private RelativeLayout mRlyNoCoach;
     private LinearLayout mLlyNoSchedule;
+    private SwipeRefreshLayout mSrlNoSchedule;
+    private ScrollView mSvNoSchedule;
     private XListView xlvScheduleList;
     private ScheduleAdapter mAdapter;
     private ArrayList<ScheduleEvent> scheduleList = new ArrayList<ScheduleEvent>();
@@ -75,6 +80,7 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
     private User mUser;
     private String mCurrentCoachId;
     private String mAccessToken;
+    private boolean isRefresh = false;//是否刷新中
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,6 +106,8 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
         mLlyNoSchedule = Util.instence(this).$(this, R.id.lly_no_schedule);
         xlvScheduleList = Util.instence(this).$(this, R.id.xlv_schedule_list);
         mTvChoseCoach = Util.instence(this).$(this, R.id.tv_chose_coach);
+        mSrlNoSchedule = Util.instence(this).$(this, R.id.srl_no_schedule);
+        mSvNoSchedule = Util.instence(this).$(this, R.id.sv_no_schedule);
         xlvScheduleList.setPullRefreshEnable(true);
         xlvScheduleList.setPullLoadEnable(true);
         xlvScheduleList.setAutoLoadEnable(true);
@@ -115,7 +123,25 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
         mTvCoachSchedule.setOnClickListener(mClickListener);
         mTvMySchedule.setOnClickListener(mClickListener);
         mTvChoseCoach.setOnClickListener(mClickListener);
+        mSrlNoSchedule.setOnRefreshListener(mRefreshListener);
+        mSrlNoSchedule.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
     }
+
+    SwipeRefreshLayout.OnRefreshListener mRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            if (!isRefresh) {
+                isRefresh = true;
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        mSrlNoSchedule.setRefreshing(false);
+                        getScheduleList();
+                        isRefresh = false;
+                    }
+                }, 1500);
+            }
+        }
+    };
 
     View.OnClickListener mClickListener = new View.OnClickListener() {
 
@@ -215,9 +241,14 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
             }
             if (scheduleList != null && scheduleList.size() > 0) {
                 mLlyNoSchedule.setVisibility(View.GONE);
+                mSrlNoSchedule.setVisibility(View.GONE);
+                mSvNoSchedule.setVisibility(View.GONE);
                 xlvScheduleList.setVisibility(View.VISIBLE);
             } else {
                 mLlyNoSchedule.setVisibility(View.VISIBLE);
+                mSrlNoSchedule.setVisibility(View.VISIBLE);
+                mSvNoSchedule.setVisibility(View.VISIBLE);
+                mSrlNoSchedule.setOnRefreshListener(mRefreshListener);
                 xlvScheduleList.setVisibility(View.GONE);
             }
         } else {

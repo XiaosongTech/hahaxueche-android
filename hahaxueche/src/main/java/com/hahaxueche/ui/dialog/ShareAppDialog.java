@@ -18,9 +18,7 @@ import android.widget.Toast;
 import com.hahaxueche.R;
 import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.share.ShareConstants;
-import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.utils.Util;
-import com.tencent.connect.common.Constants;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzoneShare;
 import com.tencent.mm.sdk.constants.ConstantsAPI;
@@ -145,7 +143,7 @@ public class ShareAppDialog extends Dialog implements IWXAPIEventHandler {
                 params.putString(QQShare.SHARE_TO_QQ_SUMMARY, mDescription);
                 params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, mImageUrl);
                 params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, mShareUrl);
-                mTencent.shareToQQ((CoachDetailActivity) mContext, params, myListener);
+                mTencent.shareToQQ((Activity) mContext, params, myListener);
             }
         });
         tvShareQzone = (TextView) view.findViewById(R.id.tv_share_qzone);
@@ -162,7 +160,7 @@ public class ShareAppDialog extends Dialog implements IWXAPIEventHandler {
                 params.putString(QzoneShare.SHARE_TO_QQ_AUDIO_URL, mShareUrl);//必填
                 params.putString(QzoneShare.SHARE_TO_QQ_IMAGE_URL, mImageUrl);
                 //params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, "图片链接ArrayList");
-                mTencent.shareToQzone((CoachDetailActivity) mContext, params, myListener);
+                mTencent.shareToQzone((Activity) mContext, params, myListener);
 
             }
         });

@@ -14,7 +14,7 @@ public class GetReviewsResponse implements Serializable {
     private ArrayList<ReviewInfo> data;
     private String code;
     private String message;
-    private boolean isSuccess;
+    private boolean isSuccess = true;
 
     public LinksModel getLinks() {
         return links;

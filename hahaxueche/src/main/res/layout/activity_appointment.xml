@@ -105,6 +105,7 @@
         android:background="@color/fCBackgroundGray"
         android:gravity="center"
         android:orientation="vertical">
+
         <com.hahaxueche.ui.widget.pullToRefreshView.XListView
             android:id="@+id/xlv_schedule_list"
             android:layout_width="match_parent"
@@ -115,35 +116,48 @@
 
         </com.hahaxueche.ui.widget.pullToRefreshView.XListView>
 
-        <LinearLayout
-            android:id="@+id/lly_no_schedule"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/srl_no_schedule"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:visibility="gone"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
+            <ScrollView
+                android:id="@+id/sv_no_schedule"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:fillViewport="true">
 
-            <ImageView
-                android:id="@+id/iv_ap_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_nolist_bk_pic" />
+                <LinearLayout
+                    android:id="@+id/lly_no_schedule"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/iv_ap_back"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
-                android:lineSpacingMultiplier="1.2"
-                android:text="@string/noScheduleTips"
-                android:textColor="@color/fCTxtGrayFade"
-                android:textSize="14sp" />
+                    <ImageView
+                        android:id="@+id/iv_ap_back"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_nolist_bk_pic" />
 
-        </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/iv_ap_back"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="20dp"
+                        android:gravity="center"
+                        android:lineSpacingMultiplier="1.2"
+                        android:text="@string/noScheduleTips"
+                        android:textColor="@color/fCTxtGrayFade"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+            </ScrollView>
+        </android.support.v4.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 
