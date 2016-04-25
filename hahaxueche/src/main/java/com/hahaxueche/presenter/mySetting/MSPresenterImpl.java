@@ -2,7 +2,10 @@ package com.hahaxueche.presenter.mySetting;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 
+import com.hahaxueche.api.auth.AuthApi;
+import com.hahaxueche.api.auth.AuthApiImpl;
 import com.hahaxueche.api.student.StudentApi;
 import com.hahaxueche.api.student.StudentApiImpl;
 import com.hahaxueche.api.util.ApiError;
@@ -17,10 +20,12 @@ import com.hahaxueche.model.base.BaseApiResponse;
 public class MSPresenterImpl implements MSPresenter {
     private Context context;
     private StudentApi studentApi;
+    private AuthApi authApi;
 
     public MSPresenterImpl(Context context) {
         this.context = context;
         this.studentApi = new StudentApiImpl();
+        this.authApi = new AuthApiImpl();
     }
 
     @Override
@@ -165,6 +170,34 @@ public class MSPresenterImpl implements MSPresenter {
                         listener.onSuccess(baseApiResponse);
                     } else {
                         listener.onFailure(baseApiResponse.getCode(), baseApiResponse.getMessage());
+                    }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void uploadAvatar(final String studentId, final String accessToken, final String filePath, final MSCallbackListener<Student> listener) {
+        if (TextUtils.isEmpty(filePath)) {
+            listener.onFailure("000", "亲，请上传头像哦~");
+            return;
+        }
+        new AsyncTask<Void, Void, Student>() {
+
+            @Override
+            protected Student doInBackground(Void... params) {
+                return authApi.uploadAvatar(accessToken, filePath, studentId);
+            }
+
+            @Override
+            protected void onPostExecute(Student student) {
+                if (listener != null) {
+                    if (student.isSuccess()) {
+                        listener.onSuccess(student);
+                    } else {
+                        listener.onFailure(student.getCode(), student.getMessage());
                     }
                 } else {
                     listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);

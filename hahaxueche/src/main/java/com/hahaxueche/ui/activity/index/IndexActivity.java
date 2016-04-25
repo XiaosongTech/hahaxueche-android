@@ -87,6 +87,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         //游客没有city_id，需选择
         if (TextUtils.isEmpty(mUser.getStudent().getCity_id())) {
             mUser.getStudent().setCity_id("0");
+            spUtil.setUser(mUser);
             mCityChoseDialog = new CityChoseDialog(this,
                     new CityChoseDialog.OnBtnClickListener() {
                         @Override
@@ -96,7 +97,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                             spUtil.setUser(mUser);
                         }
                     });
-            //mCityChoseDialog.show();
+            mCityChoseDialog.show();
         }
         //初始化定位
         mLocationClient = new AMapLocationClient(IndexActivity.this);

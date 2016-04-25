@@ -222,10 +222,7 @@ public class SignUpInfoActivity extends SLBaseActivity {
                 Toast.makeText(SignUpInfoActivity.this, "取消头像设置", Toast.LENGTH_SHORT).show();
             }
         }
-
-        super.
-
-                onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
 
     }
 

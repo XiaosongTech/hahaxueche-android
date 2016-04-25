@@ -50,4 +50,12 @@ public interface MSPresenter {
      * @param listener
      */
     public void loginOff(String session_id, String access_token, MSCallbackListener<BaseApiResponse> listener);
+
+    /**
+     * @param studentId
+     * @param accessToken
+     * @param filePath
+     * @param listener
+     */
+    public void uploadAvatar(String studentId, String accessToken, String filePath, MSCallbackListener<Student> listener);
 }

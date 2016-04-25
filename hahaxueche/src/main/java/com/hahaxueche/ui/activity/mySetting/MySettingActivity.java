@@ -2,9 +2,14 @@ package com.hahaxueche.ui.activity.mySetting;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,6 +24,7 @@ import com.hahaxueche.model.student.PurchasedService;
 import com.hahaxueche.model.user.Session;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
+import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.share.ShareConstants;
 import com.hahaxueche.ui.activity.appointment.AppointmentActivity;
@@ -27,6 +33,8 @@ import com.hahaxueche.ui.activity.findCoach.FindCoachActivity;
 import com.hahaxueche.ui.activity.findCoach.MyCoachActivity;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
+import com.hahaxueche.ui.dialog.RegisterInfoPhotoDialog;
+import com.hahaxueche.ui.util.PhotoUtil;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.ui.widget.monitorScrollView.MonitorScrollView;
 import com.hahaxueche.utils.SharedPreferencesUtil;
@@ -34,6 +42,12 @@ import com.hahaxueche.utils.Util;
 import com.squareup.picasso.Picasso;
 import com.tencent.tauth.Tencent;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -67,13 +81,16 @@ public class MySettingActivity extends MSBaseActivity {
     private ProgressDialog pd;//进度框
     private Session mSession;
     private SharedPreferencesUtil spUtil;
+    private String mPhotoPath;
+    private PhotoUtil mPhotoUtil;
+    private SwipeRefreshLayout mSrlMySetting;
+    private boolean isRefresh = false;//是否刷新中
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         spUtil = new SharedPreferencesUtil(this);
-        mSession = spUtil.getUser().getSession();
-        mStudent = spUtil.getUser().getStudent();
+        mPhotoUtil = new PhotoUtil(this);
         setContentView(R.layout.activity_my_setting);
         mTencent = Tencent.createInstance(ShareConstants.APP_ID_QQ, MySettingActivity.this);
         initView();
@@ -102,6 +119,7 @@ public class MySettingActivity extends MSBaseActivity {
         rlyCustomerPhone = Util.instence(this).$(this, R.id.rly_customer_phone);
         rlyAboutHaha = Util.instence(this).$(this, R.id.rly_about_haha);
         vwMyCoach = Util.instence(this).$(this, R.id.vw_my_coach);
+        mSrlMySetting = Util.instence(this).$(this, R.id.srl_my_setting);
     }
 
     private void initEvent() {
@@ -117,15 +135,21 @@ public class MySettingActivity extends MSBaseActivity {
         llyLoginOff.setOnClickListener(mClickListener);
         rlyCustomerPhone.setOnClickListener(mClickListener);
         rlyAboutHaha.setOnClickListener(mClickListener);
+        cirMyAvatar.setOnLongClickListener(mLongClickListener);
+        mSrlMySetting.setOnRefreshListener(mRefreshListener);
+        mSrlMySetting.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
     }
 
     private void loadDatas() {
-        if (mSession != null && mStudent != null && mSession.getId() != null && mStudent.getId() != null) {
+        mSession = spUtil.getUser().getSession();
+        mStudent = spUtil.getUser().getStudent();
+        if (mSession != null && mStudent != null && !TextUtils.isEmpty(mSession.getId()) && !TextUtils.isEmpty(mStudent.getId())) {
             isLogin = true;
         }
         if (isLogin) {
             llyNotLogin.setVisibility(View.GONE);
             msvMain.setVisibility(View.VISIBLE);
+            mSrlMySetting.setVisibility(View.VISIBLE);
             tvStuName.setText(mStudent.getName());
             //头像
             int iconWidth = Util.instence(this).dip2px(90);
@@ -166,6 +190,7 @@ public class MySettingActivity extends MSBaseActivity {
         } else {
             llyNotLogin.setVisibility(View.VISIBLE);
             msvMain.setVisibility(View.GONE);
+            mSrlMySetting.setVisibility(View.GONE);
         }
 
 
@@ -277,5 +302,135 @@ public class MySettingActivity extends MSBaseActivity {
         }
         return super.onKeyDown(keyCode, event);
 
+    }
+
+    private View.OnLongClickListener mLongClickListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            switch (v.getId()) {
+                case R.id.cir_my_avatar:
+                    RegisterInfoPhotoDialog dialog = new RegisterInfoPhotoDialog(MySettingActivity.this);
+                    dialog.show();
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        }
+    };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 100) {//相机
+            if (resultCode == RESULT_OK && null != data) {
+                Bundle bundle = data.getExtras();
+                Bitmap bitmap = (Bitmap) bundle.get("data");
+                FileOutputStream b = null;
+                String str = null;
+                Date date = null;
+                SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd_HHmmss");// 获取当前时间，进一步转化为字符串
+                date = new Date(System.currentTimeMillis());
+                str = format.format(date);
+                mPhotoPath = Environment.getExternalStorageDirectory() + File.separator + "haha" + File.separator +
+                        "icon_cache" + File.separator + str + ".jpg";
+                File photo = new File(mPhotoPath);
+                photo.getParentFile().mkdirs();
+                if (!photo.exists()) {
+                    try {
+                        photo.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                try {
+                    b = new FileOutputStream(mPhotoPath);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        b.flush();
+                        b.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                //mPhotoPath = mPhotoUtil.getPath(getApplicationContext(), uri);
+                Toast.makeText(this, "照片拍摄成功！", Toast.LENGTH_LONG).show();
+
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(MySettingActivity.this, "取消头像设置", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == 200) {//从图库选择
+            if (resultCode == RESULT_OK && null != data) {
+                Uri uri = data.getData();
+                Log.v("gibxin", "onActivityResult : uri -> " + uri);
+                mPhotoPath = mPhotoUtil.getPath(getApplicationContext(), uri);
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(MySettingActivity.this, "取消头像设置", Toast.LENGTH_SHORT).show();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+        pd = ProgressDialog.show(MySettingActivity.this, null, "头像上传中，请稍后……");
+        this.msPresenter.uploadAvatar(mStudent.getId(), mSession.getAccess_token(), mPhotoPath, new MSCallbackListener<Student>() {
+            @Override
+            public void onSuccess(Student data) {
+                refreshStudent();
+            }
+
+            @Override
+            public void onFailure(String errorEvent, String message) {
+                if (pd != null) {
+                    pd.dismiss();
+                }
+            }
+        });
+    }
+
+    SwipeRefreshLayout.OnRefreshListener mRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            if (!isRefresh) {
+                isRefresh = true;
+                /*new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        mSrlMySetting.setRefreshing(false);
+                        refreshStudent();
+                        isRefresh = false;
+
+                    }
+                }, 1500);*/
+                refreshStudent();
+            }
+        }
+    };
+
+    /**
+     * 刷新用户信息
+     */
+    private void refreshStudent() {
+        this.msPresenter.getStudent(mStudent.getId(), mSession.getAccess_token(), new MSCallbackListener<Student>() {
+            @Override
+            public void onSuccess(Student student) {
+                User user = spUtil.getUser();
+                user.setStudent(student);
+                spUtil.setUser(user);
+                loadDatas();
+                if (pd != null) {
+                    pd.dismiss();
+                }
+                mSrlMySetting.setRefreshing(false);
+                isRefresh = false;
+            }
+
+            @Override
+            public void onFailure(String errorEvent, String message) {
+                if (pd != null) {
+                    pd.dismiss();
+                }
+                mSrlMySetting.setRefreshing(false);
+                isRefresh = false;
+            }
+        });
     }
 }

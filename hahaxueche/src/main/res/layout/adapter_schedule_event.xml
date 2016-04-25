@@ -7,7 +7,7 @@
 
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="70dp"
         android:layout_height="match_parent">
 
         <FrameLayout
@@ -44,11 +44,12 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@color/haha_white">
+
         <View
             android:id="@+id/vw_schedule_divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/haha_gray_light"/>
+            android:background="@color/haha_gray_light" />
 
         <TextView
             android:id="@+id/tv_adapter_schedule_coach_name"
@@ -83,9 +84,9 @@
             android:id="@+id/lly_adapter_schedule_avatar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_alignLeft="@id/tv_adapter_schedule_coach_name"
-            android:layout_below="@id/tv_adapter_schedule_course_info">
+            android:layout_below="@id/tv_adapter_schedule_course_info"
+            android:orientation="vertical">
 
         </LinearLayout>
 

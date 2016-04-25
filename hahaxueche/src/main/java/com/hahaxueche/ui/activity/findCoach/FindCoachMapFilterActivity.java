@@ -123,9 +123,11 @@ public class FindCoachMapFilterActivity extends FCBaseActivity implements AMap.O
                             R.drawable.ic_map_local_choseoff)));
             markerOptionlst.add(markerOption);
         }
-        List<Marker> markerList = aMap.addMarkers(markerOptionlst, true);
-        for (Marker marker : markerList) {
-            marker.setObject(fieldList.get(markerList.indexOf(marker)));
+        if (aMap != null) {
+            List<Marker> markerList = aMap.addMarkers(markerOptionlst, true);
+            for (Marker marker : markerList) {
+                marker.setObject(fieldList.get(markerList.indexOf(marker)));
+            }
         }
     }
 

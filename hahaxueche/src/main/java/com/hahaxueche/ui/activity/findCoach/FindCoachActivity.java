@@ -116,6 +116,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         distance = distanceList.get(distanceList.size() - 2);
         List<String> priceList = city.getFilters().getPrices();
         price = priceList.get(priceList.size() - 1);
+        city_id = city.getId();
     }
 
     private void initEvent() {

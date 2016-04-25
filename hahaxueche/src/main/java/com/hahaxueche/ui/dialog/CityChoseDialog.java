@@ -54,14 +54,18 @@ public class CityChoseDialog extends Dialog implements View.OnClickListener {
         btnCityChoseSure = (Button) view.findViewById(R.id.btn_city_chose_sure);
         btnCityChoseSure.setOnClickListener(this);
         initCityData();
-        Window dialogWindow = this.getWindow();
-        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-        dialogWindow.setGravity(Gravity.CENTER);
-        //lp.x = 100; // 新位置X坐标
-        //lp.y = 300; // 新位置Y坐标
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        dialogWindow.setAttributes(lp);
+        setDialogParams();
+    }
+
+    private void setDialogParams() {
+        Window window = CityChoseDialog.this.getWindow(); //得到对话框
+        WindowManager.LayoutParams wl = window.getAttributes();
+        //wl.width = WindowManager.LayoutParams.MATCH_PARENT;
+        wl.width = Util.instence(mContext).getDm().widthPixels * 9 / 10;
+        wl.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        //wl.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL; //设置重力
+        wl.gravity = Gravity.CENTER;
+        window.setAttributes(wl);
     }
 
     @Override
@@ -80,7 +84,7 @@ public class CityChoseDialog extends Dialog implements View.OnClickListener {
     private void initCityData() {
         SharedPreferencesUtil spUtil = new SharedPreferencesUtil(mContext);
         Constants constants = spUtil.getConstants();
-        if(constants!=null) {
+        if (constants != null) {
             final List<City> cityList = constants.getCities();
             int rowCount = cityList.size() / 4 + 1;
             viewIds = new int[cityList.size()];
@@ -96,7 +100,6 @@ public class CityChoseDialog extends Dialog implements View.OnClickListener {
                     final int index = i * 3 + j;
                     if (index > cityList.size() - 1)
                         break;
-                    Log.v(TAG, "index->" + index);
                     TextView tv = new TextView(mContext);
                     int viewId = Util.generateViewId();
                     tv.setId(viewId);
