@@ -24,9 +24,10 @@ public interface AuthApi {
      * @param identifyCode 短信验证码
      * @param pwd          密码
      * @param user_type    类型(coach,student)
+     * @param refererId
      * @return
      */
-    public User createUser(String phoneNum, String identifyCode, String pwd, String user_type);
+    public User createUser(String phoneNum, String identifyCode, String pwd, String user_type, String refererId);
 
     /**
      * 完善学生资料

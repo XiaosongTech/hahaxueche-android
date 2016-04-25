@@ -8,8 +8,8 @@ android {
         applicationId "com.hahaxueche"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 9
-        versionName "2.0.5"
+        versionCode 10
+        versionName "2.1.0"
     }
     // 友盟多渠道打包
     productFlavors {

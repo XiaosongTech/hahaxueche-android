@@ -57,13 +57,13 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/srl_my_setting"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <com.hahaxueche.ui.widget.monitorScrollView.MonitorScrollView
             android:id="@+id/msv_main"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:background="@color/mSBackGray">
 
             <LinearLayout

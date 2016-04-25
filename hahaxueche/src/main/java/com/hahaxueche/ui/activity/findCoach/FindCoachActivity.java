@@ -1,8 +1,6 @@
 package com.hahaxueche.ui.activity.findCoach;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -20,7 +18,6 @@ import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.model.city.FieldModel;
 import com.hahaxueche.model.city.Location;
 import com.hahaxueche.model.city.City;
-import com.hahaxueche.model.student.Student;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.ui.adapter.findCoach.CoachItemAdapter;
 import com.hahaxueche.ui.dialog.FcFilterDialog;
@@ -81,7 +78,6 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         setContentView(R.layout.activity_find_coach);
         initView();
         initEvent();
-        SharedPreferences sharedPreferences = getSharedPreferences("session", Activity.MODE_PRIVATE);
         if (xlvCoachList != null)
             xlvCoachList.autoRefresh();
     }

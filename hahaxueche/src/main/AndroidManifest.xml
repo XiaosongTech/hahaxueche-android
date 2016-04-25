@@ -87,6 +87,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="https" android:host="bnc.lt" android:pathPrefix="/77Yi" />
             </intent-filter>
+            <meta-data
+                android:name="io.branch.sdk.auto_link_keys"
+                android:value="refererId" />
         </activity>
         <activity
             android:name=".ui.activity.signupLogin.SignUpActivity"

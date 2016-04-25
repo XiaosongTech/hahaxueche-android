@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
+import com.hahaxueche.api.net.HttpEngine;
 import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.share.ShareConstants;
 import com.hahaxueche.utils.Util;
@@ -36,6 +37,7 @@ import com.tencent.tauth.UiError;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 /**
  * 分享dialog页面
@@ -80,7 +82,7 @@ public class ShareAppDialog extends Dialog implements IWXAPIEventHandler {
         dialogWindow.setAttributes(lp);
         mTencent = Tencent.createInstance(ShareConstants.APP_ID_QQ, mContext);
         try {
-            mShareUrl = "http://staging-api.hahaxueche.net/share/coaches/" + mCoach.getId() + "?target=" + URLEncoder.encode(branchUrl, "utf-8");
+            mShareUrl = HttpEngine.BASE_SERVER_IP + "/share/coaches/" + mCoach.getId() + "?target=" + URLEncoder.encode(branchUrl, "utf-8");
             Log.v("gibxin", mShareUrl);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -103,7 +105,7 @@ public class ShareAppDialog extends Dialog implements IWXAPIEventHandler {
                 WXMediaMessage msg = new WXMediaMessage(webpage);
                 msg.title = mTitle;
                 msg.description = mDescription;
-                Bitmap thumb = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_share);
+                Bitmap thumb = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_launcher);
                 msg.thumbData = Util.bmpToByteArray(thumb, true);
                 SendMessageToWX.Req req = new SendMessageToWX.Req();
                 req.transaction = buildTransaction("webpage");
@@ -122,7 +124,7 @@ public class ShareAppDialog extends Dialog implements IWXAPIEventHandler {
                 WXMediaMessage msg = new WXMediaMessage(webpage);
                 msg.title = mTitle;
                 msg.description = mDescription;
-                Bitmap thumb = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_share);
+                Bitmap thumb = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_launcher);
                 msg.thumbData = Util.bmpToByteArray(thumb, true);
                 SendMessageToWX.Req req = new SendMessageToWX.Req();
                 req.transaction = buildTransaction("webpage");
@@ -150,16 +152,18 @@ public class ShareAppDialog extends Dialog implements IWXAPIEventHandler {
         tvShareQzone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.v("gibxin", "share Qzone");
                 ShareListener myListener = new ShareListener();
-
                 final Bundle params = new Bundle();
                 //分享类型
                 params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT);
                 params.putString(QzoneShare.SHARE_TO_QQ_TITLE, mTitle);//必填
                 params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, mDescription);//选填
                 params.putString(QzoneShare.SHARE_TO_QQ_AUDIO_URL, mShareUrl);//必填
-                params.putString(QzoneShare.SHARE_TO_QQ_IMAGE_URL, mImageUrl);
-                //params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, "图片链接ArrayList");
+                //params.putString(QzoneShare.SHARE_TO_QQ_IMAGE_URL, mImageUrl);
+                ArrayList<String> imageUrlList = new ArrayList<String>();
+                imageUrlList.add(mImageUrl);
+                params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, imageUrlList);
                 mTencent.shareToQzone((Activity) mContext, params, myListener);
 
             }
@@ -221,14 +225,17 @@ public class ShareAppDialog extends Dialog implements IWXAPIEventHandler {
 
         @Override
         public void onCancel() {
+            Log.v("gibxin", "onCancel");
         }
 
         @Override
         public void onComplete(Object arg0) {
+            Log.v("gibxin", "onComplete");
         }
 
         @Override
         public void onError(UiError arg0) {
+            Log.v("gibxin", "onError");
         }
 
     }

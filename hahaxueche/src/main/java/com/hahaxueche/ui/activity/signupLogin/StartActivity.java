@@ -54,6 +54,7 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
         this.setContentView(R.layout.activity_start);
         spUtil = new SharedPreferencesUtil(this);
         mConstants = spUtil.getConstants();
+        loadDatas();
         convenientBanner = (ConvenientBanner) findViewById(R.id.convenientBanner);
         WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
         int width = wm.getDefaultDisplay().getWidth();
@@ -219,5 +220,13 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
     @Override
     public void onNewIntent(Intent intent) {
         this.setIntent(intent);
+    }
+
+    private void loadDatas() {
+        Intent intent = getIntent();
+        if (intent.getSerializableExtra("refererId") != null) {
+            String refererId = (String) intent.getSerializableExtra("refererId");
+            spUtil.setRefererId(refererId);
+        }
     }
 }

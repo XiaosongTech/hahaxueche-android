@@ -14,6 +14,7 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
 import com.hahaxueche.presenter.util.ErrorEvent;
+import com.hahaxueche.utils.SharedPreferencesUtil;
 
 
 /**
@@ -74,11 +75,13 @@ public class SLPresenterImpl implements SLPresenter {
         if (!isValidPwd(pwd, listener)) {
             return;
         }
+        SharedPreferencesUtil spUtil = new SharedPreferencesUtil(context);
+        final String refererId = spUtil.getRefererId();
         new AsyncTask<Void, Void, User>() {
 
             @Override
             protected User doInBackground(Void... params) {
-                return authApi.createUser(phoneNum, identifyCode, pwd, type);
+                return authApi.createUser(phoneNum, identifyCode, pwd, type,refererId);
             }
 
             @Override
@@ -265,7 +268,7 @@ public class SLPresenterImpl implements SLPresenter {
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
         try {
             Phonenumber.PhoneNumber chNumberProto = phoneUtil.parse(phoneNumber, "CN");
-            if(!phoneUtil.isValidNumber(chNumberProto)){
+            if (!phoneUtil.isValidNumber(chNumberProto)) {
                 listener.onFailure(ErrorEvent.PARAM_ILLEGAL, "您的手机号码格式有误");
                 return false;
             }

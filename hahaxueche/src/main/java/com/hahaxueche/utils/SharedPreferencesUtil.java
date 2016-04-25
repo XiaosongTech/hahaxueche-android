@@ -172,4 +172,23 @@ public class SharedPreferencesUtil {
         editor.commit();
     }
 
+    public String getRefererId() {
+        SharedPreferences spReferer = mContext.getSharedPreferences("refererId", Activity.MODE_PRIVATE);
+        return spReferer.getString("refererId", "");
+    }
+
+    public void setRefererId(String refererId) {
+        SharedPreferences spReferer = mContext.getSharedPreferences("refererId", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = spReferer.edit();
+        editor.putString("refererId", refererId);
+        editor.commit();
+    }
+
+    public void clearRefererId() {
+        SharedPreferences spReferer = mContext.getSharedPreferences("refererId", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = spReferer.edit();
+        editor.clear();
+        editor.commit();
+    }
+
 }

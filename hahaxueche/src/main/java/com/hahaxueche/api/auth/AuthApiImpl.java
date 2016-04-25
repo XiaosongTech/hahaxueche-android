@@ -67,12 +67,13 @@ public class AuthApiImpl implements AuthApi {
      * @return
      */
     @Override
-    public User createUser(String phoneNum, String identifyCode, String pwd, String user_type) {
+    public User createUser(String phoneNum, String identifyCode, String pwd, String user_type, String refererId) {
         Map<String, String> paramMap = new HashMap<String, String>();
         paramMap.put("cell_phone", phoneNum);
         paramMap.put("auth_token", identifyCode);
         paramMap.put("password", pwd);
         paramMap.put("user_type", user_type);
+        paramMap.put("referer_id", refererId);
         Type type = new TypeToken<User>() {
         }.getType();
         Type typeBase = new TypeToken<BaseApiResponse>() {
