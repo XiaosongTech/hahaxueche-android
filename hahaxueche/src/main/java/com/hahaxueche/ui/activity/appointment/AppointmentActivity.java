@@ -210,21 +210,23 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
     private void loadDatas() {
         SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
         mUser = spUtil.getUser();
-        if (null != mUser.getSession()) {
-            mAccessToken = mUser.getSession().getAccess_token();
-        }
-        if (null != mUser.getStudent()) {
-            mCurrentCoachId = mUser.getStudent().getCurrent_coach_id();
-        }
-        mBannerHightList = spUtil.getConstants().getBanner_highlights();
-        for (int i = 0; i < 5; i++) {
-            mLoopBannerHightList.add(mBannerHightList.get(i));
-            loopIndex++;
-        }
-        mLoopStudentAdapter = new LoopStudentAdapter(AppointmentActivity.this, mLoopBannerHightList, R.layout.adapter_loop_student_schedule);
-        mLvLoopStudent.setAdapter(mLoopStudentAdapter);
-        if (!TextUtils.isEmpty(mCurrentCoachId)) {
-            getScheduleList();
+        if (mUser != null) {
+            if (null != mUser.getSession()) {
+                mAccessToken = mUser.getSession().getAccess_token();
+            }
+            if (null != mUser.getStudent()) {
+                mCurrentCoachId = mUser.getStudent().getCurrent_coach_id();
+            }
+            mBannerHightList = spUtil.getConstants().getBanner_highlights();
+            for (int i = 0; i < 5; i++) {
+                mLoopBannerHightList.add(mBannerHightList.get(i));
+                loopIndex++;
+            }
+            mLoopStudentAdapter = new LoopStudentAdapter(AppointmentActivity.this, mLoopBannerHightList, R.layout.adapter_loop_student_schedule);
+            mLvLoopStudent.setAdapter(mLoopStudentAdapter);
+            if (!TextUtils.isEmpty(mCurrentCoachId)) {
+                getScheduleList();
+            }
         }
     }
 
@@ -259,7 +261,9 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
             //提醒选择教练
             mAlertDialog = new BaseAlertDialog(AppointmentActivity.this, "", "您还没有选择教练哦~", "快去寻找教练，开启快乐学车之旅吧！");
             mAlertDialog.show();
-            mHandler.sendEmptyMessage(1);
+            if (mBannerHightList != null && mBannerHightList.size() > 5) {
+                mHandler.sendEmptyMessage(1);
+            }
         }
     }
 
