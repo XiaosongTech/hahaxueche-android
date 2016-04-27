@@ -177,7 +177,7 @@ public class PaymentStageActivity extends MSBaseActivity {
                                     if (pd != null) {
                                         pd.dismiss();
                                     }
-                                    Toast.makeText(PaymentStageActivity.this, "打款失败", Toast.LENGTH_SHORT);
+                                    Toast.makeText(PaymentStageActivity.this, message, Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }

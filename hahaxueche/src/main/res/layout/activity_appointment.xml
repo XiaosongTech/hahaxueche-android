@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:divider="@drawable/layer_list_divider_review"
-            android:dividerHeight="1dp"
+            android:dividerHeight="0.5dp"
             android:footerDividersEnabled="false"
             android:headerDividersEnabled="false"></ListView>
 
