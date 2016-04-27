@@ -335,7 +335,11 @@ public class FCPresenterImpl implements FCPresenter {
                     if (purchasedService.isSuccess()) {
                         listener.onSuccess(purchasedService);
                     } else {
-                        listener.onFailure(purchasedService.getCode(), purchasedService.getMessage());
+                        if(purchasedService.getCode().equals("400003")){
+                            listener.onFailure(purchasedService.getCode(), "亲，完成课程后才付款哦~");
+                        }else {
+                            listener.onFailure(purchasedService.getCode(), "打款失败");
+                        }
                     }
                 } else {
                     listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
