@@ -85,6 +85,8 @@ public class MySettingActivity extends MSBaseActivity {
     private PhotoUtil mPhotoUtil;
     private SwipeRefreshLayout mSrlMySetting;
     private boolean isRefresh = false;//是否刷新中
+    private RelativeLayout mRlyRefererFriends;
+    private RelativeLayout mRlyCachOut;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -120,6 +122,8 @@ public class MySettingActivity extends MSBaseActivity {
         rlyAboutHaha = Util.instence(this).$(this, R.id.rly_about_haha);
         vwMyCoach = Util.instence(this).$(this, R.id.vw_my_coach);
         mSrlMySetting = Util.instence(this).$(this, R.id.srl_my_setting);
+        mRlyRefererFriends = Util.instence(this).$(this, R.id.rly_referer_friends);
+        mRlyCachOut = Util.instence(this).$(this, R.id.rly_cash_out);
     }
 
     private void initEvent() {
@@ -138,6 +142,8 @@ public class MySettingActivity extends MSBaseActivity {
         cirMyAvatar.setOnLongClickListener(mLongClickListener);
         mSrlMySetting.setOnRefreshListener(mRefreshListener);
         mSrlMySetting.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
+        mRlyRefererFriends.setOnClickListener(mClickListener);
+        mRlyCachOut.setOnClickListener(mClickListener);
     }
 
     private void loadDatas() {
@@ -281,6 +287,16 @@ public class MySettingActivity extends MSBaseActivity {
                     bundle.putString("url", "http://staging.hahaxueche.net/#/student");
                     intent.putExtras(bundle);
                     startActivity(intent);
+                    break;
+                case R.id.rly_referer_friends:
+                    //推荐朋友
+                    intent = new Intent(getApplication(), ReferFriendsActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.rly_cash_out:
+                    //提现
+                    break;
+                default:
                     break;
             }
         }

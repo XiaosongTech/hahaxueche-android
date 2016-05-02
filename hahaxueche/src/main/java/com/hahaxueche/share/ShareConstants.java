@@ -16,4 +16,9 @@ public class ShareConstants {
      * 客服QQ
      */
     public static final String CUSTOMER_SERVICE_QQ = "3319762526";
+
+    /**
+     * 新浪微博APPKEY
+     */
+    public static final String WEIBO_APP_KEY = "4186780524";
 }
