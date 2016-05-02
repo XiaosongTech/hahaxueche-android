@@ -1,6 +1,7 @@
 package com.hahaxueche.ui.adapter.mySetting;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,8 +9,10 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.student.Student;
+import com.hahaxueche.model.student.Referee;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
+import com.hahaxueche.utils.Util;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -20,26 +23,22 @@ public class ReferInfoAdapter extends BaseAdapter {
     private int mResource;   //item的布局
     private LayoutInflater mInflator;
     private Context mContext;
-    private CircleImageView mCivStudentAvatar;
-    private TextView mTvStudentName;
-    private TextView mTvReferState;
-    private TextView mTvReferAmount;
-    private ArrayList<Student> mStudentList;
+    private ArrayList<Referee> mRefereeList;
 
-    public ReferInfoAdapter(Context context, ArrayList<Student> studentList, int resource) {
+    public ReferInfoAdapter(Context context, ArrayList<Referee> refereeList, int resource) {
         mContext = context;
-        mStudentList = studentList;
+        mRefereeList = refereeList;
         mResource = resource;
     }
 
     @Override
     public int getCount() {
-        return mStudentList.size();
+        return mRefereeList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mStudentList.get(position);
+        return mRefereeList.get(position);
     }
 
     @Override
@@ -55,22 +54,33 @@ public class ReferInfoAdapter extends BaseAdapter {
             mInflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = mInflator.inflate(mResource, null);
             holder = new ViewHolder();
-            holder.civStudentAvatar = (CircleImageView) view.findViewById(R.id.civ_student_avatar);
-            holder.tvStudentName = (TextView) view.findViewById(R.id.tv_student_name);
+            holder.civStudentAvatar = (CircleImageView) view.findViewById(R.id.civ_referee_avatar);
+            holder.tvRefereeName = (TextView) view.findViewById(R.id.tv_referee_name);
             holder.tvReferState = (TextView) view.findViewById(R.id.tv_refer_state);
             holder.tvReferAmount = (TextView) view.findViewById(R.id.tv_refer_amount);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
-        Student student = mStudentList.get(position);
-        //holder.tvReviewerName.setText(reviewInfo.getReviewer().getName());
+        Referee referee = mRefereeList.get(position);
+        final int iconWidth = Util.instence(mContext).dip2px(50);
+        final int iconHeight = iconWidth;
+        Picasso.with(mContext).load(referee.getReferee_status().getAvatar_url()).resize(iconWidth, iconHeight).into(holder.civStudentAvatar);
+        holder.tvRefereeName.setText(referee.getReferee_status().getName());
+        holder.tvReferAmount.setText(Util.getMoney(referee.getReferee_bonus_amount()));
+        if (referee.getReferee_status().getStatus().equals("0")) {
+            holder.tvReferState.setText("已注册，还没有报名教练");
+            holder.tvReferAmount.setTextColor(ContextCompat.getColor(mContext, R.color.haha_gray_heavier));
+        } else if (referee.getReferee_status().getStatus().equals("1")) {
+            holder.tvReferState.setText("已报名教练并付款");
+            holder.tvReferAmount.setTextColor(ContextCompat.getColor(mContext, R.color.app_theme_color));
+        }
         return view;
     }
 
     static class ViewHolder {
         CircleImageView civStudentAvatar;
-        TextView tvStudentName;
+        TextView tvRefereeName;
         TextView tvReferState;
         TextView tvReferAmount;
     }

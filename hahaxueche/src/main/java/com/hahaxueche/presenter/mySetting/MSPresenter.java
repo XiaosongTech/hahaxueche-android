@@ -1,7 +1,11 @@
 package com.hahaxueche.presenter.mySetting;
 
 import com.hahaxueche.model.response.CoachListResponse;
+import com.hahaxueche.model.response.ReferalHistoryResponse;
+import com.hahaxueche.model.response.RefereeListResponse;
 import com.hahaxueche.model.review.ReviewInfo;
+import com.hahaxueche.model.student.ReferalBonusSummary;
+import com.hahaxueche.model.student.ReferalBonusTransaction;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
 
@@ -58,4 +62,52 @@ public interface MSPresenter {
      * @param listener
      */
     public void uploadAvatar(String studentId, String accessToken, String filePath, MSCallbackListener<Student> listener);
+
+    /**
+     * @param studentId
+     * @param page
+     * @param perPage
+     * @param accessToken
+     * @param listener
+     */
+    public void fetchRefereeList(String studentId, String page, String perPage, String accessToken, MSCallbackListener<RefereeListResponse> listener);
+
+    /**
+     * @param url
+     * @param accessToken
+     * @param listener
+     */
+    public void fetchRefereeList(String url, String accessToken, MSCallbackListener<RefereeListResponse> listener);
+
+    /**
+     * @param studentId
+     * @param page
+     * @param perPage
+     * @param accessToken
+     * @param listener
+     */
+    public void fetchReferalHistoryList(String studentId, String page, String perPage, String accessToken, MSCallbackListener<ReferalHistoryResponse> listener);
+
+    /**
+     * @param url
+     * @param accessToken
+     * @param listener
+     */
+    public void fetchReferalHistoryList(String url, String accessToken, MSCallbackListener<ReferalHistoryResponse> listener);
+
+    /**
+     * @param studentId
+     * @param accessToken
+     */
+    public void fetchBonusSummary(String studentId, String accessToken, MSCallbackListener<ReferalBonusSummary> listener);
+
+    /**
+     * @param studentId
+     * @param account
+     * @param accountOwnerName
+     * @param amount
+     * @param accessToken
+     * @param listener
+     */
+    public void withdrawBonus(String studentId, String account, String accountOwnerName, String amount, String accessToken, MSCallbackListener<ReferalBonusTransaction> listener);
 }

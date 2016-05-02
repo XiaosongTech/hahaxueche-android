@@ -7,8 +7,12 @@ import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.api.net.HttpEngine;
 import com.hahaxueche.model.coach.ScheduleEvent;
 import com.hahaxueche.model.response.CoachListResponse;
+import com.hahaxueche.model.response.ReferalHistoryResponse;
+import com.hahaxueche.model.response.RefereeListResponse;
 import com.hahaxueche.model.response.ScheduleEventListResponse;
 import com.hahaxueche.model.review.ReviewInfo;
+import com.hahaxueche.model.student.ReferalBonusSummary;
+import com.hahaxueche.model.student.ReferalBonusTransaction;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
 import com.hahaxueche.utils.JsonUtils;
@@ -303,7 +307,7 @@ public class StudentApiImpl implements StudentApi {
             if (response.isSuccessful()) {
                 return JsonUtils.deserialize(body, type);
             } else {
-                BaseApiResponse retModel =JsonUtils.deserialize(body, type);
+                BaseApiResponse retModel = JsonUtils.deserialize(body, type);
                 retModel.setIsSuccess(false);
                 return retModel;
             }
@@ -329,6 +333,169 @@ public class StudentApiImpl implements StudentApi {
             } else {
                 ReviewInfo retModel = new ReviewInfo();
                 BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
+                retModel.setIsSuccess(false);
+                return retModel;
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public RefereeListResponse fetchRefereeList(String studentId, String page, String perPage, String accessToken) {
+        Type type = new TypeToken<RefereeListResponse>() {
+        }.getType();
+        String url = "students/" + studentId + "/referees";
+        if (!TextUtils.isEmpty(page)) {
+            url += url.indexOf("?") > 0 ? ("&page=" + page) : ("?page=" + page);
+        }
+        if (!TextUtils.isEmpty(perPage)) {
+            url += url.indexOf("?") > 0 ? ("&per_page=" + perPage) : ("?per_page=" + perPage);
+        }
+        try {
+            Response response = httpEngine.getHandle(url, accessToken);
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                RefereeListResponse retModel = new RefereeListResponse();
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, BaseApiResponse.class);
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
+                retModel.setIsSuccess(false);
+                return retModel;
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public RefereeListResponse fetchRefereeList(String url, String accessToken) {
+        Type type = new TypeToken<RefereeListResponse>() {
+        }.getType();
+        try {
+            Response response = httpEngine.getHandleByUrl(url, accessToken);
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                RefereeListResponse retModel = new RefereeListResponse();
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, BaseApiResponse.class);
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
+                retModel.setIsSuccess(false);
+                return retModel;
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public ReferalHistoryResponse fetchReferalHistoryList(String studentId, String page, String perPage, String accessToken) {
+        Type type = new TypeToken<ReferalHistoryResponse>() {
+        }.getType();
+        String url = "students/" + studentId + "/referal_bonus_transactions";
+        if (!TextUtils.isEmpty(page)) {
+            url += url.indexOf("?") > 0 ? ("&page=" + page) : ("?page=" + page);
+        }
+        if (!TextUtils.isEmpty(perPage)) {
+            url += url.indexOf("?") > 0 ? ("&per_page=" + perPage) : ("?per_page=" + perPage);
+        }
+        try {
+            Response response = httpEngine.getHandle(url, accessToken);
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                ReferalHistoryResponse retModel = new ReferalHistoryResponse();
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, BaseApiResponse.class);
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
+                retModel.setIsSuccess(false);
+                return retModel;
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public ReferalHistoryResponse fetchReferalHistoryList(String url, String accessToken) {
+        Type type = new TypeToken<ReferalHistoryResponse>() {
+        }.getType();
+        try {
+            Response response = httpEngine.getHandleByUrl(url, accessToken);
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                ReferalHistoryResponse retModel = new ReferalHistoryResponse();
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, BaseApiResponse.class);
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
+                retModel.setIsSuccess(false);
+                return retModel;
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public ReferalBonusSummary fetchBonusSummary(String studentId, String accessToken) {
+        Type type = new TypeToken<ReferalHistoryResponse>() {
+        }.getType();
+        String url = "students/" + studentId + "/referal_bonus_summary";
+        try {
+            Response response = httpEngine.getHandle(url, accessToken);
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                ReferalBonusSummary retModel = new ReferalBonusSummary();
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, BaseApiResponse.class);
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
+                retModel.setIsSuccess(false);
+                return retModel;
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public ReferalBonusTransaction withdrawBonus(String studentId, String account, String accountOwnerName, String amount, String accessToken) {
+        Type type = new TypeToken<ReferalBonusTransaction>() {
+        }.getType();
+        Map<String, String> paramMap = new HashMap<String, String>();
+        paramMap.put("account", account);
+        paramMap.put("account_owner_name", accountOwnerName);
+        paramMap.put("amount", amount);
+        try {
+            Response response = httpEngine.postHandle(paramMap, "students/" + studentId + "/withdraw_referal_bonus", accessToken);
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                ReferalBonusTransaction retModel = new ReferalBonusTransaction();
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, BaseApiResponse.class);
                 retModel.setCode(baseApiResponse.getCode());
                 retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);

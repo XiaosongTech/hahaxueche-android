@@ -8,6 +8,8 @@
       <root url="file://$PROJECT_DIR$/hahaxueche/build/intermediates/exploded-aar/io.branch.sdk.android/library/1.11.2/res" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.branch.sdk.android/library/1.11.2/2343d2afc987c9c3384e7ca3cdb09db712cd6187/library-1.11.2-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>
