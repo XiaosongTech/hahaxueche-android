@@ -83,10 +83,16 @@
             </intent-filter>
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="bnc.lt" android:pathPrefix="/77Yi" />
+
+                <data
+                    android:host="bnc.lt"
+                    android:pathPrefix="/77Yi"
+                    android:scheme="https" />
             </intent-filter>
+
             <meta-data
                 android:name="io.branch.sdk.auto_link_keys"
                 android:value="refererId" />
@@ -215,6 +221,21 @@
             android:launchMode="singleTask">
 
         </activity>
+        <activity
+            android:name=".ui.activity.mySetting.ReferFriendsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"></activity>
 
         <service android:name="com.amap.api.location.APSService"></service>
         <receiver

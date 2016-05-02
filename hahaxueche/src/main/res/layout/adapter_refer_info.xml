@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/haha_white"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.hahaxueche.ui.widget.circleImageView.CircleImageView
+            android:id="@+id/civ_student_avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp"></com.hahaxueche.ui.widget.circleImageView.CircleImageView>
+
+        <TextView
+            android:id="@+id/tv_student_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/civ_student_avatar"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@id/civ_student_avatar"
+            android:text="小梦"
+            android:textColor="@color/haha_black_light"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tv_refer_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_student_name"
+            android:layout_below="@id/tv_student_name"
+            android:layout_marginTop="10dp"
+            android:text="已报名教练并付款"
+            android:textColor="@color/haha_gray_heavy"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_refer_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:text="￥50"
+            android:textColor="@color/app_theme_color"
+            android:textSize="30sp" />
+    </RelativeLayout>
+</LinearLayout>

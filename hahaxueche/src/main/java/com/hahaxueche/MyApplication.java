@@ -14,9 +14,15 @@ import com.hahaxueche.presenter.mySetting.MSPresenter;
 import com.hahaxueche.presenter.mySetting.MSPresenterImpl;
 import com.hahaxueche.presenter.signupLogin.SLPresenter;
 import com.hahaxueche.presenter.signupLogin.SLPresenterImpl;
+import com.hahaxueche.share.ShareConstants;
 import com.hahaxueche.utils.JsonUtils;
 import com.hahaxueche.utils.SharedPreferencesUtil;
+import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
+import com.sina.weibo.sdk.api.share.WeiboShareSDK;
 import com.squareup.leakcanary.LeakCanary;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.tencent.tauth.Tencent;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -33,6 +39,9 @@ public class MyApplication extends Application {
     private FCPresenter fcPresenter;
     private MSPresenter msPresenter;
     private APPresenter apPresenter;
+    private IWXAPI wxApi;
+    private Tencent mTencent;
+    private IWeiboShareAPI mWeiboShareAPI;
 
     @Override
     public void onCreate() {
@@ -72,6 +81,7 @@ public class MyApplication extends Application {
                 }
             }
         }).start();
+        regToShare();
     }
 
     public SLPresenter getSLPresenter() {
@@ -88,6 +98,26 @@ public class MyApplication extends Application {
 
     public APPresenter getApPresenter() {
         return apPresenter;
+    }
+
+    private void regToShare() {
+        wxApi = WXAPIFactory.createWXAPI(this, ShareConstants.APP_ID, true);
+        wxApi.registerApp(ShareConstants.APP_ID);
+        mTencent = Tencent.createInstance(ShareConstants.APP_ID_QQ, this);
+        mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(this, ShareConstants.WEIBO_APP_KEY);
+        mWeiboShareAPI.registerApp();
+    }
+
+    public IWXAPI getIWXAPI() {
+        return wxApi;
+    }
+
+    public Tencent getTencentAPI() {
+        return mTencent;
+    }
+
+    public IWeiboShareAPI getWeiboAPI() {
+        return mWeiboShareAPI;
     }
 
 
