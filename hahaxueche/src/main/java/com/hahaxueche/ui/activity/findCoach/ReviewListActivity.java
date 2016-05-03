@@ -28,7 +28,7 @@ import java.util.Locale;
  * Created by gibxin on 2016/2/27.
  */
 public class ReviewListActivity extends FCBaseActivity implements XListView.IXListViewListener {
-    private List<ReviewInfo> mReviewInfoList;
+    private List<ReviewInfo> mReviewInfoList = new ArrayList<>();
     private ReviewItemAdapter mReviewItemAdapter;
     private XListView xlvReviewList;
     private String linkSelf;

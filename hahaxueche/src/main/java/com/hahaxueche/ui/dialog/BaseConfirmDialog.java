@@ -98,13 +98,13 @@ public class BaseConfirmDialog {
 
     public void show() {
         mDialog.show();
-        if (contentView != null)
-            contentView.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.in_downup));
+//        if (contentView != null)
+//            contentView.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.in_downup));
     }
 
     public void dismiss() {
-        if (contentView != null)
-            contentView.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.out_updown));
+//        if (contentView != null)
+//            contentView.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.out_updown));
         if (mDialog.isShowing())
             mDialog.dismiss();
     }

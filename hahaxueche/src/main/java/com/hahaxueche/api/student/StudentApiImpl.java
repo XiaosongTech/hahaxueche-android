@@ -456,7 +456,7 @@ public class StudentApiImpl implements StudentApi {
 
     @Override
     public ReferalBonusSummary fetchBonusSummary(String studentId, String accessToken) {
-        Type type = new TypeToken<ReferalHistoryResponse>() {
+        Type type = new TypeToken<ReferalBonusSummary>() {
         }.getType();
         String url = "students/" + studentId + "/referal_bonus_summary";
         try {

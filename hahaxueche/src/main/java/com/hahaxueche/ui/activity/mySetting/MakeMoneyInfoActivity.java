@@ -1,9 +1,16 @@
 package com.hahaxueche.ui.activity.mySetting;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
@@ -41,12 +48,16 @@ public class MakeMoneyInfoActivity extends MSBaseActivity implements XListView.I
     private String page;
     private String per_page = "10";
     private ReferInfoAdapter mReferInfoAdapter;
-    private ArrayList<Referee> mRefereeList;
+    private ArrayList<Referee> mRefereeList = new ArrayList<>();
     private boolean isOnLoadMore = false;
     private User mUser;
     private ProgressDialog pd;//进度框
-    private boolean mLoadingFetchBonus;
-    private boolean mLoadingFetchRefereeList;
+    private ReferalBonusSummary mReferalBonusSummary;
+    private SwipeRefreshLayout mSrlNoRefer;
+    private ScrollView mSvNoRefer;
+    private LinearLayout mLlyNoRefer;
+    private ImageView mIvNoRefer;
+    private boolean isRefresh = false;//是否刷新中
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,16 +87,39 @@ public class MakeMoneyInfoActivity extends MSBaseActivity implements XListView.I
         mTvWithdrawnAmount = Util.instence(this).$(this, R.id.tv_withdrawn_amount);
         mTvWithdraw = Util.instence(this).$(this, R.id.tv_withdraw);
         mXlvReferInfo = Util.instence(this).$(this, R.id.xlv_refer_info);
+        mSrlNoRefer = Util.instence(this).$(this, R.id.srl_no_refer);
+        mSvNoRefer = Util.instence(this).$(this, R.id.sv_no_refer);
+        mLlyNoRefer = Util.instence(this).$(this, R.id.lly_no_refer);
+        mIvNoRefer = Util.instence(this).$(this, R.id.iv_no_refer);
     }
 
     private void initEvent() {
-
+        mIbtnBack.setOnClickListener(mClickListener);
+        mTvWithdrawnAmount.setOnClickListener(mClickListener);
+        mTvWithdraw.setOnClickListener(mClickListener);
+        mSrlNoRefer.setOnClickListener(mClickListener);
+        mSvNoRefer.setOnClickListener(mClickListener);
+        mLlyNoRefer.setOnClickListener(mClickListener);
+        mIvNoRefer.setOnClickListener(mClickListener);
+        mSrlNoRefer.setOnRefreshListener(mRefreshListener);
+        mSrlNoRefer.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
     }
+
+    SwipeRefreshLayout.OnRefreshListener mRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            if (!isRefresh) {
+                isRefresh = true;
+                getRefereeList();
+            }
+        }
+    };
 
     private void loadDatas() {
         SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
         mUser = spUtil.getUser();
         fetchBonusSummary();
+        getRefereeList();
     }
 
     @Override
@@ -120,11 +154,11 @@ public class MakeMoneyInfoActivity extends MSBaseActivity implements XListView.I
     }
 
     private void getRefereeList() {
-        showLoading();
-        mLoadingFetchRefereeList = true;
         this.msPresenter.fetchRefereeList(mUser.getStudent().getId(), page, per_page, mUser.getSession().getAccess_token(), new MSCallbackListener<RefereeListResponse>() {
             @Override
             public void onSuccess(RefereeListResponse data) {
+                mSrlNoRefer.setRefreshing(false);
+                isRefresh = false;
                 mRefereeList = data.getData();
                 linkSelf = data.getLinks().getSelf();
                 linkNext = data.getLinks().getNext();
@@ -137,21 +171,24 @@ public class MakeMoneyInfoActivity extends MSBaseActivity implements XListView.I
                 mReferInfoAdapter = new ReferInfoAdapter(MakeMoneyInfoActivity.this, mRefereeList, R.layout.adapter_refer_info);
                 mXlvReferInfo.setAdapter(mReferInfoAdapter);
                 onLoad();
-                mLoadingFetchRefereeList = false;
-                dismissLoading();
+                if (mRefereeList != null && mRefereeList.size() > 0) {
+                    mXlvReferInfo.setVisibility(View.VISIBLE);
+                    mSrlNoRefer.setVisibility(View.GONE);
+                } else {
+                    mXlvReferInfo.setVisibility(View.GONE);
+                    mSrlNoRefer.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
             public void onFailure(String errorEvent, String message) {
-                mLoadingFetchRefereeList = false;
-                dismissLoading();
+                mSrlNoRefer.setRefreshing(false);
+                isRefresh = false;
             }
         });
     }
 
     private void getRefereeList(String url) {
-        showLoading();
-        mLoadingFetchRefereeList = true;
         this.msPresenter.fetchRefereeList(url, mUser.getSession().getAccess_token(), new MSCallbackListener<RefereeListResponse>() {
             @Override
             public void onSuccess(RefereeListResponse data) {
@@ -170,56 +207,84 @@ public class MakeMoneyInfoActivity extends MSBaseActivity implements XListView.I
                 mReferInfoAdapter = new ReferInfoAdapter(MakeMoneyInfoActivity.this, mRefereeList, R.layout.adapter_refer_info);
                 mXlvReferInfo.setAdapter(mReferInfoAdapter);
                 onLoad();
-                mLoadingFetchRefereeList = false;
-                dismissLoading();
             }
 
             @Override
             public void onFailure(String errorEvent, String message) {
-                mLoadingFetchRefereeList = false;
-                dismissLoading();
             }
         });
     }
 
     private void fetchBonusSummary() {
-        showLoading();
-        mLoadingFetchBonus = true;
+        pd = ProgressDialog.show(MakeMoneyInfoActivity.this, null, "数据加载中，请稍后……");
         this.msPresenter.fetchBonusSummary(mUser.getStudent().getId(), mUser.getSession().getAccess_token(), new MSCallbackListener<ReferalBonusSummary>() {
             @Override
             public void onSuccess(ReferalBonusSummary referalBonusSummary) {
-                mTvPendingAmount.setText(Util.getMoney(referalBonusSummary.getPending_add_to_account()));
-                mTvAvailableAmount.setText(Util.getMoney(referalBonusSummary.getAvailable_to_redeem()));
-                mTvWithdrawnAmount.setText(Util.getMoney(referalBonusSummary.getRedeemed()));
-                mLoadingFetchBonus = false;
-                dismissLoading();
+                mReferalBonusSummary = referalBonusSummary;
+                mTvPendingAmount.setText(Util.getMoney(mReferalBonusSummary.getPending_add_to_account()));
+                mTvAvailableAmount.setText(Util.getMoney(mReferalBonusSummary.getAvailable_to_redeem()));
+                mTvWithdrawnAmount.setText(Util.getMoney(mReferalBonusSummary.getRedeemed()));
+                pd.dismiss();
             }
 
             @Override
             public void onFailure(String errorEvent, String message) {
-                mLoadingFetchBonus = false;
-                dismissLoading();
-
+                pd.dismiss();
             }
         });
     }
 
-    /**
-     * 显示进度框
-     */
-    private void showLoading() {
-        if (pd == null || !pd.isShowing()) {
-            pd = ProgressDialog.show(MakeMoneyInfoActivity.this, null, "数据加载中，请稍后……");
-        }
-    }
 
-    /**
-     * 隐藏进度框
-     */
-    private void dismissLoading() {
-        if (!mLoadingFetchBonus && !mLoadingFetchRefereeList) {
-            pd.dismiss();
+    private View.OnClickListener mClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.ibtn_back:
+                    MakeMoneyInfoActivity.this.finish();
+                    break;
+                case R.id.tv_withdrawn_amount:
+                    Intent intent;
+                    if (mRefereeList != null && mRefereeList.size() > 0) {
+                        intent = new Intent(getApplication(), RedeemedListActivity.class);
+                        startActivity(intent);
+                    } else {
+                        intent = new Intent(getApplication(), ReferFriendsActivity.class);
+                        startActivity(intent);
+                    }
+                    break;
+                case R.id.tv_withdraw:
+                    if (mRefereeList != null && mRefereeList.size() > 0) {
+                        //我要提现
+                        intent = new Intent(getApplication(), WithdrawActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("referalBonusSummary", mReferalBonusSummary);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    } else {
+                        intent = new Intent(getApplication(), ReferFriendsActivity.class);
+                        startActivity(intent);
+                    }
+                    break;
+                case R.id.srl_no_refer:
+                    intent = new Intent(getApplication(), ReferFriendsActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.sv_no_refer:
+                    intent = new Intent(getApplication(), ReferFriendsActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.lly_no_refer:
+                    intent = new Intent(getApplication(), ReferFriendsActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.iv_no_refer:
+                    intent = new Intent(getApplication(), ReferFriendsActivity.class);
+                    startActivity(intent);
+                    break;
+                default:
+                    break;
+            }
         }
-    }
+    };
 
 }

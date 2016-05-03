@@ -1,9 +1,11 @@
 package com.hahaxueche.model.student;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2016/5/2.
  */
-public class ReferalBonusSummary {
+public class ReferalBonusSummary implements Serializable {
     private String pending_add_to_account;
     private String available_to_redeem;
     private String redeemed;

@@ -39,6 +39,9 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import io.branch.indexing.BranchUniversalObject;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
@@ -59,9 +62,9 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
     private IWeiboShareAPI mWeiboShareAPI;//新浪微博
     private MyApplication myApplication;
     private SharedPreferencesUtil spUtil;
-    private String mTitle = "好友向你推荐哈哈学车";
+    private String mTitle = "墙裂推荐：哈哈学车";
     private String mDescription = "注册立享50元优惠";
-    private String mUrl =  HttpEngine.BASE_SERVER_IP + "/share/invitations?target=";
+    private String mUrl = "";
     private String mImageUrl = "http://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
     private ProgressDialog pd;//进度框
 
@@ -200,7 +203,7 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
         // 设置 Bitmap 类型的图片到视频对象里         设置缩略图。 注意：最终压缩过的缩略图大小不得超过 32kb。
         mediaObject.setThumbImage(bitmap);
         mediaObject.actionUrl = mUrl;
-        mediaObject.defaultText = mTitle + mDescription;
+        mediaObject.defaultText = mTitle + mDescription + mUrl;
         weiboMessage.mediaObject = mediaObject;
         // 2. 初始化从第三方到微博的消息请求
         SendMessageToWeiboRequest request = new SendMessageToWeiboRequest();
@@ -311,8 +314,14 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
             public void onLinkCreate(String url, BranchError error) {
                 pd.dismiss();
                 if (error == null) {
-                    mUrl += url;
-                    Log.i("gibxin", "got my Branch link to share: " + mUrl);
+                    try {
+                        mUrl = HttpEngine.BASE_SERVER_IP + "/share/invitations?target=" + URLEncoder.encode(url, "utf-8");
+                    } catch (UnsupportedEncodingException e) {
+                        Log.e("gibxin", "create branchUrl error :" + e.getMessage());
+                        e.printStackTrace();
+                    }
+                    Log.i("gibxin", "got my Branch link to share: " + url);
+                    Log.i("gibxin", "mUrl: " + mUrl);
                 } else {
                     Toast.makeText(ReferFriendsActivity.this, "分享链接生成失败", Toast.LENGTH_SHORT).show();
                 }

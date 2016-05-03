@@ -186,6 +186,7 @@ public class MySettingActivity extends MSBaseActivity {
                 rlyMyCoach.setClickable(true);
                 rlyPaymentStage.setClickable(true);
             } else {
+                tvUnpaidAmount.setText(Util.getMoney(mStudent.getBonus_balance()));
                 tvPaymentStage.setText("未选择教练");
                 rlyMyCoach.setVisibility(View.GONE);
                 ivPaymentStage.setVisibility(View.GONE);
@@ -294,6 +295,8 @@ public class MySettingActivity extends MSBaseActivity {
                     startActivity(intent);
                     break;
                 case R.id.rly_cash_out:
+                    intent = new Intent(getApplication(), MakeMoneyInfoActivity.class);
+                    startActivity(intent);
                     //提现
                     break;
                 default:
