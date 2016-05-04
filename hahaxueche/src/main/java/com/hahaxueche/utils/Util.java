@@ -199,6 +199,11 @@ public class Util {
         return "￥" + dfInt.format(money);
     }
 
+    public static String getMoney(double price) {
+        DecimalFormat dfInt = new DecimalFormat("#####.##");
+        return "￥" + dfInt.format(price / 100);
+    }
+
     public static String getMoneyYuan(String price) {
         DecimalFormat dfInt = new DecimalFormat("#####.##");
         double money = 0d;

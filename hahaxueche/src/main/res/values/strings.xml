@@ -46,7 +46,7 @@
     <string name="referFriendsTips">每邀请一位好友，您和好友一起获得￥100元奖励，累计无上限！</string>
     <string name="inviteFriends">邀请好友</string>
     <string name="eventDetails">活动细则</string>
-    <string name="eventDetailsTips">1）好友通过您的专属链接注册并成功报名，您的好友在报名时可立减¥50元，同时您将获得¥50元，自动存入您的哈哈学车推荐奖金中，累计无上限，可随时提现。\n\n2）好友需通过您的专属链接注册才能建立推荐关系。\n\n3）如发现作弊行为将取消用户活动资格，并扣除所获奖励。\n\n4）如对本活动规则有任何疑问，请联系哈哈学车客服：400-001-6006\n\n5）本活动不与其它优惠活动共享</string>
+    <string name="eventDetailsTips">1）好友通过您的专属链接注册并成功报名，您的好友在报名时可立减¥50元，同时您将获得¥50元，自动存入您的哈哈学车推荐奖金中，累计无上限，可随时提现。\n\n2）好友需通过您的专属链接注册才能建立推荐关系。\n\n3）如发现作弊行为将取消用户活动资格，并扣除所获奖励。\n\n4）如对本活动规则有任何疑问，请联系哈哈学车客服：400-001-6006</string>
     <string name="eventDetailsTipsLaw">＊在法律允许的范围内，哈哈学车有权对活动规则进行解释</string>
     <string name="shareYourLinks">分享您的哈哈学车专属链接</string>
     <string name="shareLinksTips">在哈哈学车上送给好友￥50\n当好友报名时您可以获得50￥</string>
@@ -65,4 +65,8 @@
     <string name="cardPay">银行卡（暂不支持）</string>
     <string name="cardPayTips">支持储蓄卡</string>
     <string name="sureWithdraw">确认提现</string>
+    <string name="enterAlipayAccount">输入支付宝账号</string>
+    <string name="enterAlipayName">输入支付宝真实姓名</string>
+    <string name="confirm">确认</string>
+    <string name="cancel">取消</string>
 </resources>

@@ -3,8 +3,12 @@ package com.hahaxueche.api.student;
 
 import com.hahaxueche.model.coach.ScheduleEvent;
 import com.hahaxueche.model.response.CoachListResponse;
+import com.hahaxueche.model.response.ReferalHistoryResponse;
+import com.hahaxueche.model.response.RefereeListResponse;
 import com.hahaxueche.model.response.ScheduleEventListResponse;
 import com.hahaxueche.model.review.ReviewInfo;
+import com.hahaxueche.model.student.ReferalBonusSummary;
+import com.hahaxueche.model.student.ReferalBonusTransaction;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
 
@@ -96,5 +100,61 @@ public interface StudentApi {
      * @return
      */
     public ReviewInfo reviewSchedule(String studentId, String scheduleEventId, String rating, String accessToken);
+
+    /**
+     * 学员提取自己推荐的人
+     *
+     * @param studentId
+     * @param page
+     * @param perPage
+     * @param accessToken
+     * @return
+     */
+    public RefereeListResponse fetchRefereeList(String studentId, String page, String perPage, String accessToken);
+
+    /**
+     * @param url
+     * @param accessToken
+     * @return
+     */
+    public RefereeListResponse fetchRefereeList(String url, String accessToken);
+
+    /**
+     * 学员提取自己提取奖金的历史
+     *
+     * @param studentId
+     * @param page
+     * @param perPage
+     * @param accessToken
+     * @return
+     */
+    public ReferalHistoryResponse fetchReferalHistoryList(String studentId, String page, String perPage, String accessToken);
+
+    /**
+     * @param url
+     * @param accessToken
+     * @return
+     */
+    public ReferalHistoryResponse fetchReferalHistoryList(String url, String accessToken);
+
+    /**
+     * 学员提取自己提取奖金的总结
+     *
+     * @param studentId
+     * @param accessToken
+     * @return
+     */
+    public ReferalBonusSummary fetchBonusSummary(String studentId, String accessToken);
+
+    /**
+     * 学员提取奖金
+     *
+     * @param studentId
+     * @param account
+     * @param accountOwnerName
+     * @param amount
+     * @return
+     */
+    public ReferalBonusTransaction withdrawBonus(String studentId, String account, String accountOwnerName, String amount, String accessToken);
 
 }

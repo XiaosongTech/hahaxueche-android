@@ -26,6 +26,7 @@ import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
         this.setContentView(R.layout.activity_start);
         spUtil = new SharedPreferencesUtil(this);
         mConstants = spUtil.getConstants();
+        Log.v("gibxin", "0000000");
         loadDatas();
         convenientBanner = (ConvenientBanner) findViewById(R.id.convenientBanner);
         WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
@@ -73,7 +75,7 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
             }
         }, networkImages)
                 .setPageIndicator(new int[]{R.drawable.icon_point, R.drawable.icon_point_pre})
-                        //设置指示器的方向
+                //设置指示器的方向
 //                .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.ALIGN_PARENT_RIGHT)
 //                .setOnPageChangeListener(this)//监听翻页事件
                 .setOnItemClickListener(this);
@@ -175,15 +177,6 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
         }
 
     }
-    // 开始自动翻页
-
-    @Override
-
-    public void onResume() {
-        super.onResume();
-        //开始自动翻页
-        convenientBanner.startTurning(2500);
-    }
 
 
     // 停止自动翻页
@@ -226,7 +219,26 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
         Intent intent = getIntent();
         if (intent.getSerializableExtra("refererId") != null) {
             String refererId = (String) intent.getSerializableExtra("refererId");
+            Log.v("gibxin", "refererId ->" + refererId);
             spUtil.setRefererId(refererId);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //开始自动翻页
+        convenientBanner.startTurning(2500);
+        if (Branch.isAutoDeepLinkLaunch(this)) {
+            try {
+                String autoDeeplinkedValue = Branch.getInstance().getLatestReferringParams().getString("refererId");
+                String refererId = autoDeeplinkedValue;
+                Log.v("gibxin", "refererId -> " + refererId);
+                spUtil.setRefererId(refererId);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
         }
     }
 }

@@ -3,6 +3,7 @@ package com.hahaxueche.ui.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.city.CostItem;
+import com.hahaxueche.model.user.User;
+import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 
 import java.util.List;
@@ -44,12 +47,21 @@ public class FeeDetailDialog extends Dialog implements View.OnClickListener {
     public interface OnBtnClickListener {
         public void onPay();
     }
-    public FeeDetailDialog(Context context, List<CostItem> costItemList, String totalFee, String showType,OnBtnClickListener listener) {
+
+    public FeeDetailDialog(Context context, List<CostItem> costItemList, String totalFee, String showType, OnBtnClickListener listener) {
         super(context);
         mContext = context;
         mListener = listener;
         mCostItemList = costItemList;
         mTotalFee = totalFee;
+        //有余额的情况下，要减去余额
+        SharedPreferencesUtil spUtil = new SharedPreferencesUtil(mContext);
+        User user = spUtil.getUser();
+        if (user.getStudent() != null && !TextUtils.isEmpty(user.getStudent().getBonus_balance())) {
+            double totalFeeDouble = Double.parseDouble(mTotalFee);
+            double balance = Double.parseDouble(user.getStudent().getBonus_balance());
+            mTotalFee = String.valueOf(totalFeeDouble - balance);
+        }
         mShowType = showType;
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
@@ -139,7 +151,7 @@ public class FeeDetailDialog extends Dialog implements View.OnClickListener {
             TextView tvCostFee = new TextView(mContext);
             tvCostParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             tvCostFee.setLayoutParams(tvCostParams);
-            tvCostFee.setText(Util.getMoneyYuan(totalFeeDouble+""));
+            tvCostFee.setText(Util.getMoneyYuan(totalFeeDouble + ""));
             tvCostFee.setTextColor(mContext.getResources().getColor(R.color.app_theme_color));
             tvCostFee.setTextSize(16);
             rly.addView(tvCostFee);

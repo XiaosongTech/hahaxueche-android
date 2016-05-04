@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:textColor="@color/haha_black_light"
+        android:background="@color/app_theme_color"
+        android:textColor="@color/haha_white"
         android:textSize="20sp" />
 
     <View

@@ -13,6 +13,7 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.activity.mySetting.MSBaseActivity;
+import com.hahaxueche.ui.activity.signupLogin.SignUpInfoActivity;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.umeng.analytics.MobclickAgent;
@@ -71,7 +72,13 @@ public class WelcomeActivity extends MSBaseActivity {
             public void onSuccess(Student student) {
                 user.setStudent(student);
                 spUtil.setUser(user);
-                Intent intent = new Intent(WelcomeActivity.this, IndexActivity.class);
+                Intent intent;
+                if (TextUtils.isEmpty(user.getStudent().getCity_id()) || TextUtils.isEmpty(user.getStudent().getAvatar()) || TextUtils.isEmpty(user.getStudent().getName())) {
+                    //补全资料
+                    intent = new Intent(WelcomeActivity.this, SignUpInfoActivity.class);
+                } else {
+                    intent = new Intent(WelcomeActivity.this, IndexActivity.class);
+                }
                 startActivity(intent);
                 WelcomeActivity.this.finish();
             }

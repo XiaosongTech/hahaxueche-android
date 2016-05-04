@@ -10,9 +10,14 @@ import com.hahaxueche.api.student.StudentApi;
 import com.hahaxueche.api.student.StudentApiImpl;
 import com.hahaxueche.api.util.ApiError;
 import com.hahaxueche.model.response.CoachListResponse;
+import com.hahaxueche.model.response.ReferalHistoryResponse;
+import com.hahaxueche.model.response.RefereeListResponse;
 import com.hahaxueche.model.review.ReviewInfo;
+import com.hahaxueche.model.student.ReferalBonusSummary;
+import com.hahaxueche.model.student.ReferalBonusTransaction;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
+import com.hahaxueche.presenter.util.ErrorEvent;
 
 /**
  * Created by gibxin on 2016/2/29.
@@ -198,6 +203,163 @@ public class MSPresenterImpl implements MSPresenter {
                         listener.onSuccess(student);
                     } else {
                         listener.onFailure(student.getCode(), student.getMessage());
+                    }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void fetchRefereeList(final String studentId, final String page, final String perPage, final String accessToken, final MSCallbackListener<RefereeListResponse> listener) {
+        new AsyncTask<Void, Void, RefereeListResponse>() {
+
+            @Override
+            protected RefereeListResponse doInBackground(Void... params) {
+                return studentApi.fetchRefereeList(studentId, page, perPage, accessToken);
+            }
+
+            @Override
+            protected void onPostExecute(RefereeListResponse refereeListResponse) {
+                if (listener != null) {
+                    if (refereeListResponse.isSuccess()) {
+                        listener.onSuccess(refereeListResponse);
+                    } else {
+                        listener.onFailure(refereeListResponse.getCode(), refereeListResponse.getMessage());
+                    }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void fetchRefereeList(final String url, final String accessToken, final MSCallbackListener<RefereeListResponse> listener) {
+        new AsyncTask<Void, Void, RefereeListResponse>() {
+
+            @Override
+            protected RefereeListResponse doInBackground(Void... params) {
+                return studentApi.fetchRefereeList(url, accessToken);
+            }
+
+            @Override
+            protected void onPostExecute(RefereeListResponse refereeListResponse) {
+                if (listener != null) {
+                    if (refereeListResponse.isSuccess()) {
+                        listener.onSuccess(refereeListResponse);
+                    } else {
+                        listener.onFailure(refereeListResponse.getCode(), refereeListResponse.getMessage());
+                    }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void fetchReferalHistoryList(final String studentId, final String page, final String perPage, final String accessToken, final MSCallbackListener<ReferalHistoryResponse> listener) {
+        new AsyncTask<Void, Void, ReferalHistoryResponse>() {
+
+            @Override
+            protected ReferalHistoryResponse doInBackground(Void... params) {
+                return studentApi.fetchReferalHistoryList(studentId, page, perPage, accessToken);
+            }
+
+            @Override
+            protected void onPostExecute(ReferalHistoryResponse referalHistoryResponse) {
+                if (listener != null) {
+                    if (referalHistoryResponse.isSuccess()) {
+                        listener.onSuccess(referalHistoryResponse);
+                    } else {
+                        listener.onFailure(referalHistoryResponse.getCode(), referalHistoryResponse.getMessage());
+                    }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void fetchReferalHistoryList(final String url, final String accessToken, final MSCallbackListener<ReferalHistoryResponse> listener) {
+        new AsyncTask<Void, Void, ReferalHistoryResponse>() {
+
+            @Override
+            protected ReferalHistoryResponse doInBackground(Void... params) {
+                return studentApi.fetchReferalHistoryList(url, accessToken);
+            }
+
+            @Override
+            protected void onPostExecute(ReferalHistoryResponse referalHistoryResponse) {
+                if (listener != null) {
+                    if (referalHistoryResponse.isSuccess()) {
+                        listener.onSuccess(referalHistoryResponse);
+                    } else {
+                        listener.onFailure(referalHistoryResponse.getCode(), referalHistoryResponse.getMessage());
+                    }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void fetchBonusSummary(final String studentId, final String accessToken, final MSCallbackListener<ReferalBonusSummary> listener) {
+        new AsyncTask<Void, Void, ReferalBonusSummary>() {
+
+            @Override
+            protected ReferalBonusSummary doInBackground(Void... params) {
+                return studentApi.fetchBonusSummary(studentId, accessToken);
+            }
+
+            @Override
+            protected void onPostExecute(ReferalBonusSummary referalBonusSummary) {
+                if (listener != null) {
+                    if (referalBonusSummary.isSuccess()) {
+                        listener.onSuccess(referalBonusSummary);
+                    } else {
+                        listener.onFailure(referalBonusSummary.getCode(), referalBonusSummary.getMessage());
+                    }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void withdrawBonus(final String studentId, final String account, final String accountOwnerName, final String amount, final String accessToken, final MSCallbackListener<ReferalBonusTransaction> listener) {
+        if (TextUtils.isEmpty(account)) {
+            listener.onFailure(ErrorEvent.PARAM_NULL, "支付宝账号不能为空！");
+            return;
+        } else if (TextUtils.isEmpty(accountOwnerName)) {
+            listener.onFailure(ErrorEvent.PARAM_NULL, "姓名不能为空！");
+            return;
+        } else if (TextUtils.isEmpty(amount)) {
+            listener.onFailure(ErrorEvent.PARAM_NULL, "提现金额不能为空！");
+            return;
+        } else if (Double.parseDouble(amount) <= 0d) {
+            listener.onFailure(ErrorEvent.PARAM_NULL, "提现金额必须大于0！");
+            return;
+        }
+        new AsyncTask<Void, Void, ReferalBonusTransaction>() {
+
+            @Override
+            protected ReferalBonusTransaction doInBackground(Void... params) {
+                return studentApi.withdrawBonus(studentId, account, accountOwnerName, amount, accessToken);
+            }
+
+            @Override
+            protected void onPostExecute(ReferalBonusTransaction referalBonusTransaction) {
+                if (listener != null) {
+                    if (referalBonusTransaction.isSuccess()) {
+                        listener.onSuccess(referalBonusTransaction);
+                    } else {
+                        listener.onFailure(referalBonusTransaction.getCode(), referalBonusTransaction.getMessage());
                     }
                 } else {
                     listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);

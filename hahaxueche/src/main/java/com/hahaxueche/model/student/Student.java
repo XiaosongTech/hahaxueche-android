@@ -20,6 +20,8 @@ public class Student {
     private String reviewed;
     private String reviewed_at;
     private String status;
+    private String by_referal;
+    private String bonus_balance;
     private String code;
     private String message;
     private boolean isSuccess = true;
@@ -126,6 +128,22 @@ public class Student {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getBy_referal() {
+        return by_referal;
+    }
+
+    public void setBy_referal(String by_referal) {
+        this.by_referal = by_referal;
+    }
+
+    public String getBonus_balance() {
+        return bonus_balance;
+    }
+
+    public void setBonus_balance(String bonus_balance) {
+        this.bonus_balance = bonus_balance;
     }
 
     public String getCode() {

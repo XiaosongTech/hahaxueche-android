@@ -42,10 +42,10 @@
         android:textSize="16sp" />
 
     <TextView
+        android:id="@+id/tv_available_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="￥350"
         android:textColor="@color/haha_white"
         android:textSize="38sp" />
 
@@ -67,6 +67,7 @@
         android:background="@drawable/edittext_button"
         android:gravity="center"
         android:hint="@string/enterWantWithdrawMoney"
+        android:inputType="numberDecimal"
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
         android:singleLine="true"
@@ -214,6 +215,7 @@
             </RelativeLayout>
 
             <TextView
+                android:id="@+id/tv_confirm_withdraw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
