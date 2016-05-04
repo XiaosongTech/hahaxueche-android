@@ -210,6 +210,22 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/btn_fc_filter_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:gravity="center"
+            android:text="@string/fCCancel"
+            android:textColor="@color/fCTxtOrange"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="24dp"
+            android:background="@color/app_back_gray_light" />
+
+        <Button
             android:id="@+id/btn_fc_filter_sure"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -220,20 +236,6 @@
             android:textColor="@color/fCTxtGreen"
             android:textSize="14sp" />
 
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="24dp"
-            android:background="@color/app_back_gray_light" />
 
-        <Button
-            android:id="@+id/btn_fc_filter_cancel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@null"
-            android:gravity="center"
-            android:text="@string/fCCancel"
-            android:textColor="@color/fCTxtOrange"
-            android:textSize="14sp" />
     </LinearLayout>
 </LinearLayout>
