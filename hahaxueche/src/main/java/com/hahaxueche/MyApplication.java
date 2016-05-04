@@ -54,6 +54,7 @@ public class MyApplication extends Application {
         msPresenter = new MSPresenterImpl(this);
         apPresenter = new APPresenterImpl(this);
         final SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
+        spUtil.clearRefererId();
         new Thread(new Runnable() {
 
             @Override

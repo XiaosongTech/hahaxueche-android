@@ -231,9 +231,17 @@ public class LoginActivity extends SLBaseActivity {
                 }
                 spUtil.setUser(user);
                 MobclickAgent.onProfileSignIn(user.getStudent().getId());
+                Intent intent;
+                if (TextUtils.isEmpty(user.getStudent().getCity_id()) || TextUtils.isEmpty(user.getStudent().getAvatar()) || TextUtils.isEmpty(user.getStudent().getName())) {
+                    //补全资料
+                    intent = new Intent(LoginActivity.this, SignUpInfoActivity.class);
+                    startActivity(intent);
+                    LoginActivity.this.finish();
+                    return;
+                }
                 if (TextUtils.isEmpty(user.getStudent().getCurrent_coach_id())) {
                     Toast.makeText(context, "登录成功！", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(context, IndexActivity.class);
+                    intent = new Intent(context, IndexActivity.class);
                     startActivity(intent);
                     LoginActivity.this.finish();
                 } else {

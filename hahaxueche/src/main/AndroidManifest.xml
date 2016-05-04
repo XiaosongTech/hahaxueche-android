@@ -240,7 +240,6 @@
         <activity
             android:name=".ui.activity.mySetting.MakeMoneyInfoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activity.mySetting.RedeemedListActivity"
@@ -250,7 +249,6 @@
         <activity
             android:name=".ui.activity.mySetting.WithdrawActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
 
         <service android:name="com.amap.api.location.APSService"></service>

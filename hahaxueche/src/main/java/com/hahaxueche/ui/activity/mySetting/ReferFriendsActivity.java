@@ -133,40 +133,7 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
         @Override
         public void onShare(int shareType) {
             Blurry.delete(mLlyReferFriends);
-            generateShareUrl();
-            switch (shareType) {
-                case 0:
-                    //短信分享
-                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"));
-                    intent.putExtra("sms_body", "好友向你推荐哈哈学车.注册立享50元优惠 " + mUrl);
-                    startActivity(intent);
-                    break;
-                case 1:
-                    //复制链接
-                    ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                    // 将文本内容放到系统剪贴板里。
-                    cm.setText(mUrl);
-                    Toast.makeText(ReferFriendsActivity.this, "链接已复制到粘贴板！", Toast.LENGTH_SHORT).show();
-                    break;
-                case 2:
-                    //分享QQ
-                    shareToQQ();
-                    break;
-                case 3:
-                    //分享微博
-                    shareToWeibo();
-                    break;
-                case 4:
-                    //分享微信
-                    shareToWeixin();
-                    break;
-                case 5:
-                    //分享朋友圈
-                    shareToFriendCircle();
-                    break;
-                default:
-                    break;
-            }
+            generateShareUrl(shareType);
         }
     };
 
@@ -297,7 +264,7 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
         }
     }
 
-    private void generateShareUrl() {
+    private void generateShareUrl(final int shareType) {
         if (pd != null) {
             pd.dismiss();
         }
@@ -320,12 +287,50 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
                         Log.e("gibxin", "create branchUrl error :" + e.getMessage());
                         e.printStackTrace();
                     }
-                    Log.i("gibxin", "got my Branch link to share: " + url);
-                    Log.i("gibxin", "mUrl: " + mUrl);
+                    Log.v("gibxin", "got my Branch link to share: " + url);
+                    Log.v("gibxin", "mUrl: " + mUrl);
+                    share(shareType);
                 } else {
+                    Log.e("gibxin", "create branchUrl error :" + error.getMessage());
                     Toast.makeText(ReferFriendsActivity.this, "分享链接生成失败", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+
+    private void share(int shareType) {
+        switch (shareType) {
+            case 0:
+                //短信分享
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"));
+                intent.putExtra("sms_body", mTitle + mDescription + mUrl);
+                startActivity(intent);
+                break;
+            case 1:
+                //复制链接
+                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                // 将文本内容放到系统剪贴板里。
+                cm.setText(mUrl);
+                Toast.makeText(ReferFriendsActivity.this, "链接已复制到粘贴板！", Toast.LENGTH_SHORT).show();
+                break;
+            case 2:
+                //分享QQ
+                shareToQQ();
+                break;
+            case 3:
+                //分享微博
+                shareToWeibo();
+                break;
+            case 4:
+                //分享微信
+                shareToWeixin();
+                break;
+            case 5:
+                //分享朋友圈
+                shareToFriendCircle();
+                break;
+            default:
+                break;
+        }
     }
 }

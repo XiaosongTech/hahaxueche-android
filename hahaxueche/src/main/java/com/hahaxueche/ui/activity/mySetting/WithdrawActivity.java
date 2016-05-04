@@ -113,7 +113,9 @@ public class WithdrawActivity extends MSBaseActivity {
                                     msPresenter.withdrawBonus(mUser.getStudent().getId(), account, accountOwnerName, String.valueOf(withdrawMoney), mUser.getSession().getAccess_token(), new MSCallbackListener<ReferalBonusTransaction>() {
                                         @Override
                                         public void onSuccess(ReferalBonusTransaction data) {
-                                            Toast.makeText(WithdrawActivity.this, "提现成功", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent();
+                                            setResult(RESULT_OK, intent);
+                                            WithdrawActivity.this.finish();
                                         }
 
                                         @Override

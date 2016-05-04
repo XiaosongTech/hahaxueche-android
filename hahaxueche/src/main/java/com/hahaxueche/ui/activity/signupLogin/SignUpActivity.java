@@ -164,11 +164,19 @@ public class SignUpActivity extends SLBaseActivity {
                         public void onSuccess(User user) {
                             Toast.makeText(context, getResources().getText(R.string.sLResetPwdSuccess), Toast.LENGTH_SHORT).show();
                             spUtil.setUser(user);
+                            Intent intent;
+                            if (TextUtils.isEmpty(user.getStudent().getCity_id()) || TextUtils.isEmpty(user.getStudent().getAvatar()) || TextUtils.isEmpty(user.getStudent().getName())) {
+                                //补全资料
+                                intent = new Intent(context, SignUpInfoActivity.class);
+                                startActivity(intent);
+                                SignUpActivity.this.finish();
+                                return;
+                            }
                             if (TextUtils.isEmpty(user.getStudent().getCurrent_coach_id())) {
                                 if (pd != null) {
                                     pd.dismiss();
                                 }
-                                Intent intent = new Intent(context, IndexActivity.class);
+                                intent = new Intent(context, IndexActivity.class);
                                 startActivity(intent);
                                 SignUpActivity.this.finish();
                             } else {

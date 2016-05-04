@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.response.RefereeListResponse;
@@ -259,7 +260,7 @@ public class MakeMoneyInfoActivity extends MSBaseActivity implements XListView.I
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("referalBonusSummary", mReferalBonusSummary);
                         intent.putExtras(bundle);
-                        startActivity(intent);
+                        startActivityForResult(intent, 0);
                     } else {
                         intent = new Intent(getApplication(), ReferFriendsActivity.class);
                         startActivity(intent);
@@ -286,5 +287,19 @@ public class MakeMoneyInfoActivity extends MSBaseActivity implements XListView.I
             }
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0) {
+            switch (resultCode) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
+                case RESULT_OK:
+                    Toast.makeText(MakeMoneyInfoActivity.this, "提现成功", Toast.LENGTH_SHORT).show();
+                    fetchBonusSummary();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 
 }
