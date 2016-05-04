@@ -80,14 +80,35 @@
         android:textColor="@color/fCTxtGray"
         android:textColorHint="@color/fCViewGray"
         android:textSize="14sp" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@color/fCViewGray" />
+
     <LinearLayout
         android:id="@+id/lly_pay_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_later_review"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:text="@string/myLaterReview"
+            android:textColor="@color/fCTxtOrange"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/fCViewGray" />
 
         <TextView
             android:id="@+id/tv_sure_review"
@@ -101,24 +122,6 @@
             android:textColor="@color/fCTxtGreen"
             android:textSize="14sp" />
 
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="15dp"
-            android:background="@color/fCViewGray" />
-
-        <TextView
-            android:id="@+id/tv_later_review"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:paddingBottom="15dp"
-            android:paddingTop="15dp"
-            android:text="@string/myLaterReview"
-            android:textColor="@color/fCTxtOrange"
-            android:textSize="14sp" />
     </LinearLayout>
 
 </LinearLayout>
