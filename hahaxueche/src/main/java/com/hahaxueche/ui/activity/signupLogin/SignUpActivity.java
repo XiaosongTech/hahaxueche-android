@@ -154,10 +154,12 @@ public class SignUpActivity extends SLBaseActivity {
             pd.dismiss();
         }
         pd = ProgressDialog.show(SignUpActivity.this, null, "数据提交中，请稍后……");
+        btnFinish.setClickable(false);
         if (isResetPwd) {
             this.slPresenter.resetPassword(phoneNumber, pwd, identifyCode, new SLCallbackListener<BaseApiResponse>() {
                 @Override
                 public void onSuccess(BaseApiResponse baseApiResponse) {
+                    btnFinish.setClickable(true);
                     //密码修改成功，直接登录
                     slPresenter.login(phoneNumber, pwd, 2, new SLCallbackListener<User>() {
                         @Override
@@ -215,6 +217,7 @@ public class SignUpActivity extends SLBaseActivity {
 
                 @Override
                 public void onFailure(String errorEvent, String message) {
+                    btnFinish.setClickable(true);
                     if (pd != null) {
                         pd.dismiss();
                     }
@@ -225,6 +228,7 @@ public class SignUpActivity extends SLBaseActivity {
             this.slPresenter.createUser(phoneNumber, identifyCode, pwd, "student", new SLCallbackListener<User>() {
                 @Override
                 public void onSuccess(User user) {
+                    btnFinish.setClickable(true);
                     if (pd != null) {
                         pd.dismiss();
                     }
@@ -238,6 +242,7 @@ public class SignUpActivity extends SLBaseActivity {
 
                 @Override
                 public void onFailure(String errorEvent, String message) {
+                    btnFinish.setClickable(true);
                     if (pd != null) {
                         pd.dismiss();
                     }
