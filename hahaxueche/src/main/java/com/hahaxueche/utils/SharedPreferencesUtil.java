@@ -191,4 +191,16 @@ public class SharedPreferencesUtil {
         editor.commit();
     }
 
+    public void setNoticeBonus(boolean firstBonus) {
+        SharedPreferences spNotice = mContext.getSharedPreferences("notice", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = spNotice.edit();
+        editor.putBoolean("firstBonus", firstBonus);
+        editor.commit();
+    }
+
+    public boolean getNoticeBouns() {
+        SharedPreferences spNotice = mContext.getSharedPreferences("notice", Activity.MODE_PRIVATE);
+        return spNotice.getBoolean("firstBonus", false);
+    }
+
 }

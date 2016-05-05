@@ -37,6 +37,7 @@ import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.FindCoachActivity;
 import com.hahaxueche.ui.activity.mySetting.MySettingActivity;
+import com.hahaxueche.ui.dialog.BaseAlertDialog;
 import com.hahaxueche.ui.dialog.CityChoseDialog;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
 import com.hahaxueche.utils.SharedPreferencesUtil;
@@ -141,6 +142,9 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         mLocationClient.setLocationOption(mLocationOption);
         //启动定位
         mLocationClient.startLocation();
+        if (!TextUtils.isEmpty(spUtil.getRefererId())) {
+            showFirstBonusAlert();
+        }
     }
 
     private void initView() {
@@ -168,7 +172,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
             }
         }, networkImages)
                 .setPageIndicator(new int[]{R.drawable.icon_point, R.drawable.icon_point_pre})
-                        //设置指示器的方向
+                //设置指示器的方向
 //                .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.ALIGN_PARENT_RIGHT)
 //                .setOnPageChangeListener(this)//监听翻页事件
                 .setOnItemClickListener(this);
@@ -339,6 +343,17 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         super.onDestroy();
         if (null != mLocationClient) {
             mLocationClient.onDestroy();
+        }
+    }
+
+    /**
+     * 第一次加载推荐有奖通知
+     */
+    public void showFirstBonusAlert() {
+        if (!spUtil.getNoticeBouns()) {
+            BaseAlertDialog baseAlertDialog = new BaseAlertDialog(IndexActivity.this, "注册成功！", "恭喜您获得50元学车卷！", "50元已经打进您的账户余额，在支付过程中，系统会自动减现50元报名费。");
+            baseAlertDialog.show();
+            spUtil.setNoticeBonus(true);
         }
     }
 }

@@ -170,7 +170,7 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
         // 设置 Bitmap 类型的图片到视频对象里         设置缩略图。 注意：最终压缩过的缩略图大小不得超过 32kb。
         mediaObject.setThumbImage(bitmap);
         mediaObject.actionUrl = mUrl;
-        mediaObject.defaultText = mTitle + mDescription + mUrl;
+        mediaObject.defaultText = mTitle + mDescription;
         weiboMessage.mediaObject = mediaObject;
         // 2. 初始化从第三方到微博的消息请求
         SendMessageToWeiboRequest request = new SendMessageToWeiboRequest();
