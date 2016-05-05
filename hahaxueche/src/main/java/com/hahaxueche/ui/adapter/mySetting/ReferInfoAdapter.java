@@ -69,7 +69,6 @@ public class ReferInfoAdapter extends BaseAdapter {
         Picasso.with(mContext).load(referee.getReferee_status().getAvatar_url()).resize(iconWidth, iconHeight).into(holder.civStudentAvatar);
         holder.tvRefereeName.setText(referee.getReferee_status().getName());
         holder.tvReferAmount.setText(Util.getMoney(referee.getReferer_bonus_amount()));
-        Log.v("gibxin", "1111 " + referee.getReferer_bonus_amount());
         if (referee.getReferee_status().getStatus().equals("0")) {
             holder.tvReferState.setText("已注册，还没有报名教练");
             holder.tvReferAmount.setTextColor(ContextCompat.getColor(mContext, R.color.haha_gray_heavier));

@@ -92,8 +92,8 @@ public class WithdrawActivity extends MSBaseActivity {
                     }
                     double withdrawMoney = Double.parseDouble(withdrawAmount) * 100;
                     double availableMoney = Double.parseDouble(mReferalBonusSummary.getAvailable_to_redeem());
-                    if (withdrawMoney <= 0d) {
-                        Toast.makeText(WithdrawActivity.this, "提现金额必须大于0", Toast.LENGTH_SHORT).show();
+                    if (Double.compare(withdrawMoney,100d)<=0) {
+                        Toast.makeText(WithdrawActivity.this, "提现金额必须大于1元", Toast.LENGTH_SHORT).show();
                         return;
                     } else {
                         int interval = Double.compare(withdrawMoney, availableMoney);

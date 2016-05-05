@@ -55,7 +55,6 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
         this.setContentView(R.layout.activity_start);
         spUtil = new SharedPreferencesUtil(this);
         mConstants = spUtil.getConstants();
-        Log.v("gibxin", "0000000");
         loadDatas();
         convenientBanner = (ConvenientBanner) findViewById(R.id.convenientBanner);
         WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);

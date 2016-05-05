@@ -122,10 +122,10 @@ public class WithdrawDialog {
      */
     private void calculateMoney() {
         mCounterMoney = mWithdrawMoney * 0.005;
-        if (Double.compare(1, mCounterMoney) > 0) {
-            mCounterMoney = 1d;
-        } else if (Double.compare(mCounterMoney, 25) > 0) {
-            mCounterMoney = 25d;
+        if (Double.compare(100, mCounterMoney) > 0) {
+            mCounterMoney = 100d;
+        } else if (Double.compare(mCounterMoney, 2500) > 0) {
+            mCounterMoney = 2500d;
         }
         mRealMoney = mWithdrawMoney - mCounterMoney;
     }
