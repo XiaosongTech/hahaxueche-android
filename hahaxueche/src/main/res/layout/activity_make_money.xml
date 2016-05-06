@@ -152,17 +152,18 @@
         android:divider="@drawable/layer_list_divider_small"
         android:dividerHeight="0.5dp"
         android:footerDividersEnabled="false"
-        android:headerDividersEnabled="false">
+        android:headerDividersEnabled="false"
+        android:visibility="gone">
 
     </com.hahaxueche.ui.widget.pullToRefreshView.XListView>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/srl_no_refer"
         android:layout_width="match_parent"
-        android:background="@color/haha_white"
-        android:visibility="gone"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:background="@color/haha_white">
+
         <ScrollView
             android:id="@+id/sv_no_refer"
             android:layout_width="match_parent"
@@ -182,6 +183,14 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:src="@drawable/ic_cash_havenot" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:lineSpacingMultiplier="1.2"
+                    android:text="@string/makeMoneyNoReferTips"
+                    android:textColor="@color/haha_gray_heavier" />
 
 
             </LinearLayout>

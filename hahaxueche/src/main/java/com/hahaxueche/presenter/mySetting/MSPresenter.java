@@ -1,6 +1,7 @@
 package com.hahaxueche.presenter.mySetting;
 
 import com.hahaxueche.model.response.CoachListResponse;
+import com.hahaxueche.model.response.GroupBuyResponse;
 import com.hahaxueche.model.response.ReferalHistoryResponse;
 import com.hahaxueche.model.response.RefereeListResponse;
 import com.hahaxueche.model.review.ReviewInfo;
@@ -110,4 +111,11 @@ public interface MSPresenter {
      * @param listener
      */
     public void withdrawBonus(String studentId, String account, String accountOwnerName, String amount, String accessToken, MSCallbackListener<ReferalBonusTransaction> listener);
+
+    /**
+     * @param name
+     * @param phone
+     * @param listener
+     */
+    public void createGroupBuy(String name, String phone, MSCallbackListener<GroupBuyResponse> listener);
 }

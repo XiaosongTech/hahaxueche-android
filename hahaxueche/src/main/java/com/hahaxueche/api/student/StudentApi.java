@@ -3,6 +3,7 @@ package com.hahaxueche.api.student;
 
 import com.hahaxueche.model.coach.ScheduleEvent;
 import com.hahaxueche.model.response.CoachListResponse;
+import com.hahaxueche.model.response.GroupBuyResponse;
 import com.hahaxueche.model.response.ReferalHistoryResponse;
 import com.hahaxueche.model.response.RefereeListResponse;
 import com.hahaxueche.model.response.ScheduleEventListResponse;
@@ -156,5 +157,14 @@ public interface StudentApi {
      * @return
      */
     public ReferalBonusTransaction withdrawBonus(String studentId, String account, String accountOwnerName, String amount, String accessToken);
+
+    /**
+     * 团购报名
+     *
+     * @param name
+     * @param phone
+     * @return
+     */
+    public GroupBuyResponse createGroupBuy(String name, String phone);
 
 }
