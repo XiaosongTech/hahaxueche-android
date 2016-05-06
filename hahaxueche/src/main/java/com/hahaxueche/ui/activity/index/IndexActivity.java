@@ -27,18 +27,22 @@ import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.hahaxueche.R;
 import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.model.city.Location;
+import com.hahaxueche.model.response.GroupBuyResponse;
 import com.hahaxueche.model.user.Session;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
+import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.activity.appointment.AppointmentActivity;
 import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.FindCoachActivity;
 import com.hahaxueche.ui.activity.mySetting.MySettingActivity;
+import com.hahaxueche.ui.activity.mySetting.ReferFriendsActivity;
 import com.hahaxueche.ui.dialog.BaseAlertDialog;
 import com.hahaxueche.ui.dialog.CityChoseDialog;
+import com.hahaxueche.ui.dialog.GroupBuyDialog;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
@@ -75,6 +79,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     private SharedPreferencesUtil spUtil;
     private Constants mConstants;
     private User mUser;
+    private GroupBuyDialog mGroupBuyDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -210,22 +215,12 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                     finish();
                     break;
                 case R.id.lly_xiaoha_more:
-                    //Uri uri = Uri.parse("http://staging.hahaxueche.net/#/student");
-                    //Intent it = new Intent(Intent.ACTION_VIEW, uri);
-                    intent = new Intent(getApplication(), BaseWebViewActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("url", "http://staging.hahaxueche.net/#/student");
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                    aboutXiaoha();
                     break;
                 case R.id.lly_coach_more:
                     //uri = Uri.parse("http://staging.hahaxueche.net/#/coach");
                     //it = new Intent(Intent.ACTION_VIEW, uri);
-                    intent = new Intent(getApplication(), BaseWebViewActivity.class);
-                    bundle = new Bundle();
-                    bundle.putString("url", "http://staging.hahaxueche.net/#/coach");
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                    aboutCoach();
                     break;
                 case R.id.tv_onekey_find_coach:
                     if (pd != null) {
@@ -279,7 +274,39 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
 
     @Override
     public void onItemClick(int i) {
-
+        switch (i) {
+            case 0:
+                //团购报名
+                showGroupBuy();
+                break;
+            case 1:
+                //寻找教练
+                Intent intent = new Intent(getApplication(), FindCoachActivity.class);
+                startActivity(intent);
+                finish();
+                break;
+            case 2:
+                //推荐有奖
+                if (mUser.getStudent() != null && !TextUtils.isEmpty(mUser.getId())) {
+                    intent = new Intent(getApplication(), ReferFriendsActivity.class);
+                    startActivity(intent);
+                } else {
+                    intent = new Intent(getApplication(), MySettingActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                break;
+            case 3:
+                //关于小哈
+                aboutXiaoha();
+                break;
+            case 4:
+                //关于教练
+                aboutCoach();
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -304,12 +331,10 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
             Class cls = Class.forName("com.ToxicBakery.viewpager.transforms." + transforemerName);
             ABaseTransformer transforemer = (ABaseTransformer) cls.newInstance();
             cbannerIndex.getViewPager().setPageTransformer(true, transforemer);
-
             //部分3D特效需要调整滑动速度
             if (transforemerName.equals("StackTransformer")) {
                 cbannerIndex.setScrollDuration(1200);
             }
-
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
@@ -355,5 +380,49 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
             baseAlertDialog.show();
             spUtil.setNoticeBonus(true);
         }
+    }
+
+    private void showGroupBuy(){
+        if (null == mGroupBuyDialog) {
+            String stuName = "";
+            String stuPhone = "";
+            if (mUser.getStudent() != null && !TextUtils.isEmpty(mUser.getId())) {
+                stuName = mUser.getStudent().getName();
+                stuPhone = mUser.getStudent().getCell_phone();
+            }
+            mGroupBuyDialog = new GroupBuyDialog(IndexActivity.this, stuName, stuPhone, new GroupBuyDialog.OnConfirmListener() {
+                @Override
+                public void onGroupBuy(String name, String cellPhone) {
+                    msPresenter.createGroupBuy(name, cellPhone, new MSCallbackListener<GroupBuyResponse>() {
+                        @Override
+                        public void onSuccess(GroupBuyResponse data) {
+                            Toast.makeText(IndexActivity.this, "报名成功！", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailure(String errorEvent, String message) {
+                            Toast.makeText(IndexActivity.this, "报名失败！", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+        }
+        mGroupBuyDialog.show();
+    }
+
+    private void aboutXiaoha() {
+        Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("url", "http://staging.hahaxueche.net/#/student");
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    private void aboutCoach() {
+        Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("url", "http://staging.hahaxueche.net/#/coach");
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }

@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.api.net.HttpEngine;
 import com.hahaxueche.model.coach.ScheduleEvent;
 import com.hahaxueche.model.response.CoachListResponse;
+import com.hahaxueche.model.response.GroupBuyResponse;
 import com.hahaxueche.model.response.ReferalHistoryResponse;
 import com.hahaxueche.model.response.RefereeListResponse;
 import com.hahaxueche.model.response.ScheduleEventListResponse;
@@ -495,6 +496,33 @@ public class StudentApiImpl implements StudentApi {
                 return JsonUtils.deserialize(body, type);
             } else {
                 ReferalBonusTransaction retModel = new ReferalBonusTransaction();
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, BaseApiResponse.class);
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
+                retModel.setIsSuccess(false);
+                return retModel;
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public GroupBuyResponse createGroupBuy(String name, String phone) {
+        Type type = new TypeToken<GroupBuyResponse>() {
+        }.getType();
+        Map<String, String> paramMap = new HashMap<String, String>();
+        paramMap.put("name", name);
+        paramMap.put("phone", phone);
+        try {
+            Response response = httpEngine.postHandle(paramMap, "activity_users", "");
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                GroupBuyResponse retModel = new GroupBuyResponse();
                 BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, BaseApiResponse.class);
                 retModel.setCode(baseApiResponse.getCode());
                 retModel.setMessage(baseApiResponse.getMessage());

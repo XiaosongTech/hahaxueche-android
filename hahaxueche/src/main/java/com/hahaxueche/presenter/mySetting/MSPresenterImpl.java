@@ -10,6 +10,7 @@ import com.hahaxueche.api.student.StudentApi;
 import com.hahaxueche.api.student.StudentApiImpl;
 import com.hahaxueche.api.util.ApiError;
 import com.hahaxueche.model.response.CoachListResponse;
+import com.hahaxueche.model.response.GroupBuyResponse;
 import com.hahaxueche.model.response.ReferalHistoryResponse;
 import com.hahaxueche.model.response.RefereeListResponse;
 import com.hahaxueche.model.review.ReviewInfo;
@@ -360,6 +361,30 @@ public class MSPresenterImpl implements MSPresenter {
                         listener.onSuccess(referalBonusTransaction);
                     } else {
                         listener.onFailure(referalBonusTransaction.getCode(), referalBonusTransaction.getMessage());
+                    }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void createGroupBuy(final String name, final String phone, final MSCallbackListener<GroupBuyResponse> listener) {
+        new AsyncTask<Void, Void, GroupBuyResponse>() {
+
+            @Override
+            protected GroupBuyResponse doInBackground(Void... params) {
+                return studentApi.createGroupBuy(name, phone);
+            }
+
+            @Override
+            protected void onPostExecute(GroupBuyResponse groupBuyResponse) {
+                if (listener != null) {
+                    if (groupBuyResponse.isSuccess()) {
+                        listener.onSuccess(groupBuyResponse);
+                    } else {
+                        listener.onFailure(groupBuyResponse.getCode(), groupBuyResponse.getMessage());
                     }
                 } else {
                     listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
