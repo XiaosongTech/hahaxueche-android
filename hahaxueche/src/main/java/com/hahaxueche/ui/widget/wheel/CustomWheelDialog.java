@@ -2,6 +2,7 @@ package com.hahaxueche.ui.widget.wheel;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +11,16 @@ import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.hahaxueche.R;
 import com.hahaxueche.ui.widget.wheel.adapters.ArrayWheelAdapter;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,6 +40,7 @@ public class CustomWheelDialog implements View.OnClickListener, OnWheelChangedLi
     private String[][] datas = null;
     private List<WheelView> wheelViews = new ArrayList<WheelView>();
     private OnWheelChangeListener wheelChangedListener = null;
+    private String mMinMonthDay;
 
     public interface OnConfirmListener {
         public boolean onConfirm(String[] data);
@@ -48,11 +55,12 @@ public class CustomWheelDialog implements View.OnClickListener, OnWheelChangedLi
     }
 
 
-    public CustomWheelDialog(Context context, OnConfirmListener listener, String[][] datas) {
+    public CustomWheelDialog(Context context, OnConfirmListener listener, String[][] datas, String minMonthDay) {
         mDialog = new Dialog(context, R.style.my_dialog);
         this.datas = datas;
         mContext = context;
         mListener = listener;
+        mMinMonthDay = minMonthDay;
         initView();
         initEvent();
 
@@ -148,8 +156,20 @@ public class CustomWheelDialog implements View.OnClickListener, OnWheelChangedLi
                     data[i] = datas[i][view.getCurrentItem()];
                     i++;
                 }
-                if (mListener != null)
-                    mListener.onConfirm(data);
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                Date minDay = null;
+                Date selDay = null;
+                try {
+                    minDay = df.parse(this.datas[0][0] + "-" + mMinMonthDay);
+                    selDay = df.parse(data[0] + "-" + data[1] + "-" + data[2]);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                if (minDay.compareTo(selDay) > 0) {
+                    Toast.makeText(mContext, "选择日期必须大于当天！", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                mListener.onConfirm(data);
                 dismiss();
                 break;
 

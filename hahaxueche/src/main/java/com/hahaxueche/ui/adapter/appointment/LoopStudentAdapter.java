@@ -78,13 +78,13 @@ public class LoopStudentAdapter extends BaseAdapter {
         holder.tvStudentText.setText(style);
         holder.tvStudentName.setText(student.getName());
         getStudentAvatar(student.getAvatar_url(), holder.civStudentAvatar);
-        if(position==0) {
+        /*if(position==0) {
             Animation animation = AnimationUtils.loadAnimation(context, R.anim.listview_roll_in);
             view.startAnimation(animation);
         }else {
             Animation animation = AnimationUtils.loadAnimation(context, R.anim.listview_roll_down);
             view.startAnimation(animation);
-        }
+        }*/
         return view;
     }
 
