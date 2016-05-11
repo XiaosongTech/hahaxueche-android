@@ -42,6 +42,8 @@ public class AppointmentDialog extends Dialog {
     private TextView tvCancel;
     public FCPresenter fcPresenter;
     private ProgressDialog pd;//进度框
+    private CustomWheelDialog firstTimeDialog;
+    private CustomWheelDialog secondTimeDialog;
 
     public AppointmentDialog(Context context, String name, String phoneNumber, String coachId) {
         super(context);
@@ -118,26 +120,20 @@ public class AppointmentDialog extends Dialog {
                 Calendar calendar = Calendar.getInstance();
                 int month = calendar.get(Calendar.MONTH);
                 int day = calendar.get(Calendar.DAY_OF_MONTH);
-                int[] position = {0, month, day - 1};
+                int[] position = {0, month, day};
                 String[][] datas = getDate();
                 if (v.getId() == R.id.tv_first_time) {
-                    String firstTime = etFirstTime.getText().toString();
-                    if (!TextUtils.isEmpty(firstTime)) {
-                        position[1] = Integer.parseInt(firstTime.split("-")[1]) - 1;
-                        position[2] = Integer.parseInt(firstTime.split("-")[2]) - 1;
+                    if (null == firstTimeDialog) {
+                        firstTimeDialog = new CustomWheelDialog(mContext, firstConfirm, datas, (month + 1) + "-" + (day + 1));
+                        firstTimeDialog.setSelect(position);
                     }
-                    CustomWheelDialog dialog = new CustomWheelDialog(mContext, firstConfirm, datas);
-                    dialog.setSelect(position);
-                    dialog.show();
+                    firstTimeDialog.show();
                 } else if (v.getId() == R.id.tv_second_time) {
-                    String secondTime = etFirstTime.getText().toString();
-                    if (!TextUtils.isEmpty(secondTime)) {
-                        position[1] = Integer.parseInt(secondTime.split("-")[1]) - 1;
-                        position[2] = Integer.parseInt(secondTime.split("-")[2]) - 1;
+                    if (null == secondTimeDialog) {
+                        secondTimeDialog = new CustomWheelDialog(mContext, secondConfirm, datas, (month + 1) + "-" + (day + 1));
+                        firstTimeDialog.setSelect(position);
                     }
-                    CustomWheelDialog dialog = new CustomWheelDialog(mContext, secondConfirm, datas);
-                    dialog.setSelect(position);
-                    dialog.show();
+                    secondTimeDialog.show();
                 }
             }
             return true;
@@ -154,11 +150,11 @@ public class AppointmentDialog extends Dialog {
         }
         String[] month = new String[12];
         for (int i = 0; i < 12; i++) {
-            month[i] = String.valueOf(i + 1);
+            month[i] = String.format("%02d", i + 1);
         }
         String[] day = new String[31];
         for (int i = 0; i < 31; i++) {
-            day[i] = String.valueOf(i + 1);
+            day[i] = String.format("%02d", i + 1);
         }
         datas[0] = year;
         datas[1] = month;

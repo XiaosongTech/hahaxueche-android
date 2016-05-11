@@ -72,4 +72,8 @@
     <string name="enrollInfo">报名信息</string>
     <string name="groupBuyRightNow">立刻抢团购</string>
     <string name="makeMoneyNoReferTips">你推荐的小伙伴还没有报名，快去问问他们吧\n你也可以继续推荐更多好友赚取更多佣金哦</string>
+    <string name="supportHaha">支持小哈</string>
+    <string name="softwareInfo">软件信息</string>
+    <string name="versionCheck">版本检测</string>
+    <string name="copyright">武汉小松科技有限公司 版权所有\nCopyright 2016-2016 All Rights Reserved</string>
 </resources>
