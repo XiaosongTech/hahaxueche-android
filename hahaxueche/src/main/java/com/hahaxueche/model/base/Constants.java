@@ -18,6 +18,8 @@ public class Constants {
     private ArrayList<String> home_page_banners;
     private List<BaseKeyValue> service_types;
     private ArrayList<BannerHighlight> banner_highlights;
+    private String version_name;
+    private int version_code;
     private String message;
     private String code;
     private boolean isSuccess = true;
@@ -76,6 +78,22 @@ public class Constants {
 
     public void setBanner_highlights(ArrayList<BannerHighlight> banner_highlights) {
         this.banner_highlights = banner_highlights;
+    }
+
+    public String getVersion_name() {
+        return version_name;
+    }
+
+    public void setVersion_name(String version_name) {
+        this.version_name = version_name;
+    }
+
+    public int getVersion_code() {
+        return version_code;
+    }
+
+    public void setVersion_code(int version_code) {
+        this.version_code = version_code;
     }
 
     public String getMessage() {

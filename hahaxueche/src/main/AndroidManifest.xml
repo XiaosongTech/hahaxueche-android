@@ -69,9 +69,9 @@
         <activity
             android:name=".ui.activity.signupLogin.StartActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <data
@@ -248,6 +248,10 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activity.mySetting.WithdrawActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.mySetting.SoftwareInfoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
 

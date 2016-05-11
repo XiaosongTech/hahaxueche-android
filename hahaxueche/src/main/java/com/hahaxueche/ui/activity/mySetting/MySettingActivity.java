@@ -1,12 +1,16 @@
 package com.hahaxueche.ui.activity.mySetting;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.Log;
@@ -33,6 +37,7 @@ import com.hahaxueche.ui.activity.findCoach.FindCoachActivity;
 import com.hahaxueche.ui.activity.findCoach.MyCoachActivity;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
+import com.hahaxueche.ui.dialog.FAQDialog;
 import com.hahaxueche.ui.dialog.RegisterInfoPhotoDialog;
 import com.hahaxueche.ui.util.PhotoUtil;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
@@ -87,6 +92,10 @@ public class MySettingActivity extends MSBaseActivity {
     private boolean isRefresh = false;//是否刷新中
     private RelativeLayout mRlyRefererFriends;
     private RelativeLayout mRlyCachOut;
+    private RelativeLayout mRlyStuFAQ;//学员常见问题
+    private RelativeLayout mRlySupportHaha;//支持小哈
+    private RelativeLayout mRlySoftwareInfo;//软件信息
+    private FAQDialog faqDialog = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,6 +133,9 @@ public class MySettingActivity extends MSBaseActivity {
         mSrlMySetting = Util.instence(this).$(this, R.id.srl_my_setting);
         mRlyRefererFriends = Util.instence(this).$(this, R.id.rly_referer_friends);
         mRlyCachOut = Util.instence(this).$(this, R.id.rly_cash_out);
+        mRlyStuFAQ = Util.instence(this).$(this, R.id.rly_FAQ);
+        mRlySupportHaha = Util.instence(this).$(this, R.id.rly_support_haha);
+        mRlySoftwareInfo = Util.instence(this).$(this, R.id.rly_software_info);
     }
 
     private void initEvent() {
@@ -144,6 +156,9 @@ public class MySettingActivity extends MSBaseActivity {
         mSrlMySetting.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
         mRlyRefererFriends.setOnClickListener(mClickListener);
         mRlyCachOut.setOnClickListener(mClickListener);
+        mRlyStuFAQ.setOnClickListener(mClickListener);
+        mRlySupportHaha.setOnClickListener(mClickListener);
+        mRlySoftwareInfo.setOnClickListener(mClickListener);
     }
 
     private void loadDatas() {
@@ -279,6 +294,9 @@ public class MySettingActivity extends MSBaseActivity {
                 //客服热线
                 case R.id.rly_customer_phone:
                     intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:4000016006"));
+                    if (ActivityCompat.checkSelfPermission(MySettingActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
                     startActivity(intent);
                     break;
                 //关于哈哈
@@ -295,9 +313,24 @@ public class MySettingActivity extends MSBaseActivity {
                     startActivity(intent);
                     break;
                 case R.id.rly_cash_out:
+                    //提现
                     intent = new Intent(getApplication(), MakeMoneyInfoActivity.class);
                     startActivity(intent);
-                    //提现
+                    break;
+                case R.id.rly_FAQ:
+                    //学员常见问题
+                    if (faqDialog == null)
+                        faqDialog = new FAQDialog(MySettingActivity.this);
+                    faqDialog.show();
+                    break;
+                case R.id.rly_support_haha:
+                    Uri uri = Uri.parse("http://staging.hahaxueche.net/#/coach");
+                    intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                    break;
+                case R.id.rly_software_info:
+                    intent = new Intent(getApplication(), SoftwareInfoActivity.class);
+                    startActivity(intent);
                     break;
                 default:
                     break;

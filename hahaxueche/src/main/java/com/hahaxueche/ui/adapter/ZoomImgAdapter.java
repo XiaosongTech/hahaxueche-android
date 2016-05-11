@@ -19,15 +19,13 @@ import java.util.List;
 /**
  * Created by gibxin on 2016/2/13.
  */
-public class ZoomImgAdapter extends PagerAdapter{
+public class ZoomImgAdapter extends PagerAdapter {
     private List<View> picViews = new ArrayList<View>();
     private Context mContext = null;
     private ProgressBar mLoadingView;
 
-    public void update(List<String> urls)
-    {
-        if (urls != null && urls.size() > 0)
-        {
+    public void update(List<String> urls) {
+        if (urls != null && urls.size() > 0) {
             if (picViews != null)
                 picViews.clear();
             for (String url : urls)
@@ -36,61 +34,78 @@ public class ZoomImgAdapter extends PagerAdapter{
         }
     }
 
-    public void setLoadingView(ProgressBar mLoadingView)
-    {
+    public void update(int resId) {
+        if (picViews != null)
+            picViews.clear();
+        picViews.add(loadImage(resId));
+        notifyDataSetChanged();
+    }
+
+    public void setLoadingView(ProgressBar mLoadingView) {
         this.mLoadingView = mLoadingView;
     }
 
     @Override
-    public int getCount()
-    {
+    public int getCount() {
         return picViews.size();
     }
 
     @Override
-    public boolean isViewFromObject(View view, Object o)
-    {
+    public boolean isViewFromObject(View view, Object o) {
         return view == o;
     }
 
     @Override
-    public void destroyItem(ViewGroup container, int position, Object object)
-    {
+    public void destroyItem(ViewGroup container, int position, Object object) {
         ((ViewPager) container).removeView(picViews.get(position));
     }
 
     @Override
-    public Object instantiateItem(View v, int position)
-    {
+    public Object instantiateItem(View v, int position) {
         // TODO Auto-generated method stub
         ((ViewPager) v).addView(picViews.get(position));
         return picViews.get(position);
     }
 
-    public ZoomImgAdapter(Context context)
-    {
+    public ZoomImgAdapter(Context context) {
         super();
         this.mContext = context;
     }
 
-    private ZoomImageView loadImage(String url)
-    {
+    private ZoomImageView loadImage(String url) {
         ZoomImageView imageView = new ZoomImageView(mContext);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         imageView.setLayoutParams(params);
         Picasso.with(mContext).load(Uri.parse(url))
-                .transform(new ScaleTransformation(mContext)).into(imageView, new Callback()
-        {
+                .transform(new ScaleTransformation(mContext)).into(imageView, new Callback() {
             @Override
-            public void onSuccess()
-            {
+            public void onSuccess() {
                 mLoadingView.setVisibility(View.INVISIBLE);
             }
 
             @Override
-            public void onError()
-            {
+            public void onError() {
+                mLoadingView.setVisibility(View.INVISIBLE);
+            }
+        });
+        return imageView;
+    }
+
+    private ZoomImageView loadImage(int resId) {
+        ZoomImageView imageView = new ZoomImageView(mContext);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        imageView.setLayoutParams(params);
+        Picasso.with(mContext).load(resId)
+                .transform(new ScaleTransformation(mContext)).into(imageView, new Callback() {
+            @Override
+            public void onSuccess() {
+                mLoadingView.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onError() {
                 mLoadingView.setVisibility(View.INVISIBLE);
             }
         });

@@ -449,10 +449,10 @@
                         android:background="@color/mSViewBlackFade" />
 
                     <RelativeLayout
+                        android:id="@+id/rly_FAQ"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:gravity="center_vertical"
-                        android:visibility="gone">
+                        android:gravity="center_vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -474,8 +474,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
                         android:layout_marginLeft="20dp"
-                        android:background="@color/mSViewBlackFade"
-                        android:visibility="gone" />
+                        android:background="@color/mSViewBlackFade" />
+
 
                     <RelativeLayout
                         android:id="@+id/rly_about_haha"
@@ -488,6 +488,64 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
                             android:text="@string/mSAboutHaha"
+                            android:textColor="@color/mSTextBlackFade"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="20dp"
+                            android:src="@drawable/ic_coachmsg_more_arrow" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@color/mSViewBlackFade" />
+
+
+                    <RelativeLayout
+                        android:id="@+id/rly_support_haha"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:text="@string/supportHaha"
+                            android:textColor="@color/mSTextBlackFade"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="20dp"
+                            android:src="@drawable/ic_coachmsg_more_arrow" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@color/mSViewBlackFade" />
+
+
+                    <RelativeLayout
+                        android:id="@+id/rly_software_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:text="@string/softwareInfo"
                             android:textColor="@color/mSTextBlackFade"
                             android:textSize="14sp" />
 
