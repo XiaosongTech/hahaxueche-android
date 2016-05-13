@@ -18,6 +18,8 @@ android {
         xiaomi {}
         yingyongbao {}
         haha {}
+        _91 {}
+        anzhuoshichang {}
     }
 
     productFlavors.all { flavor ->

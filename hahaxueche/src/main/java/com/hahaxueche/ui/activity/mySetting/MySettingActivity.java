@@ -324,7 +324,7 @@ public class MySettingActivity extends MSBaseActivity {
                     faqDialog.show();
                     break;
                 case R.id.rly_support_haha:
-                    Uri uri = Uri.parse("http://staging.hahaxueche.net/#/coach");
+                    Uri uri = Uri.parse("http://a.app.qq.com/o/simple.jsp?pkgname=com.hahaxueche");
                     intent = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(intent);
                     break;
