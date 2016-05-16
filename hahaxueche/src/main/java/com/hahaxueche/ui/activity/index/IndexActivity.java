@@ -401,7 +401,11 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
 
                         @Override
                         public void onFailure(String errorEvent, String message) {
-                            Toast.makeText(IndexActivity.this, "报名失败！", Toast.LENGTH_SHORT).show();
+                            if(errorEvent.equals("40022")){
+                                Toast.makeText(IndexActivity.this, "请勿重复报名！", Toast.LENGTH_SHORT).show();
+                            }else {
+                                Toast.makeText(IndexActivity.this, "报名失败！", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
                 }
