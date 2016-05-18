@@ -376,7 +376,7 @@ public class MySettingActivity extends MSBaseActivity {
         if (requestCode == 100) {//相机
             if (resultCode == RESULT_OK && null != data) {
                 Bundle bundle = data.getExtras();
-                Bitmap bitmap = (Bitmap) bundle.get("data");
+                Bitmap bitmap = mPhotoUtil.resizeBitmapByWidth((Bitmap) bundle.get("data"), 300);
                 FileOutputStream b = null;
                 String str = null;
                 Date date = null;
@@ -396,7 +396,7 @@ public class MySettingActivity extends MSBaseActivity {
                 }
                 try {
                     b = new FileOutputStream(mPhotoPath);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 70, b);// 把数据写入文件
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } finally {
@@ -417,7 +417,7 @@ public class MySettingActivity extends MSBaseActivity {
             if (resultCode == RESULT_OK && null != data) {
                 Uri uri = data.getData();
                 Log.v("gibxin", "onActivityResult : uri -> " + uri);
-                Bitmap bitmap = mPhotoUtil.decodeUriAsBitmap(uri);
+                Bitmap bitmap = mPhotoUtil.resizeBitmapByWidth(mPhotoUtil.decodeUriAsBitmap(uri), 300);
                 FileOutputStream b = null;
                 String str = null;
                 Date date = null;
@@ -437,7 +437,7 @@ public class MySettingActivity extends MSBaseActivity {
                 }
                 try {
                     b = new FileOutputStream(mPhotoPath);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 70, b);// 把数据写入文件
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } finally {
