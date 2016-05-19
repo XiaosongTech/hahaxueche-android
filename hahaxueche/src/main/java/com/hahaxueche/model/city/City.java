@@ -19,6 +19,8 @@ public class City {
     private List<CostItem> fixed_cost_itemizer;
     private ArrayList<StudentPhase> student_phases;
     private ArrayList<Course> courses;
+    private ArrayList<Bonus> referal_bonus;
+    private String referral_banner;
 
     public String getId() {
         return id;
@@ -82,5 +84,21 @@ public class City {
 
     public void setCourses(ArrayList<Course> courses) {
         this.courses = courses;
+    }
+
+    public ArrayList<Bonus> getReferal_bonus() {
+        return referal_bonus;
+    }
+
+    public void setReferal_bonus(ArrayList<Bonus> referal_bonus) {
+        this.referal_bonus = referal_bonus;
+    }
+
+    public String getReferral_banner() {
+        return referral_banner;
+    }
+
+    public void setReferral_banner(String referral_banner) {
+        this.referral_banner = referral_banner;
     }
 }

@@ -96,6 +96,7 @@ public class MySettingActivity extends MSBaseActivity {
     private RelativeLayout mRlySupportHaha;//支持小哈
     private RelativeLayout mRlySoftwareInfo;//软件信息
     private FAQDialog faqDialog = null;
+    private TextView mTvStudentPhase;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -136,6 +137,7 @@ public class MySettingActivity extends MSBaseActivity {
         mRlyStuFAQ = Util.instence(this).$(this, R.id.rly_FAQ);
         mRlySupportHaha = Util.instence(this).$(this, R.id.rly_support_haha);
         mRlySoftwareInfo = Util.instence(this).$(this, R.id.rly_software_info);
+        mTvStudentPhase = Util.instence(this).$(this, R.id.tv_student_phase);
     }
 
     private void initEvent() {
@@ -195,6 +197,7 @@ public class MySettingActivity extends MSBaseActivity {
                     }
                 }
                 tvPaymentStage.setText(tempPaymentStageStr);
+                mTvStudentPhase.setText("目前阶段：" + tempPaymentStageStr);
                 rlyMyCoach.setVisibility(View.VISIBLE);
                 ivPaymentStage.setVisibility(View.VISIBLE);
                 vwMyCoach.setVisibility(View.VISIBLE);
@@ -203,6 +206,7 @@ public class MySettingActivity extends MSBaseActivity {
             } else {
                 tvUnpaidAmount.setText(Util.getMoney(mStudent.getBonus_balance()));
                 tvPaymentStage.setText("未选择教练");
+                mTvStudentPhase.setText("目前阶段：未付款");
                 rlyMyCoach.setVisibility(View.GONE);
                 ivPaymentStage.setVisibility(View.GONE);
                 vwMyCoach.setVisibility(View.GONE);
