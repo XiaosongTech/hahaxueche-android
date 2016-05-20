@@ -20,6 +20,10 @@ android {
         haha {}
         _91 {}
         anzhuoshichang {}
+        baiduzhushou {}
+        huawei {}
+        vivo {}
+        meizu {}
     }
 
     productFlavors.all { flavor ->
