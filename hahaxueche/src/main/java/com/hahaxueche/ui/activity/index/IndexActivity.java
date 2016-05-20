@@ -375,14 +375,14 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
      * 第一次加载推荐有奖通知
      */
     public void showFirstBonusAlert() {
-        if (!spUtil.getNoticeBouns()) {
+        if (!spUtil.getNoticeBouns() && mUser.getStudent() != null && !TextUtils.isEmpty(mUser.getId())) {
             BaseAlertDialog baseAlertDialog = new BaseAlertDialog(IndexActivity.this, "注册成功！", "恭喜您获得50元学车卷！", "50元已经打进您的账户余额，在支付过程中，系统会自动减现50元报名费。");
             baseAlertDialog.show();
             spUtil.setNoticeBonus(true);
         }
     }
 
-    private void showGroupBuy(){
+    private void showGroupBuy() {
         if (null == mGroupBuyDialog) {
             String stuName = "";
             String stuPhone = "";
@@ -401,9 +401,9 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
 
                         @Override
                         public void onFailure(String errorEvent, String message) {
-                            if(errorEvent.equals("40022")){
+                            if (errorEvent.equals("40022")) {
                                 Toast.makeText(IndexActivity.this, "请勿重复报名！", Toast.LENGTH_SHORT).show();
-                            }else {
+                            } else {
                                 Toast.makeText(IndexActivity.this, "报名失败！", Toast.LENGTH_SHORT).show();
                             }
                         }

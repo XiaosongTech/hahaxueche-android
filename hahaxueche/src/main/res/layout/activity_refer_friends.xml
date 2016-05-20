@@ -45,12 +45,14 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/iv_refer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_share_pic" />
 
             <TextView
+                android:id="@+id/tv_refer_tips"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="33dp"
@@ -105,6 +107,7 @@
             </RelativeLayout>
 
             <TextView
+                android:id="@+id/tv_refer_rules"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="33dp"

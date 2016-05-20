@@ -15,7 +15,6 @@ public class Student {
     private String avatar;
     private String current_coach_id;
     private List<PurchasedService> purchased_services;
-    private String phase;
     private String current_course;
     private String reviewed;
     private String reviewed_at;
@@ -88,14 +87,6 @@ public class Student {
 
     public void setPurchased_services(List<PurchasedService> purchased_services) {
         this.purchased_services = purchased_services;
-    }
-
-    public String getPhase() {
-        return phase;
-    }
-
-    public void setPhase(String phase) {
-        this.phase = phase;
     }
 
     public String getCurrent_course() {

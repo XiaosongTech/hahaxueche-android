@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -26,8 +27,7 @@ import java.io.InputStream;
  * 用于获取android4.4版本以上的相册选取照片后的路径
  * 以及设置头像，启动裁剪等功能
  */
-public class PhotoUtil
-{
+public class PhotoUtil {
     private Activity mActivity;
 
     //保存图片本地路径
@@ -52,63 +52,51 @@ public class PhotoUtil
 
     public Uri uritempFile = null;
 
-    public PhotoUtil(Activity activity)
-    {
+    public PhotoUtil(Activity activity) {
         mActivity = activity;
     }
 
-    public void creatFile()
-    {
+    public void creatFile() {
         File directory = new File(ACCOUNT_DIR);
         File imagepath = new File(IMGPATH);
-        if (!directory.exists())
-        {
+        if (!directory.exists()) {
             directory.mkdir();
         }
-        if (!imagepath.exists())
-        {
+        if (!imagepath.exists()) {
             imagepath.mkdir();
         }
 
         fileone = new File(IMGPATH, IMAGE_FILE_NAME);
         filetwo = new File(IMGPATH, TMP_IMAGE_FILE_NAME);
 
-        try
-        {
-            if (!fileone.exists() && !filetwo.exists())
-            {
+        try {
+            if (!fileone.exists() && !filetwo.exists()) {
                 fileone.createNewFile();
                 filetwo.createNewFile();
             }
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
         }
     }
 
     //bitmap转为二进制Byte
-    public byte[] Bitmap2Bytes(Bitmap bm)
-    {
+    public byte[] Bitmap2Bytes(Bitmap bm) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
         return baos.toByteArray();
     }
 
-    public InputStream Bitmap2IS(Bitmap bm)
-    {
+    public InputStream Bitmap2IS(Bitmap bm) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         InputStream sbs = new ByteArrayInputStream(baos.toByteArray());
         return sbs;
     }
 
-    public Bitmap decodeUriAsBitmap(Uri uri)
-    {
+    public Bitmap decodeUriAsBitmap(Uri uri) {
         Bitmap bitmap = null;
-        try
-        {
+        try {
             bitmap = BitmapFactory.decodeStream(mActivity.getContentResolver().openInputStream(uri));
-        } catch (FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
             return null;
         }
@@ -116,8 +104,7 @@ public class PhotoUtil
     }
 
     // 启动手机相机拍摄照片作为头像
-    public void choseHeadImageFromCameraCapture()
-    {
+    public void choseHeadImageFromCameraCapture() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT,
                 Uri.fromFile(new File(IMGPATH, IMAGE_FILE_NAME)));
@@ -127,8 +114,7 @@ public class PhotoUtil
     /**
      * <br>功能简述:裁剪图片方法实现---------------------- 相册
      */
-    public void cropImageUri(int width, int height)
-    {
+    public void cropImageUri(int width, int height) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT, null);
         intent.setType("image/*");
         intent.putExtra("crop", "true");
@@ -152,8 +138,7 @@ public class PhotoUtil
      * <br>功能简述:4.4以上裁剪图片方法实现---------------------- 相册
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void selectImageUriAfterKikat()
-    {
+    public void selectImageUriAfterKikat() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("image/*");
@@ -165,8 +150,7 @@ public class PhotoUtil
      *
      * @param uri
      */
-    public void cameraCropImageUri(Uri uri, int width, int height)
-    {
+    public void cameraCropImageUri(Uri uri, int width, int height) {
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
         // 设置裁剪
@@ -193,8 +177,7 @@ public class PhotoUtil
      *
      * @param uri
      */
-    public void cropImageUriAfterKikat(Uri uri, int width, int height)
-    {
+    public void cropImageUriAfterKikat(Uri uri, int width, int height) {
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/jpeg");
         intent.putExtra("crop", "true");
@@ -214,29 +197,24 @@ public class PhotoUtil
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    public String getPath(final Context context, final Uri uri)
-    {
+    public String getPath(final Context context, final Uri uri) {
 
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
         // DocumentProvider
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri))
-        {
+        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
             // ExternalStorageProvider
-            if (isExternalStorageDocument(uri))
-            {
+            if (isExternalStorageDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
 
-                if ("primary".equalsIgnoreCase(type))
-                {
+                if ("primary".equalsIgnoreCase(type)) {
                     return Environment.getExternalStorageDirectory() + "/" + split[1];
                 }
             }
             // DownloadsProvider
-            else if (isDownloadsDocument(uri))
-            {
+            else if (isDownloadsDocument(uri)) {
 
                 final String id = DocumentsContract.getDocumentId(uri);
                 final Uri contentUri = ContentUris.withAppendedId(
@@ -245,21 +223,17 @@ public class PhotoUtil
                 return getDataColumn(context, contentUri, null, null);
             }
             // MediaProvider
-            else if (isMediaDocument(uri))
-            {
+            else if (isMediaDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
 
                 Uri contentUri = null;
-                if ("image".equals(type))
-                {
+                if ("image".equals(type)) {
                     contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if ("video".equals(type))
-                {
+                } else if ("video".equals(type)) {
                     contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else if ("audio".equals(type))
-                {
+                } else if ("audio".equals(type)) {
                     contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
                 }
 
@@ -272,8 +246,7 @@ public class PhotoUtil
             }
         }
         // MediaStore (and general)
-        else if ("content".equalsIgnoreCase(uri.getScheme()))
-        {
+        else if ("content".equalsIgnoreCase(uri.getScheme())) {
 
             // Return the remote address
             if (isGooglePhotosUri(uri))
@@ -282,8 +255,7 @@ public class PhotoUtil
             return getDataColumn(context, uri, null, null);
         }
         // File
-        else if ("file".equalsIgnoreCase(uri.getScheme()))
-        {
+        else if ("file".equalsIgnoreCase(uri.getScheme())) {
             return uri.getPath();
         }
 
@@ -301,8 +273,7 @@ public class PhotoUtil
      * @return The value of the _data column, which is typically a file path.
      */
     public String getDataColumn(Context context, Uri uri, String selection,
-                                String[] selectionArgs)
-    {
+                                String[] selectionArgs) {
 
         Cursor cursor = null;
         final String column = "_data";
@@ -310,17 +281,14 @@ public class PhotoUtil
                 column
         };
 
-        try
-        {
+        try {
             cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
                     null);
-            if (cursor != null && cursor.moveToFirst())
-            {
+            if (cursor != null && cursor.moveToFirst()) {
                 final int index = cursor.getColumnIndexOrThrow(column);
                 return cursor.getString(index);
             }
-        } finally
-        {
+        } finally {
             if (cursor != null)
                 cursor.close();
         }
@@ -332,8 +300,7 @@ public class PhotoUtil
      * @param uri The Uri to check.
      * @return Whether the Uri authority is ExternalStorageProvider.
      */
-    public static boolean isExternalStorageDocument(Uri uri)
-    {
+    public static boolean isExternalStorageDocument(Uri uri) {
         return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
 
@@ -341,8 +308,7 @@ public class PhotoUtil
      * @param uri The Uri to check.
      * @return Whether the Uri authority is DownloadsProvider.
      */
-    public boolean isDownloadsDocument(Uri uri)
-    {
+    public boolean isDownloadsDocument(Uri uri) {
         return "com.android.providers.downloads.documents".equals(uri.getAuthority());
     }
 
@@ -350,8 +316,7 @@ public class PhotoUtil
      * @param uri The Uri to check.
      * @return Whether the Uri authority is MediaProvider.
      */
-    public boolean isMediaDocument(Uri uri)
-    {
+    public boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
@@ -359,9 +324,26 @@ public class PhotoUtil
      * @param uri The Uri to check.
      * @return Whether the Uri authority is Google Photos.
      */
-    public boolean isGooglePhotosUri(Uri uri)
-    {
+    public boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
+    }
+
+    /**
+     * 根据宽度压缩bitmap
+     *
+     * @param bitmap
+     * @param newWitdh
+     * @return
+     */
+    public Bitmap resizeBitmapByWidth(Bitmap bitmap, int newWitdh) {
+        if (bitmap.getWidth() > newWitdh) {
+            int height = Math.round(((float) newWitdh / bitmap.getWidth()) * bitmap.getHeight());
+            Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, newWitdh,
+                    height, true);
+            return newBitmap;
+        } else {
+            return bitmap;
+        }
     }
 
 }

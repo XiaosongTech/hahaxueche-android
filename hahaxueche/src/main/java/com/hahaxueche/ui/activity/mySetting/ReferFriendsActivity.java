@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.ClipboardManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.hahaxueche.MyApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.api.net.HttpEngine;
+import com.hahaxueche.model.city.City;
 import com.hahaxueche.ui.dialog.ReferFriendsDialog;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
@@ -30,6 +32,7 @@ import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
 import com.sina.weibo.sdk.api.share.SendMessageToWeiboRequest;
 import com.sina.weibo.sdk.constant.WBConstants;
 import com.sina.weibo.sdk.utils.Utility;
+import com.squareup.picasso.Picasso;
 import com.tencent.connect.share.QQShare;
 import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
@@ -67,6 +70,10 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
     private String mUrl = "";
     private String mImageUrl = "http://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
     private ProgressDialog pd;//进度框
+    private TextView mTvReferTips;
+    private TextView mTvReferRules;
+    private City myCity;
+    private ImageView mIvRefer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,6 +81,7 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
         setContentView(R.layout.activity_refer_friends);
         initView();
         initEvent();
+        loadDatas();
         regShareApi();
         if (savedInstanceState != null) {
             mWeiboShareAPI.handleWeiboResponse(getIntent(), this);
@@ -85,13 +93,30 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
         mIbtnBack = Util.instence(this).$(this, R.id.ibtn_ps_back);
         mLlyReferFriends = Util.instence(this).$(this, R.id.lly_refer_friends);
         mIvDash = Util.instence(this).$(this, R.id.iv_dash);
+        mTvReferTips = Util.instence(this).$(this, R.id.tv_refer_tips);
+        mTvReferRules = Util.instence(this).$(this, R.id.tv_refer_rules);
         mIvDash.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         spUtil = new SharedPreferencesUtil(this);
+        mIvRefer = Util.instence(this).$(this, R.id.iv_refer);
     }
 
     private void initEvent() {
         mTvReferFriends.setOnClickListener(mClickListener);
         mIbtnBack.setOnClickListener(mClickListener);
+    }
+
+    private void loadDatas() {
+        int refererBonus = spUtil.getMyCityRefererBonus();
+        int refereeBonus = spUtil.getMyCityRefereeBonus();
+        mTvReferTips.setText("每邀请一位好友，您和好友一起获得" + Util.getMoney(refererBonus + refereeBonus) + "元奖励，累计无上限！");
+        mTvReferRules.setText("1）好友通过您的专属链接注册并成功报名，您的好友在报名时可立减" + Util.getMoney(refereeBonus) + "元，同时您将获得" + Util.getMoney(refererBonus) + "元，自动存入您的哈哈学车推荐奖金中，累计无上限，可随时提现。\n\n2）好友需通过您的专属链接注册才能建立推荐关系。\n\n3）如发现作弊行为将取消用户活动资格，并扣除所获奖励。\n\n4）如对本活动规则有任何疑问，请联系哈哈学车客服：400-001-6006");
+        mDescription = "注册立享" + Util.getMoneyYuan(String.valueOf(refereeBonus)) + "优惠";
+        myCity = spUtil.getMyCity();
+        if (!TextUtils.isEmpty(myCity.getReferral_banner())) {
+            int width = Util.instence(context).getDm().widthPixels;
+            int height = Math.round(((float) 8 / 9) * width);
+            Picasso.with(context).load(myCity.getReferral_banner()).resize(width, height).centerCrop().into(mIvRefer);
+        }
     }
 
     private View.OnClickListener mClickListener = new View.OnClickListener() {
@@ -282,7 +307,7 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
                 pd.dismiss();
                 if (error == null) {
                     try {
-                        mUrl = HttpEngine.BASE_SERVER_IP + "/share/invitations?target=" + URLEncoder.encode(url, "utf-8");
+                        mUrl = HttpEngine.BASE_SERVER_IP + "/share/invitations?target=" + URLEncoder.encode(url, "utf-8") + "&city_id=" + myCity.getId();
                     } catch (UnsupportedEncodingException e) {
                         Log.e("gibxin", "create branchUrl error :" + e.getMessage());
                         e.printStackTrace();

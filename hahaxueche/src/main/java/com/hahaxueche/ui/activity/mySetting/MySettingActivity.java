@@ -96,6 +96,7 @@ public class MySettingActivity extends MSBaseActivity {
     private RelativeLayout mRlySupportHaha;//支持小哈
     private RelativeLayout mRlySoftwareInfo;//软件信息
     private FAQDialog faqDialog = null;
+    private TextView mTvStudentPhase;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -136,6 +137,7 @@ public class MySettingActivity extends MSBaseActivity {
         mRlyStuFAQ = Util.instence(this).$(this, R.id.rly_FAQ);
         mRlySupportHaha = Util.instence(this).$(this, R.id.rly_support_haha);
         mRlySoftwareInfo = Util.instence(this).$(this, R.id.rly_software_info);
+        mTvStudentPhase = Util.instence(this).$(this, R.id.tv_student_phase);
     }
 
     private void initEvent() {
@@ -195,6 +197,7 @@ public class MySettingActivity extends MSBaseActivity {
                     }
                 }
                 tvPaymentStage.setText(tempPaymentStageStr);
+                mTvStudentPhase.setText("目前阶段：" + tempPaymentStageStr);
                 rlyMyCoach.setVisibility(View.VISIBLE);
                 ivPaymentStage.setVisibility(View.VISIBLE);
                 vwMyCoach.setVisibility(View.VISIBLE);
@@ -203,6 +206,7 @@ public class MySettingActivity extends MSBaseActivity {
             } else {
                 tvUnpaidAmount.setText(Util.getMoney(mStudent.getBonus_balance()));
                 tvPaymentStage.setText("未选择教练");
+                mTvStudentPhase.setText("目前阶段：未付款");
                 rlyMyCoach.setVisibility(View.GONE);
                 ivPaymentStage.setVisibility(View.GONE);
                 vwMyCoach.setVisibility(View.GONE);
@@ -376,7 +380,7 @@ public class MySettingActivity extends MSBaseActivity {
         if (requestCode == 100) {//相机
             if (resultCode == RESULT_OK && null != data) {
                 Bundle bundle = data.getExtras();
-                Bitmap bitmap = (Bitmap) bundle.get("data");
+                Bitmap bitmap = mPhotoUtil.resizeBitmapByWidth((Bitmap) bundle.get("data"), 300);
                 FileOutputStream b = null;
                 String str = null;
                 Date date = null;
@@ -417,7 +421,38 @@ public class MySettingActivity extends MSBaseActivity {
             if (resultCode == RESULT_OK && null != data) {
                 Uri uri = data.getData();
                 Log.v("gibxin", "onActivityResult : uri -> " + uri);
-                mPhotoPath = mPhotoUtil.getPath(getApplicationContext(), uri);
+                Bitmap bitmap = mPhotoUtil.resizeBitmapByWidth(mPhotoUtil.decodeUriAsBitmap(uri), 300);
+                FileOutputStream b = null;
+                String str = null;
+                Date date = null;
+                SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd_HHmmss");// 获取当前时间，进一步转化为字符串
+                date = new Date(System.currentTimeMillis());
+                str = format.format(date);
+                mPhotoPath = Environment.getExternalStorageDirectory() + File.separator + "haha" + File.separator +
+                        "icon_cache" + File.separator + str + ".jpg";
+                File photo = new File(mPhotoPath);
+                photo.getParentFile().mkdirs();
+                if (!photo.exists()) {
+                    try {
+                        photo.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                try {
+                    b = new FileOutputStream(mPhotoPath);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        b.flush();
+                        b.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                //mPhotoPath = mPhotoUtil.getPath(getApplicationContext(), uri);
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(MySettingActivity.this, "取消头像设置", Toast.LENGTH_SHORT).show();
             }

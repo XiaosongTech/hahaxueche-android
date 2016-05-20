@@ -145,6 +145,7 @@ public class AuthApiImpl implements AuthApi {
         } else if (loginType == 2) {
             paramMap.put("password", pwd);
         }
+        paramMap.put("type", "student");
         Type type = new TypeToken<User>() {
         }.getType();
         Type typeBase = new TypeToken<BaseApiResponse>() {
