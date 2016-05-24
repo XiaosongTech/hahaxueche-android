@@ -124,10 +124,26 @@ public class FindCoachMapFilterActivity extends FCBaseActivity implements AMap.O
             markerOptionlst.add(markerOption);
         }
         if (aMap != null) {
+            Intent intent = getIntent();
+            Bundle bundle = intent.getExtras();
+            selFieldList = (ArrayList<FieldModel>) bundle.getSerializable("selFieldList");
             List<Marker> markerList = aMap.addMarkers(markerOptionlst, true);
             for (Marker marker : markerList) {
-                marker.setObject(fieldList.get(markerList.indexOf(marker)));
+                FieldModel field = fieldList.get(markerList.indexOf(marker));
+                marker.setObject(field);
+                if (selFieldList != null && selFieldList.size() > 0) {
+                    for (FieldModel selField : selFieldList) {
+                        if (selField.getId().equals(field.getId())) {
+                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                                    .decodeResource(getResources(),
+                                            R.drawable.ic_map_local_choseon)));
+                        }
+                    }
+                }
             }
+        }
+        if (selFieldList != null && selFieldList.size() > 0) {
+            tvSelFieldMap.setText("查看训练场（已选" + selFieldList.size() + "）个");
         }
     }
 
@@ -138,8 +154,18 @@ public class FindCoachMapFilterActivity extends FCBaseActivity implements AMap.O
     public boolean onMarkerClick(final Marker marker) {
         if (aMap != null) {
             FieldModel fieldModel = (FieldModel) marker.getObject();
-            if (selFieldList.indexOf(fieldModel) > -1) {
-                selFieldList.remove(fieldModel);
+            if (selFieldList == null) {
+                selFieldList = new ArrayList<>();
+            }
+            int selIndex = -1;
+            for (FieldModel selField : selFieldList) {
+                if (selField.getId().equals(fieldModel.getId())) {
+                    selIndex = selFieldList.indexOf(selField);
+                    break;
+                }
+            }
+            if (selIndex > -1) {
+                selFieldList.remove(selIndex);
                 marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                         .decodeResource(getResources(),
                                 R.drawable.ic_map_local_choseoff)));

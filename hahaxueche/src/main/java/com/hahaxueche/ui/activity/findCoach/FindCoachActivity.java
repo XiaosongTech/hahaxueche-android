@@ -183,6 +183,9 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                 //地图
                 case R.id.ibtn_fc_map:
                     intent = new Intent(getApplication(), FindCoachMapFilterActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("selFieldList", selFieldList);
+                    intent.putExtras(bundle);
                     startActivityForResult(intent, 0);
                     break;
             }
