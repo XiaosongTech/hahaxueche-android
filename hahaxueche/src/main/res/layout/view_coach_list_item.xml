@@ -98,6 +98,14 @@
                 android:layout_marginLeft="3dp"
                 android:textColor="@color/fCTxtGrayFade"
                 android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:textColor="@color/fCTxtGrayFade"
+                android:textSize="12sp" />
         </LinearLayout>
 
 

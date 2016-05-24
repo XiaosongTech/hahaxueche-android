@@ -2,7 +2,12 @@ package com.hahaxueche.ui.adapter.findCoach;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +22,7 @@ import com.hahaxueche.model.city.FieldModel;
 import com.hahaxueche.model.city.City;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.ui.dialog.MapDialog;
+import com.hahaxueche.ui.util.DistanceUtil;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
 import com.hahaxueche.utils.SharedPreferencesUtil;
@@ -41,6 +47,8 @@ public class CoachItemAdapter extends BaseAdapter {
     private MapDialog mapDialog;
     private FieldModel mFieldModel;
     private SharedPreferencesUtil spUtil;
+    private String myLat;
+    private String myLng;
 
     public CoachItemAdapter(Context context, List<Coach> coachList, int resource) {
         this.context = context;
@@ -51,6 +59,10 @@ public class CoachItemAdapter extends BaseAdapter {
         if (mConstants != null) {
             fieldsList = mConstants.getFields();
             cityList = mConstants.getCities();
+        }
+        if (spUtil.getLocation() != null) {
+            myLat = spUtil.getLocation().getLat();
+            myLng = spUtil.getLocation().getLng();
         }
     }
 
@@ -87,6 +99,7 @@ public class CoachItemAdapter extends BaseAdapter {
             holder.svCoachScore = (ScoreView) view.findViewById(R.id.sv_coach_score);
             holder.tvCoachLocation = (TextView) view.findViewById(R.id.tv_coach_location);
             holder.llyCoachLocation = (LinearLayout) view.findViewById(R.id.lly_coach_location);
+            holder.tvDistance = (TextView) view.findViewById(R.id.tv_distance);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -128,6 +141,17 @@ public class CoachItemAdapter extends BaseAdapter {
                 }
             }
         }
+        Log.v("gibxin", "myLng" + myLng);
+        Log.v("gibxin", "myLat" + myLat);
+        Log.v("gibxin", "mFieldModel.getLng()" + mFieldModel.getLng());
+        Log.v("gibxin", "mFieldModel.getLat()" + mFieldModel.getLat());
+        if (!TextUtils.isEmpty(myLat) && !TextUtils.isEmpty(myLng) && !TextUtils.isEmpty(mFieldModel.getLat()) && !TextUtils.isEmpty(mFieldModel.getLng())) {
+            String kmString = DistanceUtil.getDistanceKm(Double.parseDouble(myLng), Double.parseDouble(myLat), Double.parseDouble(mFieldModel.getLng()), Double.parseDouble(mFieldModel.getLat()));
+            String infoText = "距您" + kmString + "km";
+            SpannableStringBuilder style = new SpannableStringBuilder(infoText);
+            style.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.app_theme_color)), 2, 2 + kmString.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+            holder.tvDistance.setText(style);
+        }
         holder.llyCoachLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -157,5 +181,6 @@ public class CoachItemAdapter extends BaseAdapter {
         ScoreView svCoachScore;
         TextView tvCoachLocation;
         LinearLayout llyCoachLocation;
+        TextView tvDistance;
     }
 }
