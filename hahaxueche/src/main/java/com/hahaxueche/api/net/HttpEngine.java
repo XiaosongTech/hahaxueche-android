@@ -78,7 +78,7 @@ public class HttpEngine {
      * @return
      * @throws IOException
      */
-    public Response postHandle(Map<String, String> param, String url, String accessToken) throws IOException {
+    public Response postHandle(Map<String, Object> param, String url, String accessToken) throws IOException {
         String jsonParam = JsonUtils.serialize(param);
         if (isDebug) {
             Log.i(TAG, "post url ->" + SERVER_URL + url);
@@ -98,7 +98,7 @@ public class HttpEngine {
      * @return
      * @throws IOException
      */
-    public Response deleteHandle(Map<String, String> param, String url, String accessToken) throws IOException {
+    public Response deleteHandle(Map<String, Object> param, String url, String accessToken) throws IOException {
         String jsonParam = JsonUtils.serialize(param);
         if (isDebug) {
             Log.i(TAG, "delete url ->" + SERVER_URL + url);
@@ -118,7 +118,7 @@ public class HttpEngine {
      * @return
      * @throws IOException
      */
-    public Response putHandle(Map<String, String> param, String url, String accessToken) throws IOException {
+    public Response putHandle(Map<String, Object> param, String url, String accessToken) throws IOException {
         String jsonParam = JsonUtils.serialize(param);
         if (isDebug) {
             Log.i(TAG, "put url ->" + SERVER_URL + url);

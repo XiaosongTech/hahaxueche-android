@@ -156,7 +156,7 @@ public class StudentApiImpl implements StudentApi {
         }.getType();
         Type typeBase = new TypeToken<BaseApiResponse>() {
         }.getType();
-        Map<String, String> paramMap = new HashMap<String, String>();
+        Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("payment_stage", payment_stage);
         paramMap.put("rating", rating);
         paramMap.put("comment", comment);
@@ -186,7 +186,7 @@ public class StudentApiImpl implements StudentApi {
         }.getType();
         Type typeBase = new TypeToken<BaseApiResponse>() {
         }.getType();
-        Map<String, String> paramMap = new HashMap<String, String>();
+        Map<String, Object> paramMap = new HashMap<>();
         try {
             Response response = httpEngine.deleteHandle(paramMap, "sessions/" + session_id, access_token);
             String body = response.body().string();
@@ -213,7 +213,7 @@ public class StudentApiImpl implements StudentApi {
         }.getType();
         Type typeBase = new TypeToken<BaseApiResponse>() {
         }.getType();
-        Map<String, String> paramMap = new HashMap<String, String>();
+        Map<String, Object> paramMap = new HashMap<>();
         try {
             Response response = httpEngine.postHandle(paramMap, "students/" + studentId + "/" + courseScheduleEventId + "/schedule", accessToken);
             String body = response.body().string();
@@ -300,7 +300,7 @@ public class StudentApiImpl implements StudentApi {
     public BaseApiResponse cancelCourseSchedule(String studentId, String scheduleEventId, String accessToken) {
         Type type = new TypeToken<BaseApiResponse>() {
         }.getType();
-        Map<String, String> paramMap = new HashMap<String, String>();
+        Map<String, Object> paramMap = new HashMap<>();
         try {
             Response response = httpEngine.postHandle(paramMap, "students/" + studentId + "/" + scheduleEventId + "/unschedule", accessToken);
             String body = response.body().string();
@@ -324,7 +324,7 @@ public class StudentApiImpl implements StudentApi {
         }.getType();
         Type typeBase = new TypeToken<BaseApiResponse>() {
         }.getType();
-        Map<String, String> paramMap = new HashMap<String, String>();
+        Map<String, Object> paramMap = new HashMap<>();
         try {
             Response response = httpEngine.postHandle(paramMap, "students/" + studentId + "/" + scheduleEventId + "/review_schedule_event?rating=" + rating, accessToken);
             String body = response.body().string();
@@ -484,7 +484,7 @@ public class StudentApiImpl implements StudentApi {
     public ReferalBonusTransaction withdrawBonus(String studentId, String account, String accountOwnerName, String amount, String accessToken) {
         Type type = new TypeToken<ReferalBonusTransaction>() {
         }.getType();
-        Map<String, String> paramMap = new HashMap<String, String>();
+        Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("account", account);
         paramMap.put("account_owner_name", accountOwnerName);
         paramMap.put("amount", amount);
@@ -512,7 +512,7 @@ public class StudentApiImpl implements StudentApi {
     public GroupBuyResponse createGroupBuy(String name, String phone) {
         Type type = new TypeToken<GroupBuyResponse>() {
         }.getType();
-        Map<String, String> paramMap = new HashMap<String, String>();
+        Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("name", name);
         paramMap.put("phone", phone);
         try {
