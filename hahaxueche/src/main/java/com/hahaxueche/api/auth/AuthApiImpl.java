@@ -36,7 +36,7 @@ public class AuthApiImpl implements AuthApi {
      */
     @Override
     public BaseApiResponse sendAuthToken(String phoneNum, String send_type) {
-        Map<String, String> paramMap = new HashMap<String, String>();
+        Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("cell_phone", phoneNum);
         paramMap.put("type", send_type);
         Type type = new TypeToken<BaseApiResponse>() {
@@ -68,7 +68,7 @@ public class AuthApiImpl implements AuthApi {
      */
     @Override
     public User createUser(String phoneNum, String identifyCode, String pwd, String user_type, String refererId) {
-        Map<String, String> paramMap = new HashMap<String, String>();
+        Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("cell_phone", phoneNum);
         paramMap.put("auth_token", identifyCode);
         paramMap.put("password", pwd);
@@ -109,7 +109,7 @@ public class AuthApiImpl implements AuthApi {
      */
     @Override
     public Student completeStuInfo(String studentId, String cityId, String studentName, String accessToken) {
-        Map<String, String> paramMap = new HashMap<String, String>();
+        Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("name", studentName);
         paramMap.put("city_id", cityId);
         Type type = new TypeToken<Student>() {
@@ -138,7 +138,7 @@ public class AuthApiImpl implements AuthApi {
 
     @Override
     public User login(String cell_phone, String pwd, int loginType) {
-        Map<String, String> paramMap = new HashMap<String, String>();
+        Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("cell_phone", cell_phone);
         if (loginType == 1) {
             paramMap.put("auth_token", pwd);
@@ -172,7 +172,7 @@ public class AuthApiImpl implements AuthApi {
 
     @Override
     public BaseApiResponse resetPassword(String cell_phone, String password, String auth_token) {
-        Map<String, String> paramMap = new HashMap<String, String>();
+        Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("auth_token", auth_token);
         paramMap.put("password", password);
         paramMap.put("password_confirmation", password);

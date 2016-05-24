@@ -157,7 +157,7 @@ public class CoachApiImpl implements CoachApi {
         }.getType();
         Type typeBase = new TypeToken<BaseApiResponse>() {
         }.getType();
-        Map<String, String> paramMap = new HashMap<String, String>();
+        Map<String, Object> paramMap = new HashMap<>();
         try {
             Response response = httpEngine.postHandle(paramMap, "users/follows/" + followee_user_id, access_token);
             String body = response.body().string();
@@ -182,7 +182,7 @@ public class CoachApiImpl implements CoachApi {
     public BaseApiResponse cancelFollow(String followee_user_id, String access_token) {
         Type type = new TypeToken<BaseApiResponse>() {
         }.getType();
-        Map<String, String> paramMap = new HashMap<String, String>();
+        Map<String, Object> paramMap = new HashMap<>();
         try {
             Response response = httpEngine.deleteHandle(paramMap, "users/follows/" + followee_user_id, access_token);
             String body = response.body().string();
@@ -232,7 +232,7 @@ public class CoachApiImpl implements CoachApi {
         }.getType();
         Type typeBase = new TypeToken<BaseApiResponse>() {
         }.getType();
-        Map<String, String> paramMap = new HashMap<String, String>();
+        Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("name", name);
         paramMap.put("phone_number", phone_number);
         paramMap.put("first_time_option", first_time_option);
@@ -322,7 +322,7 @@ public class CoachApiImpl implements CoachApi {
         }.getType();
         Type typeBase = new TypeToken<BaseApiResponse>() {
         }.getType();
-        Map<String, String> paramMap = new HashMap<String, String>();
+        Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("current_payment_stage", current_payment_stage);
         paramMap.put("service_stage", service_stage);
         paramMap.put("total_amount", total_amount);
@@ -348,7 +348,7 @@ public class CoachApiImpl implements CoachApi {
 
     @Override
     public String createCharge(String coach_id, String access_token) {
-        Map<String, String> paramMap = new HashMap<String, String>();
+        Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("coach_id", coach_id);
         try {
             Response response = httpEngine.postHandle(paramMap, "charges", access_token);
@@ -371,7 +371,7 @@ public class CoachApiImpl implements CoachApi {
         }.getType();
         Type typeBase = new TypeToken<BaseApiResponse>() {
         }.getType();
-        Map<String, String> paramMap = new HashMap<String, String>();
+        Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("payment_stage", payment_stage);
         try {
             Response response = httpEngine.putHandle(paramMap, "students/purchased_service", access_token);
