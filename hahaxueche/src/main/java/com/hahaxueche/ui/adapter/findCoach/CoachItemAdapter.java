@@ -141,10 +141,6 @@ public class CoachItemAdapter extends BaseAdapter {
                 }
             }
         }
-        Log.v("gibxin", "myLng" + myLng);
-        Log.v("gibxin", "myLat" + myLat);
-        Log.v("gibxin", "mFieldModel.getLng()" + mFieldModel.getLng());
-        Log.v("gibxin", "mFieldModel.getLat()" + mFieldModel.getLat());
         if (!TextUtils.isEmpty(myLat) && !TextUtils.isEmpty(myLng) && !TextUtils.isEmpty(mFieldModel.getLat()) && !TextUtils.isEmpty(mFieldModel.getLng())) {
             String kmString = DistanceUtil.getDistanceKm(Double.parseDouble(myLng), Double.parseDouble(myLat), Double.parseDouble(mFieldModel.getLng()), Double.parseDouble(mFieldModel.getLat()));
             String infoText = "距您" + kmString + "km";

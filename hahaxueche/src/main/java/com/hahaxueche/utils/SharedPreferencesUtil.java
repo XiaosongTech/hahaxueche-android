@@ -19,6 +19,7 @@ import com.hahaxueche.model.user.User;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -154,15 +155,16 @@ public class SharedPreferencesUtil {
 
     /**
      * 获取我的城市推荐人的奖励
+     *
      * @return
      */
-    public int getMyCityRefererBonus(){
+    public int getMyCityRefererBonus() {
         City myCity = getMyCity();
         int amount = 0;
         ArrayList<Bonus> bonusList = myCity.getReferal_bonus();
-        if(bonusList!=null && bonusList.size()>0){
-            for(Bonus bonus : bonusList){
-                if(bonus.getName().equals("referer_bonus")){
+        if (bonusList != null && bonusList.size() > 0) {
+            for (Bonus bonus : bonusList) {
+                if (bonus.getName().equals("referer_bonus")) {
                     amount = bonus.getAmount();
                     break;
                 }
@@ -173,15 +175,16 @@ public class SharedPreferencesUtil {
 
     /**
      * 获取我的城市被推荐人的奖励
+     *
      * @return
      */
-    public int getMyCityRefereeBonus(){
+    public int getMyCityRefereeBonus() {
         City myCity = getMyCity();
         int amount = 0;
         ArrayList<Bonus> bonusList = myCity.getReferal_bonus();
-        if(bonusList!=null && bonusList.size()>0){
-            for(Bonus bonus : bonusList){
-                if(bonus.getName().equals("referee_bonus")){
+        if (bonusList != null && bonusList.size() > 0) {
+            for (Bonus bonus : bonusList) {
+                if (bonus.getName().equals("referee_bonus")) {
                     amount = bonus.getAmount();
                     break;
                 }
@@ -240,6 +243,39 @@ public class SharedPreferencesUtil {
     public boolean getNoticeBouns() {
         SharedPreferences spNotice = mContext.getSharedPreferences("notice", Activity.MODE_PRIVATE);
         return spNotice.getBoolean("firstBonus", false);
+    }
+
+    /**
+     * 增加历史搜索记录
+     *
+     * @param coachName
+     */
+    public void addSearchHistory(String coachName) {
+        SharedPreferences spHistory = mContext.getSharedPreferences("searchHistory", Activity.MODE_PRIVATE);
+        LinkedList<String> searchHistoryList = JsonUtils.deserialize(spHistory.getString("searchHistoryStr", ""), LinkedList.class);
+        if (searchHistoryList != null) {
+            if (searchHistoryList.size() >= 5) {
+                searchHistoryList.removeFirst();
+            }
+        } else {
+            searchHistoryList = new LinkedList<>();
+        }
+        searchHistoryList.addLast(coachName);
+        SharedPreferences.Editor editor = spHistory.edit();
+        editor.putString("searchHistoryStr", JsonUtils.serialize(searchHistoryList));
+        editor.commit();
+    }
+
+    public LinkedList getSearchHistory() {
+        SharedPreferences spHistory = mContext.getSharedPreferences("searchHistory", Activity.MODE_PRIVATE);
+        return JsonUtils.deserialize(spHistory.getString("searchHistoryStr", ""), LinkedList.class);
+    }
+
+    public void clearSearchHistory() {
+        SharedPreferences spHistory = mContext.getSharedPreferences("searchHistory", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = spHistory.edit();
+        editor.clear();
+        editor.commit();
     }
 
 }

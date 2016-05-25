@@ -76,4 +76,6 @@
     <string name="softwareInfo">软件信息</string>
     <string name="versionCheck">版本检测</string>
     <string name="copyright">武汉小松科技有限公司 版权所有\nCopyright 2016-2016 All Rights Reserved</string>
+    <string name="searchCoachName">搜索教练姓名</string>
+    <string name="historyRecord">历史记录</string>
 </resources>

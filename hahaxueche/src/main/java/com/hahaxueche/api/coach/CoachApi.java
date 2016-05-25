@@ -34,7 +34,7 @@ public interface CoachApi {
      * @param sort_by            排序依据
      */
     public CoachListResponse getCoachList(String page, String per_page, String golden_coach_only, String license_type, String price,
-                                          String city_id, ArrayList<String> training_field_ids, String distance,  ArrayList<String> user_location, String sort_by);
+                                          String city_id, ArrayList<String> training_field_ids, String distance, ArrayList<String> user_location, String sort_by);
 
     /**
      * 获取教练列表，直接根据反馈的links_next或者links_previous获取
@@ -141,4 +141,10 @@ public interface CoachApi {
      * @return
      */
     public Coach oneKeyFindCoach(String lat, String lng);
+
+    /**
+     * @param keyword
+     * @return
+     */
+    public ArrayList<Coach> searchCoach(String keyword);
 }

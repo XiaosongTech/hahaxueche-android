@@ -122,12 +122,17 @@
         <item name="android:button">@drawable/checkbox_style</item>
     </style>
 
-    <style name="FullScreen_Dialog" parent="android:style/Theme.Dialog">
+    <style name="FullScreen_Dialog_Transparent" parent="android:style/Theme.Dialog">
 
         <item name="android:background">#60606060</item>
         <!-- 设置自定义布局的背景透明 -->
         <item name="android:windowBackground">@android:color/transparent</item>
         <!-- 设置window背景透明，也就是去边框 -->
+    </style>
+
+    <style name="FullScreen_Dialog">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
 </resources>

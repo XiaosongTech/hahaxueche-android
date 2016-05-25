@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ import com.hahaxueche.ui.dialog.FcSortDialog;
 import com.hahaxueche.ui.activity.appointment.AppointmentActivity;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.activity.mySetting.MySettingActivity;
+import com.hahaxueche.ui.dialog.findCoach.SearchCoachDialog;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
@@ -67,6 +69,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
     private String sort_by = "0";
     private ImageButton ibtnFcMap;
     private ArrayList<FieldModel> selFieldList;
+    private ImageView mIvSearch;
 
     private String TAG = "FindCoachActivity";
     private boolean isOnLoadMore = false;
@@ -90,6 +93,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         llyTabMySetting = Util.instence(this).$(this, R.id.lly_tab_my_setting);
         llyFcFilter = Util.instence(this).$(this, R.id.lly_fc_filter);
         llyFcSort = Util.instence(this).$(this, R.id.lly_fc_sort);
+        mIvSearch = Util.instence(this).$(this, R.id.iv_search);
         mHandler = new Handler();
 
         xlvCoachList = (XListView) findViewById(R.id.xlv_coach_list);
@@ -124,6 +128,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         llyFcSort.setOnClickListener(mClickListener);
         xlvCoachList.setOnItemClickListener(mItemClickListener);
         ibtnFcMap.setOnClickListener(mClickListener);
+        mIvSearch.setOnClickListener(mClickListener);
     }
 
 
@@ -188,7 +193,26 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                     intent.putExtras(bundle);
                     startActivityForResult(intent, 0);
                     break;
+                case R.id.iv_search:
+                    //搜索教练
+                    SearchCoachDialog searchCoachDialog = new SearchCoachDialog(FindCoachActivity.this, mCoachItemClickListener);
+                    searchCoachDialog.show();
+                    break;
+                default:
+                    break;
             }
+        }
+    };
+
+    private SearchCoachDialog.OnCoachItemClicktListener mCoachItemClickListener = new SearchCoachDialog.OnCoachItemClicktListener() {
+        @Override
+        public boolean selectCoach(Coach coach) {
+            Intent intent = new Intent(getApplication(), CoachDetailActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("coach", coach);
+            intent.putExtras(bundle);
+            startActivity(intent);
+            return true;
         }
     };
     AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
