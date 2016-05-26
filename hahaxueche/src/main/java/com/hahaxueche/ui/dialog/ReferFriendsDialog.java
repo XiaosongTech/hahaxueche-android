@@ -43,7 +43,7 @@ public class ReferFriendsDialog {
 
 
     public ReferFriendsDialog(Context context, OnDismissListener onDismissListener, OnShareListener onShareListener) {
-        mDialog = new Dialog(context, R.style.FullScreen_Dialog);//全屏半透明风格
+        mDialog = new Dialog(context, R.style.FullScreen_Dialog_Transparent);//全屏半透明风格
         mContext = context;
         mOnDismissListener = onDismissListener;
         mOnShareListener = onShareListener;

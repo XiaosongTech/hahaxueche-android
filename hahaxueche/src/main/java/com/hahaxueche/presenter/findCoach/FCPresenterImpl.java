@@ -335,9 +335,9 @@ public class FCPresenterImpl implements FCPresenter {
                     if (purchasedService.isSuccess()) {
                         listener.onSuccess(purchasedService);
                     } else {
-                        if(purchasedService.getCode().equals("400003")){
+                        if (purchasedService.getCode().equals("400003")) {
                             listener.onFailure(purchasedService.getCode(), "亲，完成课程后才付款哦~");
-                        }else {
+                        } else {
                             listener.onFailure(purchasedService.getCode(), "打款失败");
                         }
                     }
@@ -360,18 +360,34 @@ public class FCPresenterImpl implements FCPresenter {
             @Override
             protected void onPostExecute(Coach coach) {
                 if (coach != null) {
-                    if (coach != null) {
-                        if (coach.isSuccess()) {
-                            listener.onSuccess(coach);
-                        } else {
-                            listener.onFailure(coach.getCode(), coach.getMessage());
-                        }
+                    if (coach.isSuccess()) {
+                        listener.onSuccess(coach);
                     } else {
-                        listener.onFailure("0000", "未找到合适的教练");
+                        listener.onFailure(coach.getCode(), coach.getMessage());
                     }
                 } else {
-                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                    listener.onFailure("0000", "未找到合适的教练");
                 }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void searchCoach(final String keyword, final FCCallbackListener<ArrayList<Coach>> listener) {
+        if (TextUtils.isEmpty(keyword)) {
+            listener.onFailure(ErrorEvent.PARAM_NULL, "请输入关键字");
+            return;
+        }
+        new AsyncTask<Void, Void, ArrayList<Coach>>() {
+
+            @Override
+            protected ArrayList<Coach> doInBackground(Void... params) {
+                return coachApi.searchCoach(keyword);
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<Coach> coachList) {
+                listener.onSuccess(coachList);
             }
         }.execute();
     }

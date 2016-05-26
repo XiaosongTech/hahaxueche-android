@@ -397,8 +397,6 @@ public class CoachApiImpl implements CoachApi {
     public Coach oneKeyFindCoach(String lat, String lng) {
         Type type = new TypeToken<Coach>() {
         }.getType();
-        Type typeBase = new TypeToken<BaseApiResponse>() {
-        }.getType();
         String url = "students/best_match_coach?user_location[]=" + lat + "&user_location[]=" + lng;
         try {
             Response response = httpEngine.getHandle(url, "");
@@ -408,11 +406,31 @@ public class CoachApiImpl implements CoachApi {
                 return JsonUtils.deserialize(body, type);
             } else {
                 Coach retModel = new Coach();
-                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, typeBase);
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, BaseApiResponse.class);
                 retModel.setCode(baseApiResponse.getCode());
                 retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setIsSuccess(false);
                 return retModel;
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public ArrayList<Coach> searchCoach(String keyword) {
+        Type type = new TypeToken<ArrayList<Coach>>() {
+        }.getType();
+        String url = "coaches?keyword=" + keyword;
+        try {
+            Response response = httpEngine.getHandle(url, "");
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                return new ArrayList<>();
             }
         } catch (IOException e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());

@@ -33,7 +33,7 @@ public interface FCPresenter {
      * @param listener           回调监听器
      */
     public void getCoachList(String page, String per_page, String golden_coach_only, String license_type, String price,
-                             String city_id, ArrayList<String> training_field_ids, String distance,  ArrayList<String> user_location, String sort_by,
+                             String city_id, ArrayList<String> training_field_ids, String distance, ArrayList<String> user_location, String sort_by,
                              FCCallbackListener<CoachListResponse> listener);
 
     /**
@@ -133,5 +133,11 @@ public interface FCPresenter {
      * @param listener
      */
     public void oneKeyFindCoach(String lat, String lng, FCCallbackListener<Coach> listener);
+
+    /**
+     * @param keyword
+     * @param listener
+     */
+    public void searchCoach(String keyword, FCCallbackListener<ArrayList<Coach>> listener);
 
 }

@@ -10,4 +10,6 @@
     <dimen name="padding12dp">12dp</dimen>
     <dimen name="margin12dp">12dp</dimen>
     <dimen name="height260dp">260dp</dimen>
+    <dimen name="search_edittext_width">288dp</dimen>
+    <dimen name="search_edittext_height">28dp</dimen>
 </resources>
