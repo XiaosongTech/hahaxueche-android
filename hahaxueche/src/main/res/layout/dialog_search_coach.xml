@@ -49,7 +49,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="2dp"
             android:padding="5dp"
-            android:src="@drawable/icon_clear_out_normal"
+            android:src="@drawable/image_icon_clear"
             android:visibility="gone" />
     </RelativeLayout>
 

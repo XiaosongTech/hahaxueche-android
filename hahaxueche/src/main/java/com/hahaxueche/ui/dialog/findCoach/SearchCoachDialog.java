@@ -63,7 +63,6 @@ public class SearchCoachDialog {
         spUtil = new SharedPreferencesUtil(mContext);
         initView();
         initEvents();
-        initSearchHistory();
     }
 
     private void initView() {
@@ -87,6 +86,14 @@ public class SearchCoachDialog {
                 }
             });
         }
+        mEtCoachName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
+                    loadSearchHistory();
+                }
+            }
+        });
         mEtCoachName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -198,14 +205,33 @@ public class SearchCoachDialog {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             mDialog.dismiss();
-            mOnCoachItemClicktListener.selectCoach(mCoachList.get(i));
+            if (i < mCoachList.size()) {
+                mOnCoachItemClicktListener.selectCoach(mCoachList.get(i));
+            }
         }
     };
 
     /**
      * 历史搜索记录
      */
-    private void initSearchHistory() {
+    private void loadSearchHistory() {
+        mLlyHistory.removeAllViews();
+        //历史记录行
+        LinearLayout.LayoutParams paramTvHistory = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        TextView tvHistory = new TextView(mContext);
+        tvHistory.setLayoutParams(paramTvHistory);
+        tvHistory.setPadding(Util.instence(mContext).dip2px(14), Util.instence(mContext).dip2px(12), 0, Util.instence(mContext).dip2px(12));
+        tvHistory.setTextSize(14);
+        tvHistory.setTextColor(ContextCompat.getColor(mContext, R.color.haha_gray_heavier));
+        tvHistory.setText("历史记录");
+        mLlyHistory.addView(tvHistory);
+        //分割线
+        LinearLayout.LayoutParams paramVwHistory = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Util.instence(mContext).dip2px(0.5f));
+        View viewHistory = new View(mContext);
+        viewHistory.setLayoutParams(paramVwHistory);
+        viewHistory.setBackgroundColor(ContextCompat.getColor(mContext, R.color.haha_gray_light));
+        mLlyHistory.addView(viewHistory);
+        //记录信息
         LinkedList searchHistoryList = spUtil.getSearchHistory();
         if (searchHistoryList != null && searchHistoryList.size() > 0) {
             for (final Object coachName : searchHistoryList) {
@@ -245,28 +271,11 @@ public class SearchCoachDialog {
                 @Override
                 public void onClick(View view) {
                     spUtil.clearSearchHistory();
-                    mLlyHistory.removeAllViews();
+                    loadSearchHistory();
                     //没有历史记录
-                    addNoHistoryRecord();
                 }
             });
             mLlyHistory.addView(textView);
-        } else {
-            //没有历史记录
-            addNoHistoryRecord();
         }
-    }
-
-    private void addNoHistoryRecord() {
-        //没有历史记录
-        LinearLayout.LayoutParams paramTv = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        paramTv.setMargins(0, Util.instence(mContext).dip2px(20), 0, 0);
-        TextView textView = new TextView(mContext);
-        textView.setText("暂无历史记录");
-        textView.setTextColor(ContextCompat.getColor(mContext, R.color.haha_gray_heavier));
-        textView.setGravity(Gravity.CENTER);
-        textView.setTextSize(14);
-        textView.setLayoutParams(paramTv);
-        mLlyHistory.addView(textView);
     }
 }

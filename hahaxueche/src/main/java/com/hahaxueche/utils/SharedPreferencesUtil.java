@@ -254,7 +254,7 @@ public class SharedPreferencesUtil {
         SharedPreferences spHistory = mContext.getSharedPreferences("searchHistory", Activity.MODE_PRIVATE);
         LinkedList<String> searchHistoryList = JsonUtils.deserialize(spHistory.getString("searchHistoryStr", ""), LinkedList.class);
         if (searchHistoryList != null) {
-            if (searchHistoryList.size() >= 5) {
+            if (searchHistoryList.size() >= 4) {
                 searchHistoryList.removeFirst();
             }
         } else {
