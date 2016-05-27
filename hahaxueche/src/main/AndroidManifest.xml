@@ -254,6 +254,10 @@
             android:name=".ui.activity.mySetting.SoftwareInfoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.findCoach.PurchaseCoachActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
 
         <service android:name="com.amap.api.location.APSService"></service>
         <receiver

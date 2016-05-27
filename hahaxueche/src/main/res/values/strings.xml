@@ -78,4 +78,5 @@
     <string name="copyright">武汉小松科技有限公司 版权所有\nCopyright 2016-2016 All Rights Reserved</string>
     <string name="searchCoachName">搜索教练姓名</string>
     <string name="historyRecord">历史记录</string>
+    <string name="purchaseCoach">购买教练</string>
 </resources>

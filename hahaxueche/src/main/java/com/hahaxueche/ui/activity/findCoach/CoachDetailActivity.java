@@ -488,8 +488,13 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                                     @Override
                                     public void onPay() {
                                         feeDetailDialog.dismiss();
+                                        Intent intent = new Intent(CoachDetailActivity.this, PurchaseCoachActivity.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putSerializable("coach", mCoach);
+                                        intent.putExtras(bundle);
+                                        startActivityForResult(intent, 1);
                                         //调用获取charge
-                                        fcPresenter.createCharge(mCoach.getId(), mSession.getAccess_token(), new FCCallbackListener<String>() {
+                                       /* fcPresenter.createCharge(mCoach.getId(), mSession.getAccess_token(), new FCCallbackListener<String>() {
                                             @Override
                                             public void onSuccess(String charge) {
                                                 Log.v("gibxin", "charge-> " + charge);
@@ -503,7 +508,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                                             public void onFailure(String errorEvent, String message) {
 
                                             }
-                                        });
+                                        });*/
                                     }
                                 });
                         feeDetailDialog.show();
@@ -611,77 +616,82 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //支付页面返回处理
         if (requestCode == 1) {
-            if (pd != null) {
-                pd.dismiss();
-            }
-            pd = ProgressDialog.show(CoachDetailActivity.this, null, "数据加载中，请稍后……");
             if (resultCode == Activity.RESULT_OK) {
-                if (null == spUtil) {
-                    spUtil = new SharedPreferencesUtil(this);
-                }
-                String result = data.getExtras().getString("pay_result");
-                /* 处理返回值
-                 * "success" - 支付成功
-                 * "fail"    - 支付失败
-                 * "cancel"  - 取消支付
-                 * "invalid" - 支付插件未安装（一般是微信客户端未安装的情况）
-                 */
-                String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
-                String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
-                if (result.equals("success")) {
-                    //更新SharedPreferences中的student
-                    this.msPresenter.getStudentForever(mStudent.getId(), mSession.getAccess_token(), new MSCallbackListener<Student>() {
-                        @Override
-                        public void onSuccess(Student data) {
-                            mStudent = data;
-                            User user = spUtil.getUser();
-                            user.setStudent(mStudent);
-                            spUtil.setUser(user);
-                            if (!TextUtils.isEmpty(data.getCurrent_coach_id())) {
-                                fcPresenter.getCoach(data.getCurrent_coach_id(), new FCCallbackListener<Coach>() {
-                                    @Override
-                                    public void onSuccess(Coach coach) {
-                                        if (pd != null) {
-                                            pd.dismiss();
-                                        }
-                                        MobclickAgent.onEvent(context, "did_purchase_coach");
-                                        Toast.makeText(context, "支付成功", Toast.LENGTH_SHORT).show();
-                                        spUtil.setCurrentCoach(coach);
-                                    }
-
-                                    @Override
-                                    public void onFailure(String errorEvent, String message) {
-                                        if (pd != null) {
-                                            pd.dismiss();
-                                        }
-                                    }
-                                });
-                            } else {
-                                if (pd != null) {
-                                    pd.dismiss();
-                                }
-                                MobclickAgent.onEvent(context, "did_purchase_coach");
-                                Toast.makeText(context, "支付成功", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(String errorEvent, String message) {
-                            if (pd != null) {
-                                pd.dismiss();
-                            }
-                        }
-                    });
-                } else {
-                    if (pd != null) {
-                        pd.dismiss();
-                    }
-                    Toast.makeText(context, "支付失败", Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(context, "支付成功", Toast.LENGTH_SHORT).show();
             }
         }
+        //支付页面返回处理
+//        if (requestCode == 1) {
+//            if (pd != null) {
+//                pd.dismiss();
+//            }
+//            pd = ProgressDialog.show(CoachDetailActivity.this, null, "数据加载中，请稍后……");
+//            if (resultCode == Activity.RESULT_OK) {
+//                if (null == spUtil) {
+//                    spUtil = new SharedPreferencesUtil(this);
+//                }
+//                String result = data.getExtras().getString("pay_result");
+//                /* 处理返回值
+//                 * "success" - 支付成功
+//                 * "fail"    - 支付失败
+//                 * "cancel"  - 取消支付
+//                 * "invalid" - 支付插件未安装（一般是微信客户端未安装的情况）
+//                 */
+//                String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
+//                String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
+//                if (result.equals("success")) {
+//                    //更新SharedPreferences中的student
+//                    this.msPresenter.getStudentForever(mStudent.getId(), mSession.getAccess_token(), new MSCallbackListener<Student>() {
+//                        @Override
+//                        public void onSuccess(Student data) {
+//                            mStudent = data;
+//                            User user = spUtil.getUser();
+//                            user.setStudent(mStudent);
+//                            spUtil.setUser(user);
+//                            if (!TextUtils.isEmpty(data.getCurrent_coach_id())) {
+//                                fcPresenter.getCoach(data.getCurrent_coach_id(), new FCCallbackListener<Coach>() {
+//                                    @Override
+//                                    public void onSuccess(Coach coach) {
+//                                        if (pd != null) {
+//                                            pd.dismiss();
+//                                        }
+//                                        MobclickAgent.onEvent(context, "did_purchase_coach");
+//                                        Toast.makeText(context, "支付成功", Toast.LENGTH_SHORT).show();
+//                                        spUtil.setCurrentCoach(coach);
+//                                    }
+//
+//                                    @Override
+//                                    public void onFailure(String errorEvent, String message) {
+//                                        if (pd != null) {
+//                                            pd.dismiss();
+//                                        }
+//                                    }
+//                                });
+//                            } else {
+//                                if (pd != null) {
+//                                    pd.dismiss();
+//                                }
+//                                MobclickAgent.onEvent(context, "did_purchase_coach");
+//                                Toast.makeText(context, "支付成功", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(String errorEvent, String message) {
+//                            if (pd != null) {
+//                                pd.dismiss();
+//                            }
+//                        }
+//                    });
+//                } else {
+//                    if (pd != null) {
+//                        pd.dismiss();
+//                    }
+//                    Toast.makeText(context, "支付失败", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        }
     }
 
     AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
