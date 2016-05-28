@@ -16,6 +16,7 @@ public class PurchasedService {
     private String paid_amount;
     private String unpaid_amount;
     private String paid_at;
+    private String order_no;
     private CoachGroupModel coach_group;
     private List<PaymentStage> payment_stages;
     private String code;
@@ -100,6 +101,18 @@ public class PurchasedService {
 
     public void setPayment_stages(List<PaymentStage> payment_stages) {
         this.payment_stages = payment_stages;
+    }
+
+    public String getOrder_no() {
+        return order_no;
+    }
+
+    public void setOrder_no(String order_no) {
+        this.order_no = order_no;
+    }
+
+    public void setSuccess(boolean success) {
+        isSuccess = success;
     }
 
     public String getMessage() {

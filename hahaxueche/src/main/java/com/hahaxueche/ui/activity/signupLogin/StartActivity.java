@@ -78,6 +78,7 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
 //                .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.ALIGN_PARENT_RIGHT)
 //                .setOnPageChangeListener(this)//监听翻页事件
                 .setOnItemClickListener(this);
+        convenientBanner.notifyDataSetChanged();
         tvIsTour = (TextView) findViewById(R.id.tv_is_tourist);
         tvIsTour.setOnClickListener(new View.OnClickListener() {
             @Override

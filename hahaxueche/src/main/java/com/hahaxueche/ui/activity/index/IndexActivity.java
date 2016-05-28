@@ -181,6 +181,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
 //                .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.ALIGN_PARENT_RIGHT)
 //                .setOnPageChangeListener(this)//监听翻页事件
                 .setOnItemClickListener(this);
+        cbannerIndex.notifyDataSetChanged();
     }
 
     private void initEvent() {
