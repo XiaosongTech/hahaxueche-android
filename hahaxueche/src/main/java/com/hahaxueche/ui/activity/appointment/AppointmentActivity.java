@@ -40,6 +40,8 @@ import java.lang.ref.WeakReference;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
 
@@ -409,6 +411,7 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat sdfDay = new SimpleDateFormat("yyyy-MM-dd");
         ArrayList<String> dateStringList = new ArrayList<>();
+        Collections.sort(scheduleList, comparator);
         try {
             for (ScheduleEvent scheduleEvent : scheduleList) {
                 String scheduleDay = sdfDay.format(sdf.parse(scheduleEvent.getStart_time()));
@@ -423,4 +426,10 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
             e.printStackTrace();
         }
     }
+
+    Comparator<ScheduleEvent> comparator = new Comparator<ScheduleEvent>() {
+        public int compare(ScheduleEvent s1, ScheduleEvent s2) {
+            return s1.getStart_time().compareTo(s2.getStart_time());
+        }
+    };
 }
