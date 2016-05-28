@@ -108,7 +108,7 @@ public class PaymentStageActivity extends MSBaseActivity {
         //支付时间
         tvPaidTime.setText(Util.getDateFromUTC(mPurchasedService.getPaid_at()));
         //订单编号
-        tvOrderCode.setText(mPurchasedService.getCharge_id());
+        tvOrderCode.setText(mPurchasedService.getOrder_no());
         //总金额
         tvPsTotalAmount.setText(Util.getMoney(mPurchasedService.getTotal_amount()));
         //已打款
