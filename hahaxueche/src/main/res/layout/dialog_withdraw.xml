@@ -45,7 +45,7 @@
         android:layout_marginRight="20dp"
         android:background="@drawable/edittext_back_null"
         android:gravity="center_vertical"
-        android:hint="@string/enterAlipayAccount"
+        android:hint="@string/enterAlipayName"
         android:singleLine="true"
         android:textColor="@color/app_theme_color"
         android:textColorHint="@color/haha_gray_heavy"
