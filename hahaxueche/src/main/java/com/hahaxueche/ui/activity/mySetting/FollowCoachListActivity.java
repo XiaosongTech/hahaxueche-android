@@ -91,11 +91,13 @@ public class FollowCoachListActivity extends MSBaseActivity implements XListView
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(getApplication(), CoachDetailActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("coach", coachList.get(position - 1));
-            intent.putExtras(bundle);
-            startActivity(intent);
+            if (coachList != null && coachList.size() > 0 && position > 0 && position < coachList.size()) {
+                Intent intent = new Intent(getApplication(), CoachDetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("coach", coachList.get(position - 1));
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
         }
     };
 
