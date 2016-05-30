@@ -242,8 +242,10 @@ public class SignUpInfoActivity extends SLBaseActivity {
                     e.printStackTrace();
                 } finally {
                     try {
-                        b.flush();
-                        b.close();
+                        if (b != null) {
+                            b.flush();
+                            b.close();
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
