@@ -29,7 +29,11 @@ public class DistanceUtil {
                                        double longitude2, double latitude2) {
         DecimalFormat dfInt = new DecimalFormat("#####.#");
         double s = getDistance(longitude1, latitude1, longitude2, latitude2);
-        return dfInt.format(s / 1000);
+        if (Double.compare(s / 1000, 50) > 0) {
+            return "50+";
+        } else {
+            return dfInt.format(s / 1000);
+        }
     }
 
     private static double rad(double d) {
