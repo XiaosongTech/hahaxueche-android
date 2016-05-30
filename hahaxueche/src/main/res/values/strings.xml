@@ -78,4 +78,6 @@
     <string name="copyright">武汉小松科技有限公司 版权所有\nCopyright 2016-2016 All Rights Reserved</string>
     <string name="searchCoachName">搜索教练姓名</string>
     <string name="historyRecord">历史记录</string>
+    <string name="hahaAgreement">点击“完成”即表示您同意并愿意\n遵守哈哈学车用户协议</string>
+    <string name="userAgreement">用户协议</string>
 </resources>
