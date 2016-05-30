@@ -120,6 +120,18 @@
         android:layout_height="0dp"
         android:layout_weight="12">
 
+        <TextView
+            android:id="@+id/tv_no_coach_tips"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.2"
+            android:padding="20dp"
+            android:text="抱歉，没有找到附近的教练，点击左上角筛选按钮，并调节距离等因素来寻找更多教练"
+            android:textColor="@drawable/tab_text"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
         <com.hahaxueche.ui.widget.pullToRefreshView.XListView
             android:id="@+id/xlv_coach_list"
             android:layout_width="match_parent"

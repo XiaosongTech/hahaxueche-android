@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
@@ -70,6 +71,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
     private ImageButton ibtnFcMap;
     private ArrayList<FieldModel> selFieldList;
     private ImageView mIvSearch;
+    private TextView mTvNoCoachTips;
 
     private String TAG = "FindCoachActivity";
     private boolean isOnLoadMore = false;
@@ -94,6 +96,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         llyFcFilter = Util.instence(this).$(this, R.id.lly_fc_filter);
         llyFcSort = Util.instence(this).$(this, R.id.lly_fc_sort);
         mIvSearch = Util.instence(this).$(this, R.id.iv_search);
+        mTvNoCoachTips = Util.instence(this).$(this, R.id.tv_no_coach_tips);
         mHandler = new Handler();
 
         xlvCoachList = (XListView) findViewById(R.id.xlv_coach_list);
@@ -219,11 +222,13 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(getApplication(), CoachDetailActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("coach", coachList.get(position - 1));
-            intent.putExtras(bundle);
-            startActivity(intent);
+            if (coachList != null && coachList.size() > 0 && position > 0 && position < coachList.size()) {
+                Intent intent = new Intent(getApplication(), CoachDetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("coach", coachList.get(position - 1));
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
         }
     };
 
@@ -277,17 +282,24 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                     @Override
                     public void onSuccess(CoachListResponse data) {
                         coachList = data.getData();
-                        linkSelf = data.getLinks().getSelf();
-                        linkNext = data.getLinks().getNext();
-                        linkPrevious = data.getLinks().getPrevious();
-                        if (TextUtils.isEmpty(linkNext)) {
-                            xlvCoachList.setPullLoadEnable(false);
+                        if (coachList != null && coachList.size() > 0) {
+                            mTvNoCoachTips.setVisibility(View.GONE);
+                            xlvCoachList.setVisibility(View.VISIBLE);
+                            linkSelf = data.getLinks().getSelf();
+                            linkNext = data.getLinks().getNext();
+                            linkPrevious = data.getLinks().getPrevious();
+                            if (TextUtils.isEmpty(linkNext)) {
+                                xlvCoachList.setPullLoadEnable(false);
+                            } else {
+                                xlvCoachList.setPullLoadEnable(true);
+                            }
+                            mAdapter = new CoachItemAdapter(FindCoachActivity.this, coachList, R.layout.view_coach_list_item);
+                            xlvCoachList.setAdapter(mAdapter);
+                            onLoad();
                         } else {
-                            xlvCoachList.setPullLoadEnable(true);
+                            mTvNoCoachTips.setVisibility(View.VISIBLE);
+                            xlvCoachList.setVisibility(View.GONE);
                         }
-                        mAdapter = new CoachItemAdapter(FindCoachActivity.this, coachList, R.layout.view_coach_list_item);
-                        xlvCoachList.setAdapter(mAdapter);
-                        onLoad();
                     }
 
                     @Override
