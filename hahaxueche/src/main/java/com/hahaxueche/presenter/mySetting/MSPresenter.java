@@ -118,4 +118,6 @@ public interface MSPresenter {
      * @param listener
      */
     public void createGroupBuy(String name, String phone, MSCallbackListener<GroupBuyResponse> listener);
+
+    public void editUsername(String studentId,String cityId,String username,String accessToken,MSCallbackListener<Student> listener);
 }

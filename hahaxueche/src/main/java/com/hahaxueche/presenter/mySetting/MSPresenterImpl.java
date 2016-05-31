@@ -392,4 +392,28 @@ public class MSPresenterImpl implements MSPresenter {
             }
         }.execute();
     }
+
+    @Override
+    public void editUsername(final String studentId, final String cityId, final String username, final String accessToken, final MSCallbackListener<Student> listener) {
+        new AsyncTask<Void, Void, Student>() {
+
+            @Override
+            protected Student doInBackground(Void... params) {
+                return authApi.completeStuInfo(studentId, cityId, username, accessToken);
+            }
+
+            @Override
+            protected void onPostExecute(Student student) {
+                if (listener != null) {
+                    if (student.isSuccess()) {
+                        listener.onSuccess(student);
+                    } else {
+                        listener.onFailure(student.getCode(), student.getMessage());
+                    }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
 }

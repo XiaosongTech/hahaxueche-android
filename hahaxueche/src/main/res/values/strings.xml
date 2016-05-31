@@ -80,4 +80,6 @@
     <string name="historyRecord">历史记录</string>
     <string name="hahaAgreement">点击“完成”即表示您同意并愿意\n遵守哈哈学车用户协议</string>
     <string name="userAgreement">用户协议</string>
+    <string name="editUsername">修改名称</string>
+    <string name="save">保存</string>
 </resources>
