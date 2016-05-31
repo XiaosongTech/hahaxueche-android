@@ -4,4 +4,7 @@
     <dimen name="padding10dp">6dp</dimen>
     <dimen name="search_edittext_width">240dp</dimen>
     <dimen name="search_edittext_height">24dp</dimen>
+    <dimen name="payment_adapter_spacing1">35dp</dimen>
+    <dimen name="payment_adapter_spacing2">120dp</dimen>
+    <dimen name="payment_adapter_spacing3">170dp</dimen>
 </resources>
