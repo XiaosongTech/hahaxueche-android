@@ -39,6 +39,7 @@ import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
 import com.hahaxueche.ui.dialog.FAQDialog;
 import com.hahaxueche.ui.dialog.RegisterInfoPhotoDialog;
+import com.hahaxueche.ui.dialog.mySetting.EditUsernameDialog;
 import com.hahaxueche.ui.util.PhotoUtil;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.ui.widget.monitorScrollView.MonitorScrollView;
@@ -97,6 +98,8 @@ public class MySettingActivity extends MSBaseActivity {
     private RelativeLayout mRlySoftwareInfo;//软件信息
     private FAQDialog faqDialog = null;
     private TextView mTvStudentPhase;
+    private ImageView mIvEditUsername;//修改用户名
+    private EditUsernameDialog mEditUsernameDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -138,6 +141,7 @@ public class MySettingActivity extends MSBaseActivity {
         mRlySupportHaha = Util.instence(this).$(this, R.id.rly_support_haha);
         mRlySoftwareInfo = Util.instence(this).$(this, R.id.rly_software_info);
         mTvStudentPhase = Util.instence(this).$(this, R.id.tv_student_phase);
+        mIvEditUsername = Util.instence(this).$(this, R.id.iv_edit_username);
     }
 
     private void initEvent() {
@@ -153,7 +157,7 @@ public class MySettingActivity extends MSBaseActivity {
         llyLoginOff.setOnClickListener(mClickListener);
         rlyCustomerPhone.setOnClickListener(mClickListener);
         rlyAboutHaha.setOnClickListener(mClickListener);
-        cirMyAvatar.setOnLongClickListener(mLongClickListener);
+        cirMyAvatar.setOnClickListener(mClickListener);
         mSrlMySetting.setOnRefreshListener(mRefreshListener);
         mSrlMySetting.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
         mRlyRefererFriends.setOnClickListener(mClickListener);
@@ -161,6 +165,7 @@ public class MySettingActivity extends MSBaseActivity {
         mRlyStuFAQ.setOnClickListener(mClickListener);
         mRlySupportHaha.setOnClickListener(mClickListener);
         mRlySoftwareInfo.setOnClickListener(mClickListener);
+        mIvEditUsername.setOnClickListener(mClickListener);
     }
 
     private void loadDatas() {
@@ -336,9 +341,37 @@ public class MySettingActivity extends MSBaseActivity {
                     intent = new Intent(getApplication(), SoftwareInfoActivity.class);
                     startActivity(intent);
                     break;
+                case R.id.cir_my_avatar:
+                    RegisterInfoPhotoDialog dialog = new RegisterInfoPhotoDialog(MySettingActivity.this);
+                    dialog.show();
+                    break;
+                case R.id.iv_edit_username:
+                    if (null == mEditUsernameDialog) {
+                        mEditUsernameDialog = new EditUsernameDialog(MySettingActivity.this, mEditUsernameSaveListener);
+                    }
+                    mEditUsernameDialog.show();
                 default:
                     break;
             }
+        }
+    };
+
+    private EditUsernameDialog.OnEditUsernameSaveListener mEditUsernameSaveListener = new EditUsernameDialog.OnEditUsernameSaveListener() {
+        @Override
+        public boolean saveUserName(String username) {
+            msPresenter.editUsername(mStudent.getId(), mStudent.getCity_id(), username, mSession.getAccess_token(), new MSCallbackListener<Student>() {
+                @Override
+                public void onSuccess(Student student) {
+                    Toast.makeText(MySettingActivity.this, "用户名修改成功！", Toast.LENGTH_SHORT).show();
+                    refreshStudent();
+                }
+
+                @Override
+                public void onFailure(String errorEvent, String message) {
+
+                }
+            });
+            return true;
         }
     };
 
@@ -359,21 +392,6 @@ public class MySettingActivity extends MSBaseActivity {
         return super.onKeyDown(keyCode, event);
 
     }
-
-    private View.OnLongClickListener mLongClickListener = new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View v) {
-            switch (v.getId()) {
-                case R.id.cir_my_avatar:
-                    RegisterInfoPhotoDialog dialog = new RegisterInfoPhotoDialog(MySettingActivity.this);
-                    dialog.show();
-                    break;
-                default:
-                    break;
-            }
-            return true;
-        }
-    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -462,6 +480,7 @@ public class MySettingActivity extends MSBaseActivity {
         this.msPresenter.uploadAvatar(mStudent.getId(), mSession.getAccess_token(), mPhotoPath, new MSCallbackListener<Student>() {
             @Override
             public void onSuccess(Student data) {
+                Toast.makeText(MySettingActivity.this, "头像修改成功！", Toast.LENGTH_SHORT).show();
                 refreshStudent();
             }
 

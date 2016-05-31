@@ -110,6 +110,15 @@
                             android:textColor="@color/haha_white"
                             android:textSize="18sp" />
 
+                        <ImageView
+                            android:id="@+id/iv_edit_username"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@id/tv_stu_name"
+                            android:layout_marginLeft="16dp"
+                            android:layout_toRightOf="@id/tv_stu_name"
+                            android:src="@drawable/ic_edit" />
+
                         <TextView
                             android:id="@+id/tv_student_phase"
                             android:layout_width="wrap_content"
