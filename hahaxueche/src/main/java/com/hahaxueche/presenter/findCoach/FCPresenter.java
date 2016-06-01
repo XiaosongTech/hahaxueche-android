@@ -118,7 +118,7 @@ public interface FCPresenter {
      * @param access_token
      * @param listener
      */
-    public void createCharge(String coach_id, String access_token, FCCallbackListener<String> listener);
+    public void createCharge(String coach_id, String access_token, String method, FCCallbackListener<String> listener);
 
     /**
      * @param payment_stage

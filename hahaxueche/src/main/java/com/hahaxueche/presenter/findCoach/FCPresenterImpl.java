@@ -297,12 +297,16 @@ public class FCPresenterImpl implements FCPresenter {
     }
 
     @Override
-    public void createCharge(final String coach_id, final String access_token, final FCCallbackListener<String> listener) {
+    public void createCharge(final String coach_id, final String access_token, final String method, final FCCallbackListener<String> listener) {
+        if (TextUtils.isEmpty(method)) {
+            listener.onFailure(ErrorEvent.PARAM_NULL, "请选择支付方式");
+            return;
+        }
         new AsyncTask<Void, Void, String>() {
 
             @Override
             protected String doInBackground(Void... params) {
-                return coachApi.createCharge(coach_id, access_token);
+                return coachApi.createCharge(coach_id, access_token, method);
             }
 
             @Override

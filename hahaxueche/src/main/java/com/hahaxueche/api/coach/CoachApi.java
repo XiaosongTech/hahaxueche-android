@@ -126,7 +126,7 @@ public interface CoachApi {
      * @param access_token
      * @return
      */
-    public String createCharge(String coach_id, String access_token);
+    public String createCharge(String coach_id, String access_token, String method);
 
     /**
      * @param payment_stage

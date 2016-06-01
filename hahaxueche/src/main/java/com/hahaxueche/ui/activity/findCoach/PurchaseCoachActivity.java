@@ -1,5 +1,7 @@
 package com.hahaxueche.ui.activity.findCoach;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Constants;
@@ -24,6 +27,11 @@ import com.hahaxueche.model.city.City;
 import com.hahaxueche.model.city.FieldModel;
 import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.model.student.Payment;
+import com.hahaxueche.model.student.Student;
+import com.hahaxueche.model.user.Session;
+import com.hahaxueche.model.user.User;
+import com.hahaxueche.presenter.findCoach.FCCallbackListener;
+import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.adapter.findCoach.PaymentAdapter;
 import com.hahaxueche.ui.dialog.MapDialog;
 import com.hahaxueche.ui.util.DistanceUtil;
@@ -31,7 +39,9 @@ import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
+import com.pingplusplus.android.PaymentActivity;
 import com.squareup.picasso.Picasso;
+import com.umeng.analytics.MobclickAgent;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -56,6 +66,7 @@ public class PurchaseCoachActivity extends FCBaseActivity {
     private PaymentAdapter mPaymentAdapter;
     private TextView mTvSurePay;
     private ImageButton mIbtnBack;
+    private ProgressDialog pd;//进度框
 
     private Coach mCoach;
     private List<Payment> mPaymentList;
@@ -67,6 +78,8 @@ public class PurchaseCoachActivity extends FCBaseActivity {
     private Constants mConstants;
     private List<FieldModel> fieldsList;
     private List<City> cityList;
+    private Session mSession;
+    private Student mStudent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +120,8 @@ public class PurchaseCoachActivity extends FCBaseActivity {
             myLat = spUtil.getLocation().getLat();
             myLng = spUtil.getLocation().getLng();
         }
-
+        mSession = spUtil.getUser().getSession();
+        mStudent = spUtil.getUser().getStudent();
         //教练姓名
         mTvCoachName.setText(mCoach.getName());
         //教龄
@@ -227,8 +241,33 @@ public class PurchaseCoachActivity extends FCBaseActivity {
      * 支付
      */
     private void pay() {
-        setResult(RESULT_OK, null);
-        finish();
+        //调用获取charge
+        //method:0 是alipay 1 是分期乐
+        String method = "";
+        for (Payment payment : mPaymentList) {
+            if (payment.isSelect()) {
+                method = String.valueOf(mPaymentList.indexOf(payment));
+            }
+        }
+        if (pd != null) {
+            pd.dismiss();
+        }
+        pd = ProgressDialog.show(PurchaseCoachActivity.this, null, "跳转中，请稍后……");
+        fcPresenter.createCharge(mCoach.getId(), mSession.getAccess_token(), method, new FCCallbackListener<String>() {
+            @Override
+            public void onSuccess(String charge) {
+                pd.dismiss();
+                //调用ping++
+                Intent intent = new Intent(PurchaseCoachActivity.this, PaymentActivity.class);
+                intent.putExtra(PaymentActivity.EXTRA_CHARGE, charge);
+                startActivityForResult(intent, 1);
+            }
+
+            @Override
+            public void onFailure(String errorEvent, String message) {
+                pd.dismiss();
+            }
+        });
     }
 
     private void loadPaymentMethod() {
@@ -266,5 +305,91 @@ public class PurchaseCoachActivity extends FCBaseActivity {
         // listView.getDividerHeight()获取子项间分隔符占用的高度
         // params.height最后得到整个ListView完整显示需要的高度
         listView.setLayoutParams(params);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //支付页面返回处理
+        if (requestCode == 1) {
+            if (pd != null) {
+                pd.dismiss();
+            }
+            pd = ProgressDialog.show(PurchaseCoachActivity.this, null, "数据加载中，请稍后……");
+            if (resultCode == Activity.RESULT_OK) {
+                if (null == spUtil) {
+                    spUtil = new SharedPreferencesUtil(this);
+                }
+                String result = data.getExtras().getString("pay_result");
+                /* 处理返回值
+                 * "success" - 支付成功
+                 * "fail"    - 支付失败
+                 * "cancel"  - 取消支付
+                 * "invalid" - 支付插件未安装（一般是微信客户端未安装的情况）
+                 */
+                String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
+                String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
+                if (result.equals("success")) {
+                    //更新SharedPreferences中的student
+                    this.msPresenter.getStudentForever(mStudent.getId(), mSession.getAccess_token(), new MSCallbackListener<Student>() {
+                        @Override
+                        public void onSuccess(Student data) {
+                            mStudent = data;
+                            User user = spUtil.getUser();
+                            user.setStudent(mStudent);
+                            spUtil.setUser(user);
+                            if (!TextUtils.isEmpty(data.getCurrent_coach_id())) {
+                                fcPresenter.getCoach(data.getCurrent_coach_id(), new FCCallbackListener<Coach>() {
+                                    @Override
+                                    public void onSuccess(Coach coach) {
+                                        if (pd != null) {
+                                            pd.dismiss();
+                                        }
+                                        MobclickAgent.onEvent(context, "did_purchase_coach");
+                                        spUtil.setCurrentCoach(coach);
+                                        setResult(RESULT_OK, null);
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void onFailure(String errorEvent, String message) {
+                                        if (pd != null) {
+                                            pd.dismiss();
+                                        }
+                                    }
+                                });
+                            } else {
+                                if (pd != null) {
+                                    pd.dismiss();
+                                }
+                                MobclickAgent.onEvent(context, "did_purchase_coach");
+                                setResult(RESULT_OK, null);
+                                finish();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(String errorEvent, String message) {
+                            if (pd != null) {
+                                pd.dismiss();
+                            }
+                        }
+                    });
+                } else if (result.equals("cancel")) {
+                    if (pd != null) {
+                        pd.dismiss();
+                    }
+                    Toast.makeText(context, "取消支付", Toast.LENGTH_SHORT).show();
+                } else if (result.equals("invalid")) {
+                    if (pd != null) {
+                        pd.dismiss();
+                    }
+                    Toast.makeText(context, "支付插件未安装", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (pd != null) {
+                        pd.dismiss();
+                    }
+                    Toast.makeText(context, "支付失败", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 }

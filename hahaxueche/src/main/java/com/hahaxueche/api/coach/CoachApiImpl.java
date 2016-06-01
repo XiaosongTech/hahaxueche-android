@@ -347,9 +347,10 @@ public class CoachApiImpl implements CoachApi {
     }
 
     @Override
-    public String createCharge(String coach_id, String access_token) {
+    public String createCharge(String coach_id, String access_token, String method) {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("coach_id", coach_id);
+        paramMap.put("method", method);
         try {
             Response response = httpEngine.postHandle(paramMap, "charges", access_token);
             String body = response.body().string();
