@@ -41,6 +41,7 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
     private Button btnFcFilterSure;
     private Button btnFcFilterCancel;
     private Switch swGoldenCoachOly;
+    private Switch swVIPOnly;
     private CheckBox cbLicenseTypeC1;
     private CheckBox cbLicenseTypeC2;
     private LinearLayout llyFcDistanceTvs;//距离筛选文字
@@ -114,6 +115,7 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
      */
     private void initView(View view) {
         swGoldenCoachOly = (Switch) view.findViewById(R.id.sw_golden_coach_only);
+        swVIPOnly = (Switch) view.findViewById(R.id.sw_vip_only);
         cbLicenseTypeC1 = (CheckBox) view.findViewById(R.id.cb_license_type_c1);
         cbLicenseTypeC2 = (CheckBox) view.findViewById(R.id.cb_license_type_c2);
         cbsDistanceFilter = (ComboSeekBar) view.findViewById(R.id.cbs_distinct_filter);

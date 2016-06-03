@@ -103,184 +103,251 @@
                     android:textSize="14sp" />
             </RelativeLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_coachmsg_charge"
+                    android:drawablePadding="5dp"
+                    android:padding="20dp"
+                    android:text="@string/fCTakeCertPrice"
+                    android:textColor="@color/app_theme_color"
+                    android:textSize="14sp" />
+
+                <RelativeLayout
+                    android:id="@+id/rly_normal_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/fCViewGray" />
+
+                    <TextView
+                        android:id="@+id/tv_normal_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="16dp"
+                        android:text="￥2380"
+                        android:textColor="@color/app_theme_color"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_normal_price_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/tv_normal_price"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="4dp"
+                        android:layout_toRightOf="@id/tv_normal_price"
+                        android:background="@drawable/rectangle_back_orange_ssm"
+                        android:paddingLeft="1dp"
+                        android:paddingRight="1dp"
+                        android:text="超值"
+                        android:textColor="@color/haha_white"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_old_normal_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/tv_normal_price"
+                        android:layout_marginLeft="6dp"
+                        android:layout_toRightOf="@id/tv_normal_price_label"
+                        android:text="门市价：￥3000"
+                        android:textColor="@color/haha_gray_heavier"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tv_normal_price_remarks"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@id/tv_normal_price"
+                        android:layout_below="@id/tv_normal_price"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginTop="8dp"
+                        android:text="四人一车、性价比高"
+                        android:textColor="@color/haha_gray_heavy"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_normal_price_detail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="20dp"
+                        android:background="@drawable/rect_back_transparent_corner_orange_sm"
+                        android:padding="3dp"
+                        android:text="@string/priceDetail"
+                        android:textColor="@color/app_theme_color"
+                        android:textSize="14sp" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rly_vip_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/fCViewGray" />
+
+                    <TextView
+                        android:id="@+id/tv_vip_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="16dp"
+                        android:text="￥2380"
+                        android:textColor="@color/app_theme_color"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_vip_price_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/tv_vip_price"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="4dp"
+                        android:layout_toRightOf="@id/tv_vip_price"
+                        android:background="@drawable/rectangle_back_orange_ssm"
+                        android:paddingLeft="1dp"
+                        android:paddingRight="1dp"
+                        android:text="超值"
+                        android:textColor="@color/haha_white"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_old_vip_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/tv_vip_price"
+                        android:layout_marginLeft="6dp"
+                        android:layout_toRightOf="@id/tv_vip_price_label"
+                        android:text="门市价：￥3000"
+                        android:textColor="@color/haha_gray_heavier"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tv_vip_price_remarks"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@id/tv_vip_price"
+                        android:layout_below="@id/tv_vip_price"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginTop="8dp"
+                        android:text="一人一车、极速拿证"
+                        android:textColor="@color/haha_gray_heavy"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_vip_price_detail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="20dp"
+                        android:background="@drawable/rect_back_transparent_corner_orange_sm"
+                        android:padding="3dp"
+                        android:text="@string/priceDetail"
+                        android:textColor="@color/app_theme_color"
+                        android:textSize="14sp" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:background="@android:color/white">
+                android:background="@color/haha_white"
+                android:padding="20dp">
 
-                <LinearLayout
-                    android:id="@+id/lly_cd_line0"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:drawableLeft="@drawable/ic_coachmsg_classtype"
+                    android:drawablePadding="5dp"
+                    android:text="@string/fCClassType"
+                    android:textColor="@color/app_theme_color"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_license_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="C1手动挡"
+                    android:textColor="@color/fCTxtGray"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:background="@color/haha_white"
+                android:orientation="vertical">
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:orientation="horizontal"
-                    android:paddingBottom="14dp">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:id="@+id/lly_take_cert_cost"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/ic_coachmsg_charge" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="6dp"
-                                    android:text="@string/fCTakeCertPrice"
-                                    android:textColor="@color/app_theme_color"
-                                    android:textSize="16sp" />
-                            </LinearLayout>
-
-                            <TextView
-                                android:id="@+id/tv_take_cert_price"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="12dp"
-                                android:textColor="@color/fCTxtGray"
-                                android:textSize="16sp" />
-                        </LinearLayout>
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="12dp"
-                            android:src="@drawable/ic_coachmsg_more_arrow" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="0.5dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/fCViewGray" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/ic_coachmsg_classtype" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="6dp"
-                                    android:text="@string/fCClassType"
-                                    android:textColor="@color/app_theme_color"
-                                    android:textSize="16sp" />
-                            </LinearLayout>
-
-                            <TextView
-                                android:id="@+id/tv_license_type"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="12dp"
-                                android:text="C1手动挡"
-                                android:textColor="@color/fCTxtGray"
-                                android:textSize="16sp" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                </LinearLayout>
+                    android:drawableLeft="@drawable/ic_coachmsg_localtion"
+                    android:drawablePadding="5dp"
+                    android:padding="20dp"
+                    android:text="@string/fCTrainLocation"
+                    android:textColor="@color/app_theme_color"
+                    android:textSize="14sp" />
 
                 <View
-                    android:id="@+id/vw_cd_1"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:layout_below="@id/lly_cd_line0"
                     android:background="@color/fCViewGray" />
 
-                <LinearLayout
+                <RelativeLayout
+                    android:id="@+id/rly_location"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/vw_cd_1"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content">
 
-                    <LinearLayout
-                        android:id="@+id/lly_training_location"
-                        android:layout_width="0dp"
+                    <TextView
+                        android:id="@+id/tv_train_location"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingBottom="14dp"
-                        android:paddingTop="14dp">
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/ic_coachmsg_localtion" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="6dp"
-                                android:text="@string/fCTrainLocation"
-                                android:textColor="@color/app_theme_color"
-                                android:textSize="16sp" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/tv_train_location"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:textColor="@color/fCTxtGray"
-                            android:textSize="14sp" />
-                    </LinearLayout>
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="40dp"
+                        android:layout_marginTop="20dp"
+                        android:textColor="@color/fCTxtGray"
+                        android:textSize="14sp" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="18dp"
                         android:src="@drawable/ic_coachmsg_more_arrow" />
-                </LinearLayout>
+                </RelativeLayout>
 
-            </RelativeLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

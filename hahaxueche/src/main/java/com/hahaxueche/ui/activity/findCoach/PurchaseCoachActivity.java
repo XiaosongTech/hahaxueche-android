@@ -10,6 +10,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -18,12 +19,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.city.City;
+import com.hahaxueche.model.city.CostItem;
 import com.hahaxueche.model.city.FieldModel;
 import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.model.student.Payment;
@@ -33,6 +36,7 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.adapter.findCoach.PaymentAdapter;
+import com.hahaxueche.ui.dialog.FeeDetailDialog;
 import com.hahaxueche.ui.dialog.MapDialog;
 import com.hahaxueche.ui.util.DistanceUtil;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
@@ -55,7 +59,8 @@ public class PurchaseCoachActivity extends FCBaseActivity {
     private TextView mTvCoachTeachTime;
     private TextView mTvCoachPoints;
     private TextView mTvCoachActualPrice;
-    private TextView mTvCoachOldPrice;
+    private TextView mTvCoachVIPPrice;
+    private TextView mTvCoachVIPPriceLabel;
     private CircleImageView mCivCoachAvatar;
     private ImageView mIvIsGoldenCoach;
     private ScoreView mSvCoachScore;
@@ -67,6 +72,18 @@ public class PurchaseCoachActivity extends FCBaseActivity {
     private TextView mTvSurePay;
     private ImageButton mIbtnBack;
     private ProgressDialog pd;//进度框
+    //拿证价格
+    private RelativeLayout mRlyNormalPrice;
+    private ImageView mIvSelectNormal;
+    private TextView mTvNormalPrice;//通用价格
+    private TextView mTvOldNormalPrice;//原来的通用价格
+    private TextView mTvNormalPriceDetail;//通用价格明细
+    private RelativeLayout mRlyVIPPrice;
+    private ImageView mIvSelectVIP;
+    private TextView mTvVIPPrice;//VIP班价格
+    private TextView mTvOldVIPPrice;//原来的VIP价格
+    private TextView mTvVIPPriceDetail;//VIP班价格明细
+    private RelativeLayout mRlyMorePayment;//更多支付方式
 
     private Coach mCoach;
     private List<Payment> mPaymentList;
@@ -80,6 +97,8 @@ public class PurchaseCoachActivity extends FCBaseActivity {
     private List<City> cityList;
     private Session mSession;
     private Student mStudent;
+    private int mSelectClass = -1;
+    private List<CostItem> mCostItemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +114,8 @@ public class PurchaseCoachActivity extends FCBaseActivity {
         mTvCoachTeachTime = Util.instence(this).$(this, R.id.tv_coach_teach_time);
         mTvCoachPoints = Util.instence(this).$(this, R.id.tv_coach_points);
         mTvCoachActualPrice = Util.instence(this).$(this, R.id.tv_coach_actual_price);
-        mTvCoachOldPrice = Util.instence(this).$(this, R.id.tv_coach_old_price);
+        mTvCoachVIPPrice = Util.instence(this).$(this, R.id.tv_coach_vip_price);
+        mTvCoachVIPPriceLabel = Util.instence(this).$(this, R.id.tv_coach_vip_label);
         mCivCoachAvatar = Util.instence(this).$(this, R.id.cir_coach_avatar);
         mIvIsGoldenCoach = Util.instence(this).$(this, R.id.iv_is_golden_coach);
         mSvCoachScore = Util.instence(this).$(this, R.id.sv_coach_score);
@@ -105,6 +125,18 @@ public class PurchaseCoachActivity extends FCBaseActivity {
         mLvPayment = Util.instence(this).$(this, R.id.lv_payment);
         mTvSurePay = Util.instence(this).$(this, R.id.tv_sure_pay);
         mIbtnBack = Util.instence(this).$(this, R.id.ibtn_back);
+        //价格
+        mRlyNormalPrice = Util.instence(this).$(this, R.id.rly_normal_price);
+        mIvSelectNormal = Util.instence(this).$(this, R.id.iv_select_normal);
+        mTvNormalPrice = Util.instence(this).$(this, R.id.tv_normal_price);
+        mTvOldNormalPrice = Util.instence(this).$(this, R.id.tv_old_normal_price);
+        mTvNormalPriceDetail = Util.instence(this).$(this, R.id.tv_normal_price_detail);
+        mRlyVIPPrice = Util.instence(this).$(this, R.id.rly_vip_price);
+        mIvSelectVIP = Util.instence(this).$(this, R.id.iv_select_vip);
+        mTvVIPPrice = Util.instence(this).$(this, R.id.tv_vip_price);
+        mTvOldVIPPrice = Util.instence(this).$(this, R.id.tv_old_vip_price);
+        mTvVIPPriceDetail = Util.instence(this).$(this, R.id.tv_vip_price_detail);
+        mRlyMorePayment = Util.instence(this).$(this, R.id.rly_more_payment);
     }
 
     private void loadDatas() {
@@ -115,6 +147,7 @@ public class PurchaseCoachActivity extends FCBaseActivity {
         if (mConstants != null) {
             fieldsList = mConstants.getFields();
             cityList = mConstants.getCities();
+            mCostItemList = spUtil.getMyCity().getFixed_cost_itemizer();
         }
         if (spUtil.getLocation() != null) {
             myLat = spUtil.getLocation().getLat();
@@ -133,8 +166,25 @@ public class PurchaseCoachActivity extends FCBaseActivity {
         mTvCoachTeachTime.setText(dfInt.format(coachExperiences) + "年教龄");
         //价格
         mTvCoachActualPrice.setText(Util.getMoney(mCoach.getCoach_group().getTraining_cost()));
-        mTvCoachOldPrice.setText(Util.getMoney(mCoach.getCoach_group().getMarket_price()));
-        mTvCoachOldPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        mTvNormalPrice.setText(Util.getMoney(mCoach.getCoach_group().getTraining_cost()));
+        mTvOldNormalPrice.setText(Util.getMoney(mCoach.getCoach_group().getMarket_price()));
+        mTvOldNormalPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        if (TextUtils.isEmpty(mCoach.getCoach_group().getVip_price())) {
+            //没有vip的
+            mTvCoachVIPPrice.setVisibility(View.GONE);
+            mTvCoachVIPPriceLabel.setVisibility(View.GONE);
+            mRlyVIPPrice.setVisibility(View.GONE);
+            selectClass(0);
+        } else {
+            mTvCoachVIPPrice.setVisibility(View.VISIBLE);
+            mTvCoachVIPPriceLabel.setVisibility(View.VISIBLE);
+            mTvCoachVIPPrice.setText(Util.getMoney(mCoach.getCoach_group().getVip_price()));
+            mRlyVIPPrice.setVisibility(View.VISIBLE);
+            mTvVIPPrice.setText(Util.getMoney(mCoach.getCoach_group().getVip_price()));
+            mTvOldVIPPrice.setText(Util.getMoney(mCoach.getCoach_group().getVip_market_price()));
+            mTvOldVIPPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+            refreshPayButton();
+        }
         //头像
         getCoachAvatar(mCoach.getAvatar(), mCivCoachAvatar);
         //金牌教练
@@ -185,14 +235,17 @@ public class PurchaseCoachActivity extends FCBaseActivity {
         mPaymentAdapter = new PaymentAdapter(PurchaseCoachActivity.this, mPaymentList, R.layout.adapter_payment);
         mLvPayment.setAdapter(mPaymentAdapter);
         setListViewHeightBasedOnChildren(mLvPayment);
-        //确认支付按钮
-        mTvSurePay.setText("确认支付 " + Util.getMoney(mCoach.getCoach_group().getTraining_cost()));
     }
 
     private void initEvents() {
         mIbtnBack.setOnClickListener(mClickListener);
         mLvPayment.setOnItemClickListener(mItemClickListener);
         mTvSurePay.setOnClickListener(mClickListener);
+        mTvNormalPriceDetail.setOnClickListener(mClickListener);
+        mTvVIPPriceDetail.setOnClickListener(mClickListener);
+        mIvSelectNormal.setOnClickListener(mClickListener);
+        mIvSelectVIP.setOnClickListener(mClickListener);
+        mRlyMorePayment.setOnClickListener(mClickListener);
     }
 
     private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
@@ -224,6 +277,25 @@ public class PurchaseCoachActivity extends FCBaseActivity {
                     //确认支付
                     pay();
                     break;
+                case R.id.tv_normal_price_detail:
+                    //正常价格明细
+                    FeeDetailDialog feeDetailDialog = new FeeDetailDialog(PurchaseCoachActivity.this, mCostItemList, mCoach.getCoach_group().getTraining_cost(), "1", null);
+                    feeDetailDialog.show();
+                    break;
+                case R.id.tv_vip_price_detail:
+                    //VIP价格明细
+                    feeDetailDialog = new FeeDetailDialog(PurchaseCoachActivity.this, mCostItemList, mCoach.getCoach_group().getVip_price(), "1", null);
+                    feeDetailDialog.show();
+                    break;
+                case R.id.iv_select_normal:
+                    selectClass(0);
+                    break;
+                case R.id.iv_select_vip:
+                    selectClass(1);
+                    break;
+                case R.id.rly_more_payment:
+                    //更多支付方式
+                    loadMorePaymentMethod();
                 default:
                     break;
             }
@@ -274,12 +346,18 @@ public class PurchaseCoachActivity extends FCBaseActivity {
         mPaymentList = new ArrayList<>();
         Payment alipay = new Payment(R.drawable.ic_alipay_icon, "支付宝", "推荐有支付宝账号的用户使用", true, true);
         Payment fqlpay = new Payment(R.drawable.logo_fenqile, "分期乐", "推荐分期使用", false, true);
-        Payment wxpay = new Payment(R.drawable.ic_wechatpay_icon, "微信支付", "", false, false);
-        Payment cardPay = new Payment(R.drawable.ic_cardpay_icon, "银行卡支付", "推荐有支付宝账号的用户使用", false, false);
         mPaymentList.add(alipay);
         mPaymentList.add(fqlpay);
+    }
+
+    private void loadMorePaymentMethod() {
+        Payment wxpay = new Payment(R.drawable.ic_wechatpay_icon, "微信支付", "", false, false);
+        Payment cardPay = new Payment(R.drawable.ic_cardpay_icon, "银行卡支付", "推荐有支付宝账号的用户使用", false, false);
         mPaymentList.add(wxpay);
         mPaymentList.add(cardPay);
+        mRlyMorePayment.setVisibility(View.GONE);
+        mPaymentAdapter.notifyDataSetChanged();
+        setListViewHeightBasedOnChildren(mLvPayment);
     }
 
     public void setListViewHeightBasedOnChildren(ListView listView) {
@@ -390,6 +468,40 @@ public class PurchaseCoachActivity extends FCBaseActivity {
                     Toast.makeText(context, "支付失败", Toast.LENGTH_SHORT).show();
                 }
             }
+        }
+    }
+
+    /**
+     * 选择班级
+     *
+     * @param selectClass
+     */
+    private void selectClass(int selectClass) {
+        if (mSelectClass == selectClass) {
+            return;
+        } else {
+            mSelectClass = selectClass;
+        }
+        mIvSelectVIP.setImageDrawable(ContextCompat.getDrawable(PurchaseCoachActivity.this, R.drawable.ic_cashout_unchack_btn));
+        mIvSelectNormal.setImageDrawable(ContextCompat.getDrawable(PurchaseCoachActivity.this, R.drawable.ic_cashout_unchack_btn));
+        if (mSelectClass == 0) {
+            mIvSelectNormal.setImageDrawable(ContextCompat.getDrawable(PurchaseCoachActivity.this, R.drawable.ic_cashout_chack_btn));
+        } else if (mSelectClass == 1) {
+            mIvSelectVIP.setImageDrawable(ContextCompat.getDrawable(PurchaseCoachActivity.this, R.drawable.ic_cashout_chack_btn));
+        }
+        refreshPayButton();
+    }
+
+    /**
+     * 付款按钮控制
+     */
+    private void refreshPayButton() {
+        if (mSelectClass > -1) {
+            mTvSurePay.setAlpha(1);
+            mTvSurePay.setClickable(true);
+        } else {
+            mTvSurePay.setAlpha(0.6f);
+            mTvSurePay.setClickable(false);
         }
     }
 }

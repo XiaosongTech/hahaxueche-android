@@ -93,7 +93,8 @@ public class CoachItemAdapter extends BaseAdapter {
             holder.tvCoachTeachTime = (TextView) view.findViewById(R.id.tv_coach_teach_time);
             holder.tvCoachPoints = (TextView) view.findViewById(R.id.tv_coach_points);
             holder.tvCoachActualPrice = (TextView) view.findViewById(R.id.tv_coach_actual_price);
-            holder.tvCoachOldPrice = (TextView) view.findViewById(R.id.tv_coach_old_price);
+            holder.tvVIPPrice = (TextView) view.findViewById(R.id.tv_vip_price);
+            holder.tvVIPLabel = (TextView) view.findViewById(R.id.tv_vip_label);
             holder.civCoachAvatar = (CircleImageView) view.findViewById(R.id.cir_coach_avatar);
             holder.ivIsGoldenCoach = (ImageView) view.findViewById(R.id.iv_is_golden_coach);
             holder.svCoachScore = (ScoreView) view.findViewById(R.id.sv_coach_score);
@@ -114,8 +115,15 @@ public class CoachItemAdapter extends BaseAdapter {
         holder.tvCoachTeachTime.setText(dfInt.format(coachExperiences) + "年教龄");
         holder.tvCoachPoints.setText(coach.getAverage_rating() + " (" + coach.getReview_count() + ")");
         holder.tvCoachActualPrice.setText(Util.getMoney(coach.getCoach_group().getTraining_cost()));
-        holder.tvCoachOldPrice.setText(Util.getMoney(coach.getCoach_group().getMarket_price()));
-        holder.tvCoachOldPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        //vip价格
+        if (TextUtils.isEmpty(coach.getCoach_group().getVip_price())) {
+            holder.tvVIPPrice.setVisibility(View.GONE);
+            holder.tvVIPLabel.setVisibility(View.GONE);
+        } else {
+            holder.tvVIPPrice.setVisibility(View.VISIBLE);
+            holder.tvVIPLabel.setVisibility(View.VISIBLE);
+            holder.tvVIPPrice.setText(Util.getMoney(coach.getCoach_group().getVip_price()));
+        }
         getCoachAvatar(coach.getAvatar(), holder.civCoachAvatar);
         if (coach.getSkill_level().equals("1")) {
             holder.ivIsGoldenCoach.setVisibility(View.VISIBLE);
@@ -171,7 +179,8 @@ public class CoachItemAdapter extends BaseAdapter {
         TextView tvCoachTeachTime;
         TextView tvCoachPoints;
         TextView tvCoachActualPrice;
-        TextView tvCoachOldPrice;
+        TextView tvVIPPrice;
+        TextView tvVIPLabel;
         CircleImageView civCoachAvatar;
         ImageView ivIsGoldenCoach;
         ScoreView svCoachScore;

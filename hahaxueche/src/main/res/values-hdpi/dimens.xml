@@ -4,4 +4,7 @@
     <dimen name="padding10dp">6dp</dimen>
     <dimen name="search_edittext_width">240dp</dimen>
     <dimen name="search_edittext_height">24dp</dimen>
+    <dimen name="marginleft20dp">10dp</dimen>
+    <dimen name="marginleft10dp">6dp</dimen>
+    <dimen name="marginleft5dp">2dp</dimen>
 </resources>

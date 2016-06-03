@@ -79,4 +79,8 @@
     <string name="searchCoachName">搜索教练姓名</string>
     <string name="historyRecord">历史记录</string>
     <string name="purchaseCoach">购买教练</string>
+    <string name="onlyShowVIPCoach">只显示VIP教练</string>
+    <string name="priceDetail">价格明细</string>
+    <string name="selectClass">选择班级</string>
+    <string name="morePaymentMethod">更多支付方式</string>
 </resources>

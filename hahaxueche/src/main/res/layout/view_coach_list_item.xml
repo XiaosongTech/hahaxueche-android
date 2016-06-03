@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
+    android:gravity="center_vertical"
     android:orientation="horizontal">
 
     <com.hahaxueche.ui.widget.circleImageView.CircleImageView
@@ -17,7 +18,6 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -111,11 +111,10 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
         android:layout_weight="1"
         android:gravity="right|center_vertical"
         android:orientation="vertical">
@@ -124,15 +123,33 @@
             android:id="@+id/tv_coach_actual_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:textColor="@color/app_theme_color"
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/tv_coach_old_price"
+            android:id="@+id/tv_vip_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/tv_coach_actual_price"
             android:layout_marginTop="10dp"
-            android:textColor="@color/fCTxtGrayFade"
-            android:textSize="14sp" />
-    </LinearLayout>
+            android:textColor="@color/app_theme_color"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_vip_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_vip_price"
+            android:layout_marginRight="4dp"
+            android:layout_toLeftOf="@id/tv_vip_price"
+            android:background="@drawable/rectangle_back_orange_ssm"
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp"
+            android:text="VIP"
+            android:textColor="@color/haha_white"
+            android:visibility="gone" />
+    </RelativeLayout>
 </LinearLayout>
