@@ -385,32 +385,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
 
     private void showGroupBuy() {
         if (null == mGroupBuyDialog) {
-            String stuName = "";
-            String stuPhone = "";
-            if (mUser.getStudent() != null && !TextUtils.isEmpty(mUser.getId())) {
-                stuName = mUser.getStudent().getName();
-                stuPhone = mUser.getStudent().getCell_phone();
-            }
-            mGroupBuyDialog = new GroupBuyDialog(IndexActivity.this, stuName, stuPhone, new GroupBuyDialog.OnConfirmListener() {
-                @Override
-                public void onGroupBuy(String name, String cellPhone) {
-                    msPresenter.createGroupBuy(name, cellPhone, new MSCallbackListener<GroupBuyResponse>() {
-                        @Override
-                        public void onSuccess(GroupBuyResponse data) {
-                            Toast.makeText(IndexActivity.this, "报名成功！", Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onFailure(String errorEvent, String message) {
-                            if (errorEvent.equals("40022")) {
-                                Toast.makeText(IndexActivity.this, "请勿重复报名！", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(IndexActivity.this, "报名失败！", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                }
-            });
+            mGroupBuyDialog = new GroupBuyDialog(IndexActivity.this);
         }
         mGroupBuyDialog.show();
     }
