@@ -519,7 +519,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                         name = mStudent.getName();
                         phoneNumber = mStudent.getCell_phone();
                     }
-                    appointmentDialog = new AppointmentDialog(CoachDetailActivity.this, name, phoneNumber, mCoach.getId());
+                    appointmentDialog = new AppointmentDialog(CoachDetailActivity.this, name, phoneNumber, mCoach.getId(), false);
                     appointmentDialog.show();
                     break;
                 //加载评论列表页面

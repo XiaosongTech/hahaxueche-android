@@ -28,87 +28,24 @@ public class GroupBuyDialog {
     private Dialog mDialog;
     private View contentView;
     private ImageView mIvClose;
-    private TextView mTvGroupBuy;
-    private EditText mEtName;
-    private EditText mEtPhoneNumber;
-    private String mName;
-    private String mPhoneNumber;
-    private OnConfirmListener mOnConfirmListener;
 
-    public interface OnConfirmListener {
-        void onGroupBuy(String name, String cellPhone);
-    }
-
-    public GroupBuyDialog(Context context, String name, String phoneNumber, OnConfirmListener onConfirmListener) {
+    public GroupBuyDialog(Context context) {
         mDialog = new Dialog(context, R.style.my_dialog);
         this.mContext = context;
-        this.mOnConfirmListener = onConfirmListener;
-        if (!TextUtils.isEmpty(name)) {
-            mName = name;
-        }
-        if (!TextUtils.isEmpty(phoneNumber)) {
-            mPhoneNumber = phoneNumber;
-        }
         initView();
         initEvent();
-        loadDatas();
         setDialogParams();
     }
 
     private void initView() {
         contentView = View.inflate(mContext, R.layout.dialog_group_buy_2380, null);
         mIvClose = (ImageView) contentView.findViewById(R.id.iv_close);
-        mTvGroupBuy = (TextView) contentView.findViewById(R.id.tv_group_buy);
-        mEtName = (EditText) contentView.findViewById(R.id.et_real_name);
-        mEtPhoneNumber = (EditText) contentView.findViewById(R.id.et_contact_phone);
-        mEtName.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                mEtName.setBackgroundResource(R.drawable.edittext_corner_orange);
-            }
-        });
-        mEtPhoneNumber.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                mEtPhoneNumber.setBackgroundResource(R.drawable.edittext_corner_orange);
-            }
-        });
         mDialog.setContentView(contentView);
         mDialog.dismiss();
     }
 
     private void initEvent() {
         mIvClose.setOnClickListener(mClickListener);
-        mTvGroupBuy.setOnClickListener(mClickListener);
-    }
-
-    private void loadDatas() {
-        if (!TextUtils.isEmpty(mName)) {
-            mEtName.setText(mName);
-        }
-        if (!TextUtils.isEmpty(mPhoneNumber)) {
-            mEtPhoneNumber.setText(mPhoneNumber);
-        }
     }
 
     public void show() {
@@ -137,31 +74,6 @@ public class GroupBuyDialog {
             switch (v.getId()) {
                 case R.id.iv_close:
                     mDialog.dismiss();
-                    break;
-                case R.id.tv_group_buy:
-                    mName = mEtName.getText().toString();
-                    mPhoneNumber = mEtPhoneNumber.getText().toString();
-                    if (TextUtils.isEmpty(mName)) {
-                        Toast.makeText(mContext, "您的姓名不能为空！", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else if (TextUtils.isEmpty(mPhoneNumber)) {
-                        Toast.makeText(mContext, "您的手机号不能为空！", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else {
-                        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-                        try {
-                            Phonenumber.PhoneNumber chNumberProto = phoneUtil.parse(mPhoneNumber, "CN");
-                            if (!phoneUtil.isValidNumber(chNumberProto)) {
-                                Toast.makeText(mContext, "您的手机号码格式有误！", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                        } catch (NumberParseException e) {
-                            Toast.makeText(mContext, "您的手机号码格式有误！", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                    }
-                    mDialog.dismiss();
-                    mOnConfirmListener.onGroupBuy(mName, mPhoneNumber);
                     break;
                 default:
                     break;
