@@ -34,7 +34,7 @@ public interface CoachApi {
      * @param sort_by            排序依据
      */
     public CoachListResponse getCoachList(String page, String per_page, String golden_coach_only, String license_type, String price,
-                                          String city_id, ArrayList<String> training_field_ids, String distance, ArrayList<String> user_location, String sort_by);
+                                          String city_id, ArrayList<String> training_field_ids, String distance, ArrayList<String> user_location, String sort_by, String vip_only);
 
     /**
      * 获取教练列表，直接根据反馈的links_next或者links_previous获取
@@ -126,7 +126,7 @@ public interface CoachApi {
      * @param access_token
      * @return
      */
-    public String createCharge(String coach_id, String access_token, String method);
+    public String createCharge(String coach_id, String access_token, String method, String productType);
 
     /**
      * @param payment_stage

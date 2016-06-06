@@ -54,9 +54,10 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
     private String licenseType;//C1 还是 C2 后者都行
     private String price;//薪水
     private String distance;//距离
+    private String vip_only;
 
     public interface OnBtnClickListener {
-        public void onFliterCoach(String goldenCoachOnly, String licenseType, String price, String distance);
+        public void onFliterCoach(String goldenCoachOnly, String licenseType, String price, String distance, String vipOnly);
     }
 
 
@@ -81,7 +82,7 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
         dialogWindow.setAttributes(lp);
     }
 
-    public FcFilterDialog(Context context, String _goldenCoachOnly, String _licenseType, String _price, String _distance,
+    public FcFilterDialog(Context context, String _goldenCoachOnly, String _licenseType, String _price, String _distance, String _vip_only,
                           OnBtnClickListener listener) {
         super(context);
         mContext = context;
@@ -96,6 +97,7 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
         licenseType = _licenseType;
         price = _price;
         distance = _distance;
+        vip_only = _vip_only;
         initFilter();
         Window dialogWindow = this.getWindow();
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
@@ -277,6 +279,9 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
         if (!TextUtils.isEmpty(goldenCoachOnly)) {
             swGoldenCoachOly.setChecked(true);
         }
+        if (!TextUtils.isEmpty(vip_only) && vip_only.equals("1")) {
+            swVIPOnly.setChecked(true);
+        }
         System.out.println("debug licenseType= " + licenseType);
         if (!TextUtils.isEmpty(licenseType)) {
             if (licenseType.equals("1")) {
@@ -313,6 +318,11 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
                     } else {
                         goldenCoachOnly = "";
                     }
+                    if (swVIPOnly.isChecked()) {
+                        vip_only = "1";
+                    } else {
+                        vip_only = "0";
+                    }
                     //license_type 1 = C1, 2 = C2, 3 = c1+c2
                     if (cbLicenseTypeC1.isChecked() && cbLicenseTypeC2.isChecked()) {
                         licenseType = "";
@@ -321,7 +331,7 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
                     } else if (cbLicenseTypeC2.isChecked()) {
                         licenseType = "2";
                     }
-                    mListener.onFliterCoach(goldenCoachOnly, licenseType, price, distance);
+                    mListener.onFliterCoach(goldenCoachOnly, licenseType, price, distance,vip_only);
                 }
                 this.dismiss();
                 break;

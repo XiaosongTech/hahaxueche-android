@@ -60,6 +60,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
     private String page;
     private String per_page = "10";
     private String golden_coach_only;
+    private String vip_only = "0";
     private String license_type;
     private String price;
     private String city_id;
@@ -156,15 +157,16 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                 //筛选
                 case R.id.lly_fc_filter:
                     if (fcFilterDialog == null) {
-                        fcFilterDialog = new FcFilterDialog(FindCoachActivity.this, golden_coach_only, license_type, price, distance,
+                        fcFilterDialog = new FcFilterDialog(FindCoachActivity.this, golden_coach_only, license_type, price, distance, vip_only,
                                 new FcFilterDialog.OnBtnClickListener() {
 
                                     @Override
-                                    public void onFliterCoach(String goldenCoachOnly, String licenseType, String _price, String _distance) {
+                                    public void onFliterCoach(String goldenCoachOnly, String licenseType, String _price, String _distance, String _vipOnly) {
                                         golden_coach_only = goldenCoachOnly;
                                         license_type = licenseType;
                                         price = _price;
                                         distance = _distance;
+                                        vip_only = _vipOnly;
                                         xlvCoachList.autoRefresh();
                                     }
                                 });
@@ -273,7 +275,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
             user_location.add(location.getLng());
         }
         this.fcPresenter.getCoachList(page, per_page, golden_coach_only, license_type, price, city_id, training_field_ids, distance,
-                user_location, sort_by, new FCCallbackListener<CoachListResponse>() {
+                user_location, sort_by,vip_only, new FCCallbackListener<CoachListResponse>() {
                     @Override
                     public void onSuccess(CoachListResponse data) {
                         coachList = data.getData();

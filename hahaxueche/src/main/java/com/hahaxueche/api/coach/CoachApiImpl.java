@@ -37,7 +37,7 @@ public class CoachApiImpl implements CoachApi {
 
     @Override
     public CoachListResponse getCoachList(String page, String per_page, String golden_coach_only, String license_type, String price,
-                                          String city_id, ArrayList<String> training_field_ids, String distance, ArrayList<String> user_location, String sort_by) {
+                                          String city_id, ArrayList<String> training_field_ids, String distance, ArrayList<String> user_location, String sort_by, String vip_only) {
         Type type = new TypeToken<CoachListResponse>() {
         }.getType();
         Type typeBase = new TypeToken<BaseApiResponse>() {
@@ -78,6 +78,9 @@ public class CoachApiImpl implements CoachApi {
         }
         if (!TextUtils.isEmpty(sort_by)) {
             url += url.indexOf("?") > 0 ? ("&sort_by=" + sort_by) : ("?sort_by=" + sort_by);
+        }
+        if (!TextUtils.isEmpty(vip_only)) {
+            url += url.indexOf("?") > 0 ? ("&vip_only=" + vip_only) : ("?vip_only=" + vip_only);
         }
         try {
             Response response = httpEngine.getHandle(url, "");
@@ -347,10 +350,11 @@ public class CoachApiImpl implements CoachApi {
     }
 
     @Override
-    public String createCharge(String coach_id, String access_token, String method) {
+    public String createCharge(String coach_id, String access_token, String method, String productType) {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("coach_id", coach_id);
         paramMap.put("method", method);
+        paramMap.put("product_type", productType);
         try {
             Response response = httpEngine.postHandle(paramMap, "charges", access_token);
             String body = response.body().string();
@@ -360,7 +364,7 @@ public class CoachApiImpl implements CoachApi {
             } else {
                 return null;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }

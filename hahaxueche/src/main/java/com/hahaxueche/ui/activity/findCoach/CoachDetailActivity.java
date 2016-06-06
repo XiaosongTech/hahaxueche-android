@@ -317,7 +317,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         mTvNormalPrice.setText(Util.getMoney(mCoach.getCoach_group().getTraining_cost()));
         mTvOldNormalPrice.setText("门市价：" + Util.getMoney(mCoach.getCoach_group().getMarket_price()));
         mTvOldNormalPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-        if (TextUtils.isEmpty(mCoach.getCoach_group().getVip_price())) {
+        if (mCoach.getVip()==0) {
             mRlyVIPPrice.setVisibility(View.GONE);
         } else {
             mRlyVIPPrice.setVisibility(View.VISIBLE);
@@ -483,13 +483,11 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                     break;
                 //拿证价格
                 case R.id.tv_normal_price_detail:
-                    feeDetailDialog = new FeeDetailDialog(CoachDetailActivity.this, mCostItemList, mCoach.getCoach_group().getTraining_cost(), "1",
-                            new FeeDetailDialog.OnBtnClickListener() {
-                                @Override
-                                public void onPay() {
-                                    feeDetailDialog.dismiss();
-                                }
-                            });
+                    feeDetailDialog = new FeeDetailDialog(CoachDetailActivity.this, mCostItemList, mCoach.getCoach_group().getTraining_cost(), "1", null);
+                    feeDetailDialog.show();
+                    break;
+                case R.id.tv_vip_price_detail:
+                    feeDetailDialog = new FeeDetailDialog(CoachDetailActivity.this, mCostItemList, mCoach.getCoach_group().getVip_price(), "1", null);
                     feeDetailDialog.show();
                     break;
                 //确认付款

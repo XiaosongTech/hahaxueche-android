@@ -37,14 +37,14 @@ public class FCPresenterImpl implements FCPresenter {
 
     @Override
     public void getCoachList(final String page, final String per_page, final String golden_coach_only, final String license_type, final String price,
-                             final String city_id, final ArrayList<String> training_field_ids, final String distance, final ArrayList<String> user_location, final String sort_by,
+                             final String city_id, final ArrayList<String> training_field_ids, final String distance, final ArrayList<String> user_location, final String sort_by, final String vip_only,
                              final FCCallbackListener<CoachListResponse> listener) {
         new AsyncTask<Void, Void, CoachListResponse>() {
 
             @Override
             protected CoachListResponse doInBackground(Void... params) {
                 return coachApi.getCoachList(page, per_page, golden_coach_only, license_type, price, city_id, training_field_ids,
-                        distance, user_location, sort_by);
+                        distance, user_location, sort_by, vip_only);
             }
 
             @Override
@@ -297,7 +297,11 @@ public class FCPresenterImpl implements FCPresenter {
     }
 
     @Override
-    public void createCharge(final String coach_id, final String access_token, final String method, final FCCallbackListener<String> listener) {
+    public void createCharge(final String coach_id, final String access_token, final String method, final String productType, final FCCallbackListener<String> listener) {
+        if (TextUtils.isEmpty(productType)) {
+            listener.onFailure(ErrorEvent.PARAM_NULL, "请选择班级");
+            return;
+        }
         if (TextUtils.isEmpty(method)) {
             listener.onFailure(ErrorEvent.PARAM_NULL, "请选择支付方式");
             return;
@@ -306,7 +310,7 @@ public class FCPresenterImpl implements FCPresenter {
 
             @Override
             protected String doInBackground(Void... params) {
-                return coachApi.createCharge(coach_id, access_token, method);
+                return coachApi.createCharge(coach_id, access_token, method, productType);
             }
 
             @Override

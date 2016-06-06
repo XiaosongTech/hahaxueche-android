@@ -116,7 +116,7 @@ public class CoachItemAdapter extends BaseAdapter {
         holder.tvCoachPoints.setText(coach.getAverage_rating() + " (" + coach.getReview_count() + ")");
         holder.tvCoachActualPrice.setText(Util.getMoney(coach.getCoach_group().getTraining_cost()));
         //vip价格
-        if (TextUtils.isEmpty(coach.getCoach_group().getVip_price())) {
+        if (coach.getVip() == 0) {
             holder.tvVIPPrice.setVisibility(View.GONE);
             holder.tvVIPLabel.setVisibility(View.GONE);
         } else {

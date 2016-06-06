@@ -97,7 +97,7 @@ public class PurchaseCoachActivity extends FCBaseActivity {
     private List<City> cityList;
     private Session mSession;
     private Student mStudent;
-    private int mSelectClass = -1;
+    private String mProductType = "";
     private List<CostItem> mCostItemList;
 
     @Override
@@ -169,7 +169,7 @@ public class PurchaseCoachActivity extends FCBaseActivity {
         mTvNormalPrice.setText(Util.getMoney(mCoach.getCoach_group().getTraining_cost()));
         mTvOldNormalPrice.setText(Util.getMoney(mCoach.getCoach_group().getMarket_price()));
         mTvOldNormalPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-        if (TextUtils.isEmpty(mCoach.getCoach_group().getVip_price())) {
+        if (mCoach.getVip() == 0) {
             //没有vip的
             mTvCoachVIPPrice.setVisibility(View.GONE);
             mTvCoachVIPPriceLabel.setVisibility(View.GONE);
@@ -325,21 +325,26 @@ public class PurchaseCoachActivity extends FCBaseActivity {
             pd.dismiss();
         }
         pd = ProgressDialog.show(PurchaseCoachActivity.this, null, "跳转中，请稍后……");
-        fcPresenter.createCharge(mCoach.getId(), mSession.getAccess_token(), method, new FCCallbackListener<String>() {
-            @Override
-            public void onSuccess(String charge) {
-                pd.dismiss();
-                //调用ping++
-                Intent intent = new Intent(PurchaseCoachActivity.this, PaymentActivity.class);
-                intent.putExtra(PaymentActivity.EXTRA_CHARGE, charge);
-                startActivityForResult(intent, 1);
-            }
+        fcPresenter.createCharge(mCoach.getId(), mSession.getAccess_token(), method, mProductType,
+                new FCCallbackListener<String>() {
+                    @Override
+                    public void onSuccess(String charge) {
+                        pd.dismiss();
+                        //调用ping++
+                        try {
+                            Intent intent = new Intent(PurchaseCoachActivity.this, PaymentActivity.class);
+                            intent.putExtra(PaymentActivity.EXTRA_CHARGE, charge);
+                            startActivityForResult(intent, 1);
+                        }catch (Exception e){
+                        }
 
-            @Override
-            public void onFailure(String errorEvent, String message) {
-                pd.dismiss();
-            }
-        });
+                    }
+
+                    @Override
+                    public void onFailure(String errorEvent, String message) {
+                        pd.dismiss();
+                    }
+                });
     }
 
     private void loadPaymentMethod() {
@@ -477,16 +482,16 @@ public class PurchaseCoachActivity extends FCBaseActivity {
      * @param selectClass
      */
     private void selectClass(int selectClass) {
-        if (mSelectClass == selectClass) {
+        if (mProductType.equals(String.valueOf(selectClass))) {
             return;
         } else {
-            mSelectClass = selectClass;
+            mProductType = String.valueOf(selectClass);
         }
         mIvSelectVIP.setImageDrawable(ContextCompat.getDrawable(PurchaseCoachActivity.this, R.drawable.ic_cashout_unchack_btn));
         mIvSelectNormal.setImageDrawable(ContextCompat.getDrawable(PurchaseCoachActivity.this, R.drawable.ic_cashout_unchack_btn));
-        if (mSelectClass == 0) {
+        if (mProductType.equals("0")) {
             mIvSelectNormal.setImageDrawable(ContextCompat.getDrawable(PurchaseCoachActivity.this, R.drawable.ic_cashout_chack_btn));
-        } else if (mSelectClass == 1) {
+        } else if (mProductType.equals("1")) {
             mIvSelectVIP.setImageDrawable(ContextCompat.getDrawable(PurchaseCoachActivity.this, R.drawable.ic_cashout_chack_btn));
         }
         refreshPayButton();
@@ -496,7 +501,7 @@ public class PurchaseCoachActivity extends FCBaseActivity {
      * 付款按钮控制
      */
     private void refreshPayButton() {
-        if (mSelectClass > -1) {
+        if (!TextUtils.isEmpty(mProductType)) {
             mTvSurePay.setAlpha(1);
             mTvSurePay.setClickable(true);
         } else {
