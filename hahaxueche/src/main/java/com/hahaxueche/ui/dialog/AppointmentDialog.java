@@ -37,6 +37,7 @@ public class AppointmentDialog extends Dialog {
     private EditText etContactPhone;
     private EditText etFirstTime;
     private EditText etSecondTime;
+    private TextView mTvAppointmentTime;
     private String mCoachId;
     private TextView tvTrail;
     private TextView tvCancel;
@@ -44,11 +45,13 @@ public class AppointmentDialog extends Dialog {
     private ProgressDialog pd;//进度框
     private CustomWheelDialog firstTimeDialog;
     private CustomWheelDialog secondTimeDialog;
+    private boolean mIsFreeTry;//是否免费试学
 
-    public AppointmentDialog(Context context, String name, String phoneNumber, String coachId) {
+    public AppointmentDialog(Context context, String name, String phoneNumber, String coachId, boolean isFreeTry) {
         super(context);
         mContext = context;
         mCoachId = coachId;
+        mIsFreeTry = isFreeTry;
         fcPresenter = ((MyApplication) mContext.getApplicationContext()).getFCPresenter();
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
@@ -56,9 +59,40 @@ public class AppointmentDialog extends Dialog {
         setContentView(view);
         etFirstTime = (EditText) view.findViewById(R.id.tv_first_time);
         etSecondTime = (EditText) view.findViewById(R.id.tv_second_time);
-        etFirstTime.setOnTouchListener(new TimeChooseListener());
-        etSecondTime.setOnTouchListener(new TimeChooseListener());
+        mTvAppointmentTime = (TextView) view.findViewById(R.id.tv_appointment_time);
         etRealName = (EditText) view.findViewById(R.id.et_real_name);
+        etContactPhone = (EditText) view.findViewById(R.id.et_contact_phone);
+        tvTrail = (TextView) view.findViewById(R.id.tv_trail);
+        tvCancel = (TextView) view.findViewById(R.id.tv_cancel);
+        if (mIsFreeTry) {
+            mTvAppointmentTime.setVisibility(View.GONE);
+            etFirstTime.setVisibility(View.GONE);
+            etSecondTime.setVisibility(View.GONE);
+        }
+        initEvents();
+        if (!TextUtils.isEmpty(name)) {
+            etRealName.setText(name);
+        }
+
+        if (!TextUtils.isEmpty(phoneNumber)) {
+            etContactPhone.setText(phoneNumber);
+        }
+
+        Window dialogWindow = this.getWindow();
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        dialogWindow.setGravity(Gravity.LEFT | Gravity.TOP);
+        lp.x = 100; // 新位置X坐标
+        lp.y = 150; // 新位置Y坐标
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        dialogWindow.setAttributes(lp);
+    }
+
+    private void initEvents() {
+        if (!mIsFreeTry) {
+            etFirstTime.setOnTouchListener(new TimeChooseListener());
+            etSecondTime.setOnTouchListener(new TimeChooseListener());
+        }
         etRealName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -75,10 +109,6 @@ public class AppointmentDialog extends Dialog {
                 etRealName.setBackgroundResource(R.drawable.edittext_corner_orange);
             }
         });
-        if (!TextUtils.isEmpty(name)) {
-            etRealName.setText(name);
-        }
-        etContactPhone = (EditText) view.findViewById(R.id.et_contact_phone);
         etContactPhone.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -95,21 +125,8 @@ public class AppointmentDialog extends Dialog {
                 etContactPhone.setBackgroundResource(R.drawable.edittext_corner_orange);
             }
         });
-        if (!TextUtils.isEmpty(phoneNumber)) {
-            etContactPhone.setText(phoneNumber);
-        }
-        tvTrail = (TextView) view.findViewById(R.id.tv_trail);
         tvTrail.setOnClickListener(mClickListener);
-        tvCancel = (TextView) view.findViewById(R.id.tv_cancel);
         tvCancel.setOnClickListener(mClickListener);
-        Window dialogWindow = this.getWindow();
-        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-        dialogWindow.setGravity(Gravity.LEFT | Gravity.TOP);
-        lp.x = 100; // 新位置X坐标
-        lp.y = 150; // 新位置Y坐标
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        dialogWindow.setAttributes(lp);
     }
 
     private final class TimeChooseListener implements View.OnTouchListener {

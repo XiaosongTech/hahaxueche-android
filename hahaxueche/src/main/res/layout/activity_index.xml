@@ -152,14 +152,14 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_onekey_find_coach"
+            android:id="@+id/tv_free_try"
             android:layout_width="match_parent"
             android:layout_height="66dp"
             android:layout_marginLeft="@dimen/margin12dp"
             android:layout_marginRight="@dimen/margin12dp"
             android:background="@color/app_theme_color"
             android:gravity="center"
-            android:text="@string/onkeyFindCoach"
+            android:text="免费试学"
             android:textColor="@android:color/white"
             android:textSize="28sp" />
     </LinearLayout>

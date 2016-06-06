@@ -40,6 +40,7 @@ import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.FindCoachActivity;
 import com.hahaxueche.ui.activity.mySetting.MySettingActivity;
 import com.hahaxueche.ui.activity.mySetting.ReferFriendsActivity;
+import com.hahaxueche.ui.dialog.AppointmentDialog;
 import com.hahaxueche.ui.dialog.BaseAlertDialog;
 import com.hahaxueche.ui.dialog.CityChoseDialog;
 import com.hahaxueche.ui.dialog.GroupBuyDialog;
@@ -74,12 +75,13 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     public AMapLocationClientOption mLocationOption = null;
     private double mLat;
     private double mLng;
-    private TextView tvOneKeyFindCoach;
+    private TextView mTvFreeTry;
     private ProgressDialog pd;//进度框
     private SharedPreferencesUtil spUtil;
     private Constants mConstants;
     private User mUser;
     private GroupBuyDialog mGroupBuyDialog;
+    private AppointmentDialog appointmentDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -159,7 +161,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         llyTabMySetting = Util.instence(this).$(this, R.id.lly_tab_my_setting);
         llyCoachMore = Util.instence(this).$(this, R.id.lly_coach_more);
         llyXiaohaMore = Util.instence(this).$(this, R.id.lly_xiaoha_more);
-        tvOneKeyFindCoach = Util.instence(this).$(this, R.id.tv_onekey_find_coach);
+        mTvFreeTry = Util.instence(this).$(this, R.id.tv_free_try);
         cbannerIndex = (ConvenientBanner) findViewById(R.id.indexBanner);
         WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
         int width = wm.getDefaultDisplay().getWidth();
@@ -191,7 +193,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         llyTabMySetting.setOnClickListener(mClickListener);
         llyCoachMore.setOnClickListener(mClickListener);
         llyXiaohaMore.setOnClickListener(mClickListener);
-        tvOneKeyFindCoach.setOnClickListener(mClickListener);
+        mTvFreeTry.setOnClickListener(mClickListener);
     }
 
 
@@ -223,34 +225,8 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                     //it = new Intent(Intent.ACTION_VIEW, uri);
                     aboutCoach();
                     break;
-                case R.id.tv_onekey_find_coach:
-                    if (pd != null) {
-                        pd.dismiss();
-                    }
-                    pd = ProgressDialog.show(IndexActivity.this, null, "教练寻找中，请稍后……");
-                    fcPresenter.oneKeyFindCoach(mLat + "", mLng + "", new FCCallbackListener<Coach>() {
-                        @Override
-                        public void onSuccess(Coach data) {
-                            if (pd != null) {
-                                pd.dismiss();
-                            }
-                            if (data != null && !TextUtils.isEmpty(data.getId())) {
-                                Intent intent = new Intent(getApplication(), CoachDetailActivity.class);
-                                intent.putExtra("coach_id", data.getId());
-                                startActivity(intent);
-                            } else {
-                                Toast.makeText(IndexActivity.this, "未找到合适的教练", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(String errorEvent, String message) {
-                            if (pd != null) {
-                                pd.dismiss();
-                            }
-                            Toast.makeText(IndexActivity.this, message, Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                case R.id.tv_free_try:
+                    freeTry();
                     break;
             }
         }
@@ -281,18 +257,16 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                 showGroupBuy();
                 break;
             case 1:
-                //寻找教练
-                Intent intent = new Intent(getApplication(), FindCoachActivity.class);
-                startActivity(intent);
-                finish();
+                //免费试学
+                freeTry();
                 break;
             case 2:
                 //推荐有奖
                 if (mUser.getStudent() != null && !TextUtils.isEmpty(mUser.getId())) {
-                    intent = new Intent(getApplication(), ReferFriendsActivity.class);
+                    Intent intent = new Intent(getApplication(), ReferFriendsActivity.class);
                     startActivity(intent);
                 } else {
-                    intent = new Intent(getApplication(), MySettingActivity.class);
+                    Intent intent = new Intent(getApplication(), MySettingActivity.class);
                     startActivity(intent);
                     finish();
                 }
@@ -404,5 +378,18 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         bundle.putString("url", "http://staging.hahaxueche.net/#/coach");
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    private void freeTry() {
+        if (null == appointmentDialog) {
+            String name = "";
+            String phoneNumber = "";
+            if (mUser != null && mUser.getStudent() != null) {
+                name = mUser.getStudent().getName();
+                phoneNumber = mUser.getStudent().getCell_phone();
+            }
+            appointmentDialog = new AppointmentDialog(IndexActivity.this, name, phoneNumber, "", true);
+        }
+        appointmentDialog.show();
     }
 }

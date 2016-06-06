@@ -183,6 +183,14 @@ public class FCPresenterImpl implements FCPresenter {
     @Override
     public void createTrail(final String coach_id, final String name, final String phone_number, final String first_time_option,
                             final String second_time_option, final FCCallbackListener<TrailResponse> listener) {
+        if (TextUtils.isEmpty(name)) {
+            listener.onFailure(ErrorEvent.PARAM_ILLEGAL, "您的姓名不能为空");
+            return;
+        }
+        if (TextUtils.isEmpty(phone_number)) {
+            listener.onFailure(ErrorEvent.PARAM_ILLEGAL, "您的手机号码不能为空");
+            return;
+        }
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
         boolean isValidPhoneNumber;
         try {
@@ -208,12 +216,7 @@ public class FCPresenterImpl implements FCPresenter {
                     if (trailResponse.isSuccess()) {
                         listener.onSuccess(trailResponse);
                     } else {
-                        if (trailResponse.getCode().equals("400003")) {
-                            trailResponse.setMessage("预约日期需要大于当前日期");
-                            listener.onFailure(trailResponse.getCode(), trailResponse.getMessage());
-                        } else {
-                            listener.onFailure(trailResponse.getCode(), trailResponse.getMessage());
-                        }
+                        listener.onFailure(trailResponse.getCode(), trailResponse.getMessage());
                     }
                 } else {
                     listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
