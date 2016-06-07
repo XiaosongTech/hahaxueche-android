@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="libpingpp-2.1.0">
+  <library name="UPPayPluginExPro">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/hahaxueche/libs/libpingpp-2.1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/pingpp/libs/UPPayPluginExPro.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

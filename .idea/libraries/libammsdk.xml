@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="libammsdk">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/hahaxueche/libs/libammsdk.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/pingpp/libs/libammsdk.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

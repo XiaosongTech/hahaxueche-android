@@ -44,6 +44,7 @@ import com.hahaxueche.ui.widget.scoreView.ScoreView;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 import com.pingplusplus.android.PaymentActivity;
+import com.pingplusplus.android.Pingpp;
 import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
 
@@ -331,13 +332,13 @@ public class PurchaseCoachActivity extends FCBaseActivity {
                     public void onSuccess(String charge) {
                         pd.dismiss();
                         //调用ping++
-                        try {
+                        Pingpp.createPayment(PurchaseCoachActivity.this, charge);
+                        /*try {
                             Intent intent = new Intent(PurchaseCoachActivity.this, PaymentActivity.class);
                             intent.putExtra(PaymentActivity.EXTRA_CHARGE, charge);
                             startActivityForResult(intent, 1);
                         }catch (Exception e){
-                        }
-
+                        }*/
                     }
 
                     @Override
@@ -392,7 +393,7 @@ public class PurchaseCoachActivity extends FCBaseActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //支付页面返回处理
-        if (requestCode == 1) {
+        if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
             if (pd != null) {
                 pd.dismiss();
             }
