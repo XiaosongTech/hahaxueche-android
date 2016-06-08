@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,7 +41,7 @@ public class AppointmentDialog extends Dialog {
     private TextView mTvAppointmentTime;
     private String mCoachId;
     private TextView tvTrail;
-    private TextView tvCancel;
+    private ImageView ivClose;
     public FCPresenter fcPresenter;
     private ProgressDialog pd;//进度框
     private CustomWheelDialog firstTimeDialog;
@@ -63,7 +64,7 @@ public class AppointmentDialog extends Dialog {
         etRealName = (EditText) view.findViewById(R.id.et_real_name);
         etContactPhone = (EditText) view.findViewById(R.id.et_contact_phone);
         tvTrail = (TextView) view.findViewById(R.id.tv_trail);
-        tvCancel = (TextView) view.findViewById(R.id.tv_cancel);
+        ivClose = (ImageView) view.findViewById(R.id.iv_close);
         if (mIsFreeTry) {
             mTvAppointmentTime.setVisibility(View.GONE);
             etFirstTime.setVisibility(View.GONE);
@@ -126,7 +127,7 @@ public class AppointmentDialog extends Dialog {
             }
         });
         tvTrail.setOnClickListener(mClickListener);
-        tvCancel.setOnClickListener(mClickListener);
+        ivClose.setOnClickListener(mClickListener);
     }
 
     private final class TimeChooseListener implements View.OnTouchListener {
@@ -212,7 +213,7 @@ public class AppointmentDialog extends Dialog {
                         }
                     });
                     break;
-                case R.id.tv_cancel:
+                case R.id.iv_close:
                     dismiss();
                     break;
             }
