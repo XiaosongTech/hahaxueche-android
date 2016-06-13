@@ -14,7 +14,8 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="14dp">
+            android:layout_marginTop="14dp"
+            android:background="@drawable/ic_mypage_ava">
 
         </com.hahaxueche.ui.widget.circleImageView.CircleImageView>
 

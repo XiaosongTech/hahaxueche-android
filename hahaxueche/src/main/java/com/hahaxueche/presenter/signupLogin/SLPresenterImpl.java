@@ -116,10 +116,6 @@ public class SLPresenterImpl implements SLPresenter {
         if (!isValidCity(cityId, listener)) {
             return;
         }
-        if (TextUtils.isEmpty(photoPath)) {
-            listener.onFailure("000", "亲，请上传头像哦~");
-            return;
-        }
         new AsyncTask<Void, Void, Student>() {
 
             @Override
@@ -127,7 +123,11 @@ public class SLPresenterImpl implements SLPresenter {
 
                 Student compStuResponse = authApi.completeStuInfo(studentId, cityId, studentName, accessToken);
                 if (compStuResponse.isSuccess()) {
-                    return authApi.uploadAvatar(accessToken, photoPath, studentId);
+                    if(TextUtils.isEmpty(photoPath)){
+                        return compStuResponse;
+                    }else {
+                        return authApi.uploadAvatar(accessToken, photoPath, studentId);
+                    }
                 } else {
                     return new Student();
                 }
