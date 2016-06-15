@@ -48,9 +48,6 @@ public class SignUpActivity extends SLBaseActivity {
     private final MyHandler mHandler = new MyHandler(this);
     private SharedPreferencesUtil spUtil;
 
-    private TextView mTvRegisterTips;
-    private TextView mTvCoupon;
-    private EditText mEtCoupon;
 
     public SignUpActivity() {
     }
@@ -79,9 +76,6 @@ public class SignUpActivity extends SLBaseActivity {
         etRegisterSetPwd = (EditText) findViewById(R.id.et_register_set_pwd);
         btnGetIdentifyCode = (Button) findViewById(R.id.btn_get_identify_code);
         btnFinish = (Button) findViewById(R.id.btn_finish);
-        mTvRegisterTips = (TextView) findViewById(R.id.tv_register_tips);
-        mTvCoupon = (TextView) findViewById(R.id.tv_coupon);
-        mEtCoupon = (EditText) findViewById(R.id.et_coupon);
         if (isResetPwd) {
             tvRegisterTitle.setText(getResources().getText(R.string.sLResetPwd));//密码重置
         }
@@ -95,9 +89,6 @@ public class SignUpActivity extends SLBaseActivity {
         btnGetIdentifyCode.setVisibility(View.VISIBLE);
         etRegisterSetPwd.setVisibility(View.GONE);
         btnFinish.setVisibility(View.GONE);
-        mTvRegisterTips.setVisibility(View.INVISIBLE);
-        mTvCoupon.setVisibility(View.GONE);
-        mEtCoupon.setVisibility(View.GONE);
     }
 
     /**
@@ -108,8 +99,6 @@ public class SignUpActivity extends SLBaseActivity {
         btnGetIdentifyCode.setVisibility(View.GONE);
         etRegisterSetPwd.setVisibility(View.VISIBLE);
         btnFinish.setVisibility(View.VISIBLE);
-        mTvRegisterTips.setVisibility(View.VISIBLE);
-        mTvCoupon.setVisibility(View.VISIBLE);
         if (isResetPwd) {
             btnFinish.setText(getResources().getText(R.string.sLSure));
         }
@@ -119,13 +108,6 @@ public class SignUpActivity extends SLBaseActivity {
         mHandler.sendEmptyMessage(1);
     }
 
-    public void coupon(View view) {
-        if (mEtCoupon.getVisibility() == View.VISIBLE) {
-            mEtCoupon.setVisibility(View.GONE);
-        } else {
-            mEtCoupon.setVisibility(View.VISIBLE);
-        }
-    }
 
     /**
      * 获取验证码

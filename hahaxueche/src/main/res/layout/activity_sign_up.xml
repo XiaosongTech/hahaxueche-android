@@ -37,17 +37,6 @@
                 android:textSize="20sp" />
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/tv_register_tips"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:text="请实名注册以便获得更好的服务体验"
-            android:textColor="@color/haha_white"
-            android:textSize="16sp"
-            android:visibility="invisible" />
-
         <EditText
             android:id="@+id/et_register_phone_number"
             android:layout_width="match_parent"
@@ -160,30 +149,6 @@
             android:textColor="@android:color/white"
             android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/tv_coupon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:drawablePadding="6dp"
-            android:drawableRight="@drawable/ic_coupon"
-            android:text="有优惠码"
-            android:textColor="@color/haha_white"
-            android:onClick="coupon"
-            android:textSize="14sp"
-            android:visibility="gone" />
-
-        <EditText
-            android:id="@+id/et_coupon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/input"
-            android:inputType="text"
-            android:maxLines="1"
-            android:visibility="gone" />
 
     </LinearLayout>
 

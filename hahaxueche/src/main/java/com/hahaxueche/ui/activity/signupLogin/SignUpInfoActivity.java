@@ -43,9 +43,6 @@ import java.util.Date;
  * Created by gibxin on 2016/1/23.
  */
 public class SignUpInfoActivity extends SLBaseActivity {
-    private LinearLayout mainLayout;
-    private ImageView cameraBtn;
-    private LinearLayout addressBtn;
     private EditText nameEdit;
     private TextView addressText;
     private Button downBtn;
@@ -69,6 +66,9 @@ public class SignUpInfoActivity extends SLBaseActivity {
     private SharedPreferencesUtil spUtil;
     private Session mSession;
     private Student mStudent;
+
+    private TextView mTvCoupon;
+    private EditText mEtCoupon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,12 +96,11 @@ public class SignUpInfoActivity extends SLBaseActivity {
      * 控件初始化
      */
     private void initView() {
-        cameraBtn = Util.instence(this).$(this, R.id.id_camera_btn);
-        addressBtn = Util.instence(this).$(this, R.id.id_address_select_btn);
         nameEdit = Util.instence(this).$(this, R.id.id_user_name_edit);
         addressText = Util.instence(this).$(this, R.id.id_user_address_edit);
         downBtn = Util.instence(this).$(this, R.id.id_regist_down_btn);
-
+        mTvCoupon = (TextView) findViewById(R.id.tv_coupon);
+        mEtCoupon = (EditText) findViewById(R.id.et_coupon);
         if (!mCurCityName.equals("")) {
             addressText.setText(mCurCityName);
         }
@@ -110,7 +109,7 @@ public class SignUpInfoActivity extends SLBaseActivity {
     private void initEvent() {
         addressText.setOnClickListener(clickListener);
         downBtn.setOnClickListener(clickListener);
-        cameraBtn.setOnClickListener(clickListener);
+        mTvCoupon.setOnClickListener(clickListener);
     }
 
     View.OnClickListener clickListener = new View.OnClickListener() {
@@ -126,10 +125,15 @@ public class SignUpInfoActivity extends SLBaseActivity {
                 case R.id.id_regist_down_btn:
                     completeStuInfo();
                     break;
-                //头像设置
-                case R.id.id_camera_btn:
-                    RegisterInfoPhotoDialog dialog = new RegisterInfoPhotoDialog(SignUpInfoActivity.this);
-                    dialog.show();
+                //优惠码
+                case R.id.tv_coupon:
+                    if (mEtCoupon.getVisibility() == View.VISIBLE) {
+                        mEtCoupon.setVisibility(View.GONE);
+                    } else {
+                        mEtCoupon.setVisibility(View.VISIBLE);
+                    }
+                    break;
+                default:
                     break;
             }
         }
@@ -145,7 +149,7 @@ public class SignUpInfoActivity extends SLBaseActivity {
             pd.dismiss();
         }
         pd = ProgressDialog.show(SignUpInfoActivity.this, null, "数据提交中，请稍后……");
-        this.slPresenter.completeStuInfo(mStudent.getId(), cityId, studentName, mSession.getAccess_token(), mPhotoPath, new SLCallbackListener<Student>() {
+        this.slPresenter.completeStuInfo(mStudent.getId(), cityId, studentName, mSession.getAccess_token(), mEtCoupon.getText().toString(), new SLCallbackListener<Student>() {
             @Override
             public void onSuccess(Student student) {
                 if (pd != null) {
@@ -257,23 +261,4 @@ public class SignUpInfoActivity extends SLBaseActivity {
 
     }
 
-    /**
-     * 提取保存裁剪之后的图片数据，并设置头像部分的View
-     */
-    private void setImageToHeadView(Bitmap photo) {
-        curPhoto = photo;
-        int radius = Util.instence(this).dip2px(RegisterInfoPhotoDialog.output_X) / 2;
-        if (photo.getWidth() < Util.instence(this).dip2px(RegisterInfoPhotoDialog.output_X)
-                || photo.getHeight() < Util.instence(this).dip2px(RegisterInfoPhotoDialog.output_Y)) {
-            Drawable res = new BitmapDrawable(getResources(),
-                    PictrueGet.createCircleImage(PictrueGet.zoomBitmap(photo, radius, radius), radius));
-            cameraBtn.setBackgroundDrawable(res);
-            cameraBtn.setImageDrawable(null);
-        } else {
-            Drawable res = new BitmapDrawable(getResources(),
-                    PictrueGet.createCircleImage(PictrueGet.extractMiniThumb(photo, radius * 2, radius * 2, false), radius));
-            cameraBtn.setBackgroundDrawable(res);
-            cameraBtn.setImageDrawable(null);
-        }
-    }
 }

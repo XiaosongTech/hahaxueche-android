@@ -100,6 +100,7 @@ public class PurchaseCoachActivity extends FCBaseActivity {
     private Student mStudent;
     private String mProductType = "";
     private List<CostItem> mCostItemList;
+    private String method = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -316,7 +317,6 @@ public class PurchaseCoachActivity extends FCBaseActivity {
     private void pay() {
         //调用获取charge
         //method:0 是alipay 1 是分期乐
-        String method = "";
         for (Payment payment : mPaymentList) {
             if (payment.isSelect()) {
                 method = String.valueOf(mPaymentList.indexOf(payment));
@@ -411,6 +411,7 @@ public class PurchaseCoachActivity extends FCBaseActivity {
                  */
                 String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
                 String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
+
                 if (result.equals("success")) {
                     //更新SharedPreferences中的student
                     this.msPresenter.getStudentForever(mStudent.getId(), mSession.getAccess_token(), new MSCallbackListener<Student>() {
