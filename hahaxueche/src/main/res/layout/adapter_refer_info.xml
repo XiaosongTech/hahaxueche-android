@@ -17,7 +17,8 @@
             android:layout_marginBottom="15dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="15dp"></com.hahaxueche.ui.widget.circleImageView.CircleImageView>
+            android:layout_marginTop="15dp"
+            android:background="@drawable/ic_mypage_ava"></com.hahaxueche.ui.widget.circleImageView.CircleImageView>
 
         <TextView
             android:id="@+id/tv_referee_name"

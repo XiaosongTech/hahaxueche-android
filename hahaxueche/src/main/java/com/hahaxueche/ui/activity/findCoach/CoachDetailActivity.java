@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -92,10 +93,8 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private ImageView ivIsGoldenCoach;
     private ImageView ivIsGoldenCoachSmall;
     private TextView tvSatisfactionRate;//满意度
-    private LinearLayout llyTakeCertCost;//拿证价格
     private Constants mConstants;
     private Session mSession;
-    private TextView tvTakeCertPrice;
     private TextView tvTrainLocation;
     private LinearLayout llyPeerCoachTitle;
     private View vwMoreReviews;
@@ -128,7 +127,15 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     //学员
     private Student mStudent;
     //训练场地
-    private LinearLayout llyTrainLoaction;
+    private RelativeLayout rlyTrainLoaction;
+    //拿证价格
+    private TextView mTvNormalPrice;//通用价格
+    private TextView mTvOldNormalPrice;//原来的通用价格
+    private TextView mTvNormalPriceDetail;//通用价格明细
+    private RelativeLayout mRlyVIPPrice;
+    private TextView mTvVIPPrice;//VIP班价格
+    private TextView mTvOldVIPPrice;//原来的VIP价格
+    private TextView mTvVIPPriceDetail;//VIP班价格明细
     private FieldModel mFieldModel;
     private LinearLayout llyFlCdCoachName;
     private SharedPreferencesUtil spUtil;
@@ -153,17 +160,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         }
         //根据当前登录人的cityid，加载费用明细列表
         if (mConstants != null) {
-            List<City> cityList = mConstants.getCities();
-            String cityId = "0";
-            if (mStudent != null) {
-                cityId = mStudent.getCity_id();
-            }
-            for (City city : cityList) {
-                if (city.getId().equals(cityId)) {
-                    mCostItemList = city.getFixed_cost_itemizer();
-                    break;
-                }
-            }
+            mCostItemList = spUtil.getMyCity().getFixed_cost_itemizer();
         }
         initView();
         initEvent();
@@ -184,7 +181,6 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         tvSatisfactionRate = Util.instence(this).$(this, R.id.tv_satisfaction_rate);
         tvSkillLevel = Util.instence(this).$(this, R.id.tv_skill_level);
         ivIsGoldenCoachSmall = Util.instence(this).$(this, R.id.iv_cd_is_golden_coach_small);
-        tvTakeCertPrice = Util.instence(this).$(this, R.id.tv_take_cert_price);
         tvTrainLocation = Util.instence(this).$(this, R.id.tv_train_location);
         tvLicenseType = Util.instence(this).$(this, R.id.tv_license_type);
         tvCommentCounts = Util.instence(this).$(this, R.id.tv_comments_count);
@@ -205,9 +201,16 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         isCdCoachDetail = Util.instence(this).$(this, R.id.is_cd_coach_switcher);
 
         llyShare = Util.instence(this).$(this, R.id.lly_share);
-        llyTakeCertCost = Util.instence(this).$(this, R.id.lly_take_cert_cost);
-        llyTrainLoaction = Util.instence(this).$(this, R.id.lly_training_location);
+        rlyTrainLoaction = Util.instence(this).$(this, R.id.rly_location);
         llyFlCdCoachName = Util.instence(this).$(this, R.id.fl_cd_coach_name);
+        //价格
+        mTvNormalPrice = Util.instence(this).$(this, R.id.tv_normal_price);
+        mTvOldNormalPrice = Util.instence(this).$(this, R.id.tv_old_normal_price);
+        mTvNormalPriceDetail = Util.instence(this).$(this, R.id.tv_normal_price_detail);
+        mTvVIPPrice = Util.instence(this).$(this, R.id.tv_vip_price);
+        mTvOldVIPPrice = Util.instence(this).$(this, R.id.tv_old_vip_price);
+        mTvVIPPriceDetail = Util.instence(this).$(this, R.id.tv_vip_price_detail);
+        mRlyVIPPrice = Util.instence(this).$(this, R.id.rly_vip_price);
     }
 
     private void initEvent() {
@@ -217,12 +220,14 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         ibtnCoachDetialBack.setOnClickListener(mClickListener);
         llyShare.setOnClickListener(mClickListener);
         llyFollow.setOnClickListener(mClickListener);
-        llyTakeCertCost.setOnClickListener(mClickListener);
         llySurePay.setOnClickListener(mClickListener);
         llyFreeLearn.setOnClickListener(mClickListener);
         llyMoreReviews.setOnClickListener(mClickListener);
-        llyTrainLoaction.setOnClickListener(mClickListener);
+        rlyTrainLoaction.setOnClickListener(mClickListener);
         lvPeerCoach.setOnItemClickListener(mItemClickListener);
+        //价格
+        mTvNormalPriceDetail.setOnClickListener(mClickListener);
+        mTvVIPPriceDetail.setOnClickListener(mClickListener);
     }
 
     /**
@@ -308,7 +313,18 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                 break;
             }
         }
-        tvTakeCertPrice.setText(Util.getMoney(mCoach.getCoach_group().getTraining_cost()));
+        //价格
+        mTvNormalPrice.setText(Util.getMoney(mCoach.getCoach_group().getTraining_cost()));
+        mTvOldNormalPrice.setText("门市价：" + Util.getMoney(mCoach.getCoach_group().getMarket_price()));
+        mTvOldNormalPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        if (mCoach.getVip()==0) {
+            mRlyVIPPrice.setVisibility(View.GONE);
+        } else {
+            mRlyVIPPrice.setVisibility(View.VISIBLE);
+            mTvVIPPrice.setText(Util.getMoney(mCoach.getCoach_group().getVip_price()));
+            mTvOldVIPPrice.setText("门市价：" + Util.getMoney(mCoach.getCoach_group().getVip_market_price()));
+            mTvOldVIPPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        }
         //训练场地址
         List<City> cityList = mConstants.getCities();
         List<FieldModel> fieldList = mConstants.getFields();
@@ -466,14 +482,12 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                     }
                     break;
                 //拿证价格
-                case R.id.lly_take_cert_cost:
-                    feeDetailDialog = new FeeDetailDialog(CoachDetailActivity.this, mCostItemList, mCoach.getCoach_group().getTraining_cost(), "1",
-                            new FeeDetailDialog.OnBtnClickListener() {
-                                @Override
-                                public void onPay() {
-                                    feeDetailDialog.dismiss();
-                                }
-                            });
+                case R.id.tv_normal_price_detail:
+                    feeDetailDialog = new FeeDetailDialog(CoachDetailActivity.this, mCostItemList, mCoach.getCoach_group().getTraining_cost(), "1", null);
+                    feeDetailDialog.show();
+                    break;
+                case R.id.tv_vip_price_detail:
+                    feeDetailDialog = new FeeDetailDialog(CoachDetailActivity.this, mCostItemList, mCoach.getCoach_group().getVip_price(), "1", null);
                     feeDetailDialog.show();
                     break;
                 //确认付款
@@ -483,30 +497,11 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                             Toast.makeText(context, "您已经选择过教练", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        feeDetailDialog = new FeeDetailDialog(CoachDetailActivity.this, mCostItemList, mCoach.getCoach_group().getTraining_cost(), "2",
-                                new FeeDetailDialog.OnBtnClickListener() {
-                                    @Override
-                                    public void onPay() {
-                                        feeDetailDialog.dismiss();
-                                        //调用获取charge
-                                        fcPresenter.createCharge(mCoach.getId(), mSession.getAccess_token(), new FCCallbackListener<String>() {
-                                            @Override
-                                            public void onSuccess(String charge) {
-                                                Log.v("gibxin", "charge-> " + charge);
-                                                //调用ping++
-                                                Intent intent = new Intent(CoachDetailActivity.this, PaymentActivity.class);
-                                                intent.putExtra(PaymentActivity.EXTRA_CHARGE, charge);
-                                                startActivityForResult(intent, 1);
-                                            }
-
-                                            @Override
-                                            public void onFailure(String errorEvent, String message) {
-
-                                            }
-                                        });
-                                    }
-                                });
-                        feeDetailDialog.show();
+                        Intent intent = new Intent(CoachDetailActivity.this, PurchaseCoachActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("coach", mCoach);
+                        intent.putExtras(bundle);
+                        startActivityForResult(intent, 1);
                     } else {
                         alertToLogin();
                     }
@@ -532,7 +527,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                     startActivity(intent);
                     break;
                 //训练场
-                case R.id.lly_training_location:
+                case R.id.rly_location:
                     intent = new Intent(CoachDetailActivity.this, FieldMapActivity.class);
                     bundle = new Bundle();
                     bundle.putSerializable("fieldModel", mFieldModel);
@@ -611,75 +606,9 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //支付页面返回处理
         if (requestCode == 1) {
-            if (pd != null) {
-                pd.dismiss();
-            }
-            pd = ProgressDialog.show(CoachDetailActivity.this, null, "数据加载中，请稍后……");
             if (resultCode == Activity.RESULT_OK) {
-                if (null == spUtil) {
-                    spUtil = new SharedPreferencesUtil(this);
-                }
-                String result = data.getExtras().getString("pay_result");
-                /* 处理返回值
-                 * "success" - 支付成功
-                 * "fail"    - 支付失败
-                 * "cancel"  - 取消支付
-                 * "invalid" - 支付插件未安装（一般是微信客户端未安装的情况）
-                 */
-                String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
-                String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
-                if (result.equals("success")) {
-                    //更新SharedPreferences中的student
-                    this.msPresenter.getStudentForever(mStudent.getId(), mSession.getAccess_token(), new MSCallbackListener<Student>() {
-                        @Override
-                        public void onSuccess(Student data) {
-                            mStudent = data;
-                            User user = spUtil.getUser();
-                            user.setStudent(mStudent);
-                            spUtil.setUser(user);
-                            if (!TextUtils.isEmpty(data.getCurrent_coach_id())) {
-                                fcPresenter.getCoach(data.getCurrent_coach_id(), new FCCallbackListener<Coach>() {
-                                    @Override
-                                    public void onSuccess(Coach coach) {
-                                        if (pd != null) {
-                                            pd.dismiss();
-                                        }
-                                        MobclickAgent.onEvent(context, "did_purchase_coach");
-                                        Toast.makeText(context, "支付成功", Toast.LENGTH_SHORT).show();
-                                        spUtil.setCurrentCoach(coach);
-                                    }
-
-                                    @Override
-                                    public void onFailure(String errorEvent, String message) {
-                                        if (pd != null) {
-                                            pd.dismiss();
-                                        }
-                                    }
-                                });
-                            } else {
-                                if (pd != null) {
-                                    pd.dismiss();
-                                }
-                                MobclickAgent.onEvent(context, "did_purchase_coach");
-                                Toast.makeText(context, "支付成功", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(String errorEvent, String message) {
-                            if (pd != null) {
-                                pd.dismiss();
-                            }
-                        }
-                    });
-                } else {
-                    if (pd != null) {
-                        pd.dismiss();
-                    }
-                    Toast.makeText(context, "支付失败", Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(context, "支付成功", Toast.LENGTH_SHORT).show();
             }
         }
     }

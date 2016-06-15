@@ -30,6 +30,7 @@ public class Coach implements Serializable {
     private List<BriefCoachInfo> peer_coaches;
     private List<String> images;
     private String assigned_coaches;
+    private int vip;
     private String code;
     private String message;
     private boolean isSuccess = true;
@@ -240,5 +241,13 @@ public class Coach implements Serializable {
 
     public void setIsSuccess(boolean isSuccess) {
         this.isSuccess = isSuccess;
+    }
+
+    public int getVip() {
+        return vip;
+    }
+
+    public void setVip(int vip) {
+        this.vip = vip;
     }
 }

@@ -3,6 +3,7 @@ package com.hahaxueche.presenter.signupLogin;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
@@ -81,7 +82,7 @@ public class SLPresenterImpl implements SLPresenter {
 
             @Override
             protected User doInBackground(Void... params) {
-                return authApi.createUser(phoneNum, identifyCode, pwd, type,refererId);
+                return authApi.createUser(phoneNum, identifyCode, pwd, type, refererId);
             }
 
             @Override
@@ -108,43 +109,34 @@ public class SLPresenterImpl implements SLPresenter {
     }
 
     @Override
-    public void completeStuInfo(final String studentId, final String cityId, final String studentName, final String accessToken,
-                                final String photoPath, final SLCallbackListener<Student> listener) {
+    public void completeStuInfo(final String studentId, final String cityId, final String studentName, final String accessToken, final String promoCode, final SLCallbackListener<Student> listener) {
         if (!isValidUserName(studentName, listener)) {
             return;
         }
         if (!isValidCity(cityId, listener)) {
             return;
         }
-        if (TextUtils.isEmpty(photoPath)) {
-            listener.onFailure("000", "亲，请上传头像哦~");
-            return;
-        }
         new AsyncTask<Void, Void, Student>() {
 
             @Override
             protected Student doInBackground(Void... params) {
-
-                Student compStuResponse = authApi.completeStuInfo(studentId, cityId, studentName, accessToken);
-                if (compStuResponse.isSuccess()) {
-                    return authApi.uploadAvatar(accessToken, photoPath, studentId);
-                } else {
-                    return new Student();
-                }
+                return authApi.completeStuInfo(studentId, cityId, studentName, promoCode, accessToken);
             }
 
             @Override
-            protected void onPostExecute(Student compStuResponse) {
-                if (listener != null) {
-                    if (compStuResponse != null) {
-                        if (compStuResponse.isSuccess()) {
-                            listener.onSuccess(compStuResponse);
-                        } else {
-                            listener.onFailure(compStuResponse.getCode(), compStuResponse.getMessage());
-                        }
+            protected void onPostExecute(Student student) {
+                if (student != null) {
+                    if (student.isSuccess()) {
+                        listener.onSuccess(student);
                     } else {
-                        listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                        if (student.getCode().equals("40022")) {
+                            listener.onFailure(student.getCode(), "您的优惠码有误");
+                        } else {
+                            listener.onFailure(student.getCode(), student.getMessage());
+                        }
                     }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
                 }
             }
         }.execute();

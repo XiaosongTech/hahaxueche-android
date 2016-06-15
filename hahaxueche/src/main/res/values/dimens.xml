@@ -12,6 +12,9 @@
     <dimen name="height260dp">260dp</dimen>
     <dimen name="search_edittext_width">288dp</dimen>
     <dimen name="search_edittext_height">28dp</dimen>
+    <dimen name="marginleft20dp">20dp</dimen>
+    <dimen name="marginleft10dp">10dp</dimen>
+    <dimen name="marginleft5dp">5dp</dimen>
     <dimen name="payment_adapter_spacing1">40dp</dimen>
     <dimen name="payment_adapter_spacing2">140dp</dimen>
     <dimen name="payment_adapter_spacing3">200dp</dimen>

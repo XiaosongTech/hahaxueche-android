@@ -34,9 +34,8 @@ public interface SLPresenter {
      * @param cityId      城市Id
      * @param studentName 姓名
      * @param accessToken Access Token
-     * @param photoPath   头像
      */
-    public void completeStuInfo(String studentId, String cityId, String studentName, String accessToken, String photoPath, SLCallbackListener<Student> slCallbackListener);
+    public void completeStuInfo(String studentId, String cityId, String studentName, String accessToken, String promoCode, SLCallbackListener<Student> slCallbackListener);
 
     /**
      * 登录

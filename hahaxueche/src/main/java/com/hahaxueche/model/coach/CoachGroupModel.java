@@ -17,6 +17,8 @@ public class CoachGroupModel implements Serializable {
     private String updated_at;
     private String name;
     private String market_price;
+    private String vip_price;
+    private String vip_market_price;
 
     public String getId() {
         return id;
@@ -104,5 +106,21 @@ public class CoachGroupModel implements Serializable {
 
     public void setMarket_price(String market_price) {
         this.market_price = market_price;
+    }
+
+    public String getVip_price() {
+        return vip_price;
+    }
+
+    public void setVip_price(String vip_price) {
+        this.vip_price = vip_price;
+    }
+
+    public String getVip_market_price() {
+        return vip_market_price;
+    }
+
+    public void setVip_market_price(String vip_market_price) {
+        this.vip_market_price = vip_market_price;
     }
 }

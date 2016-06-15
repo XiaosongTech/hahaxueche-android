@@ -109,7 +109,8 @@
                     android:id="@+id/cir_ps_coach_avatar"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_alignParentRight="true"></com.hahaxueche.ui.widget.circleImageView.CircleImageView>
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/ic_mypage_ava"></com.hahaxueche.ui.widget.circleImageView.CircleImageView>
 
                 <View
                     android:id="@+id/vw_ps_1"

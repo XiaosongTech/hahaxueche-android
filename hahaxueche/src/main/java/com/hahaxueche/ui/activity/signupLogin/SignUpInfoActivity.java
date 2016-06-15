@@ -1,15 +1,11 @@
 package com.hahaxueche.ui.activity.signupLogin;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -47,9 +43,6 @@ import java.util.Date;
  * Created by gibxin on 2016/1/23.
  */
 public class SignUpInfoActivity extends SLBaseActivity {
-    private LinearLayout mainLayout;
-    private ImageView cameraBtn;
-    private LinearLayout addressBtn;
     private EditText nameEdit;
     private TextView addressText;
     private Button downBtn;
@@ -72,7 +65,9 @@ public class SignUpInfoActivity extends SLBaseActivity {
     private SharedPreferencesUtil spUtil;
     private Session mSession;
     private Student mStudent;
-    private static final int PERMISSIONS_REQUEST = 600;
+
+    private TextView mTvCoupon;
+    private EditText mEtCoupon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,12 +95,11 @@ public class SignUpInfoActivity extends SLBaseActivity {
      * 控件初始化
      */
     private void initView() {
-        cameraBtn = Util.instence(this).$(this, R.id.id_camera_btn);
-        addressBtn = Util.instence(this).$(this, R.id.id_address_select_btn);
         nameEdit = Util.instence(this).$(this, R.id.id_user_name_edit);
         addressText = Util.instence(this).$(this, R.id.id_user_address_edit);
         downBtn = Util.instence(this).$(this, R.id.id_regist_down_btn);
-
+        mTvCoupon = (TextView) findViewById(R.id.tv_coupon);
+        mEtCoupon = (EditText) findViewById(R.id.et_coupon);
         if (!mCurCityName.equals("")) {
             addressText.setText(mCurCityName);
         }
@@ -114,7 +108,7 @@ public class SignUpInfoActivity extends SLBaseActivity {
     private void initEvent() {
         addressText.setOnClickListener(clickListener);
         downBtn.setOnClickListener(clickListener);
-        cameraBtn.setOnClickListener(clickListener);
+        mTvCoupon.setOnClickListener(clickListener);
     }
 
     View.OnClickListener clickListener = new View.OnClickListener() {
@@ -130,19 +124,15 @@ public class SignUpInfoActivity extends SLBaseActivity {
                 case R.id.id_regist_down_btn:
                     completeStuInfo();
                     break;
-                //头像设置
-                case R.id.id_camera_btn:
-                    // Check the SDK version and whether the permission is already granted or not.
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                            (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                                    || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                                    || checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
-                        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, PERMISSIONS_REQUEST);
-                        //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+                //优惠码
+                case R.id.tv_coupon:
+                    if (mEtCoupon.getVisibility() == View.VISIBLE) {
+                        mEtCoupon.setVisibility(View.GONE);
                     } else {
-                        // Android version is lesser than 6.0 or the permission is already granted.
-                        showPhotoDialog();
+                        mEtCoupon.setVisibility(View.VISIBLE);
                     }
+                    break;
+                default:
                     break;
             }
         }
@@ -158,7 +148,7 @@ public class SignUpInfoActivity extends SLBaseActivity {
             pd.dismiss();
         }
         pd = ProgressDialog.show(SignUpInfoActivity.this, null, "数据提交中，请稍后……");
-        this.slPresenter.completeStuInfo(mStudent.getId(), cityId, studentName, mSession.getAccess_token(), PhotoUtil.IMGPATH + "/" + PhotoUtil.IMAGE_FILE_NAME, new SLCallbackListener<Student>() {
+        this.slPresenter.completeStuInfo(mStudent.getId(), cityId, studentName, mSession.getAccess_token(), mEtCoupon.getText().toString(), new SLCallbackListener<Student>() {
             @Override
             public void onSuccess(Student student) {
                 if (pd != null) {
@@ -183,102 +173,4 @@ public class SignUpInfoActivity extends SLBaseActivity {
         });
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
-                showPhotoDialog();
-            } else {
-                Toast.makeText(this, "请允许读写sdcard权限，不然我们无法完成头像采集操作", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private void showPhotoDialog() {
-        RegisterInfoPhotoDialog dialog = new RegisterInfoPhotoDialog(SignUpInfoActivity.this);
-        dialog.show();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PhotoUtil.SELECT_A_PICTURE) {
-            if (resultCode == RESULT_OK && null != data) {
-                //4.4以下的;
-                Bitmap bitmap = mPhotoUtil.decodeUriAsBitmap(Uri.fromFile(new File(PhotoUtil.IMGPATH,
-                        PhotoUtil.TMP_IMAGE_FILE_NAME)));
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(SignUpInfoActivity.this, "取消头像设置", Toast.LENGTH_SHORT).show();
-            }
-        } else if (requestCode == PhotoUtil.SELECET_A_PICTURE_AFTER_KIKAT) {
-            if (resultCode == RESULT_OK && null != data) {
-                cropImageUriAfterKikat(data);
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(SignUpInfoActivity.this, "取消头像设置", Toast.LENGTH_SHORT).show();
-            }
-        } else if (requestCode == PhotoUtil.SET_ALBUM_PICTURE_KITKAT) {
-            Log.i("lgx", "4.4以上上的 RESULT_OK");
-
-            Bitmap bitmap = mPhotoUtil.decodeUriAsBitmap(Uri.fromFile(new File(PhotoUtil.IMGPATH,
-                    PhotoUtil.IMAGE_FILE_NAME)));
-            setImageToHeadView(bitmap);
-        } else if (requestCode == PhotoUtil.TAKE_A_PICTURE) {
-            Log.i("lgx", "TAKE_A_PICTURE-resultCode:" + resultCode);
-            if (resultCode == RESULT_OK) {
-                mPhotoUtil.cameraCropImageUri(Uri.fromFile(new File(PhotoUtil.IMGPATH, PhotoUtil.IMAGE_FILE_NAME)),
-                        Util.instence(SignUpInfoActivity.this).dip2px(RegisterInfoPhotoDialog.output_X),
-                        Util.instence(SignUpInfoActivity.this).dip2px(RegisterInfoPhotoDialog.output_Y));
-            } else {
-                Toast.makeText(SignUpInfoActivity.this, "取消头像设置", Toast.LENGTH_SHORT).show();
-            }
-        } else if (requestCode == PhotoUtil.SET_PICTURE) {
-            //拍照的设置头像  不考虑版本
-            Bitmap bitmap = null;
-            if (resultCode == RESULT_OK && null != data) {
-                if (mPhotoUtil.uritempFile != null) {
-                    try {
-                        bitmap = BitmapFactory
-                                .decodeStream(getContentResolver().openInputStream(mPhotoUtil.uritempFile));
-                        setImageToHeadView(bitmap);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(SignUpInfoActivity.this, "取消头像设置", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(SignUpInfoActivity.this, "设置头像失败", Toast.LENGTH_SHORT).show();
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-
-    }
-
-    private void cropImageUriAfterKikat(Intent data) {
-        mAlbumPicturePath = mPhotoUtil.getPath(getApplicationContext(), data.getData());
-        mPhotoUtil.cropImageUriAfterKikat(Uri.fromFile(new File(mAlbumPicturePath)),
-                Util.instence(SignUpInfoActivity.this).dip2px(RegisterInfoPhotoDialog.output_X),
-                Util.instence(SignUpInfoActivity.this).dip2px(RegisterInfoPhotoDialog.output_Y));
-    }
-
-
-    /**
-     * 提取保存裁剪之后的图片数据，并设置头像部分的View
-     */
-    private void setImageToHeadView(Bitmap photo) {
-        curPhoto = photo;
-        int radius = Util.instence(this).dip2px(RegisterInfoPhotoDialog.output_X) / 2;
-        if (photo.getWidth() < Util.instence(this).dip2px(RegisterInfoPhotoDialog.output_X)
-                || photo.getHeight() < Util.instence(this).dip2px(RegisterInfoPhotoDialog.output_Y)) {
-            Drawable res = new BitmapDrawable(getResources(),
-                    PictrueGet.createCircleImage(PictrueGet.zoomBitmap(photo, radius, radius), radius));
-            cameraBtn.setBackgroundDrawable(res);
-            cameraBtn.setImageDrawable(null);
-        } else {
-            Drawable res = new BitmapDrawable(getResources(),
-                    PictrueGet.createCircleImage(PictrueGet.extractMiniThumb(photo, radius * 2, radius * 2, false), radius));
-            cameraBtn.setBackgroundDrawable(res);
-            cameraBtn.setImageDrawable(null);
-        }
-    }
 }

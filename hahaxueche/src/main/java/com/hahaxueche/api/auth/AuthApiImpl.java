@@ -1,5 +1,6 @@
 package com.hahaxueche.api.auth;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
@@ -108,10 +109,13 @@ public class AuthApiImpl implements AuthApi {
      * @return
      */
     @Override
-    public Student completeStuInfo(String studentId, String cityId, String studentName, String accessToken) {
+    public Student completeStuInfo(String studentId, String cityId, String studentName, String promoCode, String accessToken) {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("name", studentName);
         paramMap.put("city_id", cityId);
+        if (!TextUtils.isEmpty(promoCode)) {
+            paramMap.put("promo_code", promoCode);
+        }
         Type type = new TypeToken<Student>() {
         }.getType();
         Type typeBase = new TypeToken<BaseApiResponse>() {

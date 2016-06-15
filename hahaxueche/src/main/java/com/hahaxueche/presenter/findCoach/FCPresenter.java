@@ -33,7 +33,7 @@ public interface FCPresenter {
      * @param listener           回调监听器
      */
     public void getCoachList(String page, String per_page, String golden_coach_only, String license_type, String price,
-                             String city_id, ArrayList<String> training_field_ids, String distance, ArrayList<String> user_location, String sort_by,
+                             String city_id, ArrayList<String> training_field_ids, String distance, ArrayList<String> user_location, String sort_by, String vip_only,
                              FCCallbackListener<CoachListResponse> listener);
 
     /**
@@ -118,7 +118,7 @@ public interface FCPresenter {
      * @param access_token
      * @param listener
      */
-    public void createCharge(String coach_id, String access_token, FCCallbackListener<String> listener);
+    public void createCharge(String coach_id, String access_token, String method, String productType, FCCallbackListener<String> listener);
 
     /**
      * @param payment_stage

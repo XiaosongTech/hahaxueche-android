@@ -73,7 +73,7 @@ public class WelcomeActivity extends MSBaseActivity {
                 user.setStudent(student);
                 spUtil.setUser(user);
                 Intent intent;
-                if (TextUtils.isEmpty(user.getStudent().getCity_id()) || TextUtils.isEmpty(user.getStudent().getAvatar()) || TextUtils.isEmpty(user.getStudent().getName())) {
+                if (TextUtils.isEmpty(user.getStudent().getCity_id()) || TextUtils.isEmpty(user.getStudent().getName())) {
                     //补全资料
                     intent = new Intent(WelcomeActivity.this, SignUpInfoActivity.class);
                 } else {

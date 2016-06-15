@@ -57,6 +57,7 @@ public class SignUpActivity extends SLBaseActivity {
     private final MyHandler mHandler = new MyHandler(this);
     private SharedPreferencesUtil spUtil;
 
+
     public SignUpActivity() {
     }
 
@@ -141,6 +142,7 @@ public class SignUpActivity extends SLBaseActivity {
         btnReSendIdentifyCode.setText(sendTime-- + "");
         mHandler.sendEmptyMessage(1);
     }
+
 
     /**
      * 获取验证码

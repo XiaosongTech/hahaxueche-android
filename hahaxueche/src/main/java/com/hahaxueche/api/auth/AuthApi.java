@@ -38,7 +38,7 @@ public interface AuthApi {
      * @param accessToken Access Token
      * @return
      */
-    public Student completeStuInfo(String studentId, String cityId, String studentName, String accessToken);
+    public Student completeStuInfo(String studentId, String cityId, String studentName, String promoCode, String accessToken);
 
     /**
      * 登录
