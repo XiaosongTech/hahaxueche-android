@@ -343,7 +343,7 @@
                         android:background="@drawable/rectangle_back_orange_ssm"
                         android:paddingLeft="1dp"
                         android:paddingRight="1dp"
-                        android:text="超值"
+                        android:text="VIP"
                         android:textColor="@color/haha_white"
                         android:textSize="14sp" />
 

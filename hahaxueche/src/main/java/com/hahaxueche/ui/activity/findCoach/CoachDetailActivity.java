@@ -317,7 +317,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         mTvNormalPrice.setText(Util.getMoney(mCoach.getCoach_group().getTraining_cost()));
         mTvOldNormalPrice.setText("门市价：" + Util.getMoney(mCoach.getCoach_group().getMarket_price()));
         mTvOldNormalPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-        if (mCoach.getVip()==0) {
+        if (mCoach.getVip() == 0) {
             mRlyVIPPrice.setVisibility(View.GONE);
         } else {
             mRlyVIPPrice.setVisibility(View.VISIBLE);
@@ -373,8 +373,10 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private void getCoachAvatar(String url, CircleImageView civCoachAvatar) {
         final int iconWidth = Util.instence(this).dip2px(70);
         final int iconHeight = iconWidth;
-        Picasso.with(this).load(url).resize(iconWidth, iconHeight)
-                .into(civCoachAvatar);
+        if (!TextUtils.isEmpty(url)) {
+            Picasso.with(this).load(url).resize(iconWidth, iconHeight)
+                    .into(civCoachAvatar);
+        }
     }
 
     private void loadReviews() {

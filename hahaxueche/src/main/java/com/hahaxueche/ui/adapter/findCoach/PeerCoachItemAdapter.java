@@ -1,6 +1,7 @@
 package com.hahaxueche.ui.adapter.findCoach;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,8 +69,10 @@ public class PeerCoachItemAdapter extends BaseAdapter {
     private void getCoachAvatar(String url, CircleImageView civCoachAvatar) {
         final int iconWidth = Util.instence(context).dip2px(40);
         final int iconHeight = iconWidth;
-        Picasso.with(context).load(url).resize(iconWidth, iconHeight)
-                .into(civCoachAvatar);
+        if (!TextUtils.isEmpty(url)) {
+            Picasso.with(context).load(url).resize(iconWidth, iconHeight)
+                    .into(civCoachAvatar);
+        }
     }
 
     static class ViewHolder {

@@ -1,11 +1,14 @@
 package com.hahaxueche.ui.activity.mySetting;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.ClipboardManager;
 import android.text.TextUtils;
@@ -74,6 +77,7 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
     private TextView mTvReferRules;
     private City myCity;
     private ImageView mIvRefer;
+    private static final int PERMISSIONS_REQUEST = 600;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -327,9 +331,13 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
         switch (shareType) {
             case 0:
                 //短信分享
-                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"));
-                intent.putExtra("sms_body", mTitle + mDescription + mUrl);
-                startActivity(intent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.SEND_SMS}, PERMISSIONS_REQUEST);
+                    //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+                } else {
+                    // Android version is lesser than 6.0 or the permission is already granted.
+                    shareToSms();
+                }
                 break;
             case 1:
                 //复制链接
@@ -357,5 +365,23 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                shareToSms();
+            } else {
+                Toast.makeText(this, "请允许发送短信权限，不然无法通过短信分享", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void shareToSms() {
+        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"));
+        intent.putExtra("sms_body", mTitle + mDescription + mUrl);
+        startActivity(intent);
     }
 }

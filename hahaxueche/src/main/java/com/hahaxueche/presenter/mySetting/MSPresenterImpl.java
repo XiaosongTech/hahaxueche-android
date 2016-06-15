@@ -399,7 +399,7 @@ public class MSPresenterImpl implements MSPresenter {
 
             @Override
             protected Student doInBackground(Void... params) {
-                return authApi.completeStuInfo(studentId, cityId, username, accessToken);
+                return authApi.completeStuInfo(studentId, cityId, username, "", accessToken);
             }
 
             @Override

@@ -4,11 +4,16 @@ import com.hahaxueche.model.student.Student;
 import com.hahaxueche.ui.dialog.ShareAppDialog;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -72,6 +77,7 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
     private TextView tvMyCoachContact;
     private ImageView mIvShare;
     private ShareAppDialog shareAppDialog;
+    private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -211,8 +217,10 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
     private void getCoachAvatar(String url, CircleImageView civCoachAvatar) {
         final int iconWidth = Util.instence(this).dip2px(70);
         final int iconHeight = iconWidth;
-        Picasso.with(this).load(url).resize(iconWidth, iconHeight)
-                .into(civCoachAvatar);
+        if (!TextUtils.isEmpty(url)) {
+            Picasso.with(this).load(url).resize(iconWidth, iconHeight)
+                    .into(civCoachAvatar);
+        }
     }
 
 
@@ -251,8 +259,13 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
                     break;
                 //联系方式
                 case R.id.rly_my_coach_contact:
-                    intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mCoach.getCell_phone()));
-                    startActivity(intent);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
+                        //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+                    } else {
+                        // Android version is lesser than 6.0 or the permission is already granted.
+                        contactCoach();
+                    }
                     break;
                 case R.id.iv_my_coach_share:
                     showShareAppDialog();
@@ -297,6 +310,29 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
                 }
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_CELL_PHONE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                contactCoach();
+            } else {
+                Toast.makeText(this, "请允许拨打电话权限，不然无法直接拨号联系教练", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**
+     * 联系客服
+     */
+    private void contactCoach() {
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mCoach.getCell_phone()));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        startActivity(intent);
     }
 
 }

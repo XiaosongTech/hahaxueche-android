@@ -106,6 +106,7 @@ public class MySettingActivity extends MSBaseActivity {
     private EditUsernameDialog mEditUsernameDialog;
     private String mAlbumPicturePath = null;
     private static final int PERMISSIONS_REQUEST = 600;
+    private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -185,14 +186,16 @@ public class MySettingActivity extends MSBaseActivity {
             msvMain.setVisibility(View.VISIBLE);
             mSrlMySetting.setVisibility(View.VISIBLE);
             tvStuName.setText(mStudent.getName());
-            //头像
-            int iconWidth = Util.instence(this).dip2px(90);
-            int iconHeight = iconWidth;
-            if (useCachePolicy) {
-                Picasso.with(this).invalidate(mStudent.getAvatar());
-                Picasso.with(this).load(mStudent.getAvatar()).resize(iconWidth, iconHeight).into(cirMyAvatar);
-            } else {
-                Picasso.with(this).load(mStudent.getAvatar()).resize(iconWidth, iconHeight).into(cirMyAvatar);
+            if (!TextUtils.isEmpty(mStudent.getAvatar())) {
+                //头像
+                int iconWidth = Util.instence(this).dip2px(90);
+                int iconHeight = iconWidth;
+                if (useCachePolicy) {
+                    Picasso.with(this).invalidate(mStudent.getAvatar());
+                    Picasso.with(this).load(mStudent.getAvatar()).resize(iconWidth, iconHeight).into(cirMyAvatar);
+                } else {
+                    Picasso.with(this).load(mStudent.getAvatar()).resize(iconWidth, iconHeight).into(cirMyAvatar);
+                }
             }
             if (mStudent.getPurchased_services() != null && mStudent.getPurchased_services().size() > 0) {
                 //有pruchased service，目前默认取第一个
@@ -313,11 +316,13 @@ public class MySettingActivity extends MSBaseActivity {
                     break;
                 //客服热线
                 case R.id.rly_customer_phone:
-                    intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:4000016006"));
-                    if (ActivityCompat.checkSelfPermission(MySettingActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                        return;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
+                        //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+                    } else {
+                        // Android version is lesser than 6.0 or the permission is already granted.
+                        contactService();
                     }
-                    startActivity(intent);
                     break;
                 //关于哈哈
                 case R.id.rly_about_haha:
@@ -385,6 +390,13 @@ public class MySettingActivity extends MSBaseActivity {
                 showPhotoDialog();
             } else {
                 Toast.makeText(this, "请允许读写sdcard权限，不然我们无法完成头像采集操作", Toast.LENGTH_SHORT).show();
+            }
+        }else if(requestCode == PERMISSIONS_REQUEST_CELL_PHONE){
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                contactService();
+            } else {
+                Toast.makeText(this, "请允许拨打电话权限，不然无法直接拨号联系客服", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -554,5 +566,16 @@ public class MySettingActivity extends MSBaseActivity {
                 isRefresh = false;
             }
         });
+    }
+
+    /**
+     * 联系客服
+     */
+    private void contactService() {
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:4000016006"));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        startActivity(intent);
     }
 }

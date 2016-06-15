@@ -2,6 +2,7 @@ package com.hahaxueche.ui.adapter.mySetting;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,9 +65,11 @@ public class ReferInfoAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
         Referee referee = mRefereeList.get(position);
-        final int iconWidth = Util.instence(mContext).dip2px(50);
-        final int iconHeight = iconWidth;
-        Picasso.with(mContext).load(referee.getReferee_status().getAvatar_url()).resize(iconWidth, iconHeight).into(holder.civStudentAvatar);
+        if (!TextUtils.isEmpty(referee.getReferee_status().getAvatar_url())) {
+            final int iconWidth = Util.instence(mContext).dip2px(50);
+            final int iconHeight = iconWidth;
+            Picasso.with(mContext).load(referee.getReferee_status().getAvatar_url()).resize(iconWidth, iconHeight).into(holder.civStudentAvatar);
+        }
         holder.tvRefereeName.setText(referee.getReferee_status().getName());
         holder.tvReferAmount.setText(Util.getMoney(referee.getReferer_bonus_amount()));
         if (referee.getReferee_status().getStatus().equals("0")) {

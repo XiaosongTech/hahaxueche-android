@@ -101,11 +101,13 @@ public class PaymentStageActivity extends MSBaseActivity {
         if (null != mCurrentCoach) {
             //教练姓名
             tvPsCoachName.setText(mCurrentCoach.getName());
-            //头像
-            final int iconWidth = Util.instence(this).dip2px(50);
-            final int iconHeight = iconWidth;
-            Picasso.with(this).load(mCurrentCoach.getAvatar()).resize(iconWidth, iconHeight)
-                    .into(civPsCoachAvatar);
+            if (!TextUtils.isEmpty(mCurrentCoach.getAvatar())) {
+                //头像
+                final int iconWidth = Util.instence(this).dip2px(50);
+                final int iconHeight = iconWidth;
+                Picasso.with(this).load(mCurrentCoach.getAvatar()).resize(iconWidth, iconHeight)
+                        .into(civPsCoachAvatar);
+            }
         }
         //支付时间
         tvPaidTime.setText(Util.getDateFromUTC(mPurchasedService.getPaid_at()));

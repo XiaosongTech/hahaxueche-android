@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -91,8 +92,10 @@ public class LoopStudentAdapter extends BaseAdapter {
     private void getStudentAvatar(String url, CircleImageView civCoachAvatar) {
         final int iconWidth = Util.instence(context).dip2px(50);
         final int iconHeight = iconWidth;
-        Picasso.with(context).load(url).resize(iconWidth, iconHeight)
-                .into(civCoachAvatar);
+        if (!TextUtils.isEmpty(url)) {
+            Picasso.with(context).load(url).resize(iconWidth, iconHeight)
+                    .into(civCoachAvatar);
+        }
     }
 
     static class ViewHolder {

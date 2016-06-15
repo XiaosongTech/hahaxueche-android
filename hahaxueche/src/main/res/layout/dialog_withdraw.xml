@@ -64,7 +64,7 @@
         android:layout_gravity="left"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
-        android:text="1.提现金额将于1-3个工作日内打入您的支付宝账户"
+        android:text="1.提现金额将于10个工作日内打入您的支付宝账户"
         android:textColor="@color/haha_gray_heavier"
         android:textSize="12sp" />
 

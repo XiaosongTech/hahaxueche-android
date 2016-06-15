@@ -22,6 +22,9 @@ public class SoftwareInfoActivity extends MSBaseActivity {
     private ImageButton mIbtnBack;
     private RelativeLayout mRlyVersionCheck;
     private TextView mTvCurrentVersion;
+    private PackageManager pm;
+    private PackageInfo pi;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +47,13 @@ public class SoftwareInfoActivity extends MSBaseActivity {
     }
 
     private void loadDatas() {
-        SharedPreferencesUtil spUtil = new SharedPreferencesUtil(SoftwareInfoActivity.this);
-        mTvCurrentVersion.setText("当前版本：" + spUtil.getConstants().getVersion_name());
+        pm = this.getPackageManager();
+        try {
+            pi = pm.getPackageInfo(this.getPackageName(), 0);
+            mTvCurrentVersion.setText("当前版本： " + pi.versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     private View.OnClickListener mClickListener = new View.OnClickListener() {
@@ -67,9 +75,7 @@ public class SoftwareInfoActivity extends MSBaseActivity {
      * 版本检测
      */
     private void doVersionCheck() {
-        try {
-            PackageManager pm = this.getPackageManager();
-            PackageInfo pi = pm.getPackageInfo(this.getPackageName(), 0);
+        if (pi != null) {
             int versioncode = pi.versionCode;
             SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
             Constants constants = spUtil.getConstants();
@@ -81,10 +87,6 @@ public class SoftwareInfoActivity extends MSBaseActivity {
                 BaseAlertDialog baseAlertDialog = new BaseAlertDialog(this, "", "提醒", "您已经是最新版本了！");
                 baseAlertDialog.show();
             }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
         }
-
-
     }
 }

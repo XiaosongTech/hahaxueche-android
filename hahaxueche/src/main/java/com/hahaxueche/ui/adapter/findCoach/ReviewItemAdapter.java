@@ -73,10 +73,12 @@ public class ReviewItemAdapter extends BaseAdapter {
             holder.tvReviewComment.setSingleLine();
             holder.tvReviewComment.setEllipsize(TextUtils.TruncateAt.valueOf("END"));
         }
-        final int iconWidth = Util.instence(mContext).dip2px(40);
-        final int iconHeight = iconWidth;
-        Picasso.with(mContext).load(reviewInfo.getReviewer().getAvatar_url()).resize(iconWidth, iconHeight)
-                .into(holder.civReviewerAvatar);
+        if (!TextUtils.isEmpty(reviewInfo.getReviewer().getAvatar_url())) {
+            final int iconWidth = Util.instence(mContext).dip2px(40);
+            final int iconHeight = iconWidth;
+            Picasso.with(mContext).load(reviewInfo.getReviewer().getAvatar_url()).resize(iconWidth, iconHeight)
+                    .into(holder.civReviewerAvatar);
+        }
         String reviewDate = "";
         if (!TextUtils.isEmpty(reviewInfo.getUpdated_at())) {
             reviewDate = reviewInfo.getUpdated_at().substring(0, 10);

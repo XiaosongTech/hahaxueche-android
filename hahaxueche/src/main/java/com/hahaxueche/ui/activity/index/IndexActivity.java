@@ -1,8 +1,12 @@
 package com.hahaxueche.ui.activity.index;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -46,6 +50,7 @@ import com.hahaxueche.ui.dialog.CityChoseDialog;
 import com.hahaxueche.ui.dialog.GroupBuyDialog;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
 import com.hahaxueche.utils.SharedPreferencesUtil;
+import com.hahaxueche.utils.UpdateManager;
 import com.hahaxueche.utils.Util;
 
 import java.util.ArrayList;
@@ -82,6 +87,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     private User mUser;
     private GroupBuyDialog mGroupBuyDialog;
     private AppointmentDialog appointmentDialog;
+    private static final int PERMISSIONS_REQUEST = 600;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,51 +113,18 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                     });
             mCityChoseDialog.show();
         }
-        //初始化定位
-        mLocationClient = new AMapLocationClient(IndexActivity.this);
-        mLocationListener = new AMapLocationListener() {
-            @Override
-            public void onLocationChanged(AMapLocation aMapLocation) {
-                if (aMapLocation != null) {
-                    if (aMapLocation.getErrorCode() == 0) {
-                        //定位成功回调信息，设置相关消息
-                        mLat = aMapLocation.getLatitude();//获取纬度
-                        mLng = aMapLocation.getLongitude();//获取经度
-                        Location location = new Location();
-                        location.setLat(mLat + "");
-                        location.setLng(mLng + "");
-                        spUtil.setLocation(location);
-                        if (mLat != 0d && mLng != 0d) {
-                            mLocationClient.stopLocation();
-                        }
-                    } else {
-                        //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
-                        Log.e("AmapError", "location Error, ErrCode:"
-                                + aMapLocation.getErrorCode() + ", errInfo:"
-                                + aMapLocation.getErrorInfo());
-                    }
-                }
-            }
-        };
-        //设置定位回调监听
-        mLocationClient.setLocationListener(mLocationListener);
-        //初始化定位参数
-        mLocationOption = new AMapLocationClientOption();
-        //设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
-        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-        //设置是否只定位一次,默认为false
-        mLocationOption.setOnceLocation(false);
-        //设置是否允许模拟位置,默认为false，不允许模拟位置
-        mLocationOption.setMockEnable(false);
-        //设置定位间隔,单位毫秒,默认为2000ms
-        mLocationOption.setInterval(2000);
-        //给定位客户端对象设置定位参数
-        mLocationClient.setLocationOption(mLocationOption);
-        //启动定位
-        mLocationClient.startLocation();
+        // Check the SDK version and whether the permission is already granted or not.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST);
+            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+        } else {
+            // Android version is lesser than 6.0 or the permission is already granted.
+            startLocation();
+        }
         if (!TextUtils.isEmpty(spUtil.getRefererId())) {
             showFirstBonusAlert();
         }
+        doAutoVersionCheck();
     }
 
     private void initView() {
@@ -271,14 +244,6 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                     finish();
                 }
                 break;
-            case 3:
-                //关于小哈
-                aboutXiaoha();
-                break;
-            case 4:
-                //关于教练
-                aboutCoach();
-                break;
             default:
                 break;
         }
@@ -391,5 +356,85 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
             appointmentDialog = new AppointmentDialog(IndexActivity.this, name, phoneNumber, "", true);
         }
         appointmentDialog.show();
+    }
+
+    /**
+     * 版本检测
+     */
+    private void doAutoVersionCheck() {
+        PackageManager pm = this.getPackageManager();
+        PackageInfo pi = null;
+        try {
+            pi = pm.getPackageInfo(this.getPackageName(), 0);
+            int versioncode = pi.versionCode;
+            SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
+            Constants constants = spUtil.getConstants();
+            if (constants.getVersion_code() > versioncode) {
+                //有版本更新时
+                UpdateManager updateManager = new UpdateManager(IndexActivity.this);
+                updateManager.checkUpdateInfo();
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                startLocation();
+            } else {
+                Toast.makeText(this, "请允许使用定位权限，不然我们无法精确的为您推荐教练", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**
+     * 开启定位
+     */
+    private void startLocation(){
+        //初始化定位
+        mLocationClient = new AMapLocationClient(IndexActivity.this);
+        mLocationListener = new AMapLocationListener() {
+            @Override
+            public void onLocationChanged(AMapLocation aMapLocation) {
+                if (aMapLocation != null) {
+                    if (aMapLocation.getErrorCode() == 0) {
+                        //定位成功回调信息，设置相关消息
+                        mLat = aMapLocation.getLatitude();//获取纬度
+                        mLng = aMapLocation.getLongitude();//获取经度
+                        Location location = new Location();
+                        location.setLat(mLat + "");
+                        location.setLng(mLng + "");
+                        spUtil.setLocation(location);
+                        if (mLat != 0d && mLng != 0d) {
+                            mLocationClient.stopLocation();
+                        }
+                    } else {
+                        //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
+                        Log.e("AmapError", "location Error, ErrCode:"
+                                + aMapLocation.getErrorCode() + ", errInfo:"
+                                + aMapLocation.getErrorInfo());
+                    }
+                }
+            }
+        };
+        //设置定位回调监听
+        mLocationClient.setLocationListener(mLocationListener);
+        //初始化定位参数
+        mLocationOption = new AMapLocationClientOption();
+        //设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
+        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        //设置是否只定位一次,默认为false
+        mLocationOption.setOnceLocation(false);
+        //设置是否允许模拟位置,默认为false，不允许模拟位置
+        mLocationOption.setMockEnable(false);
+        //设置定位间隔,单位毫秒,默认为2000ms
+        mLocationOption.setInterval(2000);
+        //给定位客户端对象设置定位参数
+        mLocationClient.setLocationOption(mLocationOption);
+        //启动定位
+        mLocationClient.startLocation();
     }
 }
