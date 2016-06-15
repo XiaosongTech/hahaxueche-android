@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Constants;
@@ -20,6 +21,7 @@ import com.hahaxueche.utils.Util;
 public class SoftwareInfoActivity extends MSBaseActivity {
     private ImageButton mIbtnBack;
     private RelativeLayout mRlyVersionCheck;
+    private TextView mTvCurrentVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,16 +29,23 @@ public class SoftwareInfoActivity extends MSBaseActivity {
         setContentView(R.layout.activity_software_info);
         initView();
         initEvent();
+        loadDatas();
     }
 
     private void initView() {
         mIbtnBack = Util.instence(this).$(this, R.id.ibtn_back);
         mRlyVersionCheck = Util.instence(this).$(this, R.id.rly_version_check);
+        mTvCurrentVersion = Util.instence(this).$(this, R.id.tv_current_version);
     }
 
     private void initEvent() {
         mIbtnBack.setOnClickListener(mClickListener);
         mRlyVersionCheck.setOnClickListener(mClickListener);
+    }
+
+    private void loadDatas() {
+        SharedPreferencesUtil spUtil = new SharedPreferencesUtil(SoftwareInfoActivity.this);
+        mTvCurrentVersion.setText("当前版本：" + spUtil.getConstants().getVersion_name());
     }
 
     private View.OnClickListener mClickListener = new View.OnClickListener() {
@@ -64,12 +73,12 @@ public class SoftwareInfoActivity extends MSBaseActivity {
             int versioncode = pi.versionCode;
             SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
             Constants constants = spUtil.getConstants();
-            if(constants.getVersion_code()>versioncode){
+            if (constants.getVersion_code() > versioncode) {
                 //有版本更新时
                 UpdateManager updateManager = new UpdateManager(SoftwareInfoActivity.this);
                 updateManager.checkUpdateInfo();
-            }else {
-                BaseAlertDialog baseAlertDialog = new BaseAlertDialog(this,"","提醒","您已经是最新版本了！");
+            } else {
+                BaseAlertDialog baseAlertDialog = new BaseAlertDialog(this, "", "提醒", "您已经是最新版本了！");
                 baseAlertDialog.show();
             }
         } catch (PackageManager.NameNotFoundException e) {

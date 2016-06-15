@@ -127,7 +127,7 @@ public class PhotoUtil {
         intent.putExtra("scale", true);
         intent.putExtra("return-data", false);
         intent.putExtra(MediaStore.EXTRA_OUTPUT,
-                Uri.fromFile(new File(IMGPATH, TMP_IMAGE_FILE_NAME)));
+                Uri.fromFile(new File(IMGPATH, IMAGE_FILE_NAME)));
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         intent.putExtra("noFaceDetection", true); // no face detection
         mActivity.startActivityForResult(intent, SELECT_A_PICTURE);
@@ -165,7 +165,7 @@ public class PhotoUtil {
         intent.putExtra("outputY", height * 2);
 //        intent.putExtra("return-data", true);
 
-        uritempFile = Uri.parse("file://" + "/" + Environment.getExternalStorageDirectory().getPath() + "/" + "small.jpg");
+        uritempFile = Uri.fromFile(new File(IMGPATH, IMAGE_FILE_NAME));
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uritempFile);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
 
@@ -190,7 +190,7 @@ public class PhotoUtil {
         intent.putExtra("scale", true);
         intent.putExtra("return-data", false);
         intent.putExtra(MediaStore.EXTRA_OUTPUT,
-                Uri.fromFile(new File(IMGPATH, TMP_IMAGE_FILE_NAME)));
+                Uri.fromFile(new File(IMGPATH, IMAGE_FILE_NAME)));
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         intent.putExtra("noFaceDetection", true);
         mActivity.startActivityForResult(intent, SET_ALBUM_PICTURE_KITKAT);

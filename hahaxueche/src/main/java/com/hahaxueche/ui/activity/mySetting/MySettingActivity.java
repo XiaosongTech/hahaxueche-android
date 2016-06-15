@@ -1,11 +1,16 @@
 package com.hahaxueche.ui.activity.mySetting;
 
 import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -39,6 +44,7 @@ import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
 import com.hahaxueche.ui.dialog.FAQDialog;
 import com.hahaxueche.ui.dialog.RegisterInfoPhotoDialog;
+import com.hahaxueche.ui.dialog.mySetting.EditUsernameDialog;
 import com.hahaxueche.ui.util.PhotoUtil;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.ui.widget.monitorScrollView.MonitorScrollView;
@@ -86,7 +92,6 @@ public class MySettingActivity extends MSBaseActivity {
     private ProgressDialog pd;//进度框
     private Session mSession;
     private SharedPreferencesUtil spUtil;
-    private String mPhotoPath;
     private PhotoUtil mPhotoUtil;
     private SwipeRefreshLayout mSrlMySetting;
     private boolean isRefresh = false;//是否刷新中
@@ -97,6 +102,10 @@ public class MySettingActivity extends MSBaseActivity {
     private RelativeLayout mRlySoftwareInfo;//软件信息
     private FAQDialog faqDialog = null;
     private TextView mTvStudentPhase;
+    private ImageView mIvEditUsername;//修改用户名
+    private EditUsernameDialog mEditUsernameDialog;
+    private String mAlbumPicturePath = null;
+    private static final int PERMISSIONS_REQUEST = 600;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,7 +116,7 @@ public class MySettingActivity extends MSBaseActivity {
         mTencent = Tencent.createInstance(ShareConstants.APP_ID_QQ, MySettingActivity.this);
         initView();
         initEvent();
-        loadDatas();
+        loadDatas(false);
     }
 
     private void initView() {
@@ -138,6 +147,7 @@ public class MySettingActivity extends MSBaseActivity {
         mRlySupportHaha = Util.instence(this).$(this, R.id.rly_support_haha);
         mRlySoftwareInfo = Util.instence(this).$(this, R.id.rly_software_info);
         mTvStudentPhase = Util.instence(this).$(this, R.id.tv_student_phase);
+        mIvEditUsername = Util.instence(this).$(this, R.id.iv_edit_username);
     }
 
     private void initEvent() {
@@ -153,7 +163,7 @@ public class MySettingActivity extends MSBaseActivity {
         llyLoginOff.setOnClickListener(mClickListener);
         rlyCustomerPhone.setOnClickListener(mClickListener);
         rlyAboutHaha.setOnClickListener(mClickListener);
-        cirMyAvatar.setOnLongClickListener(mLongClickListener);
+        cirMyAvatar.setOnClickListener(mClickListener);
         mSrlMySetting.setOnRefreshListener(mRefreshListener);
         mSrlMySetting.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
         mRlyRefererFriends.setOnClickListener(mClickListener);
@@ -161,9 +171,10 @@ public class MySettingActivity extends MSBaseActivity {
         mRlyStuFAQ.setOnClickListener(mClickListener);
         mRlySupportHaha.setOnClickListener(mClickListener);
         mRlySoftwareInfo.setOnClickListener(mClickListener);
+        mIvEditUsername.setOnClickListener(mClickListener);
     }
 
-    private void loadDatas() {
+    private void loadDatas(boolean useCachePolicy) {
         mSession = spUtil.getUser().getSession();
         mStudent = spUtil.getUser().getStudent();
         if (mSession != null && mStudent != null && !TextUtils.isEmpty(mSession.getId()) && !TextUtils.isEmpty(mStudent.getId())) {
@@ -177,7 +188,12 @@ public class MySettingActivity extends MSBaseActivity {
             //头像
             int iconWidth = Util.instence(this).dip2px(90);
             int iconHeight = iconWidth;
-            Picasso.with(this).load(mStudent.getAvatar()).resize(iconWidth, iconHeight).into(cirMyAvatar);
+            if (useCachePolicy) {
+                Picasso.with(this).invalidate(mStudent.getAvatar());
+                Picasso.with(this).load(mStudent.getAvatar()).resize(iconWidth, iconHeight).into(cirMyAvatar);
+            } else {
+                Picasso.with(this).load(mStudent.getAvatar()).resize(iconWidth, iconHeight).into(cirMyAvatar);
+            }
             if (mStudent.getPurchased_services() != null && mStudent.getPurchased_services().size() > 0) {
                 //有pruchased service，目前默认取第一个
                 mPurchasedService = mStudent.getPurchased_services().get(0);
@@ -336,9 +352,64 @@ public class MySettingActivity extends MSBaseActivity {
                     intent = new Intent(getApplication(), SoftwareInfoActivity.class);
                     startActivity(intent);
                     break;
+                case R.id.cir_my_avatar:
+                    // Check the SDK version and whether the permission is already granted or not.
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                            (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                                    || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                                    || checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
+                        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, PERMISSIONS_REQUEST);
+                        //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+                    } else {
+                        // Android version is lesser than 6.0 or the permission is already granted.
+                        showPhotoDialog();
+                    }
+                    break;
+                case R.id.iv_edit_username:
+                    if (null == mEditUsernameDialog) {
+                        mEditUsernameDialog = new EditUsernameDialog(MySettingActivity.this, mEditUsernameSaveListener);
+                    }
+                    mEditUsernameDialog.show();
                 default:
                     break;
             }
+        }
+    };
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                showPhotoDialog();
+            } else {
+                Toast.makeText(this, "请允许读写sdcard权限，不然我们无法完成头像采集操作", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void showPhotoDialog() {
+        RegisterInfoPhotoDialog dialog = new RegisterInfoPhotoDialog(MySettingActivity.this);
+        dialog.show();
+    }
+
+    private EditUsernameDialog.OnEditUsernameSaveListener mEditUsernameSaveListener = new EditUsernameDialog.OnEditUsernameSaveListener() {
+        @Override
+        public boolean saveUserName(String username) {
+            msPresenter.editUsername(mStudent.getId(), mStudent.getCity_id(), username, mSession.getAccess_token(), new MSCallbackListener<Student>() {
+                @Override
+                public void onSuccess(Student student) {
+                    Toast.makeText(MySettingActivity.this, "用户名修改成功！", Toast.LENGTH_SHORT).show();
+                    refreshStudent();
+                }
+
+                @Override
+                public void onFailure(String errorEvent, String message) {
+
+                }
+            });
+            return true;
         }
     };
 
@@ -360,108 +431,72 @@ public class MySettingActivity extends MSBaseActivity {
 
     }
 
-    private View.OnLongClickListener mLongClickListener = new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View v) {
-            switch (v.getId()) {
-                case R.id.cir_my_avatar:
-                    RegisterInfoPhotoDialog dialog = new RegisterInfoPhotoDialog(MySettingActivity.this);
-                    dialog.show();
-                    break;
-                default:
-                    break;
-            }
-            return true;
-        }
-    };
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 100) {//相机
+        if (requestCode == PhotoUtil.SELECT_A_PICTURE) {
             if (resultCode == RESULT_OK && null != data) {
-                Bundle bundle = data.getExtras();
-                Bitmap bitmap = mPhotoUtil.resizeBitmapByWidth((Bitmap) bundle.get("data"), 300);
-                FileOutputStream b = null;
-                String str = null;
-                Date date = null;
-                SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd_HHmmss");// 获取当前时间，进一步转化为字符串
-                date = new Date(System.currentTimeMillis());
-                str = format.format(date);
-                mPhotoPath = Environment.getExternalStorageDirectory() + File.separator + "haha" + File.separator +
-                        "icon_cache" + File.separator + str + ".jpg";
-                File photo = new File(mPhotoPath);
-                photo.getParentFile().mkdirs();
-                if (!photo.exists()) {
-                    try {
-                        photo.createNewFile();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                try {
-                    b = new FileOutputStream(mPhotoPath);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        b.flush();
-                        b.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                //mPhotoPath = mPhotoUtil.getPath(getApplicationContext(), uri);
-                Toast.makeText(this, "照片拍摄成功！", Toast.LENGTH_LONG).show();
-
+                //4.4以下的;
+                Bitmap bitmap = mPhotoUtil.decodeUriAsBitmap(Uri.fromFile(new File(PhotoUtil.IMGPATH,
+                        PhotoUtil.TMP_IMAGE_FILE_NAME)));
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(MySettingActivity.this, "取消头像设置", Toast.LENGTH_SHORT).show();
             }
-        } else if (requestCode == 200) {//从图库选择
+        } else if (requestCode == PhotoUtil.SELECET_A_PICTURE_AFTER_KIKAT) {
             if (resultCode == RESULT_OK && null != data) {
-                Uri uri = data.getData();
-                Log.v("gibxin", "onActivityResult : uri -> " + uri);
-                Bitmap bitmap = mPhotoUtil.resizeBitmapByWidth(mPhotoUtil.decodeUriAsBitmap(uri), 300);
-                FileOutputStream b = null;
-                String str = null;
-                Date date = null;
-                SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd_HHmmss");// 获取当前时间，进一步转化为字符串
-                date = new Date(System.currentTimeMillis());
-                str = format.format(date);
-                mPhotoPath = Environment.getExternalStorageDirectory() + File.separator + "haha" + File.separator +
-                        "icon_cache" + File.separator + str + ".jpg";
-                File photo = new File(mPhotoPath);
-                photo.getParentFile().mkdirs();
-                if (!photo.exists()) {
-                    try {
-                        photo.createNewFile();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                try {
-                    b = new FileOutputStream(mPhotoPath);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        b.flush();
-                        b.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                //mPhotoPath = mPhotoUtil.getPath(getApplicationContext(), uri);
+                cropImageUriAfterKikat(data);
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(MySettingActivity.this, "取消头像设置", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == PhotoUtil.SET_ALBUM_PICTURE_KITKAT) {
+            Log.i("lgx", "4.4以上上的 RESULT_OK");
+
+            Bitmap bitmap = mPhotoUtil.decodeUriAsBitmap(Uri.fromFile(new File(PhotoUtil.IMGPATH,
+                    PhotoUtil.TMP_IMAGE_FILE_NAME)));
+            uploadAvatar();
+        } else if (requestCode == PhotoUtil.TAKE_A_PICTURE) {
+            Log.i("lgx", "TAKE_A_PICTURE-resultCode:" + resultCode);
+            if (resultCode == RESULT_OK) {
+                mPhotoUtil.cameraCropImageUri(Uri.fromFile(new File(PhotoUtil.IMGPATH, PhotoUtil.IMAGE_FILE_NAME)),
+                        Util.instence(MySettingActivity.this).dip2px(RegisterInfoPhotoDialog.output_X),
+                        Util.instence(MySettingActivity.this).dip2px(RegisterInfoPhotoDialog.output_Y));
+            } else {
+                Toast.makeText(MySettingActivity.this, "取消头像设置", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == PhotoUtil.SET_PICTURE) {
+            //拍照的设置头像  不考虑版本
+            Bitmap bitmap = null;
+            if (resultCode == RESULT_OK && null != data) {
+                if (mPhotoUtil.uritempFile != null) {
+                    try {
+                        bitmap = BitmapFactory
+                                .decodeStream(getContentResolver().openInputStream(mPhotoUtil.uritempFile));
+                        uploadAvatar();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(MySettingActivity.this, "取消头像设置", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(MySettingActivity.this, "设置头像失败", Toast.LENGTH_SHORT).show();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void cropImageUriAfterKikat(Intent data) {
+        mAlbumPicturePath = mPhotoUtil.getPath(getApplicationContext(), data.getData());
+        mPhotoUtil.cropImageUriAfterKikat(Uri.fromFile(new File(mAlbumPicturePath)),
+                Util.instence(MySettingActivity.this).dip2px(RegisterInfoPhotoDialog.output_X),
+                Util.instence(MySettingActivity.this).dip2px(RegisterInfoPhotoDialog.output_Y));
+    }
+
+    private void uploadAvatar() {
         pd = ProgressDialog.show(MySettingActivity.this, null, "头像上传中，请稍后……");
-        this.msPresenter.uploadAvatar(mStudent.getId(), mSession.getAccess_token(), mPhotoPath, new MSCallbackListener<Student>() {
+        this.msPresenter.uploadAvatar(mStudent.getId(), mSession.getAccess_token(), PhotoUtil.IMGPATH + "/" + PhotoUtil.IMAGE_FILE_NAME, new MSCallbackListener<Student>() {
             @Override
             public void onSuccess(Student data) {
+                Toast.makeText(MySettingActivity.this, "头像修改成功！", Toast.LENGTH_SHORT).show();
                 refreshStudent();
             }
 
@@ -502,7 +537,7 @@ public class MySettingActivity extends MSBaseActivity {
                 User user = spUtil.getUser();
                 user.setStudent(student);
                 spUtil.setUser(user);
-                loadDatas();
+                loadDatas(true);
                 if (pd != null) {
                     pd.dismiss();
                 }

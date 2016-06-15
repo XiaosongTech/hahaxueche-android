@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fCBackgroundGray">
+    android:background="@color/fCBackgroundGray"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/rly_ps_title"
@@ -33,173 +34,183 @@
             android:textSize="20sp" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/rly_ps_info"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/rly_ps_title"
-        android:background="@color/app_theme_color"
-        android:paddingBottom="15dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="15dp">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/tv_ps_coach_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tv_ps_coach_name"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/tv_ps_coach_name"
-            android:text="@string/myCoach"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/tv_paid_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_ps_coach_name"
-            android:layout_marginTop="14dp"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/tv_order_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tv_paid_time"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="14dp"
-            android:layout_toRightOf="@id/tv_paid_time"
-            android:text="@string/myOrderCode"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/tv_order_code"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tv_order_label"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="80dp"
-            android:layout_marginTop="14dp"
-            android:layout_toRightOf="@id/tv_order_label"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
-
-        <com.hahaxueche.ui.widget.circleImageView.CircleImageView
-            android:id="@+id/cir_ps_coach_avatar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/ic_mypage_ava"></com.hahaxueche.ui.widget.circleImageView.CircleImageView>
-
-        <View
-            android:id="@+id/vw_ps_1"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_below="@id/tv_paid_time"
-            android:layout_marginTop="16dp"
-            android:background="@android:color/white" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_ps_total_amount_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/vw_ps_1"
-            android:layout_marginTop="14dp"
-            android:text="@string/myTotalAmount"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            <RelativeLayout
+                android:id="@+id/rly_ps_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rly_ps_title"
+                android:background="@color/app_theme_color"
+                android:paddingBottom="15dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="15dp">
 
-        <TextView
-            android:id="@+id/tv_ps_paid_amount_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/vw_ps_1"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="14dp"
-            android:text="@string/myPaidAmount"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/tv_ps_coach_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="22sp" />
 
-        <TextView
-            android:id="@+id/tv_ps_unpaid_amount_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tv_ps_paid_amount_label"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="14dp"
-            android:text="@string/myUnPaidAmount"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/tv_ps_coach_name"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@id/tv_ps_coach_name"
+                    android:text="@string/myCoach"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_paid_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_ps_coach_name"
+                    android:layout_marginTop="16dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_order_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/tv_paid_time"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="14dp"
+                    android:layout_toRightOf="@id/tv_paid_time"
+                    android:text="@string/myOrderCode"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_order_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/tv_order_label"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="80dp"
+                    android:layout_marginTop="14dp"
+                    android:layout_toRightOf="@id/tv_order_label"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp" />
+
+                <com.hahaxueche.ui.widget.circleImageView.CircleImageView
+                    android:id="@+id/cir_ps_coach_avatar"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/ic_mypage_ava"></com.hahaxueche.ui.widget.circleImageView.CircleImageView>
+
+                <View
+                    android:id="@+id/vw_ps_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_below="@id/tv_paid_time"
+                    android:layout_marginTop="16dp"
+                    android:background="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/tv_ps_total_amount_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/vw_ps_1"
+                    android:layout_marginTop="14dp"
+                    android:text="@string/myTotalAmount"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_ps_paid_amount_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/vw_ps_1"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="14dp"
+                    android:text="@string/myPaidAmount"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_ps_unpaid_amount_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/tv_ps_paid_amount_label"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="14dp"
+                    android:text="@string/myUnPaidAmount"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp" />
 
 
-        <TextView
-            android:id="@+id/tv_ps_total_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_ps_total_amount_label"
-            android:layout_marginTop="10dp"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/tv_ps_total_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_ps_total_amount_label"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/tv_ps_paid_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/tv_ps_paid_amount_label"
-            android:layout_below="@id/tv_ps_paid_amount_label"
-            android:layout_marginTop="10dp"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/tv_ps_paid_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/tv_ps_paid_amount_label"
+                    android:layout_below="@id/tv_ps_paid_amount_label"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/tv_ps_unpaid_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tv_ps_paid_amount"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="10dp"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/tv_ps_unpaid_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/tv_ps_paid_amount"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
 
 
-    </RelativeLayout>
+            </RelativeLayout>
 
-    <ListView
-        android:id="@+id/lv_purchased_services"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/rly_ps_info"
-        android:divider="@drawable/layer_list_divider_review"
-        android:dividerHeight="1dp"
-        android:footerDividersEnabled="false"
-        android:headerDividersEnabled="false"></ListView>
+            <ListView
+                android:id="@+id/lv_purchased_services"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@drawable/layer_list_divider_review"
+                android:dividerHeight="1dp"
+                android:footerDividersEnabled="false"
+                android:headerDividersEnabled="false"></ListView>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/lv_purchased_services"
-        android:background="@color/fCBackgroundGray"
-        android:lineSpacingMultiplier="1.2"
-        android:padding="14dp"
-        android:text="@string/myPaymentRemarks"
-        android:textColor="@color/fCTxtGrayFade"
-        android:textSize="12sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lv_purchased_services"
+                android:background="@color/fCBackgroundGray"
+                android:lineSpacingMultiplier="1.2"
+                android:padding="14dp"
+                android:text="@string/myPaymentRemarks"
+                android:textColor="@color/fCTxtGrayFade"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
         <TextView
@@ -241,4 +252,4 @@
             android:visibility="gone" />
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

@@ -514,7 +514,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                         name = mStudent.getName();
                         phoneNumber = mStudent.getCell_phone();
                     }
-                    appointmentDialog = new AppointmentDialog(CoachDetailActivity.this, name, phoneNumber, mCoach.getId());
+                    appointmentDialog = new AppointmentDialog(CoachDetailActivity.this, name, phoneNumber, mCoach.getId(), false);
                     appointmentDialog.show();
                     break;
                 //加载评论列表页面
@@ -617,9 +617,11 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(CoachDetailActivity.this, CoachDetailActivity.class);
-            intent.putExtra("coach_id", peerCoachList.get(position).getId());
-            startActivity(intent);
+            if (peerCoachList != null && peerCoachList.size() > 0 && position > -1 && position < peerCoachList.size()) {
+                Intent intent = new Intent(CoachDetailActivity.this, CoachDetailActivity.class);
+                intent.putExtra("coach_id", peerCoachList.get(position).getId());
+                startActivity(intent);
+            }
         }
     };
 

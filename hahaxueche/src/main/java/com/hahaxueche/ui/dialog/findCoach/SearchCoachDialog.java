@@ -203,10 +203,10 @@ public class SearchCoachDialog {
 
     private AdapterView.OnItemClickListener mAdapterClickListener = new AdapterView.OnItemClickListener() {
         @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
             mDialog.dismiss();
-            if (i < mCoachList.size()) {
-                mOnCoachItemClicktListener.selectCoach(mCoachList.get(i));
+            if (mCoachList != null && mCoachList.size() > 0 && position > -1 && position < mCoachList.size()) {
+                mOnCoachItemClicktListener.selectCoach(mCoachList.get(position));
             }
         }
     };

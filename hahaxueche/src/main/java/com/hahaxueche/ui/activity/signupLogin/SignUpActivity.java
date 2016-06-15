@@ -5,7 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,6 +50,7 @@ public class SignUpActivity extends SLBaseActivity {
     private EditText etRegisterSetPwd;//设置密码输入框
     private Button btnGetIdentifyCode;//获取验证码按钮
     private Button btnFinish;//完成按钮
+    private TextView mTvHahaAgreement;//哈哈用户协议
     private boolean isResetPwd;//是否重置密码
     private ProgressDialog pd;//进度框
     private int sendTime = 60;
@@ -76,6 +85,30 @@ public class SignUpActivity extends SLBaseActivity {
         etRegisterSetPwd = (EditText) findViewById(R.id.et_register_set_pwd);
         btnGetIdentifyCode = (Button) findViewById(R.id.btn_get_identify_code);
         btnFinish = (Button) findViewById(R.id.btn_finish);
+        //用户协议
+        mTvHahaAgreement = (TextView) findViewById(R.id.tv_haha_agreement);
+        //部分变色 可点击
+        CharSequence hahaAgreementStr = getText(R.string.hahaAgreement);
+        SpannableString spannableString1 = new SpannableString(hahaAgreementStr);
+        spannableString1.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                Intent intent = new Intent(context, AgreementActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(ContextCompat.getColor(context, R.color.app_theme_color));
+                ds.setUnderlineText(false);
+                ds.clearShadowLayer();
+            }
+        }, hahaAgreementStr.length() - 4, hahaAgreementStr.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString1.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.haha_blue)), hahaAgreementStr.length() - 4, hahaAgreementStr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mTvHahaAgreement.setText(spannableString1);
+        mTvHahaAgreement.setHighlightColor(ContextCompat.getColor(context, R.color.haha_blue));
+        mTvHahaAgreement.setMovementMethod(LinkMovementMethod.getInstance());
         if (isResetPwd) {
             tvRegisterTitle.setText(getResources().getText(R.string.sLResetPwd));//密码重置
         }
@@ -89,6 +122,7 @@ public class SignUpActivity extends SLBaseActivity {
         btnGetIdentifyCode.setVisibility(View.VISIBLE);
         etRegisterSetPwd.setVisibility(View.GONE);
         btnFinish.setVisibility(View.GONE);
+        mTvHahaAgreement.setVisibility(View.GONE);
     }
 
     /**
@@ -102,6 +136,7 @@ public class SignUpActivity extends SLBaseActivity {
         if (isResetPwd) {
             btnFinish.setText(getResources().getText(R.string.sLSure));
         }
+        mTvHahaAgreement.setVisibility(View.VISIBLE);
         sendTime = 60;
         btnReSendIdentifyCode.setClickable(false);
         btnReSendIdentifyCode.setText(sendTime-- + "");

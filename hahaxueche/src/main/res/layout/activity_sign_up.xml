@@ -9,12 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|top"
-        android:layout_marginTop="17dp"
+        android:gravity="center"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="44dp">
+            android:layout_height="wrap_content">
 
             <ImageButton
                 android:id="@+id/ibtn_register_back"
@@ -22,9 +22,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="20dp"
+                android:layout_margin="5dp"
                 android:background="@null"
                 android:onClick="back"
+                android:padding="10dp"
                 android:src="@drawable/ic_arrow_back" />
 
             <TextView
@@ -44,7 +45,7 @@
             android:layout_gravity="bottom"
             android:layout_marginLeft="37dp"
             android:layout_marginRight="37dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="37dp"
             android:background="@drawable/edittext_button"
             android:gravity="center"
             android:hint="@string/sLPleaseEnterPhoneNumber"
@@ -149,6 +150,15 @@
             android:textColor="@android:color/white"
             android:textSize="18sp" />
 
+        <TextView
+            android:id="@+id/tv_haha_agreement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.2"
+            android:textColor="@color/haha_white"
+            android:textSize="12sp" />
 
     </LinearLayout>
 

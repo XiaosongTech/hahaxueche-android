@@ -240,8 +240,9 @@ public class CoachApiImpl implements CoachApi {
         paramMap.put("phone_number", phone_number);
         paramMap.put("first_time_option", first_time_option);
         paramMap.put("second_time_option", second_time_option);
+        paramMap.put("coach_id", coach_id);
         try {
-            Response response = httpEngine.postHandle(paramMap, "students/trial/" + coach_id, "");
+            Response response = httpEngine.postHandle(paramMap, "students/trial/", "");
             String body = response.body().string();
             Log.v("gibxin", "body -> " + body);
             if (response.isSuccessful()) {

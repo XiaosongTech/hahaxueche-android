@@ -55,7 +55,6 @@ public class SignUpInfoActivity extends SLBaseActivity {
     private PhotoUtil mPhotoUtil;
     private String mAlbumPicturePath = null;
     private Bitmap curPhoto = null;
-    private String mPhotoPath;
 
     private ProgressDialog pd;//进度框
 
@@ -172,93 +171,6 @@ public class SignUpInfoActivity extends SLBaseActivity {
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.v(TAG, "onActivityResult : requestCode = " + requestCode + " resultCode = " + resultCode);
-        if (requestCode == 100) {//相机
-            if (resultCode == RESULT_OK && null != data) {
-                Bundle bundle = data.getExtras();
-                Bitmap bitmap = mPhotoUtil.resizeBitmapByWidth((Bitmap) bundle.get("data"), 300);
-                FileOutputStream b = null;
-                String str = null;
-                Date date = null;
-                SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd_HHmmss");// 获取当前时间，进一步转化为字符串
-                date = new Date(System.currentTimeMillis());
-                str = format.format(date);
-                mPhotoPath = Environment.getExternalStorageDirectory() + File.separator + "haha" + File.separator +
-                        "icon_cache" + File.separator + str + ".jpg";
-                File photo = new File(mPhotoPath);
-                photo.getParentFile().mkdirs();
-                if (!photo.exists()) {
-                    try {
-                        photo.createNewFile();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                try {
-                    b = new FileOutputStream(mPhotoPath);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        b.flush();
-                        b.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                //mPhotoPath = mPhotoUtil.getPath(getApplicationContext(), uri);
-                Toast.makeText(this, "照片拍摄成功！", Toast.LENGTH_LONG).show();
-
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(SignUpInfoActivity.this, "取消头像设置", Toast.LENGTH_SHORT).show();
-            }
-        } else if (requestCode == 200) {//从图库选择
-            if (resultCode == RESULT_OK && null != data) {
-                Uri uri = data.getData();
-                Log.v("gibxin", "onActivityResult : uri -> " + uri);
-                Bitmap bitmap = mPhotoUtil.resizeBitmapByWidth(mPhotoUtil.decodeUriAsBitmap(uri), 300);
-                FileOutputStream b = null;
-                String str = null;
-                Date date = null;
-                SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd_HHmmss");// 获取当前时间，进一步转化为字符串
-                date = new Date(System.currentTimeMillis());
-                str = format.format(date);
-                mPhotoPath = Environment.getExternalStorageDirectory() + File.separator + "haha" + File.separator +
-                        "icon_cache" + File.separator + str + ".jpg";
-                File photo = new File(mPhotoPath);
-                photo.getParentFile().mkdirs();
-                if (!photo.exists()) {
-                    try {
-                        photo.createNewFile();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                try {
-                    b = new FileOutputStream(mPhotoPath);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        b.flush();
-                        b.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                //mPhotoPath = mPhotoUtil.getPath(getApplicationContext(), uri);
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(SignUpInfoActivity.this, "取消头像设置", Toast.LENGTH_SHORT).show();
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-
     }
 
 }
