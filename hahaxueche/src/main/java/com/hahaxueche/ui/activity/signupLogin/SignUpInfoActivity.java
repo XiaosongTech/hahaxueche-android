@@ -23,6 +23,7 @@ import com.hahaxueche.model.user.Session;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
+import com.hahaxueche.ui.activity.collector.ActivityCollector;
 import com.hahaxueche.ui.dialog.CityChoseDialog;
 import com.hahaxueche.ui.dialog.RegisterInfoPhotoDialog;
 import com.hahaxueche.ui.activity.index.IndexActivity;
@@ -158,9 +159,10 @@ public class SignUpInfoActivity extends SLBaseActivity {
                 user.setStudent(student);
                 spUtil.setUser(user);
                 Toast.makeText(context, "完善资料成功！", Toast.LENGTH_SHORT).show();
+                ActivityCollector.finishAll();
                 Intent intent = new Intent(context, IndexActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-                SignUpInfoActivity.this.finish();
             }
 
             @Override

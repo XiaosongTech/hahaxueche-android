@@ -9,13 +9,14 @@ import com.hahaxueche.presenter.appointment.APPresenter;
 import com.hahaxueche.presenter.findCoach.FCPresenter;
 import com.hahaxueche.presenter.mySetting.MSPresenter;
 import com.hahaxueche.presenter.signupLogin.SLPresenter;
+import com.hahaxueche.ui.activity.base.BaseActivity;
 import com.umeng.analytics.MobclickAgent;
 
 /**
  * 寻找教练基本Activity
  * Created by gibxin on 2016/2/21.
  */
-public class FCBaseActivity extends Activity {
+public class FCBaseActivity extends BaseActivity {
     // 上下文实例
     public Context context;
     // 应用实例

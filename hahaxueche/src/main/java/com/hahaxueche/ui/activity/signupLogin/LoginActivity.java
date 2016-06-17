@@ -22,6 +22,7 @@ import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
+import com.hahaxueche.ui.activity.collector.ActivityCollector;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
@@ -232,7 +233,7 @@ public class LoginActivity extends SLBaseActivity {
                 spUtil.setUser(user);
                 MobclickAgent.onProfileSignIn(user.getStudent().getId());
                 Intent intent;
-                if (TextUtils.isEmpty(user.getStudent().getCity_id()) || TextUtils.isEmpty(user.getStudent().getAvatar()) || TextUtils.isEmpty(user.getStudent().getName())) {
+                if (TextUtils.isEmpty(user.getStudent().getCity_id()) || TextUtils.isEmpty(user.getStudent().getName())) {
                     //补全资料
                     intent = new Intent(LoginActivity.this, SignUpInfoActivity.class);
                     startActivity(intent);
@@ -241,18 +242,20 @@ public class LoginActivity extends SLBaseActivity {
                 }
                 if (TextUtils.isEmpty(user.getStudent().getCurrent_coach_id())) {
                     Toast.makeText(context, "登录成功！", Toast.LENGTH_SHORT).show();
+                    ActivityCollector.finishAll();
                     intent = new Intent(context, IndexActivity.class);
-                    startActivity(intent);
-                    LoginActivity.this.finish();
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
                 } else {
                     fcPresenter.getCoach(user.getStudent().getCurrent_coach_id(), new FCCallbackListener<Coach>() {
                         @Override
                         public void onSuccess(Coach coach) {
                             spUtil.setCurrentCoach(coach);
                             Toast.makeText(context, "登录成功！", Toast.LENGTH_SHORT).show();
+                            ActivityCollector.finishAll();
                             Intent intent = new Intent(context, IndexActivity.class);
-                            startActivity(intent);
-                            LoginActivity.this.finish();
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(intent);
                         }
 
                         @Override

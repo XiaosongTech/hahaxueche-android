@@ -149,7 +149,7 @@ public class AppointmentDialog extends Dialog {
                 } else if (v.getId() == R.id.tv_second_time) {
                     if (null == secondTimeDialog) {
                         secondTimeDialog = new CustomWheelDialog(mContext, secondConfirm, datas, (month + 1) + "-" + (day + 1));
-                        firstTimeDialog.setSelect(position);
+                        secondTimeDialog.setSelect(position);
                     }
                     secondTimeDialog.show();
                 }

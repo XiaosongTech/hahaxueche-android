@@ -264,8 +264,8 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
     }
 
     private void getCoachList() {
+        training_field_ids = new ArrayList<>();
         if (selFieldList != null && selFieldList.size() > 0) {
-            training_field_ids = new ArrayList<>();
             for (FieldModel selField : selFieldList) {
                 training_field_ids.add(selField.getId());
             }
@@ -278,7 +278,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
             user_location.add(location.getLng());
         }
         this.fcPresenter.getCoachList(page, per_page, golden_coach_only, license_type, price, city_id, training_field_ids, distance,
-                user_location, sort_by,vip_only, new FCCallbackListener<CoachListResponse>() {
+                user_location, sort_by, vip_only, new FCCallbackListener<CoachListResponse>() {
                     @Override
                     public void onSuccess(CoachListResponse data) {
                         coachList = data.getData();
@@ -352,23 +352,6 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         return new SimpleDateFormat("MM-dd HH:mm:ss", Locale.CHINA).format(new Date());
     }
 
-    private long exitTime = 0;
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if ((System.currentTimeMillis() - exitTime) > 2000) {
-                Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
-                exitTime = System.currentTimeMillis();
-            } else {
-                finish();
-                System.exit(0);
-            }
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -394,4 +377,21 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         }
     }
 
+    private long exitTime = 0;
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if ((System.currentTimeMillis() - exitTime) > 2000) {
+                Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                exitTime = System.currentTimeMillis();
+            } else {
+                finish();
+                System.exit(0);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+
+    }
 }

@@ -6,14 +6,16 @@ import android.os.Bundle;
 
 import com.hahaxueche.MyApplication;
 import com.hahaxueche.presenter.findCoach.FCPresenter;
+import com.hahaxueche.presenter.mySetting.MSPresenter;
 import com.hahaxueche.presenter.signupLogin.SLPresenter;
+import com.hahaxueche.ui.activity.base.BaseActivity;
 import com.umeng.analytics.MobclickAgent;
 
 /**
  * Activity抽象基类���
  * Created by gibxin on 2016/1/19.
  */
-public class SLBaseActivity extends Activity {
+public class SLBaseActivity extends BaseActivity {
     // 上下文实例
     public Context context;
     // 应用实例
@@ -23,6 +25,8 @@ public class SLBaseActivity extends Activity {
     //
     public FCPresenter fcPresenter;
 
+    public MSPresenter msPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +34,7 @@ public class SLBaseActivity extends Activity {
         application = (MyApplication) this.getApplication();
         slPresenter = application.getSLPresenter();
         fcPresenter = application.getFCPresenter();
+        msPresenter = application.getMsPresenter();
     }
 
     @Override

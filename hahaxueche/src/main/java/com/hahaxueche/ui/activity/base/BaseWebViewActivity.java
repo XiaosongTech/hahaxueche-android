@@ -13,11 +13,13 @@ import android.widget.ImageButton;
 import com.hahaxueche.R;
 import com.umeng.analytics.MobclickAgent;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * webview
  * Created by gibxin on 2016/3/10.
  */
-public class BaseWebViewActivity extends Activity {
+public class BaseWebViewActivity extends BaseActivity {
     private ImageButton ibtn_base_webview_back;
     private WebView baseWebView;
     private String url;
@@ -88,12 +90,30 @@ public class BaseWebViewActivity extends Activity {
 
     @Override
     protected void onResume() {
+        try {
+            baseWebView.getClass().getMethod("onResume").invoke(baseWebView,(Object[])null);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
         super.onResume();
         MobclickAgent.onResume(this);
     }
 
     @Override
     protected void onPause() {
+        try {
+            baseWebView.getClass().getMethod("onPause").invoke(baseWebView,(Object[])null);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
         super.onPause();
         MobclickAgent.onPause(this);
     }

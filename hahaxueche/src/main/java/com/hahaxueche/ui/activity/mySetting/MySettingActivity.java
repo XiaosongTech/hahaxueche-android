@@ -42,6 +42,7 @@ import com.hahaxueche.ui.activity.findCoach.FindCoachActivity;
 import com.hahaxueche.ui.activity.findCoach.MyCoachActivity;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
+import com.hahaxueche.ui.dialog.BaseConfirmDialog;
 import com.hahaxueche.ui.dialog.FAQDialog;
 import com.hahaxueche.ui.dialog.RegisterInfoPhotoDialog;
 import com.hahaxueche.ui.dialog.mySetting.EditUsernameDialog;
@@ -289,30 +290,7 @@ public class MySettingActivity extends MSBaseActivity {
                     break;
                 //退出登录
                 case R.id.lly_login_off:
-                    if (pd != null) {
-                        pd.dismiss();
-                    }
-                    pd = ProgressDialog.show(MySettingActivity.this, null, "退出中，请稍后……");
-                    msPresenter.loginOff(mSession.getId(), mSession.getAccess_token(), new MSCallbackListener<BaseApiResponse>() {
-                        @Override
-                        public void onSuccess(BaseApiResponse data) {
-                            if (pd != null) {
-                                pd.dismiss();
-                            }
-                            spUtil.clearUser();
-                            spUtil.clearCurrentCoach();
-                            Intent intent = new Intent(getApplication(), StartActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-
-                        @Override
-                        public void onFailure(String errorEvent, String message) {
-                            if (pd != null) {
-                                pd.dismiss();
-                            }
-                        }
-                    });
+                    logOff();
                     break;
                 //客服热线
                 case R.id.rly_customer_phone:
@@ -391,7 +369,7 @@ public class MySettingActivity extends MSBaseActivity {
             } else {
                 Toast.makeText(this, "请允许读写sdcard权限，不然我们无法完成头像采集操作", Toast.LENGTH_SHORT).show();
             }
-        }else if(requestCode == PERMISSIONS_REQUEST_CELL_PHONE){
+        } else if (requestCode == PERMISSIONS_REQUEST_CELL_PHONE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 contactService();
@@ -425,23 +403,6 @@ public class MySettingActivity extends MSBaseActivity {
         }
     };
 
-    private long exitTime = 0;
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if ((System.currentTimeMillis() - exitTime) > 2000) {
-                Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
-                exitTime = System.currentTimeMillis();
-            } else {
-                finish();
-                System.exit(0);
-            }
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -460,11 +421,15 @@ public class MySettingActivity extends MSBaseActivity {
                 Toast.makeText(MySettingActivity.this, "取消头像设置", Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == PhotoUtil.SET_ALBUM_PICTURE_KITKAT) {
-            Log.i("lgx", "4.4以上上的 RESULT_OK");
 
-            Bitmap bitmap = mPhotoUtil.decodeUriAsBitmap(Uri.fromFile(new File(PhotoUtil.IMGPATH,
-                    PhotoUtil.TMP_IMAGE_FILE_NAME)));
-            uploadAvatar();
+            Log.i("lgx", "4.4以上上的 RESULT_OK");
+            if (resultCode == RESULT_OK && null != data) {
+                //Bitmap bitmap = mPhotoUtil.decodeUriAsBitmap(Uri.fromFile(new File(PhotoUtil.IMGPATH,
+                //        PhotoUtil.TMP_IMAGE_FILE_NAME)));
+                uploadAvatar();
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(MySettingActivity.this, "取消头像设置", Toast.LENGTH_SHORT).show();
+            }
         } else if (requestCode == PhotoUtil.TAKE_A_PICTURE) {
             Log.i("lgx", "TAKE_A_PICTURE-resultCode:" + resultCode);
             if (resultCode == RESULT_OK) {
@@ -577,5 +542,62 @@ public class MySettingActivity extends MSBaseActivity {
             return;
         }
         startActivity(intent);
+    }
+
+    private long exitTime = 0;
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if ((System.currentTimeMillis() - exitTime) > 2000) {
+                Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                exitTime = System.currentTimeMillis();
+            } else {
+                finish();
+                System.exit(0);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+
+    }
+
+    private void logOff() {
+        BaseConfirmDialog baseConfirmDialog = new BaseConfirmDialog(MySettingActivity.this, "哈哈学车", "是否退出登录？", "", "", "确定", "取消", new BaseConfirmDialog.onConfirmListener() {
+            @Override
+            public boolean clickConfirm() {
+                if (pd != null) {
+                    pd.dismiss();
+                }
+                pd = ProgressDialog.show(MySettingActivity.this, null, "退出中，请稍后……");
+                msPresenter.loginOff(mSession.getId(), mSession.getAccess_token(), new MSCallbackListener<BaseApiResponse>() {
+                    @Override
+                    public void onSuccess(BaseApiResponse data) {
+                        if (pd != null) {
+                            pd.dismiss();
+                        }
+                        spUtil.clearUser();
+                        spUtil.clearCurrentCoach();
+                        Intent intent = new Intent(getApplication(), StartActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailure(String errorEvent, String message) {
+                        if (pd != null) {
+                            pd.dismiss();
+                        }
+                    }
+                });
+                return true;
+            }
+        }, new BaseConfirmDialog.onCancelListener() {
+            @Override
+            public boolean clickCancel() {
+                return false;
+            }
+        });
+        baseConfirmDialog.show();
     }
 }
