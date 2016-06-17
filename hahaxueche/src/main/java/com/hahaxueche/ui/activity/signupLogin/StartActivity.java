@@ -22,6 +22,7 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
 import com.hahaxueche.utils.SharedPreferencesUtil;
@@ -230,15 +231,51 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
         //开始自动翻页
         convenientBanner.startTurning(2500);
         if (Branch.isAutoDeepLinkLaunch(this)) {
-            try {
-                String autoDeeplinkedValue = Branch.getInstance().getLatestReferringParams().getString("refererId");
-                String refererId = autoDeeplinkedValue;
-                Log.v("gibxin", "refererId -> " + refererId);
-                spUtil.setRefererId(refererId);
-            } catch (JSONException e) {
-                e.printStackTrace();
+            User user = spUtil.getUser();
+            if (null != user && null != user.getStudent() && null != user.getSession()) {//内存中有用户信息，自动登录
+                doAutoLogin(spUtil.getUser());
+            } else {
+                try {
+                    String autoDeeplinkedValue = Branch.getInstance().getLatestReferringParams().getString("refererId");
+                    String refererId = autoDeeplinkedValue;
+                    Log.v("gibxin", "refererId -> " + refererId);
+                    spUtil.setRefererId(refererId);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         } else {
         }
+    }
+
+    /**
+     * 自动登录
+     *
+     * @param user
+     */
+    private void doAutoLogin(final User user) {
+        this.msPresenter.getStudent(user.getStudent().getId(), user.getSession().getAccess_token(), new MSCallbackListener<Student>() {
+            @Override
+            public void onSuccess(Student student) {
+                user.setStudent(student);
+                spUtil.setUser(user);
+                Intent intent;
+                if (TextUtils.isEmpty(user.getStudent().getCity_id()) || TextUtils.isEmpty(user.getStudent().getName())) {
+                    //补全资料
+                    intent = new Intent(StartActivity.this, SignUpInfoActivity.class);
+                } else {
+                    intent = new Intent(StartActivity.this, IndexActivity.class);
+                }
+                startActivity(intent);
+                StartActivity.this.finish();
+            }
+
+            @Override
+            public void onFailure(String errorEvent, String message) {
+                Intent intent = new Intent(StartActivity.this, StartActivity.class);
+                startActivity(intent);
+                StartActivity.this.finish();
+            }
+        });
     }
 }

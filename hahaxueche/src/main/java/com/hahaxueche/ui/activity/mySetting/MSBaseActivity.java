@@ -7,12 +7,13 @@ import android.os.Bundle;
 import com.hahaxueche.MyApplication;
 import com.hahaxueche.presenter.findCoach.FCPresenter;
 import com.hahaxueche.presenter.mySetting.MSPresenter;
+import com.hahaxueche.ui.activity.base.BaseActivity;
 import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by gibxin on 2016/2/29.
  */
-public class MSBaseActivity extends Activity {
+public class MSBaseActivity extends BaseActivity {
     // 上下文实例
     public Context context;
     // 应用实例

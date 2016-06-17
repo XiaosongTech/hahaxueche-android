@@ -204,23 +204,6 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
             }
         }
     };
-    private long exitTime = 0;
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if ((System.currentTimeMillis() - exitTime) > 2000) {
-                Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
-                exitTime = System.currentTimeMillis();
-            } else {
-                finish();
-                System.exit(0);
-            }
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-
-    }
 
     @Override
     public void onItemClick(int i) {
@@ -378,6 +361,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
             e.printStackTrace();
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == PERMISSIONS_REQUEST) {
@@ -393,7 +377,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     /**
      * 开启定位
      */
-    private void startLocation(){
+    private void startLocation() {
         //初始化定位
         mLocationClient = new AMapLocationClient(IndexActivity.this);
         mLocationListener = new AMapLocationListener() {
@@ -436,5 +420,23 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         mLocationClient.setLocationOption(mLocationOption);
         //启动定位
         mLocationClient.startLocation();
+    }
+
+    private long exitTime = 0;
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if ((System.currentTimeMillis() - exitTime) > 2000) {
+                Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                exitTime = System.currentTimeMillis();
+            } else {
+                finish();
+                System.exit(0);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+
     }
 }

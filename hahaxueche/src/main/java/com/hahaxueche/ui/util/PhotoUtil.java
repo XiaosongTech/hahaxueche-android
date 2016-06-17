@@ -139,7 +139,7 @@ public class PhotoUtil {
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public void selectImageUriAfterKikat() {
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("image/*");
         mActivity.startActivityForResult(intent, SELECET_A_PICTURE_AFTER_KIKAT);

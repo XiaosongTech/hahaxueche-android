@@ -30,6 +30,7 @@ import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
+import com.hahaxueche.ui.activity.collector.ActivityCollector;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.umeng.analytics.MobclickAgent;
@@ -204,7 +205,7 @@ public class SignUpActivity extends SLBaseActivity {
                             Toast.makeText(context, getResources().getText(R.string.sLResetPwdSuccess), Toast.LENGTH_SHORT).show();
                             spUtil.setUser(user);
                             Intent intent;
-                            if (TextUtils.isEmpty(user.getStudent().getCity_id()) || TextUtils.isEmpty(user.getStudent().getAvatar()) || TextUtils.isEmpty(user.getStudent().getName())) {
+                            if (TextUtils.isEmpty(user.getStudent().getCity_id()) || TextUtils.isEmpty(user.getStudent().getName())) {
                                 //补全资料
                                 intent = new Intent(context, SignUpInfoActivity.class);
                                 startActivity(intent);
@@ -215,9 +216,10 @@ public class SignUpActivity extends SLBaseActivity {
                                 if (pd != null) {
                                     pd.dismiss();
                                 }
+                                ActivityCollector.finishAll();
                                 intent = new Intent(context, IndexActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
-                                SignUpActivity.this.finish();
                             } else {
                                 fcPresenter.getCoach(user.getStudent().getCurrent_coach_id(), new FCCallbackListener<Coach>() {
                                     @Override
@@ -226,9 +228,10 @@ public class SignUpActivity extends SLBaseActivity {
                                             pd.dismiss();
                                         }
                                         spUtil.setCurrentCoach(coach);
+                                        ActivityCollector.finishAll();
                                         Intent intent = new Intent(context, IndexActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(intent);
-                                        SignUpActivity.this.finish();
                                     }
 
                                     @Override
