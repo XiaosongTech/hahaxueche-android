@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -18,6 +19,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.view.animation.ScaleAnimation;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -159,9 +164,12 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private TextView mTvOldVIPPrice;//原来的VIP价格
     private TextView mTvVIPPriceDetail;//VIP班价格明细
     private FieldModel mFieldModel;
-    private LinearLayout llyFlCdCoachName;
+    private RelativeLayout mRlyCoachName;
     private SharedPreferencesUtil spUtil;
     private String coach_id;
+    /*****************
+     * 分享
+     ******************/
     private IWXAPI wxApi; //微信api
     private Tencent mTencent;//QQ
     private IWeiboShareAPI mWeiboShareAPI;//新浪微博
@@ -170,6 +178,13 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private String mDescription;
     private String mImageUrl;
     private String mUrl;
+    /*****************
+     * end
+     ******************/
+    private TextView mTvApplaudCount;
+    private ImageView mIvApplaud;
+    private boolean isApplaud;
+    private Animation mApplaudAnimation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -246,7 +261,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
 
         llyShare = Util.instence(this).$(this, R.id.lly_share);
         rlyTrainLoaction = Util.instence(this).$(this, R.id.rly_location);
-        llyFlCdCoachName = Util.instence(this).$(this, R.id.fl_cd_coach_name);
+        mRlyCoachName = Util.instence(this).$(this, R.id.fl_cd_coach_name);
         //价格
         mTvNormalPrice = Util.instence(this).$(this, R.id.tv_normal_price);
         mTvOldNormalPrice = Util.instence(this).$(this, R.id.tv_old_normal_price);
@@ -255,6 +270,10 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         mTvOldVIPPrice = Util.instence(this).$(this, R.id.tv_old_vip_price);
         mTvVIPPriceDetail = Util.instence(this).$(this, R.id.tv_vip_price_detail);
         mRlyVIPPrice = Util.instence(this).$(this, R.id.rly_vip_price);
+        //点赞
+        mTvApplaudCount = Util.instence(this).$(this, R.id.tv_applaud_count);
+        mIvApplaud = Util.instence(this).$(this, R.id.iv_applaud);
+        mApplaudAnimation = AnimationUtils.loadAnimation(this, R.anim.applaud);
     }
 
     private void initEvent() {
@@ -272,6 +291,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         //价格
         mTvNormalPriceDetail.setOnClickListener(mClickListener);
         mTvVIPPriceDetail.setOnClickListener(mClickListener);
+        mIvApplaud.setOnClickListener(mClickListener);
     }
 
     /**
@@ -339,7 +359,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         civCdCoachAvatar.setLayoutParams(paramAvatar);
         RelativeLayout.LayoutParams paramLlyFlCd = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         paramLlyFlCd.addRule(RelativeLayout.ALIGN_BOTTOM, civCdCoachAvatar.getId());
-        llyFlCdCoachName.setLayoutParams(paramLlyFlCd);
+        mRlyCoachName.setLayoutParams(paramLlyFlCd);
         //金牌教练显示
         if (mCoach.getSkill_level().equals("1")) {
             ivIsGoldenCoach.setVisibility(View.VISIBLE);
@@ -579,6 +599,12 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                     bundle.putSerializable("fieldModel", mFieldModel);
                     intent.putExtras(bundle);
                     startActivity(intent);
+                    break;
+                //点赞
+                case R.id.iv_applaud:
+                    applaudClick();
+                    break;
+                default:
                     break;
             }
         }
@@ -863,6 +889,32 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                     break;
             }
         }
+    }
+
+    /**
+     * 点赞
+     */
+    private void applaudClick() {
+        if (isApplaud) {
+            //取消点赞
+            mIvApplaud.setImageDrawable(ContextCompat.getDrawable(CoachDetailActivity.this, R.drawable.ic_list_best_unclick));
+        } else {
+            //点赞
+            AnimationSet animationSet = new AnimationSet(true);
+            ScaleAnimation scaleAnimation = new ScaleAnimation(2f, 1f, 2f, 1f,
+                    Animation.RELATIVE_TO_SELF, 0.5f,
+                    Animation.RELATIVE_TO_SELF, 0.5f);
+            scaleAnimation.setDuration(200);
+            animationSet.addAnimation(scaleAnimation);
+            animationSet.setFillAfter(true); //让其保持动画结束时的状态。
+            mIvApplaud.startAnimation(animationSet);
+            new Handler().postDelayed(new Runnable() {
+                public void run() {
+                    mIvApplaud.setImageDrawable(ContextCompat.getDrawable(CoachDetailActivity.this, R.drawable.ic_list_best_click));
+                }
+            }, 200);
+        }
+        isApplaud = !isApplaud;
     }
 
 

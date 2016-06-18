@@ -322,9 +322,8 @@ public class MySettingActivity extends MSBaseActivity {
                     break;
                 case R.id.rly_FAQ:
                     //学员常见问题
-                    if (faqDialog == null)
-                        faqDialog = new FAQDialog(MySettingActivity.this);
-                    faqDialog.show();
+                    intent = new Intent(getApplication(), FAQActivity.class);
+                    startActivity(intent);
                     break;
                 case R.id.rly_support_haha:
                     Uri uri = Uri.parse("http://a.app.qq.com/o/simple.jsp?pkgname=com.hahaxueche");
