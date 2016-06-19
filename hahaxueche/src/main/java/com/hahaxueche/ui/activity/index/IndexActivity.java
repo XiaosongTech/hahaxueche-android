@@ -413,7 +413,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         //设置是否只定位一次,默认为false
         mLocationOption.setOnceLocation(false);
         //设置是否允许模拟位置,默认为false，不允许模拟位置
-        mLocationOption.setMockEnable(false);
+        mLocationOption.setMockEnable(true);
         //设置定位间隔,单位毫秒,默认为2000ms
         mLocationOption.setInterval(2000);
         //给定位客户端对象设置定位参数
