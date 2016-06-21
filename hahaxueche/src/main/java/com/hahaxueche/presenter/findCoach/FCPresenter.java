@@ -140,4 +140,13 @@ public interface FCPresenter {
      */
     public void searchCoach(String keyword, FCCallbackListener<ArrayList<Coach>> listener);
 
+    /**
+     * @param isApplaud
+     * @param studentId
+     * @param coachId
+     * @param accessToken
+     * @param listener
+     */
+    public void applaudCoach(boolean isApplaud, String studentId, String coachId, String accessToken, FCCallbackListener<Coach> listener);
+
 }

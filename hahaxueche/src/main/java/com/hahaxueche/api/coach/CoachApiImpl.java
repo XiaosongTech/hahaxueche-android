@@ -444,5 +444,57 @@ public class CoachApiImpl implements CoachApi {
         }
     }
 
+    @Override
+    public Coach like(String studentId, String coachId, String accessToken) {
+        Type type = new TypeToken<Coach>() {
+        }.getType();
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("like", "1");
+        try {
+            Response response = httpEngine.postHandle(paramMap, "students/" + studentId + "/like/" + coachId, accessToken);
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, BaseApiResponse.class);
+                Coach retModel = new Coach();
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
+                retModel.setIsSuccess(false);
+                return retModel;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public Coach unLike(String studentId, String coachId, String accessToken) {
+        Type type = new TypeToken<Coach>() {
+        }.getType();
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("like", "0");
+        try {
+            Response response = httpEngine.postHandle(paramMap, "students/" + studentId + "/like/" + coachId, accessToken);
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, BaseApiResponse.class);
+                Coach retModel = new Coach();
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
+                retModel.setIsSuccess(false);
+                return retModel;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
 
 }

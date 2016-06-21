@@ -402,4 +402,52 @@ public class FCPresenterImpl implements FCPresenter {
             }
         }.execute();
     }
+
+    @Override
+    public void applaudCoach(boolean isApplaud, final String studentId, final String coachId, final String accessToken, final FCCallbackListener<Coach> listener) {
+        if (isApplaud) {
+            //取消点赞
+            new AsyncTask<Void, Void, Coach>() {
+
+                @Override
+                protected Coach doInBackground(Void... params) {
+                    return coachApi.unLike(studentId, coachId, accessToken);
+                }
+
+                @Override
+                protected void onPostExecute(Coach coach) {
+                    if (coach != null) {
+                        if (coach.isSuccess()) {
+                            listener.onSuccess(coach);
+                        } else {
+                            listener.onFailure(coach.getCode(), coach.getMessage());
+                        }
+                    } else {
+                        listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                    }
+                }
+            }.execute();
+        } else {
+            new AsyncTask<Void, Void, Coach>() {
+
+                @Override
+                protected Coach doInBackground(Void... params) {
+                    return coachApi.like(studentId, coachId, accessToken);
+                }
+
+                @Override
+                protected void onPostExecute(Coach coach) {
+                    if (coach != null) {
+                        if (coach.isSuccess()) {
+                            listener.onSuccess(coach);
+                        } else {
+                            listener.onFailure(coach.getCode(), coach.getMessage());
+                        }
+                    } else {
+                        listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                    }
+                }
+            }.execute();
+        }
+    }
 }

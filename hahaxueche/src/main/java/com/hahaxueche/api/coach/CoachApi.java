@@ -147,4 +147,24 @@ public interface CoachApi {
      * @return
      */
     public ArrayList<Coach> searchCoach(String keyword);
+
+    /**
+     * 打赞
+     *
+     * @param studentId
+     * @param coachId
+     * @param accessToken
+     * @return
+     */
+    public Coach like(String studentId, String coachId, String accessToken);
+
+    /**
+     * 取消打赞
+     *
+     * @param studentId
+     * @param coachId
+     * @param accessToken
+     * @return
+     */
+    public Coach unLike(String studentId, String coachId, String accessToken);
 }
