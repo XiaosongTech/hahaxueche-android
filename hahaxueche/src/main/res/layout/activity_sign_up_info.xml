@@ -113,7 +113,7 @@
             android:layout_marginTop="4dp"
             android:background="@drawable/input"
             android:gravity="center"
-            android:inputType="text"
+            android:inputType="number"
             android:maxLines="1"
             android:textColor="@color/app_theme_color"
             android:visibility="gone" />
