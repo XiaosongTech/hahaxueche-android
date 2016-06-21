@@ -24,6 +24,7 @@ import com.hahaxueche.model.response.TrailResponse;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.findCoach.FCPresenter;
 import com.hahaxueche.ui.widget.wheel.CustomWheelDialog;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.Calendar;
 
@@ -199,6 +200,7 @@ public class AppointmentDialog extends Dialog {
                                 pd.dismiss();
                             }
                             Toast.makeText(mContext, "预约成功！", Toast.LENGTH_SHORT).show();
+                            MobclickAgent.onEvent(mContext, "did_try_coach");
                             dismiss();
                         }
 

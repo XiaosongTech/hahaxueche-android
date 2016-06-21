@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.Window;
 
 import com.hahaxueche.R;
+import com.hahaxueche.model.user.Session;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
@@ -15,6 +16,7 @@ import com.hahaxueche.ui.activity.mySetting.MSBaseActivity;
 import com.hahaxueche.ui.activity.signupLogin.SignUpInfoActivity;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
 import com.hahaxueche.utils.SharedPreferencesUtil;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by gibxin on 2016/3/6.
@@ -36,11 +38,13 @@ public class WelcomeActivity extends MSBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        MobclickAgent.onResume(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     class splashhandler implements Runnable {
