@@ -1,6 +1,5 @@
 package com.hahaxueche.ui.activity.base;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -11,7 +10,6 @@ import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 
 import com.hahaxueche.R;
-import com.umeng.analytics.MobclickAgent;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -100,7 +98,6 @@ public class BaseWebViewActivity extends BaseActivity {
             e.printStackTrace();
         }
         super.onResume();
-        MobclickAgent.onResume(this);
     }
 
     @Override
@@ -115,6 +112,5 @@ public class BaseWebViewActivity extends BaseActivity {
             e.printStackTrace();
         }
         super.onPause();
-        MobclickAgent.onPause(this);
     }
 }

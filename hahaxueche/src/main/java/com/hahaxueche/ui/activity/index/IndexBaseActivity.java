@@ -1,6 +1,5 @@
 package com.hahaxueche.ui.activity.index;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -8,7 +7,6 @@ import com.hahaxueche.MyApplication;
 import com.hahaxueche.presenter.findCoach.FCPresenter;
 import com.hahaxueche.presenter.mySetting.MSPresenter;
 import com.hahaxueche.ui.activity.base.BaseActivity;
-import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by gibxin on 2016/3/7.
@@ -34,12 +32,10 @@ public class IndexBaseActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
     }
 }

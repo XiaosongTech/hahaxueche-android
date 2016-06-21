@@ -31,10 +31,8 @@ import com.hahaxueche.ui.adapter.appointment.LoopStudentAdapter;
 import com.hahaxueche.ui.adapter.appointment.ScheduleAdapter;
 import com.hahaxueche.ui.dialog.BaseAlertDialog;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
-import com.hahaxueche.ui.widget.pullToRefreshView.XScrollView;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
-import com.umeng.analytics.MobclickAgent;
 
 import java.lang.ref.WeakReference;
 import java.text.ParseException;
@@ -276,13 +274,11 @@ public class AppointmentActivity extends FCBaseActivity implements XListView.IXL
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
     }
 
     private String getTime() {

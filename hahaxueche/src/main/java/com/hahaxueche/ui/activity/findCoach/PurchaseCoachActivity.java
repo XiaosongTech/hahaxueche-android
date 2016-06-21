@@ -46,7 +46,6 @@ import com.hahaxueche.utils.Util;
 import com.pingplusplus.android.PaymentActivity;
 import com.pingplusplus.android.Pingpp;
 import com.squareup.picasso.Picasso;
-import com.umeng.analytics.MobclickAgent;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -430,7 +429,6 @@ public class PurchaseCoachActivity extends FCBaseActivity {
                                         if (pd != null) {
                                             pd.dismiss();
                                         }
-                                        MobclickAgent.onEvent(context, "did_purchase_coach");
                                         spUtil.setCurrentCoach(coach);
                                         setResult(RESULT_OK, null);
                                         finish();
@@ -447,7 +445,6 @@ public class PurchaseCoachActivity extends FCBaseActivity {
                                 if (pd != null) {
                                     pd.dismiss();
                                 }
-                                MobclickAgent.onEvent(context, "did_purchase_coach");
                                 setResult(RESULT_OK, null);
                                 finish();
                             }

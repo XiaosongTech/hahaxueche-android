@@ -17,8 +17,6 @@ import android.widget.Toast;
 import com.hahaxueche.R;
 import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.model.user.User;
-import com.hahaxueche.model.user.Session;
-import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
@@ -26,7 +24,6 @@ import com.hahaxueche.ui.activity.collector.ActivityCollector;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
-import com.umeng.analytics.MobclickAgent;
 
 import java.lang.ref.WeakReference;
 
@@ -231,7 +228,6 @@ public class LoginActivity extends SLBaseActivity {
                     pd.dismiss();
                 }
                 spUtil.setUser(user);
-                MobclickAgent.onProfileSignIn(user.getStudent().getId());
                 Intent intent;
                 if (TextUtils.isEmpty(user.getStudent().getCity_id()) || TextUtils.isEmpty(user.getStudent().getName())) {
                     //补全资料

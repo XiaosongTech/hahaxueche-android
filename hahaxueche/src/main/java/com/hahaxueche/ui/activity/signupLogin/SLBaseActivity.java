@@ -9,7 +9,6 @@ import com.hahaxueche.presenter.findCoach.FCPresenter;
 import com.hahaxueche.presenter.mySetting.MSPresenter;
 import com.hahaxueche.presenter.signupLogin.SLPresenter;
 import com.hahaxueche.ui.activity.base.BaseActivity;
-import com.umeng.analytics.MobclickAgent;
 
 /**
  * Activity抽象基类���
@@ -40,12 +39,10 @@ public class SLBaseActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
     }
 }

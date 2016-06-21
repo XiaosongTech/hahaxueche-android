@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="vds-android-0.8.89">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/hahaxueche/build/intermediates/exploded-aar/com.growingio.android/vds-android/0.8.89/res" />
+      <root url="jar://$PROJECT_DIR$/hahaxueche/build/intermediates/exploded-aar/com.growingio.android/vds-android/0.8.89/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

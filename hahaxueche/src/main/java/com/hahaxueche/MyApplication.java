@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
+import com.growingio.android.sdk.collection.GrowingIO;
 import com.hahaxueche.api.net.HttpEngine;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.presenter.appointment.APPresenter;
@@ -49,6 +50,8 @@ public class MyApplication extends Application {
         LeakCanary.install(this);
         //Stetho.initializeWithDefaults(this);
         Branch.getAutoInstance(this);
+        GrowingIO.startTracing(this, "becfd5bc56ea7bd1");
+        GrowingIO.setScheme("growing.0d688069b7d1994b");
         sLPresenter = new SLPresenterImpl(this);
         fcPresenter = new FCPresenterImpl(this);
         msPresenter = new MSPresenterImpl(this);

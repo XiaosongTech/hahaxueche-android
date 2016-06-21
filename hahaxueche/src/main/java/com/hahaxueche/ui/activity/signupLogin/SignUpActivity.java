@@ -33,7 +33,6 @@ import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
 import com.hahaxueche.ui.activity.collector.ActivityCollector;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.utils.SharedPreferencesUtil;
-import com.umeng.analytics.MobclickAgent;
 
 import java.lang.ref.WeakReference;
 
@@ -273,8 +272,6 @@ public class SignUpActivity extends SLBaseActivity {
                         pd.dismiss();
                     }
                     spUtil.setUser(user);
-                    MobclickAgent.onProfileSignIn(user.getStudent().getId());
-                    MobclickAgent.onEvent(context, "did_register");
                     Intent intent = new Intent(context, SignUpInfoActivity.class);
                     startActivity(intent);
                     SignUpActivity.this.finish();
