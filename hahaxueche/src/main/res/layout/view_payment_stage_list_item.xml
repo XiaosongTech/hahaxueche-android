@@ -87,7 +87,7 @@
         android:text="@string/myReviewed"
         android:textColor="@android:color/white"
         android:textSize="10sp"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_ready_for_review"

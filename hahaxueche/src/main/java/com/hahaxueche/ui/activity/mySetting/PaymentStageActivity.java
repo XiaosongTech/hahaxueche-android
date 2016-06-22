@@ -209,7 +209,7 @@ public class PaymentStageActivity extends MSBaseActivity {
                 user.setStudent(mStudent);
                 spUtil.setUser(user);
                 if (!TextUtils.isEmpty(data.getCurrent_coach_id())) {
-                    fcPresenter.getCoach(data.getCurrent_coach_id(), new FCCallbackListener<Coach>() {
+                    fcPresenter.getCoach(data.getCurrent_coach_id(),mStudent.getId(), new FCCallbackListener<Coach>() {
                         @Override
                         public void onSuccess(Coach coach) {
                             spUtil.setCurrentCoach(coach);

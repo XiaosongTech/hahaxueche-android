@@ -186,7 +186,6 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private TextView mTvApplaudCount;
     private ImageView mIvApplaud;
     private boolean isApplaud;
-    private Animation mApplaudAnimation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -275,7 +274,6 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         //点赞
         mTvApplaudCount = Util.instence(this).$(this, R.id.tv_applaud_count);
         mIvApplaud = Util.instence(this).$(this, R.id.iv_applaud);
-        mApplaudAnimation = AnimationUtils.loadAnimation(this, R.anim.applaud);
     }
 
     private void initEvent() {
@@ -320,7 +318,11 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
             } else {
                 coach_id = getIntent().getStringExtra("coach_id");
             }
-            this.fcPresenter.getCoach(coach_id, new FCCallbackListener<Coach>() {
+            String studentId = "";
+            if (isLogin) {
+                studentId = mStudent.getId();
+            }
+            this.fcPresenter.getCoach(coach_id, studentId, new FCCallbackListener<Coach>() {
                 @Override
                 public void onSuccess(Coach coach) {
                     mCoach = coach;
@@ -502,7 +504,8 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private void loadApplaud() {
         if (isLogin) {
             if (!TextUtils.isEmpty(mCoach.getLiked()) && mCoach.getLiked().equals("1")) {
-                mIvApplaud.setImageDrawable(ContextCompat.getDrawable(CoachDetailActivity.this, R.drawable.ic_list_best_unclick));
+                mIvApplaud.setImageDrawable(ContextCompat.getDrawable(CoachDetailActivity.this, R.drawable.ic_list_best_click));
+                isApplaud = !isApplaud;
             }
         }
         mTvApplaudCount.setText(String.valueOf(mCoach.getLike_count()));
@@ -913,10 +916,11 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
             fcPresenter.applaudCoach(isApplaud, mStudent.getId(), mCoach.getId(), mSession.getAccess_token(), new FCCallbackListener<Coach>() {
                 @Override
                 public void onSuccess(final Coach coach) {
+                    mCoach = coach;
                     if (isApplaud) {
                         //取消点赞
                         mIvApplaud.setImageDrawable(ContextCompat.getDrawable(CoachDetailActivity.this, R.drawable.ic_list_best_unclick));
-                        mTvApplaudCount.setText(String.valueOf(coach.getLike_count()));
+                        mTvApplaudCount.setText(String.valueOf(mCoach.getLike_count()));
                         mIvApplaud.setClickable(true);
                         isApplaud = !isApplaud;
                     } else {
@@ -932,7 +936,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                         new Handler().postDelayed(new Runnable() {
                             public void run() {
                                 mIvApplaud.setImageDrawable(ContextCompat.getDrawable(CoachDetailActivity.this, R.drawable.ic_list_best_click));
-                                mTvApplaudCount.setText(String.valueOf(coach.getLike_count()));
+                                mTvApplaudCount.setText(String.valueOf(mCoach.getLike_count()));
                                 mIvApplaud.setClickable(true);
                                 isApplaud = !isApplaud;
                             }
@@ -964,5 +968,14 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         }
     }
 
-
+    @Override
+    public void finish() {
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("coach", mCoach);
+        intent.putExtras(bundle);
+        Log.v("gibxin", "setResult -> " + RESULT_OK);
+        setResult(RESULT_OK, intent);
+        super.finish();
+    }
 }

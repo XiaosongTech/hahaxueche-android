@@ -37,14 +37,14 @@ public class FCPresenterImpl implements FCPresenter {
 
     @Override
     public void getCoachList(final String page, final String per_page, final String golden_coach_only, final String license_type, final String price,
-                             final String city_id, final ArrayList<String> training_field_ids, final String distance, final ArrayList<String> user_location, final String sort_by, final String vip_only,
+                             final String city_id, final ArrayList<String> training_field_ids, final String distance, final ArrayList<String> user_location, final String sort_by, final String vip_only, final String studentId,
                              final FCCallbackListener<CoachListResponse> listener) {
         new AsyncTask<Void, Void, CoachListResponse>() {
 
             @Override
             protected CoachListResponse doInBackground(Void... params) {
                 return coachApi.getCoachList(page, per_page, golden_coach_only, license_type, price, city_id, training_field_ids,
-                        distance, user_location, sort_by, vip_only);
+                        distance, user_location, sort_by, vip_only, studentId);
             }
 
             @Override
@@ -87,12 +87,12 @@ public class FCPresenterImpl implements FCPresenter {
     }
 
     @Override
-    public void getCoach(final String coach_id, final FCCallbackListener<Coach> listener) {
+    public void getCoach(final String coach_id, final String studentId, final FCCallbackListener<Coach> listener) {
         new AsyncTask<Void, Void, Coach>() {
 
             @Override
             protected Coach doInBackground(Void... params) {
-                return coachApi.getCoach(coach_id);
+                return coachApi.getCoach(coach_id, studentId);
             }
 
             @Override

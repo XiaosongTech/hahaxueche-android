@@ -37,7 +37,7 @@ public class CoachApiImpl implements CoachApi {
 
     @Override
     public CoachListResponse getCoachList(String page, String per_page, String golden_coach_only, String license_type, String price,
-                                          String city_id, ArrayList<String> training_field_ids, String distance, ArrayList<String> user_location, String sort_by, String vip_only) {
+                                          String city_id, ArrayList<String> training_field_ids, String distance, ArrayList<String> user_location, String sort_by, String vip_only, String studentId) {
         Type type = new TypeToken<CoachListResponse>() {
         }.getType();
         Type typeBase = new TypeToken<BaseApiResponse>() {
@@ -81,6 +81,9 @@ public class CoachApiImpl implements CoachApi {
         }
         if (!TextUtils.isEmpty(vip_only)) {
             url += url.indexOf("?") > 0 ? ("&vip_only=" + vip_only) : ("?vip_only=" + vip_only);
+        }
+        if (!TextUtils.isEmpty(studentId)) {
+            url += url.indexOf("?") > 0 ? ("&student_id=" + studentId) : ("?student_id=" + studentId);
         }
         try {
             Response response = httpEngine.getHandle(url, "");
@@ -129,13 +132,17 @@ public class CoachApiImpl implements CoachApi {
     }
 
     @Override
-    public Coach getCoach(String coach_id) {
+    public Coach getCoach(String coach_id, String studentId) {
         Type type = new TypeToken<Coach>() {
         }.getType();
         Type typeBase = new TypeToken<BaseApiResponse>() {
         }.getType();
+        String url = "coaches/" + coach_id;
+        if (!TextUtils.isEmpty(studentId)) {
+            url += "?student_id=" + studentId;
+        }
         try {
-            Response response = httpEngine.getHandle("coaches/" + coach_id, "");
+            Response response = httpEngine.getHandle(url, "");
             String body = response.body().string();
             Log.v("gibxin", "body -> " + body);
             if (response.isSuccessful()) {

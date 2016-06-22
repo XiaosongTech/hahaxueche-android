@@ -33,7 +33,7 @@ public interface FCPresenter {
      * @param listener           回调监听器
      */
     public void getCoachList(String page, String per_page, String golden_coach_only, String license_type, String price,
-                             String city_id, ArrayList<String> training_field_ids, String distance, ArrayList<String> user_location, String sort_by, String vip_only,
+                             String city_id, ArrayList<String> training_field_ids, String distance, ArrayList<String> user_location, String sort_by, String vip_only, String studentId,
                              FCCallbackListener<CoachListResponse> listener);
 
     /**
@@ -50,7 +50,7 @@ public interface FCPresenter {
      * @param coach_id 教练id
      * @param listener 回调监听器
      */
-    public void getCoach(String coach_id, FCCallbackListener<Coach> listener);
+    public void getCoach(String coach_id, String studentId, FCCallbackListener<Coach> listener);
 
     /**
      * 用户A关注用户B
