@@ -101,6 +101,7 @@ public class CoachItemAdapter extends BaseAdapter {
             holder.tvCoachLocation = (TextView) view.findViewById(R.id.tv_coach_location);
             holder.llyCoachLocation = (LinearLayout) view.findViewById(R.id.lly_coach_location);
             holder.tvDistance = (TextView) view.findViewById(R.id.tv_distance);
+            holder.tvApplaudCount = (TextView) view.findViewById(R.id.tv_applaud_count);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -117,8 +118,8 @@ public class CoachItemAdapter extends BaseAdapter {
         holder.tvCoachActualPrice.setText(Util.getMoney(coach.getCoach_group().getTraining_cost()));
         //vip价格
         if (coach.getVip() == 0) {
-            holder.tvVIPPrice.setVisibility(View.GONE);
-            holder.tvVIPLabel.setVisibility(View.GONE);
+            holder.tvVIPPrice.setVisibility(View.INVISIBLE);
+            holder.tvVIPLabel.setVisibility(View.INVISIBLE);
         } else {
             holder.tvVIPPrice.setVisibility(View.VISIBLE);
             holder.tvVIPLabel.setVisibility(View.VISIBLE);
@@ -164,6 +165,7 @@ public class CoachItemAdapter extends BaseAdapter {
                 mapDialog.show();
             }
         });
+        holder.tvApplaudCount.setText(String.valueOf(coach.getLike_count()));
         return view;
     }
 
@@ -189,5 +191,6 @@ public class CoachItemAdapter extends BaseAdapter {
         TextView tvCoachLocation;
         LinearLayout llyCoachLocation;
         TextView tvDistance;
+        TextView tvApplaudCount;
     }
 }

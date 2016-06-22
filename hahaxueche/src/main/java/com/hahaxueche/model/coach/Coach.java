@@ -31,6 +31,8 @@ public class Coach implements Serializable {
     private List<String> images;
     private String assigned_coaches;
     private int vip;
+    private int like_count;
+    private String liked;
     private String code;
     private String message;
     private boolean isSuccess = true;
@@ -249,5 +251,21 @@ public class Coach implements Serializable {
 
     public void setVip(int vip) {
         this.vip = vip;
+    }
+
+    public int getLike_count() {
+        return like_count;
+    }
+
+    public void setLike_count(int like_count) {
+        this.like_count = like_count;
+    }
+
+    public String getLiked() {
+        return liked;
+    }
+
+    public void setLiked(String liked) {
+        this.liked = liked;
     }
 }

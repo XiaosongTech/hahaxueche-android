@@ -34,7 +34,7 @@ public interface CoachApi {
      * @param sort_by            排序依据
      */
     public CoachListResponse getCoachList(String page, String per_page, String golden_coach_only, String license_type, String price,
-                                          String city_id, ArrayList<String> training_field_ids, String distance, ArrayList<String> user_location, String sort_by, String vip_only);
+                                          String city_id, ArrayList<String> training_field_ids, String distance, ArrayList<String> user_location, String sort_by, String vip_only, String studentId);
 
     /**
      * 获取教练列表，直接根据反馈的links_next或者links_previous获取
@@ -50,7 +50,7 @@ public interface CoachApi {
      * @param coach_id 教练id
      * @return
      */
-    public Coach getCoach(String coach_id);
+    public Coach getCoach(String coach_id, String studentId);
 
     /**
      * 用户A关注用户B
@@ -147,4 +147,24 @@ public interface CoachApi {
      * @return
      */
     public ArrayList<Coach> searchCoach(String keyword);
+
+    /**
+     * 打赞
+     *
+     * @param studentId
+     * @param coachId
+     * @param accessToken
+     * @return
+     */
+    public Coach like(String studentId, String coachId, String accessToken);
+
+    /**
+     * 取消打赞
+     *
+     * @param studentId
+     * @param coachId
+     * @param accessToken
+     * @return
+     */
+    public Coach unLike(String studentId, String coachId, String accessToken);
 }

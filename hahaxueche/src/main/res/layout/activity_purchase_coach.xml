@@ -172,7 +172,7 @@
                 android:layout_marginTop="10dp"
                 android:textColor="@color/app_theme_color"
                 android:textSize="14sp"
-                android:visibility="gone" />
+                android:visibility="invisible" />
 
             <TextView
                 android:id="@+id/tv_coach_vip_label"
@@ -186,7 +186,18 @@
                 android:paddingRight="1dp"
                 android:text="VIP"
                 android:textColor="@color/haha_white"
-                android:visibility="gone" />
+                android:visibility="invisible" />
+            <TextView
+                android:id="@+id/tv_applaud_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/tv_coach_vip_price"
+                android:layout_marginTop="5dp"
+                android:drawableLeft="@drawable/ic_list_best_small"
+                android:drawablePadding="3dp"
+                android:textColor="@color/app_theme_color"
+                android:textSize="14sp" />
         </RelativeLayout>
     </LinearLayout>
 

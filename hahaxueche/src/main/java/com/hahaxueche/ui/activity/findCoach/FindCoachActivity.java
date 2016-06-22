@@ -214,7 +214,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
             Bundle bundle = new Bundle();
             bundle.putSerializable("coach", coach);
             intent.putExtras(bundle);
-            startActivity(intent);
+            startActivityForResult(intent, 1);
             return true;
         }
     };
@@ -222,12 +222,12 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (coachList != null && coachList.size() > 0 && position > 0 && position < coachList.size()) {
+            if (coachList != null && coachList.size() > 0 && position > 0 && position - 1 < coachList.size()) {
                 Intent intent = new Intent(getApplication(), CoachDetailActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("coach", coachList.get(position - 1));
                 intent.putExtras(bundle);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
             }
         }
     };
@@ -277,8 +277,12 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
             user_location.add(location.getLat());
             user_location.add(location.getLng());
         }
+        String studentId = "";
+        if (spUtil.getUser() != null && spUtil.getUser().getSession() != null && spUtil.getUser().getStudent() != null) {
+            studentId = spUtil.getUser().getStudent().getId();
+        }
         this.fcPresenter.getCoachList(page, per_page, golden_coach_only, license_type, price, city_id, training_field_ids, distance,
-                user_location, sort_by, vip_only, new FCCallbackListener<CoachListResponse>() {
+                user_location, sort_by, vip_only, studentId, new FCCallbackListener<CoachListResponse>() {
                     @Override
                     public void onSuccess(CoachListResponse data) {
                         coachList = data.getData();
@@ -374,6 +378,27 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
                 default:
                     break;
             }
+        } else if (requestCode == 1) {
+            switch (resultCode) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
+                case RESULT_OK:
+                    Bundle bundle = data.getExtras(); //data为B中回传的Intent
+                    if (bundle.getSerializable("coach") != null) {
+                        Coach retCoach = (Coach) bundle.getSerializable("coach");
+                        Log.v("gibxin", "retCoach ->" + retCoach.getId());
+                        for (Coach coach : coachList) {
+                            if (coach.getId().equals(retCoach.getId())) {
+                                coach.setLike_count(retCoach.getLike_count());
+                                coach.setLiked(retCoach.getLiked());
+                                mAdapter.notifyDataSetChanged();
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+
         }
     }
 

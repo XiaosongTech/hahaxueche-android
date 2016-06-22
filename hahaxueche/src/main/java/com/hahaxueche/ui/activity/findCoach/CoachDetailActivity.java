@@ -57,6 +57,8 @@ import com.hahaxueche.ui.activity.signupLogin.StartActivity;
 import com.hahaxueche.ui.adapter.findCoach.PeerCoachItemAdapter;
 import com.hahaxueche.ui.adapter.findCoach.ReviewItemAdapter;
 import com.hahaxueche.ui.dialog.AppointmentDialog;
+import com.hahaxueche.ui.dialog.BaseConfirmDialog;
+import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.FeeDetailDialog;
 import com.hahaxueche.ui.dialog.ShareAppDialog;
 import com.hahaxueche.ui.dialog.ZoomImgDialog;
@@ -184,7 +186,6 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private TextView mTvApplaudCount;
     private ImageView mIvApplaud;
     private boolean isApplaud;
-    private Animation mApplaudAnimation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -273,7 +274,6 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         //点赞
         mTvApplaudCount = Util.instence(this).$(this, R.id.tv_applaud_count);
         mIvApplaud = Util.instence(this).$(this, R.id.iv_applaud);
-        mApplaudAnimation = AnimationUtils.loadAnimation(this, R.anim.applaud);
     }
 
     private void initEvent() {
@@ -308,6 +308,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
             loadDetail();
             loadReviews();
             loadFollow();
+            loadApplaud();
             if (pd != null) {
                 pd.dismiss();
             }
@@ -317,13 +318,18 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
             } else {
                 coach_id = getIntent().getStringExtra("coach_id");
             }
-            this.fcPresenter.getCoach(coach_id, new FCCallbackListener<Coach>() {
+            String studentId = "";
+            if (isLogin) {
+                studentId = mStudent.getId();
+            }
+            this.fcPresenter.getCoach(coach_id, studentId, new FCCallbackListener<Coach>() {
                 @Override
                 public void onSuccess(Coach coach) {
                     mCoach = coach;
                     loadDetail();
                     loadReviews();
                     loadFollow();
+                    loadApplaud();
                     if (pd != null) {
                         pd.dismiss();
                     }
@@ -493,6 +499,16 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                 }
             });
         }
+    }
+
+    private void loadApplaud() {
+        if (isLogin) {
+            if (!TextUtils.isEmpty(mCoach.getLiked()) && mCoach.getLiked().equals("1")) {
+                mIvApplaud.setImageDrawable(ContextCompat.getDrawable(CoachDetailActivity.this, R.drawable.ic_list_best_click));
+                isApplaud = !isApplaud;
+            }
+        }
+        mTvApplaudCount.setText(String.valueOf(mCoach.getLike_count()));
     }
 
     @Override
@@ -895,27 +911,71 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
      * 点赞
      */
     private void applaudClick() {
-        if (isApplaud) {
-            //取消点赞
-            mIvApplaud.setImageDrawable(ContextCompat.getDrawable(CoachDetailActivity.this, R.drawable.ic_list_best_unclick));
-        } else {
-            //点赞
-            AnimationSet animationSet = new AnimationSet(true);
-            ScaleAnimation scaleAnimation = new ScaleAnimation(2f, 1f, 2f, 1f,
-                    Animation.RELATIVE_TO_SELF, 0.5f,
-                    Animation.RELATIVE_TO_SELF, 0.5f);
-            scaleAnimation.setDuration(200);
-            animationSet.addAnimation(scaleAnimation);
-            animationSet.setFillAfter(true); //让其保持动画结束时的状态。
-            mIvApplaud.startAnimation(animationSet);
-            new Handler().postDelayed(new Runnable() {
-                public void run() {
-                    mIvApplaud.setImageDrawable(ContextCompat.getDrawable(CoachDetailActivity.this, R.drawable.ic_list_best_click));
+        if (isLogin) {
+            mIvApplaud.setClickable(false);
+            fcPresenter.applaudCoach(isApplaud, mStudent.getId(), mCoach.getId(), mSession.getAccess_token(), new FCCallbackListener<Coach>() {
+                @Override
+                public void onSuccess(final Coach coach) {
+                    mCoach = coach;
+                    if (isApplaud) {
+                        //取消点赞
+                        mIvApplaud.setImageDrawable(ContextCompat.getDrawable(CoachDetailActivity.this, R.drawable.ic_list_best_unclick));
+                        mTvApplaudCount.setText(String.valueOf(mCoach.getLike_count()));
+                        mIvApplaud.setClickable(true);
+                        isApplaud = !isApplaud;
+                    } else {
+                        //点赞
+                        AnimationSet animationSet = new AnimationSet(true);
+                        ScaleAnimation scaleAnimation = new ScaleAnimation(2f, 1f, 2f, 1f,
+                                Animation.RELATIVE_TO_SELF, 0.5f,
+                                Animation.RELATIVE_TO_SELF, 0.5f);
+                        scaleAnimation.setDuration(200);
+                        animationSet.addAnimation(scaleAnimation);
+                        animationSet.setFillAfter(true); //让其保持动画结束时的状态。
+                        mIvApplaud.startAnimation(animationSet);
+                        new Handler().postDelayed(new Runnable() {
+                            public void run() {
+                                mIvApplaud.setImageDrawable(ContextCompat.getDrawable(CoachDetailActivity.this, R.drawable.ic_list_best_click));
+                                mTvApplaudCount.setText(String.valueOf(mCoach.getLike_count()));
+                                mIvApplaud.setClickable(true);
+                                isApplaud = !isApplaud;
+                            }
+                        }, 200);
+                    }
                 }
-            }, 200);
+
+                @Override
+                public void onFailure(String errorEvent, String message) {
+
+                }
+            });
+        } else {
+            BaseConfirmSimpleDialog baseConfirmDialog = new BaseConfirmSimpleDialog(CoachDetailActivity.this, "请登录", "您只有注册后\n才可以给教练点赞哦~", "去登录", "知道了", new BaseConfirmSimpleDialog.onConfirmListener() {
+                @Override
+                public boolean clickConfirm() {
+                    Intent intent = new Intent(getApplication(), StartActivity.class);
+                    intent.putExtra("isBack", "1");
+                    startActivity(intent);
+                    return true;
+                }
+            }, new BaseConfirmSimpleDialog.onCancelListener() {
+                @Override
+                public boolean clickCancel() {
+                    return true;
+                }
+            });
+            baseConfirmDialog.show();
         }
-        isApplaud = !isApplaud;
     }
 
-
+    @Override
+    public void finish() {
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("coach", mCoach);
+        intent.putExtras(bundle);
+        Log.v("gibxin", "setResult -> " + RESULT_OK);
+        setResult(RESULT_OK, intent);
+        super.finish();
+    }
 }

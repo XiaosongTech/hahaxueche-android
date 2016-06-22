@@ -44,6 +44,8 @@ public class ScoreCoachDialog {
         csvScore = (ClickScoreView) contentView.findViewById(R.id.csv_score);
         tvConfirm = (TextView) contentView.findViewById(R.id.tv_dialog_score_confirm);
         tvCancel = (TextView) contentView.findViewById(R.id.tv_dialog_score_cancel);
+        //默认5星
+        csvScore.setScore(5f, false);
         mDialog.setContentView(contentView);
         mDialog.dismiss();
     }

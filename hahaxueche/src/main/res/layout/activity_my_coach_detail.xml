@@ -79,8 +79,7 @@
                     app:border_width="3dp">
 
                 </com.hahaxueche.ui.widget.circleImageView.CircleImageView>
-
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/fl_my_cd_coach_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -92,7 +91,7 @@
                         android:id="@+id/tv_my_cd_coach_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="100dp"
+                        android:layout_marginLeft="120dp"
                         android:textColor="@color/fCTxtBlack"
                         android:textSize="20sp" />
 
@@ -100,9 +99,31 @@
                         android:id="@+id/iv_my_cd_is_golden_coach"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/tv_my_cd_coach_name"
                         android:layout_marginLeft="6dp"
+                        android:layout_toRightOf="@id/tv_my_cd_coach_name"
                         android:src="@drawable/ic_auth_golden_big" />
-                </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_applaud_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/tv_my_cd_coach_name"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="20dp"
+                        android:textColor="@color/app_theme_color"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/iv_applaud"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/tv_my_cd_coach_name"
+                        android:layout_marginRight="3dp"
+                        android:layout_toLeftOf="@id/tv_applaud_count"
+                        android:src="@drawable/ic_list_best_unclick" />
+                </RelativeLayout>
+
 
                 <TextView
                     android:id="@+id/tv_my_cd_coach_description"

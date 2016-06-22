@@ -37,10 +37,10 @@ public class ReviewDialog extends Dialog implements View.OnClickListener {
     private String mCoachUserId;
 
     public interface OnBtnClickListener {
-        public void onReview(String review, float score,String paymentStageNumber,String coachUserId);
+        public void onReview(String review, float score, String paymentStageNumber, String coachUserId);
     }
 
-    public ReviewDialog(Context context, boolean isShowTitle, String paymentStageNumber,String coachUserId,String paymentStageName, OnBtnClickListener listener) {
+    public ReviewDialog(Context context, boolean isShowTitle, String paymentStageNumber, String coachUserId, String paymentStageName, OnBtnClickListener listener) {
         super(context);
         mContext = context;
         mIsShowTitle = isShowTitle;
@@ -55,6 +55,8 @@ public class ReviewDialog extends Dialog implements View.OnClickListener {
         llyReviewTitle = (LinearLayout) view.findViewById(R.id.lly_review_title);
         tvReviewInfoTitle = (TextView) view.findViewById(R.id.tv_review_info_title);
         clvScore = (ClickScoreView) view.findViewById(R.id.clv_score);
+        //默认5星
+        clvScore.setScore(5f, false);
         etReview = (EditText) view.findViewById(R.id.et_review);
         tvSureReview = (TextView) view.findViewById(R.id.tv_sure_review);
         tvLaterReview = (TextView) view.findViewById(R.id.tv_later_review);
@@ -98,7 +100,7 @@ public class ReviewDialog extends Dialog implements View.OnClickListener {
                 }
                 String review = etReview.getText().toString();
                 if (mListener != null) {
-                    mListener.onReview(review, score,mPaymentStageNumber,mCoachUserId);
+                    mListener.onReview(review, score, mPaymentStageNumber, mCoachUserId);
                 }
                 break;
             case R.id.tv_later_review:

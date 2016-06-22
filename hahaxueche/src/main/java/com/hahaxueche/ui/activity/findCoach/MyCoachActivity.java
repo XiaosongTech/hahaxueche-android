@@ -3,6 +3,8 @@ package com.hahaxueche.ui.activity.findCoach;
 import com.hahaxueche.MyApplication;
 import com.hahaxueche.api.net.HttpEngine;
 import com.hahaxueche.model.student.Student;
+import com.hahaxueche.ui.activity.signupLogin.StartActivity;
+import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.ShareAppDialog;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
 
@@ -16,11 +18,16 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -87,7 +94,6 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
     private TextView tvTakeCertPrice;
     private TextView tvTrainLocation;
     private TextView tvLicenseType;
-    private boolean isLogin = false;
     private String access_token;
     private FeeDetailDialog feeDetailDialog;
     private List<CostItem> mCostItemList;
@@ -108,6 +114,10 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
     private String mDescription;
     private String mImageUrl;
     private String mUrl;
+    private SharedPreferencesUtil spUtil;
+    private TextView mTvApplaudCount;
+    private ImageView mIvApplaud;
+    private boolean isApplaud;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -152,6 +162,10 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
         rlyMyCoachContact = Util.instence(this).$(this, R.id.rly_my_coach_contact);
         tvMyCoachContact = Util.instence(this).$(this, R.id.tv_my_cd_coach_phone);
         mIvShare = Util.instence(this).$(this, R.id.iv_my_coach_share);
+
+        //点赞
+        mTvApplaudCount = Util.instence(this).$(this, R.id.tv_applaud_count);
+        mIvApplaud = Util.instence(this).$(this, R.id.iv_applaud);
     }
 
     private void initEvent() {
@@ -163,6 +177,7 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
         llyTrainLoaction.setOnClickListener(mClickListener);
         rlyMyCoachContact.setOnClickListener(mClickListener);
         mIvShare.setOnClickListener(mClickListener);
+        mIvApplaud.setOnClickListener(mClickListener);
     }
 
     /**
@@ -173,13 +188,14 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
         if (intent.getSerializableExtra("coach") != null) {
             mCoach = (Coach) intent.getSerializableExtra("coach");
             loadDetail();
+            loadApplaud();
         } else {
             String coach_id = getIntent().getStringExtra("coach_id");
             if (pd != null) {
                 pd.dismiss();
             }
             pd = ProgressDialog.show(MyCoachActivity.this, null, "数据加载中，请稍后……");
-            this.fcPresenter.getCoach(coach_id, new FCCallbackListener<Coach>() {
+            this.fcPresenter.getCoach(coach_id, spUtil.getUser().getStudent().getId(), new FCCallbackListener<Coach>() {
                 @Override
                 public void onSuccess(Coach coach) {
                     if (pd != null) {
@@ -187,6 +203,7 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
                     }
                     mCoach = coach;
                     loadDetail();
+                    loadApplaud();
                 }
 
                 @Override
@@ -314,6 +331,10 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
                 case R.id.iv_my_coach_share:
                     showShareAppDialog();
                     break;
+                //点赞
+                case R.id.iv_applaud:
+                    applaudClick();
+                    break;
                 default:
                     break;
             }
@@ -325,7 +346,7 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
      * SharedPreferences 数据，初始化处理
      */
     private void initSharedPreferences() {
-        SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
+        spUtil = new SharedPreferencesUtil(this);
         //根据当前登录人的cityid，加载费用明细列表
         mCostItemList = spUtil.getMyCity().getFixed_cost_itemizer();
         mConstants = spUtil.getConstants();
@@ -526,6 +547,57 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
                     break;
             }
         }
+    }
+
+    private void loadApplaud() {
+        if (!TextUtils.isEmpty(mCoach.getLiked()) && mCoach.getLiked().equals("1")) {
+            mIvApplaud.setImageDrawable(ContextCompat.getDrawable(MyCoachActivity.this, R.drawable.ic_list_best_click));
+            isApplaud = !isApplaud;
+        }
+        mTvApplaudCount.setText(String.valueOf(mCoach.getLike_count()));
+    }
+
+    /**
+     * 点赞
+     */
+    private void applaudClick() {
+        mIvApplaud.setClickable(false);
+        fcPresenter.applaudCoach(isApplaud, spUtil.getUser().getStudent().getId(), mCoach.getId(), spUtil.getUser().getSession().getAccess_token(), new FCCallbackListener<Coach>() {
+            @Override
+            public void onSuccess(final Coach coach) {
+                mCoach = coach;
+                if (isApplaud) {
+                    //取消点赞
+                    mIvApplaud.setImageDrawable(ContextCompat.getDrawable(MyCoachActivity.this, R.drawable.ic_list_best_unclick));
+                    mTvApplaudCount.setText(String.valueOf(mCoach.getLike_count()));
+                    mIvApplaud.setClickable(true);
+                    isApplaud = !isApplaud;
+                } else {
+                    //点赞
+                    AnimationSet animationSet = new AnimationSet(true);
+                    ScaleAnimation scaleAnimation = new ScaleAnimation(2f, 1f, 2f, 1f,
+                            Animation.RELATIVE_TO_SELF, 0.5f,
+                            Animation.RELATIVE_TO_SELF, 0.5f);
+                    scaleAnimation.setDuration(200);
+                    animationSet.addAnimation(scaleAnimation);
+                    animationSet.setFillAfter(true); //让其保持动画结束时的状态。
+                    mIvApplaud.startAnimation(animationSet);
+                    new Handler().postDelayed(new Runnable() {
+                        public void run() {
+                            mIvApplaud.setImageDrawable(ContextCompat.getDrawable(MyCoachActivity.this, R.drawable.ic_list_best_click));
+                            mTvApplaudCount.setText(String.valueOf(mCoach.getLike_count()));
+                            mIvApplaud.setClickable(true);
+                            isApplaud = !isApplaud;
+                        }
+                    }, 200);
+                }
+            }
+
+            @Override
+            public void onFailure(String errorEvent, String message) {
+
+            }
+        });
     }
 
 }

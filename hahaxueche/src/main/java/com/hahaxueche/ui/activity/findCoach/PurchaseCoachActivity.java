@@ -85,6 +85,7 @@ public class PurchaseCoachActivity extends FCBaseActivity {
     private TextView mTvOldVIPPrice;//原来的VIP价格
     private TextView mTvVIPPriceDetail;//VIP班价格明细
     private RelativeLayout mRlyMorePayment;//更多支付方式
+    private TextView mTvApplaudCount;
 
     private Coach mCoach;
     private List<Payment> mPaymentList;
@@ -139,6 +140,7 @@ public class PurchaseCoachActivity extends FCBaseActivity {
         mTvOldVIPPrice = Util.instence(this).$(this, R.id.tv_old_vip_price);
         mTvVIPPriceDetail = Util.instence(this).$(this, R.id.tv_vip_price_detail);
         mRlyMorePayment = Util.instence(this).$(this, R.id.rly_more_payment);
+        mTvApplaudCount = Util.instence(this).$(this, R.id.tv_applaud_count);
     }
 
     private void loadDatas() {
@@ -173,8 +175,8 @@ public class PurchaseCoachActivity extends FCBaseActivity {
         mTvOldNormalPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         if (mCoach.getVip() == 0) {
             //没有vip的
-            mTvCoachVIPPrice.setVisibility(View.GONE);
-            mTvCoachVIPPriceLabel.setVisibility(View.GONE);
+            mTvCoachVIPPrice.setVisibility(View.INVISIBLE);
+            mTvCoachVIPPriceLabel.setVisibility(View.INVISIBLE);
             mRlyVIPPrice.setVisibility(View.GONE);
             selectClass(0);
         } else {
@@ -187,6 +189,7 @@ public class PurchaseCoachActivity extends FCBaseActivity {
             mTvOldVIPPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             refreshPayButton();
         }
+        mTvApplaudCount.setText(String.valueOf(mCoach.getLike_count()));
         //头像
         getCoachAvatar(mCoach.getAvatar(), mCivCoachAvatar);
         //金牌教练
@@ -424,7 +427,7 @@ public class PurchaseCoachActivity extends FCBaseActivity {
                             user.setStudent(mStudent);
                             spUtil.setUser(user);
                             if (!TextUtils.isEmpty(data.getCurrent_coach_id())) {
-                                fcPresenter.getCoach(data.getCurrent_coach_id(), new FCCallbackListener<Coach>() {
+                                fcPresenter.getCoach(data.getCurrent_coach_id(), mStudent.getId(), new FCCallbackListener<Coach>() {
                                     @Override
                                     public void onSuccess(Coach coach) {
                                         if (pd != null) {

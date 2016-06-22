@@ -221,7 +221,7 @@ public class SignUpActivity extends SLBaseActivity {
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                             } else {
-                                fcPresenter.getCoach(user.getStudent().getCurrent_coach_id(), new FCCallbackListener<Coach>() {
+                                fcPresenter.getCoach(user.getStudent().getCurrent_coach_id(), user.getStudent().getId(), new FCCallbackListener<Coach>() {
                                     @Override
                                     public void onSuccess(Coach coach) {
                                         if (pd != null) {
