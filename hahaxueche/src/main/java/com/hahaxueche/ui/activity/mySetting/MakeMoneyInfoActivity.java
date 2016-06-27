@@ -293,7 +293,7 @@ public class MakeMoneyInfoActivity extends MSBaseActivity implements XListView.I
         if (requestCode == 0) {
             switch (resultCode) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
                 case RESULT_OK:
-                    Toast.makeText(MakeMoneyInfoActivity.this, "提现成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MakeMoneyInfoActivity.this, "客观请稍等，已奔赴银行取钱！", Toast.LENGTH_SHORT).show();
                     fetchBonusSummary();
                     break;
                 default:
