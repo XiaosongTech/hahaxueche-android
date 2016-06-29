@@ -80,7 +80,7 @@ public class FcSortDialog extends Dialog implements View.OnClickListener {
                 ivPriceLow.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_sort_price_hold_btn));
                 tvPriceLow.setTextColor(mContext.getResources().getColor(R.color.app_theme_color));
             } else if (sort_by.equals("4")) {
-                ivPopularHot.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_sort_hot_hold_btn));
+                ivPopularHot.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_sort_zan_hold_btn));
                 tvPopularHot.setTextColor(mContext.getResources().getColor(R.color.app_theme_color));
             }
         }
@@ -126,7 +126,7 @@ public class FcSortDialog extends Dialog implements View.OnClickListener {
         ivDistanceClose.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_sort_local_normal_btn));
         ivCommentNice.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_sort_nice_normal_btn));
         ivPriceLow.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_sort_price_normal_btn));
-        ivPopularHot.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_sort_hot_normal_btn));
+        ivPopularHot.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_sort_zan_normal_btn));
         tvSmartSort.setTextColor(mContext.getResources().getColor(R.color.fCTxtGray));
         tvDistanceClose.setTextColor(mContext.getResources().getColor(R.color.fCTxtGray));
         tvCommentNice.setTextColor(mContext.getResources().getColor(R.color.fCTxtGray));
@@ -167,7 +167,7 @@ public class FcSortDialog extends Dialog implements View.OnClickListener {
                 break;
             case R.id.lly_popular_hot:
                 resetViews();
-                ivPopularHot.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_sort_hot_hold_btn));
+                ivPopularHot.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_sort_zan_hold_btn));
                 tvPopularHot.setTextColor(mContext.getResources().getColor(R.color.app_theme_color));
                 mListener.onFindCoachCort("4");
                 this.dismiss();
