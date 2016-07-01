@@ -6,163 +6,153 @@
     android:background="@android:color/white"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/app_theme_color"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/hahaxueche"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
-    </LinearLayout>
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/mSBackGray"
-        android:orientation="vertical">
-
-        <com.bigkoo.convenientbanner.ConvenientBanner
-            android:id="@+id/indexBanner"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height260dp"
-            app:canLoop="true" />
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/padding12dp">
+            android:background="@color/mSBackGray"
+            android:orientation="vertical">
+
+            <com.bigkoo.convenientbanner.ConvenientBanner
+                android:id="@+id/indexBanner"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height260dp"
+                app:canLoop="true" />
 
             <LinearLayout
-                android:id="@+id/lly_xiaoha_more"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/white"
-                android:gravity="center"
                 android:orientation="horizontal"
-                android:layout_marginRight="12dp"
-                android:paddingBottom="14dp"
-                android:paddingTop="14dp">
+                android:padding="@dimen/padding12dp">
 
-                <ImageView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/lly_xiaoha_more"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_homepage_hahahere" />
+                    android:layout_marginRight="12dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingBottom="14dp"
+                    android:paddingTop="14dp">
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin12dp">
-
-                    <TextView
-                        android:id="@+id/tv_about_xiaoha1"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/aboutXiaoha"
-                        android:textColor="@color/app_theme_color"
-                        android:textSize="18sp" />
+                        android:src="@drawable/ic_homepage_hahahere" />
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/tv_about_xiaoha1"
-                        android:layout_marginTop="5dp"
-                        android:gravity="center"
-                        android:orientation="horizontal">
+                        android:layout_marginLeft="@dimen/margin12dp">
 
                         <TextView
+                            android:id="@+id/tv_about_xiaoha1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/clickToKnow"
-                            android:textColor="@color/fCTxtGrayFade"
-                            android:textSize="14sp" />
+                            android:text="@string/aboutXiaoha"
+                            android:textColor="@color/app_theme_color"
+                            android:textSize="18sp" />
 
-                        <ImageView
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="3dp"
-                            android:src="@drawable/ic_homepage_knowmore_arrow" />
-                    </LinearLayout>
+                            android:layout_below="@id/tv_about_xiaoha1"
+                            android:layout_marginTop="5dp"
+                            android:gravity="center"
+                            android:orientation="horizontal">
 
-                </RelativeLayout>
-            </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/clickToKnow"
+                                android:textColor="@color/fCTxtGrayFade"
+                                android:textSize="14sp" />
 
-            <LinearLayout
-                android:id="@+id/lly_coach_more"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/white"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingBottom="14dp"
-                android:paddingTop="14dp">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="3dp"
+                                android:src="@drawable/ic_homepage_knowmore_arrow" />
+                        </LinearLayout>
 
-                <ImageView
-                    android:layout_width="wrap_content"
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lly_coach_more"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_homepage_coachhere" />
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingBottom="14dp"
+                    android:paddingTop="14dp">
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin12dp">
-
-                    <TextView
-                        android:id="@+id/tv_about_coach"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/aboutCoach"
-                        android:textColor="@color/app_theme_color"
-                        android:textSize="18sp" />
+                        android:src="@drawable/ic_homepage_coachhere" />
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/tv_about_coach"
-                        android:layout_marginTop="5dp"
-                        android:gravity="center"
-                        android:orientation="horizontal">
+                        android:layout_marginLeft="@dimen/margin12dp">
 
                         <TextView
+                            android:id="@+id/tv_about_coach"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/clickToKnow"
-                            android:textColor="@color/fCTxtGrayFade"
-                            android:textSize="14sp" />
+                            android:text="@string/aboutCoach"
+                            android:textColor="@color/app_theme_color"
+                            android:textSize="18sp" />
 
-                        <ImageView
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="3dp"
-                            android:src="@drawable/ic_homepage_knowmore_arrow" />
-                    </LinearLayout>
+                            android:layout_below="@id/tv_about_coach"
+                            android:layout_marginTop="5dp"
+                            android:gravity="center"
+                            android:orientation="horizontal">
 
-                </RelativeLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/clickToKnow"
+                                android:textColor="@color/fCTxtGrayFade"
+                                android:textSize="14sp" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="3dp"
+                                android:src="@drawable/ic_homepage_knowmore_arrow" />
+                        </LinearLayout>
+
+                    </RelativeLayout>
+                </LinearLayout>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_free_try"
+                android:layout_width="match_parent"
+                android:layout_height="66dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="@dimen/margin12dp"
+                android:layout_marginRight="@dimen/margin12dp"
+                android:background="@color/app_theme_color"
+                android:gravity="center"
+                android:text="免费试学"
+                android:textColor="@android:color/white"
+                android:textSize="28sp" />
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_free_try"
-            android:layout_width="match_parent"
-            android:layout_height="66dp"
-            android:layout_marginLeft="@dimen/margin12dp"
-            android:layout_marginRight="@dimen/margin12dp"
-            android:background="@color/app_theme_color"
-            android:gravity="center"
-            android:text="免费试学"
-            android:textColor="@android:color/white"
-            android:textSize="28sp" />
-    </LinearLayout>
+    </ScrollView>
 
     <View
         android:layout_width="match_parent"
