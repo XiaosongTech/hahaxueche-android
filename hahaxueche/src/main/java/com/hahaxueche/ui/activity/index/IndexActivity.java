@@ -29,6 +29,7 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.hahaxueche.R;
+import com.hahaxueche.model.base.Banner;
 import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.model.city.Location;
 import com.hahaxueche.model.response.GroupBuyResponse;
@@ -143,7 +144,10 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         transformerArrayAdapter = new ArrayAdapter(this, R.layout.adapter_transformer, transformerList);
         //网络加载例子
         if (mConstants != null) {
-            networkImages = mConstants.getHome_page_banners();
+            networkImages = new ArrayList<>();
+            for (Banner banner : mConstants.getHome_page_banners()) {
+                networkImages.add(banner.getImage_url());
+            }
         }
         cbannerIndex.setPages(new CBViewHolderCreator<NetworkImageHolderView>() {
             @Override
@@ -207,28 +211,12 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
 
     @Override
     public void onItemClick(int i) {
-        switch (i) {
-            case 0:
-                //团购报名
-                showGroupBuy();
-                break;
-            case 1:
-                //免费试学
-                freeTry();
-                break;
-            case 2:
-                //推荐有奖
-                if (mUser.getStudent() != null && !TextUtils.isEmpty(mUser.getId())) {
-                    Intent intent = new Intent(getApplication(), ReferFriendsActivity.class);
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(getApplication(), MySettingActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-                break;
-            default:
-                break;
+        if (mConstants != null && !TextUtils.isEmpty(mConstants.getHome_page_banners().get(i).getTarget_url())) {
+            Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("url", mConstants.getHome_page_banners().get(i).getTarget_url());
+            intent.putExtras(bundle);
+            startActivity(intent);
         }
     }
 
@@ -305,12 +293,6 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         }
     }
 
-    private void showGroupBuy() {
-        if (null == mGroupBuyDialog) {
-            mGroupBuyDialog = new GroupBuyDialog(IndexActivity.this);
-        }
-        mGroupBuyDialog.show();
-    }
 
     private void aboutXiaoha() {
         Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
@@ -329,16 +311,11 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     }
 
     private void freeTry() {
-        if (null == appointmentDialog) {
-            String name = "";
-            String phoneNumber = "";
-            if (mUser != null && mUser.getStudent() != null) {
-                name = mUser.getStudent().getName();
-                phoneNumber = mUser.getStudent().getCell_phone();
-            }
-            appointmentDialog = new AppointmentDialog(IndexActivity.this, name, phoneNumber, "", true);
-        }
-        appointmentDialog.show();
+        Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("url", "http://m.hahaxueche.com");
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     /**

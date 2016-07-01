@@ -15,7 +15,7 @@ public class Constants {
     private List<FieldModel> fields;
     private List<BaseKeyValue> skill_levels;
     private ArrayList<String> login_banners;
-    private ArrayList<String> home_page_banners;
+    private ArrayList<Banner> home_page_banners;
     private List<BaseKeyValue> service_types;
     private ArrayList<BannerHighlight> banner_highlights;
     private String version_name;
@@ -56,11 +56,11 @@ public class Constants {
         this.login_banners = login_banners;
     }
 
-    public ArrayList<String> getHome_page_banners() {
+    public ArrayList<Banner> getHome_page_banners() {
         return home_page_banners;
     }
 
-    public void setHome_page_banners(ArrayList<String> home_page_banners) {
+    public void setHome_page_banners(ArrayList<Banner> home_page_banners) {
         this.home_page_banners = home_page_banners;
     }
 
