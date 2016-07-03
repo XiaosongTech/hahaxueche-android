@@ -313,7 +313,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     private void freeTry() {
         Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString("url", "http://m.hahaxueche.com");
+        bundle.putString("url", "http://m.hahaxueche.com/free_trial");
         intent.putExtras(bundle);
         startActivity(intent);
     }
