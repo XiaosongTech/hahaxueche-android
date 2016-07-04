@@ -53,6 +53,7 @@ import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
+import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
 import com.hahaxueche.ui.adapter.findCoach.PeerCoachItemAdapter;
 import com.hahaxueche.ui.adapter.findCoach.ReviewItemAdapter;
@@ -136,7 +137,6 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private boolean isLogin = false;
     private boolean isFollow = false;
     private FeeDetailDialog feeDetailDialog;
-    private AppointmentDialog appointmentDialog;
     private List<CostItem> mCostItemList;
     private TextView tvCommentCounts;//学员评价数量
     private ScoreView svAverageRating;//综合得分
@@ -590,14 +590,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
                     break;
                 //免费试学
                 case R.id.lly_free_learn:
-                    String name = "";
-                    String phoneNumber = "";
-                    if (mStudent != null) {
-                        name = mStudent.getName();
-                        phoneNumber = mStudent.getCell_phone();
-                    }
-                    appointmentDialog = new AppointmentDialog(CoachDetailActivity.this, name, phoneNumber, mCoach.getId(), false);
-                    appointmentDialog.show();
+                    freeTry();
                     break;
                 //加载评论列表页面
                 case R.id.lly_more_reviews:
@@ -978,4 +971,46 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         setResult(RESULT_OK, intent);
         super.finish();
     }
+
+    private void freeTry() {
+        Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
+        Bundle bundle = new Bundle();
+        //免费试学URL
+        String url = "http://m.hahaxueche.com/free_trial";
+        if(spUtil==null){
+            spUtil = new SharedPreferencesUtil(getApplicationContext());
+        }
+        if (spUtil.getUser() != null && spUtil.getUser().getStudent() != null) {
+            if (!TextUtils.isEmpty(mCoach.getId())) {
+                url += "?coach_id=" + mCoach.getId();
+            }
+            if (!TextUtils.isEmpty(spUtil.getUser().getStudent().getCity_id())) {
+                if (url.indexOf("?") > 0) {
+                    url += "&city_id=" + spUtil.getUser().getStudent().getCity_id();
+                } else {
+                    url += "?city_id=" + spUtil.getUser().getStudent().getCity_id();
+                }
+            }
+            if (!TextUtils.isEmpty(spUtil.getUser().getStudent().getName())) {
+                if (url.indexOf("?") > 0) {
+                    url += "&name=" + spUtil.getUser().getStudent().getName();
+                } else {
+                    url += "?name=" + spUtil.getUser().getStudent().getName();
+                }
+            }
+            if (!TextUtils.isEmpty(spUtil.getUser().getStudent().getCell_phone())) {
+                if (url.indexOf("?") > 0) {
+                    url += "&phone=" + spUtil.getUser().getStudent().getCell_phone();
+                } else {
+                    url += "?phone=" + spUtil.getUser().getStudent().getCell_phone();
+                }
+            }
+
+        }
+        Log.v("gibxin", "free try url -> " + url);
+        bundle.putString("url", url);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
 }

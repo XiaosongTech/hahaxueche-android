@@ -19,10 +19,12 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.hahaxueche.R;
+import com.hahaxueche.model.base.Banner;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
+import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
 import com.hahaxueche.utils.SharedPreferencesUtil;
@@ -64,7 +66,10 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
         convenientBanner.setLayoutParams(p);
         transformerArrayAdapter = new ArrayAdapter(this, R.layout.adapter_transformer, transformerList);
         if (mConstants != null) {
-            networkImages = mConstants.getLogin_banners();
+            networkImages = new ArrayList<>();
+            for (Banner banner : mConstants.getLogin_banners()) {
+                networkImages.add(banner.getImage_url());
+            }
         }
         //网络加载例子
         //networkImages= Arrays.asList(images);
@@ -138,7 +143,13 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
 
     @Override
     public void onItemClick(int i) {
-
+        if (mConstants != null && !TextUtils.isEmpty(mConstants.getHome_page_banners().get(i).getTarget_url())) {
+            Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("url", mConstants.getHome_page_banners().get(i).getTarget_url());
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
     }
 
     @Override
