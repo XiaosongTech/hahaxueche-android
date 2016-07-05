@@ -77,7 +77,7 @@ public class MyApplication extends Application {
                         constants = retModel;
                     }
                     spUtil.setConstants(constants);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

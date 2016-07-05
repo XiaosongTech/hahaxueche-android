@@ -143,9 +143,9 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         cbannerIndex.setLayoutParams(p);
         transformerArrayAdapter = new ArrayAdapter(this, R.layout.adapter_transformer, transformerList);
         //网络加载例子
-        if (mConstants != null) {
+        if (mConstants != null && mConstants.getNew_home_page_banners() != null) {
             networkImages = new ArrayList<>();
-            for (Banner banner : mConstants.getHome_page_banners()) {
+            for (Banner banner : mConstants.getNew_home_page_banners()) {
                 networkImages.add(banner.getImage_url());
             }
         }
@@ -211,10 +211,11 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
 
     @Override
     public void onItemClick(int i) {
-        if (mConstants != null && !TextUtils.isEmpty(mConstants.getHome_page_banners().get(i).getTarget_url())) {
+        if (mConstants != null && mConstants.getNew_home_page_banners() != null &&
+                !TextUtils.isEmpty(mConstants.getNew_home_page_banners().get(i).getTarget_url())) {
             Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putString("url", mConstants.getHome_page_banners().get(i).getTarget_url());
+            bundle.putString("url", mConstants.getNew_home_page_banners().get(i).getTarget_url());
             intent.putExtras(bundle);
             startActivity(intent);
         }

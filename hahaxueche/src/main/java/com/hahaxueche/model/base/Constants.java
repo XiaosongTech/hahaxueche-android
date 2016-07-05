@@ -14,8 +14,10 @@ public class Constants {
     private List<City> cities;
     private List<FieldModel> fields;
     private List<BaseKeyValue> skill_levels;
-    private ArrayList<Banner> login_banners;
-    private ArrayList<Banner> home_page_banners;
+    private ArrayList<Banner> new_login_banners;
+    private ArrayList<Banner> new_home_page_banners;
+    private ArrayList<String> login_banners;
+    private ArrayList<String> home_page_banners;
     private List<BaseKeyValue> service_types;
     private ArrayList<BannerHighlight> banner_highlights;
     private String version_name;
@@ -48,19 +50,35 @@ public class Constants {
         this.skill_levels = skill_levels;
     }
 
-    public ArrayList<Banner> getLogin_banners() {
+    public ArrayList<Banner> getNew_login_banners() {
+        return new_login_banners;
+    }
+
+    public void setNew_login_banners(ArrayList<Banner> new_login_banners) {
+        this.new_login_banners = new_login_banners;
+    }
+
+    public ArrayList<Banner> getNew_home_page_banners() {
+        return new_home_page_banners;
+    }
+
+    public void setNew_home_page_banners(ArrayList<Banner> new_home_page_banners) {
+        this.new_home_page_banners = new_home_page_banners;
+    }
+
+    public ArrayList<String> getLogin_banners() {
         return login_banners;
     }
 
-    public void setLogin_banners(ArrayList<Banner> login_banners) {
+    public void setLogin_banners(ArrayList<String> login_banners) {
         this.login_banners = login_banners;
     }
 
-    public ArrayList<Banner> getHome_page_banners() {
+    public ArrayList<String> getHome_page_banners() {
         return home_page_banners;
     }
 
-    public void setHome_page_banners(ArrayList<Banner> home_page_banners) {
+    public void setHome_page_banners(ArrayList<String> home_page_banners) {
         this.home_page_banners = home_page_banners;
     }
 

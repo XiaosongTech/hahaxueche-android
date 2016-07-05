@@ -65,9 +65,9 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
         RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, width);
         convenientBanner.setLayoutParams(p);
         transformerArrayAdapter = new ArrayAdapter(this, R.layout.adapter_transformer, transformerList);
-        if (mConstants != null) {
+        if (mConstants != null && mConstants.getNew_login_banners() != null) {
             networkImages = new ArrayList<>();
-            for (Banner banner : mConstants.getLogin_banners()) {
+            for (Banner banner : mConstants.getNew_login_banners()) {
                 networkImages.add(banner.getImage_url());
             }
         }
@@ -143,10 +143,11 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
 
     @Override
     public void onItemClick(int i) {
-        if (mConstants != null && !TextUtils.isEmpty(mConstants.getHome_page_banners().get(i).getTarget_url())) {
+        if (mConstants != null && mConstants.getNew_home_page_banners() != null
+                && !TextUtils.isEmpty(mConstants.getNew_login_banners().get(i).getTarget_url())) {
             Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putString("url", mConstants.getHome_page_banners().get(i).getTarget_url());
+            bundle.putString("url", mConstants.getNew_login_banners().get(i).getTarget_url());
             intent.putExtras(bundle);
             startActivity(intent);
         }
