@@ -14,7 +14,7 @@ public class Constants {
     private List<City> cities;
     private List<FieldModel> fields;
     private List<BaseKeyValue> skill_levels;
-    private ArrayList<String> login_banners;
+    private ArrayList<Banner> login_banners;
     private ArrayList<Banner> home_page_banners;
     private List<BaseKeyValue> service_types;
     private ArrayList<BannerHighlight> banner_highlights;
@@ -48,11 +48,11 @@ public class Constants {
         this.skill_levels = skill_levels;
     }
 
-    public ArrayList<String> getLogin_banners() {
+    public ArrayList<Banner> getLogin_banners() {
         return login_banners;
     }
 
-    public void setLogin_banners(ArrayList<String> login_banners) {
+    public void setLogin_banners(ArrayList<Banner> login_banners) {
         this.login_banners = login_banners;
     }
 
