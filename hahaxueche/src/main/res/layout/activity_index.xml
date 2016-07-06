@@ -14,7 +14,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/mSBackGray"
+            android:background="@color/haha_white"
             android:orientation="vertical">
 
             <com.bigkoo.convenientbanner.ConvenientBanner
@@ -24,129 +24,91 @@
                 app:canLoop="true" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="@dimen/padding12dp">
+                android:layout_marginLeft="@dimen/margin30dp"
+                android:layout_marginRight="@dimen/margin30dp"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:id="@+id/lly_xiaoha_more"
-                    android:layout_width="0dp"
+                <FrameLayout
+                    android:layout_width="@dimen/height260dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="12dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/white"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:paddingBottom="14dp"
-                    android:paddingTop="14dp">
+                    android:layout_weight="1">
 
-                    <ImageView
+                    <TextView
+                        android:id="@+id/tv_about_haha"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_homepage_hahahere" />
+                        android:layout_gravity="center"
+                        android:drawablePadding="6dp"
+                        android:drawableTop="@drawable/ic_homepage_haha"
+                        android:text="关于小哈"
+                        android:textColor="@color/haha_black_light"
+                        android:textSize="16sp" />
+                </FrameLayout>
 
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin12dp">
-
-                        <TextView
-                            android:id="@+id/tv_about_xiaoha1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/aboutXiaoha"
-                            android:textColor="@color/app_theme_color"
-                            android:textSize="18sp" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/tv_about_xiaoha1"
-                            android:layout_marginTop="5dp"
-                            android:gravity="center"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/clickToKnow"
-                                android:textColor="@color/fCTxtGrayFade"
-                                android:textSize="14sp" />
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="3dp"
-                                android:src="@drawable/ic_homepage_knowmore_arrow" />
-                        </LinearLayout>
-
-                    </RelativeLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/lly_coach_more"
-                    android:layout_width="0dp"
+                <FrameLayout
+                    android:layout_width="@dimen/height260dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/white"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:paddingBottom="14dp"
-                    android:paddingTop="14dp">
+                    android:layout_weight="1">
 
-                    <ImageView
+                    <TextView
+                        android:id="@+id/tv_about_coach"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_homepage_coachhere" />
+                        android:layout_gravity="center"
+                        android:drawablePadding="6dp"
+                        android:drawableTop="@drawable/ic_homepage_coach"
+                        android:text="关于教练"
+                        android:textColor="@color/haha_black_light"
+                        android:textSize="16sp" />
+                </FrameLayout>
 
-                    <RelativeLayout
+                <FrameLayout
+                    android:layout_width="@dimen/height260dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/tv_my_strengths"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin12dp">
+                        android:layout_gravity="center"
+                        android:drawablePadding="6dp"
+                        android:drawableTop="@drawable/ic_homepage_strengths"
+                        android:text="我的优势"
+                        android:textColor="@color/haha_black_light"
+                        android:textSize="16sp" />
+                </FrameLayout>
 
-                        <TextView
-                            android:id="@+id/tv_about_coach"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/aboutCoach"
-                            android:textColor="@color/app_theme_color"
-                            android:textSize="18sp" />
+                <FrameLayout
+                    android:layout_width="@dimen/height260dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/tv_about_coach"
-                            android:layout_marginTop="5dp"
-                            android:gravity="center"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/clickToKnow"
-                                android:textColor="@color/fCTxtGrayFade"
-                                android:textSize="14sp" />
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="3dp"
-                                android:src="@drawable/ic_homepage_knowmore_arrow" />
-                        </LinearLayout>
-
-                    </RelativeLayout>
-                </LinearLayout>
+                    <TextView
+                        android:id="@+id/tv_procedure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:drawablePadding="6dp"
+                        android:drawableTop="@drawable/ic_homepage_procedure"
+                        android:text="学车流程"
+                        android:textColor="@color/haha_black_light"
+                        android:textSize="16sp" />
+                </FrameLayout>
             </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_free_try"
                 android:layout_width="match_parent"
                 android:layout_height="66dp"
+                android:layout_marginLeft="@dimen/margin30dp"
+                android:layout_marginRight="@dimen/margin30dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="20dp"
-                android:layout_marginLeft="@dimen/margin12dp"
-                android:layout_marginRight="@dimen/margin12dp"
-                android:background="@color/app_theme_color"
+                android:background="@drawable/rectangle_back_orange_sm"
                 android:gravity="center"
                 android:text="免费试学"
                 android:textColor="@android:color/white"
