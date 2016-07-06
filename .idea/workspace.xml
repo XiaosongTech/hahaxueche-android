@@ -10,7 +10,10 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="54099784-6602-446d-9c0f-312d08d5d676" name="Default" comment="" />
+    <list default="true" id="54099784-6602-446d-9c0f-312d08d5d676" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/bdwallet_pay_sdk/bdwallet_pay_sdk.iml" afterPath="$PROJECT_DIR$/lib/bdwallet_pay_sdk/bdwallet_pay_sdk.iml" />
+    </list>
     <ignored path="hahaxueche-android.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -29,7 +32,18 @@
     <favorites_list name="hahaxueche-android" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/hahaxueche/build.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.8264781">
+              <caret line="89" column="71" selection-start-line="89" selection-start-column="71" selection-end-line="89" selection-end-column="71" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="GenerateSignedApkSettings">
     <option name="KEY_STORE_PATH" value="$PROJECT_DIR$/android_keystore/haha.keystore" />
@@ -13778,7 +13792,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="8806630764000" />
+        <entry key="$PROJECT_DIR$" value="8806632760000" />
       </map>
     </option>
     <option name="projectBuildClasspath">
@@ -14450,9 +14464,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="y" value="23" />
     <option name="width" value="1440" />
-    <option name="height" value="797" />
+    <option name="height" value="900" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -14546,7 +14559,7 @@
     <property name="settings.editor.selected.configurable" value="android.sdk-updates" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
-    <property name="SearchEverywhereHistoryKey" value="bu&#9;FILE&#9;file:///Users/wangshirui/Documents/work/code/android/hahaxueche-android/hahaxueche/build.gradle&#10;http&#9;FILE&#9;file:///Users/wangshirui/Documents/work/code/android/hahaxueche-android/hahaxueche/src/main/java/com/hahaxueche/api/net/HttpEngine.java&#10;cons&#9;FILE&#9;file:///Users/wangshirui/Documents/work/code/android/hahaxueche-android/hahaxueche/src/main/java/com/hahaxueche/model/base/Constants.java&#10;starta&#9;PSI&#9;JAVA://com.hahaxueche.ui.activity.signupLogin.StartActivity&#10;welco&#9;PSI&#9;JAVA://com.hahaxueche.ui.activity.WelcomeActivity&#10;login&#9;PSI&#9;JAVA://com.hahaxueche.ui.activity.signupLogin.LoginActivity&#10;const&#9;PSI&#9;JAVA://com.hahaxueche.model.base.Constants&#10;myapp&#9;PSI&#9;JAVA://com.hahaxueche.MyApplication&#10;myao&#9;null&#9;null&#10;build.gr&#9;FILE&#9;file:///Users/wangshirui/Documents/work/code/android/hahaxueche-android/hahaxueche/build.gradle&#10;httpen&#9;PSI&#9;JAVA://com.hahaxueche.api.net.HttpEngine&#10;coachde&#9;PSI&#9;JAVA://com.hahaxueche.ui.activity.findCoach.CoachDetailActivity&#10;indexa&#9;PSI&#9;JAVA://com.hahaxueche.ui.activity.index.IndexActivity" />
+    <property name="SearchEverywhereHistoryKey" value="b&#9;FILE&#9;file:///Users/wangshirui/code/hahaxueche-android/hahaxueche/build.gradle&#10;bu&#9;FILE&#9;file:///Users/wangshirui/Documents/work/code/android/hahaxueche-android/hahaxueche/build.gradle&#10;http&#9;FILE&#9;file:///Users/wangshirui/Documents/work/code/android/hahaxueche-android/hahaxueche/src/main/java/com/hahaxueche/api/net/HttpEngine.java&#10;cons&#9;FILE&#9;file:///Users/wangshirui/Documents/work/code/android/hahaxueche-android/hahaxueche/src/main/java/com/hahaxueche/model/base/Constants.java&#10;starta&#9;PSI&#9;JAVA://com.hahaxueche.ui.activity.signupLogin.StartActivity&#10;welco&#9;PSI&#9;JAVA://com.hahaxueche.ui.activity.WelcomeActivity&#10;login&#9;PSI&#9;JAVA://com.hahaxueche.ui.activity.signupLogin.LoginActivity&#10;const&#9;PSI&#9;JAVA://com.hahaxueche.model.base.Constants&#10;myapp&#9;PSI&#9;JAVA://com.hahaxueche.MyApplication&#10;myao&#9;null&#9;null&#10;build.gr&#9;FILE&#9;file:///Users/wangshirui/Documents/work/code/android/hahaxueche-android/hahaxueche/build.gradle&#10;httpen&#9;PSI&#9;JAVA://com.hahaxueche.api.net.HttpEngine&#10;coachde&#9;PSI&#9;JAVA://com.hahaxueche.ui.activity.findCoach.CoachDetailActivity&#10;indexa&#9;PSI&#9;JAVA://com.hahaxueche.ui.activity.index.IndexActivity" />
     <property name="device.picker.selection" value="Nexus_5_API_23" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="140" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
@@ -14568,6 +14581,7 @@
     <property name="ExportApk.ApkPath" value="$PROJECT_DIR$/../../../hahaxueche/apk/student/release/2_4_1" />
     <property name="ExportApk.Flavors" value="_360&#10;_91&#10;anzhuoshichang&#10;baiduzhushou&#10;haha&#10;huawei&#10;meizu&#10;vivo&#10;wandoujia&#10;xiaomi&#10;yingyongbao" />
     <property name="ExportApk.BuildType" value="release" />
+    <property name="FullScreen" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -14864,8 +14878,8 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="797" extended-state="1" />
-    <editor active="false" />
+    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32892805" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
@@ -14881,7 +14895,7 @@
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24964234" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24964234" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
@@ -15102,14 +15116,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hahaxueche/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="2.0444105">
-          <caret line="89" column="71" selection-start-line="89" selection-start-column="71" selection-end-line="89" selection-end-column="71" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/hahaxueche/src/main/java/com/hahaxueche/api/net/HttpEngine.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -15146,6 +15152,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="1.6309341">
           <caret line="97" column="51" selection-start-line="97" selection-start-column="51" selection-end-line="97" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hahaxueche/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8264781">
+          <caret line="89" column="71" selection-start-line="89" selection-start-column="71" selection-end-line="89" selection-end-column="71" />
           <folding />
         </state>
       </provider>
