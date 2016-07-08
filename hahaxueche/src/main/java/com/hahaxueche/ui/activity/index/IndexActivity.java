@@ -83,10 +83,10 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     private GroupBuyDialog mGroupBuyDialog;
     private AppointmentDialog appointmentDialog;
     private static final int PERMISSIONS_REQUEST = 600;
-    private static final String WEB_URL_ABOUT_HAHA = "http://m.hahaxueche.com/free_trial";
-    private static final String WEB_URL_ABOUT_COACH = "http://m.hahaxueche.com/free_trial";
-    private static final String WEB_URL_MY_STRENGTHS = "http://m.hahaxueche.com/free_trial";
-    private static final String WEB_URL_PROCEDURE = "http://m.hahaxueche.com/free_trial";
+    private static final String WEB_URL_ABOUT_HAHA = "http://staging.hahaxueche.net/#/student";
+    private static final String WEB_URL_ABOUT_COACH = "http://staging.hahaxueche.net/#/coach";
+    private static final String WEB_URL_MY_STRENGTHS = "http://activity.hahaxueche.com/share/features";
+    private static final String WEB_URL_PROCEDURE = "http://activity.hahaxueche.com/share/steps";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
