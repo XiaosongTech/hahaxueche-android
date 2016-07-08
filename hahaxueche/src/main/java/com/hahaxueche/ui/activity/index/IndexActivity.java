@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,10 +60,10 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     private LinearLayout llyTabMySetting;
     private CityChoseDialog mCityChoseDialog;
     private ConvenientBanner cbannerIndex;
-    private TextView mTvAboutHaha;//关于小哈
-    private TextView mTvAboutCoach;//关于教练
-    private TextView mTvMyStrengths;//我的优势
-    private TextView mTvProcedure;//学车流程
+    private RelativeLayout mRlyAboutHaha;//关于小哈
+    private RelativeLayout mRlyAboutCoach;//关于教练
+    private RelativeLayout mRlyMyStrengths;//我的优势
+    private RelativeLayout mRlyProcedure;//学车流程
     private List<String> networkImages;
     private ArrayAdapter transformerArrayAdapter;
     private ArrayList<String> transformerList = new ArrayList<String>();
@@ -130,10 +131,10 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         llyTabFindCoach = Util.instence(this).$(this, R.id.lly_tab_find_coach);
         llyTabAppointment = Util.instence(this).$(this, R.id.lly_tab_appointment);
         llyTabMySetting = Util.instence(this).$(this, R.id.lly_tab_my_setting);
-        mTvAboutHaha = Util.instence(this).$(this, R.id.tv_about_haha);
-        mTvAboutCoach = Util.instence(this).$(this, R.id.tv_about_coach);
-        mTvMyStrengths = Util.instence(this).$(this, R.id.tv_my_strengths);
-        mTvProcedure = Util.instence(this).$(this, R.id.tv_procedure);
+        mRlyAboutHaha = Util.instence(this).$(this, R.id.rly_about_haha);
+        mRlyAboutCoach = Util.instence(this).$(this, R.id.rly_about_coach);
+        mRlyMyStrengths = Util.instence(this).$(this, R.id.rly_my_strengths);
+        mRlyProcedure = Util.instence(this).$(this, R.id.rly_procedure);
         mTvFreeTry = Util.instence(this).$(this, R.id.tv_free_try);
         cbannerIndex = (ConvenientBanner) findViewById(R.id.indexBanner);
         WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
@@ -168,10 +169,10 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         llyTabAppointment.setOnClickListener(mClickListener);
         llyTabMySetting.setOnClickListener(mClickListener);
         mTvFreeTry.setOnClickListener(mClickListener);
-        mTvAboutHaha.setOnClickListener(mClickListener);
-        mTvAboutCoach.setOnClickListener(mClickListener);
-        mTvMyStrengths.setOnClickListener(mClickListener);
-        mTvProcedure.setOnClickListener(mClickListener);
+        mRlyAboutHaha.setOnClickListener(mClickListener);
+        mRlyAboutCoach.setOnClickListener(mClickListener);
+        mRlyMyStrengths.setOnClickListener(mClickListener);
+        mRlyProcedure.setOnClickListener(mClickListener);
     }
 
 
@@ -198,16 +199,16 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                 case R.id.tv_free_try:
                     freeTry();
                     break;
-                case R.id.tv_about_haha:
+                case R.id.rly_about_haha:
                     openWebView(WEB_URL_ABOUT_HAHA);
                     break;
-                case R.id.tv_about_coach:
+                case R.id.rly_about_coach:
                     openWebView(WEB_URL_ABOUT_COACH);
                     break;
-                case R.id.tv_my_strengths:
+                case R.id.rly_my_strengths:
                     openWebView(WEB_URL_MY_STRENGTHS);
                     break;
-                case R.id.tv_procedure:
+                case R.id.rly_procedure:
                     openWebView(WEB_URL_PROCEDURE);
                     break;
                 default:
