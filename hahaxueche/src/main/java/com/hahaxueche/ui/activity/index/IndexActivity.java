@@ -100,6 +100,12 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         initView();
         initEvent();
         //游客没有city_id，需选择
+        if (null == mUser) {
+            mUser = new User();
+        }
+        if (null == mUser.getStudent()) {
+            mUser.setStudent(new Student());
+        }
         if (TextUtils.isEmpty(mUser.getStudent().getCity_id())) {
             mUser.getStudent().setCity_id("0");
             spUtil.setUser(mUser);
@@ -353,7 +359,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
             int versioncode = pi.versionCode;
             SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
             Constants constants = spUtil.getConstants();
-            if (constants.getVersion_code() > versioncode) {
+            if (constants != null && constants.getVersion_code() > versioncode) {
                 //有版本更新时
                 UpdateManager updateManager = new UpdateManager(IndexActivity.this);
                 updateManager.checkUpdateInfo();
