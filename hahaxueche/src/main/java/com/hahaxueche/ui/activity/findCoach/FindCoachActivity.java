@@ -1,6 +1,9 @@
 package com.hahaxueche.ui.activity.findCoach;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -21,6 +24,7 @@ import com.hahaxueche.model.city.FieldModel;
 import com.hahaxueche.model.city.Location;
 import com.hahaxueche.model.city.City;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
+import com.hahaxueche.service.LocationService;
 import com.hahaxueche.ui.adapter.findCoach.CoachItemAdapter;
 import com.hahaxueche.ui.dialog.FcFilterDialog;
 import com.hahaxueche.ui.dialog.FcSortDialog;
@@ -73,6 +77,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
     private ArrayList<FieldModel> selFieldList;
     private ImageView mIvSearch;
     private TextView mTvNoCoachTips;
+    private static final int PERMISSIONS_REQUEST = 600;
 
     private String TAG = "FindCoachActivity";
     private boolean isOnLoadMore = false;
@@ -98,6 +103,14 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         llyFcSort = Util.instence(this).$(this, R.id.lly_fc_sort);
         mIvSearch = Util.instence(this).$(this, R.id.iv_search);
         mTvNoCoachTips = Util.instence(this).$(this, R.id.tv_no_coach_tips);
+        // Check the SDK version and whether the permission is already granted or not.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST);
+            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+        } else {
+            // Android version is lesser than 6.0 or the permission is already granted.
+            startLocationService();
+        }
         mHandler = new Handler();
 
         xlvCoachList = (XListView) findViewById(R.id.xlv_coach_list);
@@ -400,6 +413,40 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
             }
 
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                startLocationService();
+            } else {
+                Toast.makeText(this, "请允许使用定位权限，不然我们无法精确的为您推荐教练", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**
+     * 开启定位服务
+     */
+    private void startLocationService() {
+        Intent intent = new Intent(this, LocationService.class);
+        startService(intent);
+    }
+
+    /**
+     * 停止定位服务
+     */
+    private void stopLocationService() {
+        Intent intent = new Intent(this, LocationService.class);
+        stopService(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopLocationService();
     }
 
     private long exitTime = 0;

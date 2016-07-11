@@ -264,6 +264,8 @@
             android:name=".ui.activity.mySetting.FAQActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
+        <!--定位服务-->
+        <service android:name=".service.LocationService"></service>
 
         <service android:name="com.amap.api.location.APSService"></service>
         <receiver
