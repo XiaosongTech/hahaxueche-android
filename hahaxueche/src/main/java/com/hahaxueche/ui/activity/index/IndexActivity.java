@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,21 +31,13 @@ import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Banner;
-import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.model.city.Location;
-import com.hahaxueche.model.response.GroupBuyResponse;
-import com.hahaxueche.model.user.Session;
-import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.Constants;
+import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.user.User;
-import com.hahaxueche.presenter.findCoach.FCCallbackListener;
-import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.activity.appointment.AppointmentActivity;
-import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
-import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.FindCoachActivity;
 import com.hahaxueche.ui.activity.mySetting.MySettingActivity;
-import com.hahaxueche.ui.activity.mySetting.ReferFriendsActivity;
 import com.hahaxueche.ui.dialog.AppointmentDialog;
 import com.hahaxueche.ui.dialog.BaseAlertDialog;
 import com.hahaxueche.ui.dialog.CityChoseDialog;
@@ -68,11 +61,13 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     private LinearLayout llyTabMySetting;
     private CityChoseDialog mCityChoseDialog;
     private ConvenientBanner cbannerIndex;
+    private RelativeLayout mRlyAboutHaha;//关于小哈
+    private RelativeLayout mRlyAboutCoach;//关于教练
+    private RelativeLayout mRlyMyStrengths;//我的优势
+    private RelativeLayout mRlyProcedure;//学车流程
     private List<String> networkImages;
     private ArrayAdapter transformerArrayAdapter;
     private ArrayList<String> transformerList = new ArrayList<String>();
-    private LinearLayout llyXiaohaMore;
-    private LinearLayout llyCoachMore;
     //声明AMapLocationClient类对象
     private AMapLocationClient mLocationClient;
     //声明定位回调监听器
@@ -89,6 +84,10 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     private GroupBuyDialog mGroupBuyDialog;
     private AppointmentDialog appointmentDialog;
     private static final int PERMISSIONS_REQUEST = 600;
+    private static final String WEB_URL_ABOUT_HAHA = "http://staging.hahaxueche.net/#/student";
+    private static final String WEB_URL_ABOUT_COACH = "http://staging.hahaxueche.net/#/coach";
+    private static final String WEB_URL_MY_STRENGTHS = "http://activity.hahaxueche.com/share/features";
+    private static final String WEB_URL_PROCEDURE = "http://activity.hahaxueche.com/share/steps";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -139,8 +138,10 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         llyTabFindCoach = Util.instence(this).$(this, R.id.lly_tab_find_coach);
         llyTabAppointment = Util.instence(this).$(this, R.id.lly_tab_appointment);
         llyTabMySetting = Util.instence(this).$(this, R.id.lly_tab_my_setting);
-        llyCoachMore = Util.instence(this).$(this, R.id.lly_coach_more);
-        llyXiaohaMore = Util.instence(this).$(this, R.id.lly_xiaoha_more);
+        mRlyAboutHaha = Util.instence(this).$(this, R.id.rly_about_haha);
+        mRlyAboutCoach = Util.instence(this).$(this, R.id.rly_about_coach);
+        mRlyMyStrengths = Util.instence(this).$(this, R.id.rly_my_strengths);
+        mRlyProcedure = Util.instence(this).$(this, R.id.rly_procedure);
         mTvFreeTry = Util.instence(this).$(this, R.id.tv_free_try);
         cbannerIndex = (ConvenientBanner) findViewById(R.id.indexBanner);
         WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
@@ -174,9 +175,11 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         llyTabFindCoach.setOnClickListener(mClickListener);
         llyTabAppointment.setOnClickListener(mClickListener);
         llyTabMySetting.setOnClickListener(mClickListener);
-        llyCoachMore.setOnClickListener(mClickListener);
-        llyXiaohaMore.setOnClickListener(mClickListener);
         mTvFreeTry.setOnClickListener(mClickListener);
+        mRlyAboutHaha.setOnClickListener(mClickListener);
+        mRlyAboutCoach.setOnClickListener(mClickListener);
+        mRlyMyStrengths.setOnClickListener(mClickListener);
+        mRlyProcedure.setOnClickListener(mClickListener);
     }
 
 
@@ -200,16 +203,22 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                     startActivity(intent);
                     finish();
                     break;
-                case R.id.lly_xiaoha_more:
-                    aboutXiaoha();
-                    break;
-                case R.id.lly_coach_more:
-                    //uri = Uri.parse("http://staging.hahaxueche.net/#/coach");
-                    //it = new Intent(Intent.ACTION_VIEW, uri);
-                    aboutCoach();
-                    break;
                 case R.id.tv_free_try:
                     freeTry();
+                    break;
+                case R.id.rly_about_haha:
+                    openWebView(WEB_URL_ABOUT_HAHA);
+                    break;
+                case R.id.rly_about_coach:
+                    openWebView(WEB_URL_ABOUT_COACH);
+                    break;
+                case R.id.rly_my_strengths:
+                    openWebView(WEB_URL_MY_STRENGTHS);
+                    break;
+                case R.id.rly_procedure:
+                    openWebView(WEB_URL_PROCEDURE);
+                    break;
+                default:
                     break;
             }
         }
@@ -219,11 +228,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     public void onItemClick(int i) {
         if (mConstants != null && mConstants.getNew_home_page_banners() != null &&
                 !TextUtils.isEmpty(mConstants.getNew_home_page_banners().get(i).getTarget_url())) {
-            Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("url", mConstants.getNew_home_page_banners().get(i).getTarget_url());
-            intent.putExtras(bundle);
-            startActivity(intent);
+            openWebView(mConstants.getNew_home_page_banners().get(i).getTarget_url());
         }
     }
 
@@ -301,25 +306,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     }
 
 
-    private void aboutXiaoha() {
-        Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("url", "http://staging.hahaxueche.net/#/student");
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
-
-    private void aboutCoach() {
-        Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("url", "http://staging.hahaxueche.net/#/coach");
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
-
     private void freeTry() {
-        Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
-        Bundle bundle = new Bundle();
         //免费试学URL
         String url = "http://m.hahaxueche.com/free_trial";
         if (spUtil.getUser() != null && spUtil.getUser().getStudent() != null) {
@@ -343,9 +330,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
 
         }
         Log.v("gibxin", "free try url -> " + url);
-        bundle.putString("url", url);
-        intent.putExtras(bundle);
-        startActivity(intent);
+        openWebView(url);
     }
 
     /**
