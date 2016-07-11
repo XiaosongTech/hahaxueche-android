@@ -19,6 +19,8 @@ import com.hahaxueche.service.CheckSessionService;
 import com.hahaxueche.share.ShareConstants;
 import com.hahaxueche.utils.JsonUtils;
 import com.hahaxueche.utils.SharedPreferencesUtil;
+import com.instabug.library.IBGInvocationEvent;
+import com.instabug.library.Instabug;
 import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
 import com.sina.weibo.sdk.api.share.WeiboShareSDK;
 import com.squareup.leakcanary.LeakCanary;
@@ -49,6 +51,9 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         LeakCanary.install(this);
+        new Instabug.Builder(this, "e0ea921d16239f1f6b1b45a975de5ea1")
+                .setInvocationEvent(IBGInvocationEvent.IBGInvocationEventShake)
+                .build();
         //Stetho.initializeWithDefaults(this);
         Branch.getAutoInstance(this);
         sLPresenter = new SLPresenterImpl(this);
@@ -126,7 +131,7 @@ public class MyApplication extends Application {
 
     @Override
     public void onTerminate() {
-        startCheckSessionService();
+        stopCheckSessionService();
         super.onTerminate();
     }
 
