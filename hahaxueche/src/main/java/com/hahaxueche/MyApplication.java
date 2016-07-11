@@ -1,6 +1,7 @@
 package com.hahaxueche;
 
 import android.app.Application;
+import android.content.Intent;
 import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
@@ -14,6 +15,7 @@ import com.hahaxueche.presenter.mySetting.MSPresenter;
 import com.hahaxueche.presenter.mySetting.MSPresenterImpl;
 import com.hahaxueche.presenter.signupLogin.SLPresenter;
 import com.hahaxueche.presenter.signupLogin.SLPresenterImpl;
+import com.hahaxueche.service.CheckSessionService;
 import com.hahaxueche.share.ShareConstants;
 import com.hahaxueche.utils.JsonUtils;
 import com.hahaxueche.utils.SharedPreferencesUtil;
@@ -83,6 +85,7 @@ public class MyApplication extends Application {
             }
         }).start();
         regToShare();
+        startCheckSessionService();
     }
 
     public SLPresenter getSLPresenter() {
@@ -119,6 +122,28 @@ public class MyApplication extends Application {
 
     public IWeiboShareAPI getWeiboAPI() {
         return mWeiboShareAPI;
+    }
+
+    @Override
+    public void onTerminate() {
+        startCheckSessionService();
+        super.onTerminate();
+    }
+
+    /**
+     * 开启验证session服务
+     */
+    private void startCheckSessionService() {
+        Intent intent = new Intent(this, CheckSessionService.class);
+        startService(intent);
+    }
+
+    /**
+     * 停止验证session服务
+     */
+    private void stopCheckSessionService() {
+        Intent intent = new Intent(this, CheckSessionService.class);
+        stopService(intent);
     }
 
 
