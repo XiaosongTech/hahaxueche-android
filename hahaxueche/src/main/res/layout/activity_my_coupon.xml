@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lly_refer_friends"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_theme_color"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/app_theme_color">
+
+        <ImageButton
+            android:id="@+id/ibtn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:src="@drawable/ic_arrow_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="礼金券"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:padding="3dp"
+            android:text="添加"
+            android:textColor="@color/haha_white"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/haha_gray">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/rly_coupon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_coupon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="14dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="14dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_ticket" />
+
+                <TextView
+                    android:id="@+id/tv_coupon_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/iv_coupon"
+                    android:layout_alignTop="@id/iv_coupon"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="14dp"
+                    android:text="哈哈学车免费试学券"
+                    android:textColor="@color/haha_black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_coupon_premise"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/tv_coupon_title"
+                    android:layout_below="@id/tv_coupon_title"
+                    android:layout_marginTop="8dp"
+                    android:text="即日起报名成功后"
+                    android:textColor="@color/app_theme_color"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_coupon_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/tv_coupon_title"
+                    android:layout_below="@id/tv_coupon_premise"
+                    android:layout_marginTop="5dp"
+                    android:lineSpacingMultiplier="1.2"
+                    android:text="- 价值50上网卡\n- 任意饮料一瓶"
+                    android:textColor="@color/haha_gray_heavy"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@id/iv_coupon"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/margin18dp"
+                    android:lineSpacingMultiplier="1.2"
+                    android:text="立即\n激活"
+                    android:textColor="@color/haha_white"
+                    android:textSize="18sp" />
+
+            </RelativeLayout>
+
+            <include layout="@layout/view_coupon_usage" />
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>
