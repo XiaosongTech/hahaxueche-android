@@ -29,11 +29,12 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="礼金券"
+            android:text="优惠券"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/tv_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -103,11 +104,12 @@
                     android:layout_below="@id/tv_coupon_premise"
                     android:layout_marginTop="5dp"
                     android:lineSpacingMultiplier="1.2"
-                    android:text="- 价值50上网卡\n- 任意饮料一瓶"
+                    android:text="- 价值50上网卡\n- 任意饮料一瓶\n"
                     android:textColor="@color/haha_gray_heavy"
                     android:textSize="12sp" />
 
                 <TextView
+                    android:id="@+id/tv_coupon_active"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignRight="@id/iv_coupon"
@@ -117,6 +119,22 @@
                     android:text="立即\n激活"
                     android:textColor="@color/haha_white"
                     android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tv_coupon_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/tv_coupon_title"
+                    android:layout_marginRight="@dimen/margin35dp"
+                    android:layout_toLeftOf="@id/tv_coupon_active"
+                    android:background="@drawable/rect_bg_transparent_bd_green"
+                    android:paddingBottom="1dp"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp"
+                    android:paddingTop="1dp"
+                    android:text="未激活"
+                    android:textColor="@color/haha_green"
+                    android:textSize="14sp" />
 
             </RelativeLayout>
 

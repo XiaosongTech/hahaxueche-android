@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/haha_white"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/app_theme_color"
+        android:padding="20dp"
+        android:text="优惠券激活"
+        android:textColor="@color/haha_white"
+        android:textSize="20sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/haha_gray_light" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:lineSpacingMultiplier="1.2"
+        android:text="即日起,在哈哈学车报名成功即可激活该优惠券,激活成功后可线下联系渠道商领取相应优惠!赶紧开始免费试学吧!"
+        android:textColor="@color/haha_gray_heavy"
+        android:textSize="20sp" />
+
+
+    <TextView
+        android:id="@+id/tv_free_try"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/rect_bg_heavy_orange_corner"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="我要免费试学"
+        android:textColor="@color/haha_white"
+        android:textSize="20sp" />
+</LinearLayout>

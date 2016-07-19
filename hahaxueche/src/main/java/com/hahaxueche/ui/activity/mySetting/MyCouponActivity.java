@@ -13,17 +13,28 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
+import com.hahaxueche.model.student.Coupon;
+import com.hahaxueche.model.student.Student;
+import com.hahaxueche.model.user.User;
+import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
 import com.hahaxueche.share.ShareConstants;
 import com.hahaxueche.ui.activity.signupLogin.AgreementActivity;
+import com.hahaxueche.ui.dialog.BaseAlertDialog;
+import com.hahaxueche.ui.dialog.BaseConfirmDialog;
+import com.hahaxueche.ui.dialog.mySetting.ActiveCouponDialog;
+import com.hahaxueche.ui.dialog.mySetting.AddCouponDialog;
+import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 import com.tencent.tauth.Tencent;
 
@@ -36,7 +47,24 @@ public class MyCouponActivity extends MSBaseActivity {
     private TextView mTvContactTel;
     private TextView mTvContactQQ;
     private Tencent mTencent;//QQ
+    private ImageView mIvCoupon;
+    private TextView mTvCouponTitle;
+    private TextView mTvCouponPremise;
+    private TextView mTvCouponContent;
+    private TextView mTvCouponActive;
+    private TextView mTvCouponStatus;
+    private TextView mTvAdd;//添加按钮
+    private ActiveCouponDialog mActiveCouponDialog;//激活优惠券对话框
+    private AddCouponDialog mAddCouponDialog;//添加优惠券对话框
+    private BaseAlertDialog mReceiveCouponDialog;//领取优惠券对话框
+
+    private boolean isDisplayFreeTry = true;//是否显示免费试学
+    private boolean isDisplayAdd = false;//是否显示添加按钮
+
     private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
+
+    private SharedPreferencesUtil spUtil;
+    private Coupon mCoupon;//status 0 1 2 分别对应: 未激活 待领取 已领取(激活)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +72,27 @@ public class MyCouponActivity extends MSBaseActivity {
         setContentView(R.layout.activity_my_coupon);
         mTencent = Tencent.createInstance(ShareConstants.APP_ID_QQ, MyCouponActivity.this);
         initViews();
+        spUtil = new SharedPreferencesUtil(MyCouponActivity.this);
+        refreshUI();
         loadTextViews();
+    }
+
+    private void refreshUI() {
+        //判断是否显示免费试学券
+        if (spUtil.getUser().getStudent().getCoupons() != null && spUtil.getUser().getStudent().getCoupons().size() > 0) {
+            mCoupon = spUtil.getUser().getStudent().getCoupons().get(0);
+        }
+        if (mCoupon != null && mCoupon.getContent() != null && mCoupon.getContent().size() > 0) {
+            isDisplayFreeTry = false;
+        }
+        //加载优惠券
+        loadCoupon();
+        //判断是否显示添加按钮
+        if (mCoupon == null && spUtil.getUser().getStudent().getPurchased_services() == null) {
+            isDisplayAdd = true;
+        }
+        //加载添加按钮
+        loadAddButton();
     }
 
     private void initViews() {
@@ -52,6 +100,85 @@ public class MyCouponActivity extends MSBaseActivity {
         mTvFenqileUsage = Util.instence(this).$(this, R.id.tv_fenqile_usage);
         mTvContactTel = Util.instence(this).$(this, R.id.tv_contact_tel);
         mTvContactQQ = Util.instence(this).$(this, R.id.tv_contact_qq);
+        mIvCoupon = Util.instence(this).$(this, R.id.iv_coupon);
+        mTvCouponTitle = Util.instence(this).$(this, R.id.tv_coupon_title);
+        mTvCouponPremise = Util.instence(this).$(this, R.id.tv_coupon_premise);
+        mTvCouponContent = Util.instence(this).$(this, R.id.tv_coupon_content);
+        mTvCouponActive = Util.instence(this).$(this, R.id.tv_coupon_active);
+        mTvCouponStatus = Util.instence(this).$(this, R.id.tv_coupon_status);
+        mTvAdd = Util.instence(this).$(this, R.id.tv_add);
+    }
+
+    private void loadCoupon() {
+        if (isDisplayFreeTry) {
+            mIvCoupon.setImageDrawable(ContextCompat.getDrawable(MyCouponActivity.this, R.drawable.ic_ticket));
+            mTvCouponTitle.setText("哈哈学车免费试学券");
+            mTvCouponPremise.setVisibility(View.GONE);
+            mTvCouponContent.setText("使用后我们会致电联系接送事宜,优质服务提前体验,试学过程100%免费");
+            mTvCouponActive.setText("立即\n使用");
+            mTvCouponActive.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    navigateToFreeTry();
+                }
+            });
+            mTvCouponStatus.setVisibility(View.GONE);
+        } else {
+            mTvCouponTitle.setText(mCoupon.getChannel_name() + "优惠券");
+            String content = "";
+            for (String perContent : mCoupon.getContent()) {
+                content += "- " + perContent + "\n";
+            }
+            mTvCouponContent.setText(content);
+            if (mCoupon.getStatus() == 0) {
+                mTvCouponStatus.setVisibility(View.VISIBLE);
+                mTvCouponStatus.setText("未激活");
+                mTvCouponStatus.setTextColor(ContextCompat.getColor(MyCouponActivity.this, R.color.haha_green));
+                mTvCouponStatus.setBackgroundResource(R.drawable.rect_bg_transparent_bd_green);
+                mTvCouponActive.setText("立即\n激活");
+                mTvCouponActive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        activate();
+                    }
+                });
+            } else if (mCoupon.getStatus() == 1) {
+                mTvCouponStatus.setVisibility(View.VISIBLE);
+                mTvCouponStatus.setText("待领取");
+                mTvCouponStatus.setTextColor(ContextCompat.getColor(MyCouponActivity.this, R.color.app_theme_color));
+                mTvCouponStatus.setBackgroundResource(R.drawable.rect_bg_transparent_bd_appcolor);
+                mTvCouponActive.setText("立即\n领取");
+                mTvCouponActive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        receive();
+                    }
+                });
+            } else {
+                mTvCouponStatus.setVisibility(View.GONE);
+                mTvCouponActive.setText("已激活");
+                mTvCouponActive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //do nothing
+                    }
+                });
+            }
+        }
+    }
+
+    private void loadAddButton() {
+        if (isDisplayAdd) {
+            mTvAdd.setVisibility(View.VISIBLE);
+            mTvAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    addCoupon();
+                }
+            });
+        } else {
+            mTvAdd.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -153,4 +280,93 @@ public class MyCouponActivity extends MSBaseActivity {
             }
         }
     }
+
+    /**
+     * 跳转到免费试学
+     */
+    private void navigateToFreeTry() {
+        //免费试学URL
+        String url = "http://m.hahaxueche.com/free_trial";
+        if (spUtil.getUser() != null && spUtil.getUser().getStudent() != null) {
+            if (!TextUtils.isEmpty(spUtil.getUser().getStudent().getCity_id())) {
+                url += "?city_id=" + spUtil.getUser().getStudent().getCity_id();
+            }
+            if (!TextUtils.isEmpty(spUtil.getUser().getStudent().getName())) {
+                if (url.indexOf("?") > 0) {
+                    url += "&name=" + spUtil.getUser().getStudent().getName();
+                } else {
+                    url += "?name=" + spUtil.getUser().getStudent().getName();
+                }
+            }
+            if (!TextUtils.isEmpty(spUtil.getUser().getStudent().getCell_phone())) {
+                if (url.indexOf("?") > 0) {
+                    url += "&phone=" + spUtil.getUser().getStudent().getCell_phone();
+                } else {
+                    url += "?phone=" + spUtil.getUser().getStudent().getCell_phone();
+                }
+            }
+
+        }
+        Log.v("gibxin", "free try url -> " + url);
+        openWebView(url);
+    }
+
+    /**
+     * 激活
+     */
+    private void activate() {
+        if (mActiveCouponDialog == null) {
+            mActiveCouponDialog = new ActiveCouponDialog(MyCouponActivity.this, new ActiveCouponDialog.OnFreeTryListener() {
+                @Override
+                public boolean freeTry() {
+                    navigateToFreeTry();
+                    return true;
+                }
+            });
+        }
+        mActiveCouponDialog.show();
+    }
+
+    /**
+     * 添加优惠券
+     */
+    private void addCoupon() {
+        if (mAddCouponDialog == null) {
+            mAddCouponDialog = new AddCouponDialog(MyCouponActivity.this, new AddCouponDialog.OnAddCouponSaveListener() {
+                @Override
+                public boolean saveCoupon(String coupon) {
+                    Student student = spUtil.getUser().getStudent();
+                    slPresenter.completeStuInfo(student.getId(), student.getCity_id(), student.getName(),
+                            spUtil.getUser().getSession().getAccess_token(), coupon, new SLCallbackListener<Student>() {
+                                @Override
+                                public void onSuccess(Student data) {
+                                    //保存student信息
+                                    User user = spUtil.getUser();
+                                    user.setStudent(data);
+                                    spUtil.setUser(user);
+                                    mAddCouponDialog.dismiss();
+                                    Toast.makeText(MyCouponActivity.this, "优惠码添加成功!", Toast.LENGTH_SHORT).show();
+                                    refreshUI();
+                                }
+
+                                @Override
+                                public void onFailure(String errorEvent, String message) {
+                                    Toast.makeText(MyCouponActivity.this, "优惠码错误!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                    return true;
+                }
+            });
+        }
+        mAddCouponDialog.show();
+    }
+
+    private void receive() {
+        if (mReceiveCouponDialog == null) {
+            mReceiveCouponDialog = new BaseAlertDialog(MyCouponActivity.this, "领取优惠券", "恭喜您获得该优惠券!",
+                    "请您尽快前往" + mCoupon.getChannel_name() + "领取该优惠券");
+        }
+        mReceiveCouponDialog.show();
+    }
+
 }

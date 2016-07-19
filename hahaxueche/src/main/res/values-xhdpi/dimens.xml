@@ -11,4 +11,5 @@
     <dimen name="payment_adapter_spacing2">140dp</dimen>
     <dimen name="payment_adapter_spacing3">200dp</dimen>
     <dimen name="margin18dp">18dp</dimen>
+    <dimen name="margin35dp">35dp</dimen>
 </resources>
