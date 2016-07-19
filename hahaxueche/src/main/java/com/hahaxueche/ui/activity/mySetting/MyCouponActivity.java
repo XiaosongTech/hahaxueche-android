@@ -19,6 +19,7 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +32,6 @@ import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
 import com.hahaxueche.share.ShareConstants;
 import com.hahaxueche.ui.activity.signupLogin.AgreementActivity;
 import com.hahaxueche.ui.dialog.BaseAlertDialog;
-import com.hahaxueche.ui.dialog.BaseConfirmDialog;
 import com.hahaxueche.ui.dialog.mySetting.ActiveCouponDialog;
 import com.hahaxueche.ui.dialog.mySetting.AddCouponDialog;
 import com.hahaxueche.utils.SharedPreferencesUtil;
@@ -47,6 +47,7 @@ public class MyCouponActivity extends MSBaseActivity {
     private TextView mTvContactTel;
     private TextView mTvContactQQ;
     private Tencent mTencent;//QQ
+    private ImageButton mIbtnBack;
     private ImageView mIvCoupon;
     private TextView mTvCouponTitle;
     private TextView mTvCouponPremise;
@@ -75,6 +76,7 @@ public class MyCouponActivity extends MSBaseActivity {
         spUtil = new SharedPreferencesUtil(MyCouponActivity.this);
         refreshUI();
         loadTextViews();
+        initEvent();
     }
 
     private void refreshUI() {
@@ -96,6 +98,7 @@ public class MyCouponActivity extends MSBaseActivity {
     }
 
     private void initViews() {
+        mIbtnBack = Util.instence(this).$(this, R.id.ibtn_back);
         mTvHowGetCoupon = Util.instence(this).$(this, R.id.tv_how_get_coupon);
         mTvFenqileUsage = Util.instence(this).$(this, R.id.tv_fenqile_usage);
         mTvContactTel = Util.instence(this).$(this, R.id.tv_contact_tel);
@@ -107,6 +110,15 @@ public class MyCouponActivity extends MSBaseActivity {
         mTvCouponActive = Util.instence(this).$(this, R.id.tv_coupon_active);
         mTvCouponStatus = Util.instence(this).$(this, R.id.tv_coupon_status);
         mTvAdd = Util.instence(this).$(this, R.id.tv_add);
+    }
+
+    private void initEvent() {
+        mIbtnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MyCouponActivity.this.finish();
+            }
+        });
     }
 
     private void loadCoupon() {
@@ -131,6 +143,7 @@ public class MyCouponActivity extends MSBaseActivity {
             }
             mTvCouponContent.setText(content);
             if (mCoupon.getStatus() == 0) {
+                mIvCoupon.setImageDrawable(ContextCompat.getDrawable(MyCouponActivity.this, R.drawable.ic_ticket));
                 mTvCouponStatus.setVisibility(View.VISIBLE);
                 mTvCouponStatus.setText("未激活");
                 mTvCouponStatus.setTextColor(ContextCompat.getColor(MyCouponActivity.this, R.color.haha_green));
@@ -143,6 +156,7 @@ public class MyCouponActivity extends MSBaseActivity {
                     }
                 });
             } else if (mCoupon.getStatus() == 1) {
+                mIvCoupon.setImageDrawable(ContextCompat.getDrawable(MyCouponActivity.this, R.drawable.ic_ticket));
                 mTvCouponStatus.setVisibility(View.VISIBLE);
                 mTvCouponStatus.setText("待领取");
                 mTvCouponStatus.setTextColor(ContextCompat.getColor(MyCouponActivity.this, R.color.app_theme_color));
@@ -155,8 +169,9 @@ public class MyCouponActivity extends MSBaseActivity {
                     }
                 });
             } else {
+                mIvCoupon.setImageDrawable(ContextCompat.getDrawable(MyCouponActivity.this, R.drawable.ic_ticket_gray));
                 mTvCouponStatus.setVisibility(View.GONE);
-                mTvCouponActive.setText("已激活");
+                mTvCouponActive.setText("已\n激活");
                 mTvCouponActive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

@@ -114,8 +114,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignRight="@id/iv_coupon"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/margin18dp"
+                    android:layout_marginRight="@dimen/margin15dp"
                     android:lineSpacingMultiplier="1.2"
+                    android:gravity="center"
                     android:text="立即\n激活"
                     android:textColor="@color/haha_white"
                     android:textSize="18sp" />

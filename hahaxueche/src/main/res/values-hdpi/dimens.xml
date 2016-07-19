@@ -13,4 +13,5 @@
     <dimen name="margin30dp">15dp</dimen>
     <dimen name="margin18dp">8dp</dimen>
     <dimen name="margin35dp">22dp</dimen>
+    <dimen name="margin15dp">10dp</dimen>
 </resources>
