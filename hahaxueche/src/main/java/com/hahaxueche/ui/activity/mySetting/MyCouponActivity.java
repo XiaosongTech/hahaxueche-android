@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,6 +64,8 @@ public class MyCouponActivity extends MSBaseActivity {
     private ActiveCouponDialog mActiveCouponDialog;//激活优惠券对话框
     private AddCouponDialog mAddCouponDialog;//添加优惠券对话框
     private BaseAlertDialog mReceiveCouponDialog;//领取优惠券对话框
+    private TextView mTvCouponUsage;
+    private LinearLayout mLlyCouponUsage;
 
     private boolean isDisplayFreeTry = true;//是否显示免费试学
     private boolean isDisplayAdd = false;//是否显示添加按钮
@@ -117,6 +120,8 @@ public class MyCouponActivity extends MSBaseActivity {
         mTvCouponStatus = Util.instence(this).$(this, R.id.tv_coupon_status);
         mTvAdd = Util.instence(this).$(this, R.id.tv_add);
         mSrlMySetting = Util.instence(this).$(this, R.id.srl_my_coupon);
+        mTvCouponUsage = Util.instence(this).$(this, R.id.tv_coupon_usage);
+        mLlyCouponUsage = Util.instence(this).$(this, R.id.lly_coupon_usage);
     }
 
     private void initEvent() {
@@ -124,6 +129,16 @@ public class MyCouponActivity extends MSBaseActivity {
             @Override
             public void onClick(View view) {
                 MyCouponActivity.this.finish();
+            }
+        });
+        mTvCouponUsage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mLlyCouponUsage.getVisibility() == View.VISIBLE) {
+                    mLlyCouponUsage.setVisibility(View.GONE);
+                } else {
+                    mLlyCouponUsage.setVisibility(View.VISIBLE);
+                }
             }
         });
         mSrlMySetting.setOnRefreshListener(mRefreshListener);
