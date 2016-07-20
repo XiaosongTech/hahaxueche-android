@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -70,6 +71,8 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     private User mUser;
     private GroupBuyDialog mGroupBuyDialog;
     private AppointmentDialog appointmentDialog;
+    private FrameLayout mFrlTelAsk;
+    private FrameLayout mFrlOnlineAsk;
     private static final String WEB_URL_ABOUT_HAHA = "http://staging.hahaxueche.net/#/student";
     private static final String WEB_URL_ABOUT_COACH = "http://staging.hahaxueche.net/#/coach";
     private static final String WEB_URL_MY_STRENGTHS = "http://activity.hahaxueche.com/share/features";
@@ -124,7 +127,8 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         cbannerIndex = (ConvenientBanner) findViewById(R.id.indexBanner);
         WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
         int width = wm.getDefaultDisplay().getWidth();
-        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, width);
+        int height = Math.round(width / 5 * 4);
+        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(width, height);
         cbannerIndex.setLayoutParams(p);
         transformerArrayAdapter = new ArrayAdapter(this, R.layout.adapter_transformer, transformerList);
         //网络加载例子
@@ -146,6 +150,8 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
 //                .setOnPageChangeListener(this)//监听翻页事件
                 .setOnItemClickListener(this);
         cbannerIndex.notifyDataSetChanged();
+        mFrlTelAsk = Util.instence(this).$(this, R.id.frl_tel_ask);
+        mFrlOnlineAsk = Util.instence(this).$(this, R.id.frl_online_ask);
     }
 
     private void initEvent() {
@@ -328,8 +334,6 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
             e.printStackTrace();
         }
     }
-
-
 
 
     private long exitTime = 0;
