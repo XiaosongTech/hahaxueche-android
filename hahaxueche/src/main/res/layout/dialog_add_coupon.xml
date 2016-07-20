@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/haha_white"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/app_theme_color"
+        android:padding="20dp"
+        android:text="添加优惠券"
+        android:textColor="@color/haha_white"
+        android:textSize="20sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="请添加优惠码"
+        android:textColor="@color/app_theme_color"
+        android:textSize="16sp" />
+
+
+    <EditText
+        android:id="@+id/et_coupon"
+        android:layout_width="@dimen/search_edittext_width"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/edittext_corner_orange"
+        android:gravity="center_vertical"
+        android:hint=""
+        android:inputType="number"
+        android:maxLines="1"
+        android:padding="10dp"
+        android:textColor="@color/app_theme_color"
+        android:textColorHint="@color/haha_gray_heavy"
+        android:textSize="16sp" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/haha_gray_light" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:text="@string/cancel"
+            android:textColor="@color/fCTxtOrange"
+            android:textSize="14sp" />
+
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/fCViewGray" />
+
+        <TextView
+            android:id="@+id/tv_sure"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:text="确认"
+            android:textColor="@color/fCTxtGreen"
+            android:textSize="14sp" />
+    </LinearLayout>
+</LinearLayout>

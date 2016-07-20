@@ -1,5 +1,6 @@
 package com.hahaxueche.model.student;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,6 +22,7 @@ public class Student {
     private String status;
     private String by_referal;
     private String bonus_balance;
+    private ArrayList<Coupon> coupons;
     private String code;
     private String message;
     private boolean isSuccess = true;
@@ -137,6 +139,14 @@ public class Student {
         this.bonus_balance = bonus_balance;
     }
 
+    public ArrayList<Coupon> getCoupons() {
+        return coupons;
+    }
+
+    public void setCoupons(ArrayList<Coupon> coupons) {
+        this.coupons = coupons;
+    }
+
     public String getCode() {
         return code;
     }
@@ -159,5 +169,13 @@ public class Student {
 
     public void setIsSuccess(boolean isSuccess) {
         this.isSuccess = isSuccess;
+    }
+
+    public boolean hasPurchasedService() {
+        if (purchased_services == null)
+            return false;
+        if (purchased_services.size() == 0)
+            return false;
+        return true;
     }
 }

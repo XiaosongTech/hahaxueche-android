@@ -89,6 +89,7 @@ public class MySettingActivity extends MSBaseActivity {
     private LinearLayout llyLoginOff;
     private RelativeLayout rlyCustomerPhone;
     private RelativeLayout rlyAboutHaha;
+    private RelativeLayout mRlyMyCoupon;//我的礼金券
     private View vwMyCoach;
     private ProgressDialog pd;//进度框
     private Session mSession;
@@ -150,6 +151,7 @@ public class MySettingActivity extends MSBaseActivity {
         mRlySoftwareInfo = Util.instence(this).$(this, R.id.rly_software_info);
         mTvStudentPhase = Util.instence(this).$(this, R.id.tv_student_phase);
         mIvEditUsername = Util.instence(this).$(this, R.id.iv_edit_username);
+        mRlyMyCoupon = Util.instence(this).$(this, R.id.rly_my_coupon);
     }
 
     private void initEvent() {
@@ -174,6 +176,7 @@ public class MySettingActivity extends MSBaseActivity {
         mRlySupportHaha.setOnClickListener(mClickListener);
         mRlySoftwareInfo.setOnClickListener(mClickListener);
         mIvEditUsername.setOnClickListener(mClickListener);
+        mRlyMyCoupon.setOnClickListener(mClickListener);
     }
 
     private void loadDatas(boolean useCachePolicy) {
@@ -352,6 +355,10 @@ public class MySettingActivity extends MSBaseActivity {
                         mEditUsernameDialog = new EditUsernameDialog(MySettingActivity.this, mEditUsernameSaveListener);
                     }
                     mEditUsernameDialog.show();
+                    break;
+                case R.id.rly_my_coupon:
+                    navigateToCoupon();
+                    break;
                 default:
                     break;
             }
@@ -598,5 +605,17 @@ public class MySettingActivity extends MSBaseActivity {
             }
         });
         baseConfirmDialog.show();
+    }
+
+    /**
+     * 跳转到我的礼金券
+     */
+    private void navigateToCoupon() {
+        if (isLogin) {
+            Intent intent = new Intent(MySettingActivity.this, MyCouponActivity.class);
+            startActivity(intent);
+        } else {
+            Toast.makeText(context, "对不起,您还没有礼金券", Toast.LENGTH_SHORT).show();
+        }
     }
 }

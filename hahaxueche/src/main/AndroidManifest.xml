@@ -264,6 +264,10 @@
             android:name=".ui.activity.mySetting.FAQActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.mySetting.MyCouponActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
         <!--定位服务-->
         <service android:name=".service.LocationService"></service>
         <!--检测session有效性服务-->
