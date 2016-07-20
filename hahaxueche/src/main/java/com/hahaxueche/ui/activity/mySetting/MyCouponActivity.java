@@ -1,6 +1,7 @@
 package com.hahaxueche.ui.activity.mySetting;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -8,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -28,6 +30,7 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.student.Coupon;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.presenter.signupLogin.SLCallbackListener;
 import com.hahaxueche.share.ShareConstants;
 import com.hahaxueche.ui.activity.signupLogin.AgreementActivity;
@@ -55,12 +58,15 @@ public class MyCouponActivity extends MSBaseActivity {
     private TextView mTvCouponActive;
     private TextView mTvCouponStatus;
     private TextView mTvAdd;//添加按钮
+    private ProgressDialog pd;//进度框
+    private SwipeRefreshLayout mSrlMySetting;//下拉刷新
     private ActiveCouponDialog mActiveCouponDialog;//激活优惠券对话框
     private AddCouponDialog mAddCouponDialog;//添加优惠券对话框
     private BaseAlertDialog mReceiveCouponDialog;//领取优惠券对话框
 
     private boolean isDisplayFreeTry = true;//是否显示免费试学
     private boolean isDisplayAdd = false;//是否显示添加按钮
+    private boolean isRefresh = false;//是否刷新中
 
     private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
 
@@ -74,9 +80,9 @@ public class MyCouponActivity extends MSBaseActivity {
         mTencent = Tencent.createInstance(ShareConstants.APP_ID_QQ, MyCouponActivity.this);
         initViews();
         spUtil = new SharedPreferencesUtil(MyCouponActivity.this);
-        refreshUI();
-        loadTextViews();
         initEvent();
+        refreshStudent();
+        loadTextViews();
     }
 
     private void refreshUI() {
@@ -90,7 +96,7 @@ public class MyCouponActivity extends MSBaseActivity {
         //加载优惠券
         loadCoupon();
         //判断是否显示添加按钮
-        if (mCoupon == null && spUtil.getUser().getStudent().getPurchased_services() == null) {
+        if (mCoupon == null && !spUtil.getUser().getStudent().hasPurchasedService()) {
             isDisplayAdd = true;
         }
         //加载添加按钮
@@ -110,6 +116,7 @@ public class MyCouponActivity extends MSBaseActivity {
         mTvCouponActive = Util.instence(this).$(this, R.id.tv_coupon_active);
         mTvCouponStatus = Util.instence(this).$(this, R.id.tv_coupon_status);
         mTvAdd = Util.instence(this).$(this, R.id.tv_add);
+        mSrlMySetting = Util.instence(this).$(this, R.id.srl_my_coupon);
     }
 
     private void initEvent() {
@@ -119,14 +126,34 @@ public class MyCouponActivity extends MSBaseActivity {
                 MyCouponActivity.this.finish();
             }
         });
+        mSrlMySetting.setOnRefreshListener(mRefreshListener);
+        mSrlMySetting.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
     }
+
+    SwipeRefreshLayout.OnRefreshListener mRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            if (!isRefresh) {
+                isRefresh = true;
+                /*new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        mSrlMySetting.setRefreshing(false);
+                        refreshStudent();
+                        isRefresh = false;
+
+                    }
+                }, 1500);*/
+                refreshStudent();
+            }
+        }
+    };
 
     private void loadCoupon() {
         if (isDisplayFreeTry) {
             mIvCoupon.setImageDrawable(ContextCompat.getDrawable(MyCouponActivity.this, R.drawable.ic_ticket));
             mTvCouponTitle.setText("哈哈学车免费试学券");
             mTvCouponPremise.setVisibility(View.GONE);
-            mTvCouponContent.setText("使用后我们会致电联系接送事宜,优质服务提前体验,试学过程100%免费");
+            mTvCouponContent.setText("使用后我们会致电联系接送事宜,\n优质服务提前体验,试学过程100%免费");
             mTvCouponActive.setText("立即\n使用");
             mTvCouponActive.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -355,13 +382,9 @@ public class MyCouponActivity extends MSBaseActivity {
                             spUtil.getUser().getSession().getAccess_token(), coupon, new SLCallbackListener<Student>() {
                                 @Override
                                 public void onSuccess(Student data) {
-                                    //保存student信息
-                                    User user = spUtil.getUser();
-                                    user.setStudent(data);
-                                    spUtil.setUser(user);
                                     mAddCouponDialog.dismiss();
                                     Toast.makeText(MyCouponActivity.this, "优惠码添加成功!", Toast.LENGTH_SHORT).show();
-                                    refreshUI();
+                                    refreshStudent();
                                 }
 
                                 @Override
@@ -382,6 +405,37 @@ public class MyCouponActivity extends MSBaseActivity {
                     "请您尽快前往" + mCoupon.getChannel_name() + "领取该优惠券");
         }
         mReceiveCouponDialog.show();
+    }
+
+    /**
+     * 重新加载学员信息
+     */
+    private void refreshStudent() {
+        pd = ProgressDialog.show(MyCouponActivity.this, null, "数据加载中，请稍后……");
+        this.msPresenter.getStudent(spUtil.getUser().getStudent().getId(), spUtil.getUser().getSession().getAccess_token(),
+                new MSCallbackListener<Student>() {
+                    @Override
+                    public void onSuccess(Student student) {
+                        User user = spUtil.getUser();
+                        user.setStudent(student);
+                        spUtil.setUser(user);
+                        refreshUI();
+                        if (pd != null) {
+                            pd.dismiss();
+                        }
+                        mSrlMySetting.setRefreshing(false);
+                        isRefresh = false;
+                    }
+
+                    @Override
+                    public void onFailure(String errorEvent, String message) {
+                        if (pd != null) {
+                            pd.dismiss();
+                        }
+                        mSrlMySetting.setRefreshing(false);
+                        isRefresh = false;
+                    }
+                });
     }
 
 }

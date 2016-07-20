@@ -170,4 +170,12 @@ public class Student {
     public void setIsSuccess(boolean isSuccess) {
         this.isSuccess = isSuccess;
     }
+
+    public boolean hasPurchasedService() {
+        if (purchased_services == null)
+            return false;
+        if (purchased_services.size() == 0)
+            return false;
+        return true;
+    }
 }

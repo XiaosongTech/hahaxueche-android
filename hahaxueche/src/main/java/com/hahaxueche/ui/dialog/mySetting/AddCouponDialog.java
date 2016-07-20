@@ -82,7 +82,7 @@ public class AddCouponDialog {
                 case R.id.tv_cancel:
                     mDialog.dismiss();
                     break;
-                case R.id.tv_save:
+                case R.id.tv_sure:
                     String coupon = mEtCoupon.getText().toString();
                     if (TextUtils.isEmpty(coupon)) {
                         Toast.makeText(mContext, "优惠码不能为空！", Toast.LENGTH_SHORT).show();
