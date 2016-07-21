@@ -97,9 +97,6 @@
                     android:scheme="https" />
             </intent-filter>
 
-            <meta-data
-                android:name="io.branch.sdk.auto_link_keys"
-                android:value="refererId" />
         </activity>
         <activity
             android:name=".ui.activity.signupLogin.SignUpActivity"
