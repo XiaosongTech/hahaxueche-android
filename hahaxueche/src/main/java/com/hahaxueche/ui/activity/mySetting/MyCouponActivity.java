@@ -46,7 +46,6 @@ import com.tencent.tauth.Tencent;
  * Created by wangshirui on 16/7/13.
  */
 public class MyCouponActivity extends MSBaseActivity {
-    private TextView mTvHowGetCoupon;//如何获取礼金券文字说明
     private TextView mTvFenqileUsage;//分期乐使用说明
     private TextView mTvContactTel;
     private TextView mTvOnlineAsk;
@@ -106,7 +105,6 @@ public class MyCouponActivity extends MSBaseActivity {
 
     private void initViews() {
         mIbtnBack = Util.instence(this).$(this, R.id.ibtn_back);
-        mTvHowGetCoupon = Util.instence(this).$(this, R.id.tv_how_get_coupon);
         mTvFenqileUsage = Util.instence(this).$(this, R.id.tv_fenqile_usage);
         mTvContactTel = Util.instence(this).$(this, R.id.tv_contact_tel);
         mTvOnlineAsk = Util.instence(this).$(this, R.id.tv_contact_qq);
@@ -240,29 +238,6 @@ public class MyCouponActivity extends MSBaseActivity {
      * 加载部分文字说明
      */
     private void loadTextViews() {
-        //礼金券文字说明
-        //部分变色 可点击
-        CharSequence howToGetCouponStr = getText(R.string.howToGetCoupon);
-        SpannableString spHowGetCoupon = new SpannableString(howToGetCouponStr);
-        spHowGetCoupon.setSpan(new ClickableSpan() {
-            @Override
-            public void onClick(View widget) {
-                Intent intent = new Intent(context, AgreementActivity.class);
-                startActivity(intent);
-            }
-
-            @Override
-            public void updateDrawState(TextPaint ds) {
-                super.updateDrawState(ds);
-                ds.setColor(ContextCompat.getColor(context, R.color.app_theme_color));
-                ds.setUnderlineText(false);
-                ds.clearShadowLayer();
-            }
-        }, howToGetCouponStr.length() - 12, howToGetCouponStr.length() - 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spHowGetCoupon.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.haha_blue)), howToGetCouponStr.length() - 12, howToGetCouponStr.length() - 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mTvHowGetCoupon.setText(spHowGetCoupon);
-        mTvHowGetCoupon.setHighlightColor(ContextCompat.getColor(context, R.color.haha_blue));
-        mTvHowGetCoupon.setMovementMethod(LinkMovementMethod.getInstance());
         //分期乐文字说明
         CharSequence fenqileUsageStr = getText(R.string.fenqileUsage);
         SpannableString spFenqileUsageStr = new SpannableString(fenqileUsageStr);
