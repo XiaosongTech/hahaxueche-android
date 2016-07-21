@@ -49,8 +49,7 @@ public class MyCouponActivity extends MSBaseActivity {
     private TextView mTvHowGetCoupon;//如何获取礼金券文字说明
     private TextView mTvFenqileUsage;//分期乐使用说明
     private TextView mTvContactTel;
-    private TextView mTvContactQQ;
-    private Tencent mTencent;//QQ
+    private TextView mTvOnlineAsk;
     private ImageButton mIbtnBack;
     private ImageView mIvCoupon;
     private TextView mTvCouponTitle;
@@ -80,7 +79,6 @@ public class MyCouponActivity extends MSBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_coupon);
-        mTencent = Tencent.createInstance(ShareConstants.APP_ID_QQ, MyCouponActivity.this);
         initViews();
         spUtil = new SharedPreferencesUtil(MyCouponActivity.this);
         initEvent();
@@ -111,7 +109,7 @@ public class MyCouponActivity extends MSBaseActivity {
         mTvHowGetCoupon = Util.instence(this).$(this, R.id.tv_how_get_coupon);
         mTvFenqileUsage = Util.instence(this).$(this, R.id.tv_fenqile_usage);
         mTvContactTel = Util.instence(this).$(this, R.id.tv_contact_tel);
-        mTvContactQQ = Util.instence(this).$(this, R.id.tv_contact_qq);
+        mTvOnlineAsk = Util.instence(this).$(this, R.id.tv_contact_qq);
         mIvCoupon = Util.instence(this).$(this, R.id.iv_coupon);
         mTvCouponTitle = Util.instence(this).$(this, R.id.tv_coupon_title);
         mTvCouponPremise = Util.instence(this).$(this, R.id.tv_coupon_premise);
@@ -301,11 +299,11 @@ public class MyCouponActivity extends MSBaseActivity {
                 }
             }
         });
-        mTvContactQQ.setText(Html.fromHtml(getResources().getString(R.string.contactQQ)));
-        mTvContactQQ.setOnClickListener(new View.OnClickListener() {
+        mTvOnlineAsk.setText(Html.fromHtml(getResources().getString(R.string.contactQQ)));
+        mTvOnlineAsk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                contactQQ();
+                onlineAsk(MyCouponActivity.this);
             }
         });
 
@@ -322,9 +320,6 @@ public class MyCouponActivity extends MSBaseActivity {
         startActivity(intent);
     }
 
-    private void contactQQ() {
-        int ret = mTencent.startWPAConversation(MyCouponActivity.this, ShareConstants.CUSTOMER_SERVICE_QQ, "");
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {

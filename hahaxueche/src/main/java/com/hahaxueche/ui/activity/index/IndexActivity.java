@@ -1,11 +1,15 @@
 package com.hahaxueche.ui.activity.index;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -79,6 +83,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     private static final String WEB_URL_ABOUT_COACH = "http://staging.hahaxueche.net/#/coach";
     private static final String WEB_URL_MY_STRENGTHS = "http://activity.hahaxueche.com/share/features";
     private static final String WEB_URL_PROCEDURE = "http://activity.hahaxueche.com/share/steps";
+    private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -167,6 +172,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         mRlyMyStrengths.setOnClickListener(mClickListener);
         mRlyProcedure.setOnClickListener(mClickListener);
         mFrlOnlineAsk.setOnClickListener(mClickListener);
+        mFrlTelAsk.setOnClickListener(mClickListener);
     }
 
 
@@ -206,7 +212,16 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                     openWebView(WEB_URL_PROCEDURE);
                     break;
                 case R.id.frl_online_ask:
-                    onlineAsk();
+                    onlineAsk(IndexActivity.this);
+                    break;
+                case R.id.frl_tel_ask:
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
+                        //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+                    } else {
+                        // Android version is lesser than 6.0 or the permission is already granted.
+                        contactService();
+                    }
                     break;
                 default:
                     break;
@@ -341,21 +356,6 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         }
     }
 
-    /**
-     * 在线咨询
-     */
-    private void onlineAsk() {
-        String title = "聊天窗口的标题";
-        // 设置访客来源，标识访客是从哪个页面发起咨询的，用于客服了解用户是从什么页面进入三个参数分别为来源页面的url，来源页面标题，来源页面额外信息（可自由定义）
-        // 设置来源后，在客服会话界面的"用户资料"栏的页面项，可以看到这里设置的值。
-        ConsultSource source = new ConsultSource("", "android", "");
-        // 请注意： 调用该接口前，应先检查Unicorn.isServiceAvailable(), 如果返回为false，该接口不会有任何动作
-        Unicorn.openServiceActivity(context, // 上下文
-                title, // 聊天窗口的标题
-                source // 咨询的发起来源，包括发起咨询的url，title，描述信息等
-        );
-    }
-
 
     private long exitTime = 0;
 
@@ -373,5 +373,28 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         }
         return super.onKeyDown(keyCode, event);
 
+    }
+
+    /**
+     * 联系客服
+     */
+    private void contactService() {
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:4000016006"));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        startActivity(intent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_CELL_PHONE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                contactService();
+            } else {
+                Toast.makeText(this, "请允许拨打电话权限，不然无法直接拨号联系客服", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
