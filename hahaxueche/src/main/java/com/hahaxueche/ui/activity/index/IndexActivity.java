@@ -300,11 +300,11 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
      * 第一次加载推荐有奖通知
      */
     public void showFirstBonusAlert() {
-        if (!spUtil.getNoticeBouns() && mUser.getStudent() != null && !TextUtils.isEmpty(mUser.getId())) {
-            BaseAlertDialog baseAlertDialog = new BaseAlertDialog(IndexActivity.this, "注册成功！", "恭喜您获得50元学车卷！", "50元已经打进您的账户余额，在支付过程中，系统会自动减现50元报名费。");
-            baseAlertDialog.show();
-            spUtil.setNoticeBonus(true);
-        }
+//        if (!spUtil.getNoticeBouns() && mUser.getStudent() != null && !TextUtils.isEmpty(mUser.getId())) {
+//            BaseAlertDialog baseAlertDialog = new BaseAlertDialog(IndexActivity.this, "注册成功！", "恭喜您获得50元学车卷！", "50元已经打进您的账户余额，在支付过程中，系统会自动减现50元报名费。");
+//            baseAlertDialog.show();
+//            spUtil.setNoticeBonus(true);
+//        }
     }
 
 
