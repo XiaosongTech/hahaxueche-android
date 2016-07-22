@@ -1,6 +1,7 @@
 package com.hahaxueche;
 
 import android.app.Application;
+import android.content.Intent;
 import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
@@ -14,9 +15,18 @@ import com.hahaxueche.presenter.mySetting.MSPresenter;
 import com.hahaxueche.presenter.mySetting.MSPresenterImpl;
 import com.hahaxueche.presenter.signupLogin.SLPresenter;
 import com.hahaxueche.presenter.signupLogin.SLPresenterImpl;
+import com.hahaxueche.service.CheckSessionService;
 import com.hahaxueche.share.ShareConstants;
+import com.hahaxueche.ui.widget.PicassoImageLoader;
+import com.hahaxueche.utils.HahaCache;
 import com.hahaxueche.utils.JsonUtils;
 import com.hahaxueche.utils.SharedPreferencesUtil;
+import com.instabug.library.IBGInvocationEvent;
+import com.instabug.library.Instabug;
+import com.qiyukf.unicorn.api.SavePowerConfig;
+import com.qiyukf.unicorn.api.StatusBarNotificationConfig;
+import com.qiyukf.unicorn.api.Unicorn;
+import com.qiyukf.unicorn.api.YSFOptions;
 import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
 import com.sina.weibo.sdk.api.share.WeiboShareSDK;
 import com.squareup.leakcanary.LeakCanary;
@@ -47,6 +57,9 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         LeakCanary.install(this);
+        new Instabug.Builder(this, "e0ea921d16239f1f6b1b45a975de5ea1")
+                .setInvocationEvent(IBGInvocationEvent.IBGInvocationEventShake)
+                .build();
         //Stetho.initializeWithDefaults(this);
         Branch.getAutoInstance(this);
         sLPresenter = new SLPresenterImpl(this);
@@ -83,6 +96,10 @@ public class MyApplication extends Application {
             }
         }).start();
         regToShare();
+        //七鱼客服
+        HahaCache.context = getApplicationContext();
+        Unicorn.init(this, "2f328da38ac77ce6d796c2977248f7e2", options(), new PicassoImageLoader());
+        startCheckSessionService();
     }
 
     public SLPresenter getSLPresenter() {
@@ -119,6 +136,36 @@ public class MyApplication extends Application {
 
     public IWeiboShareAPI getWeiboAPI() {
         return mWeiboShareAPI;
+    }
+
+    @Override
+    public void onTerminate() {
+        stopCheckSessionService();
+        super.onTerminate();
+    }
+
+    /**
+     * 开启验证session服务
+     */
+    private void startCheckSessionService() {
+        Intent intent = new Intent(this, CheckSessionService.class);
+        startService(intent);
+    }
+
+    /**
+     * 停止验证session服务
+     */
+    private void stopCheckSessionService() {
+        Intent intent = new Intent(this, CheckSessionService.class);
+        stopService(intent);
+    }
+
+    // 如果返回值为null，则全部使用默认参数。
+    private YSFOptions options() {
+        YSFOptions options = new YSFOptions();
+        options.statusBarNotificationConfig = new StatusBarNotificationConfig();
+        options.savePowerConfig = new SavePowerConfig();
+        return options;
     }
 
 

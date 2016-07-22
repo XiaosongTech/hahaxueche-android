@@ -89,4 +89,6 @@ dependencies {
     compile files('libs/weiboSDKCore_3.1.4.jar')
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.5.0'
     compile project(':lib:pingpp')
+    compile 'com.instabug.library:instabug:2+'
+    compile 'com.qiyukf.unicorn:unicorn:2.4.0'
 }

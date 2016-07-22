@@ -1,10 +1,7 @@
 package com.hahaxueche.ui.activity.mySetting;
 
 import android.Manifest;
-import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -12,10 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.Log;
@@ -35,7 +29,6 @@ import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
-import com.hahaxueche.share.ShareConstants;
 import com.hahaxueche.ui.activity.appointment.AppointmentActivity;
 import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.findCoach.FindCoachActivity;
@@ -52,14 +45,9 @@ import com.hahaxueche.ui.widget.monitorScrollView.MonitorScrollView;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 import com.squareup.picasso.Picasso;
-import com.tencent.tauth.Tencent;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -71,8 +59,7 @@ public class MySettingActivity extends MSBaseActivity {
     private LinearLayout llyTabAppointment;
     private LinearLayout llyTabMySetting;
     private CircleImageView cirMyAvatar;
-    private RelativeLayout rllCustomerServiceQQ;
-    private Tencent mTencent;//QQ
+    private RelativeLayout rllCustomerService;
     private TextView tvBackLogin;//跳转登录
     private LinearLayout llyNotLogin;//未登录页面
     private MonitorScrollView msvMain;
@@ -89,6 +76,7 @@ public class MySettingActivity extends MSBaseActivity {
     private LinearLayout llyLoginOff;
     private RelativeLayout rlyCustomerPhone;
     private RelativeLayout rlyAboutHaha;
+    private RelativeLayout mRlyMyCoupon;//我的礼金券
     private View vwMyCoach;
     private ProgressDialog pd;//进度框
     private Session mSession;
@@ -115,7 +103,6 @@ public class MySettingActivity extends MSBaseActivity {
         spUtil = new SharedPreferencesUtil(this);
         mPhotoUtil = new PhotoUtil(this);
         setContentView(R.layout.activity_my_setting);
-        mTencent = Tencent.createInstance(ShareConstants.APP_ID_QQ, MySettingActivity.this);
         initView();
         initEvent();
         loadDatas(false);
@@ -127,7 +114,7 @@ public class MySettingActivity extends MSBaseActivity {
         llyTabAppointment = Util.instence(this).$(this, R.id.lly_tab_appointment);
         llyTabMySetting = Util.instence(this).$(this, R.id.lly_tab_my_setting);
         cirMyAvatar = Util.instence(this).$(this, R.id.cir_my_avatar);
-        rllCustomerServiceQQ = Util.instence(this).$(this, R.id.rll_customer_service_qq);
+        rllCustomerService = Util.instence(this).$(this, R.id.rll_customer_service_qq);
         tvBackLogin = Util.instence(this).$(this, R.id.tv_back_login);
         llyNotLogin = Util.instence(this).$(this, R.id.lly_not_login);
         msvMain = Util.instence(this).$(this, R.id.msv_main);
@@ -150,6 +137,7 @@ public class MySettingActivity extends MSBaseActivity {
         mRlySoftwareInfo = Util.instence(this).$(this, R.id.rly_software_info);
         mTvStudentPhase = Util.instence(this).$(this, R.id.tv_student_phase);
         mIvEditUsername = Util.instence(this).$(this, R.id.iv_edit_username);
+        mRlyMyCoupon = Util.instence(this).$(this, R.id.rly_my_coupon);
     }
 
     private void initEvent() {
@@ -157,7 +145,7 @@ public class MySettingActivity extends MSBaseActivity {
         llyTabFindCoach.setOnClickListener(mClickListener);
         llyTabAppointment.setOnClickListener(mClickListener);
         llyTabMySetting.setOnClickListener(mClickListener);
-        rllCustomerServiceQQ.setOnClickListener(mClickListener);
+        rllCustomerService.setOnClickListener(mClickListener);
         tvBackLogin.setOnClickListener(mClickListener);
         rlyMyFollowCoach.setOnClickListener(mClickListener);
         rlyMyCoach.setOnClickListener(mClickListener);
@@ -174,6 +162,7 @@ public class MySettingActivity extends MSBaseActivity {
         mRlySupportHaha.setOnClickListener(mClickListener);
         mRlySoftwareInfo.setOnClickListener(mClickListener);
         mIvEditUsername.setOnClickListener(mClickListener);
+        mRlyMyCoupon.setOnClickListener(mClickListener);
     }
 
     private void loadDatas(boolean useCachePolicy) {
@@ -264,7 +253,7 @@ public class MySettingActivity extends MSBaseActivity {
                     break;
                 //QQ客服
                 case R.id.rll_customer_service_qq:
-                    int ret = mTencent.startWPAConversation(MySettingActivity.this, ShareConstants.CUSTOMER_SERVICE_QQ, "");
+                    onlineAsk(MySettingActivity.this);
                     break;
                 case R.id.tv_back_login:
                     intent = new Intent(getApplication(), StartActivity.class);
@@ -352,6 +341,10 @@ public class MySettingActivity extends MSBaseActivity {
                         mEditUsernameDialog = new EditUsernameDialog(MySettingActivity.this, mEditUsernameSaveListener);
                     }
                     mEditUsernameDialog.show();
+                    break;
+                case R.id.rly_my_coupon:
+                    navigateToCoupon();
+                    break;
                 default:
                     break;
             }
@@ -598,5 +591,17 @@ public class MySettingActivity extends MSBaseActivity {
             }
         });
         baseConfirmDialog.show();
+    }
+
+    /**
+     * 跳转到我的礼金券
+     */
+    private void navigateToCoupon() {
+        if (isLogin) {
+            Intent intent = new Intent(MySettingActivity.this, MyCouponActivity.class);
+            startActivity(intent);
+        } else {
+            Toast.makeText(context, "对不起,您还没有礼金券", Toast.LENGTH_SHORT).show();
+        }
     }
 }

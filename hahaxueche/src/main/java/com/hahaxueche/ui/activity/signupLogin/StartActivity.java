@@ -1,6 +1,8 @@
 package com.hahaxueche.ui.activity.signupLogin;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -13,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ToxicBakery.viewpager.transforms.ABaseTransformer;
 import com.bigkoo.convenientbanner.ConvenientBanner;
@@ -25,6 +28,7 @@ import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
+import com.hahaxueche.ui.activity.collector.ActivityCollector;
 import com.hahaxueche.ui.activity.index.IndexActivity;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
 import com.hahaxueche.utils.SharedPreferencesUtil;
@@ -118,6 +122,10 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
         } else {
             ivBack.setVisibility(View.GONE);
             ivBack.setClickable(false);
+        }
+        Intent intent = getIntent();
+        if (intent.getBooleanExtra("forceOffline", false)) {
+            Toast.makeText(context,"您的会话已过期,请重新登录",Toast.LENGTH_LONG).show();
         }
     }
 
@@ -229,12 +237,12 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
     }
 
     private void loadDatas() {
-        Intent intent = getIntent();
-        if (intent.getSerializableExtra("refererId") != null) {
-            String refererId = (String) intent.getSerializableExtra("refererId");
-            Log.v("gibxin", "refererId ->" + refererId);
-            spUtil.setRefererId(refererId);
-        }
+//        Intent intent = getIntent();
+//        if (intent.getSerializableExtra("refererId") != null) {
+//            String refererId = (String) intent.getSerializableExtra("refererId");
+//            Log.v("gibxin", "refererId ->" + refererId);
+//            spUtil.setRefererId(refererId);
+//        }
     }
 
     @Override
@@ -247,14 +255,14 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
             if (null != user && null != user.getStudent() && null != user.getSession()) {//内存中有用户信息，自动登录
                 doAutoLogin(spUtil.getUser());
             } else {
-                try {
-                    String autoDeeplinkedValue = Branch.getInstance().getLatestReferringParams().getString("refererId");
-                    String refererId = autoDeeplinkedValue;
-                    Log.v("gibxin", "refererId -> " + refererId);
-                    spUtil.setRefererId(refererId);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    String autoDeeplinkedValue = Branch.getInstance().getLatestReferringParams().getString("refererId");
+//                    String refererId = autoDeeplinkedValue;
+//                    Log.v("gibxin", "refererId -> " + refererId);
+//                    spUtil.setRefererId(refererId);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
             }
         } else {
         }

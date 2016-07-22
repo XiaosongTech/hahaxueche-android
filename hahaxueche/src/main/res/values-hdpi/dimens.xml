@@ -10,4 +10,8 @@
     <dimen name="payment_adapter_spacing1">35dp</dimen>
     <dimen name="payment_adapter_spacing2">120dp</dimen>
     <dimen name="payment_adapter_spacing3">170dp</dimen>
+    <dimen name="margin30dp">15dp</dimen>
+    <dimen name="margin18dp">8dp</dimen>
+    <dimen name="margin35dp">22dp</dimen>
+    <dimen name="margin15dp">10dp</dimen>
 </resources>

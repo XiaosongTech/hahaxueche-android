@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.hahaxueche.MyApplication;
 import com.hahaxueche.presenter.findCoach.FCPresenter;
 import com.hahaxueche.presenter.mySetting.MSPresenter;
+import com.hahaxueche.presenter.signupLogin.SLPresenter;
 import com.hahaxueche.ui.activity.base.BaseActivity;
 import com.umeng.analytics.MobclickAgent;
 
@@ -21,6 +22,7 @@ public class MSBaseActivity extends BaseActivity {
     // 我的页面Presenter
     public MSPresenter msPresenter;
     public FCPresenter fcPresenter;
+    public SLPresenter slPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,7 @@ public class MSBaseActivity extends BaseActivity {
         application = (MyApplication) this.getApplication();
         msPresenter = application.getMsPresenter();
         fcPresenter = application.getFCPresenter();
+        slPresenter = application.getSLPresenter();
     }
 
     @Override

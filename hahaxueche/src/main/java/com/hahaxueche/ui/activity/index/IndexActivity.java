@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,35 +18,24 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ToxicBakery.viewpager.transforms.ABaseTransformer;
-import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.location.AMapLocationListener;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Banner;
-import com.hahaxueche.model.coach.Coach;
-import com.hahaxueche.model.city.Location;
-import com.hahaxueche.model.response.GroupBuyResponse;
-import com.hahaxueche.model.user.Session;
-import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.Constants;
+import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.user.User;
-import com.hahaxueche.presenter.findCoach.FCCallbackListener;
-import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.activity.appointment.AppointmentActivity;
-import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
-import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.FindCoachActivity;
 import com.hahaxueche.ui.activity.mySetting.MySettingActivity;
-import com.hahaxueche.ui.activity.mySetting.ReferFriendsActivity;
 import com.hahaxueche.ui.dialog.AppointmentDialog;
 import com.hahaxueche.ui.dialog.BaseAlertDialog;
 import com.hahaxueche.ui.dialog.CityChoseDialog;
@@ -53,6 +44,8 @@ import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.UpdateManager;
 import com.hahaxueche.utils.Util;
+import com.qiyukf.unicorn.api.ConsultSource;
+import com.qiyukf.unicorn.api.Unicorn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,17 +61,13 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     private LinearLayout llyTabMySetting;
     private CityChoseDialog mCityChoseDialog;
     private ConvenientBanner cbannerIndex;
+    private RelativeLayout mRlyAboutHaha;//关于小哈
+    private RelativeLayout mRlyAboutCoach;//关于教练
+    private RelativeLayout mRlyMyStrengths;//我的优势
+    private RelativeLayout mRlyProcedure;//学车流程
     private List<String> networkImages;
     private ArrayAdapter transformerArrayAdapter;
     private ArrayList<String> transformerList = new ArrayList<String>();
-    private LinearLayout llyXiaohaMore;
-    private LinearLayout llyCoachMore;
-    //声明AMapLocationClient类对象
-    private AMapLocationClient mLocationClient;
-    //声明定位回调监听器
-    private AMapLocationListener mLocationListener;
-    //声明mLocationOption对象
-    public AMapLocationClientOption mLocationOption = null;
     private double mLat;
     private double mLng;
     private TextView mTvFreeTry;
@@ -88,7 +77,13 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     private User mUser;
     private GroupBuyDialog mGroupBuyDialog;
     private AppointmentDialog appointmentDialog;
-    private static final int PERMISSIONS_REQUEST = 600;
+    private FrameLayout mFrlTelAsk;
+    private FrameLayout mFrlOnlineAsk;
+    private static final String WEB_URL_ABOUT_HAHA = "http://staging.hahaxueche.net/#/student";
+    private static final String WEB_URL_ABOUT_COACH = "http://staging.hahaxueche.net/#/coach";
+    private static final String WEB_URL_MY_STRENGTHS = "http://activity.hahaxueche.com/share/features";
+    private static final String WEB_URL_PROCEDURE = "http://activity.hahaxueche.com/share/steps";
+    private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,6 +95,12 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         initView();
         initEvent();
         //游客没有city_id，需选择
+        if (null == mUser) {
+            mUser = new User();
+        }
+        if (null == mUser.getStudent()) {
+            mUser.setStudent(new Student());
+        }
         if (TextUtils.isEmpty(mUser.getStudent().getCity_id())) {
             mUser.getStudent().setCity_id("0");
             spUtil.setUser(mUser);
@@ -114,14 +115,6 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                     });
             mCityChoseDialog.show();
         }
-        // Check the SDK version and whether the permission is already granted or not.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST);
-            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
-        } else {
-            // Android version is lesser than 6.0 or the permission is already granted.
-            startLocation();
-        }
         if (!TextUtils.isEmpty(spUtil.getRefererId())) {
             showFirstBonusAlert();
         }
@@ -133,13 +126,16 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         llyTabFindCoach = Util.instence(this).$(this, R.id.lly_tab_find_coach);
         llyTabAppointment = Util.instence(this).$(this, R.id.lly_tab_appointment);
         llyTabMySetting = Util.instence(this).$(this, R.id.lly_tab_my_setting);
-        llyCoachMore = Util.instence(this).$(this, R.id.lly_coach_more);
-        llyXiaohaMore = Util.instence(this).$(this, R.id.lly_xiaoha_more);
+        mRlyAboutHaha = Util.instence(this).$(this, R.id.rly_about_haha);
+        mRlyAboutCoach = Util.instence(this).$(this, R.id.rly_about_coach);
+        mRlyMyStrengths = Util.instence(this).$(this, R.id.rly_my_strengths);
+        mRlyProcedure = Util.instence(this).$(this, R.id.rly_procedure);
         mTvFreeTry = Util.instence(this).$(this, R.id.tv_free_try);
         cbannerIndex = (ConvenientBanner) findViewById(R.id.indexBanner);
         WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
         int width = wm.getDefaultDisplay().getWidth();
-        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, width);
+        int height = Math.round(width / 5 * 4);
+        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(width, height);
         cbannerIndex.setLayoutParams(p);
         transformerArrayAdapter = new ArrayAdapter(this, R.layout.adapter_transformer, transformerList);
         //网络加载例子
@@ -161,6 +157,8 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
 //                .setOnPageChangeListener(this)//监听翻页事件
                 .setOnItemClickListener(this);
         cbannerIndex.notifyDataSetChanged();
+        mFrlTelAsk = Util.instence(this).$(this, R.id.frl_tel_ask);
+        mFrlOnlineAsk = Util.instence(this).$(this, R.id.frl_online_ask);
     }
 
     private void initEvent() {
@@ -168,9 +166,13 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         llyTabFindCoach.setOnClickListener(mClickListener);
         llyTabAppointment.setOnClickListener(mClickListener);
         llyTabMySetting.setOnClickListener(mClickListener);
-        llyCoachMore.setOnClickListener(mClickListener);
-        llyXiaohaMore.setOnClickListener(mClickListener);
         mTvFreeTry.setOnClickListener(mClickListener);
+        mRlyAboutHaha.setOnClickListener(mClickListener);
+        mRlyAboutCoach.setOnClickListener(mClickListener);
+        mRlyMyStrengths.setOnClickListener(mClickListener);
+        mRlyProcedure.setOnClickListener(mClickListener);
+        mFrlOnlineAsk.setOnClickListener(mClickListener);
+        mFrlTelAsk.setOnClickListener(mClickListener);
     }
 
 
@@ -194,16 +196,34 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                     startActivity(intent);
                     finish();
                     break;
-                case R.id.lly_xiaoha_more:
-                    aboutXiaoha();
-                    break;
-                case R.id.lly_coach_more:
-                    //uri = Uri.parse("http://staging.hahaxueche.net/#/coach");
-                    //it = new Intent(Intent.ACTION_VIEW, uri);
-                    aboutCoach();
-                    break;
                 case R.id.tv_free_try:
                     freeTry();
+                    break;
+                case R.id.rly_about_haha:
+                    openWebView(WEB_URL_ABOUT_HAHA);
+                    break;
+                case R.id.rly_about_coach:
+                    openWebView(WEB_URL_ABOUT_COACH);
+                    break;
+                case R.id.rly_my_strengths:
+                    openWebView(WEB_URL_MY_STRENGTHS);
+                    break;
+                case R.id.rly_procedure:
+                    openWebView(WEB_URL_PROCEDURE);
+                    break;
+                case R.id.frl_online_ask:
+                    onlineAsk(IndexActivity.this);
+                    break;
+                case R.id.frl_tel_ask:
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
+                        //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+                    } else {
+                        // Android version is lesser than 6.0 or the permission is already granted.
+                        contactService();
+                    }
+                    break;
+                default:
                     break;
             }
         }
@@ -213,11 +233,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     public void onItemClick(int i) {
         if (mConstants != null && mConstants.getNew_home_page_banners() != null &&
                 !TextUtils.isEmpty(mConstants.getNew_home_page_banners().get(i).getTarget_url())) {
-            Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("url", mConstants.getNew_home_page_banners().get(i).getTarget_url());
-            intent.putExtras(bundle);
-            startActivity(intent);
+            openWebView(mConstants.getNew_home_page_banners().get(i).getTarget_url());
         }
     }
 
@@ -278,42 +294,21 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (null != mLocationClient) {
-            mLocationClient.onDestroy();
-        }
     }
 
     /**
      * 第一次加载推荐有奖通知
      */
     public void showFirstBonusAlert() {
-        if (!spUtil.getNoticeBouns() && mUser.getStudent() != null && !TextUtils.isEmpty(mUser.getId())) {
-            BaseAlertDialog baseAlertDialog = new BaseAlertDialog(IndexActivity.this, "注册成功！", "恭喜您获得50元学车卷！", "50元已经打进您的账户余额，在支付过程中，系统会自动减现50元报名费。");
-            baseAlertDialog.show();
-            spUtil.setNoticeBonus(true);
-        }
+//        if (!spUtil.getNoticeBouns() && mUser.getStudent() != null && !TextUtils.isEmpty(mUser.getId())) {
+//            BaseAlertDialog baseAlertDialog = new BaseAlertDialog(IndexActivity.this, "注册成功！", "恭喜您获得50元学车卷！", "50元已经打进您的账户余额，在支付过程中，系统会自动减现50元报名费。");
+//            baseAlertDialog.show();
+//            spUtil.setNoticeBonus(true);
+//        }
     }
 
-
-    private void aboutXiaoha() {
-        Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("url", "http://staging.hahaxueche.net/#/student");
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
-
-    private void aboutCoach() {
-        Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("url", "http://staging.hahaxueche.net/#/coach");
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
 
     private void freeTry() {
-        Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
-        Bundle bundle = new Bundle();
         //免费试学URL
         String url = "http://m.hahaxueche.com/free_trial";
         if (spUtil.getUser() != null && spUtil.getUser().getStudent() != null) {
@@ -337,9 +332,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
 
         }
         Log.v("gibxin", "free try url -> " + url);
-        bundle.putString("url", url);
-        intent.putExtras(bundle);
-        startActivity(intent);
+        openWebView(url);
     }
 
     /**
@@ -353,7 +346,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
             int versioncode = pi.versionCode;
             SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
             Constants constants = spUtil.getConstants();
-            if (constants.getVersion_code() > versioncode) {
+            if (constants != null && constants.getVersion_code() > versioncode) {
                 //有版本更新时
                 UpdateManager updateManager = new UpdateManager(IndexActivity.this);
                 updateManager.checkUpdateInfo();
@@ -363,65 +356,6 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
-                startLocation();
-            } else {
-                Toast.makeText(this, "请允许使用定位权限，不然我们无法精确的为您推荐教练", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    /**
-     * 开启定位
-     */
-    private void startLocation() {
-        //初始化定位
-        mLocationClient = new AMapLocationClient(IndexActivity.this);
-        mLocationListener = new AMapLocationListener() {
-            @Override
-            public void onLocationChanged(AMapLocation aMapLocation) {
-                if (aMapLocation != null) {
-                    if (aMapLocation.getErrorCode() == 0) {
-                        //定位成功回调信息，设置相关消息
-                        mLat = aMapLocation.getLatitude();//获取纬度
-                        mLng = aMapLocation.getLongitude();//获取经度
-                        Location location = new Location();
-                        location.setLat(mLat + "");
-                        location.setLng(mLng + "");
-                        spUtil.setLocation(location);
-                        if (mLat != 0d && mLng != 0d) {
-                            mLocationClient.stopLocation();
-                        }
-                    } else {
-                        //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
-                        Log.e("AmapError", "location Error, ErrCode:"
-                                + aMapLocation.getErrorCode() + ", errInfo:"
-                                + aMapLocation.getErrorInfo());
-                    }
-                }
-            }
-        };
-        //设置定位回调监听
-        mLocationClient.setLocationListener(mLocationListener);
-        //初始化定位参数
-        mLocationOption = new AMapLocationClientOption();
-        //设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
-        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-        //设置是否只定位一次,默认为false
-        mLocationOption.setOnceLocation(false);
-        //设置是否允许模拟位置,默认为false，不允许模拟位置
-        mLocationOption.setMockEnable(true);
-        //设置定位间隔,单位毫秒,默认为2000ms
-        mLocationOption.setInterval(2000);
-        //给定位客户端对象设置定位参数
-        mLocationClient.setLocationOption(mLocationOption);
-        //启动定位
-        mLocationClient.startLocation();
-    }
 
     private long exitTime = 0;
 
@@ -439,5 +373,28 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         }
         return super.onKeyDown(keyCode, event);
 
+    }
+
+    /**
+     * 联系客服
+     */
+    private void contactService() {
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:4000016006"));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        startActivity(intent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_CELL_PHONE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                contactService();
+            } else {
+                Toast.makeText(this, "请允许拨打电话权限，不然无法直接拨号联系客服", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
