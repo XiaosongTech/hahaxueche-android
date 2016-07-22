@@ -1,7 +1,9 @@
 package com.hahaxueche;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
+import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
@@ -57,9 +59,9 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         LeakCanary.install(this);
-        new Instabug.Builder(this, "e0ea921d16239f1f6b1b45a975de5ea1")
-                .setInvocationEvent(IBGInvocationEvent.IBGInvocationEventShake)
-                .build();
+//        new Instabug.Builder(this, "e0ea921d16239f1f6b1b45a975de5ea1")
+//                .setInvocationEvent(IBGInvocationEvent.IBGInvocationEventShake)
+//                .build();
         //Stetho.initializeWithDefaults(this);
         Branch.getAutoInstance(this);
         sLPresenter = new SLPresenterImpl(this);
@@ -166,6 +168,13 @@ public class MyApplication extends Application {
         options.statusBarNotificationConfig = new StatusBarNotificationConfig();
         options.savePowerConfig = new SavePowerConfig();
         return options;
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+
     }
 
 

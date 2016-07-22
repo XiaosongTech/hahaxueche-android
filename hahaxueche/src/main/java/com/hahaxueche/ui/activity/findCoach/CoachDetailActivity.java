@@ -976,34 +976,22 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
         Bundle bundle = new Bundle();
         //免费试学URL
-        String url = "http://m.hahaxueche.com/free_trial";
-        if(spUtil==null){
+        String url = "http://m.hahaxueche.com/free_trial?promo_code=553353";
+        if (spUtil == null) {
             spUtil = new SharedPreferencesUtil(getApplicationContext());
         }
         if (spUtil.getUser() != null && spUtil.getUser().getStudent() != null) {
             if (!TextUtils.isEmpty(mCoach.getId())) {
-                url += "?coach_id=" + mCoach.getId();
+                url += "&coach_id=" + mCoach.getId();
             }
             if (!TextUtils.isEmpty(spUtil.getUser().getStudent().getCity_id())) {
-                if (url.indexOf("?") > 0) {
-                    url += "&city_id=" + spUtil.getUser().getStudent().getCity_id();
-                } else {
-                    url += "?city_id=" + spUtil.getUser().getStudent().getCity_id();
-                }
+                url += "&city_id=" + spUtil.getUser().getStudent().getCity_id();
             }
             if (!TextUtils.isEmpty(spUtil.getUser().getStudent().getName())) {
-                if (url.indexOf("?") > 0) {
-                    url += "&name=" + spUtil.getUser().getStudent().getName();
-                } else {
-                    url += "?name=" + spUtil.getUser().getStudent().getName();
-                }
+                url += "&name=" + spUtil.getUser().getStudent().getName();
             }
             if (!TextUtils.isEmpty(spUtil.getUser().getStudent().getCell_phone())) {
-                if (url.indexOf("?") > 0) {
-                    url += "&phone=" + spUtil.getUser().getStudent().getCell_phone();
-                } else {
-                    url += "?phone=" + spUtil.getUser().getStudent().getCell_phone();
-                }
+                url += "&phone=" + spUtil.getUser().getStudent().getCell_phone();
             }
 
         }

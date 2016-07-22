@@ -313,24 +313,16 @@ public class MyCouponActivity extends MSBaseActivity {
      */
     private void navigateToFreeTry() {
         //免费试学URL
-        String url = "http://m.hahaxueche.com/free_trial";
+        String url = "http://m.hahaxueche.com/free_trial?promo_code=553353";
         if (spUtil.getUser() != null && spUtil.getUser().getStudent() != null) {
             if (!TextUtils.isEmpty(spUtil.getUser().getStudent().getCity_id())) {
-                url += "?city_id=" + spUtil.getUser().getStudent().getCity_id();
+                url += "&city_id=" + spUtil.getUser().getStudent().getCity_id();
             }
             if (!TextUtils.isEmpty(spUtil.getUser().getStudent().getName())) {
-                if (url.indexOf("?") > 0) {
-                    url += "&name=" + spUtil.getUser().getStudent().getName();
-                } else {
-                    url += "?name=" + spUtil.getUser().getStudent().getName();
-                }
+                url += "&name=" + spUtil.getUser().getStudent().getName();
             }
             if (!TextUtils.isEmpty(spUtil.getUser().getStudent().getCell_phone())) {
-                if (url.indexOf("?") > 0) {
-                    url += "&phone=" + spUtil.getUser().getStudent().getCell_phone();
-                } else {
-                    url += "?phone=" + spUtil.getUser().getStudent().getCell_phone();
-                }
+                url += "&phone=" + spUtil.getUser().getStudent().getCell_phone();
             }
 
         }

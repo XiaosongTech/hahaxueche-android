@@ -44,6 +44,12 @@ public class BaseWebViewActivity extends BaseActivity {
                 view.loadUrl(url);
                 return true;
             }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                view.clearCache(true);
+            }
         });
         WebSettings mWebSettings = baseWebView.getSettings();
         mWebSettings.setSupportZoom(true);
@@ -55,7 +61,7 @@ public class BaseWebViewActivity extends BaseActivity {
         mWebSettings.setLoadsImagesAutomatically(true);
         mWebSettings.setDomStorageEnabled(true);
         mWebSettings.setDatabaseEnabled(true);
-        mWebSettings.setAppCacheEnabled(true);
+        mWebSettings.setAppCacheEnabled(false);
         String appCachePath = getApplicationContext().getCacheDir().getAbsolutePath();
         mWebSettings.setAppCachePath(appCachePath);
         mWebSettings.setAllowFileAccess(true);
