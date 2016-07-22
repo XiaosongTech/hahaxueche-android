@@ -87,8 +87,7 @@
     <string name="userAgreement">用户协议</string>
     <string name="editUsername">修改名称</string>
     <string name="save">保存</string>
-    <string name="howToGetCoupon">关注哈哈学车官方平台，哈哈学车会不定期在线上线下为学员争取最大福利。同时注册用户也可参加推荐有奖活动，每邀请一位好友学车，你和好友一起获得￥200元现金奖励，累计无上限，随时可提现！点击查看>>推荐有奖详情</string>
     <string name="fenqileUsage">哈哈学车携手国内领先的分期购物在线商城分期乐，达成战略合作，为大学生等年轻人提供“先消费后付款”、方便快捷的极致学车体验。采用分期方式报名的学员和支付全款的学员在学车过程中，同等享受优惠活动和哈哈学车的优质服务。点击查看>>分期学车详情</string>
     <string name="contactTel"><Data><![CDATA[<font color="#616161">哈哈学车客服热线：</font><font color="#ff9e00">400-001-6006</font>]]></Data></string>
-    <string name="contactQQ"><Data><![CDATA[<font color="#616161">哈哈学车客服QQ：</font><font color="#ff9e00">3319762526</font>]]></Data></string>
+    <string name="contactQQ"><Data><![CDATA[<font color="#616161">哈哈客服：</font><font color="#ff9e00">在线客服</font>]]></Data></string>
 </resources>

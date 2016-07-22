@@ -9,6 +9,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -32,6 +34,8 @@ public class Util {
     private static Util mUtil;
 
     private static DisplayMetrics dm;
+
+    private static Handler sHandler;
 
     public static Util instence(Context context) {
         if (mUtil == null)
@@ -239,5 +243,12 @@ public class Util {
             e.printStackTrace();
         }
         return localTimeStr;
+    }
+
+    public static void runOnUiThread(Runnable runnable) {
+        if (sHandler == null) {
+            sHandler = new Handler(Looper.getMainLooper());
+        }
+        sHandler.post(runnable);
     }
 }

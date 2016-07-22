@@ -237,12 +237,12 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
     }
 
     private void loadDatas() {
-        Intent intent = getIntent();
-        if (intent.getSerializableExtra("refererId") != null) {
-            String refererId = (String) intent.getSerializableExtra("refererId");
-            Log.v("gibxin", "refererId ->" + refererId);
-            spUtil.setRefererId(refererId);
-        }
+//        Intent intent = getIntent();
+//        if (intent.getSerializableExtra("refererId") != null) {
+//            String refererId = (String) intent.getSerializableExtra("refererId");
+//            Log.v("gibxin", "refererId ->" + refererId);
+//            spUtil.setRefererId(refererId);
+//        }
     }
 
     @Override
@@ -255,14 +255,14 @@ public class StartActivity extends SLBaseActivity implements AdapterView.OnItemC
             if (null != user && null != user.getStudent() && null != user.getSession()) {//内存中有用户信息，自动登录
                 doAutoLogin(spUtil.getUser());
             } else {
-                try {
-                    String autoDeeplinkedValue = Branch.getInstance().getLatestReferringParams().getString("refererId");
-                    String refererId = autoDeeplinkedValue;
-                    Log.v("gibxin", "refererId -> " + refererId);
-                    spUtil.setRefererId(refererId);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    String autoDeeplinkedValue = Branch.getInstance().getLatestReferringParams().getString("refererId");
+//                    String refererId = autoDeeplinkedValue;
+//                    Log.v("gibxin", "refererId -> " + refererId);
+//                    spUtil.setRefererId(refererId);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
             }
         } else {
         }

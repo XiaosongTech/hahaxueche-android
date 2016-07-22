@@ -344,6 +344,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:visibility="gone"
                     android:background="@android:color/white"
                     android:orientation="vertical">
 
@@ -453,7 +454,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
-                            android:text="@string/mSCustomerServiceQQ"
+                            android:text="在线客服"
                             android:textColor="@color/mSTextBlackFade"
                             android:textSize="14sp" />
 

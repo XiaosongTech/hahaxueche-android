@@ -17,10 +17,16 @@ import com.hahaxueche.presenter.signupLogin.SLPresenter;
 import com.hahaxueche.presenter.signupLogin.SLPresenterImpl;
 import com.hahaxueche.service.CheckSessionService;
 import com.hahaxueche.share.ShareConstants;
+import com.hahaxueche.ui.widget.PicassoImageLoader;
+import com.hahaxueche.utils.HahaCache;
 import com.hahaxueche.utils.JsonUtils;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.instabug.library.IBGInvocationEvent;
 import com.instabug.library.Instabug;
+import com.qiyukf.unicorn.api.SavePowerConfig;
+import com.qiyukf.unicorn.api.StatusBarNotificationConfig;
+import com.qiyukf.unicorn.api.Unicorn;
+import com.qiyukf.unicorn.api.YSFOptions;
 import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
 import com.sina.weibo.sdk.api.share.WeiboShareSDK;
 import com.squareup.leakcanary.LeakCanary;
@@ -90,6 +96,9 @@ public class MyApplication extends Application {
             }
         }).start();
         regToShare();
+        //七鱼客服
+        HahaCache.context = getApplicationContext();
+        Unicorn.init(this, "2f328da38ac77ce6d796c2977248f7e2", options(), new PicassoImageLoader());
         startCheckSessionService();
     }
 
@@ -149,6 +158,14 @@ public class MyApplication extends Application {
     private void stopCheckSessionService() {
         Intent intent = new Intent(this, CheckSessionService.class);
         stopService(intent);
+    }
+
+    // 如果返回值为null，则全部使用默认参数。
+    private YSFOptions options() {
+        YSFOptions options = new YSFOptions();
+        options.statusBarNotificationConfig = new StatusBarNotificationConfig();
+        options.savePowerConfig = new SavePowerConfig();
+        return options;
     }
 
 

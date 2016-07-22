@@ -1,11 +1,15 @@
 package com.hahaxueche.ui.activity.index;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,6 +18,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -39,6 +44,8 @@ import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.UpdateManager;
 import com.hahaxueche.utils.Util;
+import com.qiyukf.unicorn.api.ConsultSource;
+import com.qiyukf.unicorn.api.Unicorn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,10 +77,13 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     private User mUser;
     private GroupBuyDialog mGroupBuyDialog;
     private AppointmentDialog appointmentDialog;
+    private FrameLayout mFrlTelAsk;
+    private FrameLayout mFrlOnlineAsk;
     private static final String WEB_URL_ABOUT_HAHA = "http://staging.hahaxueche.net/#/student";
     private static final String WEB_URL_ABOUT_COACH = "http://staging.hahaxueche.net/#/coach";
     private static final String WEB_URL_MY_STRENGTHS = "http://activity.hahaxueche.com/share/features";
     private static final String WEB_URL_PROCEDURE = "http://activity.hahaxueche.com/share/steps";
+    private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,7 +134,8 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         cbannerIndex = (ConvenientBanner) findViewById(R.id.indexBanner);
         WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
         int width = wm.getDefaultDisplay().getWidth();
-        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, width);
+        int height = Math.round(width / 5 * 4);
+        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(width, height);
         cbannerIndex.setLayoutParams(p);
         transformerArrayAdapter = new ArrayAdapter(this, R.layout.adapter_transformer, transformerList);
         //网络加载例子
@@ -146,6 +157,8 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
 //                .setOnPageChangeListener(this)//监听翻页事件
                 .setOnItemClickListener(this);
         cbannerIndex.notifyDataSetChanged();
+        mFrlTelAsk = Util.instence(this).$(this, R.id.frl_tel_ask);
+        mFrlOnlineAsk = Util.instence(this).$(this, R.id.frl_online_ask);
     }
 
     private void initEvent() {
@@ -158,6 +171,8 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         mRlyAboutCoach.setOnClickListener(mClickListener);
         mRlyMyStrengths.setOnClickListener(mClickListener);
         mRlyProcedure.setOnClickListener(mClickListener);
+        mFrlOnlineAsk.setOnClickListener(mClickListener);
+        mFrlTelAsk.setOnClickListener(mClickListener);
     }
 
 
@@ -195,6 +210,18 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                     break;
                 case R.id.rly_procedure:
                     openWebView(WEB_URL_PROCEDURE);
+                    break;
+                case R.id.frl_online_ask:
+                    onlineAsk(IndexActivity.this);
+                    break;
+                case R.id.frl_tel_ask:
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
+                        //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+                    } else {
+                        // Android version is lesser than 6.0 or the permission is already granted.
+                        contactService();
+                    }
                     break;
                 default:
                     break;
@@ -273,11 +300,11 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
      * 第一次加载推荐有奖通知
      */
     public void showFirstBonusAlert() {
-        if (!spUtil.getNoticeBouns() && mUser.getStudent() != null && !TextUtils.isEmpty(mUser.getId())) {
-            BaseAlertDialog baseAlertDialog = new BaseAlertDialog(IndexActivity.this, "注册成功！", "恭喜您获得50元学车卷！", "50元已经打进您的账户余额，在支付过程中，系统会自动减现50元报名费。");
-            baseAlertDialog.show();
-            spUtil.setNoticeBonus(true);
-        }
+//        if (!spUtil.getNoticeBouns() && mUser.getStudent() != null && !TextUtils.isEmpty(mUser.getId())) {
+//            BaseAlertDialog baseAlertDialog = new BaseAlertDialog(IndexActivity.this, "注册成功！", "恭喜您获得50元学车卷！", "50元已经打进您的账户余额，在支付过程中，系统会自动减现50元报名费。");
+//            baseAlertDialog.show();
+//            spUtil.setNoticeBonus(true);
+//        }
     }
 
 
@@ -330,8 +357,6 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     }
 
 
-
-
     private long exitTime = 0;
 
     @Override
@@ -348,5 +373,28 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         }
         return super.onKeyDown(keyCode, event);
 
+    }
+
+    /**
+     * 联系客服
+     */
+    private void contactService() {
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:4000016006"));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        startActivity(intent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_CELL_PHONE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                contactService();
+            } else {
+                Toast.makeText(this, "请允许拨打电话权限，不然无法直接拨号联系客服", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

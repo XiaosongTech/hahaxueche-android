@@ -97,7 +97,6 @@
                 android:background="@color/haha_gray_light" />
 
             <TextView
-                android:id="@+id/tv_how_get_coupon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -105,6 +104,7 @@
                 android:layout_marginRight="14dp"
                 android:layout_marginTop="12dp"
                 android:lineSpacingMultiplier="1.2"
+                android:text="关注哈哈学车官方平台，哈哈学车会不定期在线上线下为学员争取最大福利。目前哈哈学车与线下5000多家商户合作,通过合作商家的优惠码, 用户在哈哈学车APP或哈哈学车官网上成功报名支付后, 就可以获得相应商家的福利"
                 android:textColor="@color/haha_black_light"
                 android:textSize="14sp" />
         </LinearLayout>
