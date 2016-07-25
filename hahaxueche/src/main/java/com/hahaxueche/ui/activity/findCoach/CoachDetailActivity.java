@@ -206,7 +206,10 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         }
         //根据当前登录人的cityid，加载费用明细列表
         if (mConstants != null) {
-            mCostItemList = spUtil.getMyCity().getFixed_cost_itemizer();
+            City myCity = spUtil.getMyCity();
+            if (myCity != null) {
+                mCostItemList = myCity.getFixed_cost_itemizer();
+            }
         }
         initView();
         initEvent();

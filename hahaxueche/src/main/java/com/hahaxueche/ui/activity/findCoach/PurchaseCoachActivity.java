@@ -151,7 +151,10 @@ public class PurchaseCoachActivity extends FCBaseActivity {
         if (mConstants != null) {
             fieldsList = mConstants.getFields();
             cityList = mConstants.getCities();
-            mCostItemList = spUtil.getMyCity().getFixed_cost_itemizer();
+            City myCity = spUtil.getMyCity();
+            if(myCity!=null) {
+                mCostItemList = myCity.getFixed_cost_itemizer();
+            }
         }
         if (spUtil.getLocation() != null) {
             myLat = spUtil.getLocation().getLat();

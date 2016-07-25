@@ -79,6 +79,8 @@ public class SoftwareInfoActivity extends MSBaseActivity {
             int versioncode = pi.versionCode;
             SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
             Constants constants = spUtil.getConstants();
+            if (constants == null)
+                return;
             if (constants.getVersion_code() > versioncode) {
                 //有版本更新时
                 UpdateManager updateManager = new UpdateManager(SoftwareInfoActivity.this);

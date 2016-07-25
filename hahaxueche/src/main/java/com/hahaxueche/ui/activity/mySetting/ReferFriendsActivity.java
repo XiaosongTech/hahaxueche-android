@@ -116,7 +116,7 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
         mTvReferRules.setText("1）好友通过您的专属链接注册并成功报名，您的好友在报名时可立减" + Util.getMoney(refereeBonus) + "元，同时您将获得" + Util.getMoney(refererBonus) + "元，自动存入您的哈哈学车推荐奖金中，累计无上限，可随时提现。\n\n2）好友需通过您的专属链接注册才能建立推荐关系。\n\n3）如发现作弊行为将取消用户活动资格，并扣除所获奖励。\n\n4）如对本活动规则有任何疑问，请联系哈哈学车客服：400-001-6006");
         mDescription = "注册立享" + Util.getMoneyYuan(String.valueOf(refereeBonus)) + "优惠";
         myCity = spUtil.getMyCity();
-        if (!TextUtils.isEmpty(myCity.getReferral_banner())) {
+        if (myCity != null && !TextUtils.isEmpty(myCity.getReferral_banner())) {
             int width = Util.instence(context).getDm().widthPixels;
             int height = Math.round(((float) 8 / 9) * width);
             Picasso.with(context).load(myCity.getReferral_banner()).resize(width, height).centerCrop().into(mIvRefer);

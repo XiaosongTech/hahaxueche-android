@@ -348,7 +348,10 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
     private void initSharedPreferences() {
         spUtil = new SharedPreferencesUtil(this);
         //根据当前登录人的cityid，加载费用明细列表
-        mCostItemList = spUtil.getMyCity().getFixed_cost_itemizer();
+        City myCity = spUtil.getMyCity();
+        if (myCity != null) {
+            mCostItemList = myCity.getFixed_cost_itemizer();
+        }
         mConstants = spUtil.getConstants();
     }
 

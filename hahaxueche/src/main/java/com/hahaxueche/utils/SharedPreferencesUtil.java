@@ -140,7 +140,9 @@ public class SharedPreferencesUtil {
     public City getMyCity() {
         User user = getUser();
         int myCityCount = 0;
-        List<City> cityList = getConstants().getCities();
+        Constants constants = getConstants();
+        if (constants == null) return null;
+        List<City> cityList = constants.getCities();
         if (null != user.getStudent() && !TextUtils.isEmpty(user.getStudent().getCity_id())) {
             String city_id = user.getStudent().getCity_id();
             for (int i = 0; i < cityList.size(); i++) {

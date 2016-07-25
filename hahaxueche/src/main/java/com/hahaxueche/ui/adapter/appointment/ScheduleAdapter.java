@@ -64,7 +64,7 @@ public class ScheduleAdapter extends BaseAdapter {
         this.mRefreshUIListener = refreshUIListener;
         mTip = "您最多只能预约2节课, 确定预约这节课吗？";
         spUtil = new SharedPreferencesUtil(context);
-        mCityId = spUtil.getMyCity().getId();
+        mCityId = spUtil.getMyCity() == null ? "" : spUtil.getMyCity().getId();
         apPresenter = new APPresenterImpl(context);
         mUser = user;
     }

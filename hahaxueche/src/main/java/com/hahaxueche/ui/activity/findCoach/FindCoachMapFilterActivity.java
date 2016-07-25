@@ -201,7 +201,7 @@ public class FindCoachMapFilterActivity extends FCBaseActivity implements Locati
 
     private void initFieldList() {
         SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
-        String city_id = spUtil.getMyCity().getId();
+        String city_id = spUtil.getMyCity() == null ? "" : spUtil.getMyCity().getId();
         Constants constants = spUtil.getConstants();
         if (constants != null && constants.getFields() != null && constants.getFields().size() > 0) {
             for (FieldModel fieldsModel : constants.getFields()) {

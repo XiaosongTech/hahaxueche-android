@@ -303,8 +303,10 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
             int myCityCount = 0;
             //根据城市id加载价格、距离筛选列表
             City city = spUtil.getMyCity();
-            distanceList = city.getFilters().getRadius();
-            priceList = city.getFilters().getPrices();
+            if (city != null) {
+                distanceList = city.getFilters().getRadius();
+                priceList = city.getFilters().getPrices();
+            }
         }
     }
 
@@ -331,7 +333,7 @@ public class FcFilterDialog extends Dialog implements View.OnClickListener {
                     } else if (cbLicenseTypeC2.isChecked()) {
                         licenseType = "2";
                     }
-                    mListener.onFliterCoach(goldenCoachOnly, licenseType, price, distance,vip_only);
+                    mListener.onFliterCoach(goldenCoachOnly, licenseType, price, distance, vip_only);
                 }
                 this.dismiss();
                 break;
