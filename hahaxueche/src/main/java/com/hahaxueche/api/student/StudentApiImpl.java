@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.api.net.HttpEngine;
+import com.hahaxueche.model.activity.Event;
 import com.hahaxueche.model.coach.ScheduleEvent;
 import com.hahaxueche.model.response.CoachListResponse;
 import com.hahaxueche.model.response.GroupBuyResponse;
@@ -20,6 +21,7 @@ import com.hahaxueche.utils.JsonUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -530,6 +532,27 @@ public class StudentApiImpl implements StudentApi {
                 return retModel;
             }
         } catch (IOException e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public ArrayList<Event> fetchEventList(String cityId) {
+        Type type = new TypeToken<ArrayList<Event>>() {
+        }.getType();
+
+        try {
+            Response response = httpEngine.getHandle("events?city_id=" + cityId, "");
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                ArrayList<Event> retModel = new ArrayList<>();
+                return retModel;
+            }
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
