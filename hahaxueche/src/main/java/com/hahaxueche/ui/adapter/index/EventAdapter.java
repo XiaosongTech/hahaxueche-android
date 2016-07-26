@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.activity.Event;
+import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.utils.Util;
 import com.squareup.picasso.Picasso;
 
@@ -63,7 +64,7 @@ public class EventAdapter extends BaseAdapter {
             mInflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = mInflator.inflate(mResource, null);
             holder = new ViewHolder();
-            holder.ivIcon = (ImageView) view.findViewById(R.id.iv_event_icon);
+            holder.ivIcon = (CircleImageView) view.findViewById(R.id.iv_event_icon);
             holder.tvTitle = (TextView) view.findViewById(R.id.tv_event_title);
             holder.tvTimeLeftLabel = (TextView) view.findViewById(R.id.tv_time_left_label);
             holder.tvTimeLeft = (TextView) view.findViewById(R.id.tv_time_left);
@@ -101,7 +102,7 @@ public class EventAdapter extends BaseAdapter {
     }
 
     static class ViewHolder {
-        ImageView ivIcon;
+        CircleImageView ivIcon;
         TextView tvTitle;
         TextView tvTimeLeftLabel;
         TextView tvTimeLeft;

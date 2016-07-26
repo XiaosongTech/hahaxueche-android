@@ -39,13 +39,25 @@ public class BaseActivity extends Activity {
      * 打开webview
      *
      * @param url
+     * @param isShowShare 是否显示分享链接
      */
-    public void openWebView(String url) {
+    public void openWebView(String url, String title, boolean isShowShare) {
         Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("url", url);
+        bundle.putString("title", title);
+        bundle.putBoolean("isShowShare", isShowShare);
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    /**
+     * 打开webview
+     *
+     * @param url
+     */
+    public void openWebView(String url) {
+        openWebView(url, "", false);
     }
 
     /**

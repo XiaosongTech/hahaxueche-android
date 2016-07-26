@@ -203,7 +203,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 if (mEventArrayList != null && mEventArrayList.size() > 0 && position > -1 && position < mEventArrayList.size()) {
-                    openWebView(mEventArrayList.get(position).getUrl());
+                    openWebView(mEventArrayList.get(position).getUrl(), mEventArrayList.get(position).getTitle(), true);
                 }
             }
         });

@@ -74,10 +74,10 @@ public class Event implements Serializable {
     }
 
     public void parseCountDownText() {
-        SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String ret = "";
         try {
-            Date endTime = dayFormat.parse(end_date);
+            Date endTime = dayFormat.parse(end_date + " 23:59:59");
             long diff = endTime.getTime() - new Date().getTime();
             if (diff < 0) {
                 ret = "已截止";

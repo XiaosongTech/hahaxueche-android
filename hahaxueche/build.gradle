@@ -1,9 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        debugSign {
+            keyAlias 'haha.keystore'
+            keyPassword '2619212'
+            storeFile file('/Users/wangshirui/code/hahaxueche-android/android_keystore/haha.keystore')
+            storePassword '2619212'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
-
     defaultConfig {
         applicationId "com.hahaxueche"
         minSdkVersion 14
@@ -26,7 +33,6 @@ android {
         vivo {}
         meizu {}
     }
-
     productFlavors.all { flavor ->
         flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
     }
@@ -34,6 +40,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.debugSign
         }
     }
     // 友盟多渠道打包
@@ -50,7 +59,6 @@ android {
         vivo {}
         meizu {}
     }
-
     productFlavors.all { flavor ->
         flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
     }

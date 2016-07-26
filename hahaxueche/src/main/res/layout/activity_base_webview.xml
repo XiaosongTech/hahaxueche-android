@@ -23,12 +23,24 @@
             android:src="@drawable/ic_arrow_back" />
 
         <TextView
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="哈哈学车"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/iv_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_mycoach_sharecoach"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <WebView
