@@ -134,6 +134,7 @@ public class UpdateManager {
                 URL url = new URL(apkUrl);
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setUseCaches(false);
                 conn.connect();
                 int length = conn.getContentLength();
                 InputStream is = conn.getInputStream();
