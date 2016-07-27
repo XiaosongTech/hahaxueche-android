@@ -259,6 +259,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                     break;
                 case R.id.tv_more_events:
                     //更多活动
+                    navigateToMoreEvents();
                     break;
                 default:
                     break;
@@ -516,5 +517,10 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         // listView.getDividerHeight()获取子项间分隔符占用的高度
         // params.height最后得到整个ListView完整显示需要的高度
         listView.setLayoutParams(params);
+    }
+
+    private void navigateToMoreEvents() {
+        Intent intent = new Intent(getApplication(), EventListActivity.class);
+        startActivity(intent);
     }
 }

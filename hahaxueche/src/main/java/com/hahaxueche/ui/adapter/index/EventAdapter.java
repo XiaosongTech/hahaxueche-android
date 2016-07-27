@@ -73,12 +73,16 @@ public class EventAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
         Event event = mEventList.get(position);
-        Picasso.with(mContext).load(event.getIcon()).into(holder.ivIcon);
+        if (holder.ivIcon != null) {
+            Picasso.with(mContext).load(event.getIcon()).into(holder.ivIcon);
+        }
         holder.tvTitle.setText(event.getTitle());
         //加载倒计时
         if (!TextUtils.isEmpty(event.getEnd_date())) {
             holder.tvTimeLeft.setVisibility(View.VISIBLE);
-            holder.tvTimeLeftLabel.setVisibility(View.VISIBLE);
+            if (holder.tvTimeLeftLabel != null) {
+                holder.tvTimeLeftLabel.setVisibility(View.VISIBLE);
+            }
             String text = event.getCountDownText();
             SpannableString ss = new SpannableString(text);
             ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.app_theme_color)), 0, text.indexOf("天"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -96,7 +100,9 @@ public class EventAdapter extends BaseAdapter {
             holder.tvTimeLeft.setText(ss);
         } else {
             holder.tvTimeLeft.setVisibility(View.INVISIBLE);
-            holder.tvTimeLeftLabel.setVisibility(View.INVISIBLE);
+            if (holder.tvTimeLeftLabel != null) {
+                holder.tvTimeLeftLabel.setVisibility(View.INVISIBLE);
+            }
         }
         return view;
     }
