@@ -1,6 +1,7 @@
 package com.hahaxueche.api.student;
 
 
+import com.hahaxueche.model.activity.Event;
 import com.hahaxueche.model.coach.ScheduleEvent;
 import com.hahaxueche.model.response.CoachListResponse;
 import com.hahaxueche.model.response.GroupBuyResponse;
@@ -12,6 +13,8 @@ import com.hahaxueche.model.student.ReferalBonusSummary;
 import com.hahaxueche.model.student.ReferalBonusTransaction;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
+
+import java.util.ArrayList;
 
 /**
  * Created by gibxin on 2016/2/29.
@@ -166,5 +169,13 @@ public interface StudentApi {
      * @return
      */
     public GroupBuyResponse createGroupBuy(String name, String phone);
+
+    /**
+     * 获取活动列表
+     *
+     * @param cityId
+     * @return
+     */
+    public ArrayList<Event> fetchEventList(String cityId);
 
 }

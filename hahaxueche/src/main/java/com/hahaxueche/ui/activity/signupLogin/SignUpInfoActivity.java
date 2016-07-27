@@ -81,6 +81,12 @@ public class SignUpInfoActivity extends SLBaseActivity {
         initView();
         initEvent();
         mCityChoseDialog = new CityChoseDialog(this,
+                new CityChoseDialog.OnDismissListener() {
+                    @Override
+                    public void onDismiss(String cityId) {
+                        //do nothing
+                    }
+                },
                 new CityChoseDialog.OnBtnClickListener() {
                     @Override
                     public void onCitySelected(String cityName, String cityId) {

@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.google.gson.reflect.TypeToken;
+import com.hahaxueche.model.activity.Event;
 import com.hahaxueche.model.city.Bonus;
 import com.hahaxueche.model.city.City;
 import com.hahaxueche.model.coach.Coach;
@@ -278,6 +279,27 @@ public class SharedPreferencesUtil {
         SharedPreferences.Editor editor = spHistory.edit();
         editor.clear();
         editor.commit();
+    }
+
+    public void setEvents(ArrayList<Event> events) {
+        SharedPreferences spEvents = mContext.getSharedPreferences("events", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = spEvents.edit();
+        editor.putString("eventsStr", JsonUtils.serialize(events));
+        editor.commit();
+    }
+
+    public ArrayList<Event> getEvents() {
+        SharedPreferences spEvents = mContext.getSharedPreferences("events", Activity.MODE_PRIVATE);
+        Type type = new TypeToken<ArrayList<Event>>() {
+        }.getType();
+        ArrayList<Event> ret;
+        try {
+            ret = JsonUtils.deserialize(spEvents.getString("eventsStr", ""), type);
+            return ret;
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 
 }

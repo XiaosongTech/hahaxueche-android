@@ -9,6 +9,7 @@ import com.hahaxueche.api.auth.AuthApiImpl;
 import com.hahaxueche.api.student.StudentApi;
 import com.hahaxueche.api.student.StudentApiImpl;
 import com.hahaxueche.api.util.ApiError;
+import com.hahaxueche.model.activity.Event;
 import com.hahaxueche.model.response.CoachListResponse;
 import com.hahaxueche.model.response.GroupBuyResponse;
 import com.hahaxueche.model.response.ReferalHistoryResponse;
@@ -19,6 +20,8 @@ import com.hahaxueche.model.student.ReferalBonusTransaction;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
 import com.hahaxueche.presenter.util.ErrorEvent;
+
+import java.util.ArrayList;
 
 /**
  * Created by gibxin on 2016/2/29.
@@ -410,6 +413,26 @@ public class MSPresenterImpl implements MSPresenter {
                     } else {
                         listener.onFailure(student.getCode(), student.getMessage());
                     }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void fetchEventList(final String cityId, final MSCallbackListener<ArrayList<Event>> listener) {
+        new AsyncTask<Void, Void, ArrayList<Event>>() {
+
+            @Override
+            protected ArrayList<Event> doInBackground(Void... params) {
+                return studentApi.fetchEventList(cityId);
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<Event> arrayList) {
+                if (arrayList != null) {
+                    listener.onSuccess(arrayList);
                 } else {
                     listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
                 }

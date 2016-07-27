@@ -9,17 +9,22 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,13 +34,16 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.hahaxueche.R;
+import com.hahaxueche.model.activity.Event;
 import com.hahaxueche.model.base.Banner;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.activity.appointment.AppointmentActivity;
 import com.hahaxueche.ui.activity.findCoach.FindCoachActivity;
 import com.hahaxueche.ui.activity.mySetting.MySettingActivity;
+import com.hahaxueche.ui.adapter.index.EventAdapter;
 import com.hahaxueche.ui.dialog.AppointmentDialog;
 import com.hahaxueche.ui.dialog.BaseAlertDialog;
 import com.hahaxueche.ui.dialog.CityChoseDialog;
@@ -47,6 +55,7 @@ import com.hahaxueche.utils.Util;
 import com.qiyukf.unicorn.api.ConsultSource;
 import com.qiyukf.unicorn.api.Unicorn;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +74,12 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     private RelativeLayout mRlyAboutCoach;//关于教练
     private RelativeLayout mRlyMyStrengths;//我的优势
     private RelativeLayout mRlyProcedure;//学车流程
+    private ListView mLvEvents;
+    private TextView mTvMoreEvents;
+    private LinearLayout mLlyEvents;
+    private EventAdapter mEventAdapter;
+    private ArrayList<Event> mEventArrayList;
+
     private List<String> networkImages;
     private ArrayAdapter transformerArrayAdapter;
     private ArrayList<String> transformerList = new ArrayList<String>();
@@ -85,6 +100,8 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     private static final String WEB_URL_PROCEDURE = "http://activity.hahaxueche.com/share/steps";
     private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
 
+    private final MyHandler mHandler = new MyHandler(this);
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,21 +119,26 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
             mUser.setStudent(new Student());
         }
         if (TextUtils.isEmpty(mUser.getStudent().getCity_id())) {
-            mUser.getStudent().setCity_id("0");
-            spUtil.setUser(mUser);
             mCityChoseDialog = new CityChoseDialog(this,
-                    new CityChoseDialog.OnBtnClickListener() {
+                    new CityChoseDialog.OnDismissListener() {
                         @Override
-                        public void onCitySelected(String cityName, String cityId) {
-                            mCityChoseDialog.dismiss();
+                        public void onDismiss(String cityId) {
+                            if (TextUtils.isEmpty(cityId)) {
+                                cityId = "0";//默认武汉
+                            }
                             mUser.getStudent().setCity_id(cityId);
                             spUtil.setUser(mUser);
+                            loadEvents();
                         }
-                    });
+                    }, new CityChoseDialog.OnBtnClickListener() {
+                @Override
+                public void onCitySelected(String cityName, String cityId) {
+                    mCityChoseDialog.dismiss();
+                }
+            });
             mCityChoseDialog.show();
-        }
-        if (!TextUtils.isEmpty(spUtil.getRefererId())) {
-            showFirstBonusAlert();
+        } else {
+            loadEvents();
         }
         doAutoVersionCheck();
     }
@@ -159,6 +181,9 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         cbannerIndex.notifyDataSetChanged();
         mFrlTelAsk = Util.instence(this).$(this, R.id.frl_tel_ask);
         mFrlOnlineAsk = Util.instence(this).$(this, R.id.frl_online_ask);
+        mLvEvents = Util.instence(this).$(this, R.id.lv_events);
+        mTvMoreEvents = Util.instence(this).$(this, R.id.tv_more_events);
+        mLlyEvents = Util.instence(this).$(this, R.id.lly_events);
     }
 
     private void initEvent() {
@@ -173,6 +198,15 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         mRlyProcedure.setOnClickListener(mClickListener);
         mFrlOnlineAsk.setOnClickListener(mClickListener);
         mFrlTelAsk.setOnClickListener(mClickListener);
+        mTvMoreEvents.setOnClickListener(mClickListener);
+        mLvEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                if (mEventArrayList != null && mEventArrayList.size() > 0 && position > -1 && position < mEventArrayList.size()) {
+                    openWebView(mEventArrayList.get(position).getUrl(), mEventArrayList.get(position).getTitle(), true);
+                }
+            }
+        });
     }
 
 
@@ -222,6 +256,10 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                         // Android version is lesser than 6.0 or the permission is already granted.
                         contactService();
                     }
+                    break;
+                case R.id.tv_more_events:
+                    //更多活动
+                    navigateToMoreEvents();
                     break;
                 default:
                     break;
@@ -388,5 +426,101 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                 Toast.makeText(this, "请允许拨打电话权限，不然无法直接拨号联系客服", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    /**
+     * 加载活动
+     */
+    private void loadEvents() {
+        String cityId = "0";
+        if (mUser != null && mUser.getStudent() != null && !TextUtils.isEmpty(mUser.getStudent().getCity_id())) {
+            cityId = mUser.getStudent().getCity_id();
+        }
+        msPresenter.fetchEventList(cityId, new MSCallbackListener<ArrayList<Event>>() {
+            @Override
+            public void onSuccess(ArrayList<Event> data) {
+                if (data == null || data.size() < 1) return;
+                mLlyEvents.setVisibility(View.VISIBLE);
+                spUtil.setEvents(data);
+                if (data.size() > 2) {
+                    mTvMoreEvents.setVisibility(View.VISIBLE);
+                    mEventArrayList = new ArrayList<>();
+                    for (int i = 0; i < data.size(); i++) {
+                        if (i == 2) break;
+                        mEventArrayList.add(data.get(i));
+                    }
+                } else {
+                    mEventArrayList = data;
+                    mTvMoreEvents.setVisibility(View.INVISIBLE);
+                }
+                parseCountDownText();
+                mEventAdapter = new EventAdapter(IndexActivity.this, mEventArrayList, R.layout.adapter_event);
+                mLvEvents.setAdapter(mEventAdapter);
+                setListViewHeightBasedOnChildren(mLvEvents);
+                mHandler.sendEmptyMessage(1);
+            }
+
+            @Override
+            public void onFailure(String errorEvent, String message) {
+
+            }
+        });
+    }
+
+    static class MyHandler extends Handler {
+        private final WeakReference<IndexActivity> mActivity;
+
+        public MyHandler(IndexActivity activity) {
+            mActivity = new WeakReference<IndexActivity>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            final IndexActivity activity = mActivity.get();
+            if (activity != null) {
+                if (msg.what == 1) {
+                    activity.parseCountDownText();
+                    activity.mEventAdapter.notifyDataSetChanged();
+                    activity.mHandler.sendEmptyMessageDelayed(1, 1000);
+                }
+            }
+
+        }
+    }
+
+    private void parseCountDownText() {
+        for (Event event : mEventArrayList) {
+            event.parseCountDownText();
+        }
+    }
+
+    public void setListViewHeightBasedOnChildren(ListView listView) {
+        // 获取ListView对应的Adapter
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0, len = listAdapter.getCount(); i < len; i++) {
+            // listAdapter.getCount()返回数据项的数目
+            View listItem = listAdapter.getView(i, null, listView);
+            // 计算子项View 的宽高
+            listItem.measure(0, 0);
+            // 统计所有子项的总高度
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        //params.height = Util.instence(this).dip2px(height) * listAdapter.getCount() + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        // listView.getDividerHeight()获取子项间分隔符占用的高度
+        // params.height最后得到整个ListView完整显示需要的高度
+        listView.setLayoutParams(params);
+    }
+
+    private void navigateToMoreEvents() {
+        Intent intent = new Intent(getApplication(), EventListActivity.class);
+        startActivity(intent);
     }
 }

@@ -1,5 +1,6 @@
 package com.hahaxueche.presenter.mySetting;
 
+import com.hahaxueche.model.activity.Event;
 import com.hahaxueche.model.response.CoachListResponse;
 import com.hahaxueche.model.response.GroupBuyResponse;
 import com.hahaxueche.model.response.ReferalHistoryResponse;
@@ -9,6 +10,8 @@ import com.hahaxueche.model.student.ReferalBonusSummary;
 import com.hahaxueche.model.student.ReferalBonusTransaction;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
+
+import java.util.ArrayList;
 
 /**
  * Created by gibxin on 2016/2/29.
@@ -119,5 +122,13 @@ public interface MSPresenter {
      */
     public void createGroupBuy(String name, String phone, MSCallbackListener<GroupBuyResponse> listener);
 
-    public void editUsername(String studentId,String cityId,String username,String accessToken,MSCallbackListener<Student> listener);
+    public void editUsername(String studentId, String cityId, String username, String accessToken, MSCallbackListener<Student> listener);
+
+    /**
+     * 获取活动列表
+     *
+     * @param cityId
+     * @param listener
+     */
+    public void fetchEventList(String cityId, MSCallbackListener<ArrayList<Event>> listener);
 }

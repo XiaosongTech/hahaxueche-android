@@ -3,9 +3,11 @@ package com.hahaxueche.ui.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -36,16 +38,23 @@ public class CityChoseDialog extends Dialog implements View.OnClickListener {
     private Button btnCityChoseSure;
     TableLayout tableLayout;
 
+    private OnDismissListener mOnDismissListener;
+
     private String TAG = "CityChoseDialog";
 
     public interface OnBtnClickListener {
         public void onCitySelected(String cityName, String cityId);
     }
 
-    public CityChoseDialog(Context context, OnBtnClickListener listener) {
+    public interface OnDismissListener {
+        public void onDismiss(String cityId);
+    }
+
+    public CityChoseDialog(Context context, OnDismissListener dismissListener, OnBtnClickListener listener) {
         super(context);
         mContext = context;
         mListener = listener;
+        mOnDismissListener = dismissListener;
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_city_chose, null);
@@ -55,6 +64,12 @@ public class CityChoseDialog extends Dialog implements View.OnClickListener {
         btnCityChoseSure.setOnClickListener(this);
         initCityData();
         setDialogParams();
+    }
+
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        mOnDismissListener.onDismiss(mCurrentCityId);
     }
 
     private void setDialogParams() {
