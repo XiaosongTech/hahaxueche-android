@@ -15,8 +15,8 @@ android {
         applicationId "com.hahaxueche"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 17
-        versionName "2.5.0"
+        versionCode 18
+        versionName "2.5.1"
         multiDexEnabled true
     }
     // 友盟多渠道打包
