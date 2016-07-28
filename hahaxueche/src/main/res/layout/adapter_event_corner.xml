@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/haha_gray">
+    android:background="@color/haha_gray"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -51,4 +52,4 @@
             android:textColor="@color/app_theme_color"
             android:textSize="14sp" />
     </RelativeLayout>
-</FrameLayout>
+</LinearLayout>
