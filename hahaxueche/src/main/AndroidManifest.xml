@@ -244,6 +244,11 @@
         <activity
             android:name=".ui.activity.mySetting.WithdrawActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.mySetting.AddBankActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activity.mySetting.SoftwareInfoActivity"

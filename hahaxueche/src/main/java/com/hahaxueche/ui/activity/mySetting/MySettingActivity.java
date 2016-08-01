@@ -85,7 +85,6 @@ public class MySettingActivity extends MSBaseActivity {
     private SwipeRefreshLayout mSrlMySetting;
     private boolean isRefresh = false;//是否刷新中
     private RelativeLayout mRlyRefererFriends;
-    private RelativeLayout mRlyCachOut;
     private RelativeLayout mRlyStuFAQ;//学员常见问题
     private RelativeLayout mRlySupportHaha;//支持小哈
     private RelativeLayout mRlySoftwareInfo;//软件信息
@@ -131,7 +130,6 @@ public class MySettingActivity extends MSBaseActivity {
         vwMyCoach = Util.instence(this).$(this, R.id.vw_my_coach);
         mSrlMySetting = Util.instence(this).$(this, R.id.srl_my_setting);
         mRlyRefererFriends = Util.instence(this).$(this, R.id.rly_referer_friends);
-        mRlyCachOut = Util.instence(this).$(this, R.id.rly_cash_out);
         mRlyStuFAQ = Util.instence(this).$(this, R.id.rly_FAQ);
         mRlySupportHaha = Util.instence(this).$(this, R.id.rly_support_haha);
         mRlySoftwareInfo = Util.instence(this).$(this, R.id.rly_software_info);
@@ -157,7 +155,6 @@ public class MySettingActivity extends MSBaseActivity {
         mSrlMySetting.setOnRefreshListener(mRefreshListener);
         mSrlMySetting.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
         mRlyRefererFriends.setOnClickListener(mClickListener);
-        mRlyCachOut.setOnClickListener(mClickListener);
         mRlyStuFAQ.setOnClickListener(mClickListener);
         mRlySupportHaha.setOnClickListener(mClickListener);
         mRlySoftwareInfo.setOnClickListener(mClickListener);
@@ -302,11 +299,6 @@ public class MySettingActivity extends MSBaseActivity {
                 case R.id.rly_referer_friends:
                     //推荐朋友
                     intent = new Intent(getApplication(), ReferFriendsActivity.class);
-                    startActivity(intent);
-                    break;
-                case R.id.rly_cash_out:
-                    //提现
-                    intent = new Intent(getApplication(), MakeMoneyInfoActivity.class);
                     startActivity(intent);
                     break;
                 case R.id.rly_FAQ:

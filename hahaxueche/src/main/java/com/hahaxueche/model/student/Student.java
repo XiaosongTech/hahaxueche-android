@@ -23,6 +23,7 @@ public class Student {
     private String by_referal;
     private String bonus_balance;
     private ArrayList<Coupon> coupons;
+    private ArrayList<Bank> banks;
     private String code;
     private String message;
     private boolean isSuccess = true;
@@ -145,6 +146,14 @@ public class Student {
 
     public void setCoupons(ArrayList<Coupon> coupons) {
         this.coupons = coupons;
+    }
+
+    public ArrayList<Bank> getBanks() {
+        return banks;
+    }
+
+    public void setBanks(ArrayList<Bank> banks) {
+        this.banks = banks;
     }
 
     public String getCode() {
