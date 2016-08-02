@@ -13,4 +13,6 @@
     <dimen name="margin18dp">18dp</dimen>
     <dimen name="margin35dp">35dp</dimen>
     <dimen name="margin15dp">15dp</dimen>
+    <dimen name="width320dp">320dp</dimen>
+    <dimen name="height470dp">470dp</dimen>
 </resources>

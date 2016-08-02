@@ -54,6 +54,7 @@ public class WithdrawActivity extends MSBaseActivity {
 
     private boolean isRefresh = false;//是否刷新中
     private SharedPreferencesUtil spUtil;
+    public static int REQUEST_CODE_WITHDRAW = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,7 +205,7 @@ public class WithdrawActivity extends MSBaseActivity {
                     break;
                 case R.id.fly_add_bank:
                     Intent intent = new Intent(WithdrawActivity.this, AddBankActivity.class);
-                    startActivity(intent);
+                    startActivityForResult(intent, REQUEST_CODE_WITHDRAW);
                     break;
                 default:
                     break;
@@ -266,4 +267,13 @@ public class WithdrawActivity extends MSBaseActivity {
         return imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_WITHDRAW) {
+            if (resultCode == RESULT_OK && null != data && data.getBooleanExtra("isUpdate", false)) {
+                refreshUI();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

@@ -1,11 +1,14 @@
 package com.hahaxueche.ui.activity.mySetting;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hahaxueche.R;
 import com.hahaxueche.utils.Util;
@@ -40,7 +43,11 @@ public class AddBankActivity extends MSBaseActivity {
         mTvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Toast.makeText(AddBankActivity.this, "account -> " + mEtAccount.getText().toString() + "; name -> " + mEtAccountName.getText().toString(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                intent.putExtra("isUpdate", true);
+                setResult(RESULT_OK, intent);
+                AddBankActivity.this.finish();
             }
         });
 
