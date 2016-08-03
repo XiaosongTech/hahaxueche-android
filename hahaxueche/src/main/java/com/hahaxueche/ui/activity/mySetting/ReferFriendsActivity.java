@@ -19,7 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
+import com.hahaxueche.api.net.HttpEngine;
 import com.hahaxueche.model.city.City;
+import com.hahaxueche.model.user.User;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 import com.squareup.picasso.Picasso;
@@ -37,14 +39,15 @@ public class ReferFriendsActivity extends MSBaseActivity {
     private ImageButton mIbtnBack;
     private TextView mTvWithdrawMoney;//提现金额
     private TextView mTvWithdraw;//提现
-    private ImageView mIvQrCode;
     private TextView mTvSaveQrCode;
     private ImageView mIvDash;
+    private ImageView mIvQrCode;
     private SharedPreferencesUtil spUtil;
 
     private ProgressDialog pd;//进度框
     private TextView mTvReferRules;
     private City myCity;
+    private User mUser;
     private ImageView mIvRefer;
     private static final int PERMISSIONS_REQUEST = 600;
     private String mQrCodeUrl;
@@ -80,15 +83,18 @@ public class ReferFriendsActivity extends MSBaseActivity {
     private void loadDatas() {
         String eventDetailTips = getResources().getString(R.string.eventDetailsTips);
         myCity = spUtil.getMyCity();
+        mUser = spUtil.getUser();
         if (myCity != null && !TextUtils.isEmpty(myCity.getReferral_banner())) {
             mTvReferRules.setText(String.format(eventDetailTips, Util.getMoney(String.valueOf(myCity.getReferer_bonus()))));
             int width = Util.instence(context).getDm().widthPixels;
             int height = Math.round(((float) 8 / 9) * width);
-            mQrCodeUrl = myCity.getReferral_banner();
-            Picasso.with(context).load(mQrCodeUrl).resize(width, height).centerCrop().into(mIvRefer);
+            Picasso.with(context).load(myCity.getReferral_banner()).resize(width, height).centerCrop().into(mIvRefer);
+        }
+        if (mUser != null && mUser.getStudent() != null) {
+            mTvWithdrawMoney.setText(Util.getMoney(mUser.getStudent().getBonus_balance()));
+            mQrCodeUrl = HttpEngine.BASE_SERVER_IP + "/share/students/" + mUser.getStudent().getId() + "/image";
             Picasso.with(context).load(mQrCodeUrl).into(mIvQrCode);
         }
-
     }
 
     private View.OnClickListener mClickListener = new View.OnClickListener() {

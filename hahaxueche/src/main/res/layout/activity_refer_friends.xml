@@ -99,7 +99,7 @@
                 android:layout_height="@dimen/height470dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
-                android:scaleType="fitCenter" />
+                android:scaleType="centerCrop" />
             <TextView
                 android:id="@+id/tv_save_qr_code"
                 android:layout_width="@dimen/width320dp"
@@ -107,10 +107,11 @@
                 android:layout_gravity="center_horizontal"
                 android:textSize="16sp"
                 android:gravity="center"
-                android:textColor="@color/haha_black_light"
+                android:textColor="@color/haha_white"
                 android:paddingTop="13dp"
+                android:layout_marginTop="-10dp"
                 android:paddingBottom="13dp"
-                android:background="@drawable/rect_bg_white_shadow"
+                android:background="@drawable/rect_bg_appcolor_shadow"
                 android:text="保存到本地"/>
 
             <ImageView
