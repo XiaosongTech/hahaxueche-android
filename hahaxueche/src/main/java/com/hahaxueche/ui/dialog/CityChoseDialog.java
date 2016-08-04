@@ -110,7 +110,6 @@ public class CityChoseDialog extends Dialog implements View.OnClickListener {
                         TableLayout.LayoutParams.WRAP_CONTENT);
                 trLayoutParams.setMargins(0, Util.instence(mContext).dip2px(10), 0, 0);
                 tr.setLayoutParams(trLayoutParams);
-                tr.setGravity(Gravity.CENTER);
                 for (int j = 0; j < 3; j++) {
                     final int index = i * 3 + j;
                     if (index > cityList.size() - 1)
@@ -121,15 +120,16 @@ public class CityChoseDialog extends Dialog implements View.OnClickListener {
                     viewIds[index] = viewId;
                     tv.setText(cityList.get(index).getName());
                     tv.setTextSize(16);
-                    TableRow.LayoutParams tvLayoutParams = new TableRow.LayoutParams(Util.instence(mContext).dip2px(80),
+                    TableRow.LayoutParams tvLayoutParams = new TableRow.LayoutParams((int) mContext.getResources().getDimension(R.dimen.width80dp),
                             TableRow.LayoutParams.WRAP_CONTENT);
                     //tvLayoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
                     //tvLayoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                     //tv.setWidth(80);
                     //tv.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-                    tvLayoutParams.setMargins(0, 0, Util.instence(mContext).dip2px(10), 0);
+                    int padding = (int) mContext.getResources().getDimension(R.dimen.padding10dp);
+                    tvLayoutParams.setMargins(0, 0, padding, 0);
                     tv.setLayoutParams(tvLayoutParams);
-                    tv.setPadding(0, Util.instence(mContext).dip2px(10), 0, Util.instence(mContext).dip2px(10));
+                    tv.setPadding(0, padding, 0, padding);
                     tv.setGravity(Gravity.CENTER);
                     tv.setBackgroundColor(Color.WHITE);
                     tv.setTextColor(mContext.getResources().getColor(R.color.sLFadeBlack));

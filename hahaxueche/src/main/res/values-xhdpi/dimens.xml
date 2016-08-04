@@ -16,4 +16,6 @@
     <dimen name="width320dp">320dp</dimen>
     <dimen name="height470dp">470dp</dimen>
     <dimen name="margin40dp">40dp</dimen>
+    <dimen name="padding10dp">10dp</dimen>
+    <dimen name="width80dp">80dp</dimen>
 </resources>
