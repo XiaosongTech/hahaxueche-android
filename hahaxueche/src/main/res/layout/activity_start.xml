@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/convenientBanner"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="@dimen/margin40dp"
             android:orientation="vertical"
             android:paddingLeft="58dp"
             android:paddingRight="58dp">

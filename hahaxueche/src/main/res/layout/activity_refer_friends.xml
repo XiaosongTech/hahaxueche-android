@@ -66,7 +66,6 @@
                     android:layout_alignLeft="@id/tv_withdraw_label"
                     android:layout_below="@id/tv_withdraw_label"
                     android:layout_marginTop="10dp"
-                    android:text="¥450"
                     android:textColor="@color/haha_white"
                     android:textSize="22sp" />
 

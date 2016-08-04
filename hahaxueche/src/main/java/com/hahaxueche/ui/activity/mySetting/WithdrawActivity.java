@@ -47,6 +47,7 @@ public class WithdrawActivity extends MSBaseActivity {
     private ListView mLvBanks;//提现银行列表
     private FrameLayout mFlyAddBank;//添加银行卡
     private SwipeRefreshLayout mSrlRefresh;//下拉刷新
+    private TextView mTvWithdrawRecord;//提现记录
     private User mUser;
     private ArrayList<Bank> mBanks;
     private int mSelectBankPos = -1;
@@ -74,6 +75,7 @@ public class WithdrawActivity extends MSBaseActivity {
         mLvBanks = Util.instence(this).$(this, R.id.lv_bank);
         mSrlRefresh = Util.instence(this).$(this, R.id.srl_refresh);
         mFlyAddBank = Util.instence(this).$(this, R.id.fly_add_bank);
+        mTvWithdrawRecord = Util.instence(this).$(this, R.id.tv_withdraw_record);
     }
 
     private void initEvents() {
@@ -96,6 +98,7 @@ public class WithdrawActivity extends MSBaseActivity {
             }
         });
         mFlyAddBank.setOnClickListener(mClickListener);
+        mTvWithdrawRecord.setOnClickListener(mClickListener);
         mSrlRefresh.setOnRefreshListener(mRefreshListener);
         mSrlRefresh.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
         mLvBanks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -206,6 +209,11 @@ public class WithdrawActivity extends MSBaseActivity {
                 case R.id.fly_add_bank:
                     Intent intent = new Intent(WithdrawActivity.this, AddBankActivity.class);
                     startActivityForResult(intent, REQUEST_CODE_WITHDRAW);
+                    break;
+                case R.id.tv_withdraw_record:
+                    //提现记录
+                    intent = new Intent(WithdrawActivity.this, RedeemedListActivity.class);
+                    startActivity(intent);
                     break;
                 default:
                     break;

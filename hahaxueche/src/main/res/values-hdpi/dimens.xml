@@ -16,4 +16,5 @@
     <dimen name="margin15dp">10dp</dimen>
     <dimen name="width320dp">240dp</dimen>
     <dimen name="height470dp">353dp</dimen>
+    <dimen name="margin40dp">25dp</dimen>
 </resources>
