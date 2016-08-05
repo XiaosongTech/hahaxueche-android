@@ -152,7 +152,7 @@ public class PurchaseCoachActivity extends FCBaseActivity {
             fieldsList = mConstants.getFields();
             cityList = mConstants.getCities();
             City myCity = spUtil.getMyCity();
-            if(myCity!=null) {
+            if (myCity != null) {
                 mCostItemList = myCity.getFixed_cost_itemizer();
             }
         }
@@ -254,6 +254,8 @@ public class PurchaseCoachActivity extends FCBaseActivity {
         mIvSelectNormal.setOnClickListener(mClickListener);
         mIvSelectVIP.setOnClickListener(mClickListener);
         mRlyMorePayment.setOnClickListener(mClickListener);
+        mRlyNormalPrice.setOnClickListener(mClickListener);
+        mRlyVIPPrice.setOnClickListener(mClickListener);
     }
 
     private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
@@ -295,10 +297,10 @@ public class PurchaseCoachActivity extends FCBaseActivity {
                     feeDetailDialog = new FeeDetailDialog(PurchaseCoachActivity.this, mCostItemList, mCoach.getCoach_group().getVip_price(), "1", null);
                     feeDetailDialog.show();
                     break;
-                case R.id.iv_select_normal:
+                case R.id.rly_normal_price:
                     selectClass(0);
                     break;
-                case R.id.iv_select_vip:
+                case R.id.rly_vip_price:
                     selectClass(1);
                     break;
                 case R.id.rly_more_payment:
@@ -501,8 +503,10 @@ public class PurchaseCoachActivity extends FCBaseActivity {
         mIvSelectNormal.setImageDrawable(ContextCompat.getDrawable(PurchaseCoachActivity.this, R.drawable.ic_cashout_unchack_btn));
         if (mProductType.equals("0")) {
             mIvSelectNormal.setImageDrawable(ContextCompat.getDrawable(PurchaseCoachActivity.this, R.drawable.ic_cashout_chack_btn));
+            mTvSurePay.setText("确认支付" + Util.getMoney(mCoach.getCoach_group().getTraining_cost()));
         } else if (mProductType.equals("1")) {
             mIvSelectVIP.setImageDrawable(ContextCompat.getDrawable(PurchaseCoachActivity.this, R.drawable.ic_cashout_chack_btn));
+            mTvSurePay.setText("确认支付" + Util.getMoney(mCoach.getCoach_group().getVip_price()));
         }
         refreshPayButton();
     }
