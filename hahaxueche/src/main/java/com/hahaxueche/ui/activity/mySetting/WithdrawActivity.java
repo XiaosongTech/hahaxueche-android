@@ -105,12 +105,17 @@ public class WithdrawActivity extends MSBaseActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 if (mBanks != null && mBanks.size() > 0 && position > -1 && position < mBanks.size()) {
-                    for (Bank bank : mBanks) {
+                    Intent intent = new Intent(WithdrawActivity.this, AddBankActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("bank", mBanks.get(position));
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, REQUEST_CODE_WITHDRAW);
+                    /*for (Bank bank : mBanks) {
                         bank.setSelect(false);
                     }
                     mBanks.get(position).setSelect(true);
                     mBankAdapter.notifyDataSetChanged();
-                    mSelectBankPos = position;
+                    mSelectBankPos = position;*/
                 }
             }
         });

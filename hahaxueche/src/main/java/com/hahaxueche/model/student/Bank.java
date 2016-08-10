@@ -1,9 +1,11 @@
 package com.hahaxueche.model.student;
 
+import java.io.Serializable;
+
 /**
  * Created by wangshirui on 16/8/1.
  */
-public class Bank {
+public class Bank implements Serializable{
     private String bank_name;
     private String account_name;
     private String account;
