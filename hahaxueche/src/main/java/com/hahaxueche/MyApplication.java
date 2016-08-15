@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.api.net.HttpEngine;
 import com.hahaxueche.model.base.Constants;
+import com.hahaxueche.model.examLib.Question;
 import com.hahaxueche.presenter.appointment.APPresenter;
 import com.hahaxueche.presenter.appointment.APPresenterImpl;
 import com.hahaxueche.presenter.findCoach.FCPresenter;
@@ -23,6 +25,7 @@ import com.hahaxueche.ui.widget.PicassoImageLoader;
 import com.hahaxueche.utils.HahaCache;
 import com.hahaxueche.utils.JsonUtils;
 import com.hahaxueche.utils.SharedPreferencesUtil;
+import com.hahaxueche.utils.Util;
 import com.instabug.library.IBGInvocationEvent;
 import com.instabug.library.Instabug;
 import com.qiyukf.unicorn.api.SavePowerConfig;
@@ -36,8 +39,11 @@ import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.tencent.tauth.Tencent;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 import io.branch.referral.Branch;
 import okhttp3.Response;
@@ -54,6 +60,7 @@ public class MyApplication extends Application {
     private IWXAPI wxApi;
     private Tencent mTencent;
     private IWeiboShareAPI mWeiboShareAPI;
+
 
     @Override
     public void onCreate() {
@@ -101,6 +108,7 @@ public class MyApplication extends Application {
         //七鱼客服
         HahaCache.context = getApplicationContext();
         Unicorn.init(this, "2f328da38ac77ce6d796c2977248f7e2", options(), new PicassoImageLoader());
+        Fresco.initialize(this);
         startCheckSessionService();
     }
 
@@ -176,6 +184,5 @@ public class MyApplication extends Application {
         MultiDex.install(this);
 
     }
-
 
 }

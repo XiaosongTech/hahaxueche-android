@@ -98,7 +98,7 @@
         <!--模糊-->
     </style>
 
-    <style name="NoAnimationTheme" parent="android:Theme">
+    <style name="NoAnimationTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowAnimationStyle">@style/noAnimation</item>
         <item name="android:windowNoTitle">true</item>
     </style>

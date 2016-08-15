@@ -302,4 +302,23 @@ public class SharedPreferencesUtil {
 
     }
 
+    public void setExamPosition(String examType, int position) {
+        SharedPreferences spExam = mContext.getSharedPreferences(examType, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = spExam.edit();
+        editor.putInt("position", position);
+        editor.commit();
+    }
+
+    public int getExamPosition(String examType) {
+        SharedPreferences spExam = mContext.getSharedPreferences(examType, Activity.MODE_PRIVATE);
+        return spExam.getInt("position", -1);
+    }
+
+    public void clearExamPosition(String examType) {
+        SharedPreferences spExam = mContext.getSharedPreferences(examType, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = spExam.edit();
+        editor.clear();
+        editor.commit();
+    }
+
 }

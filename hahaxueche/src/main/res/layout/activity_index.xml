@@ -356,6 +356,26 @@
                     android:textColor="@android:color/white"
                     android:textSize="28sp" />
             </FrameLayout>
+
+            <com.hahaxueche.ui.widget.slidingTabLayout.SlidingTabLayout
+                android:id="@+id/stl_exam_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/haha_white"
+                app:bottomLineColor="@color/haha_white"
+                app:bottomLineHeight="1dp"
+                app:dividerColor="@color/haha_white"
+                app:indicatorColor="@color/app_theme_color"
+                app:indicatorHeight="4dp"
+                app:tabMainTextColor="@color/app_theme_color">
+
+            </com.hahaxueche.ui.widget.slidingTabLayout.SlidingTabLayout>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/vp_exam"
+                android:layout_width="match_parent"
+                android:layout_height="170dp"
+                android:layout_marginBottom="20dp" />
         </LinearLayout>
     </ScrollView>
 

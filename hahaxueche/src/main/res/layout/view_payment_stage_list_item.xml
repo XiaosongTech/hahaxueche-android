@@ -1,106 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
-    android:paddingBottom="15dp"
-    android:paddingLeft="15dp"
-    android:paddingTop="15dp">
+    android:background="@android:color/white">
 
-    <TextView
-        android:id="@+id/tv_stage_number"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:background="@drawable/circle_stage_number_gray"
-        android:gravity="center"
-        android:text="1"
-        android:textColor="@color/fCTxtGray"
-        android:textSize="14sp" />
+        android:background="@android:color/white"
+        android:paddingBottom="15dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="15dp">
 
-    <TextView
-        android:id="@+id/tv_stage_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/payment_adapter_spacing1"
-        android:gravity="center"
-        android:text="资料管理费"
-        android:textColor="@color/fCTxtGray"
-        android:textSize="14sp" />
+        <TextView
+            android:id="@+id/tv_stage_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/circle_stage_number_gray"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="@color/fCTxtGray"
+            android:textSize="14sp" />
 
-    <TextView
-        android:id="@+id/tv_stage_amount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/payment_adapter_spacing2"
-        android:gravity="center"
-        android:text="$500"
-        android:textColor="@color/fCTxtGray"
-        android:textSize="14sp" />
+        <TextView
+            android:id="@+id/tv_stage_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/payment_adapter_spacing1"
+            android:gravity="center"
+            android:text="资料管理费"
+            android:textColor="@color/fCTxtGray"
+            android:textSize="14sp" />
 
-    <TextView
-        android:id="@+id/tv_paid_at"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/payment_adapter_spacing3"
-        android:gravity="center"
-        android:text="15-12"
-        android:textColor="@color/fCTxtGray"
-        android:textSize="14sp" />
+        <TextView
+            android:id="@+id/tv_stage_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/payment_adapter_spacing2"
+            android:gravity="center"
+            android:text="$500"
+            android:textColor="@color/fCTxtGray"
+            android:textSize="14sp" />
 
-    <TextView
-        android:id="@+id/tv_payment_state_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/tv_paid_at"
-        android:gravity="center"
-        android:text="待付款"
-        android:textColor="@color/fCTxtGray"
-        android:textSize="14sp" />
+        <TextView
+            android:id="@+id/tv_paid_at"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/payment_adapter_spacing3"
+            android:gravity="center"
+            android:text="15-12"
+            android:textColor="@color/fCTxtGray"
+            android:textSize="14sp" />
 
-    <ImageView
-        android:id="@+id/iv_ps_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="15dp"
-        android:paddingBottom="3dp"
-        android:paddingLeft="3dp"
-        android:paddingTop="3dp"
-        android:src="@drawable/ic_paylist_message_btn" />
+        <TextView
+            android:id="@+id/tv_payment_state_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/tv_paid_at"
+            android:gravity="center"
+            android:text="待付款"
+            android:textColor="@color/fCTxtGray"
+            android:textSize="14sp" />
 
-    <TextView
-        android:id="@+id/tv_reviewed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/rectangle_back_gray"
-        android:clickable="false"
-        android:gravity="center"
-        android:text="@string/myReviewed"
-        android:textColor="@android:color/white"
-        android:textSize="10sp"
-        android:visibility="gone" />
+        <ImageView
+            android:id="@+id/iv_ps_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:paddingBottom="3dp"
+            android:paddingLeft="3dp"
+            android:paddingTop="3dp"
+            android:src="@drawable/ic_paylist_message_btn" />
 
-    <TextView
-        android:id="@+id/tv_ready_for_review"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/rectangle_back_orange"
-        android:clickable="false"
-        android:gravity="center"
-        android:text="@string/myReadyForReviewed"
-        android:textColor="@android:color/white"
-        android:textSize="10sp"
-        android:visibility="gone" />
-</RelativeLayout>
+        <TextView
+            android:id="@+id/tv_reviewed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/rectangle_back_gray"
+            android:clickable="false"
+            android:gravity="center"
+            android:text="@string/myReviewed"
+            android:textColor="@android:color/white"
+            android:textSize="10sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_ready_for_review"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/rectangle_back_orange"
+            android:clickable="false"
+            android:gravity="center"
+            android:text="@string/myReadyForReviewed"
+            android:textColor="@android:color/white"
+            android:textSize="10sp"
+            android:visibility="gone" />
+    </RelativeLayout>
+</LinearLayout>
