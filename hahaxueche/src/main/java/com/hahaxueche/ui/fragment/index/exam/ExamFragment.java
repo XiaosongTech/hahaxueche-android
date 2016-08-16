@@ -37,6 +37,8 @@ import com.hahaxueche.utils.ExamLib;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 
+import java.util.ArrayList;
+
 /**
  * Created by wangshirui on 16/8/13.
  */
@@ -72,6 +74,7 @@ public class ExamFragment extends Fragment {
     private ImageView mIvItem2;
     private ImageView mIvItem3;
     private ImageView mIvItem4;
+    private TextView mTvSubmit;
 
     private int mPageNumber;
     private Question mQuestion;
@@ -160,12 +163,14 @@ public class ExamFragment extends Fragment {
         mTvExplain = Util.instence(getContext()).$(view, R.id.tv_explain);
         mIvDash = Util.instence(getContext()).$(view, R.id.iv_dash);
         mIvDash.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        mTvSubmit = Util.instence(getContext()).$(view, R.id.tv_submit);
         mRlyItem1.setOnClickListener(mClickListener);
         mRlyItem2.setOnClickListener(mClickListener);
         mRlyItem3.setOnClickListener(mClickListener);
         mRlyItem4.setOnClickListener(mClickListener);
         mTvCollect.setOnClickListener(mClickListener);
         mTvRemove.setOnClickListener(mClickListener);
+        mTvSubmit.setOnClickListener(mClickListener);
     }
 
     private void loadDatas() {
@@ -234,14 +239,23 @@ public class ExamFragment extends Fragment {
             mTvExplain.setText(mQuestion.getExplains());
         }
 
-
         mLlyExplain.setVisibility(View.GONE);
-        if (!TextUtils.isEmpty(mQuestion.getUserAnswer())) {
+        if (mQuestion.hasAnswers()) {
             displayAnswer();
         }
 
         //显示收藏
         displayCollect();
+        //显示多选题的提交按钮
+        displayMultiSubmit();
+    }
+
+    private void displayMultiSubmit() {
+        if (mQuestion.getQuestionType().equals(ExamLib.QUESTION_TYPE_MULTI_CHOICE) && !mQuestion.isSubmit()) {
+            mTvSubmit.setVisibility(View.VISIBLE);
+        } else {
+            mTvSubmit.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -256,75 +270,191 @@ public class ExamFragment extends Fragment {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.rly_item1:
-                    selectItem(1);
+                    selectItem("1");
                     break;
                 case R.id.rly_item2:
-                    selectItem(2);
+                    selectItem("2");
                     break;
                 case R.id.rly_item3:
-                    selectItem(3);
+                    selectItem("3");
                     break;
                 case R.id.rly_item4:
-                    selectItem(4);
+                    selectItem("4");
                     break;
                 case R.id.tv_collect:
                     collectQuestion();
                     break;
                 case R.id.tv_remove_collect:
                     removeCollectQuesion();
+                    break;
+                case R.id.tv_submit:
+                    submitMultiAnswer();
+                    break;
                 default:
                     break;
             }
         }
     };
 
-    private void selectItem(int item) {
+    /**
+     * 多选题提交
+     */
+    private void submitMultiAnswer() {
+        mQuestion.setSubmit(true);
+        displayMultiSubmit();
+        displayAnswer();
+    }
+
+    private void selectItem(String item) {
+        ArrayList<String> userAnswerList = mQuestion.getUserAnswer();
         //判断题和单选题,点击直接出答案
-        if (!mQuestion.getQuestionType().equals(ExamLib.QUESTION_TYPE_MULTI_CHOICE) && TextUtils.isEmpty(mQuestion.getUserAnswer())) {
-            if (mExamMode.equals(ExamLib.TEST_MODE_TURN)) {
-                //顺序答题,记住位置
-                spUtil.setExamPosition(mExamMode, mPageNumber);
+        if (!mQuestion.getQuestionType().equals(ExamLib.QUESTION_TYPE_MULTI_CHOICE)) {
+            if (userAnswerList == null || userAnswerList.size() == 0) {
+                if (mExamMode.equals(ExamLib.TEST_MODE_TURN)) {
+                    //顺序答题,记住位置
+                    spUtil.setExamPosition(mExamMode, mPageNumber);
+                }
+                userAnswerList = new ArrayList<>();
+                userAnswerList.add(item);
+                mQuestion.setUserAnswer(userAnswerList);
+                displayAnswer();
             }
-            mQuestion.setUserAnswer(String.valueOf(item));
-            displayAnswer();
+        } else if (mQuestion.getQuestionType().equals(ExamLib.QUESTION_TYPE_MULTI_CHOICE)) {
+            if (userAnswerList == null) {
+                userAnswerList = new ArrayList<>();
+                userAnswerList.add(item);
+            } else {
+                if (!userAnswerList.contains(item)) {
+                    userAnswerList.add(item);
+                } else {
+                    userAnswerList.remove(item);
+                }
+            }
+            mQuestion.setUserAnswer(userAnswerList);
+            displayUserMultiAnswer();
         }
     }
 
-    private void displayAnswer() {
-        if (mQuestion.getAnswer().equals("1")) {
-            mTvItem1Label.setVisibility(View.INVISIBLE);
-            mIvItem1.setVisibility(View.VISIBLE);
-            mIvItem1.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_right));
-        } else if (mQuestion.getAnswer().equals("2")) {
-            mTvItem2Label.setVisibility(View.INVISIBLE);
-            mIvItem2.setVisibility(View.VISIBLE);
-            mIvItem2.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_right));
-        } else if (mQuestion.getAnswer().equals("3")) {
-            mTvItem3Label.setVisibility(View.INVISIBLE);
-            mIvItem3.setVisibility(View.VISIBLE);
-            mIvItem3.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_right));
-        } else if (mQuestion.getAnswer().equals("4")) {
-            mTvItem4Label.setVisibility(View.INVISIBLE);
-            mIvItem4.setVisibility(View.VISIBLE);
-            mIvItem4.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_right));
+    /**
+     * 显示用户多选
+     */
+    private void displayUserMultiAnswer() {
+        ArrayList<String> userAnswerList = mQuestion.getUserAnswer();
+        if (userAnswerList == null) {
+            userAnswerList = new ArrayList<>();
         }
-        if (!mQuestion.isCorrect()) {//答错要显示错误标记
-            if (mQuestion.getUserAnswer().equals("1")) {
-                mTvItem1Label.setVisibility(View.INVISIBLE);
-                mIvItem1.setVisibility(View.VISIBLE);
-                mIvItem1.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_wrong));
-            } else if (mQuestion.getUserAnswer().equals("2")) {
-                mTvItem2Label.setVisibility(View.INVISIBLE);
-                mIvItem2.setVisibility(View.VISIBLE);
-                mIvItem2.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_wrong));
-            } else if (mQuestion.getUserAnswer().equals("3")) {
-                mTvItem3Label.setVisibility(View.INVISIBLE);
-                mIvItem3.setVisibility(View.VISIBLE);
-                mIvItem3.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_wrong));
-            } else if (mQuestion.getUserAnswer().equals("4")) {
-                mTvItem4Label.setVisibility(View.INVISIBLE);
-                mIvItem4.setVisibility(View.VISIBLE);
-                mIvItem4.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_wrong));
+        mTvItem1Label.setBackgroundResource(userAnswerList.contains("1") ? R.drawable.circle_half_appcolor : R.drawable.circle_gray);
+        mTvItem1Label.setTextColor(ContextCompat.getColor(getContext(), userAnswerList.contains("1") ? R.color.app_theme_color : R.color.haha_gray_heavier));
+        mTvItem2Label.setBackgroundResource(userAnswerList.contains("2") ? R.drawable.circle_half_appcolor : R.drawable.circle_gray);
+        mTvItem2Label.setTextColor(ContextCompat.getColor(getContext(), userAnswerList.contains("2") ? R.color.app_theme_color : R.color.haha_gray_heavier));
+        mTvItem3Label.setBackgroundResource(userAnswerList.contains("3") ? R.drawable.circle_half_appcolor : R.drawable.circle_gray);
+        mTvItem3Label.setTextColor(ContextCompat.getColor(getContext(), userAnswerList.contains("3") ? R.color.app_theme_color : R.color.haha_gray_heavier));
+        mTvItem4Label.setBackgroundResource(userAnswerList.contains("4") ? R.drawable.circle_half_appcolor : R.drawable.circle_gray);
+        mTvItem4Label.setTextColor(ContextCompat.getColor(getContext(), userAnswerList.contains("4") ? R.color.app_theme_color : R.color.haha_gray_heavier));
+    }
+
+    /**
+     * 显示答案
+     */
+    private void displayAnswer() {
+        //如果是多选题,每个选项都显示对错,与用户选择的答案无关
+        if (mQuestion.getQuestionType().equals(ExamLib.QUESTION_TYPE_MULTI_CHOICE)) {
+            if (mQuestion.getAnswer().equals("1")) {//A
+                setItemView(mTvItem1Label, mIvItem1, true);
+                setItemView(mTvItem2Label, mIvItem2, false);
+                setItemView(mTvItem3Label, mIvItem3, false);
+                setItemView(mTvItem4Label, mIvItem4, false);
+            } else if (mQuestion.getAnswer().equals("2")) {//B
+                setItemView(mTvItem1Label, mIvItem1, false);
+                setItemView(mTvItem2Label, mIvItem2, true);
+                setItemView(mTvItem3Label, mIvItem3, false);
+                setItemView(mTvItem4Label, mIvItem4, false);
+            } else if (mQuestion.getAnswer().equals("3")) {//C
+                setItemView(mTvItem1Label, mIvItem1, false);
+                setItemView(mTvItem2Label, mIvItem2, false);
+                setItemView(mTvItem3Label, mIvItem3, true);
+                setItemView(mTvItem4Label, mIvItem4, false);
+            } else if (mQuestion.getAnswer().equals("4")) {//D
+                setItemView(mTvItem1Label, mIvItem1, false);
+                setItemView(mTvItem2Label, mIvItem2, false);
+                setItemView(mTvItem3Label, mIvItem3, false);
+                setItemView(mTvItem4Label, mIvItem4, true);
+            } else if (mQuestion.getAnswer().equals("7")) {//AB
+                setItemView(mTvItem1Label, mIvItem1, true);
+                setItemView(mTvItem2Label, mIvItem2, true);
+                setItemView(mTvItem3Label, mIvItem3, false);
+                setItemView(mTvItem4Label, mIvItem4, false);
+            } else if (mQuestion.getAnswer().equals("8")) {//AC
+                setItemView(mTvItem1Label, mIvItem1, true);
+                setItemView(mTvItem2Label, mIvItem2, false);
+                setItemView(mTvItem3Label, mIvItem3, true);
+                setItemView(mTvItem4Label, mIvItem4, false);
+            } else if (mQuestion.getAnswer().equals("9")) {//AD
+                setItemView(mTvItem1Label, mIvItem1, true);
+                setItemView(mTvItem2Label, mIvItem2, false);
+                setItemView(mTvItem3Label, mIvItem3, false);
+                setItemView(mTvItem4Label, mIvItem4, true);
+            } else if (mQuestion.getAnswer().equals("10")) {//BC
+                setItemView(mTvItem1Label, mIvItem1, false);
+                setItemView(mTvItem2Label, mIvItem2, true);
+                setItemView(mTvItem3Label, mIvItem3, true);
+                setItemView(mTvItem4Label, mIvItem4, false);
+            } else if (mQuestion.getAnswer().equals("11")) {//BD
+                setItemView(mTvItem1Label, mIvItem1, false);
+                setItemView(mTvItem2Label, mIvItem2, true);
+                setItemView(mTvItem3Label, mIvItem3, false);
+                setItemView(mTvItem4Label, mIvItem4, true);
+            } else if (mQuestion.getAnswer().equals("12")) {//CD
+                setItemView(mTvItem1Label, mIvItem1, false);
+                setItemView(mTvItem2Label, mIvItem2, false);
+                setItemView(mTvItem3Label, mIvItem3, true);
+                setItemView(mTvItem4Label, mIvItem4, true);
+            } else if (mQuestion.getAnswer().equals("13")) {//ABC
+                setItemView(mTvItem1Label, mIvItem1, true);
+                setItemView(mTvItem2Label, mIvItem2, true);
+                setItemView(mTvItem3Label, mIvItem3, true);
+                setItemView(mTvItem4Label, mIvItem4, false);
+            } else if (mQuestion.getAnswer().equals("14")) {//ABD
+                setItemView(mTvItem1Label, mIvItem1, true);
+                setItemView(mTvItem2Label, mIvItem2, true);
+                setItemView(mTvItem3Label, mIvItem3, false);
+                setItemView(mTvItem4Label, mIvItem4, true);
+            } else if (mQuestion.getAnswer().equals("15")) {//ACD
+                setItemView(mTvItem1Label, mIvItem1, true);
+                setItemView(mTvItem2Label, mIvItem2, false);
+                setItemView(mTvItem3Label, mIvItem3, true);
+                setItemView(mTvItem4Label, mIvItem4, true);
+            } else if (mQuestion.getAnswer().equals("16")) {//BCD
+                setItemView(mTvItem1Label, mIvItem1, false);
+                setItemView(mTvItem2Label, mIvItem2, true);
+                setItemView(mTvItem3Label, mIvItem3, true);
+                setItemView(mTvItem4Label, mIvItem4, true);
+            } else if (mQuestion.getAnswer().equals("17")) {//ABCD
+                setItemView(mTvItem1Label, mIvItem1, true);
+                setItemView(mTvItem2Label, mIvItem2, true);
+                setItemView(mTvItem3Label, mIvItem3, true);
+                setItemView(mTvItem4Label, mIvItem4, true);
+            }
+        } else {
+            if (mQuestion.getAnswer().equals("1")) {
+                setItemView(mTvItem1Label, mIvItem1, true);
+            } else if (mQuestion.getAnswer().equals("2")) {
+                setItemView(mTvItem2Label, mIvItem2, true);
+            } else if (mQuestion.getAnswer().equals("3")) {
+                setItemView(mTvItem3Label, mIvItem3, true);
+            } else if (mQuestion.getAnswer().equals("4")) {
+                setItemView(mTvItem4Label, mIvItem4, true);
+            }
+            if (!mQuestion.isCorrect() && mQuestion.getUserAnswer() != null) {//答错要显示错误标记
+                if (mQuestion.getUserAnswer().contains("1")) {
+                    setItemView(mTvItem1Label, mIvItem1, false);
+                } else if (mQuestion.getUserAnswer().contains("2")) {
+                    setItemView(mTvItem2Label, mIvItem2, false);
+                } else if (mQuestion.getUserAnswer().contains("3")) {
+                    setItemView(mTvItem3Label, mIvItem3, false);
+                } else if (mQuestion.getUserAnswer().contains("4")) {
+                    setItemView(mTvItem4Label, mIvItem4, false);
+                }
             }
         }
         mLlyExplain.setVisibility(View.VISIBLE);
@@ -333,6 +463,7 @@ public class ExamFragment extends Fragment {
     /**
      * 显示收藏
      */
+
     private void displayCollect() {
         if (mExamMode.equals(ExamLib.TEST_MODE_MY_LIB)) {
             mTvRemove.setVisibility(View.VISIBLE);
@@ -364,5 +495,11 @@ public class ExamFragment extends Fragment {
     private void removeCollectQuesion() {
         spUtil.removeQuestionCollect(mExamType, mQuestion.getId());
         mOnCollectRemoveListener.onCollectRemove(mPageNumber);
+    }
+
+    private void setItemView(TextView textView, ImageView imageView, boolean isRight) {
+        textView.setVisibility(View.INVISIBLE);
+        imageView.setVisibility(View.VISIBLE);
+        imageView.setImageDrawable(ContextCompat.getDrawable(getContext(), isRight ? R.drawable.ic_right : R.drawable.ic_wrong));
     }
 }

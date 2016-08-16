@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.hahaxueche.utils.ExamLib;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by wangshirui on 16/8/13.
@@ -19,7 +20,8 @@ public class Question implements Serializable {
     private String item4;
     private String explains;
     private String url;
-    private String userAnswer;
+    private ArrayList<String> userAnswer;
+    private boolean isSubmit;
 
     public String getId() {
         return id;
@@ -93,11 +95,11 @@ public class Question implements Serializable {
         this.url = url;
     }
 
-    public String getUserAnswer() {
+    public ArrayList<String> getUserAnswer() {
         return userAnswer;
     }
 
-    public void setUserAnswer(String userAnswer) {
+    public void setUserAnswer(ArrayList<String> userAnswer) {
         this.userAnswer = userAnswer;
     }
 
@@ -109,6 +111,14 @@ public class Question implements Serializable {
             return ExamLib.QUESTION_TYPE_TRUE_FALSE;
         }
         return ExamLib.QUESTION_TYPE_SINGLE_CHOICE;
+    }
+
+    public boolean isSubmit() {
+        return isSubmit;
+    }
+
+    public void setSubmit(boolean submit) {
+        isSubmit = submit;
     }
 
     /**
@@ -130,6 +140,48 @@ public class Question implements Serializable {
      * "17": "ABCD"
      */
     public boolean isCorrect() {
-        return userAnswer.equals(answer);
+        if (userAnswer != null && userAnswer.size() > 0) {
+            if (answer.equals("1")) {
+                return userAnswer.contains("1") && !userAnswer.contains("2") && !userAnswer.contains("3") && !userAnswer.contains("4");
+            } else if (answer.equals("2")) {
+                return !userAnswer.contains("1") && userAnswer.contains("2") && !userAnswer.contains("3") && !userAnswer.contains("4");
+            } else if (answer.equals("3")) {
+                return !userAnswer.contains("1") && !userAnswer.contains("2") && userAnswer.contains("3") && !userAnswer.contains("4");
+            } else if (answer.equals("4")) {
+                return !userAnswer.contains("1") && !userAnswer.contains("2") && !userAnswer.contains("3") && userAnswer.contains("4");
+            } else if (answer.equals("7")) {
+                return userAnswer.contains("1") && userAnswer.contains("2") && !userAnswer.contains("3") && !userAnswer.contains("4");
+            } else if (answer.equals("8")) {
+                return userAnswer.contains("1") && !userAnswer.contains("2") && userAnswer.contains("3") && !userAnswer.contains("4");
+            } else if (answer.equals("9")) {
+                return userAnswer.contains("1") && !userAnswer.contains("2") && !userAnswer.contains("3") && userAnswer.contains("4");
+            } else if (answer.equals("10")) {
+                return !userAnswer.contains("1") && userAnswer.contains("2") && userAnswer.contains("3") && !userAnswer.contains("4");
+            } else if (answer.equals("11")) {
+                return !userAnswer.contains("1") && userAnswer.contains("2") && !userAnswer.contains("3") && userAnswer.contains("4");
+            } else if (answer.equals("12")) {
+                return !userAnswer.contains("1") && !userAnswer.contains("2") && userAnswer.contains("3") && userAnswer.contains("4");
+            } else if (answer.equals("13")) {
+                return userAnswer.contains("1") && userAnswer.contains("2") && userAnswer.contains("3") && !userAnswer.contains("4");
+            } else if (answer.equals("14")) {
+                return userAnswer.contains("1") && userAnswer.contains("2") && !userAnswer.contains("3") && userAnswer.contains("4");
+            } else if (answer.equals("15")) {
+                return userAnswer.contains("1") && !userAnswer.contains("2") && userAnswer.contains("3") && userAnswer.contains("4");
+            } else if (answer.equals("16")) {
+                return !userAnswer.contains("1") && userAnswer.contains("2") && userAnswer.contains("3") && userAnswer.contains("4");
+            } else if (answer.equals("17")) {
+                return userAnswer.contains("1") && userAnswer.contains("2") && userAnswer.contains("3") && userAnswer.contains("4");
+            }
+        }
+        return false;
+
+    }
+
+    public boolean hasAnswers() {
+        if (getQuestionType().equals(ExamLib.QUESTION_TYPE_MULTI_CHOICE)) {
+            return isSubmit;
+        } else {
+            return userAnswer != null && userAnswer.size() > 0;
+        }
     }
 }

@@ -239,6 +239,23 @@
                     android:textSize="18sp" />
             </RelativeLayout>
 
+            <TextView
+                android:id="@+id/tv_submit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/rectangle_back_orange_sm"
+                android:gravity="center"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:text="提交答案"
+                android:textColor="@color/haha_white"
+                android:textSize="22sp"
+                android:visibility="gone" />
+
             <LinearLayout
                 android:id="@+id/lly_explain"
                 android:layout_width="match_parent"

@@ -217,7 +217,7 @@ public class ExamActivity extends IndexBaseActivity implements ExamFragment.OnCo
                             @Override
                             public boolean clickConfirm() {
                                 for (Question question : mQuestionList) {
-                                    question.setUserAnswer("");
+                                    question.setUserAnswer(null);
                                 }
                                 spUtil.clearExamPosition(mExamType);
                                 mCurrentPosition = 0;
