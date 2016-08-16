@@ -80,6 +80,17 @@ public class ExamActivity extends IndexBaseActivity {
             e.printStackTrace();
         }
         if (questions != null && questions.size() > 0) {
+            ArrayList<String> urls = new ArrayList<>();
+            for (Question question : questions) {
+                String explains = question.getExplains();
+                if (explains.contains("http://")) {
+                    String url = explains.substring(explains.indexOf("http://"), explains.indexOf("html") + 4);
+                    if(!urls.contains(url)){
+                        urls.add(url);
+                    }
+                }
+            }
+            Log.v("gibxin", "urls -> " + urls);
             if (mIntent.getStringExtra("examMode").equals(ExamLib.TEST_MODE_TURN)) {
                 mQuestionList = questions;
             } else if (mIntent.getStringExtra("examMode").equals(ExamLib.TEST_MODE_RANDOM)) {

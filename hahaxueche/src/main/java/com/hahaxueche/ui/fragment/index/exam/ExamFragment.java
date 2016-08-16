@@ -1,10 +1,19 @@
 package com.hahaxueche.ui.fragment.index.exam;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +30,7 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
 import com.hahaxueche.model.examLib.Question;
+import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.utils.ExamLib;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
@@ -166,7 +176,40 @@ public class ExamFragment extends Fragment {
             mTvItem3.setText(mQuestion.getItem3());
             mTvItem4.setText(mQuestion.getItem4());
         }
-        mTvExplain.setText(mQuestion.getExplains());
+        String explains = mQuestion.getExplains();
+        if (explains.contains("http://")) {
+            //含有链接的文字说明
+            CharSequence explainStr = explains;
+            final String url = explains.substring(explains.indexOf("http://"), explains.indexOf("html") + 4);
+            Log.v("gibxin", "test url -> " + url);
+            SpannableString spexplainStr = new SpannableString(explainStr);
+            spexplainStr.setSpan(new ClickableSpan() {
+                @Override
+                public void onClick(View widget) {
+                    Intent intent = new Intent(getContext(), BaseWebViewActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("url", url);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+
+                @Override
+                public void updateDrawState(TextPaint ds) {
+                    super.updateDrawState(ds);
+                    ds.setColor(ContextCompat.getColor(getContext(), R.color.app_theme_color));
+                    ds.setUnderlineText(false);
+                    ds.clearShadowLayer();
+                }
+            }, explains.indexOf("http://"), explains.indexOf("html") + 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spexplainStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.haha_blue)), explains.indexOf("http://"), explains.indexOf("html") + 4, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            mTvExplain.setText(spexplainStr);
+            mTvExplain.setHighlightColor(ContextCompat.getColor(getContext(), R.color.haha_blue));
+            mTvExplain.setMovementMethod(LinkMovementMethod.getInstance());
+        } else {
+            mTvExplain.setText(mQuestion.getExplains());
+        }
+
+
         mLlyExplain.setVisibility(View.GONE);
         if (!TextUtils.isEmpty(mQuestion.getUserAnswer())) {
             displayAnswer();
