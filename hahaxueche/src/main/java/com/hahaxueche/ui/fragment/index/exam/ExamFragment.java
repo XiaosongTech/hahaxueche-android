@@ -1,5 +1,7 @@
 package com.hahaxueche.ui.fragment.index.exam;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -34,7 +36,6 @@ import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.utils.ExamLib;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
-import com.squareup.picasso.Picasso;
 
 /**
  * Created by wangshirui on 16/8/13.
@@ -43,11 +44,13 @@ public class ExamFragment extends Fragment {
 
     public static final String ARG_PAGE = "pageNumber";
     public static final String ARG_QUESTION = "question";
+    public static final String ARG_EXAM_MODE = "examMode";
     public static final String ARG_EXAM_TYPE = "examType";
 
     private TextView mTvQuestionType;
     private TextView mTvQuestion;
     private TextView mTvCollect;
+    private TextView mTvRemove;
     private FrameLayout mFlyImage;
     private SimpleDraweeView mIvUrl;
     private RelativeLayout mRlyItem1;
@@ -72,16 +75,24 @@ public class ExamFragment extends Fragment {
 
     private int mPageNumber;
     private Question mQuestion;
+    private String mExamMode;
     private String mExamType;
 
     private SharedPreferencesUtil spUtil;
 
+    public interface OnCollectRemoveListener {
+        public void onCollectRemove(int position);
+    }
 
-    public static ExamFragment create(int pageNumber, Question question, String examType) {
+    private OnCollectRemoveListener mOnCollectRemoveListener;
+
+
+    public static ExamFragment create(int pageNumber, Question question, String examMode, String examType) {
         ExamFragment fragment = new ExamFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, pageNumber);
         args.putSerializable(ARG_QUESTION, question);
+        args.putString(ARG_EXAM_MODE, examMode);
         args.putString(ARG_EXAM_TYPE, examType);
         fragment.setArguments(args);
         return fragment;
@@ -91,11 +102,22 @@ public class ExamFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mOnCollectRemoveListener = (OnCollectRemoveListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnCollectRemoveListener");
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         spUtil = new SharedPreferencesUtil(getContext());
         mPageNumber = getArguments().getInt(ARG_PAGE);
         mQuestion = (Question) getArguments().get(ARG_QUESTION);
+        mExamMode = getArguments().getString(ARG_EXAM_MODE);
         mExamType = getArguments().getString(ARG_EXAM_TYPE);
     }
 
@@ -115,6 +137,7 @@ public class ExamFragment extends Fragment {
         mTvQuestionType = Util.instence(getContext()).$(view, R.id.tv_question_type);
         mTvQuestion = Util.instence(getContext()).$(view, R.id.tv_question);
         mTvCollect = Util.instence(getContext()).$(view, R.id.tv_collect);
+        mTvRemove = Util.instence(getContext()).$(view, R.id.tv_remove_collect);
         mFlyImage = Util.instence(getContext()).$(view, R.id.fly_image);
         mIvUrl = Util.instence(getContext()).$(view, R.id.iv_image_url);
         mTvItem1Label = Util.instence(getContext()).$(view, R.id.tv_item1_label);
@@ -141,6 +164,8 @@ public class ExamFragment extends Fragment {
         mRlyItem2.setOnClickListener(mClickListener);
         mRlyItem3.setOnClickListener(mClickListener);
         mRlyItem4.setOnClickListener(mClickListener);
+        mTvCollect.setOnClickListener(mClickListener);
+        mTvRemove.setOnClickListener(mClickListener);
     }
 
     private void loadDatas() {
@@ -214,6 +239,9 @@ public class ExamFragment extends Fragment {
         if (!TextUtils.isEmpty(mQuestion.getUserAnswer())) {
             displayAnswer();
         }
+
+        //显示收藏
+        displayCollect();
     }
 
     /**
@@ -239,6 +267,11 @@ public class ExamFragment extends Fragment {
                 case R.id.rly_item4:
                     selectItem(4);
                     break;
+                case R.id.tv_collect:
+                    collectQuestion();
+                    break;
+                case R.id.tv_remove_collect:
+                    removeCollectQuesion();
                 default:
                     break;
             }
@@ -248,9 +281,9 @@ public class ExamFragment extends Fragment {
     private void selectItem(int item) {
         //判断题和单选题,点击直接出答案
         if (!mQuestion.getQuestionType().equals(ExamLib.QUESTION_TYPE_MULTI_CHOICE) && TextUtils.isEmpty(mQuestion.getUserAnswer())) {
-            if (mExamType.equals(ExamLib.TEST_MODE_TURN)) {
+            if (mExamMode.equals(ExamLib.TEST_MODE_TURN)) {
                 //顺序答题,记住位置
-                spUtil.setExamPosition(mExamType, mPageNumber);
+                spUtil.setExamPosition(mExamMode, mPageNumber);
             }
             mQuestion.setUserAnswer(String.valueOf(item));
             displayAnswer();
@@ -295,5 +328,41 @@ public class ExamFragment extends Fragment {
             }
         }
         mLlyExplain.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 显示收藏
+     */
+    private void displayCollect() {
+        if (mExamMode.equals(ExamLib.TEST_MODE_MY_LIB)) {
+            mTvRemove.setVisibility(View.VISIBLE);
+            mTvCollect.setVisibility(View.GONE);
+        } else {
+            mTvRemove.setVisibility(View.GONE);
+            mTvCollect.setVisibility(View.VISIBLE);
+            if (spUtil.isQuestionCollect(mExamType, mQuestion.getId())) {
+                mTvCollect.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(getContext(), R.drawable.ic_question_alcollect), null, null);
+            } else {
+                mTvCollect.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(getContext(), R.drawable.ic_question_collect), null, null);
+            }
+        }
+    }
+
+    /**
+     * 收藏题目
+     */
+    private void collectQuestion() {
+        String questionId = mQuestion.getId();
+        if (spUtil.isQuestionCollect(mExamType, questionId)) {
+            spUtil.removeQuestionCollect(mExamType, questionId);
+        } else {
+            spUtil.addQuestionCollect(mExamType, questionId);
+        }
+        displayCollect();
+    }
+
+    private void removeCollectQuesion() {
+        spUtil.removeQuestionCollect(mExamType, mQuestion.getId());
+        mOnCollectRemoveListener.onCollectRemove(mPageNumber);
     }
 }

@@ -12,6 +12,7 @@ import com.hahaxueche.model.city.City;
 import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.model.city.Location;
 import com.hahaxueche.model.course.Course;
+import com.hahaxueche.model.examLib.Question;
 import com.hahaxueche.model.student.StudentPhase;
 import com.hahaxueche.model.user.Session;
 import com.hahaxueche.model.student.Student;
@@ -303,22 +304,65 @@ public class SharedPreferencesUtil {
     }
 
     public void setExamPosition(String examType, int position) {
-        SharedPreferences spExam = mContext.getSharedPreferences(examType, Activity.MODE_PRIVATE);
+        SharedPreferences spExam = mContext.getSharedPreferences(examType + "Pos", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = spExam.edit();
         editor.putInt("position", position);
         editor.commit();
     }
 
     public int getExamPosition(String examType) {
-        SharedPreferences spExam = mContext.getSharedPreferences(examType, Activity.MODE_PRIVATE);
+        SharedPreferences spExam = mContext.getSharedPreferences(examType + "Pos", Activity.MODE_PRIVATE);
         return spExam.getInt("position", -1);
     }
 
     public void clearExamPosition(String examType) {
-        SharedPreferences spExam = mContext.getSharedPreferences(examType, Activity.MODE_PRIVATE);
+        SharedPreferences spExam = mContext.getSharedPreferences(examType + "Pos", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = spExam.edit();
         editor.clear();
         editor.commit();
+    }
+
+    public void addQuestionCollect(String examType, String id) {
+        SharedPreferences spCollects = mContext.getSharedPreferences(examType + "Collect", Activity.MODE_PRIVATE);
+        ArrayList<String> collectList = JsonUtils.deserialize(spCollects.getString("collectList", ""), ArrayList.class);
+        if (collectList != null) {
+            if (!collectList.contains(id)) {
+                collectList.add(id);
+            }
+        } else {
+            collectList = new ArrayList<>();
+            collectList.add(id);
+        }
+        SharedPreferences.Editor editor = spCollects.edit();
+        editor.putString("collectList", JsonUtils.serialize(collectList));
+        editor.commit();
+    }
+
+    public void removeQuestionCollect(String examType, String id) {
+        SharedPreferences spCollects = mContext.getSharedPreferences(examType + "Collect", Activity.MODE_PRIVATE);
+        ArrayList<String> collectList = JsonUtils.deserialize(spCollects.getString("collectList", ""), ArrayList.class);
+        if (collectList != null && collectList.contains(id)) {
+            collectList.remove(id);
+        }
+        SharedPreferences.Editor editor = spCollects.edit();
+        editor.putString("collectList", JsonUtils.serialize(collectList));
+        editor.commit();
+    }
+
+    public boolean isQuestionCollect(String examType, String id) {
+        SharedPreferences spCollects = mContext.getSharedPreferences(examType + "Collect", Activity.MODE_PRIVATE);
+        ArrayList<String> collectList = JsonUtils.deserialize(spCollects.getString("collectList", ""), ArrayList.class);
+        return (collectList != null && collectList.contains(id));
+    }
+
+    public ArrayList<Question> getCollectList(ArrayList<Question> questions, String examType) {
+        ArrayList<Question> collectList = new ArrayList();
+        for (Question question : questions) {
+            if (isQuestionCollect(examType, question.getId())) {
+                collectList.add(question);
+            }
+        }
+        return collectList;
     }
 
 }

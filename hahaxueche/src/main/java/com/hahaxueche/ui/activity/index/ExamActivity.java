@@ -36,7 +36,7 @@ import java.util.Collections;
 /**
  * Created by wangshirui on 16/8/13.
  */
-public class ExamActivity extends IndexBaseActivity {
+public class ExamActivity extends IndexBaseActivity implements ExamFragment.OnCollectRemoveListener {
     private ImageButton mIbtnBack;
     private TextView mTvTitle;
     private ViewPager mPager;
@@ -52,6 +52,7 @@ public class ExamActivity extends IndexBaseActivity {
 
     private SharedPreferencesUtil spUtil;
     private String mExamType;
+    private String mExamMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +67,12 @@ public class ExamActivity extends IndexBaseActivity {
 
     private void initQuestionList() {
         mIntent = getIntent();
+        mExamType = mIntent.getStringExtra("examType");
+        mExamMode = mIntent.getStringExtra("examMode");
         ArrayList<Question> questions = null;
         try {
             Type type = new TypeToken<ArrayList<Question>>() {
             }.getType();
-            mExamType = mIntent.getStringExtra("examType");
             if (mExamType.equals(ExamLib.EXAM_TYPE_1)) {
                 questions = JsonUtils.deserialize(getJson("course1.txt"), type);
             } else {
@@ -85,24 +87,24 @@ public class ExamActivity extends IndexBaseActivity {
                 String explains = question.getExplains();
                 if (explains.contains("http://")) {
                     String url = explains.substring(explains.indexOf("http://"), explains.indexOf("html") + 4);
-                    if(!urls.contains(url)){
+                    if (!urls.contains(url)) {
                         urls.add(url);
                     }
                 }
             }
-            Log.v("gibxin", "urls -> " + urls);
-            if (mIntent.getStringExtra("examMode").equals(ExamLib.TEST_MODE_TURN)) {
+            if (mExamMode.equals(ExamLib.TEST_MODE_TURN)) {
                 mQuestionList = questions;
-            } else if (mIntent.getStringExtra("examMode").equals(ExamLib.TEST_MODE_RANDOM)) {
+            } else if (mExamMode.equals(ExamLib.TEST_MODE_RANDOM)) {
                 Collections.shuffle(questions);
                 mQuestionList = questions;
-            } else if (mIntent.getStringExtra("examMode").equals(ExamLib.TEST_MODE_MOCK_EXAM)) {
+            } else if (mExamMode.equals(ExamLib.TEST_MODE_MOCK_EXAM)) {
                 Collections.shuffle(questions);
                 mQuestionList.clear();
                 for (int i = 0; i < 100; i++) {
                     mQuestionList.add(questions.get(i));
                 }
-            } else if (mIntent.getStringExtra("examMode").equals(ExamLib.TEST_MODE_MY_LIB)) {
+            } else if (mExamMode.equals(ExamLib.TEST_MODE_MY_LIB)) {
+                mQuestionList = spUtil.getCollectList(questions, mExamType);
             }
         } else {
             Toast.makeText(ExamActivity.this, "加载试题失败,请重试", Toast.LENGTH_SHORT).show();
@@ -148,31 +150,33 @@ public class ExamActivity extends IndexBaseActivity {
     private void loadDatas() {
         mCurrentPosition = 0;
         mPageSize = mQuestionList.size();
-        if (mIntent.getStringExtra("examMode").equals(ExamLib.TEST_MODE_RANDOM)) {
+        if (mExamMode.equals(ExamLib.TEST_MODE_RANDOM)) {
             mTvTitle.setText("随机练题");
-        } else if (mIntent.getStringExtra("examMode").equals(ExamLib.TEST_MODE_MOCK_EXAM)) {
+        } else if (mExamMode.equals(ExamLib.TEST_MODE_MOCK_EXAM)) {
             mTvTitle.setText("模拟考试");
-        } else if (mIntent.getStringExtra("examMode").equals(ExamLib.TEST_MODE_MY_LIB)) {
-            mTvTitle.setText("查看错题");
+        } else if (mExamMode.equals(ExamLib.TEST_MODE_MY_LIB)) {
+            mTvTitle.setText("我的题库");
         }
-        final int lastPos = spUtil.getExamPosition(mExamType);
-        if (lastPos > 0) {
-            BaseConfirmSimpleDialog baseConfirmSimpleDialog = new BaseConfirmSimpleDialog(ExamActivity.this, "提示", "上次练习到" + (lastPos + 1) + "题,是否继续",
-                    "继续上次", "重新开始", new BaseConfirmSimpleDialog.onConfirmListener() {
-                @Override
-                public boolean clickConfirm() {
-                    mCurrentPosition = lastPos + 1;
-                    mPager.setCurrentItem(mCurrentPosition);
-                    return true;
-                }
-            }, new BaseConfirmSimpleDialog.onCancelListener() {
-                @Override
-                public boolean clickCancel() {
-                    spUtil.clearExamPosition(mExamType);
-                    return true;
-                }
-            });
-            baseConfirmSimpleDialog.show();
+        if (mExamMode.equals(ExamLib.TEST_MODE_TURN)) {//顺序联系,提示是否继续上次位置
+            final int lastPos = spUtil.getExamPosition(mExamType);
+            if (lastPos > 0) {
+                BaseConfirmSimpleDialog baseConfirmSimpleDialog = new BaseConfirmSimpleDialog(ExamActivity.this, "提示", "上次练习到" + (lastPos + 1) + "题,是否继续",
+                        "继续上次", "重新开始", new BaseConfirmSimpleDialog.onConfirmListener() {
+                    @Override
+                    public boolean clickConfirm() {
+                        mCurrentPosition = lastPos + 1;
+                        mPager.setCurrentItem(mCurrentPosition);
+                        return true;
+                    }
+                }, new BaseConfirmSimpleDialog.onCancelListener() {
+                    @Override
+                    public boolean clickCancel() {
+                        spUtil.clearExamPosition(mExamType);
+                        return true;
+                    }
+                });
+                baseConfirmSimpleDialog.show();
+            }
         }
         setPageText();
     }
@@ -189,7 +193,7 @@ public class ExamActivity extends IndexBaseActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return ExamFragment.create(position, mQuestionList.get(position), mExamType);
+            return ExamFragment.create(position, mQuestionList.get(position), mExamMode, mExamType);
         }
 
         @Override
@@ -266,4 +270,23 @@ public class ExamActivity extends IndexBaseActivity {
         return stringBuilder.toString();
     }
 
+    @Override
+    public void onCollectRemove(int position) {
+        mQuestionList.remove(position);
+        mPageSize = mQuestionList.size();
+        if (position != mPageSize) {//不是最后一题,显示下一题
+            mCurrentPosition = position;
+        } else {
+            if (position != 0) {//是最后一题显示上一题
+                mCurrentPosition = position - 1;
+            } else {
+                //没有上一题,结束activity
+                ExamActivity.this.finish();
+            }
+        }
+        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
+        mPager.setCurrentItem(mCurrentPosition);
+        setPageText();
+    }
 }
