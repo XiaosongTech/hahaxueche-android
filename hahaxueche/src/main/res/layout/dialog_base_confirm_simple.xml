@@ -31,6 +31,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:lineSpacingMultiplier="1.2"
             android:textColor="@color/haha_gray_heavier"
             android:textSize="20sp" />
     </ScrollView>

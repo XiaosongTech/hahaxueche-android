@@ -84,10 +84,18 @@ public class ExamFragment extends Fragment {
     private SharedPreferencesUtil spUtil;
 
     public interface OnCollectRemoveListener {
-        public void onCollectRemove(int position);
+        void onCollectRemove(int position);
+    }
+
+    /**
+     * 模拟测试时,答题回调
+     */
+    public interface  OnMockExamAnsweredListener{
+        void answer(Question question);
     }
 
     private OnCollectRemoveListener mOnCollectRemoveListener;
+    private OnMockExamAnsweredListener mOnMockExamAnsweredListener;
 
 
     public static ExamFragment create(int pageNumber, Question question, String examMode, String examType) {
@@ -112,6 +120,11 @@ public class ExamFragment extends Fragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement OnCollectRemoveListener");
         }
+        try {
+            mOnMockExamAnsweredListener = (OnMockExamAnsweredListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnMockExamAnsweredListener");
+        }
     }
 
     @Override
@@ -131,8 +144,6 @@ public class ExamFragment extends Fragment {
                 .inflate(R.layout.fragment_exam, container, false);
         initViews(rootView);
         loadDatas();
-
-
         return rootView;
     }
 
@@ -302,6 +313,7 @@ public class ExamFragment extends Fragment {
     private void submitMultiAnswer() {
         mQuestion.setSubmit(true);
         displayMultiSubmit();
+        mOnMockExamAnsweredListener.answer(mQuestion);
         displayAnswer();
     }
 
@@ -317,6 +329,7 @@ public class ExamFragment extends Fragment {
                 userAnswerList = new ArrayList<>();
                 userAnswerList.add(item);
                 mQuestion.setUserAnswer(userAnswerList);
+                mOnMockExamAnsweredListener.answer(mQuestion);
                 displayAnswer();
             }
         } else if (mQuestion.getQuestionType().equals(ExamLib.QUESTION_TYPE_MULTI_CHOICE)) {

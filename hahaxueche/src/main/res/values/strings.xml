@@ -91,4 +91,9 @@
     <string name="contactTel"><Data><![CDATA[<font color="#616161">哈哈学车客服热线：</font><font color="#ff9e00">400-001-6006</font>]]></Data></string>
     <string name="contactQQ"><Data><![CDATA[<font color="#616161">哈哈客服：</font><font color="#ff9e00">在线客服</font>]]></Data></string>
     <string name="moreDetail">查看详情 >></string>
+    <string name="examRule1">记分规则:模拟考试下不能修改答案,每答对1题得1分,合格标准90分,答题时间45分钟</string>
+    <string name="examRule4">记分规则:模拟考试下不能修改答案,每答对1题得2分,合格标准90分,答题时间30分钟</string>
+    <string name="passRemarks">本次模拟测试通过,下面的驾驶学习继续努力!</string>
+    <string name="notPassRemarks">本次模拟测试不及格,练习后请继续尝试!</string>
+
 </resources>

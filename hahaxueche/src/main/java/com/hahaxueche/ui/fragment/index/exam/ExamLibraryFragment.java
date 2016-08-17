@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.hahaxueche.R;
 import com.hahaxueche.ui.activity.index.ExamActivity;
+import com.hahaxueche.ui.activity.index.StartExamActivity;
 import com.hahaxueche.utils.ExamLib;
 
 /**
@@ -64,7 +65,7 @@ public class ExamLibraryFragment extends Fragment {
                     navigateToExam(ExamLib.TEST_MODE_RANDOM);
                     break;
                 case R.id.tv_mock_exam:
-                    navigateToExam(ExamLib.TEST_MODE_MOCK_EXAM);
+                    navigateToStartExam();
                     break;
                 case R.id.tv_my_question_lib:
                     navigateToExam(ExamLib.TEST_MODE_MY_LIB);
@@ -78,6 +79,12 @@ public class ExamLibraryFragment extends Fragment {
     private void navigateToExam(String examMode) {
         Intent intent = new Intent(getActivity(), ExamActivity.class);
         intent.putExtra("examMode", examMode);
+        intent.putExtra("examType", mExamType);
+        getActivity().startActivity(intent);
+    }
+
+    private void navigateToStartExam(){
+        Intent intent = new Intent(getActivity(), StartExamActivity.class);
         intent.putExtra("examType", mExamType);
         getActivity().startActivity(intent);
     }
