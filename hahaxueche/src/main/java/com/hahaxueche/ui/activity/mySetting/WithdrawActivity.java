@@ -1,40 +1,30 @@
 package com.hahaxueche.ui.activity.mySetting;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ListAdapter;
-import android.widget.ListView;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.student.Bank;
-import com.hahaxueche.model.student.ReferalBonusSummary;
+import com.hahaxueche.model.student.BankCard;
 import com.hahaxueche.model.student.ReferalBonusTransaction;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
-import com.hahaxueche.ui.adapter.mySetting.BankAccountAdapter;
 import com.hahaxueche.ui.dialog.BaseConfirmDialog;
-import com.hahaxueche.ui.dialog.WithdrawDialog;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
-
-import java.util.ArrayList;
 
 /**
  * Created by Administrator on 2016/5/3.
@@ -44,14 +34,15 @@ public class WithdrawActivity extends MSBaseActivity {
     private TextView mTvAvailableAmount;
     private EditText mEtWithdrawAmount;
     private TextView mTvConfirmWithdraw;
-    private ListView mLvBanks;//提现银行列表
+    private RelativeLayout mRlyBankCard;
+    private TextView mTvBankName;
+    private TextView mTvBankRemarks;
     private FrameLayout mFlyAddBank;//添加银行卡
     private SwipeRefreshLayout mSrlRefresh;//下拉刷新
     private TextView mTvWithdrawRecord;//提现记录
     private User mUser;
-    private ArrayList<Bank> mBanks;
-    private int mSelectBankPos = -1;
-    private BankAccountAdapter mBankAdapter;
+    private BankCard mBankCard;
+    private ImageView mIvDash;
 
     private boolean isRefresh = false;//是否刷新中
     private SharedPreferencesUtil spUtil;
@@ -64,7 +55,7 @@ public class WithdrawActivity extends MSBaseActivity {
         spUtil = new SharedPreferencesUtil(WithdrawActivity.this);
         initViews();
         initEvents();
-        refreshUI();
+        refreshStudent();
     }
 
     private void initViews() {
@@ -72,10 +63,14 @@ public class WithdrawActivity extends MSBaseActivity {
         mTvAvailableAmount = Util.instence(this).$(this, R.id.tv_available_amount);
         mEtWithdrawAmount = Util.instence(this).$(this, R.id.et_withdraw_money);
         mTvConfirmWithdraw = Util.instence(this).$(this, R.id.tv_confirm_withdraw);
-        mLvBanks = Util.instence(this).$(this, R.id.lv_bank);
         mSrlRefresh = Util.instence(this).$(this, R.id.srl_refresh);
         mFlyAddBank = Util.instence(this).$(this, R.id.fly_add_bank);
         mTvWithdrawRecord = Util.instence(this).$(this, R.id.tv_withdraw_record);
+        mRlyBankCard = Util.instence(this).$(this, R.id.rly_bank_card);
+        mTvBankName = Util.instence(this).$(this, R.id.tv_bank_name);
+        mTvBankRemarks = Util.instence(this).$(this, R.id.tv_bank_remarks);
+        mIvDash = Util.instence(this).$(this, R.id.iv_dash);
+        mIvDash.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 
     private void initEvents() {
@@ -101,25 +96,7 @@ public class WithdrawActivity extends MSBaseActivity {
         mTvWithdrawRecord.setOnClickListener(mClickListener);
         mSrlRefresh.setOnRefreshListener(mRefreshListener);
         mSrlRefresh.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
-        mLvBanks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                if (mBanks != null && mBanks.size() > 0 && position > -1 && position < mBanks.size()) {
-                    Intent intent = new Intent(WithdrawActivity.this, AddBankActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("bank", mBanks.get(position));
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent, REQUEST_CODE_WITHDRAW);
-                    /*for (Bank bank : mBanks) {
-                        bank.setSelect(false);
-                    }
-                    mBanks.get(position).setSelect(true);
-                    mBankAdapter.notifyDataSetChanged();
-                    mSelectBankPos = position;*/
-                }
-            }
-        });
-
+        mRlyBankCard.setOnClickListener(mClickListener);
     }
 
     SwipeRefreshLayout.OnRefreshListener mRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
@@ -132,25 +109,19 @@ public class WithdrawActivity extends MSBaseActivity {
     };
 
     private void refreshUI() {
-        mTvAvailableAmount.setText(Util.getMoney(450));
-        /********添加测试数据******/
-        Bank bank = new Bank();
-        bank.setAccount("6217234301000097323");
-        bank.setAccount_name("王时睿");
-        bank.setBank_name("工商银行");
-        if (mBanks == null || mBanks.size() < 1) {
-            mBanks = new ArrayList<>();
+        Student student = spUtil.getUser().getStudent();
+        mTvAvailableAmount.setText(Util.getMoney(student.getBonus_balance()));
+        //目前只会有一张银行卡
+        mBankCard = student.getBank_card();
+        if (mBankCard != null) {
+            mRlyBankCard.setVisibility(View.VISIBLE);
+            mFlyAddBank.setVisibility(View.GONE);
+            mTvBankName.setText(mBankCard.getBank_name());
+            mTvBankRemarks.setText(mBankCard.getName() + " , 尾号" + mBankCard.getCard_number().substring(mBankCard.getCard_number().length() - 4, mBankCard.getCard_number().length()));
+        } else {
+            mRlyBankCard.setVisibility(View.GONE);
+            mFlyAddBank.setVisibility(View.VISIBLE);
         }
-        mBanks.add(bank);
-        /********end************/
-        //没有选择银行的时候,默认第一个
-        if (mSelectBankPos < 0) {
-            mSelectBankPos = 0;
-            mBanks.get(0).setSelect(true);
-        }
-        mBankAdapter = new BankAccountAdapter(WithdrawActivity.this, mBanks, R.layout.adapter_bank_account);
-        mLvBanks.setAdapter(mBankAdapter);
-        setListViewHeightBasedOnChildren(mLvBanks);
     }
 
     private View.OnClickListener mClickListener = new View.OnClickListener() {
@@ -178,16 +149,12 @@ public class WithdrawActivity extends MSBaseActivity {
                             return;
                         }*/
                     }
-                    if (mSelectBankPos < 0) {
-                        Toast.makeText(WithdrawActivity.this, "请选择提现银行", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
                     //确认提款
-                    String content = "提现金额：" + Util.getMoney(withdrawMoney) + "\n银行手续费：" + Util.getMoney(200) + "\n实际提现：" + Util.getMoney(withdrawMoney - 200) + "\n银行卡号：" + mBanks.get(mSelectBankPos).getAccount() + "\n持卡人：" + mBanks.get(mSelectBankPos).getAccount_name();
+                    String content = "提现金额：" + Util.getMoney(withdrawMoney) + "\n银行手续费：" + Util.getMoney(200) + "\n实际提现：" + Util.getMoney(withdrawMoney - 200) + "\n银行卡号：" + mBankCard.getCard_number() + "\n持卡人：" + mBankCard.getName();
                     BaseConfirmDialog baseConfirmDialog = new BaseConfirmDialog(WithdrawActivity.this, "确认提现", "提现明细", content, "", "确认提现", "取消返回", new BaseConfirmDialog.onConfirmListener() {
                         @Override
                         public boolean clickConfirm() {
-                            msPresenter.withdrawBonus(mUser.getStudent().getId(), mBanks.get(mSelectBankPos).getAccount(), mBanks.get(mSelectBankPos).getAccount(), String.valueOf(withdrawMoney), mUser.getSession().getAccess_token(), new MSCallbackListener<ReferalBonusTransaction>() {
+                            msPresenter.withdrawBonus(mUser.getStudent().getId(), mBankCard.getCard_number(), mBankCard.getName(), String.valueOf(withdrawMoney), mUser.getSession().getAccess_token(), new MSCallbackListener<ReferalBonusTransaction>() {
                                 @Override
                                 public void onSuccess(ReferalBonusTransaction data) {
                                     Intent intent = new Intent();
@@ -220,6 +187,15 @@ public class WithdrawActivity extends MSBaseActivity {
                     intent = new Intent(WithdrawActivity.this, RedeemedListActivity.class);
                     startActivity(intent);
                     break;
+                case R.id.rly_bank_card:
+                    if (mBankCard != null) {
+                        intent = new Intent(WithdrawActivity.this, AddBankActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("bankCard", mBankCard);
+                        intent.putExtras(bundle);
+                        startActivityForResult(intent, REQUEST_CODE_WITHDRAW);
+                    }
+                    break;
                 default:
                     break;
             }
@@ -249,30 +225,6 @@ public class WithdrawActivity extends MSBaseActivity {
                 });
     }
 
-    public void setListViewHeightBasedOnChildren(ListView listView) {
-        // 获取ListView对应的Adapter
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            return;
-        }
-
-        int totalHeight = 0;
-        for (int i = 0, len = listAdapter.getCount(); i < len; i++) {
-            // listAdapter.getCount()返回数据项的数目
-            View listItem = listAdapter.getView(i, null, listView);
-            // 计算子项View 的宽高
-            listItem.measure(0, 0);
-            // 统计所有子项的总高度
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        //params.height = Util.instence(this).dip2px(height) * listAdapter.getCount() + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        // listView.getDividerHeight()获取子项间分隔符占用的高度
-        // params.height最后得到整个ListView完整显示需要的高度
-        listView.setLayoutParams(params);
-    }
 
     @Override
     public boolean onTouchEvent(android.view.MotionEvent event) {
@@ -284,7 +236,8 @@ public class WithdrawActivity extends MSBaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_WITHDRAW) {
             if (resultCode == RESULT_OK && null != data && data.getBooleanExtra("isUpdate", false)) {
-                refreshUI();
+                Toast.makeText(WithdrawActivity.this, "银行卡添加成功", Toast.LENGTH_SHORT).show();
+                refreshStudent();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

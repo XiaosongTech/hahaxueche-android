@@ -1,10 +1,12 @@
 package com.hahaxueche.model.user;
 
+import java.io.Serializable;
+
 /**
  * 用户session数据模型
  * Created by gibxin on 2016/1/22.
  */
-public class Session {
+public class Session implements Serializable{
     private String id;
     private String user_id;
     private String access_token;

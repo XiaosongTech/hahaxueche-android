@@ -6,6 +6,7 @@ import com.hahaxueche.model.response.GroupBuyResponse;
 import com.hahaxueche.model.response.ReferalHistoryResponse;
 import com.hahaxueche.model.response.RefereeListResponse;
 import com.hahaxueche.model.review.ReviewInfo;
+import com.hahaxueche.model.student.BankCard;
 import com.hahaxueche.model.student.ReferalBonusSummary;
 import com.hahaxueche.model.student.ReferalBonusTransaction;
 import com.hahaxueche.model.student.Student;
@@ -131,4 +132,16 @@ public interface MSPresenter {
      * @param listener
      */
     public void fetchEventList(String cityId, MSCallbackListener<ArrayList<Event>> listener);
+
+    /**
+     * 添加银行卡
+     *
+     * @param name
+     * @param cardNumber
+     * @param openBankCode
+     * @param studentId
+     * @param accessToken
+     * @param listener
+     */
+    public void addBankCard(String name, String cardNumber, String openBankCode, String studentId, String accessToken, MSCallbackListener<BankCard> listener);
 }

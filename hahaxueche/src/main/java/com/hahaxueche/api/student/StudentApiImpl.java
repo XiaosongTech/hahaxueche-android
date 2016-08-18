@@ -13,6 +13,7 @@ import com.hahaxueche.model.response.ReferalHistoryResponse;
 import com.hahaxueche.model.response.RefereeListResponse;
 import com.hahaxueche.model.response.ScheduleEventListResponse;
 import com.hahaxueche.model.review.ReviewInfo;
+import com.hahaxueche.model.student.BankCard;
 import com.hahaxueche.model.student.ReferalBonusSummary;
 import com.hahaxueche.model.student.ReferalBonusTransaction;
 import com.hahaxueche.model.student.Student;
@@ -558,5 +559,33 @@ public class StudentApiImpl implements StudentApi {
         }
     }
 
-
+    @Override
+    public BankCard addBankCard(String name, String cardNumber, String openBankCode, String studentId, String accessToken) {
+        Type type = new TypeToken<BankCard>() {
+        }.getType();
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("name", name);
+        paramMap.put("card_number", cardNumber);
+        paramMap.put("open_bank_code", openBankCode);
+        paramMap.put("transferable_type", "Student");
+        paramMap.put("transferable_id", studentId);
+        try {
+            Response response = httpEngine.postHandle(paramMap, "bank_cards", accessToken);
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                BankCard retModel = new BankCard();
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, BaseApiResponse.class);
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
+                retModel.setSuccess(false);
+                return retModel;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
 }

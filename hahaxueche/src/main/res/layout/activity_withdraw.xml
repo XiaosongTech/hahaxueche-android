@@ -110,21 +110,40 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <ListView
-                        android:id="@+id/lv_bank"
+                    <RelativeLayout
+                        android:id="@+id/rly_bank_card"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:divider="@drawable/layer_list_divider_small"
-                        android:dividerHeight="0.3dp"
-                        android:footerDividersEnabled="false"
-                        android:headerDividersEnabled="false"></ListView>
+                        android:layout_height="wrap_content">
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.3dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:background="@color/haha_gray_light" />
+                        <TextView
+                            android:id="@+id/tv_bank_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="15dp"
+                            android:textColor="@color/haha_black_light"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/tv_bank_remarks"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignLeft="@id/tv_bank_name"
+                            android:layout_below="@id/tv_bank_name"
+                            android:layout_marginBottom="15dp"
+                            android:layout_marginTop="10dp"
+                            android:textColor="@color/haha_gray_heavy"
+                            android:textSize="12sp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="20dp"
+                            android:src="@drawable/ic_coachmsg_more_arrow" />
+                    </RelativeLayout>
+
 
                     <FrameLayout
                         android:id="@+id/fly_add_bank"
@@ -147,8 +166,6 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.3dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
                         android:background="@color/haha_gray_light" />
 
                     <TextView
@@ -157,7 +174,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="30dp"
                         android:layout_marginRight="30dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="20dp"
                         android:background="@drawable/rectangle_back_orange_sm"
                         android:gravity="center"
                         android:paddingBottom="14dp"
@@ -165,6 +182,55 @@
                         android:text="@string/sureWithdraw"
                         android:textColor="@color/haha_white"
                         android:textSize="18sp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp">
+
+                        <ImageView
+                            android:id="@+id/iv_dash"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/divider_dash_line" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:background="@color/haha_white"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"
+                            android:text="提现须知"
+                            android:textColor="@color/haha_gray_heavy"
+                            android:textSize="14sp" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginTop="5dp"
+                        android:lineSpacingMultiplier="1.2"
+                        android:text="1) 每次提现最低金额不得小于100元\n2) 具体到账时间以各大银行为准"
+                        android:textColor="@color/haha_gray_heavy"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginTop="5dp"
+                        android:lineSpacingMultiplier="1.2"
+                        android:text="* 在法律允许的范围内,哈哈学车有权对活动规则进行解释"
+                        android:textColor="@color/app_theme_color"
+                        android:textSize="14sp" />
                 </LinearLayout>
             </ScrollView>
         </LinearLayout>

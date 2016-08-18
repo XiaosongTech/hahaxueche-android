@@ -3,43 +3,34 @@ package com.hahaxueche.model.student;
 import java.io.Serializable;
 
 /**
- * Created by wangshirui on 16/8/1.
+ * Created by wangshirui on 16/8/18.
  */
-public class Bank implements Serializable{
-    private String bank_name;
-    private String account_name;
-    private String account;
-    private boolean isSelect;
+public class Bank implements Serializable {
+    private String code;
+    private String name;
+    private boolean is_popular;
 
-    public String getBank_name() {
-        return bank_name;
+    public String getCode() {
+        return code;
     }
 
-    public void setBank_name(String bank_name) {
-        this.bank_name = bank_name;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getAccount_name() {
-        return account_name;
+    public String getName() {
+        return name;
     }
 
-    public void setAccount_name(String account_name) {
-        this.account_name = account_name;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getAccount() {
-        return account;
+    public boolean is_popular() {
+        return is_popular;
     }
 
-    public void setAccount(String account) {
-        this.account = account;
-    }
-
-    public boolean isSelect() {
-        return isSelect;
-    }
-
-    public void setSelect(boolean select) {
-        isSelect = select;
+    public void setIs_popular(boolean is_popular) {
+        this.is_popular = is_popular;
     }
 }

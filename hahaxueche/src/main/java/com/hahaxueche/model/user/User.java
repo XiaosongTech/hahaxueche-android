@@ -2,10 +2,12 @@ package com.hahaxueche.model.user;
 
 import com.hahaxueche.model.student.Student;
 
+import java.io.Serializable;
+
 /**
  * Created by gibxin on 2016/1/22.
  */
-public class User {
+public class User implements Serializable{
     private String id;
     private String cell_phone;
     private Session session;

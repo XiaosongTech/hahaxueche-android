@@ -275,9 +275,10 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.activity.mySetting.SelectCityActivity"
+            android:name=".ui.activity.mySetting.SelectOpenBankActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"></activity>
         <!--定位服务-->
         <service android:name=".service.LocationService"></service>
         <!--检测session有效性服务-->

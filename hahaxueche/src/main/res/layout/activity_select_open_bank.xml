@@ -29,13 +29,13 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="选择城市"
+            android:text="选择开户行"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
     </RelativeLayout>
 
     <EditText
-        android:id="@+id/et_search_city_name"
+        android:id="@+id/et_search_open_bank"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="14dp"
@@ -46,7 +46,7 @@
         android:drawableLeft="@drawable/ic_search"
         android:drawablePadding="7dp"
         android:gravity="center"
-        android:hint="搜索城市"
+        android:hint="搜索开户行"
         android:inputType="text"
         android:maxLines="1"
         android:paddingBottom="7dp"
@@ -61,15 +61,28 @@
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:layout_marginLeft="20dp"
-        android:text="热门城市"
+        android:text="常用银行"
         android:textColor="@color/haha_gray_heavier"
         android:textSize="14sp" />
 
     <LinearLayout
-        android:id="@+id/lly_hot_city"
+        android:id="@+id/lly_popular_bank"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:orientation="vertical"></LinearLayout>
+
+
+        <ListView
+            android:id="@+id/lv_open_bank"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:divider="@drawable/layer_list_divider_all"
+            android:dividerHeight="0.3dp"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="false"></ListView>
 </LinearLayout>

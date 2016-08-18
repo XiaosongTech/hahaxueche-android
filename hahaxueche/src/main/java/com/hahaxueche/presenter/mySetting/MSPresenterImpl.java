@@ -15,6 +15,7 @@ import com.hahaxueche.model.response.GroupBuyResponse;
 import com.hahaxueche.model.response.ReferalHistoryResponse;
 import com.hahaxueche.model.response.RefereeListResponse;
 import com.hahaxueche.model.review.ReviewInfo;
+import com.hahaxueche.model.student.BankCard;
 import com.hahaxueche.model.student.ReferalBonusSummary;
 import com.hahaxueche.model.student.ReferalBonusTransaction;
 import com.hahaxueche.model.student.Student;
@@ -433,6 +434,40 @@ public class MSPresenterImpl implements MSPresenter {
             protected void onPostExecute(ArrayList<Event> arrayList) {
                 if (arrayList != null) {
                     listener.onSuccess(arrayList);
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void addBankCard(final String name, final String cardNumber, final String openBankCode, final String studentId, final String accessToken, final MSCallbackListener<BankCard> listener) {
+        if (TextUtils.isEmpty(name)) {
+            listener.onFailure("000", "持卡人不能为空");
+            return;
+        }else if(TextUtils.isEmpty(cardNumber)){
+            listener.onFailure("000", "银行卡号不能为空");
+            return;
+        }else if(TextUtils.isEmpty(openBankCode)){
+            listener.onFailure("000", "开户行不能为空");
+            return;
+        }
+        new AsyncTask<Void, Void, BankCard>() {
+
+            @Override
+            protected BankCard doInBackground(Void... params) {
+                return studentApi.addBankCard(name, cardNumber, openBankCode, studentId, accessToken);
+            }
+
+            @Override
+            protected void onPostExecute(BankCard bankCard) {
+                if (bankCard != null) {
+                    if (bankCard.isSuccess()) {
+                        listener.onSuccess(bankCard);
+                    } else {
+                        listener.onFailure(bankCard.getCode(), "添加银行卡失败");
+                    }
                 } else {
                     listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
                 }

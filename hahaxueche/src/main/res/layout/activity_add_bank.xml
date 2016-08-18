@@ -134,15 +134,13 @@
                 android:layout_below="@id/tv_account_label"
                 android:background="@color/haha_gray_light" />
 
-            <LinearLayout
-                android:id="@+id/lly_bank"
+            <RelativeLayout
+                android:id="@+id/rly_open_bank"
                 android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/tv_bank_label"
+                    android:id="@+id/tv_open_bank_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
@@ -153,51 +151,17 @@
                     android:textColor="@color/haha_black_light"
                     android:textSize="14sp" />
 
-                <com.jaredrummler.materialspinner.MaterialSpinner
-                    android:id="@+id/sp_bank"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="50dp"
-                    android:textColor="@color/haha_black_light"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.3dp"
-                android:layout_below="@id/tv_account_label"
-                android:background="@color/haha_gray_light" />
-
-            <RelativeLayout
-                android:id="@+id/rly_city"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
                 <TextView
-                    android:id="@+id/tv_city_label"
+                    android:id="@+id/tv_open_bank"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
+                    android:layout_alignBottom="@id/tv_open_bank_label"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="15dp"
-                    android:padding="3dp"
-                    android:text="开户地"
-                    android:textColor="@color/haha_black_light"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/tv_city"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/tv_city_label"
-                    android:layout_marginLeft="20dp"
-                    android:layout_toRightOf="@id/tv_city_label"
+                    android:layout_toRightOf="@id/tv_open_bank_label"
                     android:background="@null"
                     android:padding="3dp"
                     android:singleLine="true"
-                    android:text="请选择开户城市"
+                    android:text="请选择银行"
                     android:textColor="@color/haha_gray_heavier"
                     android:textSize="14sp" />
             </RelativeLayout>
