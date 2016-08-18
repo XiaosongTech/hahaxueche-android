@@ -22,7 +22,9 @@ import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.MyApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.examLib.Question;
+import com.hahaxueche.ui.dialog.BaseAlertDialog;
 import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
+import com.hahaxueche.ui.dialog.ExamSubmitAlertDialog;
 import com.hahaxueche.ui.fragment.index.exam.ExamFragment;
 import com.hahaxueche.utils.ExamLib;
 import com.hahaxueche.utils.JsonUtils;
@@ -389,7 +391,7 @@ public class ExamActivity extends IndexBaseActivity implements ExamFragment.OnCo
     private void submit() {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        Log.v("gibxin","1111 wrongQuestionList-> "+mExamLib.getmWrongQuestionList().size());
+        Log.v("gibxin", "1111 wrongQuestionList-> " + mExamLib.getmWrongQuestionList().size());
         bundle.putSerializable("wrongQuestionList", mExamLib.getmWrongQuestionList());
         intent.putExtras(bundle);
         intent.putExtra("score", mExamLib.getScore());
@@ -408,24 +410,35 @@ public class ExamActivity extends IndexBaseActivity implements ExamFragment.OnCo
     public void answer(Question question) {
         if (mExamLib == null) return;
         mExamLib.addAnsweredQuestion(question.getId());
-        if (!question.isCorrect()) {
-            mExamLib.addWrongQuestion(question);
-            if (mExamLib.isShowContinueDialog()) {//错题超过及格线,提示提交
-                BaseConfirmSimpleDialog baseConfirmSimpleDialog = new BaseConfirmSimpleDialog(ExamActivity.this, "交卷提示",
-                        mExamLib.getContinueDialogHints(), "确认交卷", "继续做题", new BaseConfirmSimpleDialog.onConfirmListener() {
-                    @Override
-                    public boolean clickConfirm() {
-                        submit();
-                        return true;
-                    }
-                }, new BaseConfirmSimpleDialog.onCancelListener() {
-                    @Override
-                    public boolean clickCancel() {
-                        mExamLib.setContinue(true);
-                        return true;
-                    }
-                });
-                baseConfirmSimpleDialog.show();
+        if (mExamLib.isAnsweredAll()) {//已经回答完全部问题
+            ExamSubmitAlertDialog alertDialog = new ExamSubmitAlertDialog(ExamActivity.this, mExamLib.getAllAnsweredHints(), new ExamSubmitAlertDialog.onConfirmListener() {
+                @Override
+                public boolean clickConfirm() {
+                    submit();
+                    return true;
+                }
+            });
+            alertDialog.show();
+        } else {
+            if (!question.isCorrect()) {
+                mExamLib.addWrongQuestion(question);
+                if (mExamLib.isShowContinueDialog()) {//错题超过及格线,提示提交
+                    BaseConfirmSimpleDialog baseConfirmSimpleDialog = new BaseConfirmSimpleDialog(ExamActivity.this, "交卷提示",
+                            mExamLib.getContinueDialogHints(), "确认交卷", "继续做题", new BaseConfirmSimpleDialog.onConfirmListener() {
+                        @Override
+                        public boolean clickConfirm() {
+                            submit();
+                            return true;
+                        }
+                    }, new BaseConfirmSimpleDialog.onCancelListener() {
+                        @Override
+                        public boolean clickCancel() {
+                            mExamLib.setContinue(true);
+                            return true;
+                        }
+                    });
+                    baseConfirmSimpleDialog.show();
+                }
             }
         }
     }

@@ -143,4 +143,21 @@ public class ExamLib {
             return (mQuestionCount - mAnsweredQuestionList.size() + mWrongQuestionList.size() > 5) ? EXAM_STATUS_NOT_PASS : EXAM_STATUS_PASS;
         }
     }
+
+    public boolean isAnsweredAll() {
+        if (mAnsweredQuestionList != null && mAnsweredQuestionList.size() > 0) {
+            return mAnsweredQuestionList.size() == mQuestionCount;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 已全部答题,提示
+     *
+     * @return
+     */
+    public String getAllAnsweredHints() {
+        return "目前您已经回答了" + mAnsweredQuestionList.size() + "道题,马上交卷查看成绩?";
+    }
 }
