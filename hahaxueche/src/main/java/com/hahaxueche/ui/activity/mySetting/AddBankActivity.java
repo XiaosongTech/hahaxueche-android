@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -38,6 +39,7 @@ public class AddBankActivity extends MSBaseActivity {
     private User mUser;
     private SharedPreferencesUtil spUtil;
     private ProgressDialog pd;
+    private BankCard mBankCard;//编辑的银行卡
 
     private static final int REQUEST_CODE_SELECT_OPEN_BANK = 0;
 
@@ -65,24 +67,45 @@ public class AddBankActivity extends MSBaseActivity {
         mTvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pd = ProgressDialog.show(AddBankActivity.this, null, "银行卡信息添加中，请稍后……");
-                msPresenter.addBankCard(mEtAccountName.getText().toString(), mEtAccount.getText().toString(), mOpenBankCode, mUser.getStudent().getId(),
-                        mUser.getSession().getAccess_token(), new MSCallbackListener<BankCard>() {
-                            @Override
-                            public void onSuccess(BankCard data) {
-                                pd.dismiss();
-                                Intent intent = new Intent();
-                                intent.putExtra("isUpdate", true);
-                                setResult(RESULT_OK, intent);
-                                AddBankActivity.this.finish();
-                            }
+                if (mBankCard != null) {//修改银行卡
+                    pd = ProgressDialog.show(AddBankActivity.this, null, "银行卡信息添加中，请稍后……");
+                    msPresenter.editBankCard(mEtAccountName.getText().toString(), mEtAccount.getText().toString(), mOpenBankCode, mUser.getStudent().getId(),
+                            mUser.getSession().getAccess_token(), new MSCallbackListener<BankCard>() {
+                                @Override
+                                public void onSuccess(BankCard data) {
+                                    pd.dismiss();
+                                    Intent intent = new Intent();
+                                    intent.putExtra("isUpdate", true);
+                                    setResult(RESULT_OK, intent);
+                                    AddBankActivity.this.finish();
+                                }
 
-                            @Override
-                            public void onFailure(String errorEvent, String message) {
-                                pd.dismiss();
-                                Toast.makeText(AddBankActivity.this, message, Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                                @Override
+                                public void onFailure(String errorEvent, String message) {
+                                    pd.dismiss();
+                                    Toast.makeText(AddBankActivity.this, message, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                } else {//添加银行卡
+                    pd = ProgressDialog.show(AddBankActivity.this, null, "银行卡信息修改中，请稍后……");
+                    msPresenter.addBankCard(mEtAccountName.getText().toString(), mEtAccount.getText().toString(), mOpenBankCode, mUser.getStudent().getId(),
+                            mUser.getSession().getAccess_token(), new MSCallbackListener<BankCard>() {
+                                @Override
+                                public void onSuccess(BankCard data) {
+                                    pd.dismiss();
+                                    Intent intent = new Intent();
+                                    intent.putExtra("isUpdate", true);
+                                    setResult(RESULT_OK, intent);
+                                    AddBankActivity.this.finish();
+                                }
+
+                                @Override
+                                public void onFailure(String errorEvent, String message) {
+                                    pd.dismiss();
+                                    Toast.makeText(AddBankActivity.this, message, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
 
             }
         });
@@ -114,12 +137,12 @@ public class AddBankActivity extends MSBaseActivity {
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
             try {
-                BankCard bankCard = (BankCard) bundle.get("bankCard");
-                if (bankCard != null) {
-                    mOpenBankCode = bankCard.getOpen_bank_code();
-                    mOpenBankName = bankCard.getBank_name();
-                    mEtAccountName.setText(bankCard.getName());
-                    mEtAccount.setText(bankCard.getCard_number());
+                mBankCard = (BankCard) bundle.get("bankCard");
+                if (mBankCard != null) {
+                    mOpenBankCode = mBankCard.getOpen_bank_code();
+                    mOpenBankName = mBankCard.getBank_name();
+                    mEtAccountName.setText(mBankCard.getName());
+                    mEtAccount.setText(mBankCard.getCard_number());
                     loadOpenBank();
                 }
             } catch (Exception e) {

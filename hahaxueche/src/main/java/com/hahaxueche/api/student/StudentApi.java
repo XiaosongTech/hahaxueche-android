@@ -9,6 +9,7 @@ import com.hahaxueche.model.response.ReferalHistoryResponse;
 import com.hahaxueche.model.response.RefereeListResponse;
 import com.hahaxueche.model.response.ScheduleEventListResponse;
 import com.hahaxueche.model.review.ReviewInfo;
+import com.hahaxueche.model.student.Bank;
 import com.hahaxueche.model.student.BankCard;
 import com.hahaxueche.model.student.ReferalBonusSummary;
 import com.hahaxueche.model.student.ReferalBonusTransaction;
@@ -190,5 +191,16 @@ public interface StudentApi {
      * @return
      */
     public BankCard addBankCard(String name, String cardNumber, String openBankCode, String studentId, String accessToken);
+
+    /**
+     * 修改银行卡
+     * @param name
+     * @param cardNumber
+     * @param openBankCode
+     * @param studentId
+     * @param accessToken
+     * @return
+     */
+    public BankCard editBankCard(String name, String cardNumber, String openBankCode, String studentId, String accessToken);
 
 }

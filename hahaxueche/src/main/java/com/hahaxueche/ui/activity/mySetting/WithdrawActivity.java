@@ -236,7 +236,6 @@ public class WithdrawActivity extends MSBaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_WITHDRAW) {
             if (resultCode == RESULT_OK && null != data && data.getBooleanExtra("isUpdate", false)) {
-                Toast.makeText(WithdrawActivity.this, "银行卡添加成功", Toast.LENGTH_SHORT).show();
                 refreshStudent();
             }
         }

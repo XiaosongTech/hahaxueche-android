@@ -144,4 +144,16 @@ public interface MSPresenter {
      * @param listener
      */
     public void addBankCard(String name, String cardNumber, String openBankCode, String studentId, String accessToken, MSCallbackListener<BankCard> listener);
+
+    /**
+     * 修改银行卡
+     *
+     * @param name
+     * @param cardNumber
+     * @param openBankCode
+     * @param studentId
+     * @param accessToken
+     * @param listener
+     */
+    public void editBankCard(String name, String cardNumber, String openBankCode, String studentId, String accessToken, MSCallbackListener<BankCard> listener);
 }

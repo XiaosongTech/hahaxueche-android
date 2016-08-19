@@ -446,10 +446,10 @@ public class MSPresenterImpl implements MSPresenter {
         if (TextUtils.isEmpty(name)) {
             listener.onFailure("000", "持卡人不能为空");
             return;
-        }else if(TextUtils.isEmpty(cardNumber)){
+        } else if (TextUtils.isEmpty(cardNumber)) {
             listener.onFailure("000", "银行卡号不能为空");
             return;
-        }else if(TextUtils.isEmpty(openBankCode)){
+        } else if (TextUtils.isEmpty(openBankCode)) {
             listener.onFailure("000", "开户行不能为空");
             return;
         }
@@ -458,6 +458,40 @@ public class MSPresenterImpl implements MSPresenter {
             @Override
             protected BankCard doInBackground(Void... params) {
                 return studentApi.addBankCard(name, cardNumber, openBankCode, studentId, accessToken);
+            }
+
+            @Override
+            protected void onPostExecute(BankCard bankCard) {
+                if (bankCard != null) {
+                    if (bankCard.isSuccess()) {
+                        listener.onSuccess(bankCard);
+                    } else {
+                        listener.onFailure(bankCard.getCode(), "添加银行卡失败");
+                    }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void editBankCard(final String name, final String cardNumber, final String openBankCode, final String studentId, final String accessToken, final MSCallbackListener<BankCard> listener) {
+        if (TextUtils.isEmpty(name)) {
+            listener.onFailure("000", "持卡人不能为空");
+            return;
+        } else if (TextUtils.isEmpty(cardNumber)) {
+            listener.onFailure("000", "银行卡号不能为空");
+            return;
+        } else if (TextUtils.isEmpty(openBankCode)) {
+            listener.onFailure("000", "开户行不能为空");
+            return;
+        }
+        new AsyncTask<Void, Void, BankCard>() {
+
+            @Override
+            protected BankCard doInBackground(Void... params) {
+                return studentApi.editBankCard(name, cardNumber, openBankCode, studentId, accessToken);
             }
 
             @Override
