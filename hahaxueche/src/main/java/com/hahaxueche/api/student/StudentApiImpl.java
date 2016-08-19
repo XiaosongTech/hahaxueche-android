@@ -13,10 +13,12 @@ import com.hahaxueche.model.response.ReferalHistoryResponse;
 import com.hahaxueche.model.response.RefereeListResponse;
 import com.hahaxueche.model.response.ScheduleEventListResponse;
 import com.hahaxueche.model.review.ReviewInfo;
+import com.hahaxueche.model.student.BankCard;
 import com.hahaxueche.model.student.ReferalBonusSummary;
 import com.hahaxueche.model.student.ReferalBonusTransaction;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
+import com.hahaxueche.model.student.WithdrawRecord;
 import com.hahaxueche.utils.JsonUtils;
 
 import java.io.IOException;
@@ -483,30 +485,19 @@ public class StudentApiImpl implements StudentApi {
     }
 
     @Override
-    public ReferalBonusTransaction withdrawBonus(String studentId, String account, String accountOwnerName, String amount, String accessToken) {
-        Type type = new TypeToken<ReferalBonusTransaction>() {
-        }.getType();
+    public BaseApiResponse withdrawBonus(String studentId, String amount, String accessToken) {
         Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("account", account);
-        paramMap.put("account_owner_name", accountOwnerName);
         paramMap.put("amount", amount);
+        BaseApiResponse baseApiResponse = new BaseApiResponse();
         try {
-            Response response = httpEngine.postHandle(paramMap, "students/" + studentId + "/withdraw_referal_bonus", accessToken);
+            Response response = httpEngine.postHandle(paramMap, "students/" + studentId + "/withdraw", accessToken);
             String body = response.body().string();
             Log.v("gibxin", "body -> " + body);
-            if (response.isSuccessful()) {
-                return JsonUtils.deserialize(body, type);
-            } else {
-                ReferalBonusTransaction retModel = new ReferalBonusTransaction();
-                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, BaseApiResponse.class);
-                retModel.setCode(baseApiResponse.getCode());
-                retModel.setMessage(baseApiResponse.getMessage());
-                retModel.setIsSuccess(false);
-                return retModel;
-            }
+            baseApiResponse.setIsSuccess(response.isSuccessful());
         } catch (IOException e) {
-            Log.e(TAG, "Exception e ->" + e.getMessage());
-            return null;
+            baseApiResponse.setIsSuccess(false);
+        } finally {
+            return baseApiResponse;
         }
     }
 
@@ -558,5 +549,52 @@ public class StudentApiImpl implements StudentApi {
         }
     }
 
+    @Override
+    public BankCard addBankCard(String name, String cardNumber, String openBankCode, String studentId, String accessToken) {
+        Type type = new TypeToken<BankCard>() {
+        }.getType();
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("name", name);
+        paramMap.put("card_number", cardNumber);
+        paramMap.put("open_bank_code", openBankCode);
+        paramMap.put("transferable_type", "Student");
+        paramMap.put("transferable_id", studentId);
+        try {
+            Response response = httpEngine.postHandle(paramMap, "bank_cards", accessToken);
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                BankCard retModel = new BankCard();
+                BaseApiResponse baseApiResponse = JsonUtils.deserialize(body, BaseApiResponse.class);
+                retModel.setCode(baseApiResponse.getCode());
+                retModel.setMessage(baseApiResponse.getMessage());
+                retModel.setSuccess(false);
+                return retModel;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
 
+    @Override
+    public ArrayList<WithdrawRecord> fetchWithdrawRecordList(String accessToken) {
+        Type type = new TypeToken<ArrayList<WithdrawRecord>>() {
+        }.getType();
+        try {
+            Response response = httpEngine.getHandle("bank_cards/withdraw_records", accessToken);
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
 }

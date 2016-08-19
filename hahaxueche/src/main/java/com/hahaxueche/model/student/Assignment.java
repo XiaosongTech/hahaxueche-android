@@ -1,9 +1,11 @@
 package com.hahaxueche.model.student;
 
+import java.io.Serializable;
+
 /**
  * Created by gibxin on 2016/2/29.
  */
-public class Assignment {
+public class Assignment implements Serializable{
     private String coach_id;
     private String service_type_id;
 

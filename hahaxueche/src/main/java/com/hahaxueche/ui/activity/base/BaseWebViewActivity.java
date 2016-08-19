@@ -114,7 +114,7 @@ public class BaseWebViewActivity extends BaseActivity implements IWeiboHandler.R
         mWebSettings.setUseWideViewPort(true);
         mWebSettings.setJavaScriptEnabled(true);
         mWebSettings.setDefaultTextEncodingName("GBK");
-        mWebSettings.setSupportMultipleWindows(true);
+        mWebSettings.setSupportMultipleWindows(false);
         mWebSettings.setLoadsImagesAutomatically(true);
         mWebSettings.setDomStorageEnabled(true);
         mWebSettings.setDatabaseEnabled(true);

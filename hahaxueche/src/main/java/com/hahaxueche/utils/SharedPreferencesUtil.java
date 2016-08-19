@@ -7,14 +7,11 @@ import android.text.TextUtils;
 
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.model.activity.Event;
-import com.hahaxueche.model.city.Bonus;
 import com.hahaxueche.model.city.City;
 import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.model.city.Location;
 import com.hahaxueche.model.course.Course;
 import com.hahaxueche.model.student.StudentPhase;
-import com.hahaxueche.model.user.Session;
-import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.user.User;
 
@@ -154,46 +151,6 @@ public class SharedPreferencesUtil {
             }
         }
         return cityList.get(myCityCount);
-    }
-
-    /**
-     * 获取我的城市推荐人的奖励
-     *
-     * @return
-     */
-    public int getMyCityRefererBonus() {
-        City myCity = getMyCity();
-        int amount = 0;
-        ArrayList<Bonus> bonusList = myCity.getReferal_bonus();
-        if (bonusList != null && bonusList.size() > 0) {
-            for (Bonus bonus : bonusList) {
-                if (bonus.getName().equals("referer_bonus")) {
-                    amount = bonus.getAmount();
-                    break;
-                }
-            }
-        }
-        return amount;
-    }
-
-    /**
-     * 获取我的城市被推荐人的奖励
-     *
-     * @return
-     */
-    public int getMyCityRefereeBonus() {
-        City myCity = getMyCity();
-        int amount = 0;
-        ArrayList<Bonus> bonusList = myCity.getReferal_bonus();
-        if (bonusList != null && bonusList.size() > 0) {
-            for (Bonus bonus : bonusList) {
-                if (bonus.getName().equals("referee_bonus")) {
-                    amount = bonus.getAmount();
-                    break;
-                }
-            }
-        }
-        return amount;
     }
 
     public Coach getCurrentCoach() {

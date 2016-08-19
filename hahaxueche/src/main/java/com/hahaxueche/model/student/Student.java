@@ -1,5 +1,6 @@
 package com.hahaxueche.model.student;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import java.util.List;
  * 学生数据模型
  * Created by gibxin on 2016/1/22.
  */
-public class Student {
+public class Student implements Serializable{
     private String id;
     private String cell_phone;
     private String name;
@@ -23,6 +24,7 @@ public class Student {
     private String by_referal;
     private String bonus_balance;
     private ArrayList<Coupon> coupons;
+    private BankCard bank_card;
     private String code;
     private String message;
     private boolean isSuccess = true;
@@ -145,6 +147,14 @@ public class Student {
 
     public void setCoupons(ArrayList<Coupon> coupons) {
         this.coupons = coupons;
+    }
+
+    public BankCard getBank_card() {
+        return bank_card;
+    }
+
+    public void setBank_card(BankCard bank_card) {
+        this.bank_card = bank_card;
     }
 
     public String getCode() {

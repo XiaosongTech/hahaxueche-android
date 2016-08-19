@@ -101,4 +101,5 @@ dependencies {
     compile 'com.instabug.library:instabug:2+'
     compile 'com.qiyukf.unicorn:unicorn:2.4.0'
     compile 'com.android.support:multidex:1.0.0'
+    compile 'com.jaredrummler:material-spinner:1.1.0'
 }

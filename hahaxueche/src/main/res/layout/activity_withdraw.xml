@@ -28,207 +28,213 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/wantWithdraw"
+            android:text="提现"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tv_withdraw_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:text="提现记录"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
     </RelativeLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="@string/availableAmount"
-        android:textColor="@color/haha_white"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/tv_available_amount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:textColor="@color/haha_white"
-        android:textSize="38sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/thisWithdraw"
-        android:textColor="@color/haha_white"
-        android:textSize="14sp" />
-
-    <EditText
-        android:id="@+id/et_withdraw_money"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/srl_refresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="65dp"
-        android:layout_marginRight="65dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/edittext_button"
-        android:gravity="center"
-        android:hint="@string/enterWantWithdrawMoney"
-        android:inputType="numberDecimal"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        android:singleLine="true"
-        android:textColor="@color/app_theme_color"
-        android:textColorHint="@color/haha_gray_heavier"
-        android:textSize="12sp" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:layout_weight="1"
-        android:background="@color/haha_white">
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/iv_alipay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20dp"
-                    android:src="@drawable/ic_alipay_icon" />
-
-                <TextView
-                    android:id="@+id/tv_alipay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_toRightOf="@id/iv_alipay"
-                    android:text="@string/alipay"
-                    android:textColor="@color/haha_black_light"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@id/tv_alipay"
-                    android:layout_below="@id/tv_alipay"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/alipayTips"
-                    android:textColor="@color/haha_gray_heavy"
-                    android:textSize="12sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="20dp"
-                    android:src="@drawable/ic_cashout_chack_btn" />
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@color/haha_gray_light" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/iv_wechatpay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20dp"
-                    android:src="@drawable/ic_wechatpay_icon" />
-
-                <TextView
-                    android:id="@+id/tv_wechatpay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_toRightOf="@id/iv_wechatpay"
-                    android:text="@string/wechatpay"
-                    android:textColor="@color/haha_gray_heavy"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@id/tv_wechatpay"
-                    android:layout_below="@id/tv_wechatpay"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/wechatpayTips"
-                    android:textColor="@color/haha_gray_heavy"
-                    android:textSize="12sp" />
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@color/haha_gray_light" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/iv_cardpay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20dp"
-                    android:src="@drawable/ic_cardpay_icon" />
-
-                <TextView
-                    android:id="@+id/tv_cardpay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_toRightOf="@id/iv_cardpay"
-                    android:text="@string/cardPay"
-                    android:textColor="@color/haha_gray_heavy"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@id/tv_cardpay"
-                    android:layout_below="@id/tv_cardpay"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/cardPayTips"
-                    android:textColor="@color/haha_gray_heavy"
-                    android:textSize="12sp" />
-            </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/availableAmount"
+                android:textColor="@color/haha_white"
+                android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/tv_confirm_withdraw"
+                android:id="@+id/tv_available_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:drawablePadding="10dp"
+                android:drawableRight="@drawable/ic_arrow_more_white"
+                android:textColor="@color/haha_white"
+                android:textSize="38sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/thisWithdraw"
+                android:textColor="@color/haha_white"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/et_withdraw_money"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/rectangle_back_orange_sm"
+                android:layout_marginLeft="65dp"
+                android:layout_marginRight="65dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/edittext_button"
                 android:gravity="center"
-                android:paddingBottom="14dp"
-                android:paddingTop="14dp"
-                android:text="@string/sureWithdraw"
-                android:textColor="@color/haha_white"
-                android:textSize="18sp" />
-        </LinearLayout>
-    </ScrollView>
+                android:hint="@string/enterWantWithdrawMoney"
+                android:inputType="numberDecimal"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:singleLine="true"
+                android:textColor="@color/app_theme_color"
+                android:textColorHint="@color/haha_gray_heavier"
+                android:textSize="12sp" />
 
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:background="@color/haha_white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/rly_bank_card"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tv_bank_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="15dp"
+                            android:textColor="@color/haha_black_light"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/tv_bank_remarks"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignLeft="@id/tv_bank_name"
+                            android:layout_below="@id/tv_bank_name"
+                            android:layout_marginBottom="15dp"
+                            android:layout_marginTop="10dp"
+                            android:textColor="@color/haha_gray_heavy"
+                            android:textSize="12sp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="20dp"
+                            android:src="@drawable/ic_coachmsg_more_arrow" />
+                    </RelativeLayout>
+
+
+                    <FrameLayout
+                        android:id="@+id/fly_add_bank"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="15dp"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="15dp"
+                            android:drawableLeft="@drawable/ic_add"
+                            android:drawablePadding="15dp"
+                            android:gravity="center"
+                            android:text="添加银行卡"
+                            android:textSize="20sp" />
+                    </FrameLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.3dp"
+                        android:background="@color/haha_gray_light" />
+
+                    <TextView
+                        android:id="@+id/tv_confirm_withdraw"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/rectangle_back_orange_sm"
+                        android:gravity="center"
+                        android:paddingBottom="14dp"
+                        android:paddingTop="14dp"
+                        android:text="@string/sureWithdraw"
+                        android:textColor="@color/haha_white"
+                        android:textSize="18sp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp">
+
+                        <ImageView
+                            android:id="@+id/iv_dash"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/divider_dash_line" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:background="@color/haha_white"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"
+                            android:text="提现须知"
+                            android:textColor="@color/haha_gray_heavy"
+                            android:textSize="14sp" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginTop="5dp"
+                        android:lineSpacingMultiplier="1.2"
+                        android:text="1) 每次提现最低金额不得小于100元\n2) 具体到账时间以各大银行为准"
+                        android:textColor="@color/haha_gray_heavy"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginTop="5dp"
+                        android:lineSpacingMultiplier="1.2"
+                        android:text="* 在法律允许的范围内,哈哈学车有权对活动规则进行解释"
+                        android:textColor="@color/app_theme_color"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

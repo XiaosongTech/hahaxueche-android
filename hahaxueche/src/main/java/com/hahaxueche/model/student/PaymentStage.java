@@ -1,9 +1,11 @@
 package com.hahaxueche.model.student;
 
+import java.io.Serializable;
+
 /**
  * Created by gibxin on 2016/2/29.
  */
-public class PaymentStage {
+public class PaymentStage implements Serializable{
     private String id;
     private String stage_number;
     private String stage_name;

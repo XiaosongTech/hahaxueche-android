@@ -9,10 +9,13 @@ import com.hahaxueche.model.response.ReferalHistoryResponse;
 import com.hahaxueche.model.response.RefereeListResponse;
 import com.hahaxueche.model.response.ScheduleEventListResponse;
 import com.hahaxueche.model.review.ReviewInfo;
+import com.hahaxueche.model.student.Bank;
+import com.hahaxueche.model.student.BankCard;
 import com.hahaxueche.model.student.ReferalBonusSummary;
 import com.hahaxueche.model.student.ReferalBonusTransaction;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
+import com.hahaxueche.model.student.WithdrawRecord;
 
 import java.util.ArrayList;
 
@@ -154,12 +157,10 @@ public interface StudentApi {
      * 学员提取奖金
      *
      * @param studentId
-     * @param account
-     * @param accountOwnerName
      * @param amount
      * @return
      */
-    public ReferalBonusTransaction withdrawBonus(String studentId, String account, String accountOwnerName, String amount, String accessToken);
+    public BaseApiResponse withdrawBonus(String studentId, String amount, String accessToken);
 
     /**
      * 团购报名
@@ -177,5 +178,24 @@ public interface StudentApi {
      * @return
      */
     public ArrayList<Event> fetchEventList(String cityId);
+
+    /**
+     * 添加银行卡
+     *
+     * @param name
+     * @param cardNumber
+     * @param openBankCode
+     * @param studentId
+     * @param accessToken
+     * @return
+     */
+    public BankCard addBankCard(String name, String cardNumber, String openBankCode, String studentId, String accessToken);
+
+    /**
+     * 提现记录列表
+     * @param accessToken
+     * @return
+     */
+    public ArrayList<WithdrawRecord> fetchWithdrawRecordList(String accessToken);
 
 }

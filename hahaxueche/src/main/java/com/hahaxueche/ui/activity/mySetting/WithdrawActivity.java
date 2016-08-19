@@ -2,22 +2,27 @@ package com.hahaxueche.ui.activity.mySetting;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.student.ReferalBonusSummary;
-import com.hahaxueche.model.student.ReferalBonusTransaction;
+import com.hahaxueche.model.base.BaseApiResponse;
+import com.hahaxueche.model.student.BankCard;
+import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.dialog.BaseConfirmDialog;
-import com.hahaxueche.ui.dialog.WithdrawDialog;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 
@@ -29,16 +34,28 @@ public class WithdrawActivity extends MSBaseActivity {
     private TextView mTvAvailableAmount;
     private EditText mEtWithdrawAmount;
     private TextView mTvConfirmWithdraw;
-    private ReferalBonusSummary mReferalBonusSummary;
-    private User mUser;
+    private RelativeLayout mRlyBankCard;
+    private TextView mTvBankName;
+    private TextView mTvBankRemarks;
+    private FrameLayout mFlyAddBank;//添加银行卡
+    private SwipeRefreshLayout mSrlRefresh;//下拉刷新
+    private TextView mTvWithdrawRecord;//提现记录
+    private BankCard mBankCard;
+    private ImageView mIvDash;
+    private String mAvailableAmount = "0";
+
+    private boolean isRefresh = false;//是否刷新中
+    private SharedPreferencesUtil spUtil;
+    public static int REQUEST_CODE_ADD_BANK_CARD = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_withdraw);
+        spUtil = new SharedPreferencesUtil(WithdrawActivity.this);
         initViews();
         initEvents();
-        loadDatas();
+        refreshStudent();
     }
 
     private void initViews() {
@@ -46,6 +63,14 @@ public class WithdrawActivity extends MSBaseActivity {
         mTvAvailableAmount = Util.instence(this).$(this, R.id.tv_available_amount);
         mEtWithdrawAmount = Util.instence(this).$(this, R.id.et_withdraw_money);
         mTvConfirmWithdraw = Util.instence(this).$(this, R.id.tv_confirm_withdraw);
+        mSrlRefresh = Util.instence(this).$(this, R.id.srl_refresh);
+        mFlyAddBank = Util.instence(this).$(this, R.id.fly_add_bank);
+        mTvWithdrawRecord = Util.instence(this).$(this, R.id.tv_withdraw_record);
+        mRlyBankCard = Util.instence(this).$(this, R.id.rly_bank_card);
+        mTvBankName = Util.instence(this).$(this, R.id.tv_bank_name);
+        mTvBankRemarks = Util.instence(this).$(this, R.id.tv_bank_remarks);
+        mIvDash = Util.instence(this).$(this, R.id.iv_dash);
+        mIvDash.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 
     private void initEvents() {
@@ -67,14 +92,42 @@ public class WithdrawActivity extends MSBaseActivity {
             public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
             }
         });
+        mFlyAddBank.setOnClickListener(mClickListener);
+        mTvWithdrawRecord.setOnClickListener(mClickListener);
+        mSrlRefresh.setOnRefreshListener(mRefreshListener);
+        mSrlRefresh.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
+        mRlyBankCard.setOnClickListener(mClickListener);
+        mTvAvailableAmount.setOnClickListener(mClickListener);
     }
 
-    private void loadDatas() {
-        Intent intent = getIntent();
-        mReferalBonusSummary = (ReferalBonusSummary) intent.getSerializableExtra("referalBonusSummary");
-        mTvAvailableAmount.setText(Util.getMoney(mReferalBonusSummary.getAvailable_to_redeem()));
-        SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
-        mUser = spUtil.getUser();
+    SwipeRefreshLayout.OnRefreshListener mRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            if (!isRefresh) {
+                refreshStudent();
+            }
+        }
+    };
+
+    private void refreshUI() {
+        Student student = spUtil.getUser().getStudent();
+        mAvailableAmount = student.getBonus_balance();
+        mTvAvailableAmount.setText(Util.getMoney(mAvailableAmount));
+        //目前只会有一张银行卡
+        mBankCard = student.getBank_card();
+        if (mBankCard != null) {
+            mRlyBankCard.setVisibility(View.VISIBLE);
+            mFlyAddBank.setVisibility(View.GONE);
+            mTvBankName.setText(mBankCard.getBank_name());
+            mTvBankRemarks.setText(mBankCard.getName() + " , 尾号" + mBankCard.getCard_number().substring(mBankCard.getCard_number().length() - 4, mBankCard.getCard_number().length()));
+            mTvAvailableAmount.setClickable(true);
+            mTvAvailableAmount.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(WithdrawActivity.this, R.drawable.ic_arrow_more_white), null);
+        } else {
+            mRlyBankCard.setVisibility(View.GONE);
+            mFlyAddBank.setVisibility(View.VISIBLE);
+            mTvAvailableAmount.setClickable(false);
+            mTvAvailableAmount.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+        }
     }
 
     private View.OnClickListener mClickListener = new View.OnClickListener() {
@@ -90,62 +143,108 @@ public class WithdrawActivity extends MSBaseActivity {
                         Toast.makeText(WithdrawActivity.this, "提现金额不能为空！", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    double withdrawMoney = Double.parseDouble(withdrawAmount) * 100;
-                    double availableMoney = Double.parseDouble(mReferalBonusSummary.getAvailable_to_redeem());
-                    if (Double.compare(withdrawMoney,100d)<=0) {
-                        Toast.makeText(WithdrawActivity.this, "提现金额必须大于1元", Toast.LENGTH_SHORT).show();
+                    final double withdrawMoney = Double.parseDouble(withdrawAmount) * 100;
+                    //double availableMoney = Double.parseDouble(mReferalBonusSummary.getAvailable_to_redeem());
+                    if (Double.compare(withdrawMoney, 10000d) < 0) {
+                        Toast.makeText(WithdrawActivity.this, "提现金额不能低于100元", Toast.LENGTH_SHORT).show();
                         return;
                     } else {
-                        int interval = Double.compare(withdrawMoney, availableMoney);
+                        int interval = Double.compare(withdrawMoney, Double.parseDouble(mAvailableAmount) * 100);
                         if (interval > 0) {
                             Toast.makeText(WithdrawActivity.this, "提现金额不能大于可提现金额", Toast.LENGTH_SHORT).show();
                             return;
                         }
                     }
                     //确认提款
-                    WithdrawDialog dialog = new WithdrawDialog(WithdrawActivity.this, withdrawMoney, new WithdrawDialog.onConfirmListener() {
+                    String content = "提现金额：" + Util.getMoney(withdrawMoney) + "\n银行卡号：" + mBankCard.getCard_number() + "\n持卡人：" + mBankCard.getName();
+                    BaseConfirmDialog baseConfirmDialog = new BaseConfirmDialog(WithdrawActivity.this, "确认提现", "提现明细", content, "", "确认提现", "取消返回", new BaseConfirmDialog.onConfirmListener() {
                         @Override
-                        public boolean clickConfirm(final String account, final String accountOwnerName, final double withdrawMoney, double counterMoney, double realMoney) {
-                            String content = "提现金额：" + Util.getMoney(withdrawMoney) + "\n支付宝手续费：" + Util.getMoney(counterMoney) + "\n实际提现：" + Util.getMoney(realMoney) + "\n支付宝账号：" + account + "\n账号姓名：" + accountOwnerName;
-                            BaseConfirmDialog baseConfirmDialog = new BaseConfirmDialog(WithdrawActivity.this, "确认提现", "提现明细", content, "", "确认提现", "取消返回", new BaseConfirmDialog.onConfirmListener() {
+                        public boolean clickConfirm() {
+                            msPresenter.withdrawBonus(spUtil.getUser().getStudent().getId(), String.valueOf(withdrawMoney), spUtil.getUser().getSession().getAccess_token(), new MSCallbackListener<BaseApiResponse>() {
                                 @Override
-                                public boolean clickConfirm() {
-                                    msPresenter.withdrawBonus(mUser.getStudent().getId(), account, accountOwnerName, String.valueOf(withdrawMoney), mUser.getSession().getAccess_token(), new MSCallbackListener<ReferalBonusTransaction>() {
-                                        @Override
-                                        public void onSuccess(ReferalBonusTransaction data) {
-                                            Intent intent = new Intent();
-                                            setResult(RESULT_OK, intent);
-                                            WithdrawActivity.this.finish();
-                                        }
-
-                                        @Override
-                                        public void onFailure(String errorEvent, String message) {
-                                            Toast.makeText(WithdrawActivity.this, "提现失败", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                    return false;
+                                public void onSuccess(BaseApiResponse data) {
+                                    Intent intent = new Intent();
+                                    intent.putExtra("isUpdate", true);
+                                    setResult(RESULT_OK, intent);
+                                    WithdrawActivity.this.finish();
                                 }
-                            }, new BaseConfirmDialog.onCancelListener() {
+
                                 @Override
-                                public boolean clickCancel() {
-                                    Toast.makeText(WithdrawActivity.this, "提现取消", Toast.LENGTH_SHORT).show();
-                                    return true;
+                                public void onFailure(String errorEvent, String message) {
+                                    Toast.makeText(WithdrawActivity.this, "提现失败", Toast.LENGTH_SHORT).show();
                                 }
                             });
-                            baseConfirmDialog.show();
-                            return true;
-                        }
-                    }, new WithdrawDialog.onCancelListener() {
-                        @Override
-                        public boolean clickCancel() {
                             return false;
                         }
+                    }, new BaseConfirmDialog.onCancelListener() {
+                        @Override
+                        public boolean clickCancel() {
+                            Toast.makeText(WithdrawActivity.this, "提现取消", Toast.LENGTH_SHORT).show();
+                            return true;
+                        }
                     });
-                    dialog.show();
+                    baseConfirmDialog.show();
+                    break;
+                case R.id.fly_add_bank:
+                    Intent intent = new Intent(WithdrawActivity.this, AddBankActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE_ADD_BANK_CARD);
+                    break;
+                case R.id.tv_withdraw_record:
+                    //提现记录
+                    intent = new Intent(WithdrawActivity.this, WithdrawRecordListActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.rly_bank_card:
+                    if (mBankCard != null) {
+                        intent = new Intent(WithdrawActivity.this, AddBankActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("bankCard", mBankCard);
+                        intent.putExtras(bundle);
+                        startActivityForResult(intent, REQUEST_CODE_ADD_BANK_CARD);
+                    }
+                    break;
+                case R.id.tv_available_amount:
+                    //推荐记录
+                    intent = new Intent(WithdrawActivity.this, MakeMoneyInfoActivity.class);
+                    startActivity(intent);
                     break;
                 default:
                     break;
             }
         }
     };
+
+    private void refreshStudent() {
+        isRefresh = true;
+        mSrlRefresh.setRefreshing(true);
+        this.msPresenter.getStudent(spUtil.getUser().getStudent().getId(), spUtil.getUser().getSession().getAccess_token(),
+                new MSCallbackListener<Student>() {
+                    @Override
+                    public void onSuccess(Student student) {
+                        User user = spUtil.getUser();
+                        user.setStudent(student);
+                        spUtil.setUser(user);
+                        refreshUI();
+                        mSrlRefresh.setRefreshing(false);
+                        isRefresh = false;
+                    }
+
+                    @Override
+                    public void onFailure(String errorEvent, String message) {
+                        mSrlRefresh.setRefreshing(false);
+                        isRefresh = false;
+                    }
+                });
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_ADD_BANK_CARD) {
+            if (resultCode == RESULT_OK && null != data && data.getBooleanExtra("isUpdate", false)) {
+                refreshStudent();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

@@ -15,10 +15,12 @@ import com.hahaxueche.model.response.GroupBuyResponse;
 import com.hahaxueche.model.response.ReferalHistoryResponse;
 import com.hahaxueche.model.response.RefereeListResponse;
 import com.hahaxueche.model.review.ReviewInfo;
+import com.hahaxueche.model.student.BankCard;
 import com.hahaxueche.model.student.ReferalBonusSummary;
 import com.hahaxueche.model.student.ReferalBonusTransaction;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
+import com.hahaxueche.model.student.WithdrawRecord;
 import com.hahaxueche.presenter.util.ErrorEvent;
 
 import java.util.ArrayList;
@@ -336,34 +338,28 @@ public class MSPresenterImpl implements MSPresenter {
     }
 
     @Override
-    public void withdrawBonus(final String studentId, final String account, final String accountOwnerName, final String amount, final String accessToken, final MSCallbackListener<ReferalBonusTransaction> listener) {
-        if (TextUtils.isEmpty(account)) {
-            listener.onFailure(ErrorEvent.PARAM_NULL, "支付宝账号不能为空！");
-            return;
-        } else if (TextUtils.isEmpty(accountOwnerName)) {
-            listener.onFailure(ErrorEvent.PARAM_NULL, "姓名不能为空！");
-            return;
-        } else if (TextUtils.isEmpty(amount)) {
+    public void withdrawBonus(final String studentId, final String amount, final String accessToken, final MSCallbackListener<BaseApiResponse> listener) {
+        if (TextUtils.isEmpty(amount)) {
             listener.onFailure(ErrorEvent.PARAM_NULL, "提现金额不能为空！");
             return;
         } else if (Double.parseDouble(amount) <= 0d) {
             listener.onFailure(ErrorEvent.PARAM_NULL, "提现金额必须大于0！");
             return;
         }
-        new AsyncTask<Void, Void, ReferalBonusTransaction>() {
+        new AsyncTask<Void, Void, BaseApiResponse>() {
 
             @Override
-            protected ReferalBonusTransaction doInBackground(Void... params) {
-                return studentApi.withdrawBonus(studentId, account, accountOwnerName, amount, accessToken);
+            protected BaseApiResponse doInBackground(Void... params) {
+                return studentApi.withdrawBonus(studentId, amount, accessToken);
             }
 
             @Override
-            protected void onPostExecute(ReferalBonusTransaction referalBonusTransaction) {
+            protected void onPostExecute(BaseApiResponse baseApiResponse) {
                 if (listener != null) {
-                    if (referalBonusTransaction.isSuccess()) {
-                        listener.onSuccess(referalBonusTransaction);
+                    if (baseApiResponse.isSuccess()) {
+                        listener.onSuccess(baseApiResponse);
                     } else {
-                        listener.onFailure(referalBonusTransaction.getCode(), referalBonusTransaction.getMessage());
+                        listener.onFailure("000", "`提现失败");
                     }
                 } else {
                     listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
@@ -431,6 +427,60 @@ public class MSPresenterImpl implements MSPresenter {
 
             @Override
             protected void onPostExecute(ArrayList<Event> arrayList) {
+                if (arrayList != null) {
+                    listener.onSuccess(arrayList);
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void addBankCard(final String name, final String cardNumber, final String openBankCode, final String studentId, final String accessToken, final MSCallbackListener<BankCard> listener) {
+        if (TextUtils.isEmpty(name)) {
+            listener.onFailure("000", "持卡人不能为空");
+            return;
+        } else if (TextUtils.isEmpty(cardNumber)) {
+            listener.onFailure("000", "银行卡号不能为空");
+            return;
+        } else if (TextUtils.isEmpty(openBankCode)) {
+            listener.onFailure("000", "开户行不能为空");
+            return;
+        }
+        new AsyncTask<Void, Void, BankCard>() {
+
+            @Override
+            protected BankCard doInBackground(Void... params) {
+                return studentApi.addBankCard(name, cardNumber, openBankCode, studentId, accessToken);
+            }
+
+            @Override
+            protected void onPostExecute(BankCard bankCard) {
+                if (bankCard != null) {
+                    if (bankCard.isSuccess()) {
+                        listener.onSuccess(bankCard);
+                    } else {
+                        listener.onFailure(bankCard.getCode(), "添加银行卡失败");
+                    }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void fetchWithdrawRecordList(final String accessToken, final MSCallbackListener<ArrayList<WithdrawRecord>> listener) {
+        new AsyncTask<Void, Void, ArrayList<WithdrawRecord>>() {
+
+            @Override
+            protected ArrayList<WithdrawRecord> doInBackground(Void... params) {
+                return studentApi.fetchWithdrawRecordList(accessToken);
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<WithdrawRecord> arrayList) {
                 if (arrayList != null) {
                     listener.onSuccess(arrayList);
                 } else {

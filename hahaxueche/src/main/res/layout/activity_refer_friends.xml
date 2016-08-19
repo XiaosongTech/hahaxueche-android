@@ -12,7 +12,7 @@
         android:background="@color/app_theme_color">
 
         <ImageButton
-            android:id="@+id/ibtn_ps_back"
+            android:id="@+id/ibtn_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/refererAwards"
+            android:text="我为哈哈代言"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
     </RelativeLayout>
@@ -44,40 +44,82 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:background="@color/app_theme_color">
+
+                <TextView
+                    android:id="@+id/tv_withdraw_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginTop="20dp"
+                    android:text="可提现"
+                    android:textColor="@color/haha_white"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_withdraw_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/tv_withdraw_label"
+                    android:layout_below="@id/tv_withdraw_label"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/haha_white"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/tv_withdraw"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/rect_back_transparent_corner_sm"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="5dp"
+                    android:text="提现"
+                    android:textColor="@color/haha_white"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@color/haha_white">
+
+            <ImageView
+                android:id="@+id/iv_qr_code"
+                android:layout_width="@dimen/width320dp"
+                android:layout_height="@dimen/height470dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:scaleType="centerCrop" />
+            <TextView
+                android:id="@+id/tv_save_qr_code"
+                android:layout_width="@dimen/width320dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:textColor="@color/haha_white"
+                android:paddingTop="13dp"
+                android:layout_marginTop="-10dp"
+                android:paddingBottom="13dp"
+                android:background="@drawable/rect_bg_appcolor_shadow"
+                android:text="保存到本地"/>
+
             <ImageView
                 android:id="@+id/iv_refer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_share_pic" />
-
-            <TextView
-                android:id="@+id/tv_refer_tips"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="33dp"
-                android:layout_marginRight="33dp"
-                android:layout_marginTop="30dp"
-                android:gravity="center"
-                android:lineSpacingMultiplier="1.2"
-                android:text="@string/referFriendsTips"
-                android:textColor="@color/haha_black_light"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/tv_refer_friends"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="33dp"
-                android:layout_marginRight="33dp"
-                android:layout_marginTop="25dp"
-                android:background="@drawable/rectangle_back_orange_sm"
-                android:gravity="center"
-                android:paddingBottom="12dp"
-                android:paddingTop="12dp"
-                android:text="@string/inviteFriends"
-                android:textColor="@color/haha_white"
-                android:textSize="18sp" />
+            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -121,10 +163,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginBottom="20dp"
                 android:lineSpacingExtra="2dp"
                 android:text="@string/eventDetailsTipsLaw"
                 android:textColor="@color/app_theme_color"

@@ -2,6 +2,7 @@ package com.hahaxueche.model.base;
 
 import com.hahaxueche.model.city.FieldModel;
 import com.hahaxueche.model.city.City;
+import com.hahaxueche.model.student.Bank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public class Constants {
     private ArrayList<BannerHighlight> banner_highlights;
     private String version_name;
     private int version_code;
+    private ArrayList<Bank> banks;
     private String message;
     private String code;
     private boolean isSuccess = true;
@@ -136,5 +138,13 @@ public class Constants {
 
     public void setIsSuccess(boolean isSuccess) {
         this.isSuccess = isSuccess;
+    }
+
+    public ArrayList<Bank> getBanks() {
+        return banks;
+    }
+
+    public void setBanks(ArrayList<Bank> banks) {
+        this.banks = banks;
     }
 }

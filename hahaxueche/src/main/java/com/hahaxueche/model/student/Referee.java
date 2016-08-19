@@ -4,49 +4,31 @@ package com.hahaxueche.model.student;
  * Created by Administrator on 2016/5/2.
  */
 public class Referee {
-    private String id;
-    private String referee_bonus_amount;
-    private String referer_bonus_amount;
-    private String created_at;
-    private RefereeStatus referee_status;
+    private String name;
+    private String phone;
+    private String purchased_at;
 
-    public String getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getReferee_bonus_amount() {
-        return referee_bonus_amount;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setReferee_bonus_amount(String referee_bonus_amount) {
-        this.referee_bonus_amount = referee_bonus_amount;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public String getReferer_bonus_amount() {
-        return referer_bonus_amount;
+    public String getPurchased_at() {
+        return purchased_at;
     }
 
-    public void setReferer_bonus_amount(String referer_bonus_amount) {
-        this.referer_bonus_amount = referer_bonus_amount;
-    }
-
-    public String getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(String created_at) {
-        this.created_at = created_at;
-    }
-
-    public RefereeStatus getReferee_status() {
-        return referee_status;
-    }
-
-    public void setReferee_status(RefereeStatus referee_status) {
-        this.referee_status = referee_status;
+    public void setPurchased_at(String purchased_at) {
+        this.purchased_at = purchased_at;
     }
 }

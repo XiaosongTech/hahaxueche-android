@@ -2,12 +2,13 @@ package com.hahaxueche.model.student;
 
 import com.hahaxueche.model.coach.CoachGroupModel;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by gibxin on 2016/2/29.
  */
-public class PurchasedService {
+public class PurchasedService implements Serializable{
     private String id;
     private String charge_id;
     private List<Assignment> assignments;

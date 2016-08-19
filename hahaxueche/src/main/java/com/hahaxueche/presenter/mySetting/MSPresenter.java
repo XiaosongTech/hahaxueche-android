@@ -6,10 +6,12 @@ import com.hahaxueche.model.response.GroupBuyResponse;
 import com.hahaxueche.model.response.ReferalHistoryResponse;
 import com.hahaxueche.model.response.RefereeListResponse;
 import com.hahaxueche.model.review.ReviewInfo;
+import com.hahaxueche.model.student.BankCard;
 import com.hahaxueche.model.student.ReferalBonusSummary;
 import com.hahaxueche.model.student.ReferalBonusTransaction;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
+import com.hahaxueche.model.student.WithdrawRecord;
 
 import java.util.ArrayList;
 
@@ -107,13 +109,11 @@ public interface MSPresenter {
 
     /**
      * @param studentId
-     * @param account
-     * @param accountOwnerName
      * @param amount
      * @param accessToken
      * @param listener
      */
-    public void withdrawBonus(String studentId, String account, String accountOwnerName, String amount, String accessToken, MSCallbackListener<ReferalBonusTransaction> listener);
+    public void withdrawBonus(String studentId, String amount, String accessToken, MSCallbackListener<BaseApiResponse> listener);
 
     /**
      * @param name
@@ -131,4 +131,22 @@ public interface MSPresenter {
      * @param listener
      */
     public void fetchEventList(String cityId, MSCallbackListener<ArrayList<Event>> listener);
+
+    /**
+     * 添加银行卡
+     *
+     * @param name
+     * @param cardNumber
+     * @param openBankCode
+     * @param studentId
+     * @param accessToken
+     * @param listener
+     */
+    public void addBankCard(String name, String cardNumber, String openBankCode, String studentId, String accessToken, MSCallbackListener<BankCard> listener);
+
+    /**
+     * @param accessToken
+     * @param listener
+     */
+    public void fetchWithdrawRecordList(String accessToken, MSCallbackListener<ArrayList<WithdrawRecord>> listener);
 }
