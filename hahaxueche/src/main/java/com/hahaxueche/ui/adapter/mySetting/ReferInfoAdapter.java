@@ -56,7 +56,7 @@ public class ReferInfoAdapter extends BaseAdapter {
             mInflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = mInflator.inflate(mResource, null);
             holder = new ViewHolder();
-            holder.civStudentAvatar = (CircleImageView) view.findViewById(R.id.civ_referee_avatar);
+            holder.tvRefereePhone = (TextView) view.findViewById(R.id.tv_referee_phone);
             holder.tvRefereeName = (TextView) view.findViewById(R.id.tv_referee_name);
             holder.tvReferState = (TextView) view.findViewById(R.id.tv_refer_state);
             holder.tvReferAmount = (TextView) view.findViewById(R.id.tv_refer_amount);
@@ -65,28 +65,24 @@ public class ReferInfoAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
         Referee referee = mRefereeList.get(position);
-        if (!TextUtils.isEmpty(referee.getReferee_status().getAvatar_url())) {
-            final int iconWidth = Util.instence(mContext).dip2px(50);
-            final int iconHeight = iconWidth;
-            Picasso.with(mContext).load(referee.getReferee_status().getAvatar_url()).resize(iconWidth, iconHeight).into(holder.civStudentAvatar);
-        }
-        holder.tvRefereeName.setText(referee.getReferee_status().getName());
-        holder.tvReferAmount.setText(Util.getMoney(referee.getReferer_bonus_amount()));
-        if (referee.getReferee_status().getStatus().equals("0")) {
-            holder.tvReferState.setText("已注册，还没有报名教练");
+        holder.tvRefereeName.setText(referee.getName());
+        holder.tvRefereePhone.setText(referee.getPhone());
+        holder.tvReferAmount.setText(Util.getMoney(10000));
+        if (TextUtils.isEmpty(referee.getPurchased_at())) {
+            holder.tvReferState.setText("已预约，还没有报名教练");
             holder.tvReferAmount.setTextColor(ContextCompat.getColor(mContext, R.color.haha_gray_heavier));
-        } else if (referee.getReferee_status().getStatus().equals("1")) {
-            holder.tvReferState.setText("已报名教练并付款");
+        } else {
+            holder.tvReferState.setText("已经报名教练并付款");
             holder.tvReferAmount.setTextColor(ContextCompat.getColor(mContext, R.color.app_theme_color));
         }
         return view;
     }
 
     static class ViewHolder {
-        CircleImageView civStudentAvatar;
         TextView tvRefereeName;
         TextView tvReferState;
         TextView tvReferAmount;
+        TextView tvRefereePhone;
     }
 }
 

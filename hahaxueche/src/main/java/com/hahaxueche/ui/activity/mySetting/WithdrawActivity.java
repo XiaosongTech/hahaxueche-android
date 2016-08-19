@@ -2,6 +2,7 @@ package com.hahaxueche.ui.activity.mySetting;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -96,6 +97,7 @@ public class WithdrawActivity extends MSBaseActivity {
         mSrlRefresh.setOnRefreshListener(mRefreshListener);
         mSrlRefresh.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
         mRlyBankCard.setOnClickListener(mClickListener);
+        mTvAvailableAmount.setOnClickListener(mClickListener);
     }
 
     SwipeRefreshLayout.OnRefreshListener mRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
@@ -118,9 +120,13 @@ public class WithdrawActivity extends MSBaseActivity {
             mFlyAddBank.setVisibility(View.GONE);
             mTvBankName.setText(mBankCard.getBank_name());
             mTvBankRemarks.setText(mBankCard.getName() + " , 尾号" + mBankCard.getCard_number().substring(mBankCard.getCard_number().length() - 4, mBankCard.getCard_number().length()));
+            mTvAvailableAmount.setClickable(true);
+            mTvAvailableAmount.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(WithdrawActivity.this, R.drawable.ic_arrow_more_white), null);
         } else {
             mRlyBankCard.setVisibility(View.GONE);
             mFlyAddBank.setVisibility(View.VISIBLE);
+            mTvAvailableAmount.setClickable(false);
+            mTvAvailableAmount.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         }
     }
 
@@ -196,6 +202,11 @@ public class WithdrawActivity extends MSBaseActivity {
                         intent.putExtras(bundle);
                         startActivityForResult(intent, REQUEST_CODE_ADD_BANK_CARD);
                     }
+                    break;
+                case R.id.tv_available_amount:
+                    //推荐记录
+                    intent = new Intent(WithdrawActivity.this, MakeMoneyInfoActivity.class);
+                    startActivity(intent);
                     break;
                 default:
                     break;
