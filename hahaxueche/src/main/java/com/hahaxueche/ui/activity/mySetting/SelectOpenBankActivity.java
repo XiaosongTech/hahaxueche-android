@@ -3,6 +3,9 @@ package com.hahaxueche.ui.activity.mySetting;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -69,7 +72,40 @@ public class SelectOpenBankActivity extends MSBaseActivity {
                 }
             }
         });
+        mEtSearchOpenBank.addTextChangedListener(mTextChangedWatcher);
     }
+
+    private TextWatcher mTextChangedWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            String keyWords = mEtSearchOpenBank.getText().toString().trim();
+            if (mBankList != null && mBankList.size() > 0) {
+                if (TextUtils.isEmpty(keyWords)) {
+                    mOpenBankAdapter = new OpenBankAdapter(SelectOpenBankActivity.this, mBankList, R.layout.adapter_open_bank);
+                    mLvOpenBank.setAdapter(mOpenBankAdapter);
+                } else {
+                    ArrayList<Bank> searchBankList = new ArrayList<>();
+                    for (Bank bank : mBankList) {
+                        if (bank.getName().contains(keyWords)) {
+                            searchBankList.add(bank);
+                        }
+                    }
+                    mOpenBankAdapter = new OpenBankAdapter(SelectOpenBankActivity.this, searchBankList, R.layout.adapter_open_bank);
+                    mLvOpenBank.setAdapter(mOpenBankAdapter);
+                }
+            }
+        }
+    };
 
     /**
      * 加载热门城市
