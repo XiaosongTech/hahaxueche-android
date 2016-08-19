@@ -28,7 +28,7 @@ public class WelcomeActivity extends MSBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);// 声明使用自定义标题
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);// 声明使用自定义标题
         setContentView(R.layout.activity_welcome);
         spUtil = new SharedPreferencesUtil(this);
         Handler x = new Handler();

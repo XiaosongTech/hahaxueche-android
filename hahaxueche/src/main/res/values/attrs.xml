@@ -20,4 +20,23 @@
         <attr name="radiu" format="dimension" />
     </declare-styleable>
 
+    <attr name="indicatorColor" format="color" />
+    <attr name="dividerColor" format="color" />
+    <attr name="bottomLineColor" format="color" />
+    <attr name="tabMainTextColor" format="color"/>
+    <attr name="dividerMargin" format="dimension" />
+    <attr name="indicatorHeight" format="dimension" />
+    <attr name="bottomLineHeight" format="dimension" />
+    <attr name="dividerWidth" format="dimension" />
+    <declare-styleable name="SlidingTabLayout">
+        <attr name="indicatorColor" />
+        <attr name="dividerColor" />
+        <attr name="bottomLineColor" />
+        <attr name="dividerMargin" />
+        <attr name="indicatorHeight" />
+        <attr name="bottomLineHeight" />
+        <attr name="dividerWidth" />
+        <attr name="tabMainTextColor"/>
+    </declare-styleable>
+
 </resources>

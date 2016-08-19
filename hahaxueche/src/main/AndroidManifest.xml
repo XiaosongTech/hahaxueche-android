@@ -279,6 +279,14 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"></activity>
+        <activity
+            android:name=".ui.activity.index.ExamActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.index.StartExamActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
         <!--定位服务-->
         <service android:name=".service.LocationService"></service>
         <!--检测session有效性服务-->

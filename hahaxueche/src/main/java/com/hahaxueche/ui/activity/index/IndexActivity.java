@@ -12,6 +12,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -48,7 +51,10 @@ import com.hahaxueche.ui.dialog.AppointmentDialog;
 import com.hahaxueche.ui.dialog.BaseAlertDialog;
 import com.hahaxueche.ui.dialog.CityChoseDialog;
 import com.hahaxueche.ui.dialog.GroupBuyDialog;
+import com.hahaxueche.ui.fragment.index.exam.ExamPageItem;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
+import com.hahaxueche.ui.widget.slidingTabLayout.SlidingTabLayout;
+import com.hahaxueche.utils.ExamLib;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.UpdateManager;
 import com.hahaxueche.utils.Util;
@@ -79,6 +85,15 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     private LinearLayout mLlyEvents;
     private EventAdapter mEventAdapter;
     private ArrayList<Event> mEventArrayList;
+    /******
+     * 题库
+     ******/
+    /*viewpager*/
+    private ViewPager mViewPager;
+    /*自定义的 tabLayout*/
+    private SlidingTabLayout mTabLayout;
+    /*每个 tab 的 item*/
+    private List<ExamPageItem> mTab = new ArrayList<>();
 
     private List<String> networkImages;
     private ArrayAdapter transformerArrayAdapter;
@@ -140,6 +155,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         } else {
             loadEvents();
         }
+        loadExamLib();
         doAutoVersionCheck();
     }
 
@@ -184,6 +200,8 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         mLvEvents = Util.instence(this).$(this, R.id.lv_events);
         mTvMoreEvents = Util.instence(this).$(this, R.id.tv_more_events);
         mLlyEvents = Util.instence(this).$(this, R.id.lly_events);
+        mViewPager = Util.instence(this).$(this, R.id.vp_exam);
+        mTabLayout = Util.instence(this).$(this, R.id.stl_exam_title);
     }
 
     private void initEvent() {
@@ -522,5 +540,35 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     private void navigateToMoreEvents() {
         Intent intent = new Intent(getApplication(), EventListActivity.class);
         startActivity(intent);
+    }
+
+    private void loadExamLib() {
+        mTab.add(new ExamPageItem(ExamLib.EXAM_TYPE_1));
+        mTab.add(new ExamPageItem(ExamLib.EXAM_TYPE_4));
+        mViewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
+        /*需要先为 viewpager 设置 adapter*/
+        mTabLayout.setViewPager(mViewPager);
+    }
+
+    private class ViewPagerAdapter extends FragmentPagerAdapter implements SlidingTabLayout.TabItemName {
+
+        public ViewPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mTab.get(position).createFragment();
+        }
+
+        @Override
+        public int getCount() {
+            return mTab.size();
+        }
+
+        @Override
+        public String getTabName(int position) {
+            return mTab.get(position).getTitle();
+        }
     }
 }
