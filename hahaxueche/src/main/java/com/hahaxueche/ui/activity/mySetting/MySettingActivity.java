@@ -297,7 +297,7 @@ public class MySettingActivity extends MSBaseActivity {
                     startActivity(intent);
                     break;
                 case R.id.rly_referer_friends:
-                    //推荐朋友
+                    //推荐朋友,为哈哈代言
                     intent = new Intent(getApplication(), ReferFriendsActivity.class);
                     startActivity(intent);
                     break;

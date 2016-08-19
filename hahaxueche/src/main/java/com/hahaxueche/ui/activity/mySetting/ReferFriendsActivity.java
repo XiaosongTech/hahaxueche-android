@@ -21,7 +21,9 @@ import android.widget.Toast;
 import com.hahaxueche.R;
 import com.hahaxueche.api.net.HttpEngine;
 import com.hahaxueche.model.city.City;
+import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 import com.squareup.picasso.Picasso;
@@ -51,6 +53,8 @@ public class ReferFriendsActivity extends MSBaseActivity {
     private ImageView mIvRefer;
     private static final int PERMISSIONS_REQUEST = 600;
     private String mQrCodeUrl;
+
+    private static final int REQUEST_CODE_WITHDRAW = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,7 +110,7 @@ public class ReferFriendsActivity extends MSBaseActivity {
                     break;
                 case R.id.tv_withdraw:
                     Intent intent = new Intent(ReferFriendsActivity.this, WithdrawActivity.class);
-                    startActivity(intent);
+                    startActivityForResult(intent,REQUEST_CODE_WITHDRAW);
                     break;
                 case R.id.tv_save_qr_code:
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -190,4 +194,27 @@ public class ReferFriendsActivity extends MSBaseActivity {
             Toast.makeText(context, "图片保存失败", Toast.LENGTH_SHORT).show();
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==REQUEST_CODE_WITHDRAW){
+            if(resultCode==RESULT_OK && data!=null && data.getBooleanExtra("isUpdate",false)){
+                this.msPresenter.getStudent(spUtil.getUser().getStudent().getId(), spUtil.getUser().getSession().getAccess_token(),
+                        new MSCallbackListener<Student>() {
+                            @Override
+                            public void onSuccess(Student student) {
+                                User user = spUtil.getUser();
+                                user.setStudent(student);
+                                spUtil.setUser(user);
+                                loadDatas();
+                            }
+
+                            @Override
+                            public void onFailure(String errorEvent, String message) {
+                            }
+                        });
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

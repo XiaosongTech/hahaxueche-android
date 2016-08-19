@@ -139,9 +139,4 @@ public class SelectOpenBankActivity extends MSBaseActivity {
         SelectOpenBankActivity.this.finish();
     }
 
-    @Override
-    public boolean onTouchEvent(android.view.MotionEvent event) {
-        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        return imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
-    }
 }

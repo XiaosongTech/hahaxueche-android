@@ -108,13 +108,11 @@ public interface MSPresenter {
 
     /**
      * @param studentId
-     * @param account
-     * @param accountOwnerName
      * @param amount
      * @param accessToken
      * @param listener
      */
-    public void withdrawBonus(String studentId, String account, String accountOwnerName, String amount, String accessToken, MSCallbackListener<ReferalBonusTransaction> listener);
+    public void withdrawBonus(String studentId, String amount, String accessToken, MSCallbackListener<BaseApiResponse> listener);
 
     /**
      * @param name
@@ -144,16 +142,4 @@ public interface MSPresenter {
      * @param listener
      */
     public void addBankCard(String name, String cardNumber, String openBankCode, String studentId, String accessToken, MSCallbackListener<BankCard> listener);
-
-    /**
-     * 修改银行卡
-     *
-     * @param name
-     * @param cardNumber
-     * @param openBankCode
-     * @param studentId
-     * @param accessToken
-     * @param listener
-     */
-    public void editBankCard(String name, String cardNumber, String openBankCode, String studentId, String accessToken, MSCallbackListener<BankCard> listener);
 }

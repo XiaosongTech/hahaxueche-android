@@ -156,12 +156,10 @@ public interface StudentApi {
      * 学员提取奖金
      *
      * @param studentId
-     * @param account
-     * @param accountOwnerName
      * @param amount
      * @return
      */
-    public ReferalBonusTransaction withdrawBonus(String studentId, String account, String accountOwnerName, String amount, String accessToken);
+    public BaseApiResponse withdrawBonus(String studentId, String amount, String accessToken);
 
     /**
      * 团购报名
@@ -191,16 +189,5 @@ public interface StudentApi {
      * @return
      */
     public BankCard addBankCard(String name, String cardNumber, String openBankCode, String studentId, String accessToken);
-
-    /**
-     * 修改银行卡
-     * @param name
-     * @param cardNumber
-     * @param openBankCode
-     * @param studentId
-     * @param accessToken
-     * @return
-     */
-    public BankCard editBankCard(String name, String cardNumber, String openBankCode, String studentId, String accessToken);
 
 }

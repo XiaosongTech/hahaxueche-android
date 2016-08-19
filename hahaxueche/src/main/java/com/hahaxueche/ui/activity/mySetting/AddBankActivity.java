@@ -67,47 +67,28 @@ public class AddBankActivity extends MSBaseActivity {
         mTvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mBankCard != null) {//修改银行卡
-                    pd = ProgressDialog.show(AddBankActivity.this, null, "银行卡信息添加中，请稍后……");
-                    msPresenter.editBankCard(mEtAccountName.getText().toString(), mEtAccount.getText().toString(), mOpenBankCode, mUser.getStudent().getId(),
-                            mUser.getSession().getAccess_token(), new MSCallbackListener<BankCard>() {
-                                @Override
-                                public void onSuccess(BankCard data) {
-                                    pd.dismiss();
-                                    Intent intent = new Intent();
-                                    intent.putExtra("isUpdate", true);
-                                    setResult(RESULT_OK, intent);
-                                    AddBankActivity.this.finish();
-                                }
+                //添加银行卡
+                pd = ProgressDialog.show(AddBankActivity.this, null, "银行卡信息上传中，请稍后……");
+                msPresenter.addBankCard(mEtAccountName.getText().toString(), mEtAccount.getText().toString(), mOpenBankCode, mUser.getStudent().getId(),
+                        mUser.getSession().getAccess_token(), new MSCallbackListener<BankCard>() {
+                            @Override
+                            public void onSuccess(BankCard data) {
+                                pd.dismiss();
+                                Intent intent = new Intent();
+                                intent.putExtra("isUpdate", true);
+                                setResult(RESULT_OK, intent);
+                                AddBankActivity.this.finish();
+                            }
 
-                                @Override
-                                public void onFailure(String errorEvent, String message) {
-                                    pd.dismiss();
-                                    Toast.makeText(AddBankActivity.this, message, Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                } else {//添加银行卡
-                    pd = ProgressDialog.show(AddBankActivity.this, null, "银行卡信息修改中，请稍后……");
-                    msPresenter.addBankCard(mEtAccountName.getText().toString(), mEtAccount.getText().toString(), mOpenBankCode, mUser.getStudent().getId(),
-                            mUser.getSession().getAccess_token(), new MSCallbackListener<BankCard>() {
-                                @Override
-                                public void onSuccess(BankCard data) {
-                                    pd.dismiss();
-                                    Intent intent = new Intent();
-                                    intent.putExtra("isUpdate", true);
-                                    setResult(RESULT_OK, intent);
-                                    AddBankActivity.this.finish();
-                                }
-
-                                @Override
-                                public void onFailure(String errorEvent, String message) {
-                                    pd.dismiss();
-                                    Toast.makeText(AddBankActivity.this, message, Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                }
-
+                            @Override
+                            public void onFailure(String errorEvent, String message) {
+                                pd.dismiss();
+                                Toast.makeText(AddBankActivity.this, message, Toast.LENGTH_SHORT).show();
+                            }
+                        });
             }
+
+
         });
 
         mIbtnBack.setOnClickListener(new View.OnClickListener() {
@@ -124,12 +105,7 @@ public class AddBankActivity extends MSBaseActivity {
             }
         });
     }
-
-    @Override
-    public boolean onTouchEvent(android.view.MotionEvent event) {
-        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        return imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
-    }
+    
 
 
     private void loadDatas() {

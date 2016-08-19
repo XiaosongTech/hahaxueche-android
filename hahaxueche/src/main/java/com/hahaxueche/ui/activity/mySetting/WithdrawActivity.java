@@ -7,7 +7,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -17,8 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
+import com.hahaxueche.model.base.BaseApiResponse;
 import com.hahaxueche.model.student.BankCard;
-import com.hahaxueche.model.student.ReferalBonusTransaction;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
@@ -40,13 +39,13 @@ public class WithdrawActivity extends MSBaseActivity {
     private FrameLayout mFlyAddBank;//添加银行卡
     private SwipeRefreshLayout mSrlRefresh;//下拉刷新
     private TextView mTvWithdrawRecord;//提现记录
-    private User mUser;
     private BankCard mBankCard;
     private ImageView mIvDash;
+    private String mAvailableAmount = "0";
 
     private boolean isRefresh = false;//是否刷新中
     private SharedPreferencesUtil spUtil;
-    public static int REQUEST_CODE_WITHDRAW = 1001;
+    public static int REQUEST_CODE_ADD_BANK_CARD = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +109,8 @@ public class WithdrawActivity extends MSBaseActivity {
 
     private void refreshUI() {
         Student student = spUtil.getUser().getStudent();
-        mTvAvailableAmount.setText(Util.getMoney(student.getBonus_balance()));
+        mAvailableAmount = student.getBonus_balance();
+        mTvAvailableAmount.setText(Util.getMoney(mAvailableAmount));
         //目前只会有一张银行卡
         mBankCard = student.getBank_card();
         if (mBankCard != null) {
@@ -139,25 +139,26 @@ public class WithdrawActivity extends MSBaseActivity {
                     }
                     final double withdrawMoney = Double.parseDouble(withdrawAmount) * 100;
                     //double availableMoney = Double.parseDouble(mReferalBonusSummary.getAvailable_to_redeem());
-                    if (Double.compare(withdrawMoney, 100d) <= 0) {
-                        Toast.makeText(WithdrawActivity.this, "提现金额必须大于1元", Toast.LENGTH_SHORT).show();
+                    if (Double.compare(withdrawMoney, 10000d) < 0) {
+                        Toast.makeText(WithdrawActivity.this, "提现金额不能低于100元", Toast.LENGTH_SHORT).show();
                         return;
                     } else {
-                        /*int interval = Double.compare(withdrawMoney, availableMoney);
+                        int interval = Double.compare(withdrawMoney, Double.parseDouble(mAvailableAmount) * 100);
                         if (interval > 0) {
                             Toast.makeText(WithdrawActivity.this, "提现金额不能大于可提现金额", Toast.LENGTH_SHORT).show();
                             return;
-                        }*/
+                        }
                     }
                     //确认提款
-                    String content = "提现金额：" + Util.getMoney(withdrawMoney) + "\n银行手续费：" + Util.getMoney(200) + "\n实际提现：" + Util.getMoney(withdrawMoney - 200) + "\n银行卡号：" + mBankCard.getCard_number() + "\n持卡人：" + mBankCard.getName();
+                    String content = "提现金额：" + Util.getMoney(withdrawMoney) + "\n银行卡号：" + mBankCard.getCard_number() + "\n持卡人：" + mBankCard.getName();
                     BaseConfirmDialog baseConfirmDialog = new BaseConfirmDialog(WithdrawActivity.this, "确认提现", "提现明细", content, "", "确认提现", "取消返回", new BaseConfirmDialog.onConfirmListener() {
                         @Override
                         public boolean clickConfirm() {
-                            msPresenter.withdrawBonus(mUser.getStudent().getId(), mBankCard.getCard_number(), mBankCard.getName(), String.valueOf(withdrawMoney), mUser.getSession().getAccess_token(), new MSCallbackListener<ReferalBonusTransaction>() {
+                            msPresenter.withdrawBonus(spUtil.getUser().getStudent().getId(), String.valueOf(withdrawMoney), spUtil.getUser().getSession().getAccess_token(), new MSCallbackListener<BaseApiResponse>() {
                                 @Override
-                                public void onSuccess(ReferalBonusTransaction data) {
+                                public void onSuccess(BaseApiResponse data) {
                                     Intent intent = new Intent();
+                                    intent.putExtra("isUpdate", true);
                                     setResult(RESULT_OK, intent);
                                     WithdrawActivity.this.finish();
                                 }
@@ -180,7 +181,7 @@ public class WithdrawActivity extends MSBaseActivity {
                     break;
                 case R.id.fly_add_bank:
                     Intent intent = new Intent(WithdrawActivity.this, AddBankActivity.class);
-                    startActivityForResult(intent, REQUEST_CODE_WITHDRAW);
+                    startActivityForResult(intent, REQUEST_CODE_ADD_BANK_CARD);
                     break;
                 case R.id.tv_withdraw_record:
                     //提现记录
@@ -193,7 +194,7 @@ public class WithdrawActivity extends MSBaseActivity {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("bankCard", mBankCard);
                         intent.putExtras(bundle);
-                        startActivityForResult(intent, REQUEST_CODE_WITHDRAW);
+                        startActivityForResult(intent, REQUEST_CODE_ADD_BANK_CARD);
                     }
                     break;
                 default:
@@ -227,14 +228,8 @@ public class WithdrawActivity extends MSBaseActivity {
 
 
     @Override
-    public boolean onTouchEvent(android.view.MotionEvent event) {
-        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        return imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_WITHDRAW) {
+        if (requestCode == REQUEST_CODE_ADD_BANK_CARD) {
             if (resultCode == RESULT_OK && null != data && data.getBooleanExtra("isUpdate", false)) {
                 refreshStudent();
             }
