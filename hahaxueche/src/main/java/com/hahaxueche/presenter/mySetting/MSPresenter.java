@@ -11,6 +11,7 @@ import com.hahaxueche.model.student.ReferalBonusSummary;
 import com.hahaxueche.model.student.ReferalBonusTransaction;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
+import com.hahaxueche.model.student.WithdrawRecord;
 
 import java.util.ArrayList;
 
@@ -142,4 +143,10 @@ public interface MSPresenter {
      * @param listener
      */
     public void addBankCard(String name, String cardNumber, String openBankCode, String studentId, String accessToken, MSCallbackListener<BankCard> listener);
+
+    /**
+     * @param accessToken
+     * @param listener
+     */
+    public void fetchWithdrawRecordList(String accessToken, MSCallbackListener<ArrayList<WithdrawRecord>> listener);
 }

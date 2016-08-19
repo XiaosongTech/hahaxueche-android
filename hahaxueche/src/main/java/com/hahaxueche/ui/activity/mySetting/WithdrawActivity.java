@@ -185,7 +185,7 @@ public class WithdrawActivity extends MSBaseActivity {
                     break;
                 case R.id.tv_withdraw_record:
                     //提现记录
-                    intent = new Intent(WithdrawActivity.this, RedeemedListActivity.class);
+                    intent = new Intent(WithdrawActivity.this, WithdrawRecordListActivity.class);
                     startActivity(intent);
                     break;
                 case R.id.rly_bank_card:

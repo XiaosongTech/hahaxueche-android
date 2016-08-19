@@ -3,7 +3,6 @@ package com.hahaxueche.ui.activity.mySetting;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.View;
@@ -18,11 +17,8 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.response.RefereeListResponse;
 import com.hahaxueche.model.student.ReferalBonusSummary;
 import com.hahaxueche.model.student.Referee;
-import com.hahaxueche.model.student.RefereeStatus;
-import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
-import com.hahaxueche.ui.adapter.findCoach.ReviewItemAdapter;
 import com.hahaxueche.ui.adapter.mySetting.ReferInfoAdapter;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
 import com.hahaxueche.utils.SharedPreferencesUtil;
@@ -246,7 +242,7 @@ public class MakeMoneyInfoActivity extends MSBaseActivity implements XListView.I
                 case R.id.tv_withdrawn_amount:
                     Intent intent;
                     if (mRefereeList != null && mRefereeList.size() > 0) {
-                        intent = new Intent(getApplication(), RedeemedListActivity.class);
+                        intent = new Intent(getApplication(), WithdrawRecordListActivity.class);
                         startActivity(intent);
                     } else {
                         intent = new Intent(getApplication(), ReferFriendsActivity.class);

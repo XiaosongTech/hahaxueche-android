@@ -15,6 +15,7 @@ import com.hahaxueche.model.student.ReferalBonusSummary;
 import com.hahaxueche.model.student.ReferalBonusTransaction;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
+import com.hahaxueche.model.student.WithdrawRecord;
 
 import java.util.ArrayList;
 
@@ -189,5 +190,12 @@ public interface StudentApi {
      * @return
      */
     public BankCard addBankCard(String name, String cardNumber, String openBankCode, String studentId, String accessToken);
+
+    /**
+     * 提现记录列表
+     * @param accessToken
+     * @return
+     */
+    public ArrayList<WithdrawRecord> fetchWithdrawRecordList(String accessToken);
 
 }

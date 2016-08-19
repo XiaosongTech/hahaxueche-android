@@ -20,6 +20,7 @@ import com.hahaxueche.model.student.ReferalBonusSummary;
 import com.hahaxueche.model.student.ReferalBonusTransaction;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
+import com.hahaxueche.model.student.WithdrawRecord;
 import com.hahaxueche.presenter.util.ErrorEvent;
 
 import java.util.ArrayList;
@@ -462,6 +463,26 @@ public class MSPresenterImpl implements MSPresenter {
                     } else {
                         listener.onFailure(bankCard.getCode(), "添加银行卡失败");
                     }
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void fetchWithdrawRecordList(final String accessToken, final MSCallbackListener<ArrayList<WithdrawRecord>> listener) {
+        new AsyncTask<Void, Void, ArrayList<WithdrawRecord>>() {
+
+            @Override
+            protected ArrayList<WithdrawRecord> doInBackground(Void... params) {
+                return studentApi.fetchWithdrawRecordList(accessToken);
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<WithdrawRecord> arrayList) {
+                if (arrayList != null) {
+                    listener.onSuccess(arrayList);
                 } else {
                     listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
                 }

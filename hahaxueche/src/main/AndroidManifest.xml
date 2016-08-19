@@ -237,7 +237,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.activity.mySetting.RedeemedListActivity"
+            android:name=".ui.activity.mySetting.WithdrawRecordListActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>

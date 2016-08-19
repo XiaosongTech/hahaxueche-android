@@ -18,6 +18,7 @@ import com.hahaxueche.model.student.ReferalBonusSummary;
 import com.hahaxueche.model.student.ReferalBonusTransaction;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
+import com.hahaxueche.model.student.WithdrawRecord;
 import com.hahaxueche.utils.JsonUtils;
 
 import java.io.IOException;
@@ -495,7 +496,7 @@ public class StudentApiImpl implements StudentApi {
             baseApiResponse.setIsSuccess(response.isSuccessful());
         } catch (IOException e) {
             baseApiResponse.setIsSuccess(false);
-        }finally {
+        } finally {
             return baseApiResponse;
         }
     }
@@ -571,6 +572,25 @@ public class StudentApiImpl implements StudentApi {
                 retModel.setMessage(baseApiResponse.getMessage());
                 retModel.setSuccess(false);
                 return retModel;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public ArrayList<WithdrawRecord> fetchWithdrawRecordList(String accessToken) {
+        Type type = new TypeToken<ArrayList<WithdrawRecord>>() {
+        }.getType();
+        try {
+            Response response = httpEngine.getHandle("bank_cards/withdraw_records", accessToken);
+            String body = response.body().string();
+            Log.v("gibxin", "body -> " + body);
+            if (response.isSuccessful()) {
+                return JsonUtils.deserialize(body, type);
+            } else {
+                return null;
             }
         } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
