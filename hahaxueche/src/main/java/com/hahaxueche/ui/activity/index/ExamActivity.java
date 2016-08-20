@@ -9,8 +9,14 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -190,12 +196,13 @@ public class ExamActivity extends IndexBaseActivity implements ExamFragment.OnCo
             mTvTitle.setText("我的题库");
             mIvSubmitExam.setVisibility(View.GONE);
         } else if (mExamMode.equals(ExamLib.TEST_MODE_CHECK_WRONG)) {
+            mTvTitle.setText("查看错题");
             mIvSubmitExam.setVisibility(View.GONE);
         }
         if (mExamMode.equals(ExamLib.TEST_MODE_TURN)) {//顺序联系,提示是否继续上次位置
             final int lastPos = spUtil.getExamPosition(mExamType);
             if (lastPos > 0) {
-                BaseConfirmSimpleDialog baseConfirmSimpleDialog = new BaseConfirmSimpleDialog(ExamActivity.this, "提示", "上次练习到" + (lastPos + 1) + "题,是否继续",
+                BaseConfirmSimpleDialog baseConfirmSimpleDialog = new BaseConfirmSimpleDialog(ExamActivity.this, "提示", "上次练习到" + (lastPos + 1) + "题,是否继续?",
                         "继续上次", "重新开始", new BaseConfirmSimpleDialog.onConfirmListener() {
                     @Override
                     public boolean clickConfirm() {
@@ -217,7 +224,13 @@ public class ExamActivity extends IndexBaseActivity implements ExamFragment.OnCo
     }
 
     private void setPageText() {
-        mTvPage.setText((mCurrentPosition + 1) + "/" + mPageSize);
+        String text = (mCurrentPosition + 1) + "/" + mPageSize;
+        SpannableString ss = new SpannableString(text);
+        ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.haha_black_light)), 0, text.indexOf("/") + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(new AbsoluteSizeSpan(Util.instence(context).sp2px(22)), 0, text.indexOf("/") + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.haha_gray_heavy)), text.indexOf("/") + 1, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(new AbsoluteSizeSpan(Util.instence(context).sp2px(18)), text.indexOf("/") + 1, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mTvPage.setText(ss);
     }
 
 
@@ -341,7 +354,8 @@ public class ExamActivity extends IndexBaseActivity implements ExamFragment.OnCo
             if (activity != null) {
                 if (msg.what == 1) {
                     if (activity.examCountDownTime-- > 0) {
-                        activity.mTvTitle.setText("模拟考试  " + activity.examCountDownTime / 60 + ":" + activity.examCountDownTime % 60);
+                        String time = activity.examCountDownTime / 60 + ":" + ((activity.examCountDownTime % 60 > 9) ? String.valueOf(activity.examCountDownTime % 60) : "0" + String.valueOf(activity.examCountDownTime % 60));
+                        activity.mTvTitle.setText("模拟考试  " + time);
                         activity.mHandler.sendEmptyMessageDelayed(1, 1000);
                     } else {
                         activity.mHandler.sendEmptyMessage(2);
@@ -391,7 +405,6 @@ public class ExamActivity extends IndexBaseActivity implements ExamFragment.OnCo
     private void submit() {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        Log.v("gibxin", "1111 wrongQuestionList-> " + mExamLib.getmWrongQuestionList().size());
         bundle.putSerializable("wrongQuestionList", mExamLib.getmWrongQuestionList());
         intent.putExtras(bundle);
         intent.putExtra("score", mExamLib.getScore());

@@ -21,8 +21,8 @@ android {
         applicationId "com.hahaxueche"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 19
-        versionName "2.5.2"
+        versionCode 20
+        versionName "2.6.0"
         multiDexEnabled true
     }
     // 友盟多渠道打包
@@ -64,6 +64,7 @@ android {
         huawei {}
         vivo {}
         meizu {}
+        sougou {}
     }
     productFlavors.all { flavor ->
         flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
@@ -73,6 +74,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    dexOptions {
+        javaMaxHeapSize "4g" //specify the heap size for the dex process
     }
 }
 

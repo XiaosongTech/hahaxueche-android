@@ -69,10 +69,10 @@ public class ReferInfoAdapter extends BaseAdapter {
         holder.tvRefereePhone.setText(referee.getPhone());
         holder.tvReferAmount.setText(Util.getMoney(10000));
         if (TextUtils.isEmpty(referee.getPurchased_at())) {
-            holder.tvReferState.setText("已预约，还没有报名教练");
+            holder.tvReferState.setText("未购买教练");
             holder.tvReferAmount.setTextColor(ContextCompat.getColor(mContext, R.color.haha_gray_heavier));
         } else {
-            holder.tvReferState.setText("已经报名教练并付款");
+            holder.tvReferState.setText("已购买教练");
             holder.tvReferAmount.setTextColor(ContextCompat.getColor(mContext, R.color.app_theme_color));
         }
         return view;
