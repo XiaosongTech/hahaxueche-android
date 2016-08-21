@@ -260,25 +260,31 @@ public class ExamActivity extends IndexBaseActivity implements ExamFragment.OnCo
                     break;
                 case R.id.tv_next:
                     if (mCurrentPosition == mPageSize - 1) {
-                        BaseConfirmSimpleDialog baseConfirmSimpleDialog = new BaseConfirmSimpleDialog(ExamActivity.this, "提示", "已经是最后一题,是否从头开始?",
-                                "从头开始", "再看看", new BaseConfirmSimpleDialog.onConfirmListener() {
-                            @Override
-                            public boolean clickConfirm() {
-                                for (Question question : mQuestionList) {
-                                    question.setUserAnswer(null);
+                        if (mExamMode.equals(ExamLib.TEST_MODE_MOCK_EXAM)) {
+                            //模拟考试,要提示交卷
+                            submitExam();
+                        } else {
+                            //其他模式,提示是否从头开始
+                            BaseConfirmSimpleDialog baseConfirmSimpleDialog = new BaseConfirmSimpleDialog(ExamActivity.this, "提示", "已经是最后一题,是否从头开始?",
+                                    "从头开始", "再看看", new BaseConfirmSimpleDialog.onConfirmListener() {
+                                @Override
+                                public boolean clickConfirm() {
+                                    for (Question question : mQuestionList) {
+                                        question.setUserAnswer(null);
+                                    }
+                                    spUtil.clearExamPosition(mExamType);
+                                    mCurrentPosition = 0;
+                                    mPager.setCurrentItem(mCurrentPosition);
+                                    return true;
                                 }
-                                spUtil.clearExamPosition(mExamType);
-                                mCurrentPosition = 0;
-                                mPager.setCurrentItem(mCurrentPosition);
-                                return true;
-                            }
-                        }, new BaseConfirmSimpleDialog.onCancelListener() {
-                            @Override
-                            public boolean clickCancel() {
-                                return true;
-                            }
-                        });
-                        baseConfirmSimpleDialog.show();
+                            }, new BaseConfirmSimpleDialog.onCancelListener() {
+                                @Override
+                                public boolean clickCancel() {
+                                    return true;
+                                }
+                            });
+                            baseConfirmSimpleDialog.show();
+                        }
                     } else {
                         mPager.setCurrentItem(mCurrentPosition + 1);
                     }
