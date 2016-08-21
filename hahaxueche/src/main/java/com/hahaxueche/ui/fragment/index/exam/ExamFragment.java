@@ -90,7 +90,7 @@ public class ExamFragment extends Fragment {
     /**
      * 模拟测试时,答题回调
      */
-    public interface  OnMockExamAnsweredListener{
+    public interface OnMockExamAnsweredListener {
         void answer(Question question);
     }
 
@@ -364,6 +364,11 @@ public class ExamFragment extends Fragment {
         mTvItem3Label.setTextColor(ContextCompat.getColor(getContext(), userAnswerList.contains("3") ? R.color.app_theme_color : R.color.haha_gray_heavier));
         mTvItem4Label.setBackgroundResource(userAnswerList.contains("4") ? R.drawable.circle_half_appcolor : R.drawable.circle_gray);
         mTvItem4Label.setTextColor(ContextCompat.getColor(getContext(), userAnswerList.contains("4") ? R.color.app_theme_color : R.color.haha_gray_heavier));
+        if (!mQuestion.isCorrect()) {
+            //错题计入我的题库
+            spUtil.addQuestionCollect(mExamType, mQuestion.getId());
+            displayCollect();
+        }
     }
 
     /**
@@ -468,6 +473,9 @@ public class ExamFragment extends Fragment {
                 } else if (mQuestion.getUserAnswer().contains("4")) {
                     setItemView(mTvItem4Label, mIvItem4, false);
                 }
+                //错题计入我的题库
+                spUtil.addQuestionCollect(mExamType, mQuestion.getId());
+                displayCollect();
             }
         }
         mLlyExplain.setVisibility(View.VISIBLE);
