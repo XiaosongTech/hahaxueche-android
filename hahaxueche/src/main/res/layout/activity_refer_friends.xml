@@ -76,8 +76,10 @@
                     android:layout_alignLeft="@id/tv_withdraw_label"
                     android:layout_below="@id/tv_withdraw_label"
                     android:layout_marginTop="10dp"
+                    android:drawablePadding="8dp"
+                    android:drawableRight="@drawable/ic_arrow_more_white"
                     android:textColor="@color/haha_white"
-                    android:textSize="22sp" />
+                    android:textSize="24sp" />
 
                 <TextView
                     android:id="@+id/tv_withdraw"

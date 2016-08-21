@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -55,7 +54,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 
 /**
  * Created by gibxin on 2016/4/26.
@@ -125,6 +123,7 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
         mTvWithdraw.setOnClickListener(mClickListener);
         mIbtnBack.setOnClickListener(mClickListener);
         mTvSaveQrCode.setOnClickListener(mClickListener);
+        mTvWithdrawMoney.setOnClickListener(mClickListener);
     }
 
     private void loadDatas() {
@@ -153,7 +152,7 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
                     ReferFriendsActivity.this.finish();
                     break;
                 case R.id.tv_withdraw:
-                    Intent intent = new Intent(ReferFriendsActivity.this, ReferFriendsActivity.class);
+                    Intent intent = new Intent(ReferFriendsActivity.this, WithdrawActivity.class);
                     startActivityForResult(intent, REQUEST_CODE_WITHDRAW);
                     break;
                 case R.id.tv_save_qr_code:
@@ -164,6 +163,11 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
                         // Android version is lesser than 6.0 or the permission is already granted.
                         saveImg();
                     }
+                    break;
+                case R.id.tv_withdraw_money:
+                    //推荐记录
+                    intent = new Intent(ReferFriendsActivity.this, MakeMoneyInfoActivity.class);
+                    startActivity(intent);
                     break;
                 default:
                     break;
