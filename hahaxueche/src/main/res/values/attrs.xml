@@ -10,7 +10,7 @@
         <attr name="thumbWidth" format="dimension" />
         <attr name="selectedLineHeight" format="dimension" />
         <attr name="unselectedLineHeight" format="dimension" />
-        <attr name="selectedLintColor" format="color"/>
+        <attr name="selectedLintColor" format="color" />
         <attr name="dotRadius" format="dimension" />
     </declare-styleable>
     <declare-styleable name="CircleImageView">
@@ -23,7 +23,7 @@
     <attr name="indicatorColor" format="color" />
     <attr name="dividerColor" format="color" />
     <attr name="bottomLineColor" format="color" />
-    <attr name="tabMainTextColor" format="color"/>
+    <attr name="tabMainTextColor" format="color" />
     <attr name="dividerMargin" format="dimension" />
     <attr name="indicatorHeight" format="dimension" />
     <attr name="bottomLineHeight" format="dimension" />
@@ -36,7 +36,11 @@
         <attr name="indicatorHeight" />
         <attr name="bottomLineHeight" />
         <attr name="dividerWidth" />
-        <attr name="tabMainTextColor"/>
+        <attr name="tabMainTextColor" />
+    </declare-styleable>
+    <declare-styleable name="XListView">
+        <attr name="loadMoreTxt" format="string" />
+        <attr name="noMoreTxt" format="string" />
     </declare-styleable>
 
 </resources>

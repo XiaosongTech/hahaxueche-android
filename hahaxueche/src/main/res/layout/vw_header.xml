@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:gravity="bottom">
+    android:gravity="bottom"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/header_content"
@@ -16,7 +16,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/header_hint_text"
@@ -43,22 +44,21 @@
             </LinearLayout>
         </LinearLayout>
 
-        <ProgressBar
+        <ImageView
             android:id="@+id/header_progressbar"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_toLeftOf="@id/header_text_layout"
-            android:layout_marginRight="30dp"
-            android:layout_centerVertical="true"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <ImageView
             android:id="@+id/header_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/header_text_layout"
+            android:layout_centerInParent="true"
             android:layout_marginRight="30dp"
-            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/header_text_layout"
             android:contentDescription="@null"
             android:src="@drawable/arrow_down" />
 

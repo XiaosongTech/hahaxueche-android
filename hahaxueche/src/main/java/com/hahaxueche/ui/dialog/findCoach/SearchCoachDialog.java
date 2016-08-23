@@ -186,7 +186,7 @@ public class SearchCoachDialog {
                     FrameLayout.LayoutParams paramMain = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
                     TextView tv = new TextView(mContext);
                     tv.setGravity(Gravity.CENTER);
-                    tv.setText("抱歉，没有找到教练");
+                    tv.setText("O(≧口≦)O没有找到教练啊!");
                     tv.setLayoutParams(paramMain);
                     tv.setTextSize(14);
                     tv.setTextColor(ContextCompat.getColor(mContext, R.color.haha_black_light));
