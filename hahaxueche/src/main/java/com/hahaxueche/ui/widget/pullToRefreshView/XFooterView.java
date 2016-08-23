@@ -1,11 +1,15 @@
 package com.hahaxueche.ui.widget.pullToRefreshView;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.drawable.AnimationDrawable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,7 +27,8 @@ public class XFooterView extends LinearLayout {
 
     private View mLayout;
 
-    private View mProgressBar;
+    private ImageView mProgressBar;
+    private AnimationDrawable animationDrawable;
 
     private TextView mHintView;
 
@@ -33,6 +38,8 @@ public class XFooterView extends LinearLayout {
     private Animation mRotateDownAnim;
 
     private int mState = STATE_NORMAL;
+    private String mLoadMoreText;
+    private String mNoMoreText;
 
     public XFooterView(Context context) {
         super(context);
@@ -41,6 +48,11 @@ public class XFooterView extends LinearLayout {
 
     public XFooterView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        TypedArray a = context.obtainStyledAttributes(attrs,
+                R.styleable.XListView);
+        mNoMoreText = a.getString(R.styleable.XListView_noMoreTxt);
+        mLoadMoreText = a.getString(R.styleable.XListView_loadMoreTxt);
+        a.recycle();
         initView(context);
     }
 
@@ -50,7 +62,9 @@ public class XFooterView extends LinearLayout {
                 LayoutParams.WRAP_CONTENT));
         addView(mLayout);
 
-        mProgressBar = mLayout.findViewById(R.id.footer_progressbar);
+        mProgressBar = (ImageView) mLayout.findViewById(R.id.footer_progressbar);
+        mProgressBar.setBackgroundResource(R.drawable.loading);
+        animationDrawable = (AnimationDrawable) mProgressBar.getBackground();
         mHintView = (TextView) mLayout.findViewById(R.id.footer_hint_text);
 //        mHintImage = (ImageView) mLayout.findViewById(R.id.footer_arrow);
 
@@ -68,11 +82,10 @@ public class XFooterView extends LinearLayout {
     /**
      * Set footer view state
      *
+     * @param state
      * @see #STATE_LOADING
      * @see #STATE_NORMAL
      * @see #STATE_READY
-     *
-     * @param state
      */
     public void setState(int state) {
         if (state == mState) return;
@@ -81,11 +94,14 @@ public class XFooterView extends LinearLayout {
 //            mHintImage.clearAnimation();
 //            mHintImage.setVisibility(View.INVISIBLE);
             mProgressBar.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.VISIBLE);
+            animationDrawable.start();
             mHintView.setVisibility(View.INVISIBLE);
         } else {
             mHintView.setVisibility(View.VISIBLE);
 //            mHintImage.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.INVISIBLE);
+            animationDrawable.stop();
         }
 
         switch (state) {
@@ -96,14 +112,22 @@ public class XFooterView extends LinearLayout {
 //                if (mState == STATE_LOADING) {
 //                    mHintImage.clearAnimation();
 //                }
-                mHintView.setText(R.string.footer_hint_load_normal);
+                if (!TextUtils.isEmpty(mLoadMoreText)) {
+                    mHintView.setText(mLoadMoreText);
+                } else {
+                    mHintView.setText(R.string.footer_hint_load_normal);
+                }
                 break;
 
             case STATE_READY:
                 if (mState != STATE_READY) {
 //                    mHintImage.clearAnimation();
 //                    mHintImage.startAnimation(mRotateUpAnim);
-                    mHintView.setText(R.string.footer_hint_load_ready);
+                    if (!TextUtils.isEmpty(mLoadMoreText)) {
+                        mHintView.setText(mLoadMoreText);
+                    } else {
+                        mHintView.setText(R.string.footer_hint_load_ready);
+                    }
                 }
                 break;
 

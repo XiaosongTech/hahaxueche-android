@@ -1,6 +1,7 @@
 package com.hahaxueche.ui.widget.pullToRefreshView;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -28,7 +29,8 @@ public class XHeaderView extends LinearLayout {
 
     private ImageView mArrowImageView;
 
-    private ProgressBar mProgressBar;
+    private ImageView mProgressBar;
+    private AnimationDrawable animationDrawable;
 
     private TextView mHintTextView;
 
@@ -58,7 +60,9 @@ public class XHeaderView extends LinearLayout {
 
         mArrowImageView = (ImageView) findViewById(R.id.header_arrow);
         mHintTextView = (TextView) findViewById(R.id.header_hint_text);
-        mProgressBar = (ProgressBar) findViewById(R.id.header_progressbar);
+        mProgressBar = (ImageView) findViewById(R.id.header_progressbar);
+        mProgressBar.setBackgroundResource(R.drawable.loading);
+        animationDrawable = (AnimationDrawable) mProgressBar.getBackground();
 
         mRotateUpAnim = new RotateAnimation(0.0f, -180.0f, Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF, 0.5f);
@@ -82,10 +86,12 @@ public class XHeaderView extends LinearLayout {
             mArrowImageView.clearAnimation();
             mArrowImageView.setVisibility(View.INVISIBLE);
             mProgressBar.setVisibility(View.VISIBLE);
+            animationDrawable.start();
         } else {
             // show arrow image
             mArrowImageView.setVisibility(View.VISIBLE);
-            mProgressBar.setVisibility(View.INVISIBLE);
+            mProgressBar.setVisibility(View.GONE);
+            animationDrawable.stop();
         }
 
         switch (state) {

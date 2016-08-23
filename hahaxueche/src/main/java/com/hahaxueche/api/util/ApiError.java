@@ -6,5 +6,5 @@ package com.hahaxueche.api.util;
  */
 public class ApiError {
     public final static String TIME_OUT_EVENT = "CONNECT_TIME_OUT";
-    public final static String TIME_OUT_EVENT_MSG = "连接服务器失败";
+    public final static String TIME_OUT_EVENT_MSG = "没有网络连接,小哈接收不到电波!";
 }

@@ -2,6 +2,7 @@ package com.hahaxueche.ui.widget.pullToRefreshView;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -70,6 +71,8 @@ public class XListView extends ListView implements OnScrollListener {
     // total list items, used to detect is at the bottom of ListView
     private int mTotalItemCount;
 
+    private AttributeSet mAttrs;
+
     public XListView(Context context) {
         super(context);
         initWithContext(context);
@@ -77,6 +80,7 @@ public class XListView extends ListView implements OnScrollListener {
 
     public XListView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mAttrs = attrs;
         initWithContext(context);
     }
 
@@ -96,7 +100,7 @@ public class XListView extends ListView implements OnScrollListener {
         addHeaderView(mHeader);
 
         // init footer view
-        mFooterView = new XFooterView(context);
+        mFooterView = new XFooterView(context,mAttrs);
         mFooterLayout = new LinearLayout(context);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout
                 .LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
