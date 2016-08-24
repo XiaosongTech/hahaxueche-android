@@ -2,6 +2,7 @@ package com.hahaxueche.ui.activity.mySetting;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -73,7 +74,9 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
     private User mUser;
     private ImageView mIvRefer;
     private static final int PERMISSIONS_REQUEST = 600;
-    private static final int PERMISSIONS_REQUEST_SHARE = 601;
+    private static final int PERMISSIONS_REQUEST_SHARE_QQ = 601;
+    private static final int PERMISSIONS_REQUEST_SHARE_WX = 602;
+    private static final int PERMISSIONS_REQUEST_SHARE_CIRCLE_FRIEND = 603;
     private String mQrCodeUrl;
 
     private static final int REQUEST_CODE_WITHDRAW = 0;
@@ -184,12 +187,26 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
             } else {
                 Toast.makeText(this, "请允许写入sdcard权限，不然无法将图片保存到本地", Toast.LENGTH_SHORT).show();
             }
-        }else if(requestCode == PERMISSIONS_REQUEST_SHARE){
+        } else if (requestCode == PERMISSIONS_REQUEST_SHARE_QQ) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 shareToQQ();
             } else {
                 Toast.makeText(this, "请允许写入sdcard权限，不然从本地将图片分享到QQ", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == PERMISSIONS_REQUEST_SHARE_WX) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                shareToWeixin();
+            } else {
+                Toast.makeText(this, "请允许写入sdcard权限，不然从本地将图片分享到微信", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == PERMISSIONS_REQUEST_SHARE_CIRCLE_FRIEND) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                shareToFriendCircle();
+            } else {
+                Toast.makeText(this, "请允许写入sdcard权限，不然从本地将图片分享到朋友圈", Toast.LENGTH_SHORT).show();
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -310,20 +327,62 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
 
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom arg1) {
-            WXImageObject imgObj = new WXImageObject(bitmap);
 
-            WXMediaMessage msg = new WXMediaMessage();
-            msg.mediaObject = imgObj;
+            // 首先保存图片
+            File appDir = new File(Environment.getExternalStorageDirectory(), "hahaxueche");
+            if (!appDir.exists()) {
+                appDir.mkdir();
+            }
+            String fileName = "qrcode.jpg";
+            File file = new File(appDir, fileName);
+            try {
+                FileOutputStream fos = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                fos.flush();
+                fos.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-            Bitmap thumbBmp = Bitmap.createScaledBitmap(bitmap, THUMB_SIZE, THUMB_SIZE, true);
-            //bitmap.recycle();
-            msg.thumbData = Util.bmpToByteArray(thumbBmp, true);  // ÉèÖÃËõÂÔÍ¼
+            // 其次把文件插入到系统图库
+            try {
+                MediaStore.Images.Media.insertImage(context.getContentResolver(),
+                        file.getAbsolutePath(), fileName, null);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            // 最后通知图库更新
+            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File("/sdcard/hahaxueche/qrcode.jpg"))));
 
-            SendMessageToWX.Req req = new SendMessageToWX.Req();
-            req.transaction = buildTransaction("img");
-            req.message = msg;
-            req.scene = SendMessageToWX.Req.WXSceneSession;
-            wxApi.sendReq(req);
+            //微信官方api的分享图片方法,图片模式与转发的不一样,二维码无法识别,尼玛!!
+            Uri uriToImage = Uri.fromFile(new File("/sdcard/hahaxueche/qrcode.jpg"));
+            Intent shareIntent = new Intent();
+            //发送图片到朋友圈
+            //ComponentName comp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI");
+            //发送图片给好友。
+            ComponentName comp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareImgUI");
+            shareIntent.setComponent(comp);
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, uriToImage);
+            shareIntent.setType("image/jpeg");
+            startActivity(Intent.createChooser(shareIntent, "分享图片"));
+
+//            WXImageObject imgObj = new WXImageObject(bitmap);
+//
+//            WXMediaMessage msg = new WXMediaMessage();
+//            msg.mediaObject = imgObj;
+//
+//            Bitmap thumbBmp = Bitmap.createScaledBitmap(bitmap, THUMB_SIZE, THUMB_SIZE, true);
+//            //bitmap.recycle();
+//            msg.thumbData = Util.bmpToByteArray(thumbBmp, true);  // ÉèÖÃËõÂÔÍ¼
+//
+//            SendMessageToWX.Req req = new SendMessageToWX.Req();
+//            req.transaction = buildTransaction("img");
+//            req.message = msg;
+//            req.scene = SendMessageToWX.Req.WXSceneSession;
+//            wxApi.sendReq(req);
         }
 
         @Override
@@ -339,20 +398,59 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
 
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom arg1) {
-            WXImageObject imgObj = new WXImageObject(bitmap);
+            // 首先保存图片
+            File appDir = new File(Environment.getExternalStorageDirectory(), "hahaxueche");
+            if (!appDir.exists()) {
+                appDir.mkdir();
+            }
+            String fileName = "qrcode.jpg";
+            File file = new File(appDir, fileName);
+            try {
+                FileOutputStream fos = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                fos.flush();
+                fos.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-            WXMediaMessage msg = new WXMediaMessage();
-            msg.mediaObject = imgObj;
+            // 其次把文件插入到系统图库
+            try {
+                MediaStore.Images.Media.insertImage(context.getContentResolver(),
+                        file.getAbsolutePath(), fileName, null);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            // 最后通知图库更新
+            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File("/sdcard/hahaxueche/qrcode.jpg"))));
 
-            Bitmap thumbBmp = Bitmap.createScaledBitmap(bitmap, THUMB_SIZE, THUMB_SIZE, true);
-            //bitmap.recycle();
-            msg.thumbData = Util.bmpToByteArray(thumbBmp, true);
-
-            SendMessageToWX.Req req = new SendMessageToWX.Req();
-            req.transaction = buildTransaction("img");
-            req.message = msg;
-            req.scene = SendMessageToWX.Req.WXSceneTimeline;
-            wxApi.sendReq(req);
+            Uri uriToImage = Uri.fromFile(new File("/sdcard/hahaxueche/qrcode.jpg"));
+            Intent shareIntent = new Intent();
+            //发送图片到朋友圈
+            ComponentName comp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI");
+            //发送图片给好友。
+            //ComponentName comp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareImgUI");
+            shareIntent.setComponent(comp);
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, uriToImage);
+            shareIntent.setType("image/jpeg");
+            startActivity(Intent.createChooser(shareIntent, "分享图片"));
+//            WXImageObject imgObj = new WXImageObject(bitmap);
+//
+//            WXMediaMessage msg = new WXMediaMessage();
+//            msg.mediaObject = imgObj;
+//
+//            Bitmap thumbBmp = Bitmap.createScaledBitmap(bitmap, THUMB_SIZE, THUMB_SIZE, true);
+//            //bitmap.recycle();
+//            msg.thumbData = Util.bmpToByteArray(thumbBmp, true);
+//
+//            SendMessageToWX.Req req = new SendMessageToWX.Req();
+//            req.transaction = buildTransaction("img");
+//            req.message = msg;
+//            req.scene = SendMessageToWX.Req.WXSceneTimeline;
+//            wxApi.sendReq(req);
         }
 
         @Override
@@ -427,14 +525,26 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
     private void share(int shareType) {
         switch (shareType) {
             case 0:
-                shareToWeixin();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_SHARE_WX);
+                    //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+                } else {
+                    // Android version is lesser than 6.0 or the permission is already granted.
+                    shareToWeixin();
+                }
                 break;
             case 1:
-                shareToFriendCircle();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_SHARE_CIRCLE_FRIEND);
+                    //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+                } else {
+                    // Android version is lesser than 6.0 or the permission is already granted.
+                    shareToFriendCircle();
+                }
                 break;
             case 2:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_SHARE);
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_SHARE_QQ);
                     //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
                 } else {
                     // Android version is lesser than 6.0 or the permission is already granted.
