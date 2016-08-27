@@ -1,1 +1,1 @@
-include ':hahaxueche', ':lib:bdwallet_pay_sdk', ':lib:pingpp', ':lib:pingpp_one'
+include ':hahaxueche'

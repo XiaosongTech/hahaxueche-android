@@ -101,7 +101,9 @@ dependencies {
     compile 'io.branch.sdk.android:library:1.+'
     compile 'jp.wasabeef:blurry:2.0.2'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.5.0'
-    compile project(':lib:pingpp')
+    //compile project(':lib:pingpp')
+    compile 'com.pingxx:pingpp-core:2.1.5' //ping++
+    compile 'com.pingxx:pingpp-alipay:2.1.5'//使用支付宝时添加
     compile 'com.instabug.library:instabug:2+'
     compile 'com.qiyukf.unicorn:unicorn:2.4.0'
     compile 'com.android.support:multidex:1.0.0'
