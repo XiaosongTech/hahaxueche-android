@@ -16,7 +16,6 @@ import com.hahaxueche.model.base.BaseApiResponse;
 import com.hahaxueche.model.base.BaseBoolean;
 import com.hahaxueche.utils.JsonUtils;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -99,7 +98,7 @@ public class CoachApiImpl implements CoachApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -125,7 +124,7 @@ public class CoachApiImpl implements CoachApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -155,7 +154,7 @@ public class CoachApiImpl implements CoachApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -182,7 +181,7 @@ public class CoachApiImpl implements CoachApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -204,7 +203,7 @@ public class CoachApiImpl implements CoachApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -230,7 +229,7 @@ public class CoachApiImpl implements CoachApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -262,7 +261,7 @@ public class CoachApiImpl implements CoachApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -295,7 +294,7 @@ public class CoachApiImpl implements CoachApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -321,7 +320,7 @@ public class CoachApiImpl implements CoachApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -351,7 +350,7 @@ public class CoachApiImpl implements CoachApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -400,7 +399,7 @@ public class CoachApiImpl implements CoachApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -425,7 +424,7 @@ public class CoachApiImpl implements CoachApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -445,7 +444,7 @@ public class CoachApiImpl implements CoachApi {
             } else {
                 return new ArrayList<>();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }

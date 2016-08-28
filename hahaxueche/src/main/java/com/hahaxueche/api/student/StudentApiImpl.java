@@ -15,13 +15,11 @@ import com.hahaxueche.model.response.ScheduleEventListResponse;
 import com.hahaxueche.model.review.ReviewInfo;
 import com.hahaxueche.model.student.BankCard;
 import com.hahaxueche.model.student.ReferalBonusSummary;
-import com.hahaxueche.model.student.ReferalBonusTransaction;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
 import com.hahaxueche.model.student.WithdrawRecord;
 import com.hahaxueche.utils.JsonUtils;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,7 +58,7 @@ public class StudentApiImpl implements StudentApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -89,7 +87,7 @@ public class StudentApiImpl implements StudentApi {
                 }
             }
             return retStudent;
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -122,7 +120,7 @@ public class StudentApiImpl implements StudentApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -148,7 +146,7 @@ public class StudentApiImpl implements StudentApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -178,7 +176,7 @@ public class StudentApiImpl implements StudentApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -205,7 +203,7 @@ public class StudentApiImpl implements StudentApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -232,7 +230,7 @@ public class StudentApiImpl implements StudentApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -268,7 +266,7 @@ public class StudentApiImpl implements StudentApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -294,7 +292,7 @@ public class StudentApiImpl implements StudentApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -316,7 +314,7 @@ public class StudentApiImpl implements StudentApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -343,7 +341,7 @@ public class StudentApiImpl implements StudentApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -374,7 +372,7 @@ public class StudentApiImpl implements StudentApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -398,7 +396,7 @@ public class StudentApiImpl implements StudentApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -429,7 +427,7 @@ public class StudentApiImpl implements StudentApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -453,7 +451,7 @@ public class StudentApiImpl implements StudentApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -478,7 +476,7 @@ public class StudentApiImpl implements StudentApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -494,7 +492,7 @@ public class StudentApiImpl implements StudentApi {
             String body = response.body().string();
             Log.v("gibxin", "body -> " + body);
             baseApiResponse.setIsSuccess(response.isSuccessful());
-        } catch (IOException e) {
+        } catch (Exception e) {
             baseApiResponse.setIsSuccess(false);
         } finally {
             return baseApiResponse;
@@ -522,7 +520,7 @@ public class StudentApiImpl implements StudentApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }

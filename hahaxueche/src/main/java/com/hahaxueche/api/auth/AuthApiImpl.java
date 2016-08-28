@@ -10,7 +10,6 @@ import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.base.BaseApiResponse;
 import com.hahaxueche.utils.JsonUtils;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,7 +52,7 @@ public class AuthApiImpl implements AuthApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -93,7 +92,7 @@ public class AuthApiImpl implements AuthApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -134,7 +133,7 @@ public class AuthApiImpl implements AuthApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -168,7 +167,7 @@ public class AuthApiImpl implements AuthApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -194,7 +193,7 @@ public class AuthApiImpl implements AuthApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
@@ -220,7 +219,7 @@ public class AuthApiImpl implements AuthApi {
                 retModel.setIsSuccess(false);
                 return retModel;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception e ->" + e.getMessage());
             return null;
         }
