@@ -16,11 +16,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingRight="10dp"
             android:background="@null"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
             android:src="@drawable/ic_arrow_back" />
 
         <TextView
@@ -32,15 +32,16 @@
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/tv_guide"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"
-            android:text="@string/selectAll"
+            android:padding="10dp"
+            android:layout_marginRight="5dp"
+            android:text="导航"
             android:textColor="@android:color/white"
-            android:textSize="14sp"
-            android:visibility="gone" />
+            android:textSize="14sp" />
     </RelativeLayout>
 
     <com.amap.api.maps.MapView
@@ -48,7 +49,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
-
 
 
 </LinearLayout>
