@@ -84,6 +84,10 @@ public class EventAdapter extends BaseAdapter {
                 holder.tvTimeLeftLabel.setVisibility(View.VISIBLE);
             }
             String text = event.getCountDownText();
+            if (text.indexOf("天") < 0 || text.indexOf("时") < 0 || text.indexOf("分") < 0 || text.indexOf("秒") < 0) {
+                event.parseCountDownText();
+                text = event.getCountDownText();
+            }
             SpannableString ss = new SpannableString(text);
             ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.app_theme_color)), 0, text.indexOf("天"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             ss.setSpan(new AbsoluteSizeSpan(Util.instence(mContext).sp2px(12)), text.indexOf("天"), text.indexOf("天") + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
