@@ -121,11 +121,11 @@ public class PaymentStageActivity extends MSBaseActivity {
         tvPsUnPaidAmount.setText(Util.getMoney(mPurchasedService.getUnpaid_amount()));
         //listview
         mPaymentStageAdapter = new PaymentStageAdapter(PaymentStageActivity.this, mPurchasedService.getPayment_stages(),
-                mPurchasedService.getCurrent_payment_stage(), R.layout.view_payment_stage_list_item);
+                String.valueOf(mPurchasedService.getCurrent_payment_stage()), R.layout.view_payment_stage_list_item);
         lvPurchasedServices.setAdapter(mPaymentStageAdapter);
         setListViewHeightBasedOnChildren(lvPurchasedServices);
         //已全部打款
-        if (Integer.parseInt(mPurchasedService.getCurrent_payment_stage()) == mPurchasedService.getPayment_stages().size() + 1) {
+        if (mPurchasedService.getCurrent_payment_stage() == mPurchasedService.getPayment_stages().size() + 1) {
             tvCurrentPayAmount.setVisibility(View.GONE);
             tvSureTransfer.setVisibility(View.GONE);
             tvCongratulation.setVisibility(View.VISIBLE);
@@ -209,7 +209,7 @@ public class PaymentStageActivity extends MSBaseActivity {
                 user.setStudent(mStudent);
                 spUtil.setUser(user);
                 if (!TextUtils.isEmpty(data.getCurrent_coach_id())) {
-                    fcPresenter.getCoach(data.getCurrent_coach_id(),mStudent.getId(), new FCCallbackListener<Coach>() {
+                    fcPresenter.getCoach(data.getCurrent_coach_id(), mStudent.getId(), new FCCallbackListener<Coach>() {
                         @Override
                         public void onSuccess(Coach coach) {
                             spUtil.setCurrentCoach(coach);

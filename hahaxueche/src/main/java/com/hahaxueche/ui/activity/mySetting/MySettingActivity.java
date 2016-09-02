@@ -198,7 +198,7 @@ public class MySettingActivity extends MSBaseActivity {
                     }
                 }
                 if (TextUtils.isEmpty(tempPaymentStageStr)) {
-                    if (paymentStageList.size() + 1 == Integer.parseInt(mPurchasedService.getCurrent_payment_stage())) {
+                    if (paymentStageList.size() + 1 == mPurchasedService.getCurrent_payment_stage()) {
                         tempPaymentStageStr = "已拿证";
                     }
                 }

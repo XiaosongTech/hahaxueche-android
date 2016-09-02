@@ -13,7 +13,7 @@ public class PurchasedService implements Serializable{
     private String charge_id;
     private List<Assignment> assignments;
     private String total_amount;
-    private String current_payment_stage;
+    private int current_payment_stage;
     private String paid_amount;
     private String unpaid_amount;
     private String paid_at;
@@ -56,11 +56,11 @@ public class PurchasedService implements Serializable{
         this.total_amount = total_amount;
     }
 
-    public String getCurrent_payment_stage() {
+    public int getCurrent_payment_stage() {
         return current_payment_stage;
     }
 
-    public void setCurrent_payment_stage(String current_payment_stage) {
+    public void setCurrent_payment_stage(int current_payment_stage) {
         this.current_payment_stage = current_payment_stage;
     }
 
