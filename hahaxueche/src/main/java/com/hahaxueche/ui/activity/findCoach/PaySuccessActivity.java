@@ -3,6 +3,7 @@ package com.hahaxueche.ui.activity.findCoach;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -20,7 +21,6 @@ import com.hahaxueche.utils.Util;
  * Created by wangshirui on 16/9/3.
  */
 public class PaySuccessActivity extends FCBaseActivity {
-    private ImageButton mIbtnBack;
     private TextView mTvCoachName;
     private TextView mTvPayTime;
     private TextView mTvPayAmount;
@@ -39,7 +39,6 @@ public class PaySuccessActivity extends FCBaseActivity {
     }
 
     private void initViews() {
-        mIbtnBack = Util.instence(this).$(this, R.id.ibtn_back);
         mTvCoachName = Util.instence(this).$(this, R.id.tv_coach_name);
         mTvPayTime = Util.instence(this).$(this, R.id.tv_pay_time);
         mTvPayAmount = Util.instence(this).$(this, R.id.tv_pay_amount);
@@ -73,12 +72,6 @@ public class PaySuccessActivity extends FCBaseActivity {
     }
 
     private void initEvents() {
-        mIbtnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PaySuccessActivity.this.finish();
-            }
-        });
         mTvShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,5 +81,11 @@ public class PaySuccessActivity extends FCBaseActivity {
         });
     }
 
-
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }

@@ -11,18 +11,6 @@
         android:layout_height="50dp"
         android:background="@color/app_theme_color">
 
-        <ImageButton
-            android:id="@+id/ibtn_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:background="@null"
-            android:paddingBottom="10dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="10dp"
-            android:paddingTop="10dp"
-            android:src="@drawable/ic_arrow_back" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -177,7 +165,7 @@
                 android:layout_marginTop="20dp"
                 android:gravity="center"
                 android:lineSpacingMultiplier="1.2"
-                android:text="对订单有任何疑问可致电客服热线400-001-6006或联系客服QQ:3319762526"
+                android:text="对订单有任何疑问可致电客服热线400-001-6006或在APP首页点击在线客服"
                 android:textColor="@color/haha_gray_heavy"
                 android:textSize="16sp" />
         </LinearLayout>
