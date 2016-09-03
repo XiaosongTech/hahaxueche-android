@@ -3,6 +3,7 @@ package com.hahaxueche.presenter.mySetting;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.hahaxueche.api.auth.AuthApi;
 import com.hahaxueche.api.auth.AuthApiImpl;
@@ -483,6 +484,26 @@ public class MSPresenterImpl implements MSPresenter {
             protected void onPostExecute(ArrayList<WithdrawRecord> arrayList) {
                 if (arrayList != null) {
                     listener.onSuccess(arrayList);
+                } else {
+                    listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void convertUrl(final String url, final MSCallbackListener<String> listener) {
+        new AsyncTask<Void, Void, String>() {
+
+            @Override
+            protected String doInBackground(Void... params) {
+                return studentApi.convertUrl(url);
+            }
+
+            @Override
+            protected void onPostExecute(String url) {
+                if (!TextUtils.isEmpty(url)) {
+                    listener.onSuccess(url);
                 } else {
                     listener.onFailure(ApiError.TIME_OUT_EVENT, ApiError.TIME_OUT_EVENT_MSG);
                 }

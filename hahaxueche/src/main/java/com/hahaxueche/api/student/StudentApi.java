@@ -198,4 +198,6 @@ public interface StudentApi {
      */
     public ArrayList<WithdrawRecord> fetchWithdrawRecordList(String accessToken);
 
+    public String convertUrl(String url);
+
 }

@@ -149,4 +149,6 @@ public interface MSPresenter {
      * @param listener
      */
     public void fetchWithdrawRecordList(String accessToken, MSCallbackListener<ArrayList<WithdrawRecord>> listener);
+
+    public void convertUrl(String url,MSCallbackListener<String> listener);
 }

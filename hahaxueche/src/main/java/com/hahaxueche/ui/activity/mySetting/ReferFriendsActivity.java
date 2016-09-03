@@ -42,11 +42,13 @@ import com.sina.weibo.sdk.utils.Utility;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.tencent.connect.share.QQShare;
+import com.tencent.connect.share.QzoneShare;
 import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.sdk.modelmsg.WXImageObject;
 import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.open.utils.ThreadManager;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
@@ -55,6 +57,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+
+import okhttp3.Response;
 
 /**
  * Created by gibxin on 2016/4/26.
@@ -78,6 +83,7 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
     private static final int PERMISSIONS_REQUEST_SHARE_WX = 602;
     private static final int PERMISSIONS_REQUEST_SHARE_CIRCLE_FRIEND = 603;
     private String mQrCodeUrl;
+    private String mRedirectUrl;
 
     private static final int REQUEST_CODE_WITHDRAW = 0;
 
@@ -143,7 +149,18 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
             mTvWithdrawMoney.setText(Util.getMoney(mUser.getStudent().getBonus_balance()));
             mQrCodeUrl = HttpEngine.BASE_SERVER_IP + "/share/students/" + mUser.getStudent().getId() + "/image";
             Log.v("gibxin", "mQrCodeUrl -> " + mQrCodeUrl);
-            Picasso.with(context).load(mQrCodeUrl).into(mIvQrCode);
+            msPresenter.convertUrl(mQrCodeUrl, new MSCallbackListener<String>() {
+                @Override
+                public void onSuccess(String data) {
+                    mRedirectUrl = data;
+                    Log.v("gibxin", "redirect url -> " + mRedirectUrl);
+                    Picasso.with(context).load(mRedirectUrl).into(mIvQrCode);
+                }
+
+                @Override
+                public void onFailure(String errorEvent, String message) {
+                }
+            });
         }
     }
 
@@ -554,6 +571,9 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
             case 3:
                 shareToWeibo();
                 break;
+            case 4:
+                shareToQZone();
+                break;
             default:
                 break;
         }
@@ -561,6 +581,21 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
 
     private void shareToQQ() {
         Picasso.with(context).load(mQrCodeUrl).into(QQTarget);
+    }
+
+    private void shareToQZone() {
+        if(TextUtils.isEmpty(mRedirectUrl)) return;
+        final ShareListener myListener = new ShareListener();
+        final Bundle params = new Bundle();
+        params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_APP);
+        params.putString(QzoneShare.SHARE_TO_QQ_TITLE, mTitle);
+        params.putString(QzoneShare.SHARE_TO_QQ_APP_NAME, "哈哈学车");
+        params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, mDescription);
+        params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, mQrCodeUrl);
+        ArrayList<String> imgUrlList = new ArrayList<>();
+        imgUrlList.add(mRedirectUrl);
+        params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, imgUrlList);
+        mTencent.shareToQzone(ReferFriendsActivity.this, params, myListener);
     }
 
     private void shareToWeibo() {

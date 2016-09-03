@@ -595,4 +595,19 @@ public class StudentApiImpl implements StudentApi {
             return null;
         }
     }
+
+    @Override
+    public String convertUrl(String url) {
+        try {
+            Response response = httpEngine.getHandleByUrl(url, "");
+            if (response.isSuccessful()) {
+                return response.request().url().toString();
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Exception e ->" + e.getMessage());
+            return null;
+        }
+    }
 }
