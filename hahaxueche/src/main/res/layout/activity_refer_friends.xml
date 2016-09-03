@@ -33,15 +33,6 @@
             android:textColor="@android:color/white"
             android:textSize="20sp" />
 
-        <ImageView
-            android:id="@+id/iv_share"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:padding="10dp"
-            android:src="@drawable/ic_mycoach_sharecoach" />
     </RelativeLayout>
 
     <ScrollView
@@ -114,16 +105,16 @@
                     android:scaleType="centerCrop" />
 
                 <TextView
-                    android:id="@+id/tv_save_qr_code"
+                    android:id="@+id/tv_share_qr_code"
                     android:layout_width="@dimen/width320dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="-10dp"
-                    android:background="@drawable/rect_bg_appcolor_shadow"
+                    android:background="@drawable/rectangle_back_orange"
                     android:gravity="center"
                     android:paddingBottom="13dp"
                     android:paddingTop="13dp"
-                    android:text="保存到本地"
+                    android:text="点击分享, 赚回学费"
                     android:textColor="@color/haha_white"
                     android:textSize="16sp" />
 

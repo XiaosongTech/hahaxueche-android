@@ -68,7 +68,7 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
     private ImageButton mIbtnBack;
     private TextView mTvWithdrawMoney;//提现金额
     private TextView mTvWithdraw;//提现
-    private TextView mTvSaveQrCode;
+    private TextView mTvShareQrCode;
     private ImageView mIvDash;
     private ImageView mIvQrCode;
     private SharedPreferencesUtil spUtil;
@@ -78,7 +78,6 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
     private City myCity;
     private User mUser;
     private ImageView mIvRefer;
-    private static final int PERMISSIONS_REQUEST = 600;
     private static final int PERMISSIONS_REQUEST_SHARE_QQ = 601;
     private static final int PERMISSIONS_REQUEST_SHARE_WX = 602;
     private static final int PERMISSIONS_REQUEST_SHARE_CIRCLE_FRIEND = 603;
@@ -97,7 +96,6 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
     private String mTitle = "哈哈学车";
     private String mDescription = "";
     private ShareAppDialog shareAppDialog;
-    private ImageView mIvShare;
     private static final int THUMB_SIZE = 150;
 
     /*****************
@@ -124,14 +122,13 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
         spUtil = new SharedPreferencesUtil(this);
         mIvRefer = Util.instence(this).$(this, R.id.iv_refer);
         mIvQrCode = Util.instence(this).$(this, R.id.iv_qr_code);
-        mTvSaveQrCode = Util.instence(this).$(this, R.id.tv_save_qr_code);
-        mIvShare = Util.instence(this).$(this, R.id.iv_share);
+        mTvShareQrCode = Util.instence(this).$(this, R.id.tv_share_qr_code);
     }
 
     private void initEvent() {
         mTvWithdraw.setOnClickListener(mClickListener);
         mIbtnBack.setOnClickListener(mClickListener);
-        mTvSaveQrCode.setOnClickListener(mClickListener);
+        mTvShareQrCode.setOnClickListener(mClickListener);
         mTvWithdrawMoney.setOnClickListener(mClickListener);
     }
 
@@ -175,15 +172,6 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
                     Intent intent = new Intent(ReferFriendsActivity.this, WithdrawActivity.class);
                     startActivityForResult(intent, REQUEST_CODE_WITHDRAW);
                     break;
-                case R.id.tv_save_qr_code:
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST);
-                        //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
-                    } else {
-                        // Android version is lesser than 6.0 or the permission is already granted.
-                        saveImg();
-                    }
-                    break;
                 case R.id.tv_withdraw_money:
                     //推荐记录
                     intent = new Intent(ReferFriendsActivity.this, MakeMoneyInfoActivity.class);
@@ -197,14 +185,7 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
-                saveImg();
-            } else {
-                Toast.makeText(this, "请允许写入sdcard权限，不然无法将图片保存到本地", Toast.LENGTH_SHORT).show();
-            }
-        } else if (requestCode == PERMISSIONS_REQUEST_SHARE_QQ) {
+        if (requestCode == PERMISSIONS_REQUEST_SHARE_QQ) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 shareToQQ();
@@ -228,61 +209,6 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
-
-    private void saveImg() {
-        Picasso.with(context).load(mQrCodeUrl).into(localImgTarget);
-    }
-
-    Target localImgTarget = new Target() {
-
-        @Override
-        public void onPrepareLoad(Drawable arg0) {
-            pd = ProgressDialog.show(ReferFriendsActivity.this, null, "图片保存传中，请稍后……");
-        }
-
-        @Override
-        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom arg1) {
-            // 首先保存图片
-            File appDir = new File(Environment.getExternalStorageDirectory(), "hahaxueche");
-            if (!appDir.exists()) {
-                appDir.mkdir();
-            }
-            String fileName = "qrcode.jpg";
-            File file = new File(appDir, fileName);
-            try {
-                FileOutputStream fos = new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                fos.flush();
-                fos.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            // 其次把文件插入到系统图库
-            try {
-                MediaStore.Images.Media.insertImage(context.getContentResolver(),
-                        file.getAbsolutePath(), fileName, null);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            // 最后通知图库更新
-            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File("/sdcard/hahaxueche/qrcode.jpg"))));
-            if (pd != null) {
-                pd.dismiss();
-            }
-            Toast.makeText(context, "图片保存成功", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onBitmapFailed(Drawable arg0) {
-            if (pd != null) {
-                pd.dismiss();
-            }
-            Toast.makeText(context, "图片保存失败", Toast.LENGTH_SHORT).show();
-        }
-    };
 
     /**
      * qq分享必须是本地图片
@@ -344,7 +270,6 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
 
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom arg1) {
-
             // 首先保存图片
             File appDir = new File(Environment.getExternalStorageDirectory(), "hahaxueche");
             if (!appDir.exists()) {
@@ -531,7 +456,7 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
 
     private void loadShare() {
         regShareApi();
-        mIvShare.setOnClickListener(new View.OnClickListener() {
+        mTvShareQrCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showShareAppDialog();
