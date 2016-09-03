@@ -33,10 +33,10 @@ public class PaymentStageAdapter extends BaseAdapter {
     private ImageView ivPsMessage;
     private TextView tvReviewed;
     private TextView tvReadyForReview;
-    private String mCurrentPaymentStage;
+    private int mCurrentPaymentStage;
     private PaymentStageInfoDialog paymentStageInfoDialog;
 
-    public PaymentStageAdapter(Context context, List<PaymentStage> paymentStageList, String currentPaymentStage, int resource) {
+    public PaymentStageAdapter(Context context, List<PaymentStage> paymentStageList, int currentPaymentStage, int resource) {
         mContext = (PaymentStageActivity) context;
         mPaymentStageList = paymentStageList;
         mResource = resource;
@@ -73,7 +73,7 @@ public class PaymentStageAdapter extends BaseAdapter {
             tvReadyForReview = (TextView) convertView.findViewById(R.id.tv_ready_for_review);
         }
         final PaymentStage paymentStage = mPaymentStageList.get(position);
-        tvStageNumber.setText(paymentStage.getStage_number());
+        tvStageNumber.setText(String.valueOf(paymentStage.getStage_number()));
         tvStageName.setText(paymentStage.getStage_name());
         tvStageAmount.setText(Util.getMoney(paymentStage.getStage_amount()));
         if (TextUtils.isEmpty(paymentStage.getPaid_at())) {
@@ -88,7 +88,7 @@ public class PaymentStageAdapter extends BaseAdapter {
                     paymentStageInfoDialog.show();
                 }
             });
-            if (mCurrentPaymentStage.equals(paymentStage.getStage_number())) {
+            if (mCurrentPaymentStage==paymentStage.getStage_number()) {
                 //当前状态
                 //变橘黄色
                 tvStageNumber.setBackgroundResource(R.drawable.circle_stage_number_orange);
@@ -134,7 +134,7 @@ public class PaymentStageAdapter extends BaseAdapter {
                         tvReadyForReview.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                mContext.showReview(false,paymentStage);
+                                mContext.showReview(false, paymentStage);
                             }
                         });
                     }

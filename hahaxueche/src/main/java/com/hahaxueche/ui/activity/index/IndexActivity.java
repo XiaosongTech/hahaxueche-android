@@ -51,6 +51,7 @@ import com.hahaxueche.ui.dialog.AppointmentDialog;
 import com.hahaxueche.ui.dialog.BaseAlertDialog;
 import com.hahaxueche.ui.dialog.CityChoseDialog;
 import com.hahaxueche.ui.dialog.GroupBuyDialog;
+import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.fragment.index.exam.ExamPageItem;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
 import com.hahaxueche.ui.widget.slidingTabLayout.SlidingTabLayout;
@@ -116,6 +117,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
 
     private final MyHandler mHandler = new MyHandler(this);
+    private ShareDialog mShareDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -570,5 +572,18 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         public String getTabName(int position) {
             return mTab.get(position).getTitle();
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK && data.getBooleanExtra("isShowShare", false)) {
+                if (mShareDialog == null) {
+                    mShareDialog = new ShareDialog(IndexActivity.this);
+                }
+                mShareDialog.show();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

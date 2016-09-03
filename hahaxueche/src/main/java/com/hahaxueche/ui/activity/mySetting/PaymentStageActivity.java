@@ -25,6 +25,7 @@ import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.adapter.mySetting.PaymentStageAdapter;
 import com.hahaxueche.ui.dialog.ReviewDialog;
+import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.dialog.TransferConfirmDialog;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.utils.SharedPreferencesUtil;
@@ -58,6 +59,7 @@ public class PaymentStageActivity extends MSBaseActivity {
     private ReviewDialog reviewDialog;
     private ProgressDialog pd;//进度框
     private SharedPreferencesUtil spUtil;
+    private ShareDialog mShareDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,7 +95,7 @@ public class PaymentStageActivity extends MSBaseActivity {
         mCurrentCoach = spUtil.getCurrentCoach();
         mPurchasedService = mStudent.getPurchased_services().get(0);
         for (PaymentStage paymentStage : mPurchasedService.getPayment_stages()) {
-            if (paymentStage.getStage_number().equals(mPurchasedService.getCurrent_payment_stage())) {
+            if (paymentStage.getStage_number() == mPurchasedService.getCurrent_payment_stage()) {
                 mPaymentStage = paymentStage;
                 break;
             }
@@ -121,7 +123,7 @@ public class PaymentStageActivity extends MSBaseActivity {
         tvPsUnPaidAmount.setText(Util.getMoney(mPurchasedService.getUnpaid_amount()));
         //listview
         mPaymentStageAdapter = new PaymentStageAdapter(PaymentStageActivity.this, mPurchasedService.getPayment_stages(),
-                String.valueOf(mPurchasedService.getCurrent_payment_stage()), R.layout.view_payment_stage_list_item);
+                mPurchasedService.getCurrent_payment_stage(), R.layout.view_payment_stage_list_item);
         lvPurchasedServices.setAdapter(mPaymentStageAdapter);
         setListViewHeightBasedOnChildren(lvPurchasedServices);
         //已全部打款
@@ -155,7 +157,7 @@ public class PaymentStageActivity extends MSBaseActivity {
                                 pd.dismiss();
                             }
                             pd = ProgressDialog.show(PaymentStageActivity.this, null, "付款中，请稍后……");
-                            fcPresenter.purchasedService(mPaymentStage.getStage_number(), mSession.getAccess_token(), new FCCallbackListener<PurchasedService>() {
+                            fcPresenter.purchasedService(String.valueOf(mPaymentStage.getStage_number()), mSession.getAccess_token(), new FCCallbackListener<PurchasedService>() {
                                 @Override
                                 public void onSuccess(PurchasedService purchasedService) {
                                     /**
@@ -174,6 +176,7 @@ public class PaymentStageActivity extends MSBaseActivity {
                                     } else {
                                         refreshStuCache();
                                         refreshUI();
+                                        showShareDialog();
                                     }
                                 }
 
@@ -239,7 +242,7 @@ public class PaymentStageActivity extends MSBaseActivity {
      * @param isShowTitle
      */
     public void showReview(boolean isShowTitle, PaymentStage paymentStage) {
-        reviewDialog = new ReviewDialog(PaymentStageActivity.this, isShowTitle, paymentStage.getStage_number(), paymentStage.getCoach_user_id(), paymentStage.getStage_name(), new ReviewDialog.OnBtnClickListener() {
+        reviewDialog = new ReviewDialog(PaymentStageActivity.this, isShowTitle, String.valueOf(paymentStage.getStage_number()), paymentStage.getCoach_user_id(), paymentStage.getStage_name(), new ReviewDialog.OnBtnClickListener() {
             @Override
             public void onReview(String review, float score, String paymentStageNumber, String coachUserId) {
                 reviewDialog.dismiss();
@@ -249,6 +252,7 @@ public class PaymentStageActivity extends MSBaseActivity {
                         Toast.makeText(PaymentStageActivity.this, "评论成功", Toast.LENGTH_SHORT);
                         refreshStuCache();
                         refreshUI();
+                        showShareDialog();
                     }
 
                     @Override
@@ -256,6 +260,7 @@ public class PaymentStageActivity extends MSBaseActivity {
                         Toast.makeText(PaymentStageActivity.this, "评论失败", Toast.LENGTH_SHORT);
                         refreshStuCache();
                         refreshUI();
+                        showShareDialog();
                     }
                 });
             }
@@ -294,5 +299,12 @@ public class PaymentStageActivity extends MSBaseActivity {
         // listView.getDividerHeight()获取子项间分隔符占用的高度
         // params.height最后得到整个ListView完整显示需要的高度
         listView.setLayoutParams(params);
+    }
+
+    private void showShareDialog() {
+        if (mShareDialog == null) {
+            mShareDialog = new ShareDialog(PaymentStageActivity.this);
+        }
+        mShareDialog.show();
     }
 }
