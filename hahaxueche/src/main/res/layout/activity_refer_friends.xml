@@ -108,7 +108,7 @@
                 <ImageView
                     android:id="@+id/iv_qr_code"
                     android:layout_width="@dimen/width320dp"
-                    android:layout_height="@dimen/height470dp"
+                    android:layout_height="@dimen/width320dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
                     android:scaleType="centerCrop" />
