@@ -54,6 +54,7 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
+import com.hahaxueche.ui.activity.mySetting.ReferFriendsActivity;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
 import com.hahaxueche.ui.adapter.findCoach.PeerCoachItemAdapter;
 import com.hahaxueche.ui.adapter.findCoach.ReviewItemAdapter;
@@ -693,8 +694,11 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
-                Toast.makeText(context, "支付成功", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplication(), PaySuccessActivity.class);
+                startActivityForResult(intent, 2);
             }
+        } else if (requestCode == 2) {
+            navigateToShare();
         }
     }
 
@@ -1019,6 +1023,11 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         Log.v("gibxin", "free try url -> " + url);
         bundle.putString("url", url);
         intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    private void navigateToShare() {
+        Intent intent = new Intent(getApplication(), ReferFriendsActivity.class);
         startActivity(intent);
     }
 
