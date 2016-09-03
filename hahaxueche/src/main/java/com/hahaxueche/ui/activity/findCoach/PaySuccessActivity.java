@@ -1,7 +1,5 @@
 package com.hahaxueche.ui.activity.findCoach;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,7 +13,6 @@ import com.hahaxueche.model.coach.Coach;
 import com.hahaxueche.model.student.PurchasedService;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
-import com.hahaxueche.ui.activity.mySetting.ReferFriendsActivity;
 import com.hahaxueche.utils.SharedPreferencesUtil;
 import com.hahaxueche.utils.Util;
 
