@@ -21,6 +21,7 @@
                 android:id="@+id/indexBanner"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height260dp"
+                android:visibility="gone"
                 app:canLoop="true" />
 
             <LinearLayout
@@ -30,52 +31,105 @@
                 android:orientation="horizontal">
 
                 <FrameLayout
-                    android:id="@+id/frl_tel_ask"
+                    android:id="@+id/fly_letter"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1">
 
-                    <TextView
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginBottom="15dp"
-                        android:layout_marginTop="15dp"
-                        android:drawableLeft="@drawable/ic_ask_call"
-                        android:drawablePadding="16dp"
-                        android:gravity="center"
-                        android:text="电话咨询"
-                        android:textColor="@color/haha_black_light"
-                        android:textSize="14sp" />
+                        android:src="@drawable/ic_yourletter" />
                 </FrameLayout>
 
                 <View
                     android:layout_width="0.3dp"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/haha_gray_light" />
 
-                <FrameLayout
-                    android:id="@+id/frl_online_ask"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginBottom="15dp"
-                        android:layout_marginTop="15dp"
-                        android:drawableLeft="@drawable/ic_ask_message"
-                        android:drawablePadding="16dp"
-                        android:gravity="center"
-                        android:text="在线咨询"
-                        android:textColor="@color/haha_black_light"
-                        android:textSize="14sp" />
-                </FrameLayout>
+                    <FrameLayout
+                        android:id="@+id/frl_tel_ask"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="15dp"
+                            android:layout_marginTop="15dp"
+                            android:drawableLeft="@drawable/ic_ask_call"
+                            android:drawablePadding="16dp"
+                            android:gravity="center"
+                            android:text="电话咨询"
+                            android:textColor="@color/haha_black_light"
+                            android:textSize="14sp" />
+                    </FrameLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.3dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/haha_gray_light" />
+
+                    <FrameLayout
+                        android:id="@+id/frl_online_ask"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="15dp"
+                            android:layout_marginTop="15dp"
+                            android:drawableLeft="@drawable/ic_ask_message"
+                            android:drawablePadding="16dp"
+                            android:gravity="center"
+                            android:text="在线咨询"
+                            android:textColor="@color/haha_black_light"
+                            android:textSize="14sp" />
+                    </FrameLayout>
+                </LinearLayout>
+
+
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.3dp"
+                android:background="@color/haha_gray_light" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@color/haha_white">
+
+                <TextView
+                    android:id="@+id/tv_free_try"
+                    android:layout_width="match_parent"
+                    android:layout_height="66dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="@dimen/margin30dp"
+                    android:layout_marginRight="@dimen/margin30dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/rectangle_back_orange_sm"
+                    android:gravity="center"
+                    android:text="免费试学"
+                    android:textColor="@android:color/white"
+                    android:textSize="28sp" />
+            </FrameLayout>
 
             <LinearLayout
                 android:id="@+id/lly_events"
@@ -330,32 +384,6 @@
 
                 </RelativeLayout>
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.3dp"
-                android:background="@color/haha_gray_light" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:background="@color/haha_white">
-
-                <TextView
-                    android:id="@+id/tv_free_try"
-                    android:layout_width="match_parent"
-                    android:layout_height="66dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="@dimen/margin30dp"
-                    android:layout_marginRight="@dimen/margin30dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/rectangle_back_orange_sm"
-                    android:gravity="center"
-                    android:text="免费试学"
-                    android:textColor="@android:color/white"
-                    android:textSize="28sp" />
-            </FrameLayout>
 
             <com.hahaxueche.ui.widget.slidingTabLayout.SlidingTabLayout
                 android:id="@+id/stl_exam_title"
