@@ -79,6 +79,7 @@
                     app:border_width="3dp">
 
                 </com.hahaxueche.ui.widget.circleImageView.CircleImageView>
+
                 <RelativeLayout
                     android:id="@+id/fl_my_cd_coach_name"
                     android:layout_width="match_parent"
@@ -103,6 +104,14 @@
                         android:layout_marginLeft="6dp"
                         android:layout_toRightOf="@id/tv_my_cd_coach_name"
                         android:src="@drawable/ic_auth_golden_big" />
+                    <include
+                        android:id="@+id/lly_train_school"
+                        layout="@layout/layout_train_school"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/iv_my_cd_is_golden_coach"
+                        android:layout_marginLeft="6dp"
+                        android:layout_toRightOf="@id/iv_my_cd_is_golden_coach" />
 
                     <TextView
                         android:id="@+id/tv_applaud_count"

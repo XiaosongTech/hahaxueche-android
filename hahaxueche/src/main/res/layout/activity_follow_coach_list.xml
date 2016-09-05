@@ -42,8 +42,8 @@
             android:id="@+id/xlv_follow_coach_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@drawable/layer_list_divider"
-            android:dividerHeight="1dp"
+            android:divider="@drawable/layer_list_divider_review"
+            android:dividerHeight="0.3dp"
             android:footerDividersEnabled="false"
             android:headerDividersEnabled="false"></com.hahaxueche.ui.widget.pullToRefreshView.XListView>
     </LinearLayout>

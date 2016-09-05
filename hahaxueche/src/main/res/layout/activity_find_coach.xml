@@ -141,8 +141,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:divider="@drawable/layer_list_divider"
-            android:dividerHeight="0.5dp"
+            android:divider="@drawable/layer_list_divider_review"
+            android:dividerHeight="0.3dp"
             android:footerDividersEnabled="false"
             android:headerDividersEnabled="false"
             app:loadMoreTxt="一大波教练接近中~~~">
