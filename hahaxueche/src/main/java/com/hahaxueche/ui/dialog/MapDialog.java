@@ -48,26 +48,30 @@ public class MapDialog extends AlertDialog implements AMap.OnMarkerClickListener
     private FieldModel mFieldModel;
     private View mView;
 
-    public MapDialog(Context context)
-    {
+    private MapDialogDismissListener mListener;
+
+    public interface MapDialogDismissListener {
+        public boolean dialogDismiss();
+    }
+
+    public MapDialog(Context context) {
         super(context);
         mContext = context;
         init();
     }
 
-    public MapDialog(Context context, int theme,FieldModel fieldModel,View view)
-    {
+    public MapDialog(Context context, int theme, FieldModel fieldModel, View view, MapDialogDismissListener listener) {
         super(context, theme);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mContext = context;
         mFieldModel = fieldModel;
         mView = view;
+        mListener = listener;
         this.setCanceledOnTouchOutside(true);//设置点击Dialog外部任意区域关闭Dialog
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
         contentView = inflater.inflate(R.layout.dialog_field_map, null);
@@ -80,8 +84,7 @@ public class MapDialog extends AlertDialog implements AMap.OnMarkerClickListener
         setDialogPosition();
     }
 
-    private void init()
-    {
+    private void init() {
         if (aMap == null) {
             aMap = mapView.getMap();
         }
@@ -106,6 +109,7 @@ public class MapDialog extends AlertDialog implements AMap.OnMarkerClickListener
             aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(mFieldModel.getLat()), Double.parseDouble(mFieldModel.getLng())), 12));
         }
     }
+
     /**
      * 对marker标注点点击响应事件
      */
@@ -114,8 +118,7 @@ public class MapDialog extends AlertDialog implements AMap.OnMarkerClickListener
         return false;
     }
 
-    private void setDialogPosition()
-    {
+    private void setDialogPosition() {
         Window win = this.getWindow();
         WindowManager.LayoutParams lp = win.getAttributes();
         win.setGravity(Gravity.LEFT | Gravity.TOP);
@@ -145,11 +148,9 @@ public class MapDialog extends AlertDialog implements AMap.OnMarkerClickListener
         win.setAttributes(lp);
     }
 
-    private SpannableString getBaseInfo(String s, int color)
-    {
+    private SpannableString getBaseInfo(String s, int color) {
         SpannableString spannableString = new SpannableString(s);
-        if (s.contains("\n"))
-        {
+        if (s.contains("\n")) {
             int start = s.indexOf("\n");
             spannableString.setSpan(new ForegroundColorSpan(color), start, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             spannableString.setSpan(new RelativeSizeSpan(0.7f), start, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -158,14 +159,15 @@ public class MapDialog extends AlertDialog implements AMap.OnMarkerClickListener
     }
 
     @Override
-    public void show()
-    {
+    public void show() {
         super.show();
     }
 
     @Override
-    public void dismiss()
-    {
+    public void dismiss() {
+        if (mListener != null) {
+            mListener.dialogDismiss();
+        }
         super.dismiss();
     }
 }

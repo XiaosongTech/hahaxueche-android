@@ -85,7 +85,7 @@ public class CoachItemAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
-        ViewHolder holder;
+        final ViewHolder holder;
         if (view == null) {
             inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflator.inflate(resource, null);
@@ -105,6 +105,7 @@ public class CoachItemAdapter extends BaseAdapter {
             holder.tvTrainSchoolName = (TextView) view.findViewById(R.id.tv_train_school);
             holder.rlyVipPrice = (RelativeLayout) view.findViewById(R.id.rly_vip_price);
             holder.llyTrainSchool = (LinearLayout) view.findViewById(R.id.lly_train_school);
+            holder.rlyActualPrice = (RelativeLayout) view.findViewById(R.id.rly_actual_price);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -162,7 +163,20 @@ public class CoachItemAdapter extends BaseAdapter {
         holder.llyCoachLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mapDialog = new MapDialog(context, R.style.map_dialog, mFieldModel, v);
+                mapDialog = new MapDialog(context, R.style.map_dialog, mFieldModel, v, new MapDialog.MapDialogDismissListener() {
+                    @Override
+                    public boolean dialogDismiss() {
+                        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT);
+                        p.setMargins(Util.instence(context).dip2px(100), 0, 0, 0);
+                        holder.rlyActualPrice.setLayoutParams(p);
+                        return true;
+                    }
+                });
+                LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                p.setMargins(Util.instence(context).dip2px(100), Util.instence(context).dip2px(200), 0, 0);
+                holder.rlyActualPrice.setLayoutParams(p);
                 mapDialog.show();
             }
         });
@@ -201,5 +215,6 @@ public class CoachItemAdapter extends BaseAdapter {
         RelativeLayout rlyVipPrice;
         TextView tvTrainSchoolName;
         LinearLayout llyTrainSchool;
+        RelativeLayout rlyActualPrice;
     }
 }

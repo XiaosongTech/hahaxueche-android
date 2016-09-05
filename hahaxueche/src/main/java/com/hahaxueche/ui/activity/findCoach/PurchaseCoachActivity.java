@@ -59,9 +59,6 @@ public class PurchaseCoachActivity extends FCBaseActivity {
     private TextView mTvCoachName;
     private TextView mTvCoachTeachTime;
     private TextView mTvCoachPoints;
-    private TextView mTvCoachActualPrice;
-    private TextView mTvCoachVIPPrice;
-    private TextView mTvCoachVIPPriceLabel;
     private CircleImageView mCivCoachAvatar;
     private ImageView mIvIsGoldenCoach;
     private ScoreView mSvCoachScore;
@@ -86,6 +83,8 @@ public class PurchaseCoachActivity extends FCBaseActivity {
     private TextView mTvVIPPriceDetail;//VIP班价格明细
     private RelativeLayout mRlyMorePayment;//更多支付方式
     private TextView mTvApplaudCount;
+    private TextView mTvTrainSchool;
+    private LinearLayout mLlyTrainSchool;
 
     private Coach mCoach;
     private List<Payment> mPaymentList;
@@ -116,9 +115,6 @@ public class PurchaseCoachActivity extends FCBaseActivity {
         mTvCoachName = Util.instence(this).$(this, R.id.tv_coach_name);
         mTvCoachTeachTime = Util.instence(this).$(this, R.id.tv_coach_teach_time);
         mTvCoachPoints = Util.instence(this).$(this, R.id.tv_coach_points);
-        mTvCoachActualPrice = Util.instence(this).$(this, R.id.tv_coach_actual_price);
-        mTvCoachVIPPrice = Util.instence(this).$(this, R.id.tv_coach_vip_price);
-        mTvCoachVIPPriceLabel = Util.instence(this).$(this, R.id.tv_coach_vip_label);
         mCivCoachAvatar = Util.instence(this).$(this, R.id.cir_coach_avatar);
         mIvIsGoldenCoach = Util.instence(this).$(this, R.id.iv_is_golden_coach);
         mSvCoachScore = Util.instence(this).$(this, R.id.sv_coach_score);
@@ -141,6 +137,8 @@ public class PurchaseCoachActivity extends FCBaseActivity {
         mTvVIPPriceDetail = Util.instence(this).$(this, R.id.tv_vip_price_detail);
         mRlyMorePayment = Util.instence(this).$(this, R.id.rly_more_payment);
         mTvApplaudCount = Util.instence(this).$(this, R.id.tv_applaud_count);
+        mTvTrainSchool = Util.instence(this).$(this, R.id.tv_train_school);
+        mLlyTrainSchool = Util.instence(this).$(this, R.id.lly_train_school);
     }
 
     private void loadDatas() {
@@ -172,20 +170,14 @@ public class PurchaseCoachActivity extends FCBaseActivity {
         }
         mTvCoachTeachTime.setText(dfInt.format(coachExperiences) + "年教龄");
         //价格
-        mTvCoachActualPrice.setText(Util.getMoney(mCoach.getCoach_group().getTraining_cost()));
         mTvNormalPrice.setText(Util.getMoney(mCoach.getCoach_group().getTraining_cost()));
         mTvOldNormalPrice.setText(Util.getMoney(mCoach.getCoach_group().getMarket_price()));
         mTvOldNormalPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         if (mCoach.getVip() == 0) {
             //没有vip的
-            mTvCoachVIPPrice.setVisibility(View.INVISIBLE);
-            mTvCoachVIPPriceLabel.setVisibility(View.INVISIBLE);
             mRlyVIPPrice.setVisibility(View.GONE);
             selectClass(0);
         } else {
-            mTvCoachVIPPrice.setVisibility(View.VISIBLE);
-            mTvCoachVIPPriceLabel.setVisibility(View.VISIBLE);
-            mTvCoachVIPPrice.setText(Util.getMoney(mCoach.getCoach_group().getVip_price()));
             mRlyVIPPrice.setVisibility(View.VISIBLE);
             mTvVIPPrice.setText(Util.getMoney(mCoach.getCoach_group().getVip_price()));
             mTvOldVIPPrice.setText(Util.getMoney(mCoach.getCoach_group().getVip_market_price()));
@@ -231,10 +223,16 @@ public class PurchaseCoachActivity extends FCBaseActivity {
             style.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.app_theme_color)), 2, 2 + kmString.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
             mTvDistance.setText(style);
         }
+        if (!TextUtils.isEmpty(mCoach.getDriving_school())) {
+            mLlyTrainSchool.setVisibility(View.VISIBLE);
+            mTvTrainSchool.setText(mCoach.getDriving_school());
+        } else {
+            mLlyTrainSchool.setVisibility(View.GONE);
+        }
         mLlyCoachLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mapDialog = new MapDialog(PurchaseCoachActivity.this, R.style.map_dialog, mFieldModel, v);
+                mapDialog = new MapDialog(PurchaseCoachActivity.this, R.style.map_dialog, mFieldModel, v, null);
                 mapDialog.show();
             }
         });

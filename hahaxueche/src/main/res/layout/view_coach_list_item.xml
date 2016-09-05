@@ -122,6 +122,7 @@
     </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/rly_actual_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="100dp">
