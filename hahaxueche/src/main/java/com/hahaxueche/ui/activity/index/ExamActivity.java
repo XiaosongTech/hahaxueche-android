@@ -461,4 +461,14 @@ public class ExamActivity extends IndexBaseActivity implements ExamFragment.OnCo
             }
         }
     }
+
+    @Override
+    public void finish() {
+        if ((mExamMode.equals(ExamLib.TEST_MODE_TURN) || mExamMode.equals(ExamLib.TEST_MODE_RANDOM)) && spUtil.isLogin()) {
+            Intent intent = new Intent();
+            intent.putExtra("isShowShare", true);
+            setResult(RESULT_OK, intent);
+        }
+        super.finish();
+    }
 }

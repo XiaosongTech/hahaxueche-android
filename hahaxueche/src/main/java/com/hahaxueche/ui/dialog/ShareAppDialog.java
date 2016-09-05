@@ -56,6 +56,7 @@ public class ShareAppDialog extends Dialog {
     private TextView tvShareWeixin;
     private TextView tvShareFriendCircle;
     private TextView tvShareCancel;
+    private TextView tvShareQzone;
 
     public interface OnShareListener {
         void onShare(int shareType);
@@ -117,6 +118,14 @@ public class ShareAppDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 mOnShareListener.onShare(3);
+                dismiss();
+            }
+        });
+        tvShareQzone = (TextView) view.findViewById(R.id.tv_share_qzone);
+        tvShareQzone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnShareListener.onShare(4);
                 dismiss();
             }
         });

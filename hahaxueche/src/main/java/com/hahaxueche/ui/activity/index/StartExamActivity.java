@@ -14,6 +14,7 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.examLib.Question;
 import com.hahaxueche.model.student.Student;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
 import com.hahaxueche.utils.ExamLib;
 import com.hahaxueche.utils.SharedPreferencesUtil;
@@ -59,6 +60,8 @@ public class StartExamActivity extends IndexBaseActivity {
     private static final String ARG_WRONG_QUESTION_LIST = "wrongQuestionList";
     private static final String ARG_STATUS = "status";
     private static final int REQUEST_CODE_EXAM_ACTIVITY = 0;
+
+    private ShareDialog mShareDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,6 +181,11 @@ public class StartExamActivity extends IndexBaseActivity {
             }
 
         }
+        if (mStatus.equals(ExamLib.EXAM_STATUS_PASS) || mStatus.equals(ExamLib.EXAM_STATUS_NOT_PASS)) {
+            if (spUtil.isLogin()) {
+                showShare();
+            }
+        }
     }
 
     @Override
@@ -258,5 +266,12 @@ public class StartExamActivity extends IndexBaseActivity {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void showShare() {
+        if (mShareDialog == null) {
+            mShareDialog = new ShareDialog(StartExamActivity.this);
+        }
+        mShareDialog.show();
     }
 }

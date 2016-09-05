@@ -192,7 +192,7 @@ public class MySettingActivity extends MSBaseActivity {
                 List<PaymentStage> paymentStageList = mPurchasedService.getPayment_stages();
                 String tempPaymentStageStr = "";
                 for (PaymentStage paymentStage : paymentStageList) {
-                    if (paymentStage.getStage_number().equals(mPurchasedService.getCurrent_payment_stage())) {
+                    if (paymentStage.getStage_number() == mPurchasedService.getCurrent_payment_stage()) {
                         tempPaymentStageStr = paymentStage.getStage_name();
                         break;
                     }
@@ -224,8 +224,6 @@ public class MySettingActivity extends MSBaseActivity {
             msvMain.setVisibility(View.GONE);
             mSrlMySetting.setVisibility(View.GONE);
         }
-
-
     }
 
     View.OnClickListener mClickListener = new View.OnClickListener() {

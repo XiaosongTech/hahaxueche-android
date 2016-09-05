@@ -51,6 +51,7 @@ import com.hahaxueche.ui.dialog.AppointmentDialog;
 import com.hahaxueche.ui.dialog.BaseAlertDialog;
 import com.hahaxueche.ui.dialog.CityChoseDialog;
 import com.hahaxueche.ui.dialog.GroupBuyDialog;
+import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.fragment.index.exam.ExamPageItem;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
 import com.hahaxueche.ui.widget.slidingTabLayout.SlidingTabLayout;
@@ -113,9 +114,12 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     private static final String WEB_URL_ABOUT_COACH = "http://staging.hahaxueche.net/#/coach";
     private static final String WEB_URL_MY_STRENGTHS = "http://activity.hahaxueche.com/share/features";
     private static final String WEB_URL_PROCEDURE = "http://activity.hahaxueche.com/share/steps";
+    private static final String WEB_URL_LETTER = "http://m.hahaxueche.com/letter-for-customer";
     private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
 
     private final MyHandler mHandler = new MyHandler(this);
+    private ShareDialog mShareDialog;
+    private FrameLayout mFlyLetter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -202,6 +206,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         mLlyEvents = Util.instence(this).$(this, R.id.lly_events);
         mViewPager = Util.instence(this).$(this, R.id.vp_exam);
         mTabLayout = Util.instence(this).$(this, R.id.stl_exam_title);
+        mFlyLetter = Util.instence(this).$(this, R.id.fly_letter);
     }
 
     private void initEvent() {
@@ -217,6 +222,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         mFrlOnlineAsk.setOnClickListener(mClickListener);
         mFrlTelAsk.setOnClickListener(mClickListener);
         mTvMoreEvents.setOnClickListener(mClickListener);
+        mFlyLetter.setOnClickListener(mClickListener);
         mLvEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -279,6 +285,8 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                     //更多活动
                     navigateToMoreEvents();
                     break;
+                case R.id.fly_letter:
+                    openWebView(WEB_URL_LETTER);
                 default:
                     break;
             }
@@ -570,5 +578,18 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         public String getTabName(int position) {
             return mTab.get(position).getTitle();
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK && data.getBooleanExtra("isShowShare", false)) {
+                if (mShareDialog == null) {
+                    mShareDialog = new ShareDialog(IndexActivity.this);
+                }
+                mShareDialog.show();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

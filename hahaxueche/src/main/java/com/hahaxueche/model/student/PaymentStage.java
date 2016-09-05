@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public class PaymentStage implements Serializable{
     private String id;
-    private String stage_number;
+    private int stage_number;
     private String stage_name;
     private String description;
     private String stage_amount;
@@ -28,11 +28,11 @@ public class PaymentStage implements Serializable{
         this.id = id;
     }
 
-    public String getStage_number() {
+    public int getStage_number() {
         return stage_number;
     }
 
-    public void setStage_number(String stage_number) {
+    public void setStage_number(int stage_number) {
         this.stage_number = stage_number;
     }
 

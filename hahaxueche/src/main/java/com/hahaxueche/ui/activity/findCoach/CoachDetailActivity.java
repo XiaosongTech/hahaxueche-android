@@ -54,6 +54,7 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.findCoach.FCCallbackListener;
 import com.hahaxueche.presenter.mySetting.MSCallbackListener;
 import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
+import com.hahaxueche.ui.activity.mySetting.ReferFriendsActivity;
 import com.hahaxueche.ui.activity.signupLogin.StartActivity;
 import com.hahaxueche.ui.adapter.findCoach.PeerCoachItemAdapter;
 import com.hahaxueche.ui.adapter.findCoach.ReviewItemAdapter;
@@ -80,6 +81,7 @@ import com.sina.weibo.sdk.constant.WBConstants;
 import com.sina.weibo.sdk.utils.Utility;
 import com.squareup.picasso.Picasso;
 import com.tencent.connect.share.QQShare;
+import com.tencent.connect.share.QzoneShare;
 import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
@@ -692,8 +694,11 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
-                Toast.makeText(context, "支付成功", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplication(), PaySuccessActivity.class);
+                startActivityForResult(intent, 2);
             }
+        } else if (requestCode == 2) {
+            navigateToShare();
         }
     }
 
@@ -767,6 +772,9 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
             case 3:
                 shareToWeibo();
                 break;
+            case 4:
+                shareToQZone();
+                break;
             default:
                 break;
         }
@@ -797,6 +805,20 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, mImageUrl);
         params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, mUrl);
         mTencent.shareToQQ(this, params, myListener);
+    }
+
+    private void shareToQZone() {
+        ShareListener myListener = new ShareListener();
+        final Bundle params = new Bundle();
+        params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_APP);
+        params.putString(QzoneShare.SHARE_TO_QQ_TITLE, mTitle);
+        params.putString(QzoneShare.SHARE_TO_QQ_APP_NAME, "哈哈学车");
+        params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, mDescription);
+        params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, mUrl);
+        ArrayList<String> imgUrlList = new ArrayList<>();
+        imgUrlList.add(mImageUrl);
+        params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, imgUrlList);
+        mTencent.shareToQzone(this, params, myListener);
     }
 
     private void shareToWeibo() {
@@ -1001,6 +1023,11 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         Log.v("gibxin", "free try url -> " + url);
         bundle.putString("url", url);
         intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    private void navigateToShare() {
+        Intent intent = new Intent(getApplication(), ReferFriendsActivity.class);
         startActivity(intent);
     }
 

@@ -31,6 +31,7 @@ import com.sina.weibo.sdk.api.share.SendMessageToWeiboRequest;
 import com.sina.weibo.sdk.constant.WBConstants;
 import com.sina.weibo.sdk.utils.Utility;
 import com.tencent.connect.share.QQShare;
+import com.tencent.connect.share.QzoneShare;
 import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
@@ -43,6 +44,7 @@ import com.umeng.analytics.MobclickAgent;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 import io.branch.indexing.BranchUniversalObject;
 import io.branch.referral.Branch;
@@ -196,6 +198,8 @@ public class BaseWebViewActivity extends BaseActivity implements IWeiboHandler.R
             case 3:
                 shareToWeibo();
                 break;
+            case 4:
+                shareToQZone();
             default:
                 break;
         }
@@ -211,6 +215,20 @@ public class BaseWebViewActivity extends BaseActivity implements IWeiboHandler.R
         params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, mImageUrl);
         params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, url);
         mTencent.shareToQQ(this, params, myListener);
+    }
+
+    private void shareToQZone() {
+        ShareListener myListener = new ShareListener();
+        final Bundle params = new Bundle();
+        params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_APP);
+        params.putString(QzoneShare.SHARE_TO_QQ_TITLE, mTitle);
+        params.putString(QzoneShare.SHARE_TO_QQ_APP_NAME, "哈哈学车");
+        params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, mDescription);
+        params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, url);
+        ArrayList<String> imgUrlList = new ArrayList<>();
+        imgUrlList.add(mImageUrl);
+        params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, imgUrlList);
+        mTencent.shareToQzone(this, params, myListener);
     }
 
     private void shareToWeibo() {

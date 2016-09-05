@@ -80,10 +80,10 @@ public class ExamLibraryFragment extends Fragment {
         Intent intent = new Intent(getActivity(), ExamActivity.class);
         intent.putExtra("examMode", examMode);
         intent.putExtra("examType", mExamType);
-        getActivity().startActivity(intent);
+        getActivity().startActivityForResult(intent, 1);
     }
 
-    private void navigateToStartExam(){
+    private void navigateToStartExam() {
         Intent intent = new Intent(getActivity(), StartExamActivity.class);
         intent.putExtra("examType", mExamType);
         getActivity().startActivity(intent);

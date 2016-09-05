@@ -322,4 +322,13 @@ public class SharedPreferencesUtil {
         return collectList;
     }
 
+    public boolean isLogin() {
+        User user = getUser();
+        if (user == null) return false;
+        if (user.getStudent() == null || TextUtils.isEmpty(user.getStudent().getId())) return false;
+        if (user.getSession() == null || TextUtils.isEmpty(user.getSession().getAccess_token()))
+            return false;
+        return true;
+    }
+
 }
