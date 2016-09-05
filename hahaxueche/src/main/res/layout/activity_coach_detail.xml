@@ -110,6 +110,14 @@
                         android:layout_marginRight="3dp"
                         android:layout_toLeftOf="@id/tv_applaud_count"
                         android:src="@drawable/ic_list_best_unclick" />
+                    <include
+                        android:id="@+id/lly_train_school"
+                        layout="@layout/layout_train_school"
+                        android:layout_width="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:layout_alignBottom="@id/tv_cd_coach_name"
+                        android:layout_toRightOf="@id/iv_cd_is_golden_coach"
+                        android:layout_height="wrap_content"/>
                 </RelativeLayout>
 
                 <TextView

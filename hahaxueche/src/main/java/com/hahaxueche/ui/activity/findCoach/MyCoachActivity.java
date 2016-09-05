@@ -30,6 +30,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -120,6 +121,8 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
     private TextView mTvApplaudCount;
     private ImageView mIvApplaud;
     private boolean isApplaud;
+    private TextView mTvTrainSchool;
+    private LinearLayout mLlyTrainSchool;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -168,6 +171,8 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
         //点赞
         mTvApplaudCount = Util.instence(this).$(this, R.id.tv_applaud_count);
         mIvApplaud = Util.instence(this).$(this, R.id.iv_applaud);
+        mTvTrainSchool = Util.instence(this).$(this, R.id.tv_train_school);
+        mLlyTrainSchool = Util.instence(this).$(this, R.id.lly_train_school);
     }
 
     private void initEvent() {
@@ -275,6 +280,13 @@ public class MyCoachActivity extends FCBaseActivity implements ImageSwitcher.OnS
                 break;
             }
         }
+        if (!TextUtils.isEmpty(mCoach.getDriving_school())) {
+            mLlyTrainSchool.setVisibility(View.VISIBLE);
+            mTvTrainSchool.setText(mCoach.getDriving_school());
+        } else {
+            mLlyTrainSchool.setVisibility(View.GONE);
+        }
+
     }
 
     private void getCoachAvatar(String url, CircleImageView civCoachAvatar) {

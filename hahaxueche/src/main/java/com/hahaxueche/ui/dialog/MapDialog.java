@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
@@ -101,6 +102,8 @@ public class MapDialog extends AlertDialog implements AMap.OnMarkerClickListener
                             R.drawable.ic_map_local_choseon)));
             markerOptionlst.add(markerOption);
             List<Marker> markerList = aMap.addMarkers(markerOptionlst, true);
+            //设定初始可视区域
+            aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(mFieldModel.getLat()), Double.parseDouble(mFieldModel.getLng())), 12));
         }
     }
     /**

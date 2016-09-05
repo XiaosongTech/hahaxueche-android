@@ -36,6 +36,7 @@ public class Coach implements Serializable {
     private String code;
     private String message;
     private boolean isSuccess = true;
+    private String driving_school;
 
     public String getId() {
         return id;
@@ -267,5 +268,13 @@ public class Coach implements Serializable {
 
     public void setLiked(String liked) {
         this.liked = liked;
+    }
+
+    public String getDriving_school() {
+        return driving_school;
+    }
+
+    public void setDriving_school(String driving_school) {
+        this.driving_school = driving_school;
     }
 }

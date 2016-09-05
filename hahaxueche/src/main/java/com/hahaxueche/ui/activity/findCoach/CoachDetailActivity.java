@@ -188,6 +188,8 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     private TextView mTvApplaudCount;
     private ImageView mIvApplaud;
     private boolean isApplaud;
+    private TextView mTvTrainSchoolName;//驾校名称
+    private LinearLayout mLlyTrainSchool;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -279,6 +281,8 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         //点赞
         mTvApplaudCount = Util.instence(this).$(this, R.id.tv_applaud_count);
         mIvApplaud = Util.instence(this).$(this, R.id.iv_applaud);
+        mTvTrainSchoolName = Util.instence(this).$(this, R.id.tv_train_school);
+        mLlyTrainSchool = Util.instence(this).$(this, R.id.lly_train_school);
     }
 
     private void initEvent() {
@@ -443,6 +447,12 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
             averageRating = 5;
         }
         svAverageRating.setScore(averageRating, true);
+        if (!TextUtils.isEmpty(mCoach.getDriving_school())) {
+            mLlyTrainSchool.setVisibility(View.VISIBLE);
+            mTvTrainSchoolName.setText(mCoach.getDriving_school());
+        } else {
+            mLlyTrainSchool.setVisibility(View.GONE);
+        }
     }
 
     private void getCoachAvatar(String url, CircleImageView civCoachAvatar) {

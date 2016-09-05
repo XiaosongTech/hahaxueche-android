@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
@@ -94,7 +95,6 @@ public class CoachItemAdapter extends BaseAdapter {
             holder.tvCoachPoints = (TextView) view.findViewById(R.id.tv_coach_points);
             holder.tvCoachActualPrice = (TextView) view.findViewById(R.id.tv_coach_actual_price);
             holder.tvVIPPrice = (TextView) view.findViewById(R.id.tv_vip_price);
-            holder.tvVIPLabel = (TextView) view.findViewById(R.id.tv_vip_label);
             holder.civCoachAvatar = (CircleImageView) view.findViewById(R.id.cir_coach_avatar);
             holder.ivIsGoldenCoach = (ImageView) view.findViewById(R.id.iv_is_golden_coach);
             holder.svCoachScore = (ScoreView) view.findViewById(R.id.sv_coach_score);
@@ -102,6 +102,9 @@ public class CoachItemAdapter extends BaseAdapter {
             holder.llyCoachLocation = (LinearLayout) view.findViewById(R.id.lly_coach_location);
             holder.tvDistance = (TextView) view.findViewById(R.id.tv_distance);
             holder.tvApplaudCount = (TextView) view.findViewById(R.id.tv_applaud_count);
+            holder.tvTrainSchoolName = (TextView) view.findViewById(R.id.tv_train_school);
+            holder.rlyVipPrice = (RelativeLayout) view.findViewById(R.id.rly_vip_price);
+            holder.llyTrainSchool = (LinearLayout) view.findViewById(R.id.lly_train_school);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -118,13 +121,12 @@ public class CoachItemAdapter extends BaseAdapter {
         holder.tvCoachActualPrice.setText(Util.getMoney(coach.getCoach_group().getTraining_cost()));
         //vip价格
         if (coach.getVip() == 0) {
-            holder.tvVIPPrice.setVisibility(View.INVISIBLE);
-            holder.tvVIPLabel.setVisibility(View.INVISIBLE);
+            holder.rlyVipPrice.setVisibility(View.GONE);
         } else {
-            holder.tvVIPPrice.setVisibility(View.VISIBLE);
-            holder.tvVIPLabel.setVisibility(View.VISIBLE);
+            holder.rlyVipPrice.setVisibility(View.VISIBLE);
             holder.tvVIPPrice.setText(Util.getMoney(coach.getCoach_group().getVip_price()));
         }
+
         getCoachAvatar(coach.getAvatar(), holder.civCoachAvatar);
         if (coach.getSkill_level().equals("1")) {
             holder.ivIsGoldenCoach.setVisibility(View.VISIBLE);
@@ -160,12 +162,17 @@ public class CoachItemAdapter extends BaseAdapter {
         holder.llyCoachLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int id = v.getId();
                 mapDialog = new MapDialog(context, R.style.map_dialog, mFieldModel, v);
                 mapDialog.show();
             }
         });
         holder.tvApplaudCount.setText(String.valueOf(coach.getLike_count()));
+        if (!TextUtils.isEmpty(coach.getDriving_school())) {
+            holder.llyTrainSchool.setVisibility(View.VISIBLE);
+            holder.tvTrainSchoolName.setText(coach.getDriving_school());
+        } else {
+            holder.llyTrainSchool.setVisibility(View.GONE);
+        }
         return view;
     }
 
@@ -184,7 +191,6 @@ public class CoachItemAdapter extends BaseAdapter {
         TextView tvCoachPoints;
         TextView tvCoachActualPrice;
         TextView tvVIPPrice;
-        TextView tvVIPLabel;
         CircleImageView civCoachAvatar;
         ImageView ivIsGoldenCoach;
         ScoreView svCoachScore;
@@ -192,5 +198,8 @@ public class CoachItemAdapter extends BaseAdapter {
         LinearLayout llyCoachLocation;
         TextView tvDistance;
         TextView tvApplaudCount;
+        RelativeLayout rlyVipPrice;
+        TextView tvTrainSchoolName;
+        LinearLayout llyTrainSchool;
     }
 }
