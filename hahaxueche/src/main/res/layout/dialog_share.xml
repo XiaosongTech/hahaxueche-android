@@ -12,7 +12,7 @@
         android:layout_margin="20dp"
         android:gravity="center"
         android:lineSpacingMultiplier="1.2"
-        android:text="我正在用哈哈学车开车\n感觉棒棒哒!马上分享给大家"
+        android:text="用@哈哈学车爽到飞起\n好东西不私藏~马上分享给大家"
         android:textColor="@color/haha_white"
         android:textSize="20sp" />
 

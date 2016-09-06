@@ -94,6 +94,6 @@
     <string name="examRule4">记分规则:模拟考试下不能修改答案,每答对1题得2分,合格标准90分,答题时间30分钟</string>
     <string name="passRemarks">本次模拟测试通过,下面的驾驶学习继续努力!</string>
     <string name="notPassRemarks">本次模拟测试不及格,练习后请继续尝试!</string>
-    <string name="referDialogStr">好东西要分享给朋友,好朋友通过分享链接报名哈哈学车后,你可得到%1$s现金奖励,上不封顶哦~</string>
+    <string name="referDialogStr">好东西要分享给朋友，好友通过分享链接并报名哈哈学车后，你将获得%1$s现金奖励，更有机会获得保时捷试驾一日游，上不封顶哦~</string>
 
 </resources>
