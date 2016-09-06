@@ -17,7 +17,7 @@
         android:id="@+id/tv_train_school"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
+        android:textSize="10sp"
         android:layout_marginLeft="3dp"
         android:textColor="@color/haha_gray_heavy"/>
     </LinearLayout>

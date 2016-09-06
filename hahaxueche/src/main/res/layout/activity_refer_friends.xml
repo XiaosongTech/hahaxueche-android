@@ -98,8 +98,8 @@
 
                 <ImageView
                     android:id="@+id/iv_qr_code"
-                    android:layout_width="@dimen/width320dp"
-                    android:layout_height="@dimen/width320dp"
+                    android:layout_width="@dimen/width360dp"
+                    android:layout_height="@dimen/width360dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
                     android:scaleType="centerCrop" />
@@ -110,10 +110,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="-10dp"
-                    android:background="@drawable/rectangle_back_orange"
+                    android:background="@drawable/rectangle_back_orange_corner"
                     android:gravity="center"
-                    android:paddingBottom="13dp"
-                    android:paddingTop="13dp"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="16dp"
                     android:text="点击分享, 赚回学费"
                     android:textColor="@color/haha_white"
                     android:textSize="16sp" />

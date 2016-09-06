@@ -119,7 +119,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
 
     private final MyHandler mHandler = new MyHandler(this);
     private ShareDialog mShareDialog;
-    private FrameLayout mFlyLetter;
+    private LinearLayout mLlyLetter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -206,7 +206,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         mLlyEvents = Util.instence(this).$(this, R.id.lly_events);
         mViewPager = Util.instence(this).$(this, R.id.vp_exam);
         mTabLayout = Util.instence(this).$(this, R.id.stl_exam_title);
-        mFlyLetter = Util.instence(this).$(this, R.id.fly_letter);
+        mLlyLetter = Util.instence(this).$(this, R.id.lly_letter);
     }
 
     private void initEvent() {
@@ -222,7 +222,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         mFrlOnlineAsk.setOnClickListener(mClickListener);
         mFrlTelAsk.setOnClickListener(mClickListener);
         mTvMoreEvents.setOnClickListener(mClickListener);
-        mFlyLetter.setOnClickListener(mClickListener);
+        mLlyLetter.setOnClickListener(mClickListener);
         mLvEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -285,7 +285,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
                     //更多活动
                     navigateToMoreEvents();
                     break;
-                case R.id.fly_letter:
+                case R.id.lly_letter:
                     openWebView(WEB_URL_LETTER);
                 default:
                     break;

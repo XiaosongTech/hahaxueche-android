@@ -23,6 +23,7 @@
     <dimen name="margin35dp">35dp</dimen>
     <dimen name="margin15dp">15dp</dimen>
     <dimen name="width320dp">320dp</dimen>
+    <dimen name="width360dp">360dp</dimen>
     <dimen name="height470dp">470dp</dimen>
     <dimen name="margin40dp">40dp</dimen>
     <dimen name="padding10dp">10dp</dimen>

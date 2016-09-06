@@ -34,6 +34,7 @@
             android:textColor="@android:color/white"
             android:textSize="20sp" />
     </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,47 +56,54 @@
             android:layout_weight="1"
             android:paddingTop="20dp">
 
-            <TextView
-                android:id="@+id/tv_coach_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/haha_black_light"
-                android:textSize="18sp" />
+            <RelativeLayout
+                android:id="@+id/rly_first_line"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/iv_is_golden_coach"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/tv_coach_name"
-                android:layout_marginLeft="6dp"
-                android:layout_toRightOf="@id/tv_coach_name"
-                android:src="@drawable/ic_auth_golden" />
+                <TextView
+                    android:id="@+id/tv_coach_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/haha_black_light"
+                    android:textSize="18sp" />
 
-            <include
-                android:id="@+id/lly_train_school"
-                layout="@layout/layout_train_school"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/tv_coach_name"
-                android:layout_marginLeft="6dp"
-                android:layout_toRightOf="@id/iv_is_golden_coach" />
+                <ImageView
+                    android:id="@+id/iv_is_golden_coach"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="6dp"
+                    android:layout_toRightOf="@id/tv_coach_name"
+                    android:src="@drawable/ic_auth_golden" />
 
-            <TextView
-                android:id="@+id/tv_coach_teach_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/tv_coach_name"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="15dp"
-                android:textColor="@color/haha_gray_heavy"
-                android:textSize="14sp" />
+                <include
+                    android:id="@+id/lly_train_school"
+                    layout="@layout/layout_train_school"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="6dp"
+                    android:layout_toRightOf="@id/iv_is_golden_coach" />
+
+                <TextView
+                    android:id="@+id/tv_coach_teach_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:textColor="@color/haha_gray_heavy"
+                    android:textSize="14sp" />
+            </RelativeLayout>
 
             <com.hahaxueche.ui.widget.scoreView.ScoreView
                 android:id="@+id/sv_coach_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@id/tv_coach_name"
-                android:layout_below="@id/tv_coach_name"
+                android:layout_alignLeft="@id/rly_first_line"
+                android:layout_below="@id/rly_first_line"
                 android:layout_marginTop="6dp"></com.hahaxueche.ui.widget.scoreView.ScoreView>
 
             <TextView
@@ -112,7 +120,7 @@
                 android:id="@+id/lly_coach_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@id/tv_coach_name"
+                android:layout_alignLeft="@id/rly_first_line"
                 android:layout_below="@id/sv_coach_score"
                 android:layout_marginTop="6dp"
                 android:orientation="horizontal">
@@ -163,7 +171,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="10dp"
                 android:background="@color/haha_white"
                 android:orientation="vertical">
 
@@ -389,7 +397,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/rectangle_back_orange_sm"
                     android:paddingBottom="15dp"
                     android:paddingLeft="100dp"

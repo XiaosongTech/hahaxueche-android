@@ -72,7 +72,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@id/cir_cd_coach_avatar"
-                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <TextView
@@ -81,13 +80,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="100dp"
                         android:textColor="@color/fCTxtBlack"
+                        android:layout_centerVertical="true"
                         android:textSize="20sp" />
 
                     <ImageView
                         android:id="@+id/iv_cd_is_golden_coach"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignBottom="@id/tv_cd_coach_name"
+                        android:layout_centerVertical="true"
                         android:layout_marginLeft="6dp"
                         android:layout_toRightOf="@id/tv_cd_coach_name"
                         android:src="@drawable/ic_auth_golden_big" />
@@ -106,7 +106,7 @@
                         android:id="@+id/iv_applaud"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignBottom="@id/tv_cd_coach_name"
+                        android:layout_centerVertical="true"
                         android:layout_marginRight="3dp"
                         android:layout_toLeftOf="@id/tv_applaud_count"
                         android:src="@drawable/ic_list_best_unclick" />
@@ -115,7 +115,7 @@
                         layout="@layout/layout_train_school"
                         android:layout_width="wrap_content"
                         android:layout_marginLeft="6dp"
-                        android:layout_alignBottom="@id/tv_cd_coach_name"
+                        android:layout_centerVertical="true"
                         android:layout_toRightOf="@id/iv_cd_is_golden_coach"
                         android:layout_height="wrap_content"/>
                 </RelativeLayout>
