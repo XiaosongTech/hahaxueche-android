@@ -160,7 +160,7 @@
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/tv_actual_label"
             android:text="四人一车,性价比高"
-            android:textColor="@color/haha_gray_heavier"
+            android:textColor="@color/haha_gray_heavy"
             android:textSize="14sp" />
 
         <TextView
@@ -207,7 +207,7 @@
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/tv_vip_label"
             android:text="一人一车,极速拿证"
-            android:textColor="@color/haha_gray_heavier"
+            android:textColor="@color/haha_gray_heavy"
             android:textSize="14sp" />
 
         <TextView
