@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,16 +16,20 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -65,6 +70,11 @@ import com.qiyukf.unicorn.api.Unicorn;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
+import tourguide.tourguide.Overlay;
+import tourguide.tourguide.Pointer;
+import tourguide.tourguide.ToolTip;
+import tourguide.tourguide.TourGuide;
 
 /**
  * Created by gibxin on 2016/1/27.
@@ -110,6 +120,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
     private AppointmentDialog appointmentDialog;
     private FrameLayout mFrlTelAsk;
     private FrameLayout mFrlOnlineAsk;
+    private TextView mTvOnlineAsk;
     private static final String WEB_URL_ABOUT_HAHA = "http://staging.hahaxueche.net/#/student";
     private static final String WEB_URL_ABOUT_COACH = "http://staging.hahaxueche.net/#/coach";
     private static final String WEB_URL_MY_STRENGTHS = "http://activity.hahaxueche.com/share/features";
@@ -161,6 +172,10 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         }
         loadExamLib();
         doAutoVersionCheck();
+        if (spUtil.isShowFirstScreenTourGuide()) {
+            loadTourGuide();
+            spUtil.showFirstScreenTourGuide();
+        }
     }
 
     private void initView() {
@@ -201,6 +216,7 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
         cbannerIndex.notifyDataSetChanged();
         mFrlTelAsk = Util.instence(this).$(this, R.id.frl_tel_ask);
         mFrlOnlineAsk = Util.instence(this).$(this, R.id.frl_online_ask);
+        mTvOnlineAsk = Util.instence(this).$(this, R.id.tv_online_ask);
         mLvEvents = Util.instence(this).$(this, R.id.lv_events);
         mTvMoreEvents = Util.instence(this).$(this, R.id.tv_more_events);
         mLlyEvents = Util.instence(this).$(this, R.id.lly_events);
@@ -591,5 +607,31 @@ public class IndexActivity extends IndexBaseActivity implements AdapterView.OnIt
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void loadTourGuide() {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        ViewGroup vgXiaoha = (ViewGroup) inflater.inflate(R.layout.layout_tourguide_xiaoha, null);
+        final ViewGroup vgFindCoach = (ViewGroup) inflater.inflate(R.layout.layout_tourguide_findcoach, null);
+        final TourGuide mTourGuideHandler = TourGuide.init(this).with(TourGuide.Technique.Click)
+                .setToolTip(new ToolTip().setCustomView(vgXiaoha).setShadow(false));
+        Overlay overlay = new Overlay();
+        overlay.disableClick(true).setStyle(Overlay.Style.Rectangle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mTourGuideHandler.cleanUp();
+                mTourGuideHandler.setToolTip(new ToolTip().setCustomView(vgFindCoach).setShadow(false).setGravity(Gravity.TOP));
+                mTourGuideHandler.setOverlay(new Overlay().disableClick(true).setStyle(Overlay.Style.Rectangle)
+                        .setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                mTourGuideHandler.cleanUp();
+                            }
+                        }));
+                mTourGuideHandler.playOn(llyTabFindCoach);
+            }
+        });
+        mTourGuideHandler.setOverlay(overlay);
+        mTourGuideHandler.playOn(mTvOnlineAsk);
     }
 }

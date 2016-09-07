@@ -71,14 +71,9 @@
                 android:layout_height="wrap_content"
                 android:text="@string/fCFilter"
                 android:textColor="@drawable/tab_text"
+                android:drawableRight="@drawable/ic_screen_normal_btn"
+                android:drawablePadding="5dp"
                 android:textSize="14sp" />
-
-            <ImageView
-                android:id="@+id/iv_fc_filter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:src="@drawable/ic_screen_normal_btn" />
         </LinearLayout>
 
         <View
@@ -101,14 +96,10 @@
                 android:layout_height="wrap_content"
                 android:text="@string/fCSort"
                 android:textColor="@drawable/tab_text"
+                android:drawableRight="@drawable/ic_sort_normal_btn"
+                android:drawablePadding="5dp"
                 android:textSize="14sp" />
 
-            <ImageView
-                android:id="@+id/iv_fc_sort"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:src="@drawable/ic_sort_normal_btn" />
         </LinearLayout>
     </LinearLayout>
 

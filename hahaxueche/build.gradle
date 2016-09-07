@@ -6,7 +6,7 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 android {
     signingConfigs {
         def path = properties.getProperty("keystore.path")
-        def password =properties.getProperty("keystore.password")
+        def password = properties.getProperty("keystore.password")
         def alias = properties.getProperty("keystore.alias")
         debugSign {
             keyAlias alias
@@ -80,6 +80,13 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+    maven(){
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.1.1'
@@ -110,4 +117,7 @@ dependencies {
     compile 'com.jaredrummler:material-spinner:1.1.0'
     compile 'com.facebook.fresco:fresco:0.12.0'
     compile 'com.facebook.fresco:animated-gif:0.12.0'
+    compile('com.github.worker8:tourguide:1.0.17-SNAPSHOT@aar') {
+        transitive = true
+    }
 }
