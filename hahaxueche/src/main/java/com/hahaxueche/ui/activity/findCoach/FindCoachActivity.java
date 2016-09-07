@@ -8,8 +8,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -42,6 +45,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import tourguide.tourguide.Overlay;
+import tourguide.tourguide.ToolTip;
+import tourguide.tourguide.TourGuide;
+
 /**
  * Created by gibxin on 2016/1/27.
  */
@@ -51,6 +58,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
     private LinearLayout llyTabAppointment;
     private LinearLayout llyTabMySetting;
     private LinearLayout llyFcFilter;
+    private TextView mTvFilter;
     private LinearLayout llyFcSort;
     private FcFilterDialog fcFilterDialog;
     private FcSortDialog fcSortDialog;
@@ -91,6 +99,10 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         initEvent();
         if (xlvCoachList != null)
             xlvCoachList.autoRefresh();
+        if (spUtil.isShowSecondScreenTourGuide()) {
+            loadTourGuide();
+            spUtil.showSecondScreenTourGuide();
+        }
     }
 
     private void initView() {
@@ -100,6 +112,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         llyTabAppointment = Util.instence(this).$(this, R.id.lly_tab_appointment);
         llyTabMySetting = Util.instence(this).$(this, R.id.lly_tab_my_setting);
         llyFcFilter = Util.instence(this).$(this, R.id.lly_fc_filter);
+        mTvFilter = Util.instence(this).$(this, R.id.tv_fc_filter);
         llyFcSort = Util.instence(this).$(this, R.id.lly_fc_sort);
         mIvSearch = Util.instence(this).$(this, R.id.iv_search);
         mTvNoCoachTips = Util.instence(this).$(this, R.id.tv_no_coach_tips);
@@ -467,5 +480,44 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         }
         return super.onKeyDown(keyCode, event);
 
+    }
+
+    private void loadTourGuide() {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        ViewGroup vgPointmap = (ViewGroup) inflater.inflate(R.layout.layout_tourguide_pointmap, null);
+        final ViewGroup vgSelect = (ViewGroup) inflater.inflate(R.layout.layout_tourguide_select, null);
+        final ViewGroup vgWhereNotice = (ViewGroup) inflater.inflate(R.layout.layout_tourguide_wherenotice, null);
+        final TourGuide mTourGuideHandler = TourGuide.init(this).with(TourGuide.Technique.Click)
+                .setToolTip(new ToolTip().setCustomView(vgPointmap).setShadow(false));
+        Overlay overlay = new Overlay();
+        overlay.disableClick(true).setStyle(Overlay.Style.Rectangle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mTourGuideHandler.cleanUp();
+                mTourGuideHandler.setToolTip(new ToolTip().setCustomView(vgSelect).setShadow(false).setGravity(Gravity.RIGHT));
+                mTourGuideHandler.setOverlay(new Overlay().disableClick(true).setStyle(Overlay.Style.Rectangle)
+                        .setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                mTourGuideHandler.cleanUp();
+                                if (coachList != null && coachList.size() > 0) {
+                                    LinearLayout llyLocation = (LinearLayout) xlvCoachList.getChildAt(1).findViewById(R.id.lly_coach_location);
+                                    mTourGuideHandler.setToolTip(new ToolTip().setCustomView(vgWhereNotice).setShadow(false));
+                                    mTourGuideHandler.setOverlay(new Overlay().disableClick(true).setStyle(Overlay.Style.Rectangle)
+                                            .setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    mTourGuideHandler.cleanUp();
+                                                }
+                                            }));
+                                    mTourGuideHandler.playOn(llyLocation);
+                                }
+                            }
+                        }));
+                mTourGuideHandler.playOn(mTvFilter);
+            }
+        });
+        mTourGuideHandler.setOverlay(overlay);
+        mTourGuideHandler.playOn(ibtnFcMap);
     }
 }

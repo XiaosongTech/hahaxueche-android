@@ -64,6 +64,30 @@
                     android:orientation="vertical">
 
                     <FrameLayout
+                        android:id="@+id/frl_online_ask"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/tv_online_ask"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:drawableLeft="@drawable/ic_ask_message"
+                            android:drawablePadding="16dp"
+                            android:gravity="center"
+                            android:text="在线客服"
+                            android:textColor="@color/haha_black_light"
+                            android:textSize="14sp" />
+                    </FrameLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.3dp"
+                        android:background="@color/haha_gray_light" />
+
+                    <FrameLayout
                         android:id="@+id/frl_tel_ask"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
@@ -77,29 +101,6 @@
                             android:drawablePadding="16dp"
                             android:gravity="center"
                             android:text="电话咨询"
-                            android:textColor="@color/haha_black_light"
-                            android:textSize="14sp" />
-                    </FrameLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.3dp"
-                        android:background="@color/haha_gray_light" />
-
-                    <FrameLayout
-                        android:id="@+id/frl_online_ask"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:drawableLeft="@drawable/ic_ask_message"
-                            android:drawablePadding="16dp"
-                            android:gravity="center"
-                            android:text="在线咨询"
                             android:textColor="@color/haha_black_light"
                             android:textSize="14sp" />
                     </FrameLayout>

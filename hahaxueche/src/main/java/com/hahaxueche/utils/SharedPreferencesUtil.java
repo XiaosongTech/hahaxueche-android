@@ -331,4 +331,28 @@ public class SharedPreferencesUtil {
         return true;
     }
 
+    public boolean isShowFirstScreenTourGuide() {
+        SharedPreferences spFirstScreenGuide = mContext.getSharedPreferences("firstScreenTourGuide", Activity.MODE_PRIVATE);
+        return spFirstScreenGuide.getBoolean("firstScreenTourGuide", true);
+    }
+
+    public void showFirstScreenTourGuide() {
+        SharedPreferences spFirstScreenGuide = mContext.getSharedPreferences("firstScreenTourGuide", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = spFirstScreenGuide.edit();
+        editor.putBoolean("firstScreenTourGuide", false);
+        editor.commit();
+    }
+
+    public boolean isShowSecondScreenTourGuide() {
+        SharedPreferences spFirstScreenGuide = mContext.getSharedPreferences("secondScreenTourGuide", Activity.MODE_PRIVATE);
+        return spFirstScreenGuide.getBoolean("secondScreenTourGuide", true);
+    }
+
+    public void showSecondScreenTourGuide() {
+        SharedPreferences spFirstScreenGuide = mContext.getSharedPreferences("secondScreenTourGuide", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = spFirstScreenGuide.edit();
+        editor.putBoolean("secondScreenTourGuide", false);
+        editor.commit();
+    }
+
 }
