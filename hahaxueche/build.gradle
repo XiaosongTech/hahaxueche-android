@@ -51,30 +51,6 @@ android {
             signingConfig signingConfigs.debugSign
         }
     }
-    // 友盟多渠道打包
-    productFlavors {
-        wandoujia {}
-        _360 {}
-        xiaomi {}
-        yingyongbao {}
-        haha {}
-        _91 {}
-        anzhuoshichang {}
-        baiduzhushou {}
-        huawei {}
-        vivo {}
-        meizu {}
-        sougou {}
-    }
-    productFlavors.all { flavor ->
-        flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
     dexOptions {
         javaMaxHeapSize "4g" //specify the heap size for the dex process
     }
