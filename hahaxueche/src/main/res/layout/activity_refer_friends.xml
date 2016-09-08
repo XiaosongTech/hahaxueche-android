@@ -106,9 +106,11 @@
 
                 <TextView
                     android:id="@+id/tv_share_qr_code"
-                    android:layout_width="@dimen/width320dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:layout_marginTop="-10dp"
                     android:background="@drawable/rectangle_back_orange_corner"
                     android:gravity="center"

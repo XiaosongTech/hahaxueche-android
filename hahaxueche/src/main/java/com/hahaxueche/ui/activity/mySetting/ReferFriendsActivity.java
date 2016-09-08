@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -123,6 +124,9 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
         mIvRefer = Util.instence(this).$(this, R.id.iv_refer);
         mIvQrCode = Util.instence(this).$(this, R.id.iv_qr_code);
         mTvShareQrCode = Util.instence(this).$(this, R.id.tv_share_qr_code);
+        int width = Util.instence(this).getDm().widthPixels;
+        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(width, width);
+        mIvQrCode.setLayoutParams(p);
     }
 
     private void initEvent() {
