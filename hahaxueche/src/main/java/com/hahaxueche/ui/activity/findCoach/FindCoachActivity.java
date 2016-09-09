@@ -488,7 +488,7 @@ public class FindCoachActivity extends FCBaseActivity implements XListView.IXLis
         final ViewGroup vgSelect = (ViewGroup) inflater.inflate(R.layout.layout_tourguide_select, null);
         final ViewGroup vgWhereNotice = (ViewGroup) inflater.inflate(R.layout.layout_tourguide_wherenotice, null);
         final TourGuide mTourGuideHandler = TourGuide.init(this).with(TourGuide.Technique.Click)
-                .setToolTip(new ToolTip().setCustomView(vgPointmap).setShadow(false));
+                .setToolTip(new ToolTip().setCustomView(vgPointmap).setShadow(false).setGravity(Gravity.RIGHT));
         Overlay overlay = new Overlay();
         overlay.disableClick(true).setStyle(Overlay.Style.Rectangle).setOnClickListener(new View.OnClickListener() {
             @Override

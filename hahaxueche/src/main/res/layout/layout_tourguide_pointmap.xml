@@ -8,11 +8,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:rotation="200"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="15dp"
         android:src="@drawable/arrow"/>
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/iv_arrow"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="5dp"
         android:src="@drawable/pointtomap"/>
 </RelativeLayout>
