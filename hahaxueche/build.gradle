@@ -15,85 +15,36 @@ android {
             storePassword password
         }
     }
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
+
     defaultConfig {
         applicationId "com.hahaxueche"
         minSdkVersion 14
-        targetSdkVersion 23
-        versionCode 22
-        versionName "2.6.2"
-        multiDexEnabled true
-    }
-    // 友盟多渠道打包
-    productFlavors {
-        wandoujia {}
-        _360 {}
-        xiaomi {}
-        yingyongbao {}
-        haha {}
-        _91 {}
-        anzhuoshichang {}
-        baiduzhushou {}
-        huawei {}
-        vivo {}
-        meizu {}
-    }
-    productFlavors.all { flavor ->
-        flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "SERVER_URL", properties.getProperty("serverUrl")
         }
         debug {
             signingConfig signingConfigs.debugSign
+            buildConfigField "String", "SERVER_URL", properties.getProperty("serverUrl")
         }
-    }
-    dexOptions {
-        javaMaxHeapSize "4g" //specify the heap size for the dex process
-    }
-}
-
-repositories {
-    mavenCentral()
-    maven(){
-        url "https://oss.sonatype.org/content/repositories/snapshots"
     }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.google.code.gson:gson:2.5'
-    compile 'com.squareup.okhttp3:okhttp:3.0.1'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.bigkoo:convenientbanner:2.0.5'
-    compile 'com.ToxicBakery.viewpager.transforms:view-pager-transforms:1.2.32@aar'
-    compile 'com.umeng.analytics:analytics:latest.integration'
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
-    // or 1.4-beta2
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
-    // or 1.4-beta2
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
-    // or 1.4-beta2
-    compile 'com.googlecode.libphonenumber:libphonenumber:7.3.0'
-    //compile 'com.facebook.stetho:stetho:1.3.1'
-    //compile 'com.facebook.stetho:stetho-okhttp3:1.3.1'
-    compile 'io.branch.sdk.android:library:1.+'
-    compile 'jp.wasabeef:blurry:2.0.2'
-    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.5.0'
-    //compile project(':lib:pingpp')
-    compile 'com.pingxx:pingpp-core:2.1.5' //ping++
-    compile 'com.pingxx:pingpp-alipay:2.1.5'//使用支付宝时添加
-    compile 'com.instabug.library:instabug:2+'
-    compile 'com.qiyukf.unicorn:unicorn:2.4.0'
-    compile 'com.android.support:multidex:1.0.0'
-    compile 'com.jaredrummler:material-spinner:1.1.0'
-    compile 'com.facebook.fresco:fresco:0.12.0'
-    compile 'com.facebook.fresco:animated-gif:0.12.0'
-    compile('com.github.worker8:tourguide:1.0.17-SNAPSHOT@aar') {
-        transitive = true
-    }
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:24.0.0'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'io.reactivex:rxjava:1.1.6'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+    compile 'io.reactivex:rxandroid:1.2.1'
 }

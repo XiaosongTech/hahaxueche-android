@@ -1,26 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="app_theme_color">#ff9e00</color>
-    <color name="tab_bottom_gray">#929292</color>
-    <color name="tab_bottom_gray_fade">#dbdbdb</color>
-    <color name="app_back_gray_light">#f4f4f4</color>
-    <color name="filter_txt_white_heavy">#dbdbdb</color>
-    <color name="coach_info_dialog_normal_btn_bg_color">#f5f6f8</color>
-    <color name="coach_info_blue">#1883FF</color>
-    <color name="title_color">#333333</color>
-    <color name="province_line_border">#C7C7C7</color>
-    <color name="haha_white">#ffffff</color>
-    <color name="haha_white_light">#ccffffff</color>
-    <color name="haha_pink">#feddaa</color>
-    <color name="haha_gray_light">#dbdbdb</color>
-    <color name="haha_gray">#f4f4f4</color>
-    <color name="haha_gray_heavier">#bbbbbb</color>
-    <color name="haha_gray_heavy">#929292</color>
-    <color name="haha_black_light">#616161</color>
-    <color name="haha_green">#77dd00</color>
-    <color name="haha_orange">#ff7200</color>
-    <color name="haha_black">#000000</color>
-    <color name="haha_blue">#009fff</color>
-    <color name="haha_orange_fade">#fffbf0</color>
-
+    <color name="haha_gray">#929292</color>
 </resources>
