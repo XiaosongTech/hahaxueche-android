@@ -22,7 +22,7 @@ public interface HHApiService {
 
     class Factory {
         public static HHApiService create() {
-            HHLog.v("gibxin", "baseUrl -> " + baseUrl);
+            HHLog.v("baseUrl -> " + baseUrl);
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())

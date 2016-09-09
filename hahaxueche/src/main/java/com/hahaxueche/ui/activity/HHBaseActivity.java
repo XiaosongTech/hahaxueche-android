@@ -3,7 +3,7 @@ package com.hahaxueche.ui.activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.orhanobut.logger.Logger;
+import com.hahaxueche.util.HHLog;
 
 
 /**
@@ -13,7 +13,7 @@ public class HHBaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Logger.d(getClass().getName());
+        HHLog.v(getClass().getName());
         ActivityCollector.addActivity(this);
     }
 

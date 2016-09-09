@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.hahaxueche.R;
+import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.view.HHBaseView;
 
 /**
@@ -22,13 +23,17 @@ public class WelcomeActivity extends HHBaseActivity implements HHBaseView {
 
     class splashHandler implements Runnable {
         public void run() {
-            //startActivity(new Intent(getContext(), StartActivity.class));
-            //WelcomeActivity.this.finish();
+            navigateToStartActivity();
         }
     }
 
     @Override
     public Context getContext() {
         return this;
+    }
+
+    private void navigateToStartActivity(){
+        startActivity(new Intent(getContext(), StartLoginActivity.class));
+        //WelcomeActivity.this.finish();
     }
 }

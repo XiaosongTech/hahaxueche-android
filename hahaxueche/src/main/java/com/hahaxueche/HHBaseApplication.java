@@ -3,6 +3,7 @@ package com.hahaxueche;
 import android.app.Application;
 import android.content.Context;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.hahaxueche.ui.api.HHApiService;
 import com.hahaxueche.ui.model.Constants;
 import com.hahaxueche.util.HHLog;
@@ -19,7 +20,6 @@ public class HHBaseApplication extends Application {
     private HHApiService apiService;
     private Scheduler defaultSubscribeScheduler;
     private Constants constants;
-    private static final String TAG = "gibxin";
 
     public static HHBaseApplication get(Context context) {
         return (HHBaseApplication) context.getApplicationContext();
@@ -39,13 +39,14 @@ public class HHBaseApplication extends Application {
         return defaultSubscribeScheduler;
     }
 
-    public Constants getConstants(){
+    public Constants getConstants() {
         return constants;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        Fresco.initialize(this);
         HHApiService apiService = getApiService();
         apiService.getConstants()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -57,7 +58,7 @@ public class HHBaseApplication extends Application {
 
                     @Override
                     public void onError(Throwable e) {
-                        HHLog.e(TAG,e.getMessage());
+                        HHLog.e(e.getMessage());
                     }
 
                     @Override
@@ -66,4 +67,5 @@ public class HHBaseApplication extends Application {
                     }
                 });
     }
+
 }
