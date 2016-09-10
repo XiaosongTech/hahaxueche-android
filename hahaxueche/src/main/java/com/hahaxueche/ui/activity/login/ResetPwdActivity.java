@@ -1,7 +1,5 @@
 package com.hahaxueche.ui.activity.login;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.CoordinatorLayout;
@@ -16,18 +14,17 @@ import android.widget.TextView;
 
 import com.hahaxueche.R;
 import com.hahaxueche.ui.activity.HHBaseActivity;
-import com.hahaxueche.ui.presenter.login.LoginPresenter;
-import com.hahaxueche.ui.view.login.LoginView;
-import com.hahaxueche.util.HHLog;
+import com.hahaxueche.ui.presenter.login.ResetPwdPresenter;
+import com.hahaxueche.ui.view.login.ResetPwdView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * Created by wangshirui on 16/9/9.
+ * Created by wangshirui on 16/9/10.
  */
-public class LoginActivity extends HHBaseActivity implements LoginView {
+public class ResetPwdActivity extends HHBaseActivity implements ResetPwdView {
     @BindView(R.id.et_cell_phone)
     TextView mEtCellPhone;
     @BindView(R.id.lly_auth_code)
@@ -42,55 +39,41 @@ public class LoginActivity extends HHBaseActivity implements LoginView {
     TextView mTvGetAuthCode;
     @BindView(R.id.tv_login)
     TextView mTvLogin;
-    @BindView(R.id.tv_change_type)
-    TextView mTvChangeType;
     @BindView(R.id.crl_main)
     CoordinatorLayout mClyMain;
     ImageView mIvBack;
     TextView mTvTitle;
-    TextView mTvForgetPwd;
 
-    private LoginPresenter mPresenter;
-    private int mLoginType;
+    private ResetPwdPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter = new LoginPresenter();
+        mPresenter = new ResetPwdPresenter();
         mPresenter.attachView(this);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_reset_pwd);
         ButterKnife.bind(this);
         initActionBar();
-        initAuthLogin();
+        initView();
     }
 
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setCustomView(R.layout.actionbar_login);
+        actionBar.setCustomView(R.layout.actionbar_base);
         mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
         mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
-        mTvForgetPwd = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_forget_pwd);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LoginActivity.this.finish();
-            }
-        });
-        mTvForgetPwd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getContext(), ResetPwdActivity.class));
+                ResetPwdActivity.this.finish();
             }
         });
     }
 
     @Override
-    public void initAuthLogin() {
-        mLoginType = mPresenter.AUTH_LOGIN;
-        mTvTitle.setText("验证码登录");
-        mTvChangeType.setText("我想使用密码登录我的帐号");
-        mTvForgetPwd.setVisibility(View.INVISIBLE);
+    public void initView() {
+        mTvTitle.setText("重置密码");
         mLlyAuthCode.setVisibility(View.GONE);
         mEtPassword.setVisibility(View.GONE);
         mTvGetAuthCode.setVisibility(View.VISIBLE);
@@ -98,26 +81,12 @@ public class LoginActivity extends HHBaseActivity implements LoginView {
     }
 
     @Override
-    public void initPasswordLogin() {
-        mLoginType = mPresenter.PASSWORD_LOGIN;
-        mTvTitle.setText("密码登录");
-        mTvChangeType.setText("我想使用验证码登录我的帐号");
-        mTvForgetPwd.setVisibility(View.VISIBLE);
-        mLlyAuthCode.setVisibility(View.GONE);
+    public void showViewAfterSendingAuthCode() {
+        mLlyAuthCode.setVisibility(View.VISIBLE);
         mEtPassword.setVisibility(View.VISIBLE);
         mTvGetAuthCode.setVisibility(View.GONE);
         mTvLogin.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void showViewAfterSendingAuthCode() {
-        mTvTitle.setText("验证码登录");
-        mTvChangeType.setText("我想使用密码登录我的帐号");
-        mTvForgetPwd.setVisibility(View.INVISIBLE);
-        mLlyAuthCode.setVisibility(View.VISIBLE);
-        mEtPassword.setVisibility(View.GONE);
-        mTvGetAuthCode.setVisibility(View.GONE);
-        mTvLogin.setVisibility(View.VISIBLE);
+        mTvLogin.setText("完成");
         mTvResend.setClickable(false);
         mTvResend.setTextColor(ContextCompat.getColor(getContext(), R.color.haha_orange_light));
         new CountDownTimer(60000, 1000) {
@@ -136,20 +105,16 @@ public class LoginActivity extends HHBaseActivity implements LoginView {
     @Override
     public void enableButtons() {
         mIvBack.setClickable(true);
-        mTvForgetPwd.setClickable(true);
         mTvResend.setClickable(true);
         mTvLogin.setClickable(true);
-        mTvChangeType.setClickable(true);
         mTvGetAuthCode.setClickable(true);
     }
 
     @Override
     public void disableButtons() {
         mIvBack.setClickable(false);
-        mTvForgetPwd.setClickable(false);
         mTvResend.setClickable(false);
         mTvLogin.setClickable(false);
-        mTvChangeType.setClickable(false);
         mTvGetAuthCode.setClickable(false);
     }
 
@@ -158,14 +123,9 @@ public class LoginActivity extends HHBaseActivity implements LoginView {
         mPresenter.getAuthCode(mEtCellPhone.getText().toString());
     }
 
-    @OnClick(R.id.tv_change_type)
-    public void changeLoginType() {
-        mPresenter.changeLoginType(mLoginType);
-    }
-
     @OnClick(R.id.tv_login)
-    public void login() {
-        mPresenter.login(mEtCellPhone.getText().toString(), mEtAuthCode.getText().toString(), mEtPassword.getText().toString(), mLoginType);
+    public void resetPassword() {
+        mPresenter.resetPassword(mEtCellPhone.getText().toString(), mEtAuthCode.getText().toString(), mEtPassword.getText().toString());
     }
 
     @Override

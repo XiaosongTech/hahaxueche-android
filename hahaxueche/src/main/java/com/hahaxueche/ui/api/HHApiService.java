@@ -32,12 +32,15 @@ public interface HHApiService {
 
     @FormUrlEncoded
     @POST("send_auth_token")
-    Observable<BaseModel> getAuthToken(@Field("cell_phone") String cellPhone,
-                                       @Field("type") String sendType);
+    Observable<BaseModel> getAuthToken(@FieldMap HashMap<String, Object> map);
 
     @FormUrlEncoded
     @POST("sessions")
-    Observable<User> login(@FieldMap HashMap<String,Object> map);
+    Observable<User> login(@FieldMap HashMap<String, Object> map);
+
+    @FormUrlEncoded
+    @POST("users/reset_password")
+    Observable<BaseModel> resetPassword(@FieldMap HashMap<String, Object> map);
 
     /*
     @Header("Content-Range") String contentRange,

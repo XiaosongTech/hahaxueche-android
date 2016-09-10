@@ -60,24 +60,29 @@ public class LoginPresenter implements Presenter<LoginView> {
         mLoginView.showProgressDialog("验证码获取中,请稍后...");
         HHBaseApplication application = HHBaseApplication.get(mLoginView.getContext());
         HHApiService apiService = application.getApiService();
-        subscription = apiService.getAuthToken(cellPhone, SENT_AUTH_TYPE)
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("cell_phone", cellPhone);
+        map.put("type", SENT_AUTH_TYPE);
+        subscription = apiService.getAuthToken(map)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<BaseModel>() {
                     @Override
                     public void onCompleted() {
+                        mLoginView.enableButtons();
+                        mLoginView.dismissProgressDialog();
                         mLoginView.showViewAfterSendingAuthCode();
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        mLoginView.enableButtons();
+                        mLoginView.dismissProgressDialog();
                         HHLog.e(e.getMessage());
                     }
 
                     @Override
                     public void onNext(BaseModel baseModel) {
-                        mLoginView.enableButtons();
-                        mLoginView.dismissProgressDialog();
                     }
                 });
     }
