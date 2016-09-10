@@ -1,9 +1,12 @@
 package com.hahaxueche.ui.activity.login;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.widget.EditText;
@@ -115,6 +118,19 @@ public class LoginActivity extends HHBaseActivity implements LoginView {
         mEtPassword.setVisibility(View.GONE);
         mTvGetAuthCode.setVisibility(View.GONE);
         mTvLogin.setVisibility(View.VISIBLE);
+        mTvResend.setClickable(false);
+        mTvResend.setTextColor(ContextCompat.getColor(getContext(), R.color.haha_orange_light));
+        new CountDownTimer(60000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                mTvResend.setText(String.valueOf(millisUntilFinished / 1000));
+            }
+
+            public void onFinish() {
+                mTvResend.setTextColor(ContextCompat.getColor(getContext(), R.color.app_theme_color));
+                mTvResend.setText("重发");
+                mTvResend.setClickable(true);
+            }
+        }.start();
     }
 
     @Override
@@ -137,7 +153,7 @@ public class LoginActivity extends HHBaseActivity implements LoginView {
         mTvGetAuthCode.setClickable(false);
     }
 
-    @OnClick(R.id.tv_get_auth_code)
+    @OnClick({R.id.tv_get_auth_code, R.id.tv_resend})
     public void sendAuthCode() {
         mPresenter.getAuthCode(mEtCellPhone.getText().toString());
     }
@@ -149,7 +165,6 @@ public class LoginActivity extends HHBaseActivity implements LoginView {
 
     @OnClick(R.id.tv_login)
     public void login() {
-        HHLog.v("11111");
         mPresenter.login(mEtCellPhone.getText().toString(), mEtAuthCode.getText().toString(), mEtPassword.getText().toString(), mLoginType);
     }
 
