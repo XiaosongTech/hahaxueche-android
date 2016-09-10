@@ -5,7 +5,7 @@ import com.hahaxueche.ui.view.HHBaseView;
 /**
  * Created by wangshirui on 16/9/10.
  */
-public interface ResetPwdView extends HHBaseView {
+public interface RegisterView extends HHBaseView {
     /**
      * 显示信息
      *
@@ -32,4 +32,9 @@ public interface ResetPwdView extends HHBaseView {
      * 禁用所有按钮
      */
     void disableButtons();
+
+    /**
+     * 跳转到完善资料
+     */
+    void navigateToCompleteInfo();
 }

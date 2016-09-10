@@ -9,4 +9,12 @@ public class ErrorUtil {
     public static boolean isHttp401(Throwable error) {
         return error instanceof HttpException && ((HttpException) error).code() == 401;
     }
+
+    public static boolean isHttp422(Throwable error) {
+        return error instanceof HttpException && ((HttpException) error).code() == 422;
+    }
+
+    public static boolean isHttp400(Throwable error) {
+        return error instanceof HttpException && ((HttpException) error).code() == 400;
+    }
 }

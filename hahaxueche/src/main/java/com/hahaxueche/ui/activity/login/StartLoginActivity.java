@@ -81,7 +81,8 @@ public class StartLoginActivity extends HHBaseActivity implements ViewPager.OnPa
 
     @OnClick(R.id.tv_start_register)
     public void startRegister() {
-        HHLog.v("click start register");
+        Intent intent = new Intent(getContext(), RegisterActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.iv_back)

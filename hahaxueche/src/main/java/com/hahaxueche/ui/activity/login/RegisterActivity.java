@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 import com.hahaxueche.R;
 import com.hahaxueche.ui.activity.HHBaseActivity;
-import com.hahaxueche.ui.presenter.login.ResetPwdPresenter;
-import com.hahaxueche.ui.view.login.ResetPwdView;
+import com.hahaxueche.ui.presenter.login.RegisterPresenter;
+import com.hahaxueche.ui.view.login.RegisterView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,7 +24,7 @@ import butterknife.OnClick;
 /**
  * Created by wangshirui on 16/9/10.
  */
-public class ResetPwdActivity extends HHBaseActivity implements ResetPwdView {
+public class RegisterActivity extends HHBaseActivity implements RegisterView {
     @BindView(R.id.et_cell_phone)
     TextView mEtCellPhone;
     @BindView(R.id.lly_auth_code)
@@ -44,14 +44,16 @@ public class ResetPwdActivity extends HHBaseActivity implements ResetPwdView {
     ImageView mIvBack;
     TextView mTvTitle;
 
-    private ResetPwdPresenter mPresenter;
+    private RegisterPresenter mPresenter;
+    private boolean isResetPwd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter = new ResetPwdPresenter();
+        mPresenter = new RegisterPresenter();
         mPresenter.attachView(this);
-        setContentView(R.layout.activity_reset_pwd);
+        setContentView(R.layout.activity_register);
+        isResetPwd = getIntent().getBooleanExtra("isResetPwd", false);
         ButterKnife.bind(this);
         initActionBar();
         initView();
@@ -66,14 +68,18 @@ public class ResetPwdActivity extends HHBaseActivity implements ResetPwdView {
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ResetPwdActivity.this.finish();
+                RegisterActivity.this.finish();
             }
         });
     }
 
     @Override
     public void initView() {
-        mTvTitle.setText("重置密码");
+        if (isResetPwd) {
+            mTvTitle.setText("重置密码");
+        } else {
+            mTvTitle.setText("注册");
+        }
         mLlyAuthCode.setVisibility(View.GONE);
         mEtPassword.setVisibility(View.GONE);
         mTvGetAuthCode.setVisibility(View.VISIBLE);
@@ -84,6 +90,7 @@ public class ResetPwdActivity extends HHBaseActivity implements ResetPwdView {
     public void showViewAfterSendingAuthCode() {
         mLlyAuthCode.setVisibility(View.VISIBLE);
         mEtPassword.setVisibility(View.VISIBLE);
+        mEtPassword.setHint("请设置6~20位密码");
         mTvGetAuthCode.setVisibility(View.GONE);
         mTvLogin.setVisibility(View.VISIBLE);
         mTvLogin.setText("完成");
@@ -118,14 +125,23 @@ public class ResetPwdActivity extends HHBaseActivity implements ResetPwdView {
         mTvGetAuthCode.setClickable(false);
     }
 
+    @Override
+    public void navigateToCompleteInfo() {
+        Snackbar.make(mClyMain, "注册成功", Snackbar.LENGTH_SHORT).show();
+    }
+
     @OnClick({R.id.tv_get_auth_code, R.id.tv_resend})
     public void sendAuthCode() {
-        mPresenter.getAuthCode(mEtCellPhone.getText().toString());
+        mPresenter.getAuthCode(mEtCellPhone.getText().toString(), isResetPwd);
     }
 
     @OnClick(R.id.tv_login)
     public void resetPassword() {
-        mPresenter.resetPassword(mEtCellPhone.getText().toString(), mEtAuthCode.getText().toString(), mEtPassword.getText().toString());
+        if (isResetPwd) {
+            mPresenter.resetPassword(mEtCellPhone.getText().toString(), mEtAuthCode.getText().toString(), mEtPassword.getText().toString());
+        } else {
+            mPresenter.register(mEtCellPhone.getText().toString(), mEtAuthCode.getText().toString(), mEtPassword.getText().toString());
+        }
     }
 
     @Override

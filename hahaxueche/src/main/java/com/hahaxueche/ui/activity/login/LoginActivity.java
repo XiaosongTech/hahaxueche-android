@@ -1,6 +1,5 @@
 package com.hahaxueche.ui.activity.login;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -18,7 +17,6 @@ import com.hahaxueche.R;
 import com.hahaxueche.ui.activity.HHBaseActivity;
 import com.hahaxueche.ui.presenter.login.LoginPresenter;
 import com.hahaxueche.ui.view.login.LoginView;
-import com.hahaxueche.util.HHLog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -80,7 +78,9 @@ public class LoginActivity extends HHBaseActivity implements LoginView {
         mTvForgetPwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getContext(), ResetPwdActivity.class));
+                Intent intent = new Intent(getContext(), RegisterActivity.class);
+                intent.putExtra("isResetPwd", true);
+                startActivity(intent);
             }
         });
     }

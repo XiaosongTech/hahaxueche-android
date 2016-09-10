@@ -35,7 +35,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.activity.login.ResetPwdActivity"
+            android:name=".ui.activity.login.RegisterActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
     </application>

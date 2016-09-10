@@ -42,6 +42,10 @@ public interface HHApiService {
     @POST("users/reset_password")
     Observable<BaseModel> resetPassword(@FieldMap HashMap<String, Object> map);
 
+    @FormUrlEncoded
+    @POST("users")
+    Observable<User> createSession(@FieldMap HashMap<String, Object> map);
+
     /*
     @Header("Content-Range") String contentRange,
      */
