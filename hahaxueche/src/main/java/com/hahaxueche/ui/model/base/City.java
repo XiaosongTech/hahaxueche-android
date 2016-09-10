@@ -1,4 +1,6 @@
-package com.hahaxueche.ui.model;
+package com.hahaxueche.ui.model.base;
+
+import com.hahaxueche.ui.model.payment.PaymentStage;
 
 import java.util.ArrayList;
 

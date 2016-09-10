@@ -1,4 +1,4 @@
-package com.hahaxueche.ui.model;
+package com.hahaxueche.ui.model.base;
 
 import java.util.ArrayList;
 

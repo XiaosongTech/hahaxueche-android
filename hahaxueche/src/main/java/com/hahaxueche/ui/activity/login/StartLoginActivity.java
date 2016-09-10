@@ -1,6 +1,6 @@
 package com.hahaxueche.ui.activity.login;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -14,9 +14,8 @@ import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.ui.activity.HHBaseActivity;
-import com.hahaxueche.ui.model.Banner;
-import com.hahaxueche.ui.model.Constants;
-import com.hahaxueche.ui.view.HHBaseView;
+import com.hahaxueche.ui.model.base.Banner;
+import com.hahaxueche.ui.model.base.Constants;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
@@ -30,7 +29,7 @@ import butterknife.OnClick;
 /**
  * Created by wangshirui on 16/9/9.
  */
-public class StartLoginActivity extends HHBaseActivity implements HHBaseView, ViewPager.OnPageChangeListener, OnItemClickListener {
+public class StartLoginActivity extends HHBaseActivity implements ViewPager.OnPageChangeListener, OnItemClickListener {
     @BindView(R.id.iv_back)
     ImageView mIvBack;
     @BindView(R.id.tv_start_login)
@@ -46,6 +45,7 @@ public class StartLoginActivity extends HHBaseActivity implements HHBaseView, Vi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AppThemeNoTitle);
         setContentView(R.layout.acitivity_start_login);
         ButterKnife.bind(this);
         initBanners();
@@ -76,7 +76,7 @@ public class StartLoginActivity extends HHBaseActivity implements HHBaseView, Vi
 
     @OnClick(R.id.tv_start_login)
     public void startLogin() {
-        HHLog.v("click start login");
+        startActivity(new Intent(getContext(), LoginActivity.class));
     }
 
     @OnClick(R.id.tv_start_register)
@@ -89,7 +89,7 @@ public class StartLoginActivity extends HHBaseActivity implements HHBaseView, Vi
         HHLog.v("click back");
     }
 
-    @OnClick(R.id.iv_back)
+    @OnClick(R.id.tv_tourist_login)
     public void touristLogin() {
         HHLog.v("click tourist login");
     }
@@ -134,11 +134,5 @@ public class StartLoginActivity extends HHBaseActivity implements HHBaseView, Vi
         super.onResume();
         //开始自动翻页
         mLoginBanner.startTurning(2500);
-    }
-
-
-    @Override
-    public Context getContext() {
-        return this;
     }
 }

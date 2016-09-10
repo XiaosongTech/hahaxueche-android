@@ -7,4 +7,10 @@ import android.content.Context;
  */
 public interface HHBaseView {
     Context getContext();
+
+    void showProgressDialog();
+
+    void showProgressDialog(String message);
+
+    void dismissProgressDialog();
 }

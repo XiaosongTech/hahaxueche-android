@@ -3,4 +3,5 @@
     <color name="app_theme_color">#ff9e00</color>
     <color name="haha_gray">#929292</color>
     <color name="haha_white">#ffffff</color>
+    <color name="haha_orange_light">#feddaa</color>
 </resources>

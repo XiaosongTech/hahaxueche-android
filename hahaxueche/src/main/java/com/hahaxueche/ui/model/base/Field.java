@@ -1,4 +1,4 @@
-package com.hahaxueche.ui.model;
+package com.hahaxueche.ui.model.base;
 
 /**
  * Created by wangshirui on 16/9/8.

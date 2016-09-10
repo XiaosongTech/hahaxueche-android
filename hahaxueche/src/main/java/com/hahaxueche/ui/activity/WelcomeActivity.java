@@ -12,10 +12,11 @@ import com.hahaxueche.ui.view.HHBaseView;
 /**
  * Created by wangshirui on 16/9/8.
  */
-public class WelcomeActivity extends HHBaseActivity implements HHBaseView {
+public class WelcomeActivity extends HHBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AppThemeNoTitle);
         setContentView(R.layout.activity_welcome);
         Handler x = new Handler();
         x.postDelayed(new splashHandler(), 2000);
@@ -27,13 +28,8 @@ public class WelcomeActivity extends HHBaseActivity implements HHBaseView {
         }
     }
 
-    @Override
-    public Context getContext() {
-        return this;
-    }
-
-    private void navigateToStartActivity(){
+    private void navigateToStartActivity() {
         startActivity(new Intent(getContext(), StartLoginActivity.class));
-        //WelcomeActivity.this.finish();
+        WelcomeActivity.this.finish();
     }
 }

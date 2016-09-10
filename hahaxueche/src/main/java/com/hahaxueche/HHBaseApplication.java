@@ -5,7 +5,7 @@ import android.content.Context;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.hahaxueche.ui.api.HHApiService;
-import com.hahaxueche.ui.model.Constants;
+import com.hahaxueche.ui.model.base.Constants;
 import com.hahaxueche.util.HHLog;
 
 import rx.Scheduler;
