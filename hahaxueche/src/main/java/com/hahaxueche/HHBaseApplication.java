@@ -6,7 +6,9 @@ import android.content.Context;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.hahaxueche.ui.api.HHApiService;
 import com.hahaxueche.ui.model.base.Constants;
+import com.hahaxueche.ui.model.user.User;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.SharedPrefUtil;
 
 import rx.Scheduler;
 import rx.Subscriber;
@@ -20,6 +22,7 @@ public class HHBaseApplication extends Application {
     private HHApiService apiService;
     private Scheduler defaultSubscribeScheduler;
     private Constants constants;
+    private SharedPrefUtil spUtil;
 
     public static HHBaseApplication get(Context context) {
         return (HHBaseApplication) context.getApplicationContext();
@@ -43,11 +46,16 @@ public class HHBaseApplication extends Application {
         return constants;
     }
 
+    public SharedPrefUtil getSharedPrefUtil() {
+        return spUtil;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
         Fresco.initialize(this);
         HHApiService apiService = getApiService();
+        spUtil = new SharedPrefUtil(this);
         apiService.getConstants()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(defaultSubscribeScheduler())

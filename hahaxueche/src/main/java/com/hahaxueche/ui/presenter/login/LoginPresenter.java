@@ -106,25 +106,25 @@ public class LoginPresenter implements Presenter<LoginView> {
             mLoginView.showMessage("您的手机号码格式有误");
             return;
         }
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("cell_phone",cellPhone);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("cell_phone", cellPhone);
         if (loginType == AUTH_LOGIN) {
             if (TextUtils.isEmpty(authCode)) {
                 mLoginView.showMessage("短信验证码不能为空");
                 return;
             }
-            map.put("auth_token",authCode);
+            map.put("auth_token", authCode);
         } else {
             if (TextUtils.isEmpty(password)) {
                 mLoginView.showMessage("登录密码不能为空");
                 return;
             }
-            map.put("password",password);
+            map.put("password", password);
         }
-        map.put("type",LOGIN_TYPE_STUDENT);
+        map.put("type", LOGIN_TYPE_STUDENT);
         mLoginView.disableButtons();
         mLoginView.showProgressDialog("登录中,请稍后...");
-        HHBaseApplication application = HHBaseApplication.get(mLoginView.getContext());
+        final HHBaseApplication application = HHBaseApplication.get(mLoginView.getContext());
         HHApiService apiService = application.getApiService();
         subscription = apiService.login(map)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -144,7 +144,7 @@ public class LoginPresenter implements Presenter<LoginView> {
                         if (ErrorUtil.isHttp401(e)) {
                             if (loginType == AUTH_LOGIN) {
                                 mLoginView.showMessage("验证码错误");
-                            }else {
+                            } else {
                                 mLoginView.showMessage("密码错误");
                             }
                         }
@@ -153,7 +153,7 @@ public class LoginPresenter implements Presenter<LoginView> {
 
                     @Override
                     public void onNext(User user) {
-
+                        application.getSharedPrefUtil().setUser(user);
                     }
                 });
     }
