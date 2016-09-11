@@ -4,9 +4,8 @@ import android.app.Application;
 import android.content.Context;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.hahaxueche.ui.api.HHApiService;
-import com.hahaxueche.ui.model.base.Constants;
-import com.hahaxueche.ui.model.user.User;
+import com.hahaxueche.api.HHApiService;
+import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.SharedPrefUtil;
 

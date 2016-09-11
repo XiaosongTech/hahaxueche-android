@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.hahaxueche.R;
 import com.hahaxueche.ui.activity.HHBaseActivity;
-import com.hahaxueche.ui.presenter.login.LoginPresenter;
+import com.hahaxueche.presenter.login.LoginPresenter;
 import com.hahaxueche.ui.view.login.LoginView;
 
 import butterknife.BindView;
