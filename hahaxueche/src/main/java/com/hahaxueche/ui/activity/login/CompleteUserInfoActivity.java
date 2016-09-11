@@ -10,17 +10,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
+import com.hahaxueche.model.base.City;
 import com.hahaxueche.ui.activity.HHBaseActivity;
 import com.hahaxueche.presenter.login.CompleteUserInfoPresenter;
+import com.hahaxueche.ui.dialog.login.CityChoseDialog;
 import com.hahaxueche.ui.view.login.CompleteUserInfoView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by wangshirui on 16/9/10.
  */
-public class CompleteUserInfoActivity extends HHBaseActivity implements CompleteUserInfoView{
+public class CompleteUserInfoActivity extends HHBaseActivity implements CompleteUserInfoView {
     @BindView(R.id.et_username)
     EditText mEtUsername;
     @BindView(R.id.tv_city)
@@ -37,6 +40,8 @@ public class CompleteUserInfoActivity extends HHBaseActivity implements Complete
     TextView mTvTitle;
 
     private CompleteUserInfoPresenter mPresenter;
+    private CityChoseDialog mCityChoseDialog;
+    private City mSelectCity = new City();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,9 +80,24 @@ public class CompleteUserInfoActivity extends HHBaseActivity implements Complete
         mTvCoupon.setClickable(false);
     }
 
+    @OnClick(R.id.tv_complete)
+    public void completeUserInfo() {
+        mPresenter.completeUserInfo(mEtUsername.getText().toString(), mSelectCity.id, mEtCoupon.getText().toString());
+    }
+
     @Override
     public void showCitySelectDialog() {
-
+        if (mCityChoseDialog == null) {
+            mCityChoseDialog = new CityChoseDialog(getContext(), new CityChoseDialog.onConfirmListener() {
+                @Override
+                public boolean selectCity(City city) {
+                    mSelectCity = city;
+                    mTvCity.setText(city.name);
+                    return true;
+                }
+            });
+        }
+        mCityChoseDialog.show();
     }
 
     @Override

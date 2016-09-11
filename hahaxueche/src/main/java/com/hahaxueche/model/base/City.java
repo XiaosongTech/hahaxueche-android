@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Created by wangshirui on 16/9/8.
  */
 public class City {
-    public int id;
+    public int id = -1;
     public String name;
     public String zip_code;
     public boolean available;

@@ -32,12 +32,12 @@ public class CompleteUserInfoPresenter implements Presenter<CompleteUserInfoView
         if (subscription != null) subscription.unsubscribe();
     }
 
-    public void completeUserInfo(String username,String cityId,String promoCode){
-        if(TextUtils.isEmpty(username)){
+    public void completeUserInfo(String username, int cityId, String promoCode) {
+        if (TextUtils.isEmpty(username)) {
             mCompleteUserInfoView.showMessage("用户名不能为空");
             return;
         }
-        if(TextUtils.isEmpty(cityId)){
+        if (cityId < 0) {
             mCompleteUserInfoView.showMessage("请选择所在城市");
             return;
         }
@@ -51,7 +51,7 @@ public class CompleteUserInfoPresenter implements Presenter<CompleteUserInfoView
         if (!TextUtils.isEmpty(promoCode)) {
             map.put("promo_code", promoCode);
         }
-        subscription = apiService.completeUserInfo(application.getSharedPrefUtil().getStudentId(),application.getSharedPrefUtil().getAccessToken(), map)
+        subscription = apiService.completeUserInfo(application.getSharedPrefUtil().getStudentId(), application.getSharedPrefUtil().getAccessToken(), map)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<Student>() {

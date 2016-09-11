@@ -30,9 +30,10 @@ public class CityChoseDialog {
     private TextView mTvSure;
     private GridView mGvCities;
     private onConfirmListener mConfirmListener;
+    private City mSelectCity;
 
     public interface onConfirmListener {
-        boolean clickConfirm();
+        boolean selectCity(City city);
     }
 
     public CityChoseDialog(Context context, onConfirmListener confirmListener) {
@@ -58,14 +59,14 @@ public class CityChoseDialog {
             @Override
             public void onClick(View view) {
                 mDialog.dismiss();
-                mConfirmListener.clickConfirm();
+                mConfirmListener.selectCity(mSelectCity);
             }
         });
     }
 
     private void loadDatas() {
         HHBaseApplication application = HHBaseApplication.get(mContext);
-        ArrayList<City> cities = application.getConstants().cities;
+        final ArrayList<City> cities = application.getConstants().cities;
         if (cities == null) return;
         final CityChoseAdapter cityChoseAdapter = new CityChoseAdapter(mContext, cities);
         mGvCities.setAdapter(cityChoseAdapter);
@@ -74,6 +75,7 @@ public class CityChoseDialog {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 cityChoseAdapter.clearSelection(position);
                 cityChoseAdapter.notifyDataSetChanged();
+                mSelectCity = cities.get(position);
             }
         });
     }
