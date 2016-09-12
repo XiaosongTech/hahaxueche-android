@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.City;
+import com.hahaxueche.util.HHLog;
 
 import java.util.ArrayList;
 
@@ -34,19 +35,16 @@ public class CityChoseAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
         return cities.size();
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
         return cities.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
         return position;
     }
 
@@ -69,11 +67,11 @@ public class CityChoseAdapter extends BaseAdapter {
         holder.tvCity.setText(cities.get(position).name);
 
         if (selectedPosition == position) {
-            holder.tvCity.setBackgroundColor(ContextCompat.getColor(mContext,R.color.app_theme_color));
-            holder.tvCity.setTextColor(ContextCompat.getColor(mContext,R.color.haha_white));
+            holder.tvCity.setBackgroundColor(ContextCompat.getColor(mContext, R.color.app_theme_color));
+            holder.tvCity.setTextColor(ContextCompat.getColor(mContext, R.color.haha_white));
         } else {
-            holder.tvCity.setBackgroundColor(ContextCompat.getColor(mContext,R.color.haha_white));
-            holder.tvCity.setTextColor(ContextCompat.getColor(mContext,R.color.haha_gray_dark));
+            holder.tvCity.setBackgroundColor(ContextCompat.getColor(mContext, R.color.haha_white));
+            holder.tvCity.setTextColor(ContextCompat.getColor(mContext, R.color.haha_gray_dark));
         }
         return convertView;
     }

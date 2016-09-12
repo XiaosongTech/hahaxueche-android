@@ -153,6 +153,12 @@ public class LoginActivity extends HHBaseActivity implements LoginView {
         mTvGetAuthCode.setClickable(false);
     }
 
+    @Override
+    public void navigateToCompleteInfo() {
+        Intent intent = new Intent(getContext(), CompleteUserInfoActivity.class);
+        startActivity(intent);
+    }
+
     @OnClick({R.id.tv_get_auth_code, R.id.tv_resend})
     public void sendAuthCode() {
         mPresenter.getAuthCode(mEtCellPhone.getText().toString());

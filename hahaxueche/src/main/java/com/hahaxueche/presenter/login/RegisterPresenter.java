@@ -230,6 +230,12 @@ public class RegisterPresenter implements Presenter<RegisterView> {
                 });
     }
 
+    /**
+     * 密码重置后,直接登录
+     *
+     * @param cellPhone
+     * @param password
+     */
     public void autoLogin(String cellPhone, String password) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", cellPhone);
@@ -258,6 +264,11 @@ public class RegisterPresenter implements Presenter<RegisterView> {
                     @Override
                     public void onNext(User user) {
                         application.getSharedPrefUtil().setUser(user);
+                        if (!user.isCompleted()) {
+                            mRegisterView.enableButtons();
+                            mRegisterView.dismissProgressDialog();
+                            mRegisterView.navigateToCompleteInfo();
+                        }
                     }
                 });
     }

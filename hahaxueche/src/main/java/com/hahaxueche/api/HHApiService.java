@@ -18,6 +18,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import rx.Observable;
 
@@ -47,7 +48,7 @@ public interface HHApiService {
     Observable<User> createSession(@FieldMap HashMap<String, Object> map);
 
     @FormUrlEncoded
-    @POST("students/{id}")
+    @PUT("students/{id}")
     Observable<Student> completeUserInfo(@Path("id") String studentId, @Header("X-Access-Token") String accessToken, @FieldMap HashMap<String, Object> map);
 
     class Factory {

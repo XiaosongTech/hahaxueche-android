@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
+import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.user.Student;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.login.CompleteUserInfoView;
@@ -51,12 +52,17 @@ public class CompleteUserInfoPresenter implements Presenter<CompleteUserInfoView
         if (!TextUtils.isEmpty(promoCode)) {
             map.put("promo_code", promoCode);
         }
+        HHLog.v(application.getSharedPrefUtil().getStudentId());
+        HHLog.v(application.getSharedPrefUtil().getAccessToken());
+        HHLog.v(map.toString());
         subscription = apiService.completeUserInfo(application.getSharedPrefUtil().getStudentId(), application.getSharedPrefUtil().getAccessToken(), map)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<Student>() {
                     @Override
                     public void onCompleted() {
+                        mCompleteUserInfoView.enableButtons();
+                        mCompleteUserInfoView.dismissProgressDialog();
                         mCompleteUserInfoView.showMessage("完善资料成功");
                     }
 

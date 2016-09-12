@@ -159,6 +159,11 @@ public class LoginPresenter implements Presenter<LoginView> {
                     @Override
                     public void onNext(User user) {
                         application.getSharedPrefUtil().setUser(user);
+                        if (!user.isCompleted()) {
+                            mLoginView.enableButtons();
+                            mLoginView.dismissProgressDialog();
+                            mLoginView.navigateToCompleteInfo();
+                        }
                     }
                 });
     }

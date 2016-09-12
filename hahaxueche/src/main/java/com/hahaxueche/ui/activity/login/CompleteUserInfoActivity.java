@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -41,7 +42,7 @@ public class CompleteUserInfoActivity extends HHBaseActivity implements Complete
 
     private CompleteUserInfoPresenter mPresenter;
     private CityChoseDialog mCityChoseDialog;
-    private City mSelectCity = new City();
+    private int mSelectCityId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,7 @@ public class CompleteUserInfoActivity extends HHBaseActivity implements Complete
 
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setCustomView(R.layout.actionbar_login);
+        actionBar.setCustomView(R.layout.actionbar_base);
         mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
         mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -82,17 +83,19 @@ public class CompleteUserInfoActivity extends HHBaseActivity implements Complete
 
     @OnClick(R.id.tv_complete)
     public void completeUserInfo() {
-        mPresenter.completeUserInfo(mEtUsername.getText().toString(), mSelectCity.id, mEtCoupon.getText().toString());
+        mPresenter.completeUserInfo(mEtUsername.getText().toString(), mSelectCityId, mEtCoupon.getText().toString());
     }
 
-    @Override
+    @OnClick(R.id.tv_city)
     public void showCitySelectDialog() {
         if (mCityChoseDialog == null) {
             mCityChoseDialog = new CityChoseDialog(getContext(), new CityChoseDialog.onConfirmListener() {
                 @Override
                 public boolean selectCity(City city) {
-                    mSelectCity = city;
-                    mTvCity.setText(city.name);
+                    if (city != null) {
+                        mTvCity.setText(city.name);
+                        mSelectCityId = city.id;
+                    }
                     return true;
                 }
             });
@@ -100,9 +103,33 @@ public class CompleteUserInfoActivity extends HHBaseActivity implements Complete
         mCityChoseDialog.show();
     }
 
+    @OnClick(R.id.tv_coupon)
+    public void showCouponEdit() {
+        if (mEtCoupon.getVisibility() == View.VISIBLE) {
+            mEtCoupon.setVisibility(View.GONE);
+        } else {
+            mEtCoupon.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Override
     protected void onDestroy() {
         mPresenter.detachView();
         super.onDestroy();
+    }
+
+    /**
+     * 拦截返回键
+     *
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

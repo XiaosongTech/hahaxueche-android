@@ -1,5 +1,6 @@
 package com.hahaxueche.ui.activity.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.CoordinatorLayout;
@@ -127,7 +128,8 @@ public class RegisterActivity extends HHBaseActivity implements RegisterView {
 
     @Override
     public void navigateToCompleteInfo() {
-        Snackbar.make(mClyMain, "注册成功", Snackbar.LENGTH_SHORT).show();
+        Intent intent = new Intent(getContext(), CompleteUserInfoActivity.class);
+        startActivity(intent);
     }
 
     @OnClick({R.id.tv_get_auth_code, R.id.tv_resend})

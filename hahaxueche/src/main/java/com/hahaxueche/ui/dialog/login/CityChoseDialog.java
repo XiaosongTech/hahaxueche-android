@@ -69,6 +69,7 @@ public class CityChoseDialog {
         final ArrayList<City> cities = application.getConstants().cities;
         if (cities == null) return;
         final CityChoseAdapter cityChoseAdapter = new CityChoseAdapter(mContext, cities);
+        cityChoseAdapter.clearSelection(-1);//默认没有选中
         mGvCities.setAdapter(cityChoseAdapter);
         mGvCities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

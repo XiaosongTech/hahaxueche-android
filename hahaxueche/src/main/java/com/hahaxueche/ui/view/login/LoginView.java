@@ -37,4 +37,9 @@ public interface LoginView extends HHBaseView {
      * 禁用所有按钮
      */
     void disableButtons();
+
+    /**
+     * 跳转到完善资料
+     */
+    void navigateToCompleteInfo();
 }

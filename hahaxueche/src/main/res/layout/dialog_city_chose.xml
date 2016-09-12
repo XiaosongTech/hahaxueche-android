@@ -22,7 +22,13 @@
         <GridView
             android:id="@+id/gv_cities"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:columnWidth="80dp"
+            android:horizontalSpacing="10dp"
+            android:numColumns="3"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="10dp">
 
         </GridView>
 
@@ -38,12 +44,12 @@
         android:id="@+id/tv_sure"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@null"
         android:gravity="center"
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:background="@null"
         android:text="确定"
         android:textColor="@color/app_theme_color"
         android:textSize="16sp" />

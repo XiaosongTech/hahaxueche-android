@@ -1,5 +1,6 @@
 package com.hahaxueche.ui.view.login;
 
+import com.hahaxueche.model.base.City;
 import com.hahaxueche.ui.view.HHBaseView;
 
 /**
@@ -12,6 +13,7 @@ public interface CompleteUserInfoView extends HHBaseView {
      * @param message
      */
     void showMessage(String message);
+
     /**
      * 激活所有按钮
      */
@@ -22,8 +24,4 @@ public interface CompleteUserInfoView extends HHBaseView {
      */
     void disableButtons();
 
-    /**
-     * 显示城市选择
-     */
-    void showCitySelectDialog();
 }
