@@ -38,6 +38,7 @@ android {
         huawei {}
         vivo {}
         meizu {}
+        sougou {}
     }
     productFlavors.all { flavor ->
         flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
