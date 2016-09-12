@@ -23,7 +23,7 @@ public class HttpEngine {
      */
     private static boolean isDebug = false;
     private boolean isShowLog = false;
-    public final static String BASE_SERVER_IP = isDebug ? "http://staging-api.hahaxueche.net" : "http://api.hahaxueche.net";
+    public final static String BASE_SERVER_IP = isDebug ? "https://staging-api.hahaxueche.net" : "https://api.hahaxueche.net";
     private final static String SERVER_URL = BASE_SERVER_IP + "/api/v1/";
     private final static int TIME_OUT = 20000;
     private static HttpEngine instance = null;
