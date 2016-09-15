@@ -16,6 +16,7 @@ import com.hahaxueche.R;
 import com.hahaxueche.ui.activity.HHBaseActivity;
 import com.hahaxueche.model.base.Banner;
 import com.hahaxueche.model.base.Constants;
+import com.hahaxueche.ui.activity.MainActivity;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
@@ -92,7 +93,9 @@ public class StartLoginActivity extends HHBaseActivity implements ViewPager.OnPa
 
     @OnClick(R.id.tv_tourist_login)
     public void touristLogin() {
-        HHLog.v("click tourist login");
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        startActivity(intent);
+        HHLog.v("click back");
     }
 
     @Override
