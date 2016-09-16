@@ -15,7 +15,7 @@
             android:orientation="vertical">
 
             <com.bigkoo.convenientbanner.ConvenientBanner
-                android:id="@+id/indexBanner"
+                android:id="@+id/banner_homepage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:canLoop="true" />
