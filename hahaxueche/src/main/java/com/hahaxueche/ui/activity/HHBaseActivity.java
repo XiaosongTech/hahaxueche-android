@@ -2,6 +2,7 @@ package com.hahaxueche.ui.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
@@ -93,6 +94,31 @@ public class HHBaseActivity extends AppCompatActivity implements HHBaseView {
         if (manager != null) {
             manager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
+    }
+
+    /**
+     * 打开webview
+     *
+     * @param url
+     * @param isShowShare 是否显示分享链接
+     */
+    public void openWebView(String url, String title, boolean isShowShare) {
+        Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("url", url);
+        bundle.putString("title", title);
+        bundle.putBoolean("isShowShare", isShowShare);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    /**
+     * 打开webview
+     *
+     * @param url
+     */
+    public void openWebView(String url) {
+        openWebView(url, "", false);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.hahaxueche.ui.fragment.homepage;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -8,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
@@ -17,6 +17,7 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Banner;
 import com.hahaxueche.model.base.Constants;
+import com.hahaxueche.ui.activity.BaseWebViewActivity;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
@@ -84,11 +85,11 @@ public class HomepageFragment extends Fragment implements ViewPager.OnPageChange
     public void onItemClick(int i) {
         if (mConstants == null) return;
         if (!TextUtils.isEmpty(mConstants.new_home_page_banners.get(i).target_url)) {
-            /*Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
+            Intent intent = new Intent(getActivity(), BaseWebViewActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putString("url", mConstants.getNew_login_banners().get(i).getTarget_url());
+            bundle.putString("url", mConstants.new_home_page_banners.get(i).target_url);
             intent.putExtras(bundle);
-            startActivity(intent);*/
+            startActivity(intent);
             HHLog.v("target url -> " + mConstants.new_home_page_banners.get(i).target_url);
         }
     }
