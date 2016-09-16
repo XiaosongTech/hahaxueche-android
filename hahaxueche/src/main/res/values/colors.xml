@@ -5,6 +5,7 @@
     <color name="haha_gray">#929292</color>
     <color name="haha_gray_text">#bbbbbb</color>
     <color name="haha_gray_background">#f4f4f4</color>
+    <color name="haha_gray_divider">#dbdbdb</color>
     <color name="haha_white">#ffffff</color>
     <color name="haha_orange_light">#feddaa</color>
 </resources>

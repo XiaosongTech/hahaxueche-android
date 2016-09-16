@@ -9,7 +9,11 @@
         android:id="@+id/tabText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp"
+        android:drawablePadding="4dp"
         android:drawableTop="@drawable/bottom_community_selector"
         android:focusable="true"
-        android:textColor="@drawable/bottom_text_selector" />
+        android:textColor="@drawable/bottom_text_selector"
+        android:textSize="10sp" />
 </LinearLayout>

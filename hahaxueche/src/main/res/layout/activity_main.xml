@@ -19,6 +19,12 @@
                 android:layout_height="wrap_content"
                 android:background="@color/haha_white" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_alignTop="@android:id/tabs"
+                android:background="@color/haha_gray_divider" />
+
             <TabWidget
                 android:id="@android:id/tabs"
                 android:layout_width="match_parent"
