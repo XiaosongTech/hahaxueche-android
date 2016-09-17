@@ -31,7 +31,6 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="12dp"
-            android:text="已入驻86所"
             android:textColor="@color/haha_gray"
             android:textSize="10sp" />
     </RelativeLayout>

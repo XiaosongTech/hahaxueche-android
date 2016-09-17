@@ -10,11 +10,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
@@ -48,6 +50,13 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     ConvenientBanner mHomepageBanner;
     @BindView(R.id.crl_main)
     CoordinatorLayout mClyMain;
+    @BindView(R.id.tv_driving_school_count)
+    TextView mTvDrivingSchoolCount;
+    @BindView(R.id.tv_coach_count)
+    TextView mTvCoachCount;
+    @BindView(R.id.tv_paid_student_count)
+    TextView mTvPaidStudentCount;
+
     private Constants mConstants;
 
     public static HomepageFragment newInstance() {
@@ -73,6 +82,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
         ButterKnife.bind(this, view);
         initBanners();
+        mPresenter.loadStatistics();
         return view;
     }
 
@@ -98,6 +108,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                 .setOnItemClickListener(this);
         mHomepageBanner.notifyDataSetChanged();
     }
+
 
     @OnClick(R.id.fly_about_xiaoha)
     public void openAboutHaha() {
@@ -169,9 +180,25 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     }
 
     @Override
+    public void setDrivingSchoolCountDisplay(SpannableString ss) {
+        mTvDrivingSchoolCount.setText(ss);
+    }
+
+    @Override
+    public void setCoachCountDisplay(SpannableString ss) {
+        mTvCoachCount.setText(ss);
+    }
+
+    @Override
+    public void setPaidStudentCountDisplay(SpannableString ss) {
+        mTvPaidStudentCount.setText(ss);
+    }
+
+    @Override
     public void openWebView(String url) {
         mActivity.openWebView(url);
     }
+
 
     @Override
     public void onItemClick(int i) {

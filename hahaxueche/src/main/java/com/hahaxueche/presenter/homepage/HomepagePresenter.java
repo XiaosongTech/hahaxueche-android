@@ -1,12 +1,21 @@
 package com.hahaxueche.presenter.homepage;
 
+import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
 
 import com.hahaxueche.HHBaseApplication;
+import com.hahaxueche.R;
+import com.hahaxueche.model.base.Statistics;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.homepage.HomepageView;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.Utils;
 import com.qiyukf.unicorn.api.ConsultSource;
 import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFUserInfo;
@@ -95,5 +104,30 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         }
         HHLog.v("free try url -> " + url);
         mHomepageView.openWebView(url);
+    }
+
+    public void loadStatistics() {
+        Statistics statistics = application.getConstants().statistics;
+        int drivingSchoolCount = statistics.driving_school_count * 3;
+        String text = "已入驻" + (drivingSchoolCount > 9999 ? (drivingSchoolCount / 1000 * 0.1 + "万") : drivingSchoolCount) + "所";
+        SpannableString ss = new SpannableString(text);
+        ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mHomepageView.getContext(), R.color.haha_orange_text)), text.indexOf("驻") + 1, text.indexOf("所"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(new AbsoluteSizeSpan(Utils.instence(mHomepageView.getContext()).sp2px(14)), text.indexOf("驻") + 1, text.indexOf("所"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mHomepageView.setDrivingSchoolCountDisplay(ss);
+
+        int coachCount = statistics.coach_count * 10;
+        text = "已签约" + (coachCount > 9999 ? (coachCount / 1000 * 0.1 + "万") : coachCount) + "名";
+        ss = new SpannableString(text);
+        ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mHomepageView.getContext(), R.color.haha_blue_text)), text.indexOf("约") + 1, text.indexOf("名"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(new AbsoluteSizeSpan(Utils.instence(mHomepageView.getContext()).sp2px(14)), text.indexOf("约") + 1, text.indexOf("名"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mHomepageView.setCoachCountDisplay(ss);
+
+        int paidStudentCount = statistics.paid_student_count * 10;
+        text = "已帮助学员" + (paidStudentCount > 9999 ? (paidStudentCount / 1000 * 0.1 + "万") : paidStudentCount) + "名";
+        ss = new SpannableString(text);
+        ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mHomepageView.getContext(), R.color.haha_red_text)), text.indexOf("员") + 1, text.indexOf("名"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(new AbsoluteSizeSpan(Utils.instence(mHomepageView.getContext()).sp2px(14)), text.indexOf("员") + 1, text.indexOf("名"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mHomepageView.setPaidStudentCountDisplay(ss);
+
     }
 }

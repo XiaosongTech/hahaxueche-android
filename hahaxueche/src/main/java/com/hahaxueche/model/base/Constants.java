@@ -19,4 +19,5 @@ public class Constants {
     public String version_name;
     public int version_code;
     public ArrayList<Bank> banks;
+    public Statistics statistics;
 }
