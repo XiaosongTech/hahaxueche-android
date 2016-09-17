@@ -57,4 +57,5 @@ dependencies {
     compile 'com.googlecode.libphonenumber:libphonenumber:7.6.1'
     compile 'com.android.support:design:24.0.0'
     compile 'com.android.support:cardview-v7:24.0.0'
+    compile 'com.qiyukf.unicorn:unicorn:2.7.0'
 }

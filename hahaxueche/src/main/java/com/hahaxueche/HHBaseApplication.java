@@ -6,8 +6,14 @@ import android.content.Context;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.Constants;
+import com.hahaxueche.ui.widget.FrescoImageLoader;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.HahaCache;
 import com.hahaxueche.util.SharedPrefUtil;
+import com.qiyukf.unicorn.api.SavePowerConfig;
+import com.qiyukf.unicorn.api.StatusBarNotificationConfig;
+import com.qiyukf.unicorn.api.Unicorn;
+import com.qiyukf.unicorn.api.YSFOptions;
 
 import rx.Scheduler;
 import rx.Subscriber;
@@ -73,6 +79,16 @@ public class HHBaseApplication extends Application {
                         constants = _constants;
                     }
                 });
+        HahaCache.context = getApplicationContext();
+        Unicorn.init(this, "2f328da38ac77ce6d796c2977248f7e2", options(), new FrescoImageLoader());
+    }
+
+    // 如果返回值为null，则全部使用默认参数。
+    private YSFOptions options() {
+        YSFOptions options = new YSFOptions();
+        options.statusBarNotificationConfig = new StatusBarNotificationConfig();
+        options.savePowerConfig = new SavePowerConfig();
+        return options;
     }
 
 }

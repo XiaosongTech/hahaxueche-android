@@ -14,4 +14,8 @@ public class User {
     public boolean isCompleted() {
         return (student != null && student.city_id >= 0 && !TextUtils.isEmpty(student.name));
     }
+
+    public boolean isLogin() {
+        return (session != null && !TextUtils.isEmpty(session.access_token) && student != null && !TextUtils.isEmpty(student.id));
+    }
 }

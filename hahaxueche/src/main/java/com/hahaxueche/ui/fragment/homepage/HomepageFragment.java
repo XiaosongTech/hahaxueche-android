@@ -1,7 +1,13 @@
 package com.hahaxueche.ui.fragment.homepage;
 
+import android.Manifest;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -17,22 +23,31 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Banner;
 import com.hahaxueche.model.base.Constants;
-import com.hahaxueche.ui.activity.BaseWebViewActivity;
+import com.hahaxueche.presenter.homepage.HomepagePresenter;
+import com.hahaxueche.ui.activity.MainActivity;
+import com.hahaxueche.ui.fragment.HHBaseFragment;
+import com.hahaxueche.ui.view.homepage.HomepageView;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
-import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by wangshirui on 16/9/13.
  */
-public class HomepageFragment extends Fragment implements ViewPager.OnPageChangeListener, OnItemClickListener {
+public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPageChangeListener, OnItemClickListener, HomepageView {
+    private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
+    private MainActivity mActivity;
+    private HomepagePresenter mPresenter;
+
     @BindView(R.id.banner_homepage)
     ConvenientBanner mHomepageBanner;
+    @BindView(R.id.crl_main)
+    CoordinatorLayout mClyMain;
     private Constants mConstants;
 
     public static HomepageFragment newInstance() {
@@ -47,6 +62,9 @@ public class HomepageFragment extends Fragment implements ViewPager.OnPageChange
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mActivity = (MainActivity) getActivity();
+        mPresenter = new HomepagePresenter();
+        mPresenter.attachView(this);
     }
 
     @Override
@@ -81,16 +99,85 @@ public class HomepageFragment extends Fragment implements ViewPager.OnPageChange
         mHomepageBanner.notifyDataSetChanged();
     }
 
+    @OnClick(R.id.fly_about_xiaoha)
+    public void openAboutHaha() {
+        mPresenter.openAboutHaha();
+    }
+
+    @OnClick(R.id.fly_about_coach)
+    public void openAboutCoach() {
+        mPresenter.openAboutCoach();
+    }
+
+    @OnClick(R.id.fly_my_strength)
+    public void openMyStrengths() {
+        mPresenter.openMyStrengths();
+    }
+
+    @OnClick(R.id.fly_procedure)
+    public void openProcedure() {
+        mPresenter.openProcedure();
+    }
+
+    @OnClick(R.id.frl_tel_ask)
+    public void clickTelContact() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
+            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+        } else {
+            // Android version is lesser than 6.0 or the permission is already granted.
+            contactService();
+        }
+    }
+
+    @OnClick(R.id.frl_online_ask)
+    public void onlineAsk() {
+        mPresenter.onlineAsk();
+    }
+
+    @OnClick(R.id.iv_free_try)
+    public void freeTry() {
+        mPresenter.freeTry();
+    }
+
+    /**
+     * 联系客服
+     */
+    private void contactService() {
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:4000016006"));
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        startActivity(intent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_CELL_PHONE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                contactService();
+            } else {
+                showMessage("请允许拨打电话权限，不然无法直接拨号联系客服");
+            }
+        }
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Snackbar.make(mClyMain, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void openWebView(String url) {
+        mActivity.openWebView(url);
+    }
+
     @Override
     public void onItemClick(int i) {
         if (mConstants == null) return;
         if (!TextUtils.isEmpty(mConstants.new_home_page_banners.get(i).target_url)) {
-            Intent intent = new Intent(getActivity(), BaseWebViewActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("url", mConstants.new_home_page_banners.get(i).target_url);
-            intent.putExtras(bundle);
-            startActivity(intent);
-            HHLog.v("target url -> " + mConstants.new_home_page_banners.get(i).target_url);
+            openWebView(mConstants.new_home_page_banners.get(i).target_url);
         }
     }
 
@@ -121,5 +208,11 @@ public class HomepageFragment extends Fragment implements ViewPager.OnPageChange
         super.onResume();
         //开始自动翻页
         mHomepageBanner.startTurning(2500);
+    }
+
+    @Override
+    public void onDestroy() {
+        mPresenter.detachView();
+        super.onDestroy();
     }
 }
