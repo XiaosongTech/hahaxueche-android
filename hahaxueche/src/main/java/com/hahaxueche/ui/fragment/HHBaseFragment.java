@@ -2,6 +2,7 @@ package com.hahaxueche.ui.fragment;
 
 import android.app.ProgressDialog;
 import android.support.v4.app.Fragment;
+import android.widget.Toast;
 
 import com.hahaxueche.ui.view.base.HHBaseView;
 
@@ -10,6 +11,11 @@ import com.hahaxueche.ui.view.base.HHBaseView;
  */
 public class HHBaseFragment extends Fragment implements HHBaseView {
     private ProgressDialog progressDialog;//进度框
+
+    @Override
+    public void showError(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     public void showProgressDialog() {
@@ -28,4 +34,6 @@ public class HHBaseFragment extends Fragment implements HHBaseView {
             progressDialog.dismiss();
         }
     }
+
+
 }

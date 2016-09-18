@@ -13,4 +13,6 @@ public interface HHBaseView {
     void showProgressDialog(String message);
 
     void dismissProgressDialog();
+
+    void showError(String message);
 }

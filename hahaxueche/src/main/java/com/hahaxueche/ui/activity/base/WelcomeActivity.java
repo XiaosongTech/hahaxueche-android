@@ -2,7 +2,8 @@ package com.hahaxueche.ui.activity.base;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.hahaxueche.R;
 import com.hahaxueche.presenter.base.WelcomePresenter;
@@ -11,11 +12,16 @@ import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.view.base.WelcomeView;
 import com.hahaxueche.ui.view.login.CompleteUserInfoView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by wangshirui on 16/9/8.
  */
 public class WelcomeActivity extends HHBaseActivity implements WelcomeView {
     private WelcomePresenter mPresenter;
+    @BindView(R.id.progressBar)
+    ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +30,7 @@ public class WelcomeActivity extends HHBaseActivity implements WelcomeView {
         mPresenter.attachView(this);
         setTheme(R.style.AppThemeNoTitle);
         setContentView(R.layout.activity_welcome);
+        ButterKnife.bind(this);
         mPresenter.startApplication();
     }
 

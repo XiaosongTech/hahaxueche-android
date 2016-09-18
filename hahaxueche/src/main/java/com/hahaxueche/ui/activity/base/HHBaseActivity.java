@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.view.base.HHBaseView;
@@ -55,6 +56,11 @@ public class HHBaseActivity extends AppCompatActivity implements HHBaseView {
         if (progressDialog != null) {
             progressDialog.dismiss();
         }
+    }
+
+    @Override
+    public void showError(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     // 获取点击事件

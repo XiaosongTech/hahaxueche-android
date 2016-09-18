@@ -9,9 +9,13 @@ import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.base.WelcomeView;
 import com.hahaxueche.util.HHLog;
 
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 
 /**
  * Created by wangshirui on 16/9/18.
@@ -38,7 +42,8 @@ public class WelcomePresenter implements Presenter<WelcomeView> {
     public void startApplication() {
         //获取常量信息
         HHApiService apiService = application.getApiService();
-        apiService.getConstants()
+        subscription = apiService.getConstants()
+                .delay(2, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<Constants>() {
@@ -50,6 +55,7 @@ public class WelcomePresenter implements Presenter<WelcomeView> {
                     @Override
                     public void onError(Throwable e) {
                         HHLog.e(e.getMessage());
+                        mWelcomeView.showError("服务器连接异常,请稍后再试~");
                     }
 
                     @Override
