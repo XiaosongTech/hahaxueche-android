@@ -93,7 +93,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         String url = WEB_URL_FREE_TRY;
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
-            if (user.student.city_id > 0) {
+            if (user.student.city_id >= 0) {
                 url += "&city_id=" + user.student.city_id;
             }
             if (!TextUtils.isEmpty(user.student.name)) {
@@ -135,7 +135,8 @@ public class HomepagePresenter implements Presenter<HomepageView> {
 
     public void loadCityChoseDialog() {
         User user = application.getSharedPrefUtil().getUser();
-        if (user == null || user.isFakeUser) {
+        if (user.student.city_id < 0) {
+            selectCity(0);//先默认为武汉
             mHomepageView.showCityChoseDialog();
         }
     }

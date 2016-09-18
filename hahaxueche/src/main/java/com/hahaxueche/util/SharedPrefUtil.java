@@ -36,7 +36,6 @@ public class SharedPrefUtil {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         User user = new User();
         user.student = new Student();
-        user.isFakeUser = true;
         prefs.edit().putString("usrSerialize", mGson.toJson(user)).apply();
     }
 

@@ -15,7 +15,7 @@ public class Student {
     public String id;
     public String cell_phone;
     public String name;
-    public int city_id;
+    public int city_id = -1;
     public String user_id;
     public String avatar;
     public String current_coach_id;
