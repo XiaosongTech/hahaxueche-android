@@ -11,6 +11,7 @@ import android.text.style.ForegroundColorSpan;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.City;
+import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.base.Statistics;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
@@ -141,5 +142,9 @@ public class HomepagePresenter implements Presenter<HomepageView> {
 
     public void selectCity(int cityId) {
         application.getSharedPrefUtil().setUserCity(cityId);
+    }
+
+    public Constants getConstants() {
+        return application.getConstants();
     }
 }

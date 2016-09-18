@@ -21,7 +21,6 @@ import android.widget.TextView;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
-import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Banner;
 import com.hahaxueche.model.base.City;
@@ -84,19 +83,18 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
         ButterKnife.bind(this, view);
-        initBanners();
+        mConstants = mPresenter.getConstants();
+        if (mConstants != null) {
+            initBanners();
+        }
         mPresenter.loadStatistics();
         mPresenter.loadCityChoseDialog();
         return view;
     }
 
     private void initBanners() {
-        HHBaseApplication application = HHBaseApplication.get(getContext());
-        mConstants = application.getConstants();
-        if (mConstants == null) return;
-
         int screenWidth = Utils.instence(getContext()).getDm().widthPixels;
-        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(screenWidth, screenWidth / 2);
+        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(screenWidth, screenWidth / 5 * 2);
         mHomepageBanner.setLayoutParams(p);
         ArrayList<String> networkImages = new ArrayList<>();
         for (Banner banner : mConstants.new_home_page_banners) {
