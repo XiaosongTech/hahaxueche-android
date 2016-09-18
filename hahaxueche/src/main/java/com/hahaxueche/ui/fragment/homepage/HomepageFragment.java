@@ -24,9 +24,11 @@ import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Banner;
+import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.presenter.homepage.HomepagePresenter;
-import com.hahaxueche.ui.activity.MainActivity;
+import com.hahaxueche.ui.activity.base.MainActivity;
+import com.hahaxueche.ui.dialog.login.CityChoseDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.homepage.HomepageView;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
@@ -58,6 +60,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     TextView mTvPaidStudentCount;
 
     private Constants mConstants;
+    private CityChoseDialog mCityChoseDialog;
 
     public static HomepageFragment newInstance() {
         HomepageFragment fragment = new HomepageFragment();
@@ -83,6 +86,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         ButterKnife.bind(this, view);
         initBanners();
         mPresenter.loadStatistics();
+        mPresenter.loadCityChoseDialog();
         return view;
     }
 
@@ -192,6 +196,22 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     @Override
     public void setPaidStudentCountDisplay(SpannableString ss) {
         mTvPaidStudentCount.setText(ss);
+    }
+
+    @Override
+    public void showCityChoseDialog() {
+        if (mCityChoseDialog == null) {
+            mCityChoseDialog = new CityChoseDialog(getContext(), new CityChoseDialog.onConfirmListener() {
+                @Override
+                public boolean selectCity(City city) {
+                    if (city != null) {
+                        mPresenter.selectCity(city.id);
+                    }
+                    return true;
+                }
+            });
+        }
+        mCityChoseDialog.show();
     }
 
     @Override

@@ -51,6 +51,9 @@ public interface HHApiService {
     @PUT("students/{id}")
     Observable<Student> completeUserInfo(@Path("id") String studentId, @Header("X-Access-Token") String accessToken, @FieldMap HashMap<String, Object> map);
 
+    @GET("students/{id}")
+    Observable<Student> getStudent(@Path("id") String studentId, @Header("X-Access-Token") String accessToken);
+
     class Factory {
         public static HHApiService create() {
             HHLog.v("baseUrl -> " + baseUrl);

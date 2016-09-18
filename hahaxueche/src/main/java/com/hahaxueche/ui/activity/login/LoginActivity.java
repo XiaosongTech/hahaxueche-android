@@ -14,8 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
-import com.hahaxueche.ui.activity.HHBaseActivity;
+import com.hahaxueche.ui.activity.ActivityCollector;
+import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.presenter.login.LoginPresenter;
+import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.view.login.LoginView;
 
 import butterknife.BindView;
@@ -156,6 +158,14 @@ public class LoginActivity extends HHBaseActivity implements LoginView {
     @Override
     public void navigateToCompleteInfo() {
         Intent intent = new Intent(getContext(), CompleteUserInfoActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void navigateToHomepage() {
+        ActivityCollector.finishAll();
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 

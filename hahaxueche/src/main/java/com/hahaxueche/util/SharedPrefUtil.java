@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
+import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.user.Student;
 import com.hahaxueche.model.user.User;
 
@@ -29,6 +30,20 @@ public class SharedPrefUtil {
     public void setUser(User user) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         prefs.edit().putString("usrSerialize", mGson.toJson(user)).apply();
+    }
+
+    public void createFakeUser() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        User user = new User();
+        user.student = new Student();
+        user.isFakeUser = true;
+        prefs.edit().putString("usrSerialize", mGson.toJson(user)).apply();
+    }
+
+    public void setUserCity(int cityId) {
+        User user = getUser();
+        user.student.city_id = cityId;
+        setUser(user);
     }
 
     public String getStudentId() {

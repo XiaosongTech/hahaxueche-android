@@ -10,6 +10,7 @@ import android.text.style.ForegroundColorSpan;
 
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
+import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.base.Statistics;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
@@ -129,5 +130,16 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         ss.setSpan(new AbsoluteSizeSpan(Utils.instence(mHomepageView.getContext()).sp2px(14)), text.indexOf("员") + 1, text.indexOf("名"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         mHomepageView.setPaidStudentCountDisplay(ss);
 
+    }
+
+    public void loadCityChoseDialog() {
+        User user = application.getSharedPrefUtil().getUser();
+        if (user == null || user.isFakeUser) {
+            mHomepageView.showCityChoseDialog();
+        }
+    }
+
+    public void selectCity(int cityId) {
+        application.getSharedPrefUtil().setUserCity(cityId);
     }
 }

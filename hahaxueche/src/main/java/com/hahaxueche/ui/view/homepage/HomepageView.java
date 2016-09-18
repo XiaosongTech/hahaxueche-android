@@ -2,7 +2,7 @@ package com.hahaxueche.ui.view.homepage;
 
 import android.text.SpannableString;
 
-import com.hahaxueche.ui.view.HHBaseView;
+import com.hahaxueche.ui.view.base.HHBaseView;
 
 /**
  * Created by wangshirui on 16/9/17.
@@ -42,4 +42,9 @@ public interface HomepageView extends HHBaseView {
      * @param ss
      */
     void setPaidStudentCountDisplay(SpannableString ss);
+
+    /**
+     * 显示城市选择对话框
+     */
+    void showCityChoseDialog();
 }

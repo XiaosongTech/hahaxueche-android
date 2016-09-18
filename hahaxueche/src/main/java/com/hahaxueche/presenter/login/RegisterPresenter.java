@@ -249,9 +249,6 @@ public class RegisterPresenter implements Presenter<RegisterView> {
                 .subscribe(new Subscriber<User>() {
                     @Override
                     public void onCompleted() {
-                        mRegisterView.enableButtons();
-                        mRegisterView.dismissProgressDialog();
-                        mRegisterView.showMessage("登录成功");
                     }
 
                     @Override
@@ -268,6 +265,10 @@ public class RegisterPresenter implements Presenter<RegisterView> {
                             mRegisterView.enableButtons();
                             mRegisterView.dismissProgressDialog();
                             mRegisterView.navigateToCompleteInfo();
+                        } else {
+                            mRegisterView.enableButtons();
+                            mRegisterView.dismissProgressDialog();
+                            mRegisterView.navigateToHomepage();
                         }
                     }
                 });

@@ -1,4 +1,4 @@
-package com.hahaxueche.ui.activity;
+package com.hahaxueche.ui.activity.base;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -10,7 +10,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.hahaxueche.ui.view.HHBaseView;
+import com.hahaxueche.ui.activity.ActivityCollector;
+import com.hahaxueche.ui.view.base.HHBaseView;
 import com.hahaxueche.util.HHLog;
 
 

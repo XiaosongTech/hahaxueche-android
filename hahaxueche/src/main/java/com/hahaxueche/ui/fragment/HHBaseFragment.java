@@ -3,7 +3,7 @@ package com.hahaxueche.ui.fragment;
 import android.app.ProgressDialog;
 import android.support.v4.app.Fragment;
 
-import com.hahaxueche.ui.view.HHBaseView;
+import com.hahaxueche.ui.view.base.HHBaseView;
 
 /**
  * Created by wangshirui on 16/9/17.

@@ -137,9 +137,6 @@ public class LoginPresenter implements Presenter<LoginView> {
                 .subscribe(new Subscriber<User>() {
                     @Override
                     public void onCompleted() {
-                        mLoginView.enableButtons();
-                        mLoginView.dismissProgressDialog();
-                        mLoginView.showMessage("登录成功");
                     }
 
                     @Override
@@ -163,6 +160,10 @@ public class LoginPresenter implements Presenter<LoginView> {
                             mLoginView.enableButtons();
                             mLoginView.dismissProgressDialog();
                             mLoginView.navigateToCompleteInfo();
+                        } else {
+                            mLoginView.enableButtons();
+                            mLoginView.dismissProgressDialog();
+                            mLoginView.navigateToHomepage();
                         }
                     }
                 });

@@ -51,6 +51,10 @@ public class HHBaseApplication extends Application {
         return constants;
     }
 
+    public void setConstants(Constants constants) {
+        this.constants = constants;
+    }
+
     public SharedPrefUtil getSharedPrefUtil() {
         return spUtil;
     }
@@ -59,26 +63,7 @@ public class HHBaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Fresco.initialize(this);
-        HHApiService apiService = getApiService();
         spUtil = new SharedPrefUtil(this);
-        apiService.getConstants()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(defaultSubscribeScheduler())
-                .subscribe(new Subscriber<Constants>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        HHLog.e(e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(Constants _constants) {
-                        constants = _constants;
-                    }
-                });
         HahaCache.context = getApplicationContext();
         Unicorn.init(this, "2f328da38ac77ce6d796c2977248f7e2", options(), new FrescoImageLoader());
     }

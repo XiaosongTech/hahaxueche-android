@@ -13,10 +13,12 @@ import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
-import com.hahaxueche.ui.activity.HHBaseActivity;
+import com.hahaxueche.presenter.login.StartLoginPresenter;
+import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.model.base.Banner;
 import com.hahaxueche.model.base.Constants;
-import com.hahaxueche.ui.activity.MainActivity;
+import com.hahaxueche.ui.activity.base.MainActivity;
+import com.hahaxueche.ui.view.login.StartLoginView;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
@@ -30,22 +32,19 @@ import butterknife.OnClick;
 /**
  * Created by wangshirui on 16/9/9.
  */
-public class StartLoginActivity extends HHBaseActivity implements ViewPager.OnPageChangeListener, OnItemClickListener {
+public class StartLoginActivity extends HHBaseActivity implements ViewPager.OnPageChangeListener, OnItemClickListener, StartLoginView {
     @BindView(R.id.iv_back)
     ImageView mIvBack;
-    @BindView(R.id.tv_start_login)
-    TextView mTvStartLogin;
-    @BindView(R.id.tv_start_register)
-    TextView mTvStartRegister;
-    @BindView(R.id.tv_tourist_login)
-    TextView mTvTouristLogin;
     @BindView(R.id.banner_login)
     ConvenientBanner mLoginBanner;
     private Constants mConstants;
+    private StartLoginPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPresenter = new StartLoginPresenter();
+        mPresenter.attachView(this);
         setTheme(R.style.AppThemeNoTitle);
         setContentView(R.layout.acitivity_start_login);
         ButterKnife.bind(this);
@@ -75,15 +74,30 @@ public class StartLoginActivity extends HHBaseActivity implements ViewPager.OnPa
         mLoginBanner.notifyDataSetChanged();
     }
 
+    @Override
+    public void navigateToLogin() {
+        startActivity(new Intent(getContext(), LoginActivity.class));
+    }
+
+    @Override
+    public void navigateToRegister() {
+        startActivity(new Intent(getContext(), RegisterActivity.class));
+    }
+
+    @Override
+    public void navigateToHomepage() {
+        startActivity(new Intent(getContext(), MainActivity.class));
+        StartLoginActivity.this.finish();
+    }
+
     @OnClick(R.id.tv_start_login)
     public void startLogin() {
-        startActivity(new Intent(getContext(), LoginActivity.class));
+        mPresenter.navigateToLogin();
     }
 
     @OnClick(R.id.tv_start_register)
     public void startRegister() {
-        Intent intent = new Intent(getContext(), RegisterActivity.class);
-        startActivity(intent);
+        mPresenter.navigateToRegister();
     }
 
     @OnClick(R.id.iv_back)
@@ -93,9 +107,7 @@ public class StartLoginActivity extends HHBaseActivity implements ViewPager.OnPa
 
     @OnClick(R.id.tv_tourist_login)
     public void touristLogin() {
-        Intent intent = new Intent(getContext(), MainActivity.class);
-        startActivity(intent);
-        HHLog.v("click back");
+        mPresenter.touristLogin();
     }
 
     @Override
@@ -139,4 +151,11 @@ public class StartLoginActivity extends HHBaseActivity implements ViewPager.OnPa
         //开始自动翻页
         mLoginBanner.startTurning(2500);
     }
+
+    @Override
+    protected void onDestroy() {
+        mPresenter.detachView();
+        super.onDestroy();
+    }
+
 }

@@ -1,5 +1,7 @@
 package com.hahaxueche.model.user;
 
+import android.text.TextUtils;
+
 import com.hahaxueche.model.payment.BankCard;
 import com.hahaxueche.model.payment.Coupon;
 import com.hahaxueche.model.payment.PurchasedService;
@@ -24,4 +26,7 @@ public class Student {
     public BankCard bank_card;
     public ArrayList<Coupon> coupons;
 
+    public boolean isCompleted() {
+        return (city_id >= 0 && !TextUtils.isEmpty(name));
+    }
 }

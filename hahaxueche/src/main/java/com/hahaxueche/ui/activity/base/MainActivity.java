@@ -1,4 +1,4 @@
-package com.hahaxueche.ui.activity;
+package com.hahaxueche.ui.activity.base;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;

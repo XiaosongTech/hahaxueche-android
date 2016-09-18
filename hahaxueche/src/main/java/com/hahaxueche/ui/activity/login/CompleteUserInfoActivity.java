@@ -1,5 +1,6 @@
 package com.hahaxueche.ui.activity.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -12,8 +13,10 @@ import android.widget.TextView;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.City;
-import com.hahaxueche.ui.activity.HHBaseActivity;
+import com.hahaxueche.ui.activity.ActivityCollector;
+import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.presenter.login.CompleteUserInfoPresenter;
+import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.dialog.login.CityChoseDialog;
 import com.hahaxueche.ui.view.login.CompleteUserInfoView;
 
@@ -110,6 +113,14 @@ public class CompleteUserInfoActivity extends HHBaseActivity implements Complete
         } else {
             mEtCoupon.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void navigateToHomepage() {
+        ActivityCollector.finishAll();
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @Override

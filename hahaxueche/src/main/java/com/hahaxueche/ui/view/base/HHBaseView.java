@@ -1,4 +1,4 @@
-package com.hahaxueche.ui.view;
+package com.hahaxueche.ui.view.base;
 
 import android.content.Context;
 

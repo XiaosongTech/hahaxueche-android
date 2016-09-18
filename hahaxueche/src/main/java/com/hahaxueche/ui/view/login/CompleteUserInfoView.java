@@ -1,7 +1,6 @@
 package com.hahaxueche.ui.view.login;
 
-import com.hahaxueche.model.base.City;
-import com.hahaxueche.ui.view.HHBaseView;
+import com.hahaxueche.ui.view.base.HHBaseView;
 
 /**
  * Created by wangshirui on 16/9/10.
@@ -23,5 +22,10 @@ public interface CompleteUserInfoView extends HHBaseView {
      * 禁用所有按钮
      */
     void disableButtons();
+
+    /**
+     * 跳转到首页
+     */
+    void navigateToHomepage();
 
 }
