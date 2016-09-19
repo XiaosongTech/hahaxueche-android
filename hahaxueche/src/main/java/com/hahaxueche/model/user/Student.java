@@ -4,9 +4,11 @@ import android.text.TextUtils;
 
 import com.hahaxueche.model.payment.BankCard;
 import com.hahaxueche.model.payment.Coupon;
+import com.hahaxueche.model.payment.PaymentStage;
 import com.hahaxueche.model.payment.PurchasedService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by wangshirui on 16/9/10.
@@ -26,7 +28,52 @@ public class Student {
     public BankCard bank_card;
     public ArrayList<Coupon> coupons;
 
+    private boolean isPurchasedService() {
+        return purchased_services != null && purchased_services.size() > 0;
+    }
+
+    private PurchasedService getCurrentPS() {
+        return isPurchasedService() ? purchased_services.get(0) : null;
+    }
+
     public boolean isCompleted() {
         return (city_id >= 0 && !TextUtils.isEmpty(name));
+    }
+
+    public int getAccountBalance() {
+        if (isPurchasedService()) {
+            return getCurrentPS().unpaid_amount;
+        } else {
+            return bonus_balance;
+        }
+    }
+
+    public String getPaymentStageLabel() {
+        if (isPurchasedService()) {
+            ArrayList<PaymentStage> paymentStageList = getCurrentPS().payment_stages;
+            String tempPaymentStageStr = "";
+            for (PaymentStage paymentStage : paymentStageList) {
+                if (paymentStage.stage_number == getCurrentPS().current_payment_stage) {
+                    tempPaymentStageStr = paymentStage.stage_name;
+                    break;
+                }
+            }
+            if (TextUtils.isEmpty(tempPaymentStageStr)) {
+                if (paymentStageList.size() + 1 == getCurrentPS().current_payment_stage) {
+                    tempPaymentStageStr = "已拿证";
+                }
+            }
+            return tempPaymentStageStr;
+        } else {
+            return "未选择教练";
+        }
+    }
+
+    public String getStudentPhaseLabel() {
+        if (isPurchasedService()) {
+            return "目前阶段：" + getPaymentStageLabel();
+        } else {
+            return "目前阶段：未付款";
+        }
     }
 }

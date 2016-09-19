@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -10,23 +10,24 @@
         android:scaleType="fitXY"
         android:src="@drawable/ic_mypage_bk" />
 
-    <com.hahaxueche.ui.widget.CircleImageView
-        android:id="@+id/civ_my_avatar"
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/iv_my_avatar"
         android:layout_width="90dp"
         android:layout_height="90dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:background="@drawable/ic_mypage_ava"
-        app:border_color="@android:color/white"
-        app:border_width="4dp">
+        fresco:placeholderImage="@drawable/ic_mypage_ava"
+        fresco:roundAsCircle="true"
+        fresco:roundingBorderColor="@color/haha_white"
+        fresco:roundingBorderWidth="4dp">
 
-    </com.hahaxueche.ui.widget.CircleImageView>
+    </com.facebook.drawee.view.SimpleDraweeView>
 
     <TextView
-        android:id="@+id/tv_stu_name"
+        android:id="@+id/tv_student_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/civ_my_avatar"
+        android:layout_below="@id/iv_my_avatar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:textColor="@color/haha_white"
@@ -36,16 +37,16 @@
         android:id="@+id/iv_edit_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/tv_stu_name"
+        android:layout_alignBottom="@id/tv_student_name"
         android:layout_marginLeft="16dp"
-        android:layout_toRightOf="@id/tv_stu_name"
+        android:layout_toRightOf="@id/tv_student_name"
         android:src="@drawable/ic_edit" />
 
     <TextView
         android:id="@+id/tv_student_phase"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_stu_name"
+        android:layout_below="@id/tv_student_name"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:textColor="@color/haha_white"

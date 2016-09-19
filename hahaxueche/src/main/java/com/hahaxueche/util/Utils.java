@@ -89,12 +89,12 @@ public class Utils {
 
     public static String getMoney(double price) {
         DecimalFormat dfInt = new DecimalFormat("#####.##");
-        return "￥" + dfInt.format(price / 100);
+        return "￥" + dfInt.format(price / 100.0);
     }
 
     public static String getMoneyYuan(double price) {
         DecimalFormat dfInt = new DecimalFormat("#####.##");
-        return dfInt.format(price / 100) + "元";
+        return dfInt.format(price / 100.0) + "元";
     }
 
     public static String getDateFromUTC(String UTCTime) {
