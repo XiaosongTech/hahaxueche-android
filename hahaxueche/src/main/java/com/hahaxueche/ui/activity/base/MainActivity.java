@@ -1,7 +1,6 @@
 package com.hahaxueche.ui.activity.base;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentTabHost;
 import android.view.View;
 import android.widget.TextView;
 
@@ -10,6 +9,7 @@ import com.hahaxueche.ui.fragment.community.CommunityFragment;
 import com.hahaxueche.ui.fragment.findCoach.FindCoachFragment;
 import com.hahaxueche.ui.fragment.homepage.HomepageFragment;
 import com.hahaxueche.ui.fragment.myPage.MyPageFragment;
+import com.hahaxueche.ui.widget.FragmentTabHost;
 
 /**
  * Created by wangshirui on 16/9/15.
