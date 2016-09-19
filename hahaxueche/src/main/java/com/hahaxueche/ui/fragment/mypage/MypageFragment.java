@@ -1,5 +1,6 @@
 package com.hahaxueche.ui.fragment.myPage;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -12,12 +13,15 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
 import com.hahaxueche.model.user.Student;
 import com.hahaxueche.presenter.myPage.MyPagePresenter;
+import com.hahaxueche.ui.activity.base.MainActivity;
+import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.myPage.MyPageView;
 import com.hahaxueche.util.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by wangshirui on 16/9/13.
@@ -39,10 +43,12 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView {
     TextView mTvStudentPhase;
 
     private MyPagePresenter mPresenter;
+    private MainActivity mActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mActivity = (MainActivity) getActivity();
         mPresenter = new MyPagePresenter();
     }
 
@@ -53,6 +59,11 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView {
         ButterKnife.bind(this, view);
         mPresenter.attachView(this);
         return view;
+    }
+
+    @OnClick(R.id.tv_logout)
+    public void logOut() {
+        mPresenter.logOut();
     }
 
     @Override
@@ -74,6 +85,12 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView {
         mTvAccountBalance.setText(Utils.getMoney(student.getAccountBalance()));
         mTvPaymentStage.setText(student.getPaymentStageLabel());
         mTvStudentPhase.setText(student.getStudentPhaseLabel());
+    }
+
+    @Override
+    public void finishToStartLogin() {
+        startActivity(new Intent(getContext(), StartLoginActivity.class));
+        mActivity.finish();
     }
 
     @Override

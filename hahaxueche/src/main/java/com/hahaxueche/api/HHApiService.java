@@ -13,6 +13,7 @@ import java.util.HashMap;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.DELETE;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -53,6 +54,9 @@ public interface HHApiService {
 
     @GET("students/{id}")
     Observable<Student> getStudent(@Path("id") String studentId, @Header("X-Access-Token") String accessToken);
+
+    @DELETE("sessions/{id}")
+    Observable<BaseModel> logOut(@Path("id") String sessionId, @Header("X-Access-Token") String accessToken);
 
     class Factory {
         public static HHApiService create() {
