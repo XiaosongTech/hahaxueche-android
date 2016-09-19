@@ -2,9 +2,107 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/haha_gray_background"
     android:orientation="vertical">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="我的页面"/>
+
+    <LinearLayout
+        android:id="@+id/lly_not_login"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/haha_gray_background"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="你怎么还没登录呀〒▽〒"
+                android:textColor="@color/haha_gray_text"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_back_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="请先登录或注册"
+                android:textColor="@color/app_theme_color"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/srl_my_page"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include layout="@layout/my_page_user_info" />
+
+                <include layout="@layout/my_page_account_info" />
+
+                <RelativeLayout
+                    android:id="@+id/rly_referer_friends"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/app_theme_color">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginBottom="23dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="23dp"
+                        android:text="我想为哈哈代言,免费赚取代言费"
+                        android:textColor="@color/haha_white"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/pic_xiaoha" />
+                </RelativeLayout>
+
+                <include layout="@layout/my_page_coach_info" />
+
+                <include layout="@layout/my_page_customer_service" />
+
+                <include layout="@layout/my_page_usage" />
+
+                <TextView
+                    android:id="@+id/tv_logout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@color/haha_white"
+                    android:gravity="center"
+                    android:paddingBottom="15dp"
+                    android:paddingTop="15dp"
+                    android:text="退出当前帐号"
+                    android:textColor="@color/haha_orange"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+        </ScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>
