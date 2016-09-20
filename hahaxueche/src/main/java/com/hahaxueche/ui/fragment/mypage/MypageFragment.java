@@ -54,6 +54,8 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     private MyPagePresenter mPresenter;
     private MainActivity mActivity;
     private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
+    private static final String WEB_URL_ABOUT_HAHA = "http://staging.hahaxueche.net/#/student";
+    private static final String URL_APP_STORE = "http://a.app.qq.com/o/simple.jsp?pkgname=com.hahaxueche";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -145,6 +147,18 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     @OnClick(R.id.rly_FAQ)
     public void navigateToFAQ() {
         startActivity(new Intent(getContext(), FAQActivity.class));
+    }
+
+    @OnClick(R.id.rly_about_haha)
+    public void navigateToAboutHaha() {
+        mActivity.openWebView(WEB_URL_ABOUT_HAHA);
+    }
+
+    @OnClick(R.id.rly_support_haha)
+    public void supportHaha() {
+        Uri uri = Uri.parse(URL_APP_STORE);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
     }
 
     /**
