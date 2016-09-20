@@ -1,7 +1,13 @@
 package com.hahaxueche.ui.fragment.myPage;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +21,7 @@ import com.hahaxueche.model.user.Student;
 import com.hahaxueche.presenter.myPage.MyPagePresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
+import com.hahaxueche.ui.activity.myPage.FAQActivity;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.myPage.MyPageView;
 import com.hahaxueche.util.Utils;
@@ -41,9 +48,12 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     TextView mTvPaymentStage;
     @BindView(R.id.tv_student_phase)
     TextView mTvStudentPhase;
+    @BindView(R.id.lly_main)
+    LinearLayout mLlyMain;
 
     private MyPagePresenter mPresenter;
     private MainActivity mActivity;
+    private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -114,5 +124,54 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     @Override
     public void onRefresh() {
         mPresenter.fetchStudent();
+    }
+
+    @OnClick(R.id.rly_online_service)
+    public void onlineAsk() {
+        mPresenter.onlineAsk();
+    }
+
+    @OnClick(R.id.rly_tel_service)
+    public void clickTelContact() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
+            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+        } else {
+            // Android version is lesser than 6.0 or the permission is already granted.
+            contactService();
+        }
+    }
+
+    @OnClick(R.id.rly_FAQ)
+    public void navigateToFAQ() {
+        startActivity(new Intent(getContext(), FAQActivity.class));
+    }
+
+    /**
+     * 联系客服
+     */
+    private void contactService() {
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:4000016006"));
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        startActivity(intent);
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Snackbar.make(mLlyMain, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_CELL_PHONE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                contactService();
+            } else {
+                showMessage("请允许拨打电话权限，不然无法直接拨号联系客服");
+            }
+        }
     }
 }

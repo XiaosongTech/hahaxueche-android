@@ -18,4 +18,6 @@ public interface MyPageView extends HHBaseView {
     void startRefresh();
 
     void stopRefresh();
+
+    void showMessage(String message);
 }
