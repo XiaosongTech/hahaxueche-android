@@ -82,7 +82,6 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
     private static final int PERMISSIONS_REQUEST_SHARE_QQ = 601;
     private static final int PERMISSIONS_REQUEST_SHARE_WX = 602;
     private static final int PERMISSIONS_REQUEST_SHARE_CIRCLE_FRIEND = 603;
-    private String mQrCodeUrl;
     private String mRedirectUrl;
 
     private static final int REQUEST_CODE_WITHDRAW = 0;
@@ -148,7 +147,7 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
         }
         if (mUser != null && mUser.getStudent() != null) {
             mTvWithdrawMoney.setText(Util.getMoney(mUser.getStudent().getBonus_balance()));
-            mQrCodeUrl = HttpEngine.BASE_SERVER_IP + "/share/students/" + mUser.getStudent().getId() + "/image";
+            String mQrCodeUrl = HttpEngine.BASE_SERVER_IP + "/share/students/" + mUser.getStudent().getId() + "/image";
             Log.v("gibxin", "mQrCodeUrl -> " + mQrCodeUrl);
             msPresenter.convertUrl(mQrCodeUrl, new MSCallbackListener<String>() {
                 @Override
@@ -509,18 +508,19 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
     }
 
     private void shareToQQ() {
-        Picasso.with(context).load(mQrCodeUrl).into(QQTarget);
+        if (TextUtils.isEmpty(mRedirectUrl)) return;
+        Picasso.with(context).load(mRedirectUrl).into(QQTarget);
     }
 
     private void shareToQZone() {
-        if(TextUtils.isEmpty(mRedirectUrl)) return;
+        if (TextUtils.isEmpty(mRedirectUrl)) return;
         final ShareListener myListener = new ShareListener();
         final Bundle params = new Bundle();
         params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_APP);
         params.putString(QzoneShare.SHARE_TO_QQ_TITLE, mTitle);
         params.putString(QzoneShare.SHARE_TO_QQ_APP_NAME, "哈哈学车");
         params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, mDescription);
-        params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, mQrCodeUrl);
+        params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, mRedirectUrl);
         ArrayList<String> imgUrlList = new ArrayList<>();
         imgUrlList.add(mRedirectUrl);
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, imgUrlList);
@@ -528,15 +528,18 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
     }
 
     private void shareToWeibo() {
-        Picasso.with(context).load(mQrCodeUrl).into(weiboTarget);
+        if (TextUtils.isEmpty(mRedirectUrl)) return;
+        Picasso.with(context).load(mRedirectUrl).into(weiboTarget);
     }
 
     private void shareToWeixin() {
-        Picasso.with(context).load(mQrCodeUrl).into(wxTarget);
+        if (TextUtils.isEmpty(mRedirectUrl)) return;
+        Picasso.with(context).load(mRedirectUrl).into(wxTarget);
     }
 
     private void shareToFriendCircle() {
-        Picasso.with(context).load(mQrCodeUrl).into(circleFriendsTarget);
+        if (TextUtils.isEmpty(mRedirectUrl)) return;
+        Picasso.with(context).load(mRedirectUrl).into(circleFriendsTarget);
     }
 
     private String buildTransaction(final String type) {
