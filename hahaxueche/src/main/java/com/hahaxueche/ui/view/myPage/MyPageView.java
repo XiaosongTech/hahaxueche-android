@@ -14,4 +14,8 @@ public interface MyPageView extends HHBaseView {
     void loadStudentInfo(Student student);
 
     void finishToStartLogin();
+
+    void startRefresh();
+
+    void stopRefresh();
 }

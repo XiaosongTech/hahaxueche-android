@@ -42,6 +42,36 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         mStudent = null;
     }
 
+    public void fetchStudent() {
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            mMyPageView.startRefresh();
+            HHApiService apiService = application.getApiService();
+            subscription = apiService.getStudent(user.student.id, user.session.access_token)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(application.defaultSubscribeScheduler())
+                    .subscribe(new Subscriber<Student>() {
+                        @Override
+                        public void onCompleted() {
+                            mMyPageView.stopRefresh();
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            mMyPageView.stopRefresh();
+                            HHLog.e(e.getMessage());
+                        }
+
+                        @Override
+                        public void onNext(Student student) {
+                            application.getSharedPrefUtil().updateStudent(student);
+                            mMyPageView.loadStudentInfo(student);
+                        }
+                    });
+        }
+
+    }
+
     public void logOut() {
         HHApiService apiService = application.getApiService();
         String sessionId = application.getSharedPrefUtil().getUser().session.id;

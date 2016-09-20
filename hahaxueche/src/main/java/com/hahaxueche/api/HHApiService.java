@@ -1,5 +1,7 @@
 package com.hahaxueche.api;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.hahaxueche.BuildConfig;
 import com.hahaxueche.model.base.BaseModel;
 import com.hahaxueche.model.base.Constants;
@@ -10,6 +12,8 @@ import com.hahaxueche.util.HHLog;
 
 import java.util.HashMap;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -61,10 +65,18 @@ public interface HHApiService {
     class Factory {
         public static HHApiService create() {
             HHLog.v("baseUrl -> " + baseUrl);
+            OkHttpClient httpClient = new OkHttpClient();
+            if (BuildConfig.DEBUG) {
+                //添加网络请求日志拦截
+                HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+                logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+                httpClient = new OkHttpClient.Builder().addInterceptor(logging).build();
+            }
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                    .client(httpClient)
                     .build();
             return retrofit.create(HHApiService.class);
         }

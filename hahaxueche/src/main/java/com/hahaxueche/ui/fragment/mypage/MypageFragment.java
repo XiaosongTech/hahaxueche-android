@@ -26,7 +26,7 @@ import butterknife.OnClick;
 /**
  * Created by wangshirui on 16/9/13.
  */
-public class MyPageFragment extends HHBaseFragment implements MyPageView {
+public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeRefreshLayout.OnRefreshListener {
     @BindView(R.id.lly_not_login)
     LinearLayout mLlyNotLogin;
     @BindView(R.id.srl_my_page)
@@ -58,6 +58,8 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView {
         View view = inflater.inflate(R.layout.fragment_my_page, container, false);
         ButterKnife.bind(this, view);
         mPresenter.attachView(this);
+        mSrlMyPage.setOnRefreshListener(this);
+        mSrlMyPage.setColorSchemeResources(R.color.app_theme_color);
         return view;
     }
 
@@ -94,8 +96,23 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView {
     }
 
     @Override
+    public void startRefresh() {
+        mSrlMyPage.setRefreshing(true);
+    }
+
+    @Override
+    public void stopRefresh() {
+        mSrlMyPage.setRefreshing(false);
+    }
+
+    @Override
     public void onDestroy() {
         mPresenter.detachView();
         super.onDestroy();
+    }
+
+    @Override
+    public void onRefresh() {
+        mPresenter.fetchStudent();
     }
 }
