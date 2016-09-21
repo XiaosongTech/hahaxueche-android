@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hahaxueche.BuildConfig;
 import com.hahaxueche.model.base.BaseModel;
+import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.user.Student;
 import com.hahaxueche.model.user.User;
@@ -61,6 +62,10 @@ public interface HHApiService {
 
     @DELETE("sessions/{id}")
     Observable<BaseModel> logOut(@Path("id") String sessionId, @Header("X-Access-Token") String accessToken);
+
+    @FormUrlEncoded
+    @POST("sessions/access_token/valid")
+    Observable<BaseValid> isValidToken(@Header("X-Access-Token") String accessToken, @FieldMap HashMap<String, Object> map);
 
     class Factory {
         public static HHApiService create() {

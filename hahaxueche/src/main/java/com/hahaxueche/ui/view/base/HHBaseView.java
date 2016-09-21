@@ -15,4 +15,6 @@ public interface HHBaseView {
     void dismissProgressDialog();
 
     void showError(String message);
+
+    void forceOffline();
 }

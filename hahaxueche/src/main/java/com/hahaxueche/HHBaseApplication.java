@@ -7,6 +7,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.ui.widget.FrescoImageLoader;
+import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.HahaCache;
 import com.hahaxueche.util.SharedPrefUtil;
@@ -15,6 +16,7 @@ import com.qiyukf.unicorn.api.StatusBarNotificationConfig;
 import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFOptions;
 
+import rx.Observable;
 import rx.Scheduler;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -28,6 +30,7 @@ public class HHBaseApplication extends Application {
     private Scheduler defaultSubscribeScheduler;
     private Constants constants;
     private SharedPrefUtil spUtil;
+    private Observable sessionObservable;
 
     public static HHBaseApplication get(Context context) {
         return (HHBaseApplication) context.getApplicationContext();
@@ -45,6 +48,18 @@ public class HHBaseApplication extends Application {
             defaultSubscribeScheduler = Schedulers.io();
         }
         return defaultSubscribeScheduler;
+    }
+
+    public Observable getSessionObservable() {
+        if (sessionObservable == null) {
+            sessionObservable = Observable.create(new Observable.OnSubscribe<Object>() {
+                @Override
+                public void call(Subscriber<? super Object> subscriber) {
+                    subscriber.onError(new Throwable(ErrorUtil.INVALID_SESSION));
+                }
+            });
+        }
+        return sessionObservable;
     }
 
     public Constants getConstants() {

@@ -3,18 +3,24 @@ package com.hahaxueche.presenter.myPage;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseModel;
+import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.user.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.MyPageView;
+import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 import com.qiyukf.unicorn.api.ConsultSource;
 import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFUserInfo;
 
+import java.util.HashMap;
+
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 
 /**
  * Created by wangshirui on 16/9/19.
@@ -69,11 +75,23 @@ public class MyPagePresenter implements Presenter<MyPageView> {
     }
 
     public void fetchStudent() {
-        User user = application.getSharedPrefUtil().getUser();
+        final User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             mMyPageView.startRefresh();
-            HHApiService apiService = application.getApiService();
-            subscription = apiService.getStudent(user.student.id, user.session.access_token)
+            final HHApiService apiService = application.getApiService();
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("cell_phone", user.cell_phone);
+            subscription = apiService.isValidToken(user.session.access_token, map)
+                    .flatMap(new Func1<BaseValid, Observable<Student>>() {
+                        @Override
+                        public Observable<Student> call(BaseValid baseValid) {
+                            if (baseValid.valid) {
+                                return apiService.getStudent(user.student.id, user.session.access_token);
+                            } else {
+                                return application.getSessionObservable();
+                            }
+                        }
+                    })
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(application.defaultSubscribeScheduler())
                     .subscribe(new Subscriber<Student>() {
@@ -85,6 +103,9 @@ public class MyPagePresenter implements Presenter<MyPageView> {
                         @Override
                         public void onError(Throwable e) {
                             mMyPageView.stopRefresh();
+                            if (ErrorUtil.isInvalidSession(e)) {
+                                mMyPageView.forceOffline();
+                            }
                             HHLog.e(e.getMessage());
                         }
 

@@ -1,7 +1,9 @@
 package com.hahaxueche.ui.activity.base;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.hahaxueche.R;
 import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.view.base.HHBaseView;
 import com.hahaxueche.util.HHLog;
@@ -61,6 +64,21 @@ public class HHBaseActivity extends AppCompatActivity implements HHBaseView {
     @Override
     public void showError(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void forceOffline() {
+        //token过期,强制下线
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("提示");
+        builder.setMessage("会话已过期,请重新登录");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        builder.create().show();
     }
 
     // 获取点击事件
