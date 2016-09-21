@@ -58,24 +58,14 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     @BindView(R.id.tv_paid_student_count)
     TextView mTvPaidStudentCount;
 
-    private Constants mConstants;
     private CityChoseDialog mCityChoseDialog;
 
-    public static HomepageFragment newInstance() {
-        HomepageFragment fragment = new HomepageFragment();
-        return fragment;
-    }
-
-    public HomepageFragment() {
-
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = (MainActivity) getActivity();
         mPresenter = new HomepagePresenter();
-        mPresenter.attachView(this);
     }
 
     @Override
@@ -83,21 +73,17 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
         ButterKnife.bind(this, view);
-        mConstants = mPresenter.getConstants();
-        if (mConstants != null) {
-            initBanners();
-        }
-        mPresenter.loadStatistics();
-        mPresenter.loadCityChoseDialog();
+        mPresenter.attachView(this);
         return view;
     }
 
-    private void initBanners() {
+    @Override
+    public void initBanners(ArrayList<Banner> bannerArrayList) {
         int screenWidth = Utils.instence(getContext()).getDm().widthPixels;
         LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(screenWidth, screenWidth / 5 * 2);
         mHomepageBanner.setLayoutParams(p);
         ArrayList<String> networkImages = new ArrayList<>();
-        for (Banner banner : mConstants.new_home_page_banners) {
+        for (Banner banner : bannerArrayList) {
             networkImages.add(banner.image_url);
         }
         mHomepageBanner.setPages(new CBViewHolderCreator<NetworkImageHolderView>() {
@@ -220,10 +206,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
 
     @Override
     public void onItemClick(int i) {
-        if (mConstants == null) return;
-        if (!TextUtils.isEmpty(mConstants.new_home_page_banners.get(i).target_url)) {
-            openWebView(mConstants.new_home_page_banners.get(i).target_url);
-        }
+        mPresenter.bannerClick(i);
     }
 
     @Override

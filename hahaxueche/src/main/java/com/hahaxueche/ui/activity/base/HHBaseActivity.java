@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.hahaxueche.R;
 import com.hahaxueche.ui.activity.ActivityCollector;
+import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.view.base.HHBaseView;
 import com.hahaxueche.util.HHLog;
 
@@ -75,7 +76,10 @@ public class HHBaseActivity extends AppCompatActivity implements HHBaseView {
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                ActivityCollector.finishAll();
+                Intent intent = new Intent(getContext(), StartLoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
         });
         builder.create().show();

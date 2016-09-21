@@ -1,5 +1,9 @@
 package com.hahaxueche.presenter.homepage;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -17,6 +21,7 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.homepage.HomepageView;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.UpdateManager;
 import com.hahaxueche.util.Utils;
 import com.qiyukf.unicorn.api.ConsultSource;
 import com.qiyukf.unicorn.api.Unicorn;
@@ -37,10 +42,16 @@ public class HomepagePresenter implements Presenter<HomepageView> {
     private static final String WEB_URL_FREE_TRY = "http://m.hahaxueche.com/free_trial?promo_code=553353";
 
     private HHBaseApplication application;
+    private Constants constants;
 
     public void attachView(HomepageView view) {
         this.mHomepageView = view;
         application = HHBaseApplication.get(mHomepageView.getContext());
+        constants = application.getConstants();
+        mHomepageView.initBanners(constants.new_home_page_banners);
+        loadStatistics();
+        loadCityChoseDialog();
+        doVersionCheck();
     }
 
     public void detachView() {
@@ -108,7 +119,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         mHomepageView.openWebView(url);
     }
 
-    public void loadStatistics() {
+    private void loadStatistics() {
         Statistics statistics = application.getConstants().statistics;
         int drivingSchoolCount = statistics.driving_school_count * 3;
         String text = "已入驻" + (drivingSchoolCount > 9999 ? (drivingSchoolCount / 1000 * 0.1 + "万") : drivingSchoolCount) + "所";
@@ -145,7 +156,32 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         application.getSharedPrefUtil().setUserCity(cityId);
     }
 
-    public Constants getConstants() {
-        return application.getConstants();
+    public void bannerClick(int i) {
+        try {
+            if (!TextUtils.isEmpty(constants.new_home_page_banners.get(i).target_url)) {
+                mHomepageView.openWebView(constants.new_home_page_banners.get(i).target_url);
+            }
+        } catch (Exception e) {
+            HHLog.e(e.getMessage());
+        }
+    }
+
+    /**
+     * 版本检测
+     */
+    public void doVersionCheck() {
+        PackageManager pm = mHomepageView.getContext().getPackageManager();
+        try {
+            PackageInfo pi = pm.getPackageInfo(mHomepageView.getContext().getPackageName(), 0);
+            int versioncode = pi.versionCode;
+            Constants constants = application.getConstants();
+            if (constants.version_code > versioncode) {
+                //有版本更新时
+                UpdateManager updateManager = new UpdateManager(mHomepageView.getContext());
+                updateManager.checkUpdateInfo();
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

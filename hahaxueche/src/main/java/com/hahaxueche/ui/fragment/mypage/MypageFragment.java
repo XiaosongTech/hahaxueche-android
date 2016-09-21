@@ -22,6 +22,7 @@ import com.hahaxueche.presenter.myPage.MyPagePresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.activity.myPage.FAQActivity;
+import com.hahaxueche.ui.activity.myPage.SoftwareInfoActivity;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.myPage.MyPageView;
 import com.hahaxueche.util.Utils;
@@ -159,6 +160,11 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
         Uri uri = Uri.parse(URL_APP_STORE);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
+    }
+
+    @OnClick(R.id.rly_software_info)
+    public void navigateToSoftwareInfo() {
+        startActivity(new Intent(getContext(), SoftwareInfoActivity.class));
     }
 
     /**
