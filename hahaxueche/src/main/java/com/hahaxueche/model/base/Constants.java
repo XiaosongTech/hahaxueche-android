@@ -20,4 +20,15 @@ public class Constants {
     public int version_code;
     public ArrayList<Bank> banks;
     public Statistics statistics;
+
+    public City getMyCity(int cityId) {
+        City myCity = cities.get(0);
+        for (City city : cities) {
+            if (city.id == cityId) {
+                myCity = city;
+                break;
+            }
+        }
+        return myCity;
+    }
 }
