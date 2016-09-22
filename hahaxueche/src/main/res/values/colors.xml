@@ -13,4 +13,5 @@
     <color name="haha_blue_text">#71e0ff</color>
     <color name="haha_red_text">#ff9971</color>
     <color name="haha_white_light">#ccffffff</color>
+    <color name="title_color">#333333</color>
 </resources>

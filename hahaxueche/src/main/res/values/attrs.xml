@@ -6,4 +6,8 @@
         <attr name="border_overlay" format="boolean" />
         <attr name="radiu" format="dimension" />
     </declare-styleable>
+    <declare-styleable name="XListView">
+        <attr name="loadMoreTxt" format="string" />
+        <attr name="noMoreTxt" format="string" />
+    </declare-styleable>
 </resources>

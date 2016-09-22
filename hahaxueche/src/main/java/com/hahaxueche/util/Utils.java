@@ -97,6 +97,11 @@ public class Utils {
         return dfInt.format(price / 100.0) + "元";
     }
 
+    public static String getCount(int count) {
+        DecimalFormat dfInt = new DecimalFormat("#####.#");
+        return count > 9999 ? (dfInt.format(count / 10000.0) + "万") : String.valueOf(count);
+    }
+
     public static String getDateFromUTC(String UTCTime) {
         String localTimeStr = null;
         DateFormat UTCformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

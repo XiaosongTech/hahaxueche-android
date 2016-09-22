@@ -7,30 +7,84 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hahaxueche.R;
+import com.hahaxueche.model.community.News;
+import com.hahaxueche.presenter.community.CommunityPresenter;
+import com.hahaxueche.ui.activity.base.MainActivity;
+import com.hahaxueche.ui.adapter.community.NewsAdapter;
+import com.hahaxueche.ui.fragment.HHBaseFragment;
+import com.hahaxueche.ui.view.community.CommunityView;
+import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
+
+import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by wangshirui on 16/9/13.
  */
-public class CommunityFragment extends Fragment {
-    public static CommunityFragment newInstance() {
-        CommunityFragment fragment = new CommunityFragment();
-        return fragment;
-    }
-
-    public CommunityFragment() {
-
-    }
+public class CommunityFragment extends HHBaseFragment implements CommunityView, XListView.IXListViewListener {
+    private CommunityPresenter mPresenter;
+    private MainActivity mActivity;
+    @BindView(R.id.xlv_news)
+    XListView mXlvNews;
+    private NewsAdapter mNewsAdapter;
+    private ArrayList<News> mNewsArrayList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mActivity = (MainActivity) getActivity();
+        mPresenter = new CommunityPresenter();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_community, container, false);
-        //TextView tv = (TextView)view.findViewById(R.id.tv_location);
+        ButterKnife.bind(this, view);
+        mPresenter.attachView(this);
+        mXlvNews.setPullRefreshEnable(true);
+        mXlvNews.setPullLoadEnable(true);
+        mXlvNews.setAutoLoadEnable(true);
+        mXlvNews.setXListViewListener(this);
+        mPresenter.fetchNews();
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        mPresenter.detachView();
+        super.onDestroy();
+    }
+
+    @Override
+    public void setPullLoadEnable(boolean enable) {
+        mXlvNews.setPullLoadEnable(enable);
+    }
+
+    @Override
+    public void refreshNewsList(ArrayList<News> newsArrayList) {
+        mNewsArrayList = newsArrayList;
+        mNewsAdapter = new NewsAdapter(getContext(), mNewsArrayList);
+        mXlvNews.setAdapter(mNewsAdapter);
+        mXlvNews.stopRefresh();
+        mXlvNews.stopLoadMore();
+    }
+
+    @Override
+    public void addMoreNewsList(ArrayList<News> newsArrayList) {
+        mNewsArrayList.addAll(newsArrayList);
+        mNewsAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onRefresh() {
+        mPresenter.fetchNews();
+    }
+
+    @Override
+    public void onLoadMore() {
+        mPresenter.loadMoreNews();
     }
 }
