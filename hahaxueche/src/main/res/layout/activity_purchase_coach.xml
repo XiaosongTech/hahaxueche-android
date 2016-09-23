@@ -360,37 +360,31 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/haha_white"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:textSize="16sp"
+                    android:text="支付方式" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/haha_gray_light" />
+
                 <ListView
                     android:id="@+id/lv_payment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:divider="@drawable/layer_list_divider_all"
                     android:dividerHeight="0.5dp"
                     android:footerDividersEnabled="false"
                     android:headerDividersEnabled="false"></ListView>
 
-                <RelativeLayout
-                    android:id="@+id/rly_more_payment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/haha_white">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="@color/fCViewGray" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginTop="10dp"
-                        android:drawablePadding="8dp"
-                        android:drawableRight="@drawable/ic_pull_down"
-                        android:text="@string/morePaymentMethod" />
-                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/tv_sure_pay"

@@ -81,7 +81,6 @@ public class PurchaseCoachActivity extends FCBaseActivity {
     private TextView mTvVIPPrice;//VIP班价格
     private TextView mTvOldVIPPrice;//原来的VIP价格
     private TextView mTvVIPPriceDetail;//VIP班价格明细
-    private RelativeLayout mRlyMorePayment;//更多支付方式
     private TextView mTvApplaudCount;
     private TextView mTvTrainSchool;
     private LinearLayout mLlyTrainSchool;
@@ -135,7 +134,6 @@ public class PurchaseCoachActivity extends FCBaseActivity {
         mTvVIPPrice = Util.instence(this).$(this, R.id.tv_vip_price);
         mTvOldVIPPrice = Util.instence(this).$(this, R.id.tv_old_vip_price);
         mTvVIPPriceDetail = Util.instence(this).$(this, R.id.tv_vip_price_detail);
-        mRlyMorePayment = Util.instence(this).$(this, R.id.rly_more_payment);
         mTvApplaudCount = Util.instence(this).$(this, R.id.tv_applaud_count);
         mTvTrainSchool = Util.instence(this).$(this, R.id.tv_train_school);
         mLlyTrainSchool = Util.instence(this).$(this, R.id.lly_train_school);
@@ -251,7 +249,6 @@ public class PurchaseCoachActivity extends FCBaseActivity {
         mTvVIPPriceDetail.setOnClickListener(mClickListener);
         mIvSelectNormal.setOnClickListener(mClickListener);
         mIvSelectVIP.setOnClickListener(mClickListener);
-        mRlyMorePayment.setOnClickListener(mClickListener);
         mRlyNormalPrice.setOnClickListener(mClickListener);
         mRlyVIPPrice.setOnClickListener(mClickListener);
     }
@@ -301,9 +298,6 @@ public class PurchaseCoachActivity extends FCBaseActivity {
                 case R.id.rly_vip_price:
                     selectClass(1);
                     break;
-                case R.id.rly_more_payment:
-                    //更多支付方式
-                    loadMorePaymentMethod();
                 default:
                     break;
             }
@@ -327,7 +321,7 @@ public class PurchaseCoachActivity extends FCBaseActivity {
         //method:0 是alipay 1 是分期乐
         for (Payment payment : mPaymentList) {
             if (payment.isSelect()) {
-                method = String.valueOf(mPaymentList.indexOf(payment));
+                method = String.valueOf(payment.getMethod());
             }
         }
         if (pd != null) {
@@ -358,21 +352,23 @@ public class PurchaseCoachActivity extends FCBaseActivity {
 
     private void loadPaymentMethod() {
         mPaymentList = new ArrayList<>();
-        Payment alipay = new Payment(R.drawable.ic_alipay_icon, "支付宝", "推荐有支付宝账号的用户使用", true, true);
-        Payment fqlpay = new Payment(R.drawable.logo_fenqile, "分期乐", "推荐分期使用", false, true);
+        Payment alipay = new Payment(R.drawable.ic_alipay_icon, "支付宝", "推荐有支付宝账号的用户使用", true, true, 0);
+        Payment fqlpay = new Payment(R.drawable.logo_fenqile, "分期乐", "推荐分期使用", false, true, 1);
+        Payment cardPay = new Payment(R.drawable.ic_cardpay_icon, "银行卡支付", "安全极速支付,无需开通网银", false, true, 4);
         mPaymentList.add(alipay);
         mPaymentList.add(fqlpay);
+        mPaymentList.add(cardPay);
     }
 
-    private void loadMorePaymentMethod() {
-        Payment wxpay = new Payment(R.drawable.ic_wechatpay_icon, "微信支付", "", false, false);
-        Payment cardPay = new Payment(R.drawable.ic_cardpay_icon, "银行卡支付", "推荐有支付宝账号的用户使用", false, false);
-        mPaymentList.add(wxpay);
-        mPaymentList.add(cardPay);
-        mRlyMorePayment.setVisibility(View.GONE);
-        mPaymentAdapter.notifyDataSetChanged();
-        setListViewHeightBasedOnChildren(mLvPayment);
-    }
+//    private void loadMorePaymentMethod() {
+//        Payment wxpay = new Payment(R.drawable.ic_wechatpay_icon, "微信支付", "", false, false);
+//        Payment cardPay = new Payment(R.drawable.ic_cardpay_icon, "银行卡支付", "推荐有支付宝账号的用户使用", false, false);
+//        mPaymentList.add(wxpay);
+//        mPaymentList.add(cardPay);
+//        mRlyMorePayment.setVisibility(View.GONE);
+//        mPaymentAdapter.notifyDataSetChanged();
+//        setListViewHeightBasedOnChildren(mLvPayment);
+//    }
 
     public void setListViewHeightBasedOnChildren(ListView listView) {
         // 获取ListView对应的Adapter

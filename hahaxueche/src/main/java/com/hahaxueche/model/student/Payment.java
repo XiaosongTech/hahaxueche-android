@@ -5,12 +5,13 @@ package com.hahaxueche.model.student;
  * Created by Administrator on 2016/5/27.
  */
 public class Payment {
-    public Payment(int drawableLogo, String name, String remarks, boolean isSelect, boolean isActive) {
+    public Payment(int drawableLogo, String name, String remarks, boolean isSelect, boolean isActive, int method) {
         this.drawableLogo = drawableLogo;
         this.name = name;
         this.remarks = remarks;
         this.isSelect = isSelect;
         this.isActive = isActive;
+        this.method = method;
     }
 
     /**
@@ -33,6 +34,7 @@ public class Payment {
      * 是否可用
      */
     private boolean isActive;
+    private int method;
 
     public int getDrawableLogo() {
         return drawableLogo;
@@ -72,5 +74,13 @@ public class Payment {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public int getMethod() {
+        return method;
+    }
+
+    public void setMethod(int method) {
+        this.method = method;
     }
 }

@@ -24,7 +24,7 @@
         android:layout_toRightOf="@id/iv_payment_logo"
         android:text="@string/alipay"
         android:textColor="@color/haha_black_light"
-        android:textSize="20sp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/tv_payment_remarks"
@@ -33,7 +33,7 @@
         android:layout_alignLeft="@id/tv_payment_name"
         android:layout_below="@id/tv_payment_name"
         android:layout_marginBottom="15dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:text="@string/alipayTips"
         android:textColor="@color/haha_gray_heavy"
         android:textSize="12sp" />
