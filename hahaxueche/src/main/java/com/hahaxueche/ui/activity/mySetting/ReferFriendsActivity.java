@@ -1,8 +1,10 @@
 package com.hahaxueche.ui.activity.mySetting;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -79,6 +81,7 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
     private City myCity;
     private User mUser;
     private ImageView mIvRefer;
+    private static final int PERMISSIONS_REQUEST_SAVE_LOCAL = 60;
     private static final int PERMISSIONS_REQUEST_SHARE_QQ = 601;
     private static final int PERMISSIONS_REQUEST_SHARE_WX = 602;
     private static final int PERMISSIONS_REQUEST_SHARE_CIRCLE_FRIEND = 603;
@@ -133,6 +136,13 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
         mIbtnBack.setOnClickListener(mClickListener);
         mTvShareQrCode.setOnClickListener(mClickListener);
         mTvWithdrawMoney.setOnClickListener(mClickListener);
+        mIvQrCode.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                showSaveImageDialog();
+                return true;
+            }
+        });
     }
 
     private void loadDatas() {
@@ -208,6 +218,13 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
                 shareToFriendCircle();
             } else {
                 Toast.makeText(this, "请允许写入sdcard权限，不然从本地将图片分享到朋友圈", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == PERMISSIONS_REQUEST_SAVE_LOCAL) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                saveImg();
+            } else {
+                Toast.makeText(this, "请允许写入sdcard权限，无法将图片保存到本地", Toast.LENGTH_SHORT).show();
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -613,4 +630,89 @@ public class ReferFriendsActivity extends MSBaseActivity implements IWeiboHandle
         }
         shareAppDialog.show();
     }
+
+    /**
+     * 提示是否保存到本地
+     */
+    private void showSaveImageDialog() {
+        if (TextUtils.isEmpty(mRedirectUrl)) return;
+        AlertDialog.Builder builder = new AlertDialog.Builder(ReferFriendsActivity.this);
+        builder.setTitle("提示");
+        builder.setMessage("是否保存到本地?");
+        builder.setPositiveButton("保存本地", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_SAVE_LOCAL);
+                    //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+                } else {
+                    // Android version is lesser than 6.0 or the permission is already granted.
+                    saveImg();
+                }
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
+
+    private void saveImg() {
+        Picasso.with(context).load(mRedirectUrl).into(localImgTarget);
+    }
+
+    Target localImgTarget = new Target() {
+
+        @Override
+        public void onPrepareLoad(Drawable arg0) {
+            pd = ProgressDialog.show(ReferFriendsActivity.this, null, "图片保存传中，请稍后……");
+        }
+
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom arg1) {
+            // 首先保存图片
+            File appDir = new File(Environment.getExternalStorageDirectory(), "hahaxueche");
+            if (!appDir.exists()) {
+                appDir.mkdir();
+            }
+            String fileName = "qrcode.jpg";
+            File file = new File(appDir, fileName);
+            try {
+                FileOutputStream fos = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                fos.flush();
+                fos.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // 其次把文件插入到系统图库
+            try {
+                MediaStore.Images.Media.insertImage(context.getContentResolver(),
+                        file.getAbsolutePath(), fileName, null);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            // 最后通知图库更新
+            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File("/sdcard/hahaxueche/qrcode.jpg"))));
+            if (pd != null) {
+                pd.dismiss();
+            }
+            Toast.makeText(context, "图片保存成功", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onBitmapFailed(Drawable arg0) {
+            if (pd != null) {
+                pd.dismiss();
+            }
+            Toast.makeText(context, "图片保存失败", Toast.LENGTH_SHORT).show();
+        }
+    };
 }
