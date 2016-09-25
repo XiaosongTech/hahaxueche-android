@@ -1,5 +1,7 @@
 package com.hahaxueche.presenter.myPage;
 
+import android.text.TextUtils;
+
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseModel;
@@ -10,12 +12,17 @@ import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.MyPageView;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.PhotoUtil;
 import com.qiyukf.unicorn.api.ConsultSource;
 import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFUserInfo;
 
+import java.io.File;
 import java.util.HashMap;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -26,6 +33,7 @@ import rx.functions.Func1;
  * Created by wangshirui on 16/9/19.
  */
 public class MyPagePresenter implements Presenter<MyPageView> {
+    private static final MediaType MULTIPART_FORM_DATA = MediaType.parse("multipart/form-data; boundary=__X_PAW_BOUNDARY__");
     private MyPageView mMyPageView;
     private Subscription subscription;
     private HHBaseApplication application;
@@ -144,4 +152,39 @@ public class MyPagePresenter implements Presenter<MyPageView> {
                     }
                 });
     }
+
+    public void uploadAvatar() {
+        HHApiService apiService = application.getApiService();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin()) return;
+        String filePath = PhotoUtil.IMGPATH + "/" + PhotoUtil.IMAGE_FILE_NAME;
+        if (TextUtils.isEmpty(filePath)) {
+
+            return;
+        }
+        File file = new File(filePath);
+        String fileName = filePath.split("/")[filePath.split("/").length - 1];
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file", fileName, RequestBody.create(MULTIPART_FORM_DATA, file));
+        apiService.uploadAvatar(user.student.id, user.session.access_token, body).observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<Student>() {
+                    @Override
+                    public void onCompleted() {
+                        mMyPageView.showMessage("头像修改成功");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(Student student) {
+                        application.getSharedPrefUtil().updateStudent(student);
+                        mMyPageView.loadStudentInfo(student);
+                    }
+                });
+
+    }
+
 }

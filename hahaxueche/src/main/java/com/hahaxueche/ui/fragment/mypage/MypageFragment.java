@@ -3,6 +3,7 @@ package com.hahaxueche.ui.fragment.myPage;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,13 +25,20 @@ import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.activity.myPage.FAQActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.activity.myPage.SoftwareInfoActivity;
+import com.hahaxueche.ui.dialog.AvatarDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.myPage.MyPageView;
+import com.hahaxueche.util.PhotoUtil;
 import com.hahaxueche.util.Utils;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by wangshirui on 16/9/13.
@@ -55,15 +63,19 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
 
     private MyPagePresenter mPresenter;
     private MainActivity mActivity;
+    private static final int PERMISSIONS_REQUEST_SDCARD = 600;
     private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
     private static final String WEB_URL_ABOUT_HAHA = "http://staging.hahaxueche.net/#/student";
     private static final String URL_APP_STORE = "http://a.app.qq.com/o/simple.jsp?pkgname=com.hahaxueche";
+    private PhotoUtil mPhotoUtil;
+    private String mAlbumPicturePath = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = (MainActivity) getActivity();
         mPresenter = new MyPagePresenter();
+        mPhotoUtil = new PhotoUtil(this);
     }
 
     @Override
@@ -173,6 +185,21 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
         startActivity(new Intent(getContext(), ReferFriendsActivity.class));
     }
 
+    @OnClick(R.id.iv_my_avatar)
+    public void clickAvatar() {
+        // Check the SDK version and whether the permission is already granted or not.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                (mActivity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                        || mActivity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                        || mActivity.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, PERMISSIONS_REQUEST_SDCARD);
+            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+        } else {
+            // Android version is lesser than 6.0 or the permission is already granted.
+            showAvatarDialog();
+        }
+    }
+
     /**
      * 联系客服
      */
@@ -198,6 +225,74 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
             } else {
                 showMessage("请允许拨打电话权限，不然无法直接拨号联系客服");
             }
+        } else if (requestCode == PERMISSIONS_REQUEST_SDCARD) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                showAvatarDialog();
+            } else {
+                showMessage("请允许读写sdcard权限，不然我们无法完成头像采集操作");
+            }
         }
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PhotoUtil.SELECT_A_PICTURE) {
+            if (resultCode == RESULT_OK && null != data) {
+                //4.4以下的;
+                Bitmap bitmap = mPhotoUtil.decodeUriAsBitmap(Uri.fromFile(new File(PhotoUtil.IMGPATH,
+                        PhotoUtil.TMP_IMAGE_FILE_NAME)));
+            } else if (resultCode == RESULT_CANCELED) {
+                showMessage("取消头像设置");
+            }
+        } else if (requestCode == PhotoUtil.SELECET_A_PICTURE_AFTER_KIKAT) {
+            if (resultCode == RESULT_OK && null != data) {
+                cropImageUriAfterKikat(data);
+            } else if (resultCode == RESULT_CANCELED) {
+                showMessage("取消头像设置");
+            }
+        } else if (requestCode == PhotoUtil.SET_ALBUM_PICTURE_KITKAT) {
+            if (resultCode == RESULT_OK && null != data) {
+                //Bitmap bitmap = mPhotoUtil.decodeUriAsBitmap(Uri.fromFile(new File(PhotoUtil.IMGPATH,
+                //        PhotoUtil.TMP_IMAGE_FILE_NAME)));
+                mPresenter.uploadAvatar();
+            } else if (resultCode == RESULT_CANCELED) {
+                showMessage("取消头像设置");
+            }
+        } else if (requestCode == PhotoUtil.TAKE_A_PICTURE) {
+            if (resultCode == RESULT_OK) {
+                mPhotoUtil.cameraCropImageUri(Uri.fromFile(new File(PhotoUtil.IMGPATH, PhotoUtil.IMAGE_FILE_NAME)),
+                        Utils.instence(getContext()).dip2px(AvatarDialog.output_X),
+                        Utils.instence(getContext()).dip2px(AvatarDialog.output_Y));
+            } else {
+                showMessage("取消头像设置");
+            }
+        } else if (requestCode == PhotoUtil.SET_PICTURE) {
+            //拍照的设置头像  不考虑版本
+            Bitmap bitmap = null;
+            if (resultCode == RESULT_OK && null != data) {
+                if (mPhotoUtil.uritempFile != null) {
+                    mPresenter.uploadAvatar();
+                }
+            } else if (resultCode == RESULT_CANCELED) {
+                showMessage("取消头像设置");
+            } else {
+                showMessage("设置头像失败");
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void cropImageUriAfterKikat(Intent data) {
+        mAlbumPicturePath = mPhotoUtil.getPath(getContext(), data.getData());
+        mPhotoUtil.cropImageUriAfterKikat(Uri.fromFile(new File(mAlbumPicturePath)),
+                Utils.instence(getContext()).dip2px(AvatarDialog.output_X),
+                Utils.instence(getContext()).dip2px(AvatarDialog.output_Y));
+    }
+
+    private void showAvatarDialog() {
+        AvatarDialog dialog = new AvatarDialog(this);
+        dialog.show();
     }
 }
