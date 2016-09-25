@@ -32,7 +32,7 @@
         </FrameLayout>
 
         <View
-            android:layout_width="0.3dp"
+            android:layout_width="@dimen/dividerWidth"
             android:layout_height="match_parent"
             android:background="@color/haha_gray_divider" />
 
@@ -60,7 +60,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.3dp"
+        android:layout_height="@dimen/dividerWidth"
         android:background="@color/haha_gray_divider" />
 
     <LinearLayout
@@ -90,7 +90,7 @@
         </FrameLayout>
 
         <View
-            android:layout_width="0.3dp"
+            android:layout_width="@dimen/dividerWidth"
             android:layout_height="match_parent"
             android:background="@color/haha_gray_divider" />
 

@@ -1,14 +1,17 @@
 package com.hahaxueche.ui.fragment.community;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.community.News;
 import com.hahaxueche.presenter.community.CommunityPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
+import com.hahaxueche.ui.activity.community.ArticleActivity;
 import com.hahaxueche.ui.adapter.community.NewsAdapter;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.community.CommunityView;
@@ -22,7 +25,7 @@ import butterknife.ButterKnife;
 /**
  * Created by wangshirui on 16/9/13.
  */
-public class CommunityFragment extends HHBaseFragment implements CommunityView, XListView.IXListViewListener {
+public class CommunityFragment extends HHBaseFragment implements CommunityView, XListView.IXListViewListener, AdapterView.OnItemClickListener {
     private CommunityPresenter mPresenter;
     private MainActivity mActivity;
     @BindView(R.id.xlv_news)
@@ -47,6 +50,7 @@ public class CommunityFragment extends HHBaseFragment implements CommunityView, 
         mXlvNews.setPullLoadEnable(true);
         mXlvNews.setAutoLoadEnable(true);
         mXlvNews.setXListViewListener(this);
+        mXlvNews.setOnItemClickListener(this);
         mPresenter.fetchNews();
         return view;
     }
@@ -85,5 +89,11 @@ public class CommunityFragment extends HHBaseFragment implements CommunityView, 
     @Override
     public void onLoadMore() {
         mPresenter.loadMoreNews();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(getContext(), ArticleActivity.class);
+        startActivity(intent);
     }
 }
