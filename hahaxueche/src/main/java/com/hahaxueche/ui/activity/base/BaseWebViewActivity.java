@@ -317,7 +317,7 @@ public class BaseWebViewActivity extends HHBaseActivity {
 //
 //    private void showShareAppDialog() {
 //        if (shareAppDialog == null) {
-//            shareAppDialog = new ShareAppDialog(BaseWebViewActivity.this, new ShareAppDialog.OnShareListener() {
+//            shareAppDialog = new ShareDialog(BaseWebViewActivity.this, new ShareDialog.OnShareListener() {
 //                @Override
 //                public void onShare(int shareType) {
 //                    share(shareType);

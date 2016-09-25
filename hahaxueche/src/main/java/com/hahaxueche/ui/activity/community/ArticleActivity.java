@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.hahaxueche.R;
 import com.hahaxueche.presenter.community.ArticlePresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
+import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.dialog.community.CommentDialog;
 import com.hahaxueche.ui.view.community.ArticleView;
 
@@ -26,6 +27,7 @@ public class ArticleActivity extends HHBaseActivity implements ArticleView {
     @BindView(R.id.tv_publish_comment)
     TextView mTvPublishComment;
     private CommentDialog commentDialog;
+    private ShareDialog shareDialog;
     private ArticlePresenter mPresenter;
 
     @Override
@@ -50,10 +52,18 @@ public class ArticleActivity extends HHBaseActivity implements ArticleView {
                 ArticleActivity.this.finish();
             }
         });
-        mIvShare.setOnLongClickListener(new View.OnLongClickListener() {
+        mIvShare.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View v) {
-                return false;
+            public void onClick(View v) {
+                if (shareDialog == null) {
+                    shareDialog = new ShareDialog(getContext(), new ShareDialog.OnShareListener() {
+                        @Override
+                        public void onShare(int shareType) {
+
+                        }
+                    });
+                }
+                shareDialog.show();
             }
         });
     }
@@ -61,6 +71,8 @@ public class ArticleActivity extends HHBaseActivity implements ArticleView {
     @Override
     protected void onDestroy() {
         mPresenter.detachView();
+        commentDialog = null;
+        shareDialog = null;
         super.onDestroy();
     }
 

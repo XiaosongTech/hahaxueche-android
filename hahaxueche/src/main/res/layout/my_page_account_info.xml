@@ -37,7 +37,7 @@
     </RelativeLayout>
 
     <View
-        android:layout_width="@dimen/dividerWidth"
+        android:layout_width="@dimen/divider_width"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:background="@color/haha_gray_divider" />
