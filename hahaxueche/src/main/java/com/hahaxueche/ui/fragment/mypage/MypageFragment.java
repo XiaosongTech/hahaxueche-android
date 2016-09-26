@@ -163,10 +163,6 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
         startActivity(new Intent(getContext(), FAQActivity.class));
     }
 
-    @OnClick(R.id.rly_about_haha)
-    public void navigateToAboutHaha() {
-        mActivity.openWebView(WEB_URL_ABOUT_HAHA);
-    }
 
     @OnClick(R.id.rly_support_haha)
     public void supportHaha() {
