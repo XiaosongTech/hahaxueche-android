@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!--strings-->
     <string name="mSMyPage">我的页面</string>
     <string name="mSCustomerRemainMoney">客户余额</string>

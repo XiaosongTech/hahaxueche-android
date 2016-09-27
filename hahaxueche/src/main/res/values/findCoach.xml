@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!--string-->
     <string name="fCEnterWantedCoachName">请输入你想选择的教练名字</string>
     <string name="fCFilter">筛选</string>
