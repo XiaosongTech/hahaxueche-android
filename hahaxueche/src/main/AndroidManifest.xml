@@ -307,6 +307,10 @@
         </receiver>
         <!--定时receiver-->
         <receiver android:name=".receiver.AlarmReceiver" />
+        <service android:name="cmb.pb.cmbsafe.CmbService" android:exported="false"/>
+        <activity
+            android:name="cmb.pb.ui.PBKeyboardActivity"
+            android:theme="@style/CmbDialogStyleBottom" />
     </application>
 
 </manifest>
