@@ -20,5 +20,5 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
         android:padding="5dp"
-        android:src="@drawable/icon_share" />
+        android:src="@drawable/ic_mycoach_sharecoach" />
 </RelativeLayout>

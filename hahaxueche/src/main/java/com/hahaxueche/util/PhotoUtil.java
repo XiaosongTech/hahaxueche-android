@@ -1,8 +1,6 @@
 package com.hahaxueche.util;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.Fragment;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
