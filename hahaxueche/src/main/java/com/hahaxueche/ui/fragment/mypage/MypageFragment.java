@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
+import com.hahaxueche.model.user.Consultant;
 import com.hahaxueche.model.user.Student;
 import com.hahaxueche.presenter.myPage.MyPagePresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
@@ -26,6 +27,7 @@ import com.hahaxueche.ui.activity.myPage.FAQActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.activity.myPage.SoftwareInfoActivity;
 import com.hahaxueche.ui.dialog.AvatarDialog;
+import com.hahaxueche.ui.dialog.community.MyConsultantDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.myPage.MyPageView;
 import com.hahaxueche.util.PhotoUtil;
@@ -69,6 +71,7 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     private static final String URL_APP_STORE = "http://a.app.qq.com/o/simple.jsp?pkgname=com.hahaxueche";
     private PhotoUtil mPhotoUtil;
     private String mAlbumPicturePath = null;
+    private MyConsultantDialog mConsultantDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -147,15 +150,28 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
         mPresenter.onlineAsk();
     }
 
-    @OnClick(R.id.rly_tel_service)
-    public void clickTelContact() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
-            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
-        } else {
-            // Android version is lesser than 6.0 or the permission is already granted.
-            contactService();
+    @OnClick(R.id.rly_my_consultant)
+    public void clickMyConsultant() {
+        if (mConsultantDialog == null) {
+            Consultant consultant = new Consultant();
+            consultant.name = "余寒";
+            consultant.description = "\"自打入宫以来,就独得学员恩宠\"";
+            consultant.avatar = "http://haha-production.oss-cn-hangzhou.aliyuncs.com/uploads/coach/avatar/c4aa92c9-5e2b-41ca-9ed8-b21d752338a3/15902721430ava.JPG";
+            mConsultantDialog = new MyConsultantDialog(getContext(), consultant, new MyConsultantDialog.onMyConsultantListener() {
+                @Override
+                public boolean call() {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
+                        //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+                    } else {
+                        // Android version is lesser than 6.0 or the permission is already granted.
+                        callMyConsultant();
+                    }
+                    return true;
+                }
+            });
         }
+        mConsultantDialog.show();
     }
 
     @OnClick(R.id.rly_FAQ)
@@ -199,7 +215,7 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     /**
      * 联系客服
      */
-    private void contactService() {
+    private void callMyConsultant() {
         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:4000016006"));
         if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -217,7 +233,7 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
         if (requestCode == PERMISSIONS_REQUEST_CELL_PHONE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
-                contactService();
+                callMyConsultant();
             } else {
                 showMessage("请允许拨打电话权限，不然无法直接拨号联系客服");
             }

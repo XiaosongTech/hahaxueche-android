@@ -27,7 +27,7 @@
         android:background="@color/haha_gray_divider" />
 
     <RelativeLayout
-        android:id="@+id/rly_tel_service"
+        android:id="@+id/rly_my_consultant"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="15dp"
