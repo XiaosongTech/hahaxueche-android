@@ -1,67 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/haha_white"
     android:layout_marginBottom="10dp"
+    android:background="@color/haha_white"
     android:orientation="vertical">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <FrameLayout
-            android:id="@+id/fly_about_xiaoha"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:drawableLeft="@drawable/ic_homepage_haha"
-                android:drawablePadding="20dp"
-                android:gravity="center"
-                android:text="关于小哈"
-                android:textColor="@color/haha_gray_dark"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-        </FrameLayout>
-
-        <View
-            android:layout_width="@dimen/divider_width"
-            android:layout_height="match_parent"
-            android:background="@color/haha_gray_divider" />
-
-        <FrameLayout
-            android:id="@+id/fly_about_coach"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:drawableLeft="@drawable/ic_homepage_coach"
-                android:drawablePadding="20dp"
-                android:gravity="center"
-                android:text="关于教练"
-                android:textColor="@color/haha_gray_dark"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-        </FrameLayout>
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_width"
-        android:background="@color/haha_gray_divider" />
 
     <LinearLayout
         android:layout_width="match_parent"

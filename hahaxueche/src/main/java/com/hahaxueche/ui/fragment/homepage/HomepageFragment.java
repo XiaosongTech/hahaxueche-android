@@ -97,17 +97,6 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         mHomepageBanner.notifyDataSetChanged();
     }
 
-
-    @OnClick(R.id.fly_about_xiaoha)
-    public void openAboutHaha() {
-        mPresenter.openAboutHaha();
-    }
-
-    @OnClick(R.id.fly_about_coach)
-    public void openAboutCoach() {
-        mPresenter.openAboutCoach();
-    }
-
     @OnClick(R.id.fly_my_strength)
     public void openMyStrengths() {
         mPresenter.openMyStrengths();

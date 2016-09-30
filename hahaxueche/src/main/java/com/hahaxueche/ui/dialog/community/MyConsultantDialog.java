@@ -67,7 +67,7 @@ public class MyConsultantDialog {
     }
 
     private void loadDatas() {
-        mTvName.setText("嗨! 我是你的专属学车顾问 " + mConsultant.name);
+        mTvName.setText("嗨, 我是" + mConsultant.name + ", 您的专属学车顾问!");
         mIvAvatar.setImageURI(mConsultant.avatar);
         mTvDescription.setText(mConsultant.description);
     }
