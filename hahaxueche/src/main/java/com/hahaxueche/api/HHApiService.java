@@ -33,6 +33,7 @@ import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 import rx.Observable;
 
 /**
@@ -86,7 +87,7 @@ public interface HHApiService {
                                              @Query("student_id") String studentId);
 
     @GET
-    Observable<CoachResponseList> getCoaches();
+    Observable<CoachResponseList> getCoaches(@Url String path);
 
     class Factory {
         public static HHApiService create() {
@@ -100,24 +101,6 @@ public interface HHApiService {
             }
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                    .client(httpClient)
-                    .build();
-            return retrofit.create(HHApiService.class);
-        }
-
-        public static HHApiService create(String url) {
-            HHLog.v("baseUrl -> " + url);
-            OkHttpClient httpClient = new OkHttpClient();
-            if (BuildConfig.DEBUG) {
-                //添加网络请求日志拦截
-                HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-                logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-                httpClient = new OkHttpClient.Builder().addInterceptor(logging).build();
-            }
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(url)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .client(httpClient)

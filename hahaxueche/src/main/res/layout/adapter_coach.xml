@@ -14,7 +14,8 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_margin="20dp"
-            fresco:placeholderImage="@drawable/ic_coach_ava" />
+            fresco:placeholderImage="@drawable/ic_coach_ava"
+            fresco:roundAsCircle="true" />
 
         <RelativeLayout
             android:id="@+id/rly_first_line"

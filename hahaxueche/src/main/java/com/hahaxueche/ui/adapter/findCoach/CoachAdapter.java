@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -39,6 +40,7 @@ public class CoachAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<Coach> mCoachList;
     private HHBaseApplication application;
+    private LayoutInflater inflator;
 
     public CoachAdapter(Context context, ArrayList<Coach> coachList) {
         inflater = LayoutInflater.from(context);
@@ -64,14 +66,31 @@ public class CoachAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final CoachAdapter.ViewHolder holder;
-
-        if (convertView != null) {
-            holder = (CoachAdapter.ViewHolder) convertView.getTag();
+        View view = convertView;
+        final ViewHolder holder;
+        if (view == null) {
+            inflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = inflator.inflate(R.layout.adapter_coach, null);
+            holder = new ViewHolder();
+            holder.tvCoachName = ButterKnife.findById(view, R.id.tv_coach_name);
+            holder.tvCoachTeachTime = ButterKnife.findById(view, R.id.tv_coach_teach_time);
+            holder.tvCoachPoints = ButterKnife.findById(view, R.id.tv_coach_points);
+            holder.tvCoachActualPrice = ButterKnife.findById(view, R.id.tv_coach_actual_price);
+            holder.tvVIPPrice = ButterKnife.findById(view, R.id.tv_vip_price);
+            holder.ivCoachAvatar = ButterKnife.findById(view, R.id.iv_coach_avatar);
+            holder.ivIsGoldenCoach = ButterKnife.findById(view, R.id.iv_is_golden_coach);
+            holder.svCoachScore = ButterKnife.findById(view, R.id.sv_coach_score);
+            holder.tvCoachLocation = ButterKnife.findById(view, R.id.tv_coach_location);
+            holder.rlyCoachLocation = ButterKnife.findById(view, R.id.rly_third_line);
+            holder.tvDistance = ButterKnife.findById(view, R.id.tv_distance);
+            holder.tvApplaudCount = ButterKnife.findById(view, R.id.tv_applaud_count);
+            holder.tvTrainSchoolName = ButterKnife.findById(view, R.id.tv_train_school);
+            holder.rlyVipPrice = ButterKnife.findById(view, R.id.rly_vip_price);
+            holder.llyTrainSchool = ButterKnife.findById(view, R.id.lly_train_school);
+            holder.rlyActualPrice = ButterKnife.findById(view, R.id.rly_actual_price);
+            view.setTag(holder);
         } else {
-            convertView = inflater.inflate(R.layout.adapter_news, parent, false);
-            holder = new CoachAdapter.ViewHolder(convertView);
-            convertView.setTag(holder);
+            holder = (ViewHolder) view.getTag();
         }
         Coach coach = mCoachList.get(position);
         holder.tvCoachName.setText(coach.name);
@@ -137,45 +156,25 @@ public class CoachAdapter extends BaseAdapter {
         } else {
             holder.llyTrainSchool.setVisibility(View.GONE);
         }
-        return convertView;
+        return view;
     }
 
     static class ViewHolder {
-        @BindView(R.id.tv_coach_name)
         TextView tvCoachName;
-        @BindView(R.id.tv_coach_teach_time)
         TextView tvCoachTeachTime;
-        @BindView(R.id.tv_coach_points)
         TextView tvCoachPoints;
-        @BindView(R.id.tv_coach_actual_price)
         TextView tvCoachActualPrice;
-        @BindView(R.id.tv_vip_price)
         TextView tvVIPPrice;
-        @BindView(R.id.iv_coach_avatar)
         SimpleDraweeView ivCoachAvatar;
-        @BindView(R.id.iv_is_golden_coach)
-        SimpleDraweeView ivIsGoldenCoach;
-        @BindView(R.id.sv_coach_score)
+        ImageView ivIsGoldenCoach;
         ScoreView svCoachScore;
-        @BindView(R.id.tv_coach_location)
         TextView tvCoachLocation;
-        @BindView(R.id.rly_third_line)
         RelativeLayout rlyCoachLocation;
-        @BindView(R.id.tv_distance)
         TextView tvDistance;
-        @BindView(R.id.tv_applaud_count)
         TextView tvApplaudCount;
-        @BindView(R.id.rly_vip_price)
         RelativeLayout rlyVipPrice;
-        @BindView(R.id.tv_train_school)
         TextView tvTrainSchoolName;
-        @BindView(R.id.lly_train_school)
         LinearLayout llyTrainSchool;
-        @BindView(R.id.rly_actual_price)
         RelativeLayout rlyActualPrice;
-
-        public ViewHolder(View view) {
-            ButterKnife.bind(this, view);
-        }
     }
 }

@@ -9,6 +9,6 @@ import java.util.ArrayList;
  */
 
 public class CoachResponseList {
-    private BaseLink links;
-    private ArrayList<Coach> data;
+    public BaseLink links;
+    public ArrayList<Coach> data;
 }
