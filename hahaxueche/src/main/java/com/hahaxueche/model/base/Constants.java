@@ -31,4 +31,41 @@ public class Constants {
         }
         return myCity;
     }
+
+    public String getSectionName(String fieldId) {
+        String ret = "";
+        if (fields == null || fields.size() < 1) return ret;
+        for (Field field : fields) {
+            if (field.id.equals(fieldId)) {
+                ret = getCityName(field.city_id) + field.section;
+                break;
+            }
+        }
+        return ret;
+    }
+
+    public String getCityName(int cityId) {
+        String ret = "";
+        if (cities == null || cities.size() < 1) return ret;
+        for (City city : cities) {
+            if (city.id == cityId) {
+                ret = city.name;
+                break;
+            }
+        }
+        return ret;
+    }
+
+    public Field getField(String fieldId) {
+        Field ret = null;
+        if (fields != null && fields.size() > 0) {
+            for (Field field : fields) {
+                if (field.id.equals(fieldId)) {
+                    ret = field;
+                    break;
+                }
+            }
+        }
+        return ret;
+    }
 }

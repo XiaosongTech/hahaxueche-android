@@ -6,6 +6,7 @@ import android.content.Context;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.Constants;
+import com.hahaxueche.model.base.Location;
 import com.hahaxueche.ui.widget.FrescoImageLoader;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
@@ -31,6 +32,7 @@ public class HHBaseApplication extends Application {
     private Constants constants;
     private SharedPrefUtil spUtil;
     private Observable sessionObservable;
+    private Location myLocation;
 
     public static HHBaseApplication get(Context context) {
         return (HHBaseApplication) context.getApplicationContext();
@@ -89,6 +91,18 @@ public class HHBaseApplication extends Application {
         options.statusBarNotificationConfig = new StatusBarNotificationConfig();
         options.savePowerConfig = new SavePowerConfig();
         return options;
+    }
+
+    public Location getMyLocation() {
+        return myLocation;
+    }
+
+    public void setMyLocation(double lat, double lng) {
+        if (myLocation == null) {
+            myLocation = new Location();
+        }
+        myLocation.lat = lat;
+        myLocation.lng = lng;
     }
 
 }

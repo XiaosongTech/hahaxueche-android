@@ -1,3 +1,4 @@
 <resources>
     <dimen name="width80dp">60dp</dimen>
+    <dimen name="width_160dp">120dp</dimen>
 </resources>

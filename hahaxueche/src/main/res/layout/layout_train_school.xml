@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rect_bg_gray_bd_gray_corner"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingBottom="2dp"
+    android:paddingLeft="6dp"
+    android:paddingRight="6dp"
+    android:paddingTop="2dp">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/point_app_color"></FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_train_school"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="3dp"
+        android:textColor="@color/haha_gray"
+        android:textSize="10sp" />
+</LinearLayout>

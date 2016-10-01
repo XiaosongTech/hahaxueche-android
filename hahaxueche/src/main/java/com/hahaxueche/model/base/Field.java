@@ -11,8 +11,8 @@ public class Field {
     public String street;
     public String province;
     public String zip_code;
-    public String lat;
-    public String lng;
+    public double lat;
+    public double lng;
     public String deleted_at;
     public boolean active;
     public String created_at;
