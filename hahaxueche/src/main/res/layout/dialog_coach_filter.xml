@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/haha_white"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="距离筛选"
+        android:textColor="@color/haha_gray"
+        android:textSize="14sp" />
+
+    <com.hahaxueche.ui.widget.comboSeekBar.ComboSeekBar
+        android:id="@+id/cbs_distinct"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        app:dotRadius="6dp"
+        app:multiline="false"
+        app:myColor="@color/app_theme_color"
+        app:selectedLineHeight="5dp"
+        app:selectedLintColor="@color/app_theme_color"
+        app:textSize="12sp"
+        app:thumb="@drawable/seek_bar_circle"
+        app:thumbHeight="20dp"
+        app:thumbWidth="20dp"
+        app:unSelectedColor="@color/haha_gray_divider"
+        app:unselectedLineHeight="5dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_width"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/haha_gray_divider" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="价格筛选"
+        android:textColor="@color/haha_gray"
+        android:textSize="14sp" />
+
+    <com.hahaxueche.ui.widget.comboSeekBar.ComboSeekBar
+        android:id="@+id/cbs_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        app:dotRadius="6dp"
+        app:multiline="false"
+        app:myColor="@color/app_theme_color"
+        app:selectedLineHeight="5dp"
+        app:selectedLintColor="@color/app_theme_color"
+        app:textSize="12sp"
+        app:thumb="@drawable/seek_bar_circle"
+        app:thumbHeight="20dp"
+        app:thumbWidth="20dp"
+        app:unSelectedColor="@color/haha_gray_divider"
+        app:unselectedLineHeight="5dp" />
+</LinearLayout>

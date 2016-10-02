@@ -10,4 +10,17 @@
         <attr name="loadMoreTxt" format="string" />
         <attr name="noMoreTxt" format="string" />
     </declare-styleable>
+    <declare-styleable name="ComboSeekBar">
+        <attr name="multiline" format="boolean" />
+        <attr name="myColor" format="color" />
+        <attr name="thumb" format="reference" />
+        <attr name="textSize" format="dimension" />
+        <attr name="thumbHeight" format="dimension" />
+        <attr name="thumbWidth" format="dimension" />
+        <attr name="selectedLineHeight" format="dimension" />
+        <attr name="unselectedLineHeight" format="dimension" />
+        <attr name="selectedLintColor" format="color" />
+        <attr name="unSelectedColor" format="color" />
+        <attr name="dotRadius" format="dimension" />
+    </declare-styleable>
 </resources>

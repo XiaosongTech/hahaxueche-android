@@ -11,15 +11,16 @@ import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.findCoach.FindCoachPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachAdapter;
+import com.hahaxueche.ui.dialog.findCoach.CoachFilterDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.findCoach.FindCoachView;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
-import com.hahaxueche.util.HHLog;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by wangshirui on 16/9/13.
@@ -31,6 +32,7 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView, 
     XListView mXlvCoaches;
     private CoachAdapter mCoachAdapter;
     private ArrayList<Coach> mCoachArrayList;
+    private CoachFilterDialog mFilterDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,5 +95,13 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView, 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         //Intent intent = new Intent(getContext(), ArticleActivity.class);
         //startActivity(intent);
+    }
+
+    @OnClick(R.id.fly_filter)
+    public void showFilterDialog() {
+        if (mFilterDialog == null) {
+            mFilterDialog = new CoachFilterDialog(getContext());
+        }
+        mFilterDialog.show();
     }
 }
