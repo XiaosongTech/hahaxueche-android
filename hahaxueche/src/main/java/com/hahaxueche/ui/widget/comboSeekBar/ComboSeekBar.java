@@ -35,6 +35,7 @@ public class ComboSeekBar extends SeekBar {
     private Dot prevSelected = null;
     private int mColor;
     private int mUnSelectedColor;
+    private int mSelectedTextColor;
     private int mTextSize;
     private int mDotRadius;
     private int mSelectedLineHeight;
@@ -63,6 +64,7 @@ public class ComboSeekBar extends SeekBar {
 
         mColor = a.getColor(R.styleable.ComboSeekBar_myColor, DEFAULT_COLOR);
         mUnSelectedColor = a.getColor(R.styleable.ComboSeekBar_unSelectedColor, DEFAULT_COLOR);
+        mSelectedTextColor = a.getColor(R.styleable.ComboSeekBar_selectedTextColor, DEFAULT_COLOR);
         mTextSize = a.getDimensionPixelSize(R.styleable.ComboSeekBar_textSize,
                 DEFAULT_TEXT_SIZE);
         mDotRadius = a.getDimensionPixelSize(
@@ -92,7 +94,7 @@ public class ComboSeekBar extends SeekBar {
         setProgressDrawable(new CustomDrawable(this.getProgressDrawable(),
                 this, mThumb.getRadius(), mDots, mColor, mTextSize,
                 mSelectedLineHeight, mUnselectedLineHeight, mDotRadius,
-                mIsMultiline, mSelectdLineColor, mUnSelectedColor));
+                mIsMultiline, mSelectdLineColor, mUnSelectedColor, mSelectedTextColor));
 
         setPadding(0, 0, 0, 0);
         // init the first position when show
@@ -159,7 +161,7 @@ public class ComboSeekBar extends SeekBar {
         setProgressDrawable(new CustomDrawable(this.getProgressDrawable(),
                 this, mThumb.getRadius(), mDots, color, mTextSize,
                 mSelectedLineHeight, mUnselectedLineHeight, mDotRadius,
-                mIsMultiline, mSelectdLineColor, mUnSelectedColor));
+                mIsMultiline, mSelectdLineColor, mUnSelectedColor, mSelectedTextColor));
     }
 
     public void setSelection(int position) {
@@ -182,7 +184,7 @@ public class ComboSeekBar extends SeekBar {
         setProgressDrawable(new CustomDrawable(this.getProgressDrawable(),
                 this, mThumb.getRadius(), mDots, mColor, mTextSize,
                 mSelectedLineHeight, mUnselectedLineHeight, mDotRadius,
-                mIsMultiline, mSelectdLineColor, mUnSelectedColor));
+                mIsMultiline, mSelectdLineColor, mUnSelectedColor, mSelectedTextColor));
         /*postDelayed(new Runnable() {
             @Override
             public void run() {

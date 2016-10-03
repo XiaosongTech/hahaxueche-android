@@ -100,7 +100,14 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView, 
     @OnClick(R.id.fly_filter)
     public void showFilterDialog() {
         if (mFilterDialog == null) {
-            mFilterDialog = new CoachFilterDialog(getContext());
+            mFilterDialog = new CoachFilterDialog(getContext(), new CoachFilterDialog.OnFilterListener() {
+                @Override
+                public void filter(String distance, String price, boolean isGoldenCoachOnly,
+                                   boolean isVipOnly, boolean C1Checked, boolean C2Checked) {
+                    mPresenter.setFilters(distance, price, isGoldenCoachOnly, isVipOnly, C1Checked, C2Checked);
+                    mPresenter.fetchCoaches();
+                }
+            });
         }
         mFilterDialog.show();
     }

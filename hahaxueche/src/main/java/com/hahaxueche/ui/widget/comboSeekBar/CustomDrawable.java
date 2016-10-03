@@ -44,7 +44,7 @@ public class CustomDrawable extends Drawable {
     public CustomDrawable(Drawable base, ComboSeekBar slider,
                           float thumbRadius, List<Dot> dots, int color, int textSize,
                           int selectedLineHeight, int unselectedLineHeight, int dotRadius,
-                          boolean isMultiline, int selectedLineColor,int unSelectedColor) {
+                          boolean isMultiline, int selectedLineColor,int unSelectedColor,int selectedTextColor) {
         mIsMultiline = isMultiline;
         myBase = base;
         mDots = dots;
@@ -59,7 +59,7 @@ public class CustomDrawable extends Drawable {
 
         textSelected = new Paint(Paint.ANTI_ALIAS_FLAG);
         //textSelected.setTypeface(Typeface.DEFAULT_BOLD);
-        textSelected.setColor(color);
+        textSelected.setColor(selectedTextColor);
         //textSelected.setAlpha(255);
 
         mThumbRadius = thumbRadius;
