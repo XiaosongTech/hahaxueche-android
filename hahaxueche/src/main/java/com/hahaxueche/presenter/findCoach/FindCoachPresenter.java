@@ -37,6 +37,7 @@ public class FindCoachPresenter implements Presenter<FindCoachView> {
     private int vipOnly = 0;
     private String licenseType;
     private int cityId = 0;
+    private int sortBy = 0;
 
     public void attachView(FindCoachView view) {
         this.mFindCoachView = view;
@@ -69,6 +70,10 @@ public class FindCoachPresenter implements Presenter<FindCoachView> {
         }
     }
 
+    public void setSortBy(int sortBy){
+        this.sortBy = sortBy;
+    }
+
     private void initFilters() {
         HHBaseApplication application = HHBaseApplication.get(mFindCoachView.getContext());
         User user = application.getSharedPrefUtil().getUser();
@@ -85,7 +90,7 @@ public class FindCoachPresenter implements Presenter<FindCoachView> {
         HHApiService apiService = application.getApiService();
         apiService.getCoaches(PAGE, PER_PAGE, TextUtils.isEmpty(goldenCoachOnly) ? null : goldenCoachOnly,
                 TextUtils.isEmpty(licenseType) ? null : licenseType, TextUtils.isEmpty(filterPrice) ? null : filterPrice, cityId,
-                null, TextUtils.isEmpty(filterDistance) ? null : filterDistance, null, 0, vipOnly, null)
+                null, TextUtils.isEmpty(filterDistance) ? null : filterDistance, null, sortBy, vipOnly, null)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<CoachResponseList>() {

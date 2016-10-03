@@ -12,6 +12,7 @@ import com.hahaxueche.presenter.findCoach.FindCoachPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachAdapter;
 import com.hahaxueche.ui.dialog.findCoach.CoachFilterDialog;
+import com.hahaxueche.ui.dialog.findCoach.CoachSortDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.findCoach.FindCoachView;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
@@ -33,6 +34,7 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView, 
     private CoachAdapter mCoachAdapter;
     private ArrayList<Coach> mCoachArrayList;
     private CoachFilterDialog mFilterDialog;
+    private CoachSortDialog mSortDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -110,5 +112,19 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView, 
             });
         }
         mFilterDialog.show();
+    }
+
+    @OnClick(R.id.fly_sort)
+    public void showSortDialog() {
+        if (mSortDialog == null) {
+            mSortDialog = new CoachSortDialog(getContext(), new CoachSortDialog.OnSortListener() {
+                @Override
+                public void sort(int sortBy) {
+                    mPresenter.setSortBy(sortBy);
+                    mPresenter.fetchCoaches();
+                }
+            });
+        }
+        mSortDialog.show();
     }
 }

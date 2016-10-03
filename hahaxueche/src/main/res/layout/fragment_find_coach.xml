@@ -75,6 +75,7 @@
             android:background="@color/haha_gray_divider" />
 
         <FrameLayout
+            android:id="@+id/fly_sort"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
