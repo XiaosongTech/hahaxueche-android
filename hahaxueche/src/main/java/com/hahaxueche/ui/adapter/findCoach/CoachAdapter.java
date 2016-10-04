@@ -135,16 +135,20 @@ public class CoachAdapter extends BaseAdapter {
                 MapDialog mapDialog = new MapDialog(mContext, R.style.map_dialog, myField, v, new MapDialog.MapDialogDismissListener() {
                     @Override
                     public boolean dialogDismiss() {
-                        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT);
-                        p.setMargins(Utils.instence(mContext).dip2px(100), 0, 0, 0);
+                        RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                                RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        p.setMargins(0, Utils.instence(mContext).dip2px(6), 0, 0);
+                        p.addRule(RelativeLayout.ALIGN_LEFT, R.id.rly_third_line);
+                        p.addRule(RelativeLayout.BELOW, R.id.rly_third_line);
                         holder.rlyActualPrice.setLayoutParams(p);
                         return true;
                     }
                 });
-                LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                p.setMargins(Utils.instence(mContext).dip2px(100), Utils.instence(mContext).dip2px(200), 0, 0);
+                RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+                p.setMargins(0, Utils.instence(mContext).dip2px(200), 0, 0);
+                p.addRule(RelativeLayout.ALIGN_LEFT, R.id.rly_third_line);
+                p.addRule(RelativeLayout.BELOW, R.id.rly_third_line);
                 holder.rlyActualPrice.setLayoutParams(p);
                 mapDialog.show();
             }

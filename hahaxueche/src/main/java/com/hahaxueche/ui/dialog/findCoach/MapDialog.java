@@ -42,7 +42,7 @@ public class MapDialog extends AlertDialog implements AMap.OnMarkerClickListener
     private AMap aMap;
     private MapView mapView;
     private MarkerOptions markerOption;
-    private int contentWidht, contentHeight;
+    private int contentWidth, contentHeight;
     private View contentView;
     private Display display;
     private Field mField;
@@ -88,7 +88,7 @@ public class MapDialog extends AlertDialog implements AMap.OnMarkerClickListener
         if (aMap == null) {
             aMap = mapView.getMap();
         }
-        contentWidht = Utils.instence(mContext).dip2px(225);
+        contentWidth = Utils.instence(mContext).getDm().widthPixels;
         contentHeight = Utils.instence(mContext).dip2px(159);
     }
 
@@ -130,7 +130,7 @@ public class MapDialog extends AlertDialog implements AMap.OnMarkerClickListener
 
         int stateBarH = Utils.instence(mContext).getStatusBarHeight(mContext);
 
-        int x = location[0] + mView.getWidth() / 2 - contentWidht / 2;
+        int x = location[0] + mView.getWidth() / 2 - contentWidth / 2;
         int y = location[1] + mView.getHeight() - stateBarH;
         WindowManager m = ((Activity) mContext).getWindowManager();
         display = m.getDefaultDisplay(); // 获取屏幕宽、高用
