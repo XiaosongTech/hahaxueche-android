@@ -30,7 +30,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="唐骏"
                 android:textColor="@color/haha_gray_dark"
                 android:textSize="18sp" />
 
@@ -58,7 +57,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:text="三年教龄"
                 android:textColor="@color/haha_gray"
                 android:textSize="14sp" />
         </RelativeLayout>
@@ -85,7 +83,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="6dp"
                 android:layout_toRightOf="@id/sv_coach_score"
-                android:text="3.5"
                 android:textColor="@color/app_theme_color"
                 android:textSize="12sp" />
         </RelativeLayout>
@@ -109,7 +106,6 @@
                 android:ellipsize="end"
                 android:lines="1"
                 android:maxWidth="@dimen/width_160dp"
-                android:text="江苏南京"
                 android:textColor="@color/haha_gray_text"
                 android:textSize="12sp" />
 
@@ -120,7 +116,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="3dp"
                 android:layout_toRightOf="@id/tv_coach_location"
-                android:text="3.5km"
                 android:textColor="@color/haha_gray_text"
                 android:textSize="12sp" />
 
@@ -133,7 +128,6 @@
                 android:layout_marginLeft="6dp"
                 android:drawableLeft="@drawable/ic_list_best_small"
                 android:drawablePadding="3dp"
-                android:text="12"
                 android:textColor="@color/app_theme_color"
                 android:textSize="14sp" />
         </RelativeLayout>
