@@ -9,6 +9,8 @@ import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.user.Student;
 import com.hahaxueche.model.user.User;
 
+import java.util.LinkedList;
+
 /**
  * Created by wangshirui on 16/9/10.
  */
@@ -23,7 +25,6 @@ public class SharedPrefUtil {
 
     public User getUser() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        Gson gson = new Gson();
         return mGson.fromJson(prefs.getString("usrSerialize", ""), User.class);
     }
 
@@ -69,5 +70,34 @@ public class SharedPrefUtil {
         User user = getUser();
         user.student = student;
         setUser(user);
+    }
+
+    /**
+     * 增加历史搜索记录
+     *
+     * @param coachName
+     */
+    public void addSearchHistory(String coachName) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        LinkedList<String> searchHistoryList = getSearchHistory();
+        if (searchHistoryList != null) {
+            if (searchHistoryList.size() >= 4) {
+                searchHistoryList.removeFirst();
+            }
+        } else {
+            searchHistoryList = new LinkedList<>();
+        }
+        searchHistoryList.addLast(coachName);
+        prefs.edit().putString("searchHistorySerialize", mGson.toJson(searchHistoryList)).apply();
+    }
+
+    public LinkedList getSearchHistory() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        return mGson.fromJson(prefs.getString("searchHistorySerialize", ""), LinkedList.class);
+    }
+
+    public void clearSearchHistory() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        prefs.edit().putString("searchHistorySerialize", null).apply();
     }
 }

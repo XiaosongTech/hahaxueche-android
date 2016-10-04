@@ -1,5 +1,6 @@
 package com.hahaxueche.ui.fragment.findCoach;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.findCoach.FindCoachPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
+import com.hahaxueche.ui.activity.findCoach.SearchCoachActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachAdapter;
 import com.hahaxueche.ui.dialog.findCoach.CoachFilterDialog;
 import com.hahaxueche.ui.dialog.findCoach.CoachSortDialog;
@@ -130,5 +132,10 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView, 
             });
         }
         mSortDialog.show();
+    }
+
+    @OnClick(R.id.iv_search)
+    public void clickSearchCoach() {
+        startActivity(new Intent(getContext(), SearchCoachActivity.class));
     }
 }

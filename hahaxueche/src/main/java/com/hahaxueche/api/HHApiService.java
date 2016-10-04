@@ -9,6 +9,7 @@ import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.responseList.CoachResponseList;
 import com.hahaxueche.model.user.Student;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.util.HHLog;
 
 
@@ -88,6 +89,9 @@ public interface HHApiService {
 
     @GET
     Observable<CoachResponseList> getCoaches(@Url String path);
+
+    @GET("coaches")
+    Observable<ArrayList<Coach>> getCoachesByKeyword(@Query("keyword") String keyword);
 
     class Factory {
         public static HHApiService create() {

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_weight="1">
+
+        <EditText
+            android:id="@+id/et_coach_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/rect_bg_white_bd_appcolor_corner"
+            android:drawableLeft="@drawable/icon_search_input"
+            android:drawablePadding="7dp"
+            android:hint="搜索教练姓名"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingBottom="7dp"
+            android:paddingLeft="7dp"
+            android:paddingTop="7dp"
+            android:textColor="@color/haha_gray_dark"
+            android:textColorHint="@color/haha_gray"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/iv_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/et_coach_name"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="2dp"
+            android:padding="5dp"
+            android:src="@drawable/image_icon_clear"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="取消"
+        android:textColor="@color/haha_white"
+        android:textSize="18sp" />
+</LinearLayout>
