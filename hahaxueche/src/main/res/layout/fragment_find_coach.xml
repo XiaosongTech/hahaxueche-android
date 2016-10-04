@@ -110,4 +110,18 @@
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
         app:loadMoreTxt="一大波教练接近中~~~"></com.hahaxueche.ui.widget.pullToRefreshView.XListView>
+
+    <TextView
+        android:id="@+id/tv_empty"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.2"
+        android:padding="20dp"
+        android:text="啥?!没有匹配到教练啊/(ㄒ o ㄒ)/~~点击左上角筛选按钮,并调节距离等因素来寻
+找更多教练吧"
+        android:textColor="@color/haha_gray"
+        android:textSize="14sp"
+        android:visibility="gone" />
 </LinearLayout>

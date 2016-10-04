@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.TextView;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.user.coach.Coach;
@@ -31,6 +32,8 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView, 
     private FindCoachPresenter mPresenter;
     @BindView(R.id.xlv_coaches)
     XListView mXlvCoaches;
+    @BindView(R.id.tv_empty)
+    TextView mTvEmpty;
     private CoachAdapter mCoachAdapter;
     private ArrayList<Coach> mCoachArrayList;
     private CoachFilterDialog mFilterDialog;
@@ -53,6 +56,7 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView, 
         mXlvCoaches.setAutoLoadEnable(true);
         mXlvCoaches.setXListViewListener(this);
         mXlvCoaches.setOnItemClickListener(this);
+        mXlvCoaches.setEmptyView(mTvEmpty);
         mPresenter.fetchCoaches();
         return view;
     }
