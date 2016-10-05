@@ -12,6 +12,7 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.findCoach.FindCoachPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
+import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.SearchCoachActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachAdapter;
 import com.hahaxueche.ui.dialog.findCoach.CoachFilterDialog;
@@ -101,8 +102,11 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView, 
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //Intent intent = new Intent(getContext(), ArticleActivity.class);
-        //startActivity(intent);
+        if (mCoachArrayList != null && mCoachArrayList.size() > 0 && position > 0 && position - 1 < mCoachArrayList.size()) {
+            Intent intent = new Intent(getContext(), CoachDetailActivity.class);
+            intent.putExtra("coach", mCoachArrayList.get(position - 1));
+            startActivityForResult(intent, 1);
+        }
     }
 
     @OnClick(R.id.fly_filter)

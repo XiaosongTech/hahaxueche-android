@@ -49,7 +49,7 @@ public class SearchCoachPresenter implements Presenter<SearchCoachView> {
         }
         mSearchCoachView.disableButton();
         HHApiService apiService = application.getApiService();
-        apiService.getCoachesByKeyword(keyword)
+        subscription = apiService.getCoachesByKeyword(keyword)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<ArrayList<Coach>>() {

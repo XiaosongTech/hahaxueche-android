@@ -38,7 +38,7 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
         getQrCodeUrl(user);
         mReferFriendsView.setWithdrawMoney(Utils.getMoney(user.student.bonus_balance));
         String eventDetailTips = mReferFriendsView.getContext().getResources().getString(R.string.eventDetailsTips);
-        City myCity = application.getConstants().getMyCity(user.student.city_id);
+        City myCity = application.getConstants().getCity(user.student.city_id);
         mReferFriendsView.setReferRules(String.format(eventDetailTips, Utils.getMoney(myCity.referer_bonus)));
         mReferFriendsView.setMyCityReferImage(myCity.referral_banner);
 
@@ -52,7 +52,7 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
     }
 
     private void getQrCodeUrl(User user) {
-        redirectUrl(user)
+        subscription = redirectUrl(user)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<String>() {

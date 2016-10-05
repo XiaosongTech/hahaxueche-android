@@ -21,7 +21,7 @@ public class Constants {
     public ArrayList<Bank> banks;
     public Statistics statistics;
 
-    public City getMyCity(int cityId) {
+    public City getCity(int cityId) {
         City myCity = cities.get(0);
         for (City city : cities) {
             if (city.id == cityId) {

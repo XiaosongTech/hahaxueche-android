@@ -114,7 +114,7 @@ public class CoachFilterDialog {
         if (user != null) {
             cityId = user.student.city_id;
         }
-        final City myCity = application.getConstants().getMyCity(cityId);
+        final City myCity = application.getConstants().getCity(cityId);
         /**********距离筛选**********/
         ArrayList<String> distanceTextList = new ArrayList<>();
         for (int i = 0; i < myCity.filters.radius.length; i++) {

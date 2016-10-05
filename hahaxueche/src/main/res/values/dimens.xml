@@ -2,6 +2,7 @@
     <dimen name="width80dp">80dp</dimen>
     <dimen name="width_160dp">160dp</dimen>
     <dimen name="divider_width">0.5dp</dimen>
+    <dimen name="section_margin_top">16dp</dimen>
     <dimen name="header_height">60dp</dimen>
     <dimen name="footer_height">90dp</dimen>
     <dimen name="footer_padding">10dp</dimen>

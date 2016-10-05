@@ -131,7 +131,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         HHApiService apiService = application.getApiService();
         String sessionId = application.getSharedPrefUtil().getUser().session.id;
         String accessToken = application.getSharedPrefUtil().getUser().session.access_token;
-        apiService.logOut(sessionId, accessToken)
+        subscription = apiService.logOut(sessionId, accessToken)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<BaseModel>() {
@@ -165,7 +165,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         File file = new File(filePath);
         String fileName = filePath.split("/")[filePath.split("/").length - 1];
         MultipartBody.Part body = MultipartBody.Part.createFormData("file", fileName, RequestBody.create(MULTIPART_FORM_DATA, file));
-        apiService.uploadAvatar(user.student.id, user.session.access_token, body).observeOn(AndroidSchedulers.mainThread())
+        subscription = apiService.uploadAvatar(user.student.id, user.session.access_token, body).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<Student>() {
                     @Override

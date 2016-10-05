@@ -10,7 +10,6 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.FindCoachView;
-import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 
 import java.util.ArrayList;
@@ -70,7 +69,7 @@ public class FindCoachPresenter implements Presenter<FindCoachView> {
         }
     }
 
-    public void setSortBy(int sortBy){
+    public void setSortBy(int sortBy) {
         this.sortBy = sortBy;
     }
 
@@ -80,7 +79,7 @@ public class FindCoachPresenter implements Presenter<FindCoachView> {
         if (user != null) {
             cityId = user.student.city_id;
         }
-        final City myCity = application.getConstants().getMyCity(cityId);
+        final City myCity = application.getConstants().getCity(cityId);
         String distance = String.valueOf(myCity.filters.radius[myCity.filters.radius.length - 2]);
         String price = String.valueOf(myCity.filters.prices[myCity.filters.prices.length - 1]);
         setFilters(distance, price, false, false, false, false);
@@ -88,7 +87,7 @@ public class FindCoachPresenter implements Presenter<FindCoachView> {
 
     public void fetchCoaches() {
         HHApiService apiService = application.getApiService();
-        apiService.getCoaches(PAGE, PER_PAGE, TextUtils.isEmpty(goldenCoachOnly) ? null : goldenCoachOnly,
+        subscription = apiService.getCoaches(PAGE, PER_PAGE, TextUtils.isEmpty(goldenCoachOnly) ? null : goldenCoachOnly,
                 TextUtils.isEmpty(licenseType) ? null : licenseType, TextUtils.isEmpty(filterPrice) ? null : filterPrice, cityId,
                 null, TextUtils.isEmpty(filterDistance) ? null : filterDistance, null, sortBy, vipOnly, null)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -118,7 +117,7 @@ public class FindCoachPresenter implements Presenter<FindCoachView> {
     public void addMoreCoaches() {
         if (TextUtils.isEmpty(nextLink)) return;
         HHApiService apiService = application.getApiService();
-        apiService.getCoaches(nextLink)
+        subscription = apiService.getCoaches(nextLink)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<CoachResponseList>() {

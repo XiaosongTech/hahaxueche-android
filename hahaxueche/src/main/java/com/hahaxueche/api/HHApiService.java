@@ -93,6 +93,9 @@ public interface HHApiService {
     @GET("coaches")
     Observable<ArrayList<Coach>> getCoachesByKeyword(@Query("keyword") String keyword);
 
+    @GET("coaches/{id}")
+    Observable<Coach> getCoach(@Path("id") String coachId, @Query("student_id") String studentId);
+
     class Factory {
         public static HHApiService create() {
             HHLog.v("baseUrl -> " + baseUrl);
