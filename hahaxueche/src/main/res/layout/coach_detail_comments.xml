@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lly_reviews"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/section_margin_top"
     android:layout_marginTop="@dimen/section_margin_top"
     android:background="@color/haha_white"
     android:orientation="vertical">
@@ -30,16 +32,15 @@
             android:layout_marginRight="20dp" />
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_width"
+        android:background="@color/haha_gray_divider" />
+
     <FrameLayout
         android:id="@+id/fly_more_comments"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_width"
-            android:background="@color/haha_gray_divider" />
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/tv_more_reviews"

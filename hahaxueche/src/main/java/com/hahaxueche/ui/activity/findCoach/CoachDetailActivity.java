@@ -1,7 +1,6 @@
 package com.hahaxueche.ui.activity.findCoach;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -10,6 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -20,7 +20,9 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
+import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.user.coach.Coach;
+import com.hahaxueche.model.user.coach.Review;
 import com.hahaxueche.presenter.findCoach.CoachDetailPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.view.findCoach.CoachDetailView;
@@ -83,6 +85,13 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     TextView mTvTrainSchoolName;
     @BindView(R.id.lly_peer_coaches)
     LinearLayout mLlyPeerCoaches;
+    @BindView(R.id.lly_reviews)
+    LinearLayout mLlyReviews;
+    @BindView(R.id.fly_more_comments)
+    FrameLayout mFlyMoreComments;
+    @BindView(R.id.tv_more_reviews)
+    TextView mTvMoreReviews;
+    private ReviewResponseList mReviewResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,6 +217,22 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         Snackbar.make(mSvMain, message, Snackbar.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void showNoReview(String coachName) {
+        mFlyMoreComments.setClickable(false);
+        mTvMoreReviews.setText(coachName + "教练目前还没有评价");
+        mTvMoreReviews.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
+    }
+
+    @Override
+    public void showReviews(ReviewResponseList responseList) {
+        mReviewResponse = responseList;
+        int showReviewCount = responseList.data.size() > 3 ? 3 : responseList.data.size();
+        for (int i = 0; i < showReviewCount; i++) {
+            mLlyReviews.addView(getReviewAdapter(responseList.data.get(i), i == showReviewCount - 1), i + 2);
+        }
+    }
+
     private RelativeLayout getPeerCoachAdapter(final Coach coach) {
         RelativeLayout rly = new RelativeLayout(this);
         LinearLayout.LayoutParams rlyParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -261,6 +286,92 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 startActivity(intent);
             }
         });
+
+        return rly;
+    }
+
+    private RelativeLayout getReviewAdapter(Review review, boolean isLastLine) {
+        RelativeLayout rly = new RelativeLayout(this);
+        LinearLayout.LayoutParams rlyParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        rly.setLayoutParams(rlyParams);
+
+        SimpleDraweeView ivAvatar = new SimpleDraweeView(this);
+        GenericDraweeHierarchy hierarchy = ivAvatar.getHierarchy();
+        hierarchy.setPlaceholderImage(R.drawable.ic_mypage_ava);
+        hierarchy.setRoundingParams(new RoundingParams().setRoundAsCircle(true));
+        RelativeLayout.LayoutParams ivAvatarParams = new RelativeLayout.LayoutParams(Utils.instence(this).dip2px(40), Utils.instence(this).dip2px(40));
+        ivAvatarParams.setMargins(Utils.instence(this).dip2px(20), Utils.instence(this).dip2px(15), 0, 0);
+        ivAvatar.setLayoutParams(ivAvatarParams);
+        ivAvatar.setImageURI(review.reviewer.avatar);
+        int ivAvatarId = Utils.generateViewId();
+        ivAvatar.setId(ivAvatarId);
+        rly.addView(ivAvatar);
+
+        TextView tvName = new TextView(this);
+        RelativeLayout.LayoutParams tvNameParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvNameParams.addRule(RelativeLayout.RIGHT_OF, ivAvatarId);
+        tvNameParams.addRule(RelativeLayout.ALIGN_TOP, ivAvatarId);
+        tvNameParams.setMargins(Utils.instence(this).dip2px(10), 0, 0, 0);
+        tvName.setLayoutParams(tvNameParams);
+        tvName.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
+        tvName.setTextSize(18);
+        tvName.setText(review.reviewer.name);
+        int tvNameId = Utils.generateViewId();
+        tvName.setId(tvNameId);
+        rly.addView(tvName);
+
+        TextView tvReviewDate = new TextView(this);
+        RelativeLayout.LayoutParams tvReviewDateParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvReviewDateParams.addRule(RelativeLayout.ALIGN_BOTTOM, tvNameId);
+        tvReviewDateParams.addRule(RelativeLayout.RIGHT_OF, tvNameId);
+        tvReviewDateParams.setMargins(Utils.instence(this).dip2px(6), 0, 0, 0);
+        tvReviewDate.setLayoutParams(tvReviewDateParams);
+        tvReviewDate.setTextColor(ContextCompat.getColor(this, R.color.haha_gray_text));
+        tvReviewDate.setTextSize(12);
+        tvReviewDate.setText(review.updated_at.substring(0, 10));
+        rly.addView(tvReviewDate);
+
+        ScoreView svScore = new ScoreView(this);
+        RelativeLayout.LayoutParams svScoreParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        svScoreParams.addRule(RelativeLayout.ALIGN_BOTTOM, tvNameId);
+        svScoreParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+        svScoreParams.setMargins(0, 0, Utils.instence(this).dip2px(20), 0);
+        svScore.setLayoutParams(svScoreParams);
+        float reviewerRating = 0;
+        if (!TextUtils.isEmpty(review.rating)) {
+            reviewerRating = Float.parseFloat(review.rating);
+        }
+        if (reviewerRating > 5) {
+            reviewerRating = 5;
+        }
+        svScore.setScore(reviewerRating, false);
+        rly.addView(svScore);
+
+        TextView tvComment = new TextView(this);
+        RelativeLayout.LayoutParams tvCommentParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvCommentParams.addRule(RelativeLayout.ALIGN_LEFT, tvNameId);
+        tvCommentParams.addRule(RelativeLayout.BELOW, tvNameId);
+        tvCommentParams.setMargins(0, Utils.instence(this).dip2px(10), Utils.instence(this).dip2px(20), 0);
+        tvComment.setLayoutParams(tvCommentParams);
+        tvComment.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
+        tvComment.setTextSize(12);
+        tvComment.setText(review.comment);
+        tvComment.setLineSpacing(0, 1.2f);
+        int tvCommentId = Utils.generateViewId();
+        tvComment.setId(tvCommentId);
+        rly.addView(tvComment);
+
+        View divider = new View(this);
+        RelativeLayout.LayoutParams dividerParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.divider_width));
+        if (!isLastLine) {
+            dividerParams.setMargins(Utils.instence(this).dip2px(20), Utils.instence(this).dip2px(14), 0, 0);
+        } else {
+            dividerParams.setMargins(0, Utils.instence(this).dip2px(15), 0, 0);
+        }
+        dividerParams.addRule(RelativeLayout.BELOW, tvCommentId);
+        divider.setLayoutParams(dividerParams);
+        divider.setBackgroundColor(ContextCompat.getColor(this, R.color.haha_gray_divider));
+        rly.addView(divider);
 
         return rly;
     }

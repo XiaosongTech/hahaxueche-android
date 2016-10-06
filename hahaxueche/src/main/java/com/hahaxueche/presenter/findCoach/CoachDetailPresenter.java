@@ -6,11 +6,15 @@ import com.hahaxueche.model.base.BaseItemType;
 import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.base.Field;
+import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Coach;
+import com.hahaxueche.model.user.coach.Review;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.CoachDetailView;
 import com.hahaxueche.util.HHLog;
+
+import java.util.ArrayList;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -21,6 +25,8 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 
 public class CoachDetailPresenter implements Presenter<CoachDetailView> {
+    private static final int PAGE = 1;
+    private static final int PER_PAGE = 10;
     private CoachDetailView mCoachDetailView;
     private Subscription subscription;
     private HHBaseApplication application;
@@ -45,12 +51,13 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
 
     public void setCoach(Coach coach) {
         this.mCoach = coach;
+        if (mCoach == null) return;
         setCoachLabel();
         this.mCoachDetailView.showCoachDetail(mCoach);
+        loadReviews(mCoach.user_id);
     }
 
     private void setCoachLabel() {
-        if (mCoach == null) return;
         Constants constants = application.getConstants();
         for (BaseItemType skillLevel : constants.skill_levels) {
             if (String.valueOf(skillLevel.id).equals(mCoach.skill_level)) {
@@ -92,6 +99,33 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
                     @Override
                     public void onNext(Coach coach) {
                         setCoach(coach);
+                    }
+                });
+    }
+
+    private void loadReviews(String coachUserId) {
+        HHApiService apiService = application.getApiService();
+        subscription = apiService.getReviews(coachUserId, PAGE, PER_PAGE)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<ReviewResponseList>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(ReviewResponseList reviewResponseList) {
+                        if (reviewResponseList != null && reviewResponseList.data != null && reviewResponseList.data.size() > 0) {
+                            mCoachDetailView.showReviews(reviewResponseList);
+                        } else {
+                            mCoachDetailView.showNoReview(mCoach.name);
+                        }
                     }
                 });
     }

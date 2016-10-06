@@ -1,5 +1,7 @@
 package com.hahaxueche.model.user;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
 
 import com.hahaxueche.model.payment.BankCard;
@@ -13,7 +15,7 @@ import java.util.List;
 /**
  * Created by wangshirui on 16/9/10.
  */
-public class Student {
+public class Student implements Parcelable {
     public String id;
     public String cell_phone;
     public String name;
@@ -27,6 +29,37 @@ public class Student {
     public int bonus_balance;
     public BankCard bank_card;
     public ArrayList<Coupon> coupons;
+
+    public Student() {
+
+    }
+
+    protected Student(Parcel in) {
+        id = in.readString();
+        cell_phone = in.readString();
+        name = in.readString();
+        city_id = in.readInt();
+        user_id = in.readString();
+        avatar = in.readString();
+        current_coach_id = in.readString();
+        phase = in.readInt();
+        current_course = in.readInt();
+        bonus_balance = in.readInt();
+        bank_card = in.readParcelable(BankCard.class.getClassLoader());
+        coupons = in.createTypedArrayList(Coupon.CREATOR);
+    }
+
+    public static final Creator<Student> CREATOR = new Creator<Student>() {
+        @Override
+        public Student createFromParcel(Parcel in) {
+            return new Student(in);
+        }
+
+        @Override
+        public Student[] newArray(int size) {
+            return new Student[size];
+        }
+    };
 
     private boolean isPurchasedService() {
         return purchased_services != null && purchased_services.size() > 0;
@@ -75,5 +108,26 @@ public class Student {
         } else {
             return "目前阶段：未付款";
         }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(cell_phone);
+        dest.writeString(name);
+        dest.writeInt(city_id);
+        dest.writeString(user_id);
+        dest.writeString(avatar);
+        dest.writeString(current_coach_id);
+        dest.writeInt(phase);
+        dest.writeInt(current_course);
+        dest.writeInt(bonus_balance);
+        dest.writeParcelable(bank_card, flags);
+        dest.writeTypedList(coupons);
     }
 }

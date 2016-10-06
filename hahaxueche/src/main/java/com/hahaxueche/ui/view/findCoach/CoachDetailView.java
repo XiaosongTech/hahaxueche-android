@@ -1,5 +1,6 @@
 package com.hahaxueche.ui.view.findCoach;
 
+import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.ui.view.base.HHBaseView;
 
@@ -11,4 +12,8 @@ public interface CoachDetailView extends HHBaseView {
     void showCoachDetail(Coach coach);
 
     void showMessage(String message);
+
+    void showNoReview(String coachName);
+
+    void showReviews(ReviewResponseList responseList);
 }

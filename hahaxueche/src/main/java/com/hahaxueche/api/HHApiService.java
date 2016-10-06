@@ -7,6 +7,7 @@ import com.hahaxueche.model.base.BaseModel;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.responseList.CoachResponseList;
+import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.user.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Coach;
@@ -95,6 +96,12 @@ public interface HHApiService {
 
     @GET("coaches/{id}")
     Observable<Coach> getCoach(@Path("id") String coachId, @Query("student_id") String studentId);
+
+    @GET("users/reviews/{id}")
+    Observable<ReviewResponseList> getReviews(@Path("id") String coachUserId, @Query("page") int page, @Query("per_page") int perPage);
+
+    @GET
+    Observable<ReviewResponseList> getReviews(@Url String path);
 
     class Factory {
         public static HHApiService create() {
