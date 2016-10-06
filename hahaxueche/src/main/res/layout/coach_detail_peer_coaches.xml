@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lly_peer_coaches"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/haha_white"
     android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:paddingBottom="14dp">
+    android:orientation="vertical">
 
     <View
         android:layout_width="match_parent"

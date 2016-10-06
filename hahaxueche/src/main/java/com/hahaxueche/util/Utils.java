@@ -13,6 +13,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by wangshirui on 16/9/9.
@@ -102,6 +103,17 @@ public class Utils {
         return count > 9999 ? (dfInt.format(count / 10000.0) + "万") : String.valueOf(count);
     }
 
+    public static String getRate(String rate) {
+        String ret = "";
+        DecimalFormat dfInt = new DecimalFormat("#####");
+        try {
+            ret = dfInt.format(Double.parseDouble(rate)) + "%";
+        } catch (Exception e) {
+            HHLog.e(e.getMessage());
+        }
+        return ret;
+    }
+
     public static String getDateFromUTC(String UTCTime) {
         String localTimeStr = null;
         DateFormat UTCformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -135,5 +147,24 @@ public class Utils {
             sHandler = new Handler(Looper.getMainLooper());
         }
         sHandler.post(runnable);
+    }
+
+    private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
+
+    /**
+     * API<17时，生成viewid
+     *
+     * @return
+     */
+    public static int generateViewId() {
+        for (; ; ) {
+            final int result = sNextGeneratedId.get();
+            // aapt-generated IDs have the high byte nonzero; clamp to the range under that.
+            int newValue = result + 1;
+            if (newValue > 0x00FFFFFF) newValue = 1; // Roll over to 1, not 0.
+            if (sNextGeneratedId.compareAndSet(result, newValue)) {
+                return result;
+            }
+        }
     }
 }

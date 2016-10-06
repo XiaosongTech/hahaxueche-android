@@ -1,6 +1,7 @@
 package com.hahaxueche.ui.activity.findCoach;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -8,12 +9,15 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
 import com.hahaxueche.model.user.coach.Coach;
@@ -23,6 +27,8 @@ import com.hahaxueche.ui.view.findCoach.CoachDetailView;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
 import com.hahaxueche.util.Utils;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -75,6 +81,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     LinearLayout mLlyTrainSchool;
     @BindView(R.id.tv_train_school)
     TextView mTvTrainSchoolName;
+    @BindView(R.id.lly_peer_coaches)
+    LinearLayout mLlyPeerCoaches;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,7 +152,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             mIvGoldenCoach.setVisibility(View.GONE);
             mTvCoachLevel.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         }
-        mTvSatisfactionRate.setText(coach.satisfaction_rate + "%");
+
+        mTvSatisfactionRate.setText(Utils.getRate(coach.satisfaction_rate));
         mTvCoachLevel.setText(coach.skill_level_label);
         //价格
         mTvNormalPrice.setText(Utils.getMoney(coach.coach_group.training_cost));
@@ -159,16 +168,14 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             mTvOldVipPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         }
         mTvTrainLocation.setText(mPresenter.getTrainingFieldName());
-        /*peerCoachList = mCoach.getPeer_coaches();
-        if (peerCoachList != null && peerCoachList.size() > 0) {
-            peerCoachItemAdapter = new PeerCoachItemAdapter(CoachDetailActivity.this, peerCoachList, R.layout.view_peer_coach_item);
-            lvPeerCoach.setAdapter(peerCoachItemAdapter);
-            setListViewHeightBasedOnChildren(lvPeerCoach);
-            msvCoachDetail.smoothScrollTo(0, 0);
+        ArrayList<Coach> peerCoaches = coach.peer_coaches;
+        if (peerCoaches != null && peerCoaches.size() > 0) {
+            for (Coach peerCoach : peerCoaches) {
+                mLlyPeerCoaches.addView(getPeerCoachAdapter(peerCoach));
+            }
         } else {
-            llyPeerCoachTitle.setVisibility(View.GONE);
-        }*/
-
+            mLlyPeerCoaches.setVisibility(View.GONE);
+        }
 
         if (coach.license_type.equals("1")) {
             mTvLicenseType.setText("C1手动档");
@@ -199,5 +206,62 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     @Override
     public void showMessage(String message) {
         Snackbar.make(mSvMain, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    private RelativeLayout getPeerCoachAdapter(final Coach coach) {
+        RelativeLayout rly = new RelativeLayout(this);
+        LinearLayout.LayoutParams rlyParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        rly.setLayoutParams(rlyParams);
+
+        SimpleDraweeView ivAvatar = new SimpleDraweeView(this);
+        GenericDraweeHierarchy hierarchy = ivAvatar.getHierarchy();
+        hierarchy.setPlaceholderImage(R.drawable.ic_coach_ava);
+        hierarchy.setRoundingParams(new RoundingParams().setRoundAsCircle(true));
+        RelativeLayout.LayoutParams ivAvatarParams = new RelativeLayout.LayoutParams(Utils.instence(this).dip2px(40), Utils.instence(this).dip2px(40));
+        ivAvatarParams.setMargins(Utils.instence(this).dip2px(20), Utils.instence(this).dip2px(15), Utils.instence(this).dip2px(10), Utils.instence(this).dip2px(15));
+        ivAvatar.setLayoutParams(ivAvatarParams);
+        ivAvatar.setImageURI(coach.avatar);
+        int ivAvatarId = Utils.generateViewId();
+        ivAvatar.setId(ivAvatarId);
+        rly.addView(ivAvatar);
+
+        TextView tvName = new TextView(this);
+        RelativeLayout.LayoutParams tvNameParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvNameParams.addRule(RelativeLayout.RIGHT_OF, ivAvatarId);
+        tvNameParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        tvName.setLayoutParams(tvNameParams);
+        tvName.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
+        tvName.setTextSize(16);
+        tvName.setText(coach.name);
+        rly.addView(tvName);
+
+        ImageView ivArrow = new ImageView(this);
+        RelativeLayout.LayoutParams ivArrowParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        ivArrowParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        ivArrowParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+        ivArrowParams.setMargins(0, 0, Utils.instence(this).dip2px(20), 0);
+        ivArrow.setLayoutParams(ivArrowParams);
+        ivArrow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_coachmsg_more_arrow));
+        rly.addView(ivArrow);
+
+        View divider = new View(this);
+        RelativeLayout.LayoutParams dividerParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.divider_width));
+        dividerParams.setMargins(Utils.instence(this).dip2px(20), 0, 0, 0);
+        dividerParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+        divider.setLayoutParams(dividerParams);
+        divider.setBackgroundColor(ContextCompat.getColor(this, R.color.haha_gray_divider));
+        rly.addView(divider);
+
+        //点击合作教练,查看详情
+        rly.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), CoachDetailActivity.class);
+                intent.putExtra("coach_id", coach.id);
+                startActivity(intent);
+            }
+        });
+
+        return rly;
     }
 }
