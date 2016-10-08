@@ -12,8 +12,6 @@ import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.FindCoachView;
 import com.hahaxueche.util.HHLog;
 
-import java.util.ArrayList;
-
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -28,7 +26,6 @@ public class FindCoachPresenter implements Presenter<FindCoachView> {
     private FindCoachView mFindCoachView;
     private Subscription subscription;
     private HHBaseApplication application;
-    private ArrayList<Coach> mCoachArrayList;
     private String nextLink;
     private String filterDistance;
     private String filterPrice;

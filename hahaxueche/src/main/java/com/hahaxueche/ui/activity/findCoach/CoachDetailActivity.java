@@ -34,6 +34,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by wangshirui on 16/10/5.
@@ -224,6 +225,13 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         mTvMoreReviews.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
     }
 
+    @OnClick(R.id.fly_more_comments)
+    public void showMoreReviews() {
+        Intent intent = new Intent(getContext(), ReviewListActivity.class);
+        intent.putExtra("coach", mPresenter.getCoach());
+        startActivity(intent);
+    }
+
     @Override
     public void showReviews(ReviewResponseList responseList) {
         mReviewResponse = responseList;
@@ -364,7 +372,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         View divider = new View(this);
         RelativeLayout.LayoutParams dividerParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.divider_width));
         if (!isLastLine) {
-            dividerParams.setMargins(Utils.instence(this).dip2px(20), Utils.instence(this).dip2px(14), 0, 0);
+            dividerParams.setMargins(Utils.instence(this).dip2px(20), Utils.instence(this).dip2px(15), 0, 0);
         } else {
             dividerParams.setMargins(0, Utils.instence(this).dip2px(15), 0, 0);
         }

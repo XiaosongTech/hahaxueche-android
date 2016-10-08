@@ -57,6 +57,10 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         loadReviews(mCoach.user_id);
     }
 
+    public Coach getCoach() {
+        return mCoach;
+    }
+
     private void setCoachLabel() {
         Constants constants = application.getConstants();
         for (BaseItemType skillLevel : constants.skill_levels) {

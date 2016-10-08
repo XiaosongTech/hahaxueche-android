@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/haha_white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:layout_marginTop="14dp">
+
+        <TextView
+            android:id="@+id/tv_comments_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:drawableLeft="@drawable/ic_coachmsg_pingjia"
+            android:drawablePadding="6dp"
+            android:textColor="@color/app_theme_color"
+            android:textSize="14sp" />
+
+        <com.hahaxueche.ui.widget.scoreView.ScoreView
+            android:id="@+id/sv_average_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"></com.hahaxueche.ui.widget.scoreView.ScoreView>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_width"
+        android:background="@color/haha_gray_background" />
+
+    <com.hahaxueche.ui.widget.pullToRefreshView.XListView
+        android:id="@+id/xlv_reviews"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@drawable/divider_left_20dp"
+        android:dividerHeight="@dimen/divider_width"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"></com.hahaxueche.ui.widget.pullToRefreshView.XListView>
+
+</LinearLayout>

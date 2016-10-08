@@ -106,7 +106,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:divider="@drawable/divider_left_20dp"
-        android:dividerHeight="0.3dp"
+        android:dividerHeight="@dimen/divider_width"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
         app:loadMoreTxt="一大波教练接近中~~~"></com.hahaxueche.ui.widget.pullToRefreshView.XListView>
