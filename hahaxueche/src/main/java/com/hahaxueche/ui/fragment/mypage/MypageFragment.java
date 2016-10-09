@@ -21,6 +21,7 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.user.Consultant;
 import com.hahaxueche.model.user.Student;
 import com.hahaxueche.presenter.myPage.MyPagePresenter;
+import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.activity.myPage.FAQActivity;
@@ -148,6 +149,14 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     @OnClick(R.id.rly_online_service)
     public void onlineAsk() {
         mPresenter.onlineAsk();
+    }
+
+    @OnClick(R.id.tv_back_login)
+    public void toLogin() {
+        ActivityCollector.finishAll();
+        Intent intent = new Intent(getContext(), StartLoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @OnClick(R.id.rly_my_consultant)
