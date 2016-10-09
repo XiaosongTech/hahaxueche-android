@@ -25,6 +25,7 @@ import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.activity.myPage.FAQActivity;
+import com.hahaxueche.ui.activity.myPage.FollowListActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.activity.myPage.SoftwareInfoActivity;
 import com.hahaxueche.ui.dialog.AvatarDialog;
@@ -120,9 +121,12 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     }
 
     @Override
+    @OnClick(R.id.tv_back_login)
     public void finishToStartLogin() {
-        startActivity(new Intent(getContext(), StartLoginActivity.class));
-        mActivity.finish();
+        ActivityCollector.finishAll();
+        Intent intent = new Intent(getContext(), StartLoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @Override
@@ -151,12 +155,9 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
         mPresenter.onlineAsk();
     }
 
-    @OnClick(R.id.tv_back_login)
-    public void toLogin() {
-        ActivityCollector.finishAll();
-        Intent intent = new Intent(getContext(), StartLoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+    @OnClick(R.id.rly_my_follow_coach)
+    public void navigateToFollwList() {
+        startActivity(new Intent(getContext(), FollowListActivity.class));
     }
 
     @OnClick(R.id.rly_my_consultant)

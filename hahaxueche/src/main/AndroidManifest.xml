@@ -78,5 +78,9 @@
             android:name=".ui.activity.findCoach.ReviewListActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.myPage.FollowListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
     </application>
 </manifest>
