@@ -29,6 +29,7 @@ import com.hahaxueche.ui.activity.myPage.FollowListActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.activity.myPage.SoftwareInfoActivity;
 import com.hahaxueche.ui.dialog.AvatarDialog;
+import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.community.MyConsultantDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.myPage.MyPageView;
@@ -96,7 +97,20 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
 
     @OnClick(R.id.tv_logout)
     public void logOut() {
-        mPresenter.logOut();
+        BaseConfirmSimpleDialog baseConfirmSimpleDialog = new BaseConfirmSimpleDialog(getContext(),
+                "哈哈学车", "是否退出登录？", "确定", "取消", new BaseConfirmSimpleDialog.onConfirmListener() {
+            @Override
+            public boolean clickConfirm() {
+                mPresenter.logOut();
+                return true;
+            }
+        }, new BaseConfirmSimpleDialog.onCancelListener() {
+            @Override
+            public boolean clickCancel() {
+                return false;
+            }
+        });
+        baseConfirmSimpleDialog.show();
     }
 
     @Override
