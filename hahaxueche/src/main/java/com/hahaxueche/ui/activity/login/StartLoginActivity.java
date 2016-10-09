@@ -33,34 +33,27 @@ import butterknife.OnClick;
  * Created by wangshirui on 16/9/9.
  */
 public class StartLoginActivity extends HHBaseActivity implements ViewPager.OnPageChangeListener, OnItemClickListener, StartLoginView {
-    @BindView(R.id.iv_back)
-    ImageView mIvBack;
     @BindView(R.id.banner_login)
     ConvenientBanner mLoginBanner;
-    private Constants mConstants;
     private StartLoginPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPresenter = new StartLoginPresenter();
-        mPresenter.attachView(this);
         setTheme(R.style.AppThemeNoTitle);
         setContentView(R.layout.acitivity_start_login);
         ButterKnife.bind(this);
-        initBanners();
+        mPresenter.attachView(this);
     }
 
-    private void initBanners() {
-        HHBaseApplication application = HHBaseApplication.get(getContext());
-        mConstants = application.getConstants();
-        if (mConstants == null) return;
-
+    @Override
+    public void initBanners(ArrayList<Banner> bannerArrayList) {
         int screenWidth = Utils.instence(this).getDm().widthPixels;
         RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(screenWidth, screenWidth);
         mLoginBanner.setLayoutParams(p);
         ArrayList<String> networkImages = new ArrayList<>();
-        for (Banner banner : mConstants.new_login_banners) {
+        for (Banner banner : bannerArrayList) {
             networkImages.add(banner.image_url);
         }
         mLoginBanner.setPages(new CBViewHolderCreator<NetworkImageHolderView>() {
@@ -100,11 +93,6 @@ public class StartLoginActivity extends HHBaseActivity implements ViewPager.OnPa
         mPresenter.navigateToRegister();
     }
 
-    @OnClick(R.id.iv_back)
-    public void back() {
-        HHLog.v("click back");
-    }
-
     @OnClick(R.id.tv_tourist_login)
     public void touristLogin() {
         mPresenter.touristLogin();
@@ -112,15 +100,7 @@ public class StartLoginActivity extends HHBaseActivity implements ViewPager.OnPa
 
     @Override
     public void onItemClick(int i) {
-        if (mConstants == null) return;
-        if (!TextUtils.isEmpty(mConstants.new_login_banners.get(i).target_url)) {
-            /*Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("url", mConstants.getNew_login_banners().get(i).getTarget_url());
-            intent.putExtras(bundle);
-            startActivity(intent);*/
-            HHLog.v("target url -> " + mConstants.new_login_banners.get(i).target_url);
-        }
+        mPresenter.bannerClick(i);
     }
 
     @Override

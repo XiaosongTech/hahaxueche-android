@@ -1,7 +1,5 @@
 package com.hahaxueche.ui.activity.findCoach;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;

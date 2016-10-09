@@ -1,8 +1,12 @@
 package com.hahaxueche.presenter.login;
 
+import android.text.TextUtils;
+
 import com.hahaxueche.HHBaseApplication;
+import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.login.StartLoginView;
+import com.hahaxueche.util.HHLog;
 
 import rx.Subscription;
 
@@ -12,9 +16,13 @@ import rx.Subscription;
 public class StartLoginPresenter implements Presenter<StartLoginView> {
     private StartLoginView mStartLoginView;
     private Subscription subscription;
+    private Constants constants;
 
     public void attachView(StartLoginView view) {
         this.mStartLoginView = view;
+        HHBaseApplication application = HHBaseApplication.get(mStartLoginView.getContext());
+        constants = application.getConstants();
+        mStartLoginView.initBanners(constants.new_login_banners);
     }
 
     public void detachView() {
@@ -34,5 +42,14 @@ public class StartLoginPresenter implements Presenter<StartLoginView> {
         HHBaseApplication application = HHBaseApplication.get(mStartLoginView.getContext());
         application.getSharedPrefUtil().createFakeUser();
         mStartLoginView.navigateToHomepage();
+    }
+    public void bannerClick(int i) {
+        try {
+            if (!TextUtils.isEmpty(constants.new_login_banners.get(i).target_url)) {
+                mStartLoginView.openWebView(constants.new_login_banners.get(i).target_url);
+            }
+        } catch (Exception e) {
+            HHLog.e(e.getMessage());
+        }
     }
 }
