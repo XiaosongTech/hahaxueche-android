@@ -40,6 +40,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
     private static final String WEB_URL_MY_STRENGTHS = "http://activity.hahaxueche.com/share/features";
     private static final String WEB_URL_PROCEDURE = "http://activity.hahaxueche.com/share/steps";
     private static final String WEB_URL_FREE_TRY = "http://m.hahaxueche.com/free_trial?promo_code=553353";
+    private static final String WEB_URL_BEST_COACHES = "http://m.hahaxueche.com/share/best-coaches";
 
     private HHBaseApplication application;
     private Constants constants;
@@ -70,6 +71,10 @@ public class HomepagePresenter implements Presenter<HomepageView> {
 
     public void openMyStrengths() {
         mHomepageView.openWebView(WEB_URL_MY_STRENGTHS);
+    }
+
+    public void openBestCoaches(){
+        mHomepageView.openWebView(WEB_URL_BEST_COACHES);
     }
 
     public void openProcedure() {

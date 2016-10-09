@@ -118,6 +118,11 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         }
     }
 
+    @OnClick(R.id.cv_coach)
+    public void openBestCoaches() {
+        mPresenter.openBestCoaches();
+    }
+
     @OnClick(R.id.frl_online_ask)
     public void onlineAsk() {
         mPresenter.onlineAsk();
