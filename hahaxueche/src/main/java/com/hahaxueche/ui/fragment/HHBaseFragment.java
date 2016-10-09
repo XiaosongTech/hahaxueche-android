@@ -42,6 +42,29 @@ public class HHBaseFragment extends Fragment implements HHBaseView {
     }
 
     @Override
+    public void alertToLogin() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("提示");
+        builder.setMessage("请先登录或者注册");
+        builder.setPositiveButton("现在就去", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ActivityCollector.finishAll();
+                Intent intent = new Intent(getContext(), StartLoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
+        builder.setNegativeButton("再看看", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
+
+    @Override
     public void showProgressDialog() {
         showProgressDialog("数据加载中，请稍后……");
     }

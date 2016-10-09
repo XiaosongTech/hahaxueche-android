@@ -3,6 +3,7 @@ package com.hahaxueche.api;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hahaxueche.BuildConfig;
+import com.hahaxueche.model.base.BaseBoolean;
 import com.hahaxueche.model.base.BaseModel;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.Constants;
@@ -11,6 +12,7 @@ import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.user.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Coach;
+import com.hahaxueche.model.user.coach.Follow;
 import com.hahaxueche.util.HHLog;
 
 
@@ -102,6 +104,21 @@ public interface HHApiService {
 
     @GET
     Observable<ReviewResponseList> getReviews(@Url String path);
+
+    @GET("users/follows/{id}")
+    Observable<BaseBoolean> isFollow(@Path("id") String coachUserId, @Header("X-Access-Token") String accessToken);
+
+    @POST("users/follows/{id}")
+    Observable<Follow> follow(@Path("id") String coachUserId, @Header("X-Access-Token") String accessToken);
+
+    @DELETE("users/follows/{id}")
+    Observable<BaseModel> cancelFollow(@Path("id") String coachUserId, @Header("X-Access-Token") String accessToken);
+
+    @GET("users/follows")
+    Observable<CoachResponseList> getFollowList(@Query("page") int page, @Query("per_page") int perPage, @Header("X-Access-Token") String accessToken);
+
+    @GET
+    Observable<CoachResponseList> getFollowList(@Url String path);
 
     class Factory {
         public static HHApiService create() {

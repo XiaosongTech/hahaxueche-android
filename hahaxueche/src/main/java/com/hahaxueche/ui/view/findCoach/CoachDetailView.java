@@ -16,4 +16,8 @@ public interface CoachDetailView extends HHBaseView {
     void showNoReview(String coachName);
 
     void showReviews(ReviewResponseList responseList);
+
+    void enableFollow(boolean enable);
+
+    void showFollow(boolean isFollow);
 }

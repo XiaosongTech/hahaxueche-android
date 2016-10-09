@@ -1,5 +1,7 @@
 package com.hahaxueche.ui.activity.findCoach;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -92,6 +94,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     FrameLayout mFlyMoreComments;
     @BindView(R.id.tv_more_reviews)
     TextView mTvMoreReviews;
+    @BindView(R.id.tv_follow)
+    TextView mTvFollow;
     private ReviewResponseList mReviewResponse;
 
     @Override
@@ -232,12 +236,33 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         startActivity(intent);
     }
 
+    @OnClick(R.id.tv_follow)
+    public void clickFollow() {
+        mPresenter.follow();
+    }
+
     @Override
     public void showReviews(ReviewResponseList responseList) {
         mReviewResponse = responseList;
         int showReviewCount = responseList.data.size() > 3 ? 3 : responseList.data.size();
         for (int i = 0; i < showReviewCount; i++) {
             mLlyReviews.addView(getReviewAdapter(responseList.data.get(i), i == showReviewCount - 1), i + 2);
+        }
+    }
+
+    @Override
+    public void enableFollow(boolean enable) {
+        mTvFollow.setClickable(enable);
+    }
+
+    @Override
+    public void showFollow(boolean isFollow) {
+        if (isFollow) {
+            mTvFollow.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
+            mTvFollow.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(this, R.drawable.ic_coachmsg_attention_on), null, null);
+        } else {
+            mTvFollow.setTextColor(ContextCompat.getColor(this, R.color.haha_gray_text));
+            mTvFollow.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(this, R.drawable.ic_coachmsg_attention_hold), null, null);
         }
     }
 

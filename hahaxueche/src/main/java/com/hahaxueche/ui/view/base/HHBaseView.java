@@ -17,4 +17,6 @@ public interface HHBaseView {
     void showError(String message);
 
     void forceOffline();
+
+    void alertToLogin();
 }
