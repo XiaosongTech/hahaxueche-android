@@ -52,7 +52,6 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         mHomepageView.initBanners(constants.new_home_page_banners);
         loadStatistics();
         loadCityChoseDialog();
-        doVersionCheck();
     }
 
     public void detachView() {

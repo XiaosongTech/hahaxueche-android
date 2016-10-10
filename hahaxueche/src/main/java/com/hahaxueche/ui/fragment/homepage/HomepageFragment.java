@@ -59,6 +59,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     TextView mTvPaidStudentCount;
 
     private CityChoseDialog mCityChoseDialog;
+    private static final int PERMISSIONS_REQUEST_SDCARD = 600;
 
 
     @Override
@@ -74,6 +75,17 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
         ButterKnife.bind(this, view);
         mPresenter.attachView(this);
+        // Check the SDK version and whether the permission is already granted or not.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                (mActivity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                        || mActivity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                        || mActivity.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, PERMISSIONS_REQUEST_SDCARD);
+            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+        } else {
+            // Android version is lesser than 6.0 or the permission is already granted.
+            mPresenter.doVersionCheck();
+        }
         return view;
     }
 
@@ -152,6 +164,13 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                 contactService();
             } else {
                 showMessage("请允许拨打电话权限，不然无法直接拨号联系客服");
+            }
+        } else if (requestCode == PERMISSIONS_REQUEST_SDCARD) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                mPresenter.doVersionCheck();
+            } else {
+                showMessage("请允许读写sdcard权限，不然无法下载最新的安装包");
             }
         }
     }

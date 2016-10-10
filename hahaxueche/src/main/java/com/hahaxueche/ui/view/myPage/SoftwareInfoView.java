@@ -8,4 +8,6 @@ import com.hahaxueche.ui.view.base.HHBaseView;
 
 public interface SoftwareInfoView extends HHBaseView {
     void setVersionCode(String versionCode);
+
+    void showMessage(String message);
 }
