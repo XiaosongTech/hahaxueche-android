@@ -9,6 +9,9 @@ import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -95,6 +98,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     TextView mTvMoreReviews;
     @BindView(R.id.iv_follow)
     ImageView mIvFollow;
+    @BindView(R.id.tv_applaud_count)
+    TextView mTvApplaud;
     private ReviewResponseList mReviewResponse;
 
     @Override
@@ -264,6 +269,39 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         }
     }
 
+    @Override
+    public void enableApplaud(boolean enable) {
+        mTvApplaud.setClickable(enable);
+    }
+
+    @Override
+    public void showApplaud(boolean isApplaud) {
+        mTvApplaud.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(this, isApplaud ? R.drawable.ic_list_best_click : R.drawable.ic_list_best_unclick), null, null, null);
+    }
+
+    @Override
+    public void setApplaudCount(int count) {
+        mTvApplaud.setText(String.valueOf(count));
+    }
+
+    @Override
+    public void startApplaudAnimation() {
+        //点赞
+        AnimationSet animationSet = new AnimationSet(true);
+        ScaleAnimation scaleAnimation = new ScaleAnimation(2f, 1f, 2f, 1f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+        scaleAnimation.setDuration(200);
+        animationSet.addAnimation(scaleAnimation);
+        animationSet.setFillAfter(true); //让其保持动画结束时的状态。
+        mTvApplaud.startAnimation(animationSet);
+    }
+
+    @OnClick(R.id.tv_applaud_count)
+    public void applaud() {
+        mPresenter.applaud();
+    }
+
     private RelativeLayout getPeerCoachAdapter(final Coach coach) {
         RelativeLayout rly = new RelativeLayout(this);
         LinearLayout.LayoutParams rlyParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -405,5 +443,13 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         rly.addView(divider);
 
         return rly;
+    }
+
+    @Override
+    public void finish() {
+        Intent intent = new Intent();
+        intent.putExtra("coach", mPresenter.getCoach());
+        setResult(RESULT_OK, intent);
+        super.finish();
     }
 }

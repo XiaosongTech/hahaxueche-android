@@ -36,7 +36,7 @@ public class Coach implements Parcelable {
     public String assigned_coaches;
     public int vip;
     public int like_count;
-    public String liked;
+    public int liked;
     public String driving_school;
 
     protected Coach(Parcel in) {
@@ -60,14 +60,14 @@ public class Coach implements Parcelable {
         service_type = in.readString();
         satisfaction_rate = in.readString();
         consultant = in.readString();
+        coach_group = in.readParcelable(CoachGroup.class.getClassLoader());
         peer_coaches = in.createTypedArrayList(Coach.CREATOR);
         images = in.createStringArrayList();
         assigned_coaches = in.readString();
         vip = in.readInt();
         like_count = in.readInt();
-        liked = in.readString();
+        liked = in.readInt();
         driving_school = in.readString();
-        coach_group = in.readParcelable(CoachGroup.class.getClassLoader());
     }
 
     public static final Creator<Coach> CREATOR = new Creator<Coach>() {
@@ -109,13 +109,13 @@ public class Coach implements Parcelable {
         dest.writeString(service_type);
         dest.writeString(satisfaction_rate);
         dest.writeString(consultant);
+        dest.writeParcelable(coach_group, flags);
         dest.writeTypedList(peer_coaches);
         dest.writeStringList(images);
         dest.writeString(assigned_coaches);
         dest.writeInt(vip);
         dest.writeInt(like_count);
-        dest.writeString(liked);
+        dest.writeInt(liked);
         dest.writeString(driving_school);
-        dest.writeParcelable(coach_group, flags);
     }
 }

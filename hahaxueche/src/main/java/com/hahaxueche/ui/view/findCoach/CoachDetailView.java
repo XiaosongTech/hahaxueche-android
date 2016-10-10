@@ -20,4 +20,12 @@ public interface CoachDetailView extends HHBaseView {
     void enableFollow(boolean enable);
 
     void showFollow(boolean isFollow);
+
+    void enableApplaud(boolean enable);
+
+    void showApplaud(boolean isApplaud);
+
+    void setApplaudCount(int count);
+
+    void startApplaudAnimation();
 }

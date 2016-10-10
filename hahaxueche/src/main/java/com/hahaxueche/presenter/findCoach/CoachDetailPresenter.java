@@ -39,6 +39,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
     private Coach mCoach;
     private User mUser;
     private boolean isFollow;
+    private boolean isApplaud;
 
     @Override
     public void attachView(CoachDetailView view) {
@@ -63,6 +64,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         this.mCoachDetailView.showCoachDetail(mCoach);
         loadReviews();
         loadFollow();
+        loadApplaud();
     }
 
     public Coach getCoach() {
@@ -268,6 +270,103 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
                         public void onNext(Follow follow) {
                             isFollow = true;
                             mCoachDetailView.showFollow(isFollow);
+                        }
+                    });
+        }
+    }
+
+    private void loadApplaud() {
+        isApplaud = (mCoach.liked == 1);
+        mCoachDetailView.showApplaud(isApplaud);
+        mCoachDetailView.setApplaudCount(mCoach.like_count);
+    }
+
+    public void applaud() {
+        if (mUser == null || !mUser.isLogin()) {
+            mCoachDetailView.alertToLogin();
+            return;
+        }
+        final HHApiService apiService = application.getApiService();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("cell_phone", mUser.cell_phone);
+        final HashMap<String, Object> mapParam = new HashMap<>();
+        mCoachDetailView.enableApplaud(false);
+        if (isApplaud) {
+            mapParam.put("like", 0);
+            subscription = apiService.isValidToken(mUser.session.access_token, map)
+                    .flatMap(new Func1<BaseValid, Observable<Coach>>() {
+                        @Override
+                        public Observable<Coach> call(BaseValid baseValid) {
+                            if (baseValid.valid) {
+                                return apiService.like(mUser.student.id, mCoach.id, mapParam, mUser.session.access_token);
+                            } else {
+                                return application.getSessionObservable();
+                            }
+                        }
+                    })
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(application.defaultSubscribeScheduler())
+                    .subscribe(new Subscriber<Coach>() {
+                        @Override
+                        public void onCompleted() {
+                            loadApplaud();
+                            mCoachDetailView.enableApplaud(true);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            mCoachDetailView.enableApplaud(true);
+                            if (ErrorUtil.isInvalidSession(e)) {
+                                mCoachDetailView.forceOffline();
+                            }
+                            HHLog.e(e.getMessage());
+                        }
+
+                        @Override
+                        public void onNext(Coach coach) {
+                            mCoach = coach;
+                        }
+                    });
+        } else {
+            mapParam.put("like", 1);
+            subscription = apiService.isValidToken(mUser.session.access_token, map)
+                    .flatMap(new Func1<BaseValid, Observable<Coach>>() {
+                        @Override
+                        public Observable<Coach> call(BaseValid baseValid) {
+                            if (baseValid.valid) {
+                                return apiService.like(mUser.student.id, mCoach.id, mapParam, mUser.session.access_token);
+                            } else {
+                                return application.getSessionObservable();
+                            }
+                        }
+                    })
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(application.defaultSubscribeScheduler())
+                    .subscribe(new Subscriber<Coach>() {
+                        @Override
+                        public void onStart() {
+                            super.onStart();
+                            mCoachDetailView.startApplaudAnimation();
+                        }
+
+                        @Override
+                        public void onCompleted() {
+                            loadApplaud();
+                            mCoachDetailView.enableApplaud(true);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            mCoachDetailView.enableApplaud(true);
+                            if (ErrorUtil.isInvalidSession(e)) {
+                                mCoachDetailView.forceOffline();
+                            }
+                            HHLog.e(e.getMessage());
+                        }
+
+                        @Override
+                        public void onNext(Coach coach) {
+                            mCoach = coach;
                         }
                     });
         }

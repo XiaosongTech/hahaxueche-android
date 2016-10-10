@@ -1,6 +1,8 @@
 package com.hahaxueche.ui.fragment.findCoach;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,12 +22,17 @@ import com.hahaxueche.ui.dialog.findCoach.CoachSortDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.findCoach.FindCoachView;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
+import com.hahaxueche.util.PhotoUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by wangshirui on 16/9/13.
@@ -41,6 +48,8 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView, 
     private ArrayList<Coach> mCoachArrayList;
     private CoachFilterDialog mFilterDialog;
     private CoachSortDialog mSortDialog;
+
+    private static final int REQEUST_CODE_COACH_DETAIL = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,7 +114,7 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView, 
         if (mCoachArrayList != null && mCoachArrayList.size() > 0 && position > 0 && position - 1 < mCoachArrayList.size()) {
             Intent intent = new Intent(getContext(), CoachDetailActivity.class);
             intent.putExtra("coach", mCoachArrayList.get(position - 1));
-            startActivityForResult(intent, 1);
+            startActivityForResult(intent, REQEUST_CODE_COACH_DETAIL);
         }
     }
 
@@ -141,5 +150,25 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView, 
     @OnClick(R.id.iv_search)
     public void clickSearchCoach() {
         startActivity(new Intent(getContext(), SearchCoachActivity.class));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQEUST_CODE_COACH_DETAIL) {
+            if (resultCode == RESULT_OK && null != data) {
+                Coach retCoach = data.getParcelableExtra("coach");
+                if (retCoach != null) {
+                    for (Coach coach : mCoachArrayList) {
+                        if (coach.id.equals(retCoach.id)) {
+                            coach.like_count = retCoach.like_count;
+                            coach.liked = retCoach.liked;
+                            mCoachAdapter.notifyDataSetChanged();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
