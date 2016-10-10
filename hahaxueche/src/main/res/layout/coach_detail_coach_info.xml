@@ -66,6 +66,15 @@
             android:gravity="bottom"
             android:textColor="@color/app_theme_color"
             android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/iv_follow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="6dp"
+            android:layout_toLeftOf="@id/tv_applaud_count"
+            android:src="@drawable/ic_coachmsg_attention_hold" />
     </RelativeLayout>
 
     <TextView

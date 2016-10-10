@@ -44,6 +44,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     private CoachDetailPresenter mPresenter;
     private ImageView mIvBack;
     private TextView mTvTitle;
+    private ImageView mIvShare;
     @BindView(R.id.sv_main)
     ScrollView mSvMain;
     @BindView(R.id.tv_coach_name)
@@ -92,8 +93,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     FrameLayout mFlyMoreComments;
     @BindView(R.id.tv_more_reviews)
     TextView mTvMoreReviews;
-    @BindView(R.id.tv_follow)
-    TextView mTvFollow;
+    @BindView(R.id.iv_follow)
+    ImageView mIvFollow;
     private ReviewResponseList mReviewResponse;
 
     @Override
@@ -120,7 +121,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
 
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setCustomView(R.layout.actionbar_base);
+        actionBar.setCustomView(R.layout.actionbar_base_share);
         mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
         mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -131,6 +132,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 CoachDetailActivity.this.finish();
             }
         });
+        mIvShare = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_share);
     }
 
     @Override
@@ -234,7 +236,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         startActivity(intent);
     }
 
-    @OnClick(R.id.tv_follow)
+    @OnClick(R.id.iv_follow)
     public void clickFollow() {
         mPresenter.follow();
     }
@@ -250,17 +252,15 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
 
     @Override
     public void enableFollow(boolean enable) {
-        mTvFollow.setClickable(enable);
+        mIvFollow.setClickable(enable);
     }
 
     @Override
     public void showFollow(boolean isFollow) {
         if (isFollow) {
-            mTvFollow.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
-            mTvFollow.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(this, R.drawable.ic_coachmsg_attention_on), null, null);
+            mIvFollow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_coachmsg_attention_on));
         } else {
-            mTvFollow.setTextColor(ContextCompat.getColor(this, R.color.haha_gray_text));
-            mTvFollow.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(this, R.drawable.ic_coachmsg_attention_hold), null, null);
+            mIvFollow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_coachmsg_attention_hold));
         }
     }
 

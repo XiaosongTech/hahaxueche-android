@@ -42,7 +42,7 @@ public class ArticleActivity extends HHBaseActivity implements ArticleView {
 
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setCustomView(R.layout.actionbar_article);
+        actionBar.setCustomView(R.layout.actionbar_base_share);
         mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
         mIvShare = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_share);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
