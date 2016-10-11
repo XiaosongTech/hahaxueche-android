@@ -1,8 +1,6 @@
 package com.hahaxueche.ui.fragment.findCoach;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,23 +20,19 @@ import com.hahaxueche.ui.dialog.findCoach.CoachSortDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.findCoach.FindCoachView;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
-import com.hahaxueche.util.PhotoUtil;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by wangshirui on 16/9/13.
  */
 public class FindCoachFragment extends HHBaseFragment implements FindCoachView, XListView.IXListViewListener, AdapterView.OnItemClickListener {
-    private MainActivity mActivity;
     private FindCoachPresenter mPresenter;
     @BindView(R.id.xlv_coaches)
     XListView mXlvCoaches;
@@ -54,7 +48,6 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView, 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivity = (MainActivity) getActivity();
         mPresenter = new FindCoachPresenter();
     }
 
