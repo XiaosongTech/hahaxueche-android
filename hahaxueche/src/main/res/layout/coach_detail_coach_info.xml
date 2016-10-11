@@ -16,7 +16,7 @@
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginLeft="30dp"
-        fresco:placeholderImage="@drawable/ic_mypage_ava"
+        fresco:placeholderImage="@drawable/ic_coach_ava"
         fresco:roundAsCircle="true"
         fresco:roundingBorderColor="@color/haha_white"
         fresco:roundingBorderWidth="3dp"></com.facebook.drawee.view.SimpleDraweeView>

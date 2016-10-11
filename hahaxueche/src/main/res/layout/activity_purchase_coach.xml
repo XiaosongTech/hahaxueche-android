@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/crl_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/haha_gray_background"
+    android:orientation="vertical">
+
+    <include layout="@layout/purchase_coach_info" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/section_margin_top"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/lly_purchase"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <include layout="@layout/purchase_coach_prices" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/section_margin_top"
+                android:background="@color/haha_white"
+                android:paddingBottom="10dp"
+                android:paddingLeft="20dp"
+                android:paddingTop="10dp"
+                android:text="支付方式"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_sure_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/rect_bg_appcolor_ssm"
+                android:paddingBottom="15dp"
+                android:paddingLeft="100dp"
+                android:paddingRight="100dp"
+                android:paddingTop="15dp"
+                android:text="确认支付"
+                android:textColor="@color/haha_white"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
