@@ -17,6 +17,8 @@ public class CoachGroup implements Parcelable {
     public int other_fee;
     public int vip_price;
     public int vip_market_price;
+    public int c2_price;
+    public int c2_vip_price;
 
     protected CoachGroup(Parcel in) {
         id = in.readString();
@@ -29,6 +31,8 @@ public class CoachGroup implements Parcelable {
         other_fee = in.readInt();
         vip_price = in.readInt();
         vip_market_price = in.readInt();
+        c2_price = in.readInt();
+        c2_vip_price = in.readInt();
     }
 
     public static final Creator<CoachGroup> CREATOR = new Creator<CoachGroup>() {
@@ -60,5 +64,7 @@ public class CoachGroup implements Parcelable {
         dest.writeInt(other_fee);
         dest.writeInt(vip_price);
         dest.writeInt(vip_market_price);
+        dest.writeInt(c2_price);
+        dest.writeInt(c2_vip_price);
     }
 }

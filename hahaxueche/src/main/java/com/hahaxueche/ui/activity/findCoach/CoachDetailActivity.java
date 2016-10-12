@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -25,6 +26,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
 import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.user.coach.Coach;
+import com.hahaxueche.model.user.coach.ProductType;
 import com.hahaxueche.model.user.coach.Review;
 import com.hahaxueche.presenter.findCoach.CoachDetailPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
@@ -66,16 +68,6 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     TextView mTvSatisfactionRate;
     @BindView(R.id.tv_coach_level)
     TextView mTvCoachLevel;
-    @BindView(R.id.tv_normal_price)
-    TextView mTvNormalPrice;
-    @BindView(R.id.tv_old_normal_price)
-    TextView mTvOldNormalPrice;
-    @BindView(R.id.tv_vip_price)
-    TextView mTvVipPrice;
-    @BindView(R.id.tv_old_vip_price)
-    TextView mTvOldVipPrice;
-    @BindView(R.id.rly_vip_price)
-    RelativeLayout mRlyVipPrice;
     @BindView(R.id.tv_train_location)
     TextView mTvTrainLocation;
     @BindView(R.id.tv_license_type)
@@ -100,6 +92,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     ImageView mIvFollow;
     @BindView(R.id.tv_applaud_count)
     TextView mTvApplaud;
+    @BindView(R.id.lly_prices)
+    LinearLayout mLlyPrices;
     private ReviewResponseList mReviewResponse;
 
     @Override
@@ -174,18 +168,6 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
 
         mTvSatisfactionRate.setText(Utils.getRate(coach.satisfaction_rate));
         mTvCoachLevel.setText(coach.skill_level_label);
-        //价格
-        mTvNormalPrice.setText(Utils.getMoney(coach.coach_group.training_cost));
-        mTvOldNormalPrice.setText("门市价：" + Utils.getMoney(coach.coach_group.market_price));
-        mTvOldNormalPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-        if (coach.vip == 0) {
-            mRlyVipPrice.setVisibility(View.GONE);
-        } else {
-            mRlyVipPrice.setVisibility(View.VISIBLE);
-            mTvVipPrice.setText(Utils.getMoney(coach.coach_group.vip_price));
-            mTvOldVipPrice.setText("门市价：" + Utils.getMoney(coach.coach_group.vip_market_price));
-            mTvOldVipPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-        }
         mTvTrainLocation.setText(mPresenter.getTrainingFieldName());
         ArrayList<Coach> peerCoaches = coach.peer_coaches;
         if (peerCoaches != null && peerCoaches.size() > 0) {
@@ -297,9 +279,81 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         mTvApplaud.startAnimation(animationSet);
     }
 
+    @Override
+    public void addPrices(ArrayList<ProductType> productTypes) {
+        if (productTypes == null || productTypes.size() < 1) return;
+        for (ProductType productType : productTypes) {
+            mLlyPrices.addView(getPriceAdapter(productType), 1 + productTypes.indexOf(productType));
+        }
+
+    }
+
     @OnClick(R.id.tv_applaud_count)
     public void applaud() {
         mPresenter.applaud();
+    }
+
+    private RelativeLayout getPriceAdapter(ProductType productType) {
+        RelativeLayout rly = new RelativeLayout(this);
+        LinearLayout.LayoutParams rlyParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        rly.setLayoutParams(rlyParams);
+
+        View view = new View(this);
+        RelativeLayout.LayoutParams viewParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.divider_width));
+        view.setLayoutParams(viewParams);
+        view.setBackgroundResource(R.color.haha_gray_divider);
+        rly.addView(view);
+
+        TextView tvName = new TextView(this);
+        RelativeLayout.LayoutParams tvNameParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        tvNameParams.setMargins(Utils.instence(this).dip2px(20), Utils.instence(this).dip2px(15), 0, 0);
+        tvName.setLayoutParams(tvNameParams);
+        tvName.setPadding(Utils.instence(this).dip2px(2), Utils.instence(this).dip2px(1), Utils.instence(this).dip2px(2), Utils.instence(this).dip2px(1));
+        tvName.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
+        tvName.setTextSize(12);
+        tvName.setBackgroundResource(productType.nameBackground);
+        tvName.setText(productType.name);
+        int tvNameId = Utils.generateViewId();
+        tvName.setId(tvNameId);
+        rly.addView(tvName);
+
+        TextView tvLabel = new TextView(this);
+        RelativeLayout.LayoutParams tvLabelParams = new RelativeLayout.LayoutParams(Utils.instence(this).dip2px(32), RelativeLayout.LayoutParams.WRAP_CONTENT);
+        tvLabelParams.setMargins(Utils.instence(this).dip2px(6), 0, 0, 0);
+        tvLabelParams.addRule(RelativeLayout.ALIGN_TOP, tvNameId);
+        tvLabelParams.addRule(RelativeLayout.RIGHT_OF, tvNameId);
+        tvLabel.setLayoutParams(tvLabelParams);
+        tvLabel.setPadding(Utils.instence(this).dip2px(1), Utils.instence(this).dip2px(1), Utils.instence(this).dip2px(1), Utils.instence(this).dip2px(1));
+        tvLabel.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
+        tvLabel.setTextSize(12);
+        tvLabel.setBackgroundResource(R.drawable.rect_bg_appcolor_ssm);
+        tvLabel.setGravity(Gravity.CENTER);
+        tvLabel.setText(productType.label);
+        rly.addView(tvLabel);
+
+        TextView tvPrice = new TextView(this);
+        RelativeLayout.LayoutParams tvPriceParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        tvPriceParams.setMargins(0, 0, Utils.instence(this).dip2px(20), 0);
+        tvPriceParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        tvPriceParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+        tvPrice.setLayoutParams(tvPriceParams);
+        tvPrice.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
+        tvPrice.setTextSize(18);
+        tvPrice.setText(Utils.getMoney(productType.price));
+        rly.addView(tvPrice);
+
+        TextView tvRemark = new TextView(this);
+        RelativeLayout.LayoutParams tvRemarkParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        tvRemarkParams.setMargins(0, Utils.instence(this).dip2px(10), 0, Utils.instence(this).dip2px(15));
+        tvRemarkParams.addRule(RelativeLayout.ALIGN_LEFT, tvNameId);
+        tvRemarkParams.addRule(RelativeLayout.BELOW, tvNameId);
+        tvRemark.setLayoutParams(tvRemarkParams);
+        tvRemark.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
+        tvRemark.setTextSize(16);
+        tvRemark.setText(productType.remark);
+        rly.addView(tvRemark);
+
+        return rly;
     }
 
     private RelativeLayout getPeerCoachAdapter(final Coach coach) {
