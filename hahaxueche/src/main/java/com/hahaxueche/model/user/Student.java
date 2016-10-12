@@ -110,6 +110,19 @@ public class Student implements Parcelable {
         }
     }
 
+    public boolean hasPurchasedService() {
+        if (TextUtils.isEmpty(current_coach_id)) return false;
+        if (purchased_services == null || purchased_services.size() < 1) return false;
+        boolean existsActive = false;
+        for (PurchasedService ps : purchased_services) {
+            if (ps.active) {
+                existsActive = true;
+                break;
+            }
+        }
+        return existsActive;
+    }
+
     @Override
     public int describeContents() {
         return 0;

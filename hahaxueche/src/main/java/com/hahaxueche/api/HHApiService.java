@@ -124,6 +124,10 @@ public interface HHApiService {
     @POST("students/{studentId}/like/{coachId}")
     Observable<Coach> like(@Path("studentId") String studentId, @Path("coachId") String coachId, @FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
 
+    @FormUrlEncoded
+    @POST("charges")
+    Observable<String> createCharge(@FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
+
     class Factory {
         public static HHApiService create() {
             HHLog.v("baseUrl -> " + baseUrl);

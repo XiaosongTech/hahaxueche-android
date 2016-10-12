@@ -2,18 +2,28 @@ package com.hahaxueche.presenter.findCoach;
 
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
+import com.hahaxueche.api.HHApiService;
+import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.payment.PaymentMethod;
+import com.hahaxueche.model.user.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.PurchaseCoachView;
+import com.hahaxueche.util.ErrorUtil;
+import com.hahaxueche.util.HHLog;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 
 /**
  * Created by wangshirui on 2016/10/11.
@@ -63,5 +73,86 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         paymentMethods.add(cardPay);
         paymentMethods.add(fqlPay);
         return paymentMethods;
+    }
+
+    public void createCharge(int method, int productType) {
+        final HHApiService apiService = application.getApiService();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("cell_phone", mUser.cell_phone);
+        final HashMap<String, Object> mapParam = new HashMap<>();
+        mapParam.put("coach_id", mCoach.id);
+        mapParam.put("method", method);
+        mapParam.put("product_type", productType);
+        subscription = apiService.isValidToken(mUser.session.access_token, map)
+                .flatMap(new Func1<BaseValid, Observable<String>>() {
+                    @Override
+                    public Observable<String> call(BaseValid baseValid) {
+                        if (baseValid.valid) {
+                            return apiService.createCharge(mapParam, mUser.session.access_token);
+                        } else {
+                            return application.getSessionObservable();
+                        }
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        getStudentUtilHasCoach();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+
+                    }
+                });
+    }
+
+    public void getStudentUtilHasCoach() {
+        final HHApiService apiService = application.getApiService();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("cell_phone", mUser.cell_phone);
+        subscription = apiService.isValidToken(mUser.session.access_token, map)
+                .flatMap(new Func1<BaseValid, Observable<Student>>() {
+                    @Override
+                    public Observable<Student> call(BaseValid baseValid) {
+                        if (baseValid.valid) {
+                            return apiService.getStudent(mUser.student.id, mUser.session.access_token);
+                        } else {
+                            return application.getSessionObservable();
+                        }
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<Student>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(Student student) {
+                        if (!student.hasPurchasedService()) {
+                            getStudentUtilHasCoach();
+                        }
+                    }
+                });
     }
 }

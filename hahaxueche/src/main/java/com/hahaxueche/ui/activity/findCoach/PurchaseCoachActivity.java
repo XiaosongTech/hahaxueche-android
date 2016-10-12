@@ -33,6 +33,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by wangshirui on 2016/10/12.
@@ -101,6 +102,11 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     protected void onDestroy() {
         mPresenter.detachView();
         super.onDestroy();
+    }
+
+    @OnClick(R.id.tv_sure_pay)
+    public void createCharge() {
+        mPresenter.createCharge(0, 1);
     }
 
     @Override
