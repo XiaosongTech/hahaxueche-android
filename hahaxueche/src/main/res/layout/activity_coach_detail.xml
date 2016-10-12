@@ -21,33 +21,6 @@
 
             <include layout="@layout/coach_detail_prices" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/section_margin_top"
-                android:background="@color/haha_white"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="6dp"
-                    android:drawableLeft="@drawable/ic_coachmsg_classtype"
-                    android:drawablePadding="5dp"
-                    android:text="课程类型"
-                    android:textColor="@color/app_theme_color"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/tv_license_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/haha_gray"
-                    android:textSize="14sp" />
-            </RelativeLayout>
-
             <include layout="@layout/coach_detail_training_field" />
 
             <include layout="@layout/coach_detail_other" />

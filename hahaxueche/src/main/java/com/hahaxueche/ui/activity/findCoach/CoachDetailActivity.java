@@ -70,8 +70,6 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     TextView mTvCoachLevel;
     @BindView(R.id.tv_train_location)
     TextView mTvTrainLocation;
-    @BindView(R.id.tv_license_type)
-    TextView mTvLicenseType;
     @BindView(R.id.tv_comments_count)
     TextView mTvCommentsCount;
     @BindView(R.id.sv_average_rating)
@@ -176,14 +174,6 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             }
         } else {
             mLlyPeerCoaches.setVisibility(View.GONE);
-        }
-
-        if (coach.license_type.equals("1")) {
-            mTvLicenseType.setText("C1手动档");
-        } else if (coach.license_type.equals("2")) {
-            mTvLicenseType.setText("C2自动档");
-        } else {
-            mTvLicenseType.setText("C1手动档，C2自动挡");
         }
         //学员评价数量
         mTvCommentsCount.setText("学员评价（" + coach.review_count + "）");
