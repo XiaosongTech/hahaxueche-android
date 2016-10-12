@@ -33,4 +33,6 @@ public interface CoachDetailView extends HHBaseView {
     void startApplaudAnimation();
 
     void addPrices(ArrayList<ProductType> productTypes);
+
+    void navigateToPurchaseCoach(Coach coach);
 }

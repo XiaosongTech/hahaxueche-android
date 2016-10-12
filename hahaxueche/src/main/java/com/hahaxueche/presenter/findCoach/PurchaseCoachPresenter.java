@@ -2,6 +2,9 @@ package com.hahaxueche.presenter.findCoach;
 
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
+import com.hahaxueche.model.base.City;
+import com.hahaxueche.model.base.Constants;
+import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.payment.PaymentMethod;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Coach;

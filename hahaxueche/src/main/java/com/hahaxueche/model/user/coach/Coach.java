@@ -23,7 +23,7 @@ public class Coach implements Parcelable {
     public String active_student_count;
     public String account_balance;
     public String commission_ratio;
-    public String experiences;
+    public int experiences;
     public String skill_level;
     public String skill_level_label;
     public String license_type;
@@ -53,7 +53,7 @@ public class Coach implements Parcelable {
         active_student_count = in.readString();
         account_balance = in.readString();
         commission_ratio = in.readString();
-        experiences = in.readString();
+        experiences = in.readInt();
         skill_level = in.readString();
         skill_level_label = in.readString();
         license_type = in.readString();
@@ -102,7 +102,7 @@ public class Coach implements Parcelable {
         dest.writeString(active_student_count);
         dest.writeString(account_balance);
         dest.writeString(commission_ratio);
-        dest.writeString(experiences);
+        dest.writeInt(experiences);
         dest.writeString(skill_level);
         dest.writeString(skill_level_label);
         dest.writeString(license_type);

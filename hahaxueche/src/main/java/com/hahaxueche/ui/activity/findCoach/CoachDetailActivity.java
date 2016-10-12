@@ -94,6 +94,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     LinearLayout mLlyPrices;
     private ReviewResponseList mReviewResponse;
 
+    private static final int REQUEST_CODE_PURCHASE_COACH = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -278,9 +280,22 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
 
     }
 
+    @Override
+    public void navigateToPurchaseCoach(Coach coach) {
+        if (coach == null) return;
+        Intent intent = new Intent(getContext(), PurchaseCoachActivity.class);
+        intent.putExtra("coach", coach);
+        startActivityForResult(intent, REQUEST_CODE_PURCHASE_COACH);
+    }
+
     @OnClick(R.id.tv_applaud_count)
     public void applaud() {
         mPresenter.applaud();
+    }
+
+    @OnClick(R.id.tv_pay)
+    public void pay() {
+        mPresenter.purchaseCoach();
     }
 
     private RelativeLayout getPriceAdapter(ProductType productType) {

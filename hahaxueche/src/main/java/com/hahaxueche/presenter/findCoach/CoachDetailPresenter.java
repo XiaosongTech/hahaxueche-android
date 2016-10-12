@@ -397,4 +397,12 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         }
     }
 
+    public void purchaseCoach() {
+        if (mUser == null || !mUser.isLogin()) {
+            mCoachDetailView.alertToLogin();
+            return;
+        }
+        mCoachDetailView.navigateToPurchaseCoach(mCoach);
+    }
+
 }

@@ -95,12 +95,7 @@ public class CoachAdapter extends BaseAdapter {
         Coach coach = mCoachList.get(position);
         holder.tvCoachName.setText(coach.name);
         holder.ivCoachAvatar.setImageURI(coach.avatar);
-        double coachExperiences = 0d;
-        if (!TextUtils.isEmpty(coach.experiences)) {
-            coachExperiences = Double.parseDouble(coach.experiences);
-        }
-        DecimalFormat dfInt = new DecimalFormat("#####");
-        holder.tvCoachTeachTime.setText(dfInt.format(coachExperiences) + "年教龄");
+        holder.tvCoachTeachTime.setText(coach.experiences + "年教龄");
         holder.tvCoachPoints.setText(coach.average_rating + " (" + coach.review_count + ")");
         holder.tvCoachActualPrice.setText(Utils.getMoney(coach.coach_group.training_cost));
         //vip价格
