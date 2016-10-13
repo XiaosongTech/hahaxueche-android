@@ -52,7 +52,9 @@ public class HHBaseActivity extends AppCompatActivity implements HHBaseView {
 
     @Override
     public void showProgressDialog(String message) {
-        dismissProgressDialog();
+        if (progressDialog != null && progressDialog.isShowing()) {//不干扰正在显示的进度框
+            return;
+        }
         progressDialog = ProgressDialog.show(getContext(), null, message);
     }
 

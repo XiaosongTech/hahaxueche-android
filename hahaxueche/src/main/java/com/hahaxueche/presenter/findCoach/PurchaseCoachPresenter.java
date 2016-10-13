@@ -99,13 +99,20 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<ResponseBody>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        mPurchaseCoachView.showProgressDialog("订单生成中，请稍后...");
+                    }
 
                     @Override
                     public void onCompleted() {
+                        mPurchaseCoachView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        mPurchaseCoachView.dismissProgressDialog();
                         HHLog.e(e.getMessage());
                     }
 
@@ -147,6 +154,13 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<Student>() {
+
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        mPurchaseCoachView.showProgressDialog();
+                    }
+
                     @Override
                     public void onCompleted() {
 
@@ -155,6 +169,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                     @Override
                     public void onError(Throwable e) {
                         HHLog.e(e.getMessage());
+                        mPurchaseCoachView.dismissProgressDialog();
                     }
 
                     @Override
@@ -162,6 +177,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                         if (!student.hasPurchasedService()) {
                             getStudentUtilHasCoach();
                         } else {
+                            mPurchaseCoachView.dismissProgressDialog();
                             mPurchaseCoachView.showMessage("付款成功");
                         }
                     }

@@ -91,12 +91,20 @@ public class FindCoachPresenter implements Presenter<FindCoachView> {
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<CoachResponseList>() {
                     @Override
+                    public void onStart() {
+                        super.onStart();
+                        mFindCoachView.showProgressDialog("查找中，请稍后...");
+                    }
+
+                    @Override
                     public void onCompleted() {
+                        mFindCoachView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         HHLog.e(e.getMessage());
+                        mFindCoachView.dismissProgressDialog();
                     }
 
                     @Override
