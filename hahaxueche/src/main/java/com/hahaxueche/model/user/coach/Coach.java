@@ -38,6 +38,9 @@ public class Coach implements Parcelable {
     public int like_count;
     public int liked;
     public String driving_school;
+    public String stage_two_pass_rate;
+    public String stage_three_pass_rate;
+    public String average_pass_days;
 
     protected Coach(Parcel in) {
         id = in.readString();
@@ -68,6 +71,9 @@ public class Coach implements Parcelable {
         like_count = in.readInt();
         liked = in.readInt();
         driving_school = in.readString();
+        stage_two_pass_rate = in.readString();
+        stage_three_pass_rate = in.readString();
+        average_pass_days = in.readString();
     }
 
     public static final Creator<Coach> CREATOR = new Creator<Coach>() {
@@ -117,5 +123,8 @@ public class Coach implements Parcelable {
         dest.writeInt(like_count);
         dest.writeInt(liked);
         dest.writeString(driving_school);
+        dest.writeString(stage_two_pass_rate);
+        dest.writeString(stage_three_pass_rate);
+        dest.writeString(average_pass_days);
     }
 }

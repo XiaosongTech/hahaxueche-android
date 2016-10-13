@@ -105,7 +105,7 @@ public class Utils {
 
     public static String getRate(String rate) {
         String ret = "";
-        DecimalFormat dfInt = new DecimalFormat("#####");
+        DecimalFormat dfInt = new DecimalFormat("#####.#");
         try {
             ret = dfInt.format(Double.parseDouble(rate)) + "%";
         } catch (Exception e) {

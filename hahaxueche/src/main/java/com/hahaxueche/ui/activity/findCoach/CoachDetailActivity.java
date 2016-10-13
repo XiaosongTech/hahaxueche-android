@@ -68,6 +68,10 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     TextView mTvSatisfactionRate;
     @BindView(R.id.tv_coach_level)
     TextView mTvCoachLevel;
+    @BindView(R.id.tv_pass_days)
+    TextView mTvPassDays;
+    @BindView(R.id.tv_pass_rate)
+    TextView mTvPassRate;
     @BindView(R.id.tv_train_location)
     TextView mTvTrainLocation;
     @BindView(R.id.tv_comments_count)
@@ -168,6 +172,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
 
         mTvSatisfactionRate.setText(Utils.getRate(coach.satisfaction_rate));
         mTvCoachLevel.setText(coach.skill_level_label);
+        mTvPassDays.setText(coach.average_pass_days + "天");
+        mTvPassRate.setText(Utils.getRate(coach.stage_three_pass_rate));
         mTvTrainLocation.setText(mPresenter.getTrainingFieldName());
         ArrayList<Coach> peerCoaches = coach.peer_coaches;
         if (peerCoaches != null && peerCoaches.size() > 0) {
