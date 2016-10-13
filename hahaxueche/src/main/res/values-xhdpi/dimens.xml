@@ -3,4 +3,6 @@
     <dimen name="width_160dp">160dp</dimen>
     <dimen name="search_edittext_width">288dp</dimen>
     <dimen name="search_edittext_height">28dp</dimen>
+    <dimen name="margin40dp">40dp</dimen>
+    <dimen name="width320dp">320dp</dimen>
 </resources>

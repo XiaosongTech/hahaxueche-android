@@ -104,5 +104,9 @@
         <activity
             android:name="cmb.pb.ui.PBKeyboardActivity"
             android:theme="@style/CmbDialogStyleBottom" />
+        <activity
+            android:name=".ui.activity.findCoach.PaySuccessActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
     </application>
 </manifest>

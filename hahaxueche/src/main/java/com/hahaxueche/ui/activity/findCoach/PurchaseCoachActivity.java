@@ -249,6 +249,12 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
         Pingpp.createPayment(this, charge);
     }
 
+    @Override
+    public void paySuccess() {
+        setResult(RESULT_OK, null);
+        finish();
+    }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //支付页面返回处理
         if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {

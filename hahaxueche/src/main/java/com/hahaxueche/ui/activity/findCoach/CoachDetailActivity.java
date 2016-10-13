@@ -1,5 +1,6 @@
 package com.hahaxueche.ui.activity.findCoach;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import com.hahaxueche.model.user.coach.ProductType;
 import com.hahaxueche.model.user.coach.Review;
 import com.hahaxueche.presenter.findCoach.CoachDetailPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
+import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.view.findCoach.CoachDetailView;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
@@ -99,6 +101,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     private ReviewResponseList mReviewResponse;
 
     private static final int REQUEST_CODE_PURCHASE_COACH = 1;
+    private static final int REQUEST_CODE_PAY_SUCCESS = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -508,6 +511,18 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         rly.addView(divider);
 
         return rly;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_PURCHASE_COACH) {
+            if (resultCode == Activity.RESULT_OK) {
+                startActivityForResult(new Intent(getContext(), PaySuccessActivity.class), REQUEST_CODE_PAY_SUCCESS);
+            }
+        } else if (requestCode == REQUEST_CODE_PAY_SUCCESS) {
+            startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

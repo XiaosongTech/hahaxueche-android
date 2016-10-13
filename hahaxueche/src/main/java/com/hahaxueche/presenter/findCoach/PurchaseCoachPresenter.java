@@ -178,7 +178,8 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                             getStudentUtilHasCoach();
                         } else {
                             mPurchaseCoachView.dismissProgressDialog();
-                            mPurchaseCoachView.showMessage("付款成功");
+                            application.getSharedPrefUtil().updateStudent(student);
+                            mPurchaseCoachView.paySuccess();
                         }
                     }
                 });
