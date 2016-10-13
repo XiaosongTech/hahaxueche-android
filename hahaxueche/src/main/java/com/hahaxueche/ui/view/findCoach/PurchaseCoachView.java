@@ -24,4 +24,8 @@ public interface PurchaseCoachView extends HHBaseView {
     void selectPayment(int paymentId);
 
     void setPayText(String text);
+
+    void showMessage(String message);
+
+    void callPingpp(String charge);
 }

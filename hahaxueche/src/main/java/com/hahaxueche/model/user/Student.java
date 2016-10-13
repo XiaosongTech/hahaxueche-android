@@ -10,7 +10,6 @@ import com.hahaxueche.model.payment.PaymentStage;
 import com.hahaxueche.model.payment.PurchasedService;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by wangshirui on 16/9/10.
@@ -111,16 +110,7 @@ public class Student implements Parcelable {
     }
 
     public boolean hasPurchasedService() {
-        if (TextUtils.isEmpty(current_coach_id)) return false;
-        if (purchased_services == null || purchased_services.size() < 1) return false;
-        boolean existsActive = false;
-        for (PurchasedService ps : purchased_services) {
-            if (ps.active) {
-                existsActive = true;
-                break;
-            }
-        }
-        return existsActive;
+        return !TextUtils.isEmpty(current_coach_id) && purchased_services != null && purchased_services.size() > 0;
     }
 
     @Override

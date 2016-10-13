@@ -4,21 +4,22 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseValid;
-import com.hahaxueche.model.base.City;
-import com.hahaxueche.model.base.Constants;
-import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.payment.PaymentMethod;
 import com.hahaxueche.model.user.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.PurchaseCoachView;
-import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.ResponseBody;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -76,7 +77,8 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
     }
 
     public void createCharge(int method, int productType) {
-        final HHApiService apiService = application.getApiService();
+        HHApiService apiService = application.getApiService();
+        final HHApiService apiServiceNoConverter = application.getApiServiceNoConverter();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", mUser.cell_phone);
         final HashMap<String, Object> mapParam = new HashMap<>();
@@ -84,11 +86,11 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         mapParam.put("method", method);
         mapParam.put("product_type", productType);
         subscription = apiService.isValidToken(mUser.session.access_token, map)
-                .flatMap(new Func1<BaseValid, Observable<String>>() {
+                .flatMap(new Func1<BaseValid, Observable<ResponseBody>>() {
                     @Override
-                    public Observable<String> call(BaseValid baseValid) {
+                    public Observable<ResponseBody> call(BaseValid baseValid) {
                         if (baseValid.valid) {
-                            return apiService.createCharge(mapParam, mUser.session.access_token);
+                            return apiServiceNoConverter.createCharge(mapParam, mUser.session.access_token);
                         } else {
                             return application.getSessionObservable();
                         }
@@ -96,15 +98,10 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
-                .subscribe(new Subscriber<String>() {
-                    @Override
-                    public void onStart() {
-                        super.onStart();
-                    }
+                .subscribe(new Subscriber<ResponseBody>() {
 
                     @Override
                     public void onCompleted() {
-                        getStudentUtilHasCoach();
                     }
 
                     @Override
@@ -113,8 +110,21 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                     }
 
                     @Override
-                    public void onNext(String s) {
-
+                    public void onNext(ResponseBody responseBody) {
+                        //Try to get response body
+                        BufferedReader reader = null;
+                        StringBuilder sb = new StringBuilder();
+                        reader = new BufferedReader(new InputStreamReader(responseBody.byteStream()));
+                        String line;
+                        try {
+                            while ((line = reader.readLine()) != null) {
+                                sb.append(line);
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        String result = sb.toString();
+                        mPurchaseCoachView.callPingpp(result);
                     }
                 });
     }
@@ -128,7 +138,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                     @Override
                     public Observable<Student> call(BaseValid baseValid) {
                         if (baseValid.valid) {
-                            return apiService.getStudent(mUser.student.id, mUser.session.access_token);
+                            return apiService.getStudent(mUser.student.id, mUser.session.access_token).delay(1, TimeUnit.SECONDS);
                         } else {
                             return application.getSessionObservable();
                         }
@@ -151,6 +161,8 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                     public void onNext(Student student) {
                         if (!student.hasPurchasedService()) {
                             getStudentUtilHasCoach();
+                        } else {
+                            mPurchaseCoachView.showMessage("付款成功");
                         }
                     }
                 });

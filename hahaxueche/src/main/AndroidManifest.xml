@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name=".HHBaseApplication"
@@ -86,5 +88,21 @@
             android:name=".ui.activity.findCoach.PurchaseCoachActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
+        <!-- Ping++ SDK -->
+        <activity
+            android:name="com.pingplusplus.android.PaymentActivity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!-- 支付宝 -->
+        <activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind"></activity>
+        <service android:name="cmb.pb.cmbsafe.CmbService" android:exported="false"/>
+        <activity
+            android:name="cmb.pb.ui.PBKeyboardActivity"
+            android:theme="@style/CmbDialogStyleBottom" />
     </application>
 </manifest>

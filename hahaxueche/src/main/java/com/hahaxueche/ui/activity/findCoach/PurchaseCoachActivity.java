@@ -1,14 +1,15 @@
 package com.hahaxueche.ui.activity.findCoach;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -27,7 +28,9 @@ import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.view.findCoach.PurchaseCoachView;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
 import com.hahaxueche.util.DistanceUtil;
+import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
+import com.pingplusplus.android.Pingpp;
 
 import java.util.ArrayList;
 
@@ -65,6 +68,8 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     TextView mTvApplaudCount;
     @BindView(R.id.lly_purchase)
     LinearLayout mLlyPurchase;
+    @BindView(R.id.lly_main)
+    LinearLayout mLlyMain;
 
     private HHBaseApplication application;
 
@@ -231,5 +236,43 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     @Override
     public void setPayText(String text) {
 
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Snackbar.make(mLlyMain, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void callPingpp(String charge) {
+        HHLog.v(charge);
+        Pingpp.createPayment(this, charge);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //支付页面返回处理
+        if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
+            if (resultCode == Activity.RESULT_OK) {
+                String result = data.getExtras().getString("pay_result");
+                /* 处理返回值
+                 * "success" - 支付成功
+                 * "fail"    - 支付失败
+                 * "cancel"  - 取消支付
+                 * "invalid" - 支付插件未安装（一般是微信客户端未安装的情况）
+                 */
+                String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
+                String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
+
+                if (result.equals("success")) {
+                    mPresenter.getStudentUtilHasCoach();
+                } else if (result.equals("cancel")) {
+                    showMessage("取消支付");
+                } else if (result.equals("invalid")) {
+                    showMessage("支付插件未安装");
+                } else {
+                    showMessage("支付失败");
+                }
+            }
+        }
     }
 }

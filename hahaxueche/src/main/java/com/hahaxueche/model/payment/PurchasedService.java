@@ -18,6 +18,5 @@ public class PurchasedService {
     public String order_no;
     public int product_type;
     public CoachGroup coach_group;
-    public boolean active;
     public ArrayList<PaymentStage> payment_stages;
 }

@@ -28,6 +28,7 @@ import rx.schedulers.Schedulers;
  */
 public class HHBaseApplication extends Application {
     private HHApiService apiService;
+    private HHApiService apiServiceNoConverter;
     private Scheduler defaultSubscribeScheduler;
     private Constants constants;
     private SharedPrefUtil spUtil;
@@ -43,6 +44,13 @@ public class HHBaseApplication extends Application {
             apiService = HHApiService.Factory.create();
         }
         return apiService;
+    }
+
+    public HHApiService getApiServiceNoConverter() {
+        if (apiServiceNoConverter == null) {
+            apiServiceNoConverter = HHApiService.Factory.createWithNoConverter();
+        }
+        return apiServiceNoConverter;
     }
 
     public Scheduler defaultSubscribeScheduler() {

@@ -1,7 +1,5 @@
 package com.hahaxueche.api;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.hahaxueche.BuildConfig;
 import com.hahaxueche.model.base.BaseBoolean;
 import com.hahaxueche.model.base.BaseModel;
@@ -21,7 +19,7 @@ import java.util.HashMap;
 
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -126,7 +124,7 @@ public interface HHApiService {
 
     @FormUrlEncoded
     @POST("charges")
-    Observable<String> createCharge(@FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
+    Observable<ResponseBody> createCharge(@FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
 
     class Factory {
         public static HHApiService create() {
@@ -141,6 +139,23 @@ public interface HHApiService {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                    .client(httpClient)
+                    .build();
+            return retrofit.create(HHApiService.class);
+        }
+
+        public static HHApiService createWithNoConverter() {
+            HHLog.v("baseUrl -> " + baseUrl);
+            OkHttpClient httpClient = new OkHttpClient();
+            if (BuildConfig.DEBUG) {
+                //添加网络请求日志拦截
+                HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+                logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+                httpClient = new OkHttpClient.Builder().addInterceptor(logging).build();
+            }
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(baseUrl)
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .client(httpClient)
                     .build();
