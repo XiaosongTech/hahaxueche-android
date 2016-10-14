@@ -73,7 +73,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
 
     private ArrayList<ProductType> getPrices() {
         ArrayList<ProductType> productTypes = new ArrayList<>();
-        if (mCoach.coach_group.market_price != 0) {
+        if (mCoach.coach_group.training_cost != 0) {
             ProductType price = new ProductType(mCoach.coach_group.market_price, "C1手动档", "超值", R.drawable.rect_bg_orange_ssm, "四人一车，性价比高");
             productTypes.add(price);
         }

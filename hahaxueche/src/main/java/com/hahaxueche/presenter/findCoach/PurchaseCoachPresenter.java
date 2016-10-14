@@ -11,6 +11,7 @@ import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.PurchaseCoachView;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.Utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,6 +37,10 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
     private HHBaseApplication application;
     private Coach mCoach;
     private User mUser;
+    private int license;//1 C1; 2 C2
+    private int classType;//0 普通版; 1 vip
+    private int productType = -1;
+    private int paymentMethod = -1;
 
     @Override
     public void attachView(PurchaseCoachView view) {
@@ -57,7 +62,70 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         this.mCoach = coach;
         if (mCoach == null) return;
         mPurchaseCoachView.loadCoachInfo(mCoach);
+        if (mCoach.coach_group.training_cost != 0) {
+            mPurchaseCoachView.showLicenseC1();
+        }
+        if (mCoach.coach_group.c2_price != 0) {
+            mPurchaseCoachView.showLicenseC2();
+        }
+        selectLicenseC1();
+        selectClassNormal();//默认C1 普通班
         mPurchaseCoachView.loadPaymentMethod(getPaymentMethod());
+        paymentMethod = 0;
+    }
+
+    public void selectLicenseC1() {
+        license = 1;
+        mPurchaseCoachView.unSelectLicense();
+        mPurchaseCoachView.selectLicenseC1();
+        if (mCoach.coach_group.vip_price != 0) {
+            mPurchaseCoachView.showClassVIP();
+        }
+        setProductType();
+    }
+
+    public void selectLicenseC2() {
+        license = 2;
+        mPurchaseCoachView.unSelectLicense();
+        mPurchaseCoachView.selectLicenseC2();
+        if (mCoach.coach_group.c2_vip_price != 0) {
+            mPurchaseCoachView.showClassVIP();
+        }
+        setProductType();
+    }
+
+    public void selectClassNormal() {
+        classType = 0;
+        mPurchaseCoachView.unSelectClass();
+        mPurchaseCoachView.selectClassNormal();
+        setProductType();
+    }
+
+    public void selectClassVip() {
+        classType = 1;
+        mPurchaseCoachView.unSelectClass();
+        mPurchaseCoachView.selectClassVip();
+        setProductType();
+    }
+
+    private void setProductType() {
+        if (license == 1 && classType == 0) {
+            productType = 0;
+            mPurchaseCoachView.setTotalAmountText("总价： " + Utils.getMoney(mCoach.coach_group.training_cost));
+        } else if (license == 1 && classType == 1) {
+            productType = 1;
+            mPurchaseCoachView.setTotalAmountText("总价： " + Utils.getMoney(mCoach.coach_group.vip_price));
+        } else if (license == 2 && classType == 0) {
+            productType = 2;
+            mPurchaseCoachView.setTotalAmountText("总价： " + Utils.getMoney(mCoach.coach_group.c2_price));
+        } else if (license == 2 && classType == 1) {
+            productType = 3;
+            mPurchaseCoachView.setTotalAmountText("总价： " + Utils.getMoney(mCoach.coach_group.c2_vip_price));
+        }
+    }
+
+    public void setPaymentMethod(int paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 
     /**
@@ -76,14 +144,22 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         return paymentMethods;
     }
 
-    public void createCharge(int method, int productType) {
+    public void createCharge() {
+        if (productType < 0) {
+            mPurchaseCoachView.showMessage("请选择课程类型");
+            return;
+        }
+        if (paymentMethod < 0) {
+            mPurchaseCoachView.showMessage("请选择支付方式");
+            return;
+        }
         HHApiService apiService = application.getApiService();
         final HHApiService apiServiceNoConverter = application.getApiServiceNoConverter();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", mUser.cell_phone);
         final HashMap<String, Object> mapParam = new HashMap<>();
         mapParam.put("coach_id", mCoach.id);
-        mapParam.put("method", method);
+        mapParam.put("method", paymentMethod);
         mapParam.put("product_type", productType);
         subscription = apiService.isValidToken(mUser.session.access_token, map)
                 .flatMap(new Func1<BaseValid, Observable<ResponseBody>>() {

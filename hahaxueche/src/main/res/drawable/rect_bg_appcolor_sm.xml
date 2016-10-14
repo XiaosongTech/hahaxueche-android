@@ -5,7 +5,7 @@
         <shape android:shape="rectangle">
             <!-- 圆角 -->
             <corners android:radius="3dp" />
-            <solid android:color="@color/haha_gray_background" />
+            <solid android:color="@color/app_theme_color" />
         </shape>
     </item>
 

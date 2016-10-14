@@ -70,8 +70,20 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     LinearLayout mLlyPurchase;
     @BindView(R.id.lly_main)
     LinearLayout mLlyMain;
+    @BindView(R.id.tv_C1)
+    TextView mTvC1;
+    @BindView(R.id.tv_C2)
+    TextView mTvC2;
+    @BindView(R.id.tv_normal)
+    TextView mTvNormal;
+    @BindView(R.id.tv_vip)
+    TextView mTvVip;
+    @BindView(R.id.tv_total_amount)
+    TextView mTvTotalAmount;
 
     private HHBaseApplication application;
+    private int[] selectIds = new int[3];
+    private int selectId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +123,27 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
 
     @OnClick(R.id.tv_sure_pay)
     public void createCharge() {
-        mPresenter.createCharge(0, 1);
+        mPresenter.createCharge();
+    }
+
+    @OnClick(R.id.tv_C1)
+    public void clickTvC1() {
+        mPresenter.selectLicenseC1();
+    }
+
+    @OnClick(R.id.tv_C2)
+    public void clickTvC2() {
+        mPresenter.selectLicenseC2();
+    }
+
+    @OnClick(R.id.tv_normal)
+    public void clickTvNormal() {
+        mPresenter.selectClassNormal();
+    }
+
+    @OnClick(R.id.tv_vip)
+    public void clickTvVip() {
+        mPresenter.selectClassVip();
     }
 
     @Override
@@ -148,34 +180,82 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     }
 
     @Override
-    public void unSelectAllClasses() {
-
-    }
-
-    @Override
-    public void selectClass(int classType) {
-
-    }
-
-    @Override
     public void loadPaymentMethod(ArrayList<PaymentMethod> paymentMethods) {
         if (paymentMethods == null || paymentMethods.size() < 1) return;
         for (PaymentMethod paymentMethod : paymentMethods) {
-            mLlyPurchase.addView(getPaymentAdapter(paymentMethod), 2 + paymentMethods.indexOf(paymentMethod));
+            mLlyPurchase.addView(getPaymentAdapter(paymentMethod, paymentMethods.indexOf(paymentMethod)), 1 + paymentMethods.indexOf(paymentMethod));
         }
     }
 
-    private RelativeLayout getPaymentAdapter(PaymentMethod paymentMethod) {
+    @Override
+    public void showLicenseC1() {
+        mTvC1.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showLicenseC2() {
+        mTvC2.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showClassVIP() {
+        mTvVip.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void selectLicenseC1() {
+        mTvC1.setBackgroundResource(R.drawable.rect_bg_appcolor_sm);
+        mTvC1.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
+    }
+
+    @Override
+    public void selectLicenseC2() {
+        mTvC2.setBackgroundResource(R.drawable.rect_bg_appcolor_sm);
+        mTvC2.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
+    }
+
+    @Override
+    public void unSelectLicense() {
+        mTvC1.setBackgroundResource(R.drawable.rect_bg_gray_sm);
+        mTvC1.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
+        mTvC2.setBackgroundResource(R.drawable.rect_bg_gray_sm);
+        mTvC2.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
+    }
+
+    @Override
+    public void selectClassNormal() {
+        mTvNormal.setBackgroundResource(R.drawable.rect_bg_appcolor_sm);
+        mTvNormal.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
+    }
+
+    @Override
+    public void selectClassVip() {
+        mTvVip.setBackgroundResource(R.drawable.rect_bg_appcolor_sm);
+        mTvVip.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
+    }
+
+    @Override
+    public void unSelectClass() {
+        mTvNormal.setBackgroundResource(R.drawable.rect_bg_gray_sm);
+        mTvNormal.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
+        mTvVip.setBackgroundResource(R.drawable.rect_bg_gray_sm);
+        mTvVip.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
+    }
+
+    private RelativeLayout getPaymentAdapter(final PaymentMethod paymentMethod, int i) {
         RelativeLayout rly = new RelativeLayout(this);
         rly.setBackgroundResource(R.color.haha_white);
         LinearLayout.LayoutParams rlyParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         rly.setLayoutParams(rlyParams);
 
-        View view = new View(this);
-        RelativeLayout.LayoutParams viewParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.divider_width));
-        view.setLayoutParams(viewParams);
-        view.setBackgroundResource(R.color.haha_gray_divider);
-        rly.addView(view);
+        if (i != 0) {
+            View view = new View(this);
+            RelativeLayout.LayoutParams viewParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.divider_width));
+            viewParams.setMargins(Utils.instence(this).dip2px(20), 0, 0, 0);
+            view.setLayoutParams(viewParams);
+            view.setBackgroundResource(R.color.haha_gray_divider);
+            rly.addView(view);
+        }
 
         ImageView mIvLogo = new ImageView(this);
         RelativeLayout.LayoutParams ivLogoParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -217,25 +297,37 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
         ivSelectParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
         ivSelectParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
         mIvSelect.setLayoutParams(ivSelectParams);
-        mIvSelect.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_cashout_unchack_btn));
+        mIvSelect.setImageDrawable(ContextCompat.getDrawable(this, i == 0 ? R.drawable.ic_cashout_chack_btn : R.drawable.ic_cashout_unchack_btn));
+        final int ivSelectId = Utils.generateViewId();
+        mIvSelect.setId(ivSelectId);
         rly.addView(mIvSelect);
-
+        selectIds[i] = ivSelectId;
+        rly.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectId = ivSelectId;
+                selectPayments();
+                mPresenter.setPaymentMethod(paymentMethod.id);
+            }
+        });
         return rly;
     }
 
-    @Override
-    public void unSelectAllPayments() {
-
+    public void selectPayments() {
+        for (int id : selectIds) {
+            ImageView ivSelect = ButterKnife.findById(this, id);
+            if (id == selectId) {
+                ivSelect.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_cashout_chack_btn));
+            } else {
+                ivSelect.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_cashout_unchack_btn));
+            }
+        }
     }
 
-    @Override
-    public void selectPayment(int paymentId) {
-
-    }
 
     @Override
-    public void setPayText(String text) {
-
+    public void setTotalAmountText(String text) {
+        mTvTotalAmount.setText(text);
     }
 
     @Override

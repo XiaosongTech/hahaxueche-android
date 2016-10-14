@@ -13,17 +13,27 @@ import java.util.ArrayList;
 public interface PurchaseCoachView extends HHBaseView {
     void loadCoachInfo(Coach coach);
 
-    void unSelectAllClasses();
-
-    void selectClass(int classType);
-
     void loadPaymentMethod(ArrayList<PaymentMethod> paymentMethods);
 
-    void unSelectAllPayments();
+    void showLicenseC1();
 
-    void selectPayment(int paymentId);
+    void showLicenseC2();
 
-    void setPayText(String text);
+    void showClassVIP();
+
+    void selectLicenseC1();
+
+    void selectLicenseC2();
+
+    void unSelectLicense();
+
+    void selectClassNormal();
+
+    void selectClassVip();
+
+    void unSelectClass();
+
+    void setTotalAmountText(String text);
 
     void showMessage(String message);
 
