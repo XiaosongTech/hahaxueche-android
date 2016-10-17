@@ -76,7 +76,6 @@ public class CoachAdapter extends BaseAdapter {
             holder.tvCoachTeachTime = ButterKnife.findById(view, R.id.tv_coach_teach_time);
             holder.tvCoachPoints = ButterKnife.findById(view, R.id.tv_coach_points);
             holder.tvCoachActualPrice = ButterKnife.findById(view, R.id.tv_coach_actual_price);
-            holder.tvVIPPrice = ButterKnife.findById(view, R.id.tv_vip_price);
             holder.ivCoachAvatar = ButterKnife.findById(view, R.id.iv_coach_avatar);
             holder.ivIsGoldenCoach = ButterKnife.findById(view, R.id.iv_is_golden_coach);
             holder.svCoachScore = ButterKnife.findById(view, R.id.sv_coach_score);
@@ -85,7 +84,6 @@ public class CoachAdapter extends BaseAdapter {
             holder.tvDistance = ButterKnife.findById(view, R.id.tv_distance);
             holder.tvApplaudCount = ButterKnife.findById(view, R.id.tv_applaud_count);
             holder.tvTrainSchoolName = ButterKnife.findById(view, R.id.tv_train_school);
-            holder.rlyVipPrice = ButterKnife.findById(view, R.id.rly_vip_price);
             holder.llyTrainSchool = ButterKnife.findById(view, R.id.lly_train_school);
             holder.rlyActualPrice = ButterKnife.findById(view, R.id.rly_actual_price);
             view.setTag(holder);
@@ -98,13 +96,6 @@ public class CoachAdapter extends BaseAdapter {
         holder.tvCoachTeachTime.setText(coach.experiences + "年教龄");
         holder.tvCoachPoints.setText(coach.average_rating + " (" + coach.review_count + ")");
         holder.tvCoachActualPrice.setText(Utils.getMoney(coach.coach_group.training_cost));
-        //vip价格
-        if (coach.vip == 0) {
-            holder.rlyVipPrice.setVisibility(View.GONE);
-        } else {
-            holder.rlyVipPrice.setVisibility(View.VISIBLE);
-            holder.tvVIPPrice.setText(Utils.getMoney(coach.coach_group.vip_price));
-        }
         if (coach.skill_level.equals("1")) {
             holder.ivIsGoldenCoach.setVisibility(View.VISIBLE);
         } else {
@@ -163,7 +154,6 @@ public class CoachAdapter extends BaseAdapter {
         TextView tvCoachTeachTime;
         TextView tvCoachPoints;
         TextView tvCoachActualPrice;
-        TextView tvVIPPrice;
         SimpleDraweeView ivCoachAvatar;
         ImageView ivIsGoldenCoach;
         ScoreView svCoachScore;
@@ -171,7 +161,6 @@ public class CoachAdapter extends BaseAdapter {
         RelativeLayout rlyCoachLocation;
         TextView tvDistance;
         TextView tvApplaudCount;
-        RelativeLayout rlyVipPrice;
         TextView tvTrainSchoolName;
         LinearLayout llyTrainSchool;
         RelativeLayout rlyActualPrice;
