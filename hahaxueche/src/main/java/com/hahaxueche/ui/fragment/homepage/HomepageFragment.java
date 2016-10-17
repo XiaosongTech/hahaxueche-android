@@ -109,40 +109,44 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         mHomepageBanner.notifyDataSetChanged();
     }
 
-    @OnClick(R.id.fly_my_strength)
-    public void openMyStrengths() {
-        mPresenter.openMyStrengths();
-    }
-
-    @OnClick(R.id.fly_procedure)
-    public void openProcedure() {
-        mPresenter.openProcedure();
-    }
-
-    @OnClick(R.id.frl_tel_ask)
-    public void clickTelContact() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
-            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
-        } else {
-            // Android version is lesser than 6.0 or the permission is already granted.
-            contactService();
+    @OnClick({R.id.fly_my_strength,
+            R.id.fly_procedure,
+            R.id.frl_tel_ask,
+            R.id.cv_coach,
+            R.id.frl_online_ask,
+            R.id.iv_free_try,
+            R.id.cv_adviser})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.fly_my_strength:
+                mPresenter.openMyStrengths();
+                break;
+            case R.id.fly_procedure:
+                mPresenter.openProcedure();
+                break;
+            case R.id.frl_tel_ask:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
+                    //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+                } else {
+                    // Android version is lesser than 6.0 or the permission is already granted.
+                    contactService();
+                }
+                break;
+            case R.id.cv_coach:
+                mPresenter.openBestCoaches();
+                break;
+            case R.id.frl_online_ask:
+                mPresenter.onlineAsk();
+                break;
+            case R.id.iv_free_try:
+                mPresenter.freeTry();
+                break;
+            case R.id.cv_adviser:
+                mPresenter.openFindAdviser();
+            default:
+                break;
         }
-    }
-
-    @OnClick(R.id.cv_coach)
-    public void openBestCoaches() {
-        mPresenter.openBestCoaches();
-    }
-
-    @OnClick(R.id.frl_online_ask)
-    public void onlineAsk() {
-        mPresenter.onlineAsk();
-    }
-
-    @OnClick(R.id.iv_free_try)
-    public void freeTry() {
-        mPresenter.freeTry();
     }
 
     /**

@@ -1,7 +1,5 @@
 package com.hahaxueche.presenter.homepage;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.v4.content.ContextCompat;
@@ -14,7 +12,6 @@ import android.text.style.ForegroundColorSpan;
 
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
-import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.base.Statistics;
 import com.hahaxueche.model.user.User;
@@ -41,6 +38,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
     private static final String WEB_URL_PROCEDURE = "http://activity.hahaxueche.com/share/steps";
     private static final String WEB_URL_FREE_TRY = "http://m.hahaxueche.com/free_trial?promo_code=553353";
     private static final String WEB_URL_BEST_COACHES = "http://m.hahaxueche.com/share/best-coaches";
+    private static final String WEB_URL_FIND_ADVISER = "http://m.hahaxueche.com/share/zhaoguwen";
 
     private HHBaseApplication application;
     private Constants constants;
@@ -72,12 +70,21 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         mHomepageView.openWebView(WEB_URL_MY_STRENGTHS);
     }
 
-    public void openBestCoaches(){
+    public void openBestCoaches() {
         mHomepageView.openWebView(WEB_URL_BEST_COACHES);
     }
 
     public void openProcedure() {
         mHomepageView.openWebView(WEB_URL_PROCEDURE);
+    }
+
+    public void openFindAdviser() {
+        int cityId = 0;
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.student != null) {
+            cityId = user.student.city_id;
+        }
+        mHomepageView.openWebView(WEB_URL_FIND_ADVISER + "?city_id=" + cityId);
     }
 
     /**
