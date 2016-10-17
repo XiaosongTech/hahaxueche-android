@@ -1,13 +1,24 @@
 package com.hahaxueche.ui.fragment.findCoach;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps.LocationSource;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.user.coach.Coach;
@@ -22,6 +33,7 @@ import com.hahaxueche.ui.dialog.findCoach.CoachSortDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.findCoach.FindCoachView;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
+import com.hahaxueche.util.HHLog;
 
 import java.util.ArrayList;
 
@@ -35,22 +47,33 @@ import static android.app.Activity.RESULT_OK;
  * Created by wangshirui on 16/9/13.
  */
 public class FindCoachFragment extends HHBaseFragment implements FindCoachView, XListView.IXListViewListener, AdapterView.OnItemClickListener {
+    private MainActivity mActivity;
     private FindCoachPresenter mPresenter;
     @BindView(R.id.xlv_coaches)
     XListView mXlvCoaches;
     @BindView(R.id.tv_empty)
     TextView mTvEmpty;
+    @BindView(R.id.lly_main)
+    LinearLayout mLlyMain;
     private CoachAdapter mCoachAdapter;
     private ArrayList<Coach> mCoachArrayList;
     private CoachFilterDialog mFilterDialog;
     private CoachSortDialog mSortDialog;
+    //定位client
+    public AMapLocationClient mLocationClient;
+    //定位回调监听器
+    public AMapLocationListener mLocationListener;
+    //定位参数
+    private AMapLocationClientOption mLocationOption;
 
     private static final int REQUEST_CODE_COACH_DETAIL = 1;
     private static final int REQUEST_CODE_FIELD_FILTER = 2;
+    private static final int PERMISSIONS_REQUEST_LOCATION = 602;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mActivity = (MainActivity) getActivity();
         mPresenter = new FindCoachPresenter();
     }
 
@@ -65,7 +88,14 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView, 
         mXlvCoaches.setXListViewListener(this);
         mXlvCoaches.setOnItemClickListener(this);
         mXlvCoaches.setEmptyView(mTvEmpty);
-        mPresenter.fetchCoaches();
+        // Check the SDK version and whether the permission is already granted or not.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_LOCATION);
+            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+        } else {
+            // Android version is lesser than 6.0 or the permission is already granted.
+            startLocation();
+        }
         return view;
     }
 
@@ -73,6 +103,9 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView, 
     public void onDestroy() {
         mPresenter.detachView();
         super.onDestroy();
+        if (null != mLocationClient) {
+            mLocationClient.onDestroy();//销毁定位客户端。
+        }
     }
 
     @Override
@@ -93,6 +126,11 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView, 
     public void addMoreCoachList(ArrayList<Coach> coachArrayList) {
         mCoachArrayList.addAll(coachArrayList);
         mCoachAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Snackbar.make(mLlyMain, message, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -181,5 +219,48 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView, 
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_LOCATION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                startLocation();
+            } else {
+                showMessage("请允许使用定位权限，不然我们无法精确的为您推荐教练");
+            }
+        }
+    }
+
+    private void startLocation() {
+        //初始化定位
+        mLocationClient = new AMapLocationClient(getContext());
+        mLocationListener = new AMapLocationListener() {
+                @Override
+            public void onLocationChanged(AMapLocation amapLocation) {
+                if (amapLocation != null) {
+                    if (amapLocation.getErrorCode() == 0) {
+                        //定位成功回调信息，设置相关消息
+                        mPresenter.setLocation(amapLocation.getLatitude(), amapLocation.getLongitude());
+                    } else {
+                        String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
+                        HHLog.e(errText);
+                    }
+                }
+            }
+        };
+        mLocationClient.setLocationListener(mLocationListener);
+        //初始化定位参数
+        mLocationOption = new AMapLocationClientOption();
+        //设置是否允许模拟位置,默认为false，不允许模拟位置
+        mLocationOption.setMockEnable(true);
+        //设置定位间隔,单位毫秒,默认为2000ms
+        mLocationOption.setInterval(1000 * 10);
+        //给定位客户端对象设置定位参数
+        mLocationClient.setLocationOption(mLocationOption);
+        HHLog.v("create location service");
+        mLocationClient.startLocation();
+        mPresenter.fetchCoaches();
     }
 }

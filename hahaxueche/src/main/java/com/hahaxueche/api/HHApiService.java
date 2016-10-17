@@ -85,7 +85,7 @@ public interface HHApiService {
     Observable<CoachResponseList> getCoaches(@Query("page") int page, @Query("per_page") int perPage, @Query("golden_coach_only") String goldenCoachOnly,
                                              @Query("license_type") String licenseType, @Query("price") String price, @Query("city_id") int cityId,
                                              @Query("training_field_ids[]") ArrayList<String> fieldIdList, @Query("distance") String distance,
-                                             @Query("user_location[]") double[] locations, @Query("sort_by") int sortBy, @Query("vip_only") int vipOnly,
+                                             @Query("user_location[]") ArrayList<String> locations, @Query("sort_by") int sortBy, @Query("vip_only") int vipOnly,
                                              @Query("student_id") String studentId);
 
     @GET

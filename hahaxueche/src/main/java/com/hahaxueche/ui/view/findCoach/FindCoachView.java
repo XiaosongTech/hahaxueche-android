@@ -25,4 +25,6 @@ public interface FindCoachView extends HHBaseView {
      * @param coachArrayList
      */
     void addMoreCoachList(ArrayList<Coach> coachArrayList);
+
+    void showMessage(String message);
 }

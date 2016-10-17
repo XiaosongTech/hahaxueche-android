@@ -13,6 +13,7 @@ import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.FindCoachView;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
 
@@ -95,10 +96,21 @@ public class FindCoachPresenter implements Presenter<FindCoachView> {
                 fieldIds.add(field.id);
             }
         }
+        String studentId = null;
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            studentId = user.student.id;
+        }
+        ArrayList<String> locations = null;
+        if (application.getMyLocation() != null) {
+            locations = new ArrayList<>();
+            locations.add(String.valueOf(application.getMyLocation().lat));
+            locations.add(String.valueOf(application.getMyLocation().lng));
+        }
         HHApiService apiService = application.getApiService();
         subscription = apiService.getCoaches(PAGE, PER_PAGE, TextUtils.isEmpty(goldenCoachOnly) ? null : goldenCoachOnly,
                 TextUtils.isEmpty(licenseType) ? null : licenseType, TextUtils.isEmpty(filterPrice) ? null : filterPrice, cityId,
-                fieldIds, TextUtils.isEmpty(filterDistance) ? null : filterDistance, null, sortBy, vipOnly, null)
+                fieldIds, TextUtils.isEmpty(filterDistance) ? null : filterDistance, locations, sortBy, vipOnly, studentId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<CoachResponseList>() {
@@ -164,5 +176,9 @@ public class FindCoachPresenter implements Presenter<FindCoachView> {
 
     public void setSelectFields(ArrayList<Field> selectFields) {
         this.selectFields = selectFields;
+    }
+
+    public void setLocation(double lat, double lng) {
+        application.setMyLocation(lat, lng);
     }
 }
