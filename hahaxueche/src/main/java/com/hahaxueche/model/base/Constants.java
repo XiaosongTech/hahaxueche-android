@@ -68,4 +68,14 @@ public class Constants {
         }
         return ret;
     }
+
+    public ArrayList<Field> getFields(int cityId) {
+        ArrayList<Field> retFields = new ArrayList<>();
+        for (Field field : fields) {
+            if (field.city_id == cityId) {
+                retFields.add(field);
+            }
+        }
+        return retFields;
+    }
 }

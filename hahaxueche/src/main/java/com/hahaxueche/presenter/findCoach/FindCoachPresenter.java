@@ -5,12 +5,16 @@ import android.text.TextUtils;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.City;
+import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.responseList.CoachResponseList;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.FindCoachView;
+import com.hahaxueche.ui.widget.scoreView.ScoreView;
 import com.hahaxueche.util.HHLog;
+
+import java.util.ArrayList;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -34,6 +38,7 @@ public class FindCoachPresenter implements Presenter<FindCoachView> {
     private String licenseType;
     private int cityId = 0;
     private int sortBy = 0;
+    private ArrayList<Field> selectFields;
 
     public void attachView(FindCoachView view) {
         this.mFindCoachView = view;
@@ -83,10 +88,17 @@ public class FindCoachPresenter implements Presenter<FindCoachView> {
     }
 
     public void fetchCoaches() {
+        ArrayList<String> fieldIds = null;
+        if (selectFields != null && selectFields.size() > 0) {
+            fieldIds = new ArrayList<>();
+            for (Field field : selectFields) {
+                fieldIds.add(field.id);
+            }
+        }
         HHApiService apiService = application.getApiService();
         subscription = apiService.getCoaches(PAGE, PER_PAGE, TextUtils.isEmpty(goldenCoachOnly) ? null : goldenCoachOnly,
                 TextUtils.isEmpty(licenseType) ? null : licenseType, TextUtils.isEmpty(filterPrice) ? null : filterPrice, cityId,
-                null, TextUtils.isEmpty(filterDistance) ? null : filterDistance, null, sortBy, vipOnly, null)
+                fieldIds, TextUtils.isEmpty(filterDistance) ? null : filterDistance, null, sortBy, vipOnly, null)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<CoachResponseList>() {
@@ -144,5 +156,13 @@ public class FindCoachPresenter implements Presenter<FindCoachView> {
                         }
                     }
                 });
+    }
+
+    public ArrayList<Field> getSelectFields() {
+        return selectFields;
+    }
+
+    public void setSelectFields(ArrayList<Field> selectFields) {
+        this.selectFields = selectFields;
     }
 }

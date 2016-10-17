@@ -9,10 +9,12 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
+import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.findCoach.FindCoachPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
+import com.hahaxueche.ui.activity.findCoach.FieldFilterActivity;
 import com.hahaxueche.ui.activity.findCoach.SearchCoachActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachAdapter;
 import com.hahaxueche.ui.dialog.findCoach.CoachFilterDialog;
@@ -43,7 +45,8 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView, 
     private CoachFilterDialog mFilterDialog;
     private CoachSortDialog mSortDialog;
 
-    private static final int REQEUST_CODE_COACH_DETAIL = 1;
+    private static final int REQUEST_CODE_COACH_DETAIL = 1;
+    private static final int REQUEST_CODE_FIELD_FILTER = 2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,7 +110,7 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView, 
         if (mCoachArrayList != null && mCoachArrayList.size() > 0 && position > 0 && position - 1 < mCoachArrayList.size()) {
             Intent intent = new Intent(getContext(), CoachDetailActivity.class);
             intent.putExtra("coach", mCoachArrayList.get(position - 1));
-            startActivityForResult(intent, REQEUST_CODE_COACH_DETAIL);
+            startActivityForResult(intent, REQUEST_CODE_COACH_DETAIL);
         }
     }
 
@@ -124,6 +127,13 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView, 
             });
         }
         mFilterDialog.show();
+    }
+
+    @OnClick(R.id.iv_map)
+    public void clickFieldFilter() {
+        Intent intent = new Intent(getContext(), FieldFilterActivity.class);
+        intent.putParcelableArrayListExtra("selectFields", mPresenter.getSelectFields());
+        startActivityForResult(intent, REQUEST_CODE_FIELD_FILTER);
     }
 
     @OnClick(R.id.fly_sort)
@@ -147,7 +157,7 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView, 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQEUST_CODE_COACH_DETAIL) {
+        if (requestCode == REQUEST_CODE_COACH_DETAIL) {
             if (resultCode == RESULT_OK && null != data) {
                 Coach retCoach = data.getParcelableExtra("coach");
                 if (retCoach != null) {
@@ -159,6 +169,14 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView, 
                             break;
                         }
                     }
+                }
+            }
+        } else if (requestCode == REQUEST_CODE_FIELD_FILTER) {
+            if (resultCode == RESULT_OK && null != data) {
+                ArrayList<Field> fields = data.getParcelableArrayListExtra("selectFields");
+                if (fields != null) {
+                    mPresenter.setSelectFields(fields);
+                    mPresenter.fetchCoaches();
                 }
             }
         }

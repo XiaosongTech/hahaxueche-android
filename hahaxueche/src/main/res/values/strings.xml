@@ -9,4 +9,5 @@
     <string name="header_hint_refresh_time">时间：</string>
     <string name="footer_hint_load_normal">加载更多</string>
     <string name="footer_hint_load_ready">松开加载更多</string>
+    <string name="field_filter_hints"><![CDATA[<font color="#ff9e00">图标可多选</font><font color="#bbbbbb">，请选择地图上的图标</font><font color="#ff9e00">“查看训练场地址”</font><font color="#bbbbbb">，可查看教练场教练列表]]></string>
 </resources>
