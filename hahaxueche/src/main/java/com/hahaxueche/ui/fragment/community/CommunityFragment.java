@@ -12,6 +12,7 @@ import com.hahaxueche.model.community.News;
 import com.hahaxueche.presenter.community.CommunityPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.community.ArticleActivity;
+import com.hahaxueche.ui.activity.community.ExamLibraryActivity;
 import com.hahaxueche.ui.adapter.community.NewsAdapter;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.community.CommunityView;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by wangshirui on 16/9/13.
@@ -95,5 +97,15 @@ public class CommunityFragment extends HHBaseFragment implements CommunityView, 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(getContext(), ArticleActivity.class);
         startActivity(intent);
+    }
+
+    @OnClick(R.id.rly_test_lib)
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.rly_test_lib:
+                mActivity.startActivity(new Intent(getContext(), ExamLibraryActivity.class));
+            default:
+                break;
+        }
     }
 }
