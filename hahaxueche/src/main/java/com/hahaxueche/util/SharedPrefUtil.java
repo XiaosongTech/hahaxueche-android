@@ -1,14 +1,17 @@
 package com.hahaxueche.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.hahaxueche.model.base.City;
+import com.hahaxueche.model.examLib.Question;
 import com.hahaxueche.model.user.Student;
 import com.hahaxueche.model.user.User;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -99,5 +102,60 @@ public class SharedPrefUtil {
     public void clearSearchHistory() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         prefs.edit().putString("searchHistorySerialize", null).apply();
+    }
+
+    public void setExamPosition(String examType, int position) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        prefs.edit().putInt(examType + "Pos", position).apply();
+    }
+
+
+    public int getExamPosition(String examType) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        return prefs.getInt(examType + "Pos", 0);
+    }
+
+    public void clearExamPosition(String examType) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        prefs.edit().putInt(examType + "Pos", 0).apply();
+    }
+
+    public void addQuestionCollect(String examType, String id) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        ArrayList<String> collectList = mGson.fromJson(prefs.getString(examType + "collectList", ""), ArrayList.class);
+        if (collectList != null) {
+            if (!collectList.contains(id)) {
+                collectList.add(id);
+            }
+        } else {
+            collectList = new ArrayList<>();
+            collectList.add(id);
+        }
+        prefs.edit().putString(examType + "collectList", mGson.toJson(collectList)).apply();
+    }
+
+    public void removeQuestionCollect(String examType, String id) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        ArrayList<String> collectList = mGson.fromJson(prefs.getString(examType + "collectList", ""), ArrayList.class);
+        if (collectList != null && collectList.contains(id)) {
+            collectList.remove(id);
+        }
+        prefs.edit().putString(examType + "collectList", mGson.toJson(collectList)).apply();
+    }
+
+    public boolean isQuestionCollect(String examType, String id) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        ArrayList<String> collectList = mGson.fromJson(prefs.getString(examType + "collectList", ""), ArrayList.class);
+        return (collectList != null && collectList.contains(id));
+    }
+
+    public ArrayList<Question> getCollectList(ArrayList<Question> questions, String examType) {
+        ArrayList<Question> collectList = new ArrayList();
+        for (Question question : questions) {
+            if (isQuestionCollect(examType, question.id)) {
+                collectList.add(question);
+            }
+        }
+        return collectList;
     }
 }
