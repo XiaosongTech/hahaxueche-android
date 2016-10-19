@@ -6,11 +6,13 @@ import com.hahaxueche.model.base.BaseModel;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.responseList.CoachResponseList;
+import com.hahaxueche.model.responseList.PartnerResponseList;
 import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.user.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.Follow;
+import com.hahaxueche.model.user.coach.Partner;
 import com.hahaxueche.util.HHLog;
 
 
@@ -37,6 +39,8 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.Url;
 import rx.Observable;
+
+import static android.R.attr.path;
 
 /**
  * Created by wangshirui on 16/9/8.
@@ -125,6 +129,21 @@ public interface HHApiService {
     @FormUrlEncoded
     @POST("charges")
     Observable<ResponseBody> createCharge(@FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
+
+    @GET("coaches")
+    Observable<PartnerResponseList> getPartners(@Query("page") int page, @Query("per_page") int perPage, @Query("license_type") String licenseType,
+                                                @Query("price") String price, @Query("city_id") int cityId, @Query("sort_by") int sortBy);
+
+    @GET
+    Observable<PartnerResponseList> getPartners(@Url String path);
+
+    @GET("coaches")
+    Observable<ArrayList<Partner>> getPartnersByKeyword(@Query("keyword") String keyword);
+
+    @FormUrlEncoded
+    @POST("students/{studentId}/like/{coachId}")
+    Observable<Partner> likePartner(@Path("studentId") String studentId, @Path("coachId") String coachId, @FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
+
 
     class Factory {
         public static HHApiService create() {
