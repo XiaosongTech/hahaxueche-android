@@ -38,35 +38,35 @@ public class StartExamActivity extends HHBaseActivity {
     ImageView mIvBack;
     TextView mTvTitle;
     @BindView(R.id.cir_my_avatar)
-    private SimpleDraweeView mCirAvatar;
+    SimpleDraweeView mCirAvatar;
     @BindView(R.id.tv_exam_status)
-    private TextView mTvExamStatus;//考试状态--姓名/未登录,通过,继续努力
+    TextView mTvExamStatus;//考试状态--姓名/未登录,通过,继续努力
     @BindView(R.id.tv_record_remarks)
-    private TextView mTvRecordRemarks;//成绩说明
+    TextView mTvRecordRemarks;//成绩说明
     @BindView(R.id.tv_exam_time)
-    private TextView mTvExamTime;//考试时间
+    TextView mTvExamTime;//考试时间
     @BindView(R.id.rly_exam_score)
-    private RelativeLayout mRlyScore;//分数布局
+    RelativeLayout mRlyScore;//分数布局
     @BindView(R.id.tv_exam_score)
-    private TextView mTvScore;
+    TextView mTvScore;
     @BindView(R.id.rly_pass_score)
-    private RelativeLayout mRlyPassScore;//合格标准
+    RelativeLayout mRlyPassScore;//合格标准
     @BindView(R.id.rly_exam_standard)
-    private RelativeLayout mRlyExamStandard;//出题规则
+    RelativeLayout mRlyExamStandard;//出题规则
     @BindView(R.id.rly_exam_type)
-    private RelativeLayout mRlyExamType;
+    RelativeLayout mRlyExamType;
     @BindView(R.id.tv_exam_type)
-    private TextView mTvExamType;
+    TextView mTvExamType;
     @BindView(R.id.tv_exam_rules)
-    private TextView mTvExamRules;//记分规则说明
+    TextView mTvExamRules;//记分规则说明
     @BindView(R.id.tv_start_exam)
-    private TextView mTvStartExam;//开始考试按钮
+    TextView mTvStartExam;//开始考试按钮
     @BindView(R.id.tv_try_again)
-    private TextView mTvTryAgain;//再次考试按钮
+    TextView mTvTryAgain;//再次考试按钮
     @BindView(R.id.tv_return)
-    private TextView mTvReturnHomepage;//返回首页按钮
+    TextView mTvReturnHomepage;//返回首页按钮
     @BindView(R.id.tv_check_wrong)
-    private TextView mTvCheckWrong;//查看错题按钮
+    TextView mTvCheckWrong;//查看错题按钮
 
     private String mExamType;
     private String mStatus = ExamLib.EXAM_STATUS_READY;//默认准备状态

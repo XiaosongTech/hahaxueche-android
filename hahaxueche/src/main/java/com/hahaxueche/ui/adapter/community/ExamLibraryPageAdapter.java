@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.hahaxueche.ui.fragment.community.ExamLibraryFragment;
+import com.hahaxueche.util.ExamLib;
 
 /**
  * Created by wangshirui on 2016/10/18.
@@ -23,7 +24,11 @@ public class ExamLibraryPageAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return ExamLibraryFragment.newInstance(position + 1);
+        if (position == 0) {
+            return ExamLibraryFragment.newInstance(ExamLib.EXAM_TYPE_1);
+        } else {
+            return ExamLibraryFragment.newInstance(ExamLib.EXAM_TYPE_4);
+        }
     }
 
     @Override

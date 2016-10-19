@@ -54,14 +54,14 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
     private TextView mTvTitle;
     private ImageView mIvSubmitExam;
     @BindView(R.id.pager)
-    private ViewPager mPager;
+    ViewPager mPager;
     private PagerAdapter mPagerAdapter;
     @BindView(R.id.tv_previous)
-    private TextView mTvPrevious;
+    TextView mTvPrevious;
     @BindView(R.id.tv_next)
-    private TextView mTvNext;
+    TextView mTvNext;
     @BindView(R.id.tv_page)
-    private TextView mTvPage;
+    TextView mTvPage;
 
     private ArrayList<Question> mQuestionList = new ArrayList<>();
     private int mCurrentPosition;
