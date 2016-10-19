@@ -16,6 +16,7 @@ public class FindCoachPresenter implements Presenter<FindCoachView> {
     public void attachView(FindCoachView view) {
         this.mFindCoachView = view;
         //默认选中驾校教练
+        selectCoach();
     }
 
     public void detachView() {
@@ -27,11 +28,13 @@ public class FindCoachPresenter implements Presenter<FindCoachView> {
         mFindCoachView.selectCoach();
         mFindCoachView.unSelectPartner();
         mFindCoachView.showLeftIconMap();
+        mFindCoachView.showCoachListFragment();
     }
 
     public void selectPartner() {
         mFindCoachView.selectPartner();
         mFindCoachView.unSelectCoach();
         mFindCoachView.showLeftIconExplain();
+        mFindCoachView.showPartnerListFragment();
     }
 }

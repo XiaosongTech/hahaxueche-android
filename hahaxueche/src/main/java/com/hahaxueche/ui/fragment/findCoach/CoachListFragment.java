@@ -44,7 +44,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by wangshirui on 16/9/13.
  */
-public class CoachListListFragment extends HHBaseFragment implements CoachListView, XListView.IXListViewListener, AdapterView.OnItemClickListener {
+public class CoachListFragment extends HHBaseFragment implements CoachListView, XListView.IXListViewListener, AdapterView.OnItemClickListener {
     private MainActivity mActivity;
     private CoachListPresenter mPresenter;
     @BindView(R.id.xlv_coaches)
@@ -165,12 +165,12 @@ public class CoachListListFragment extends HHBaseFragment implements CoachListVi
         mFilterDialog.show();
     }
 
-    @OnClick(R.id.iv_map)
-    public void clickFieldFilter() {
-        Intent intent = new Intent(getContext(), FieldFilterActivity.class);
-        intent.putParcelableArrayListExtra("selectFields", mPresenter.getSelectFields());
-        startActivityForResult(intent, REQUEST_CODE_FIELD_FILTER);
-    }
+//    @OnClick(R.id.iv_map)
+//    public void clickFieldFilter() {
+//        Intent intent = new Intent(getContext(), FieldFilterActivity.class);
+//        intent.putParcelableArrayListExtra("selectFields", mPresenter.getSelectFields());
+//        startActivityForResult(intent, REQUEST_CODE_FIELD_FILTER);
+//    }
 
     @OnClick(R.id.fly_sort)
     public void showSortDialog() {
@@ -185,11 +185,11 @@ public class CoachListListFragment extends HHBaseFragment implements CoachListVi
         }
         mSortDialog.show();
     }
-
-    @OnClick(R.id.iv_search)
-    public void clickSearchCoach() {
-        startActivity(new Intent(getContext(), SearchCoachActivity.class));
-    }
+//
+//    @OnClick(R.id.iv_search)
+//    public void clickSearchCoach() {
+//        startActivity(new Intent(getContext(), SearchCoachActivity.class));
+//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

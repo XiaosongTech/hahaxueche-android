@@ -18,4 +18,8 @@ public interface FindCoachView extends HHBaseView {
     void showLeftIconMap();
 
     void showLeftIconExplain();
+
+    void showCoachListFragment();
+
+    void showPartnerListFragment();
 }

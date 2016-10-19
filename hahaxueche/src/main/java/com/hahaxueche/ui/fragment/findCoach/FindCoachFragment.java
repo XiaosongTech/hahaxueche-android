@@ -1,6 +1,8 @@
 package com.hahaxueche.ui.fragment.findCoach;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +33,8 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
     TextView mTvSelectCoach;
     @BindView(R.id.tv_select_partner)
     TextView mTvSelectPartner;
+    private CoachListFragment mCoachListFragment;
+    private PartnerListFragment mPartnerListFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,12 +83,48 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
 
     @Override
     public void showLeftIconMap() {
-
+        mIvIconLeft.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_maplist_btn));
     }
 
     @Override
     public void showLeftIconExplain() {
+        mIvIconLeft.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_explain));
+    }
 
+    @Override
+    public void showCoachListFragment() {
+        FragmentManager fm = getChildFragmentManager();
+        // 开启Fragment事务
+        FragmentTransaction transaction = fm.beginTransaction();
+        if (mCoachListFragment == null) {
+            mCoachListFragment = new CoachListFragment();
+        }
+        if (mPartnerListFragment == null) {
+            mPartnerListFragment = new PartnerListFragment();
+        }
+        if (!mCoachListFragment.isAdded()) {//先判断是否被add过
+            transaction.hide(mPartnerListFragment).add(R.id.id_content, mCoachListFragment).commit();//隐藏当前的fragment，add下一个到Activity中
+        } else {
+            transaction.hide(mPartnerListFragment).show(mCoachListFragment).commit();//隐藏当前的fragment，显示下一个
+        }
+    }
+
+    @Override
+    public void showPartnerListFragment() {
+        FragmentManager fm = getChildFragmentManager();
+        // 开启Fragment事务
+        FragmentTransaction transaction = fm.beginTransaction();
+        if (mCoachListFragment == null) {
+            mCoachListFragment = new CoachListFragment();
+        }
+        if (mPartnerListFragment == null) {
+            mPartnerListFragment = new PartnerListFragment();
+        }
+        if (!mPartnerListFragment.isAdded()) {//先判断是否被add过
+            transaction.hide(mCoachListFragment).add(R.id.id_content, mPartnerListFragment).commit();//隐藏当前的fragment，add下一个到Activity中
+        } else {
+            transaction.hide(mCoachListFragment).show(mPartnerListFragment).commit();//隐藏当前的fragment，显示下一个
+        }
     }
 
     @OnClick({R.id.tv_select_coach,
