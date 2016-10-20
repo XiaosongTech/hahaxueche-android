@@ -121,7 +121,7 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
             mPartnerListFragment = new PartnerListFragment();
         }
         if (!mPartnerListFragment.isAdded()) {//先判断是否被add过
-            transaction.hide(mCoachListFragment).add(R.id.id_content, mPartnerListFragment).commit();//隐藏当前的fragment，add下一个到Activity中
+            transaction.hide(mCoachListFragment).add(R.id.id_content, mPartnerListFragment).show(mPartnerListFragment).commit();//隐藏当前的fragment，add下一个到Activity中
         } else {
             transaction.hide(mCoachListFragment).show(mPartnerListFragment).commit();//隐藏当前的fragment，显示下一个
         }
