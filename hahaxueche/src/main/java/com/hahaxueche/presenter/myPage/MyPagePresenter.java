@@ -8,6 +8,7 @@ import com.hahaxueche.model.base.BaseModel;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.user.Student;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.user.employee.Adviser;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.MyPageView;
 import com.hahaxueche.util.ErrorUtil;
@@ -38,6 +39,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
     private Subscription subscription;
     private HHBaseApplication application;
     private Student mStudent;
+    private Adviser mAdviser;
 
     public void attachView(MyPageView view) {
         this.mMyPageView = view;
@@ -47,6 +49,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
             mMyPageView.showLoggedInView();
             mStudent = user.student;
             mMyPageView.loadStudentInfo(mStudent);
+            fetchAdviser();
         } else {
             mMyPageView.showNotLoginView();
         }
@@ -185,6 +188,33 @@ public class MyPagePresenter implements Presenter<MyPageView> {
                     }
                 });
 
+    }
+
+    private void fetchAdviser() {
+        HHApiService apiService = application.getApiService();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin()) return;
+        subscription = apiService.getAdviser(user.student.id)
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<Adviser>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(Adviser adviser) {
+                        mAdviser = adviser;
+                    }
+                });
+    }
+
+    public Adviser getAdviser() {
+        return mAdviser;
     }
 
 }

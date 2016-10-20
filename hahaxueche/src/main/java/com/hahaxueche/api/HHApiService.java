@@ -13,6 +13,7 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.Follow;
 import com.hahaxueche.model.user.coach.Partner;
+import com.hahaxueche.model.user.employee.Adviser;
 import com.hahaxueche.util.HHLog;
 
 
@@ -143,6 +144,9 @@ public interface HHApiService {
     @FormUrlEncoded
     @POST("students/{studentId}/like/{coachId}")
     Observable<Partner> likePartner(@Path("studentId") String studentId, @Path("coachId") String coachId, @FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
+
+    @GET("employees/advisers")
+    Observable<Adviser> getAdviser(@Query("student_id") String studentId);
 
 
     class Factory {

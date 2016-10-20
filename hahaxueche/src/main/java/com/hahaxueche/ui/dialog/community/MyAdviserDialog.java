@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
-import com.hahaxueche.model.user.Consultant;
+import com.hahaxueche.model.user.employee.Adviser;
 import com.hahaxueche.util.Utils;
 
 import butterknife.ButterKnife;
@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
  * Created by wangshirui on 16/9/29.
  */
 
-public class MyConsultantDialog {
+public class MyAdviserDialog {
     private Context mContext;
     private Dialog mDialog;
     private View contentView;
@@ -29,16 +29,16 @@ public class MyConsultantDialog {
     private SimpleDraweeView mIvAvatar;
     private TextView mTvDescription;
     private onMyConsultantListener mListener;
-    private Consultant mConsultant;
+    private Adviser mAdviser;
 
     public interface onMyConsultantListener {
         boolean call();
     }
 
-    public MyConsultantDialog(Context context, Consultant consultant, onMyConsultantListener onMyConsultantListener) {
+    public MyAdviserDialog(Context context, Adviser adviser, onMyConsultantListener onMyConsultantListener) {
         mDialog = new Dialog(context, R.style.my_dialog);
         mContext = context;
-        mConsultant = consultant;
+        mAdviser = adviser;
         mListener = onMyConsultantListener;
         initView();
         initEvent();
@@ -47,7 +47,7 @@ public class MyConsultantDialog {
     }
 
     private void initView() {
-        contentView = View.inflate(mContext, R.layout.dialog_my_consultant, null);
+        contentView = View.inflate(mContext, R.layout.dialog_my_adviser, null);
         mTvName = ButterKnife.findById(contentView, R.id.tv_consultant_name);
         mTvDescription = ButterKnife.findById(contentView, R.id.tv_description);
         mIvAvatar = ButterKnife.findById(contentView, R.id.iv_avatar);
@@ -67,9 +67,9 @@ public class MyConsultantDialog {
     }
 
     private void loadDatas() {
-        mTvName.setText("嗨, 我是" + mConsultant.name + ", 您的专属学车顾问!");
-        mIvAvatar.setImageURI(mConsultant.avatar);
-        mTvDescription.setText(mConsultant.description);
+        mTvName.setText("嗨, 我是" + mAdviser.name + ", 您的专属学车顾问!");
+        mIvAvatar.setImageURI(mAdviser.avatar);
+        mTvDescription.setText(mAdviser.long_intro);
     }
 
     public void show() {
