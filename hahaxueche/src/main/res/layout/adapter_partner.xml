@@ -37,36 +37,11 @@
                 android:id="@+id/tv_teach_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:textColor="@color/haha_gray"
-                android:textSize="14sp" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/rly_second_line"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/rly_first_line"
-            android:layout_below="@id/rly_first_line"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="6dp">
-
-            <com.hahaxueche.ui.widget.scoreView.ScoreView
-                android:id="@+id/sv_partner_score"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"></com.hahaxueche.ui.widget.scoreView.ScoreView>
-
-            <TextView
-                android:id="@+id/tv_partner_points"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="6dp"
-                android:layout_toRightOf="@id/sv_partner_score"
-                android:textColor="@color/app_theme_color"
-                android:textSize="12sp" />
+                android:layout_toRightOf="@id/tv_partner_name"
+                android:textColor="@color/haha_gray"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tv_applaud_count"
@@ -81,18 +56,17 @@
                 android:textSize="14sp" />
         </RelativeLayout>
 
-
         <RelativeLayout
             android:id="@+id/rly_actual_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/rly_second_line"
-            android:layout_below="@id/rly_second_line"
-            android:layout_marginTop="6dp">
+            android:layout_alignLeft="@id/rly_first_line"
+            android:layout_below="@id/rly_first_line"
+            android:layout_marginTop="10dp">
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/divider_width"
+                android:layout_height="0.3dp"
                 android:background="@color/haha_gray_divider" />
 
             <TextView

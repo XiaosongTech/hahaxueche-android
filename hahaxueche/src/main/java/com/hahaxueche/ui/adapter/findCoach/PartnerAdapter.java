@@ -11,7 +11,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.user.coach.Partner;
-import com.hahaxueche.ui.widget.scoreView.ScoreView;
 import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
@@ -61,10 +60,8 @@ public class PartnerAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.tvPartnerName = ButterKnife.findById(view, R.id.tv_partner_name);
             holder.tvTeachTime = ButterKnife.findById(view, R.id.tv_teach_time);
-            holder.tvPartnerPoints = ButterKnife.findById(view, R.id.tv_partner_points);
             holder.tvPrice = ButterKnife.findById(view, R.id.tv_price);
             holder.ivPartnerAvatar = ButterKnife.findById(view, R.id.iv_partner_avatar);
-            holder.svPartnerScore = ButterKnife.findById(view, R.id.sv_partner_score);
             holder.tvApplaudCount = ButterKnife.findById(view, R.id.tv_applaud_count);
             view.setTag(holder);
         } else {
@@ -74,13 +71,7 @@ public class PartnerAdapter extends BaseAdapter {
         holder.tvPartnerName.setText(Partner.name);
         holder.ivPartnerAvatar.setImageURI(Partner.avatar);
         holder.tvTeachTime.setText(Partner.experiences + "年教龄");
-        holder.tvPartnerPoints.setText(Partner.average_rating + " (" + Partner.review_count + ")");
         holder.tvPrice.setText(Utils.getMoney(Partner.coach_group.training_cost));
-        float score = Float.parseFloat(Partner.average_rating);
-        if (score > 5) {
-            score = 5;
-        }
-        holder.svPartnerScore.setScore(score, false);
         holder.tvApplaudCount.setText(String.valueOf(Partner.like_count));
         return view;
     }
@@ -88,10 +79,8 @@ public class PartnerAdapter extends BaseAdapter {
     static class ViewHolder {
         TextView tvPartnerName;
         TextView tvTeachTime;
-        TextView tvPartnerPoints;
         TextView tvPrice;
         SimpleDraweeView ivPartnerAvatar;
-        ScoreView svPartnerScore;
         TextView tvApplaudCount;
     }
 }
