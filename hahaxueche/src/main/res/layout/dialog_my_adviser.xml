@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="有问题? 我一直在等你的电话"
+            android:text="有问题? 我一直在等您的电话"
             android:textColor="@color/haha_gray_text_dark"
             android:textSize="16sp" />
 
