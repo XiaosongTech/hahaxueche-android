@@ -15,6 +15,7 @@ import com.hahaxueche.model.user.coach.Partner;
 import com.hahaxueche.presenter.findCoach.PartnerListPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
+import com.hahaxueche.ui.activity.findCoach.PartnerDetailActivity;
 import com.hahaxueche.ui.adapter.findCoach.PartnerAdapter;
 import com.hahaxueche.ui.dialog.findCoach.PartnerFilterDialog;
 import com.hahaxueche.ui.dialog.findCoach.PartnerSortDialog;
@@ -27,6 +28,8 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by wangshirui on 2016/10/19.
@@ -45,6 +48,7 @@ public class PartnerListFragment extends HHBaseFragment implements PartnerListVi
     private ArrayList<Partner> mPartnerArrayList;
     private PartnerFilterDialog mFilterDialog;
     private PartnerSortDialog mSortDialog;
+    private static final int REQUEST_CODE_PARTNER_DETAIL = 3;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,9 +116,9 @@ public class PartnerListFragment extends HHBaseFragment implements PartnerListVi
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (mPartnerArrayList != null && mPartnerArrayList.size() > 0 && position > 0 && position - 1 < mPartnerArrayList.size()) {
-            Intent intent = new Intent(getContext(), CoachDetailActivity.class);
-            intent.putExtra("coach", mPartnerArrayList.get(position - 1));
-            startActivity(intent);
+            Intent intent = new Intent(getContext(), PartnerDetailActivity.class);
+            intent.putExtra("partner", mPartnerArrayList.get(position - 1));
+            startActivityForResult(intent, REQUEST_CODE_PARTNER_DETAIL);
         }
     }
 
@@ -144,5 +148,25 @@ public class PartnerListFragment extends HHBaseFragment implements PartnerListVi
             });
         }
         mSortDialog.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_PARTNER_DETAIL) {
+            if (resultCode == RESULT_OK && null != data) {
+                Partner retPartner = data.getParcelableExtra("partner");
+                if (retPartner != null) {
+                    for (Partner partner : mPartnerArrayList) {
+                        if (partner.id.equals(retPartner.id)) {
+                            partner.like_count = retPartner.like_count;
+                            partner.liked = retPartner.liked;
+                            mPartnerAdapter.notifyDataSetChanged();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
