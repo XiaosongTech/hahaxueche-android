@@ -15,6 +15,7 @@ import com.hahaxueche.model.user.employee.Adviser;
 import com.hahaxueche.util.Utils;
 
 import butterknife.ButterKnife;
+import me.grantland.widget.AutofitTextView;
 
 /**
  * Created by wangshirui on 16/9/29.
@@ -27,7 +28,7 @@ public class MyAdviserDialog {
     private ImageView mIvCall;
     private TextView mTvName;
     private SimpleDraweeView mIvAvatar;
-    private TextView mTvDescription;
+    private AutofitTextView mTvDescription;
     private onMyConsultantListener mListener;
     private Adviser mAdviser;
 
@@ -69,7 +70,7 @@ public class MyAdviserDialog {
     private void loadDatas() {
         mTvName.setText("嗨, 我是" + mAdviser.name + ", 您的专属学车顾问!");
         mIvAvatar.setImageURI(mAdviser.avatar);
-        mTvDescription.setText(mAdviser.long_intro);
+        mTvDescription.setText("\"" + mAdviser.long_intro + "\"");
     }
 
     public void show() {
