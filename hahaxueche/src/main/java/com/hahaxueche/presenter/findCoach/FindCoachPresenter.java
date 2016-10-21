@@ -12,6 +12,7 @@ import rx.Subscription;
 public class FindCoachPresenter implements Presenter<FindCoachView> {
     private FindCoachView mFindCoachView;
     private Subscription subscription;
+    private int currentPage = 0;//0,驾校教练；1，陪练教练
 
     public void attachView(FindCoachView view) {
         this.mFindCoachView = view;
@@ -29,6 +30,7 @@ public class FindCoachPresenter implements Presenter<FindCoachView> {
         mFindCoachView.unSelectPartner();
         mFindCoachView.showLeftIconMap();
         mFindCoachView.showCoachListFragment();
+        currentPage = 0;
     }
 
     public void selectPartner() {
@@ -36,5 +38,16 @@ public class FindCoachPresenter implements Presenter<FindCoachView> {
         mFindCoachView.unSelectCoach();
         mFindCoachView.showLeftIconExplain();
         mFindCoachView.showPartnerListFragment();
+        currentPage = 1;
     }
+
+    public void clickLeftIcon() {
+        if (currentPage == 1) {
+            mFindCoachView.showPartnerInfoDialog();
+        } else {
+
+        }
+    }
+
+
 }

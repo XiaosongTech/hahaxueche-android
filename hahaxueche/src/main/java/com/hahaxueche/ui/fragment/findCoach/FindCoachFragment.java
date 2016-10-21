@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.hahaxueche.R;
 import com.hahaxueche.presenter.findCoach.FindCoachPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
+import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.findCoach.FindCoachView;
 
@@ -35,6 +36,7 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
     TextView mTvSelectPartner;
     private CoachListFragment mCoachListFragment;
     private PartnerListFragment mPartnerListFragment;
+    private BaseAlertSimpleDialog mAlertDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -127,8 +129,17 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
         }
     }
 
+    @Override
+    public void showPartnerInfoDialog() {
+        if (mAlertDialog == null) {
+            mAlertDialog = new BaseAlertSimpleDialog(getContext(), "什么是陪练教练？", getString(R.string.partnerExplain));
+        }
+        mAlertDialog.show();
+    }
+
     @OnClick({R.id.tv_select_coach,
-            R.id.tv_select_partner})
+            R.id.tv_select_partner,
+            R.id.iv_icon_left})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_select_coach:
@@ -136,6 +147,9 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
                 break;
             case R.id.tv_select_partner:
                 mPresenter.selectPartner();
+                break;
+            case R.id.iv_icon_left:
+                mPresenter.clickLeftIcon();
                 break;
             default:
                 break;

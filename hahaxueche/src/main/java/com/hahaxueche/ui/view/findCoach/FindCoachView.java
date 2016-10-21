@@ -22,4 +22,6 @@ public interface FindCoachView extends HHBaseView {
     void showCoachListFragment();
 
     void showPartnerListFragment();
+
+    void showPartnerInfoDialog();
 }

@@ -15,4 +15,5 @@
     <string name="examRule4">记分规则:模拟考试下不能修改答案,每答对1题得2分,合格标准90分,答题时间30分钟</string>
     <string name="passRemarks">本次模拟测试通过,下面的驾驶学习继续努力!</string>
     <string name="notPassRemarks">本次模拟测试不及格,练习后请继续尝试!</string>
+    <string name="partnerExplain">&#160;&#160;面向初学拿到驾照或有驾照数年未驾过车的学员提供的陪练服务，包括驾驶技术的提升、驾驶经验的传授、安全应变能力的强化，以及在考驾照中所学不到的交通繁忙道路的实际行驶，使学员在短时间内历练出高操的驾车技术，从而达到安全行车的目的。</string>
 </resources>
