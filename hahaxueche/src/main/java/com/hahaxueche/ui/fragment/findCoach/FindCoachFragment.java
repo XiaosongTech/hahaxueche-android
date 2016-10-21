@@ -1,5 +1,6 @@
 package com.hahaxueche.ui.fragment.findCoach;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -11,15 +12,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
+import com.hahaxueche.model.base.Field;
 import com.hahaxueche.presenter.findCoach.FindCoachPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
+import com.hahaxueche.ui.activity.findCoach.FieldFilterActivity;
+import com.hahaxueche.ui.activity.findCoach.SearchCoachActivity;
 import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.findCoach.FindCoachView;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by wangshirui on 2016/10/19.
@@ -34,9 +42,12 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
     TextView mTvSelectCoach;
     @BindView(R.id.tv_select_partner)
     TextView mTvSelectPartner;
+    @BindView(R.id.iv_search)
+    ImageView mIvSearch;
     private CoachListFragment mCoachListFragment;
     private PartnerListFragment mPartnerListFragment;
     private BaseAlertSimpleDialog mAlertDialog;
+    private static final int REQUEST_CODE_FIELD_FILTER = 2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -137,9 +148,22 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
         mAlertDialog.show();
     }
 
+    @Override
+    public void navigateToSelectFields() {
+        Intent intent = new Intent(getContext(), FieldFilterActivity.class);
+        intent.putParcelableArrayListExtra("selectFields", mCoachListFragment.getSelectFields());
+        startActivityForResult(intent, REQUEST_CODE_FIELD_FILTER);
+    }
+
+    @Override
+    public void showSearchIcon(boolean enable) {
+        mIvSearch.setVisibility(enable ? View.VISIBLE : View.GONE);
+    }
+
     @OnClick({R.id.tv_select_coach,
             R.id.tv_select_partner,
-            R.id.iv_icon_left})
+            R.id.iv_icon_left,
+            R.id.iv_search})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_select_coach:
@@ -151,8 +175,24 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
             case R.id.iv_icon_left:
                 mPresenter.clickLeftIcon();
                 break;
+            case R.id.iv_search:
+                startActivity(new Intent(getContext(), SearchCoachActivity.class));
+                break;
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_FIELD_FILTER) {
+            if (resultCode == RESULT_OK && null != data) {
+                ArrayList<Field> fields = data.getParcelableArrayListExtra("selectFields");
+                if (fields != null) {
+                    mCoachListFragment.setSelectFields(fields);
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

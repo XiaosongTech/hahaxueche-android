@@ -65,7 +65,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     private AMapLocationClientOption mLocationOption;
 
     private static final int REQUEST_CODE_COACH_DETAIL = 1;
-    private static final int REQUEST_CODE_FIELD_FILTER = 2;
+
     private static final int PERMISSIONS_REQUEST_LOCATION = 602;
 
     @Override
@@ -185,11 +185,6 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
         }
         mSortDialog.show();
     }
-//
-//    @OnClick(R.id.iv_search)
-//    public void clickSearchCoach() {
-//        startActivity(new Intent(getContext(), SearchCoachActivity.class));
-//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -205,14 +200,6 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                             break;
                         }
                     }
-                }
-            }
-        } else if (requestCode == REQUEST_CODE_FIELD_FILTER) {
-            if (resultCode == RESULT_OK && null != data) {
-                ArrayList<Field> fields = data.getParcelableArrayListExtra("selectFields");
-                if (fields != null) {
-                    mPresenter.setSelectFields(fields);
-                    mPresenter.fetchCoaches();
                 }
             }
         }
@@ -235,7 +222,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
         //初始化定位
         mLocationClient = new AMapLocationClient(getContext());
         mLocationListener = new AMapLocationListener() {
-                @Override
+            @Override
             public void onLocationChanged(AMapLocation amapLocation) {
                 if (amapLocation != null) {
                     if (amapLocation.getErrorCode() == 0) {
@@ -260,5 +247,14 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
         HHLog.v("create location service");
         mLocationClient.startLocation();
         mPresenter.fetchCoaches();
+    }
+
+    public void setSelectFields(ArrayList<Field> selectFields) {
+        mPresenter.setSelectFields(selectFields);
+        mPresenter.fetchCoaches();
+    }
+
+    public ArrayList<Field> getSelectFields() {
+        return mPresenter.getSelectFields();
     }
 }

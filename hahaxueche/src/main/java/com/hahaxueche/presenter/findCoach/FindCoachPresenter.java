@@ -29,6 +29,7 @@ public class FindCoachPresenter implements Presenter<FindCoachView> {
         mFindCoachView.selectCoach();
         mFindCoachView.unSelectPartner();
         mFindCoachView.showLeftIconMap();
+        mFindCoachView.showSearchIcon(true);
         mFindCoachView.showCoachListFragment();
         currentPage = 0;
     }
@@ -37,6 +38,7 @@ public class FindCoachPresenter implements Presenter<FindCoachView> {
         mFindCoachView.selectPartner();
         mFindCoachView.unSelectCoach();
         mFindCoachView.showLeftIconExplain();
+        mFindCoachView.showSearchIcon(false);
         mFindCoachView.showPartnerListFragment();
         currentPage = 1;
     }
@@ -45,7 +47,7 @@ public class FindCoachPresenter implements Presenter<FindCoachView> {
         if (currentPage == 1) {
             mFindCoachView.showPartnerInfoDialog();
         } else {
-
+            mFindCoachView.navigateToSelectFields();
         }
     }
 

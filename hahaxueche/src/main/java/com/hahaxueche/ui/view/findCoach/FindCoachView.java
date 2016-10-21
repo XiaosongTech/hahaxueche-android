@@ -24,4 +24,8 @@ public interface FindCoachView extends HHBaseView {
     void showPartnerListFragment();
 
     void showPartnerInfoDialog();
+
+    void navigateToSelectFields();
+
+    void showSearchIcon(boolean enable);
 }
