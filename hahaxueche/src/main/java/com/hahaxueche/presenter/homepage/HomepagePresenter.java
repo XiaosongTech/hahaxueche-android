@@ -132,22 +132,19 @@ public class HomepagePresenter implements Presenter<HomepageView> {
 
     private void loadStatistics() {
         Statistics statistics = application.getConstants().statistics;
-        int drivingSchoolCount = statistics.driving_school_count * 3;
-        String text = "已入驻" + Utils.getCount(drivingSchoolCount) + "所";
+        String text = "已入驻" + Utils.getCount(statistics.driving_school_count) + "所";
         SpannableString ss = new SpannableString(text);
         ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mHomepageView.getContext(), R.color.haha_orange_text)), text.indexOf("驻") + 1, text.indexOf("所"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         ss.setSpan(new AbsoluteSizeSpan(Utils.instence(mHomepageView.getContext()).sp2px(14)), text.indexOf("驻") + 1, text.indexOf("所"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         mHomepageView.setDrivingSchoolCountDisplay(ss);
 
-        int coachCount = statistics.coach_count * 10;
-        text = "已签约" + Utils.getCount(coachCount) + "名";
+        text = "已签约" + Utils.getCount(statistics.coach_count) + "名";
         ss = new SpannableString(text);
         ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mHomepageView.getContext(), R.color.haha_blue_text)), text.indexOf("约") + 1, text.indexOf("名"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         ss.setSpan(new AbsoluteSizeSpan(Utils.instence(mHomepageView.getContext()).sp2px(14)), text.indexOf("约") + 1, text.indexOf("名"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         mHomepageView.setCoachCountDisplay(ss);
 
-        int paidStudentCount = statistics.paid_student_count * 10;
-        text = "已帮助学员" + Utils.getCount(paidStudentCount) + "名";
+        text = "已帮助学员" + Utils.getCount(statistics.paid_student_count) + "名";
         ss = new SpannableString(text);
         ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mHomepageView.getContext(), R.color.haha_red_text)), text.indexOf("员") + 1, text.indexOf("名"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         ss.setSpan(new AbsoluteSizeSpan(Utils.instence(mHomepageView.getContext()).sp2px(14)), text.indexOf("员") + 1, text.indexOf("名"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
