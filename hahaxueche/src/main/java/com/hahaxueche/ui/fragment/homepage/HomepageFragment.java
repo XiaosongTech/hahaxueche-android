@@ -115,7 +115,8 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             R.id.cv_coach,
             R.id.frl_online_ask,
             R.id.iv_free_try,
-            R.id.cv_adviser})
+            R.id.cv_adviser,
+            R.id.cv_driving_school})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fly_my_strength:
@@ -144,6 +145,10 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                 break;
             case R.id.cv_adviser:
                 mPresenter.openFindAdviser();
+                break;
+            case R.id.cv_driving_school:
+                mPresenter.openFindDrivingSchool();
+                break;
             default:
                 break;
         }

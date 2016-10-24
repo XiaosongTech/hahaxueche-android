@@ -39,6 +39,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
     private static final String WEB_URL_FREE_TRY = "http://m.hahaxueche.com/free_trial?promo_code=553353";
     private static final String WEB_URL_BEST_COACHES = "http://m.hahaxueche.com/share/best-coaches";
     private static final String WEB_URL_FIND_ADVISER = "http://m.hahaxueche.com/share/zhaoguwen";
+    private static final String WEB_URL_FIND_DRIVING_SCHOOL = "http://m.hahaxueche.com/share/zhaojiaxiao";
 
     private HHBaseApplication application;
     private Constants constants;
@@ -85,6 +86,10 @@ public class HomepagePresenter implements Presenter<HomepageView> {
             cityId = user.student.city_id;
         }
         mHomepageView.openWebView(WEB_URL_FIND_ADVISER + "?city_id=" + cityId);
+    }
+
+    public void openFindDrivingSchool() {
+        mHomepageView.openWebView(WEB_URL_FIND_DRIVING_SCHOOL);
     }
 
     /**
