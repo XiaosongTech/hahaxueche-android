@@ -217,16 +217,34 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         mTvMoreReviews.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
     }
 
-    @OnClick(R.id.fly_more_comments)
-    public void showMoreReviews() {
-        Intent intent = new Intent(getContext(), ReviewListActivity.class);
-        intent.putExtra("coach", mPresenter.getCoach());
-        startActivity(intent);
-    }
-
-    @OnClick(R.id.iv_follow)
-    public void clickFollow() {
-        mPresenter.follow();
+    @OnClick({R.id.fly_more_comments,
+            R.id.rly_price,
+            R.id.iv_follow,
+            R.id.tv_applaud_count,
+            R.id.tv_pay})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_follow:
+                mPresenter.follow();
+                break;
+            case R.id.fly_more_comments:
+                Intent intent = new Intent(getContext(), ReviewListActivity.class);
+                intent.putExtra("coach", mPresenter.getCoach());
+                startActivity(intent);
+            case R.id.rly_price:
+                intent = new Intent(getContext(), PriceActivity.class);
+                intent.putExtra("coach", mPresenter.getCoach());
+                startActivity(intent);
+                break;
+            case R.id.tv_applaud_count:
+                mPresenter.applaud();
+                break;
+            case R.id.tv_pay:
+                mPresenter.purchaseCoach();
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -295,16 +313,6 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         Intent intent = new Intent(getContext(), PurchaseCoachActivity.class);
         intent.putExtra("coach", coach);
         startActivityForResult(intent, REQUEST_CODE_PURCHASE_COACH);
-    }
-
-    @OnClick(R.id.tv_applaud_count)
-    public void applaud() {
-        mPresenter.applaud();
-    }
-
-    @OnClick(R.id.tv_pay)
-    public void pay() {
-        mPresenter.purchaseCoach();
     }
 
     private RelativeLayout getPriceAdapter(ProductType productType) {

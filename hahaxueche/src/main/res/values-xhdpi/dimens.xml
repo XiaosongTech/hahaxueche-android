@@ -5,4 +5,5 @@
     <dimen name="search_edittext_height">28dp</dimen>
     <dimen name="margin40dp">40dp</dimen>
     <dimen name="width320dp">320dp</dimen>
+    <dimen name="text_size_14sp">14sp</dimen>
 </resources>

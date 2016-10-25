@@ -13,7 +13,7 @@ public class Coach implements Parcelable {
     public String id;
     public String cell_phone;
     public String name;
-    public String city_id;
+    public int city_id;
     public String user_id;
     public String avatar;
     public String bio;
@@ -46,7 +46,7 @@ public class Coach implements Parcelable {
         id = in.readString();
         cell_phone = in.readString();
         name = in.readString();
-        city_id = in.readString();
+        city_id = in.readInt();
         user_id = in.readString();
         avatar = in.readString();
         bio = in.readString();
@@ -98,7 +98,7 @@ public class Coach implements Parcelable {
         dest.writeString(id);
         dest.writeString(cell_phone);
         dest.writeString(name);
-        dest.writeString(city_id);
+        dest.writeInt(city_id);
         dest.writeString(user_id);
         dest.writeString(avatar);
         dest.writeString(bio);

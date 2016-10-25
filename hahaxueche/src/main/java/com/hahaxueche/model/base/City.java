@@ -1,5 +1,6 @@
 package com.hahaxueche.model.base;
 
+import com.hahaxueche.model.payment.OtherFee;
 import com.hahaxueche.model.payment.PaymentStage;
 
 import java.util.ArrayList;
@@ -19,4 +20,13 @@ public class City {
     public int referee_bonus;
     public String referral_banner;
     public CoachGroupFilter filters;
+    public ArrayList<OtherFee> other_fee;
+
+    public int getTotalFixedFee() {
+        int ret = 0;
+        for (FixedCostItem fixedFee : fixed_cost_itemizer) {
+            ret += fixedFee.cost;
+        }
+        return ret;
+    }
 }

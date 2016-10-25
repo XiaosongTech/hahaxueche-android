@@ -139,6 +139,10 @@
             android:name=".ui.activity.findCoach.PartnerDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.findCoach.PriceActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
 
 
         <service
