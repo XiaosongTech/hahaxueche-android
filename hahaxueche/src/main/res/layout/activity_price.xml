@@ -457,7 +457,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="如教练收取额外费用，请联系客服4001-001-6006"
+                    android:text="如教练收取额外费用，请联系客服400-001-6006"
                     android:textColor="@color/app_theme_color" />
             </LinearLayout>
         </LinearLayout>
