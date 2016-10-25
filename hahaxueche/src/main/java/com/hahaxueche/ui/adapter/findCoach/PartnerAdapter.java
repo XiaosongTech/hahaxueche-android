@@ -67,12 +67,12 @@ public class PartnerAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) view.getTag();
         }
-        Partner Partner = mPartnerList.get(position);
-        holder.tvPartnerName.setText(Partner.name);
-        holder.ivPartnerAvatar.setImageURI(Partner.avatar);
-        holder.tvTeachTime.setText(Partner.experiences + "年教龄");
-        holder.tvPrice.setText(Utils.getMoney(Partner.coach_group.training_cost));
-        holder.tvApplaudCount.setText(String.valueOf(Partner.like_count));
+        Partner partner = mPartnerList.get(position);
+        holder.tvPartnerName.setText(partner.name);
+        holder.ivPartnerAvatar.setImageURI(partner.avatar);
+        holder.tvTeachTime.setText(partner.experiences + "年教龄");
+        holder.tvPrice.setText(Utils.getMoney(partner.prices.get(0).price));
+        holder.tvApplaudCount.setText(String.valueOf(partner.like_count));
         return view;
     }
 

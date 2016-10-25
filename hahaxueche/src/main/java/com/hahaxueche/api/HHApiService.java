@@ -131,19 +131,17 @@ public interface HHApiService {
     @POST("charges")
     Observable<ResponseBody> createCharge(@FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
 
-    @GET("coaches")
+    @GET("training_partners")
     Observable<PartnerResponseList> getPartners(@Query("page") int page, @Query("per_page") int perPage, @Query("license_type") String licenseType,
-                                                @Query("price") String price, @Query("city_id") int cityId, @Query("sort_by") int sortBy);
+                                                @Query("price_from") String priceFrom, @Query("price_to") String priceTo,
+                                                @Query("city_id") int cityId, @Query("sort_by") int sortBy, @Query("student_id") String studentId);
 
     @GET
     Observable<PartnerResponseList> getPartners(@Url String path);
 
-    @GET("coaches")
-    Observable<ArrayList<Partner>> getPartnersByKeyword(@Query("keyword") String keyword);
-
     @FormUrlEncoded
-    @POST("students/{studentId}/like/{coachId}")
-    Observable<Partner> likePartner(@Path("studentId") String studentId, @Path("coachId") String coachId, @FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
+    @POST("students/{studentId}/liked_training_partners/{partnerId}")
+    Observable<Partner> likePartner(@Path("studentId") String studentId, @Path("partnerId") String partnerId, @FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
 
     @GET("employees/advisers")
     Observable<Adviser> getAdviser(@Query("student_id") String studentId);

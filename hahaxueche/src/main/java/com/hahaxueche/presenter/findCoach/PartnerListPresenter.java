@@ -71,9 +71,14 @@ public class PartnerListPresenter implements Presenter<PartnerListView> {
     }
 
     public void fetchPartners() {
+        String studentId = null;
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            studentId = user.student.id;
+        }
         HHApiService apiService = application.getApiService();
-        subscription = apiService.getPartners(PAGE, PER_PAGE, TextUtils.isEmpty(licenseType) ? null : licenseType,
-                TextUtils.isEmpty(filterPrice) ? null : filterPrice, cityId, sortBy)
+        subscription = apiService.getPartners(PAGE, PER_PAGE, TextUtils.isEmpty(licenseType) ? null : licenseType, "0",
+                TextUtils.isEmpty(filterPrice) ? null : filterPrice, cityId, sortBy, studentId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<PartnerResponseList>() {

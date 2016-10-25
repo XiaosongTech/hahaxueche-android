@@ -96,7 +96,7 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
     @Override
     public void showPartnerDetail(Partner partner) {
         mTvName.setText(partner.name);
-        mTvDescription.setText(partner.bio);
+        mTvDescription.setText(partner.description);
         mIvAvatar.setImageURI(partner.avatar);
         mIsImages.updateImages(partner.images);
         int width = Utils.instence(this).getDm().widthPixels;

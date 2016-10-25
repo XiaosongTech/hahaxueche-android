@@ -3,16 +3,10 @@ package com.hahaxueche.presenter.findCoach;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
-import com.hahaxueche.model.base.BaseBoolean;
-import com.hahaxueche.model.base.BaseItemType;
-import com.hahaxueche.model.base.BaseModel;
 import com.hahaxueche.model.base.BaseValid;
-import com.hahaxueche.model.base.City;
-import com.hahaxueche.model.base.Constants;
-import com.hahaxueche.model.base.Field;
-import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Partner;
+import com.hahaxueche.model.user.coach.PartnerPrice;
 import com.hahaxueche.model.user.coach.ProductType;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.PartnerDetailView;
@@ -59,7 +53,6 @@ public class PartnerDetailPresenter implements Presenter<PartnerDetailView> {
     public void setPartner(Partner Partner) {
         this.mPartner = Partner;
         if (mPartner == null) return;
-        setPartnerLabel();
         this.mPartnerDetailView.showPartnerDetail(mPartner);
         this.mPartnerDetailView.addPrices(getPrices());
         loadApplaud();
@@ -67,37 +60,19 @@ public class PartnerDetailPresenter implements Presenter<PartnerDetailView> {
 
     private ArrayList<ProductType> getPrices() {
         ArrayList<ProductType> productTypes = new ArrayList<>();
-        if (mPartner.coach_group.training_cost != 0) {
-            ProductType price = new ProductType(mPartner.coach_group.market_price, "C1手动档", "9h", R.drawable.rect_bg_orange_ssm, "短期速成，性价比高");
-            productTypes.add(price);
-        }
-        if (mPartner.coach_group.vip_price != 0) {
-            ProductType price = new ProductType(mPartner.coach_group.vip_price, "C1手动档", "18h", R.drawable.rect_bg_orange_ssm, "基础强化，全面巩固");
-            productTypes.add(price);
-        }
-        if (mPartner.coach_group.c2_price != 0) {
-            ProductType price = new ProductType(mPartner.coach_group.c2_price, "C2自动档", "9h", R.drawable.rect_bg_yellow_ssm, "短期速成，性价比高");
-            productTypes.add(price);
-        }
-        if (mPartner.coach_group.c2_vip_price != 0) {
-            ProductType price = new ProductType(mPartner.coach_group.c2_vip_price, "C2自动档", "18h", R.drawable.rect_bg_yellow_ssm, "基础强化，全面巩固");
-            productTypes.add(price);
+        for (PartnerPrice price : mPartner.prices) {
+            String name = price.license_type == 1 ? "C1手动档" : "C2自动档";
+            String label = price.duration + "h";
+            int nameBackgroundResId = price.license_type == 1 ? R.drawable.rect_bg_orange_ssm : R.drawable.rect_bg_yellow_ssm;
+            String remark = price.duration == 9 ? "短期速成，性价比高" : "基础强化，全面巩固";
+            ProductType productType = new ProductType(price.price, name, label, nameBackgroundResId, remark);
+            productTypes.add(productType);
         }
         return productTypes;
     }
 
     public Partner getPartner() {
         return mPartner;
-    }
-
-    private void setPartnerLabel() {
-        Constants constants = application.getConstants();
-        for (BaseItemType skillLevel : constants.skill_levels) {
-            if (String.valueOf(skillLevel.id).equals(mPartner.skill_level)) {
-                mPartner.skill_level_label = skillLevel.readable_name;
-                break;
-            }
-        }
     }
 
     private void loadApplaud() {
