@@ -20,4 +20,6 @@ public interface MyPageView extends HHBaseView {
     void stopRefresh();
 
     void showMessage(String message);
+
+    void toMyCoach(String coachId);
 }

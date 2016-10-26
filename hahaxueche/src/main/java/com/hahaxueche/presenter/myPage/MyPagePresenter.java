@@ -217,4 +217,16 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         return mAdviser;
     }
 
+    public void toMyCoach() {
+        HHApiService apiService = application.getApiService();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin()) {
+            mMyPageView.alertToLogin();
+        } else if (!user.student.hasPurchasedService()) {
+            mMyPageView.showMessage("您还没有购买教练");
+        } else {
+            mMyPageView.toMyCoach(user.student.current_coach_id);
+        }
+    }
+
 }

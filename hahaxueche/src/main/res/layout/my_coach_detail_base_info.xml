@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/section_margin_top"
+    android:background="@color/haha_white"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:text="基本信息"
+        android:textColor="@color/app_theme_color"
+        android:textSize="14sp" />
+
+    <RelativeLayout
+        android:id="@+id/rly_contact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_width"
+            android:background="@color/haha_gray_divider" />
+
+        <TextView
+            android:id="@+id/tv_phone_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:text="联系方式"
+            android:textColor="@color/haha_gray"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/iv_phone_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/ic_coachmsg_more_arrow" />
+
+        <TextView
+            android:id="@+id/tv_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="20dp"
+            android:layout_toLeftOf="@id/iv_phone_arrow"
+            android:layout_toRightOf="@id/tv_phone_label"
+            android:gravity="right"
+            android:textColor="@color/app_theme_color"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rly_training_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_width"
+            android:layout_marginLeft="20dp"
+            android:background="@color/haha_gray_divider" />
+
+        <TextView
+            android:id="@+id/tv_train_location_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:text="训练场地址"
+            android:textColor="@color/haha_gray"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/iv_location_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/ic_coachmsg_more_arrow" />
+
+        <TextView
+            android:id="@+id/tv_train_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="20dp"
+            android:layout_toLeftOf="@id/iv_location_arrow"
+            android:layout_toRightOf="@id/tv_train_location_label"
+            android:gravity="right"
+            android:textColor="@color/app_theme_color"
+            android:textSize="14sp" />
+    </RelativeLayout>
+</LinearLayout>

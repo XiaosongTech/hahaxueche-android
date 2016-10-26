@@ -28,6 +28,7 @@ public class Coach implements Parcelable {
     public String skill_level_label;
     public String license_type;
     public String service_type;
+    public String service_type_label;
     public String satisfaction_rate;
     public String consultant;
     public CoachGroup coach_group;
@@ -61,6 +62,7 @@ public class Coach implements Parcelable {
         skill_level_label = in.readString();
         license_type = in.readString();
         service_type = in.readString();
+        service_type_label = in.readString();
         satisfaction_rate = in.readString();
         consultant = in.readString();
         coach_group = in.readParcelable(CoachGroup.class.getClassLoader());
@@ -113,6 +115,7 @@ public class Coach implements Parcelable {
         dest.writeString(skill_level_label);
         dest.writeString(license_type);
         dest.writeString(service_type);
+        dest.writeString(service_type_label);
         dest.writeString(satisfaction_rate);
         dest.writeString(consultant);
         dest.writeParcelable(coach_group, flags);

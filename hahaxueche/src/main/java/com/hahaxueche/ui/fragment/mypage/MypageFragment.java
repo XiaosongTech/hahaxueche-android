@@ -25,6 +25,7 @@ import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.activity.myPage.FAQActivity;
 import com.hahaxueche.ui.activity.myPage.FollowListActivity;
+import com.hahaxueche.ui.activity.myPage.MyCoachDetailActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.activity.myPage.SoftwareInfoActivity;
 import com.hahaxueche.ui.dialog.AvatarDialog;
@@ -94,24 +95,6 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
         return view;
     }
 
-    @OnClick(R.id.tv_logout)
-    public void logOut() {
-        BaseConfirmSimpleDialog baseConfirmSimpleDialog = new BaseConfirmSimpleDialog(getContext(),
-                "哈哈学车", "是否退出登录？", "确定", "取消", new BaseConfirmSimpleDialog.onConfirmListener() {
-            @Override
-            public boolean clickConfirm() {
-                mPresenter.logOut();
-                return true;
-            }
-        }, new BaseConfirmSimpleDialog.onCancelListener() {
-            @Override
-            public boolean clickCancel() {
-                return false;
-            }
-        });
-        baseConfirmSimpleDialog.show();
-    }
-
     @Override
     public void showNotLoginView() {
         mLlyNotLogin.setVisibility(View.VISIBLE);
@@ -163,71 +146,90 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
         mPresenter.fetchStudent();
     }
 
-    @OnClick(R.id.rly_online_service)
-    public void onlineAsk() {
-        mPresenter.onlineAsk();
-    }
-
-    @OnClick(R.id.rly_my_follow_coach)
-    public void navigateToFollwList() {
-        startActivity(new Intent(getContext(), FollowListActivity.class));
-    }
-
-    @OnClick(R.id.rly_my_consultant)
-    public void clickMyConsultant() {
-        if (mConsultantDialog == null) {
-            mConsultantDialog = new MyAdviserDialog(getContext(), mPresenter.getAdviser(), new MyAdviserDialog.onMyConsultantListener() {
-                @Override
-                public boolean call() {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                        requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
-                        //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
-                    } else {
-                        // Android version is lesser than 6.0 or the permission is already granted.
-                        callMyConsultant(mPresenter.getAdviser().phone);
-                    }
-                    return true;
+    @OnClick({R.id.rly_online_service,
+            R.id.rly_my_follow_coach,
+            R.id.rly_my_consultant,
+            R.id.rly_FAQ,
+            R.id.rly_support_haha,
+            R.id.rly_software_info,
+            R.id.rly_referer_friends,
+            R.id.iv_my_avatar,
+            R.id.tv_logout,
+            R.id.rly_my_coach})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.rly_online_service:
+                mPresenter.onlineAsk();
+                break;
+            case R.id.rly_my_follow_coach:
+                startActivity(new Intent(getContext(), FollowListActivity.class));
+                break;
+            case R.id.rly_my_consultant:
+                if (mConsultantDialog == null) {
+                    mConsultantDialog = new MyAdviserDialog(getContext(), mPresenter.getAdviser(), new MyAdviserDialog.onMyConsultantListener() {
+                        @Override
+                        public boolean call() {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                                requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
+                                //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+                            } else {
+                                // Android version is lesser than 6.0 or the permission is already granted.
+                                callMyConsultant(mPresenter.getAdviser().phone);
+                            }
+                            return true;
+                        }
+                    });
                 }
-            });
-        }
-        mConsultantDialog.show();
-    }
-
-    @OnClick(R.id.rly_FAQ)
-    public void navigateToFAQ() {
-        startActivity(new Intent(getContext(), FAQActivity.class));
-    }
-
-
-    @OnClick(R.id.rly_support_haha)
-    public void supportHaha() {
-        Uri uri = Uri.parse(URL_APP_STORE);
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        startActivity(intent);
-    }
-
-    @OnClick(R.id.rly_software_info)
-    public void navigateToSoftwareInfo() {
-        startActivity(new Intent(getContext(), SoftwareInfoActivity.class));
-    }
-
-    @OnClick(R.id.rly_referer_friends)
-    public void navigateToReferFriends() {
-        startActivity(new Intent(getContext(), ReferFriendsActivity.class));
-    }
-
-    @OnClick(R.id.iv_my_avatar)
-    public void clickAvatar() {
-        // Check the SDK version and whether the permission is already granted or not.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                (mActivity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                        || mActivity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                        || mActivity.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, PERMISSIONS_REQUEST_SDCARD);
-            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
-        } else {
-            // Android version is lesser than 6.0 or the permission is already granted.
-            showAvatarDialog();
+                mConsultantDialog.show();
+                break;
+            case R.id.rly_FAQ:
+                startActivity(new Intent(getContext(), FAQActivity.class));
+                break;
+            case R.id.rly_support_haha:
+                Uri uri = Uri.parse(URL_APP_STORE);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+                break;
+            case R.id.rly_software_info:
+                startActivity(new Intent(getContext(), SoftwareInfoActivity.class));
+                break;
+            case R.id.rly_referer_friends:
+                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+                break;
+            case R.id.iv_my_avatar:
+                // Check the SDK version and whether the permission is already granted or not.
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                        (mActivity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                                || mActivity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                                || mActivity.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
+                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, PERMISSIONS_REQUEST_SDCARD);
+                    //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+                } else {
+                    // Android version is lesser than 6.0 or the permission is already granted.
+                    showAvatarDialog();
+                }
+                break;
+            case R.id.tv_logout:
+                BaseConfirmSimpleDialog baseConfirmSimpleDialog = new BaseConfirmSimpleDialog(getContext(),
+                        "哈哈学车", "是否退出登录？", "确定", "取消", new BaseConfirmSimpleDialog.onConfirmListener() {
+                    @Override
+                    public boolean clickConfirm() {
+                        mPresenter.logOut();
+                        return true;
+                    }
+                }, new BaseConfirmSimpleDialog.onCancelListener() {
+                    @Override
+                    public boolean clickCancel() {
+                        return false;
+                    }
+                });
+                baseConfirmSimpleDialog.show();
+                break;
+            case R.id.rly_my_coach:
+                mPresenter.toMyCoach();
+                break;
+            default:
+                break;
         }
     }
 
@@ -245,6 +247,13 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     @Override
     public void showMessage(String message) {
         Snackbar.make(mLlyMain, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void toMyCoach(String coachId) {
+        Intent intent = new Intent(getContext(), MyCoachDetailActivity.class);
+        intent.putExtra("coachId", coachId);
+        startActivity(intent);
     }
 
     @Override
