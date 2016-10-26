@@ -11,11 +11,13 @@ public class PartnerPrice implements Parcelable {
     public int license_type;
     public int duration;
     public int price;
+    public String description;
 
     protected PartnerPrice(Parcel in) {
         license_type = in.readInt();
         duration = in.readInt();
         price = in.readInt();
+        description = in.readString();
     }
 
     public static final Creator<PartnerPrice> CREATOR = new Creator<PartnerPrice>() {
@@ -40,5 +42,6 @@ public class PartnerPrice implements Parcelable {
         dest.writeInt(license_type);
         dest.writeInt(duration);
         dest.writeInt(price);
+        dest.writeString(description);
     }
 }
