@@ -133,8 +133,7 @@ public interface HHApiService {
 
     @GET("training_partners")
     Observable<PartnerResponseList> getPartners(@Query("page") int page, @Query("per_page") int perPage, @Query("license_type") String licenseType,
-                                                @Query("price_from") String priceFrom, @Query("price_to") String priceTo,
-                                                @Query("city_id") int cityId, @Query("sort_by") int sortBy, @Query("student_id") String studentId);
+                                                @Query("price_limit") String price, @Query("city_id") int cityId, @Query("sort_by") int sortBy, @Query("student_id") String studentId);
 
     @GET
     Observable<PartnerResponseList> getPartners(@Url String path);
