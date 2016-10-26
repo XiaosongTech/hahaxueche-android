@@ -119,6 +119,13 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
         return city.name + field.street + field.section;
     }
 
+    public Field getTrainingField() {
+        if (mCoach == null) return null;
+        Constants constants = application.getConstants();
+        Field field = constants.getField(mCoach.coach_group.field_id);
+        return field;
+    }
+
     private void loadFollow() {
         if (mUser == null || !mUser.isLogin()) return;
         final HHApiService apiService = application.getApiService();

@@ -25,6 +25,7 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
+import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.ProductType;
@@ -221,7 +222,9 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             R.id.rly_price,
             R.id.iv_follow,
             R.id.tv_applaud_count,
-            R.id.tv_pay})
+            R.id.tv_pay,
+            R.id.rly_training_field
+    })
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_follow:
@@ -242,6 +245,13 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             case R.id.tv_pay:
                 mPresenter.purchaseCoach();
                 break;
+            case R.id.rly_training_field:
+                Field field = mPresenter.getTrainingField();
+                if (field != null) {
+                    intent = new Intent(getContext(), FieldMapActivity.class);
+                    intent.putExtra("field", field);
+                    startActivity(intent);
+                }
             default:
                 break;
         }

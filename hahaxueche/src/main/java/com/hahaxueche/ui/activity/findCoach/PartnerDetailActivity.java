@@ -1,8 +1,13 @@
 package com.hahaxueche.ui.activity.findCoach;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.view.Gravity;
@@ -57,6 +62,8 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
     TextView mTvApplaud;
     @BindView(R.id.lly_prices)
     LinearLayout mLlyPrices;
+
+    private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,9 +162,25 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
 
     }
 
-    @OnClick(R.id.tv_applaud_count)
-    public void applaud() {
-        mPresenter.applaud();
+    @OnClick({R.id.tv_applaud_count,
+            R.id.tv_contact})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv_applaud_count:
+                mPresenter.applaud();
+                break;
+            case R.id.tv_contact:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
+                    //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+                } else {
+                    callMyCoach(mPresenter.getPartner().phone);
+                }
+                break;
+            default:
+                break;
+        }
+
     }
 
     private RelativeLayout getPriceAdapter(ProductType productType) {
@@ -229,5 +252,28 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
         intent.putExtra("partner", mPresenter.getPartner());
         setResult(RESULT_OK, intent);
         super.finish();
+    }
+
+    /**
+     * 联系教练
+     */
+    private void callMyCoach(String phone) {
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        startActivity(intent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_CELL_PHONE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                callMyCoach(mPresenter.getPartner().phone);
+            } else {
+                showMessage("请允许拨打电话权限，不然无法直接拨号联系教练");
+            }
+        }
     }
 }

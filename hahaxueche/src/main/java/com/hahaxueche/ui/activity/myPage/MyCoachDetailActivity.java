@@ -26,10 +26,12 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
+import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.myPage.MyCoachDetailPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
+import com.hahaxueche.ui.activity.findCoach.FieldMapActivity;
 import com.hahaxueche.ui.activity.findCoach.PriceActivity;
 import com.hahaxueche.ui.view.myPage.MyCoachDetailView;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
@@ -121,7 +123,8 @@ public class MyCoachDetailActivity extends HHBaseActivity implements MyCoachDeta
     @OnClick({R.id.iv_follow,
             R.id.tv_applaud_count,
             R.id.rly_fee_detail,
-            R.id.rly_contact
+            R.id.rly_contact,
+            R.id.rly_training_field
     })
     public void onClick(View view) {
         switch (view.getId()) {
@@ -144,6 +147,13 @@ public class MyCoachDetailActivity extends HHBaseActivity implements MyCoachDeta
                     callMyCoach(mPresenter.getCoach().cell_phone);
                 }
                 break;
+            case R.id.rly_training_field:
+                Field field = mPresenter.getTrainingField();
+                if (field != null) {
+                    intent = new Intent(getContext(), FieldMapActivity.class);
+                    intent.putExtra("field", field);
+                    startActivity(intent);
+                }
             default:
                 break;
         }
@@ -307,7 +317,7 @@ public class MyCoachDetailActivity extends HHBaseActivity implements MyCoachDeta
                 // Permission is granted
                 callMyCoach(mPresenter.getCoach().cell_phone);
             } else {
-                showMessage("请允许拨打电话权限，不然无法直接拨号联系客服");
+                showMessage("请允许拨打电话权限，不然无法直接拨号联系教练");
             }
         }
     }

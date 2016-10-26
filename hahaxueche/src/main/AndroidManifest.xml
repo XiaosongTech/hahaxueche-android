@@ -147,7 +147,10 @@
             android:name=".ui.activity.myPage.MyCoachDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
-
+        <activity
+            android:name=".ui.activity.findCoach.FieldMapActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
 
         <service
             android:name="cmb.pb.cmbsafe.CmbService"

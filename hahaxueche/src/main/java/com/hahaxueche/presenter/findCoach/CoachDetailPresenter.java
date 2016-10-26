@@ -120,6 +120,13 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         return city.name + field.street + field.section;
     }
 
+    public Field getTrainingField() {
+        if (mCoach == null) return null;
+        Constants constants = application.getConstants();
+        Field field = constants.getField(mCoach.coach_group.field_id);
+        return field;
+    }
+
     public void setCoach(String coachId) {
         HHApiService apiService = application.getApiService();
         subscription = apiService.getCoach(coachId, (mUser != null && mUser.isLogin()) ? mUser.student.id : null)
