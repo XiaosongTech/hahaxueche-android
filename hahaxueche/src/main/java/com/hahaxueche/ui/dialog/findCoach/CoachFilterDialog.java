@@ -121,10 +121,10 @@ public class CoachFilterDialog {
             distanceTextList.add(i == myCity.filters.radius.length - 1 ? (myCity.filters.radius[i] + "KM+") : (myCity.filters.radius[i] + "KM"));
         }
         mCbsDistance.setAdapter(distanceTextList);
-        int progress = (distanceTextList.size() - 2) * 100 / (distanceTextList.size() - 1);
+        int progress = (distanceTextList.size() - 1) * 100 / (distanceTextList.size() - 1);
         mCbsDistance.setProgress(progress >= 95 ? 95 : progress);
-        mCbsDistance.setSelection(distanceTextList.size() - 2);
-        mSelectDistance = String.valueOf(myCity.filters.radius[distanceTextList.size() - 2]);
+        mCbsDistance.setSelection(distanceTextList.size() - 1);
+        mSelectDistance = String.valueOf(myCity.filters.radius[distanceTextList.size() - 1]);
         mCbsDistance.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

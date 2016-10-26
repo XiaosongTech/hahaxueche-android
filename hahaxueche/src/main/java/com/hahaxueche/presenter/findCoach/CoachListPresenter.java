@@ -80,9 +80,9 @@ public class CoachListPresenter implements Presenter<CoachListView> {
             cityId = user.student.city_id;
         }
         final City myCity = application.getConstants().getCity(cityId);
-        String distance = String.valueOf(myCity.filters.radius[myCity.filters.radius.length - 2]);
-        String price = String.valueOf(myCity.filters.prices[myCity.filters.prices.length - 1]);
-        setFilters(distance, price, false, false, false, false);
+        //String distance = String.valueOf(myCity.filters.radius[myCity.filters.radius.length - 1]);
+        //String price = String.valueOf(myCity.filters.prices[myCity.filters.prices.length - 1]);
+        setFilters("", "", false, false, false, false);
     }
 
     public void fetchCoaches() {
