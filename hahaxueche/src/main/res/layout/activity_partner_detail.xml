@@ -54,7 +54,7 @@
         android:gravity="center"
         android:paddingBottom="14dp"
         android:paddingTop="14dp"
-        android:text="联系教练了解更多课程详情"
+        android:text="联系教练"
         android:textColor="@color/haha_white"
         android:textSize="18sp" />
 </LinearLayout>

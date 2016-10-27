@@ -5,6 +5,7 @@ import com.hahaxueche.model.base.BaseBoolean;
 import com.hahaxueche.model.base.BaseModel;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.Constants;
+import com.hahaxueche.model.payment.PurchasedService;
 import com.hahaxueche.model.responseList.CoachResponseList;
 import com.hahaxueche.model.responseList.PartnerResponseList;
 import com.hahaxueche.model.responseList.ReviewResponseList;
@@ -13,6 +14,7 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.Follow;
 import com.hahaxueche.model.user.coach.Partner;
+import com.hahaxueche.model.user.coach.Review;
 import com.hahaxueche.model.user.employee.Adviser;
 import com.hahaxueche.util.HHLog;
 
@@ -144,6 +146,14 @@ public interface HHApiService {
 
     @GET("employees/advisers")
     Observable<Adviser> getAdviser(@Query("student_id") String studentId);
+
+    @FormUrlEncoded
+    @POST("users/reviews/{coachUserId}")
+    Observable<Review> reviewCoach(@Path("coachUserId") String coachUserId, @FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
+
+    @FormUrlEncoded
+    @PUT("students/purchased_service")
+    Observable<PurchasedService> payStage(@FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
 
 
     class Factory {
