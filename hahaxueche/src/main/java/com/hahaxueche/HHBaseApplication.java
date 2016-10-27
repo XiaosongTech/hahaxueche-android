@@ -12,10 +12,16 @@ import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.HahaCache;
 import com.hahaxueche.util.SharedPrefUtil;
+import com.hahaxueche.util.share.ShareConstants;
 import com.qiyukf.unicorn.api.SavePowerConfig;
 import com.qiyukf.unicorn.api.StatusBarNotificationConfig;
 import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFOptions;
+import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
+import com.sina.weibo.sdk.api.share.WeiboShareSDK;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.tencent.tauth.Tencent;
 
 import rx.Observable;
 import rx.Scheduler;
@@ -34,6 +40,9 @@ public class HHBaseApplication extends Application {
     private SharedPrefUtil spUtil;
     private Observable sessionObservable;
     private Location myLocation;
+    private IWXAPI wxApi;
+    private Tencent mTencent;
+    private IWeiboShareAPI mWeiboShareAPI;
 
     public static HHBaseApplication get(Context context) {
         return (HHBaseApplication) context.getApplicationContext();
@@ -90,6 +99,7 @@ public class HHBaseApplication extends Application {
         Fresco.initialize(this);
         spUtil = new SharedPrefUtil(this);
         HahaCache.context = getApplicationContext();
+        regToShare();
         Unicorn.init(this, "2f328da38ac77ce6d796c2977248f7e2", options(), new FrescoImageLoader());
     }
 
@@ -111,6 +121,26 @@ public class HHBaseApplication extends Application {
         }
         myLocation.lat = lat;
         myLocation.lng = lng;
+    }
+
+    private void regToShare() {
+        wxApi = WXAPIFactory.createWXAPI(this, ShareConstants.APP_ID, true);
+        wxApi.registerApp(ShareConstants.APP_ID);
+        mTencent = Tencent.createInstance(ShareConstants.APP_ID_QQ, this);
+        mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(this, ShareConstants.WEIBO_APP_KEY);
+        mWeiboShareAPI.registerApp();
+    }
+
+    public IWXAPI getIWXAPI() {
+        return wxApi;
+    }
+
+    public Tencent getTencentAPI() {
+        return mTencent;
+    }
+
+    public IWeiboShareAPI getWeiboAPI() {
+        return mWeiboShareAPI;
     }
 
 }

@@ -11,6 +11,12 @@ import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.view.base.WelcomeView;
 import com.hahaxueche.ui.view.login.CompleteUserInfoView;
+import com.hahaxueche.util.HHLog;
+import com.singulariti.deepshare.DeepShare;
+import com.singulariti.deepshare.listeners.DSInappDataListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,10 +24,17 @@ import butterknife.ButterKnife;
 /**
  * Created by wangshirui on 16/9/8.
  */
-public class WelcomeActivity extends HHBaseActivity implements WelcomeView {
+public class WelcomeActivity extends HHBaseActivity implements WelcomeView, DSInappDataListener {
     private WelcomePresenter mPresenter;
     @BindView(R.id.progressBar)
     ProgressBar mProgressBar;
+
+    public void onStart() {
+        super.onStart();
+        // 请直接复制下一行代码，粘贴到相应位置
+        DeepShare.init(this, "c4e677e0fa60ceb4", this);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,5 +72,35 @@ public class WelcomeActivity extends HHBaseActivity implements WelcomeView {
     protected void onDestroy() {
         mPresenter.detachView();
         super.onDestroy();
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        this.setIntent(intent);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        DeepShare.onStop();//停止DeepShare
+    }
+
+    @Override
+    /** 代理方法onInappDataReturned处理获取的启动参数
+     * @param params 所获取到的启动参数
+     */
+    public void onInappDataReturned(JSONObject params) {
+        try {
+            if (params == null) return;
+            String type = params.getString("type");
+            HHLog.v("分享type -> " + type);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onFailed(String s) {
+        HHLog.e("deepshare error -> " + s);
     }
 }
