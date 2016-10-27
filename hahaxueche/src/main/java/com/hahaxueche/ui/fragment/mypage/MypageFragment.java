@@ -26,6 +26,7 @@ import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.activity.myPage.FAQActivity;
 import com.hahaxueche.ui.activity.myPage.FollowListActivity;
 import com.hahaxueche.ui.activity.myPage.MyCoachDetailActivity;
+import com.hahaxueche.ui.activity.myPage.PaymentStageActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.activity.myPage.SoftwareInfoActivity;
 import com.hahaxueche.ui.dialog.AvatarDialog;
@@ -155,7 +156,8 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
             R.id.rly_referer_friends,
             R.id.iv_my_avatar,
             R.id.tv_logout,
-            R.id.rly_my_coach})
+            R.id.rly_my_coach,
+            R.id.rly_payment_stage})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rly_online_service:
@@ -227,6 +229,9 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
                 break;
             case R.id.rly_my_coach:
                 mPresenter.toMyCoach();
+                break;
+            case R.id.rly_payment_stage:
+                startActivity(new Intent(getContext(), PaymentStageActivity.class));
                 break;
             default:
                 break;
