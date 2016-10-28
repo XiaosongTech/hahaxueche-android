@@ -92,6 +92,7 @@ public class WelcomeActivity extends HHBaseActivity implements WelcomeView, DSIn
     public void onInappDataReturned(JSONObject params) {
         try {
             if (params == null) return;
+            HHLog.v("params.toString() -> " + params.toString());
             String type = params.getString("type");
             HHLog.v("分享type -> " + type);
         } catch (JSONException e) {

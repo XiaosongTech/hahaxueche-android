@@ -35,4 +35,6 @@ public interface CoachDetailView extends HHBaseView {
     void addPrices(ArrayList<ProductType> productTypes);
 
     void navigateToPurchaseCoach(Coach coach);
+
+    void initShareData(Coach coach);
 }

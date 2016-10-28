@@ -24,4 +24,6 @@ public interface PartnerDetailView extends HHBaseView {
     void startApplaudAnimation();
 
     void addPrices(ArrayList<ProductType> productTypes);
+
+    void initShareData(Partner partner);
 }

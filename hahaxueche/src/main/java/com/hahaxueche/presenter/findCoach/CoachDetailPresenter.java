@@ -66,6 +66,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         setCoachLabel();
         this.mCoachDetailView.showCoachDetail(mCoach);
         this.mCoachDetailView.addPrices(getPrices());
+        this.mCoachDetailView.initShareData(mCoach);
         loadReviews();
         loadFollow();
         loadApplaud();

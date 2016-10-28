@@ -15,7 +15,7 @@ public class Partner implements Parcelable {
     public String name;
     public String phone;
     public String experiences;
-    public String description;
+    public ArrayList<String> description;
     public String avatar;
     public ArrayList<String> images;
     public int like_count;
@@ -28,7 +28,7 @@ public class Partner implements Parcelable {
         name = in.readString();
         phone = in.readString();
         experiences = in.readString();
-        description = in.readString();
+        description = in.createStringArrayList();
         avatar = in.readString();
         images = in.createStringArrayList();
         like_count = in.readInt();
@@ -60,7 +60,7 @@ public class Partner implements Parcelable {
         dest.writeString(name);
         dest.writeString(phone);
         dest.writeString(experiences);
-        dest.writeString(description);
+        dest.writeStringList(description);
         dest.writeString(avatar);
         dest.writeStringList(images);
         dest.writeInt(like_count);

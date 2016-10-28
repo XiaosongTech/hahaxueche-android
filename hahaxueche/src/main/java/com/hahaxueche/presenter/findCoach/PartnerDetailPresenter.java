@@ -55,6 +55,7 @@ public class PartnerDetailPresenter implements Presenter<PartnerDetailView> {
         if (mPartner == null) return;
         this.mPartnerDetailView.showPartnerDetail(mPartner);
         this.mPartnerDetailView.addPrices(getPrices());
+        this.mPartnerDetailView.initShareData(mPartner);
         loadApplaud();
     }
 

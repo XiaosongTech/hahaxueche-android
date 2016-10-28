@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.hahaxueche.BuildConfig;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Field;
@@ -167,14 +168,15 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         if (savedInstanceState != null) {
             mWeiboShareAPI.handleWeiboResponse(getIntent(), this);
         }
-        initShareData();
     }
 
-    private void initShareData() {
-        mTitle = "哈哈学车-开启快乐学车之旅吧～";
-        mDescription = "好友力荐:\n哈哈学车优秀教练" + mPresenter.getCoach().name;
+    @Override
+    public void initShareData(Coach coach) {
+        mTitle = "哈哈学车-选驾校，挑教练，上哈哈学车";
+        mDescription = "好友力荐:\n哈哈学车优秀教练" + coach.name;
         mImageUrl = "http://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
-        mUrl = "http://m.hahaxueche.com";
+        mUrl = BuildConfig.SERVER_URL + "/share/coaches/" + coach.id;
+        HHLog.v("mUrl -> " + mUrl);
     }
 
     /**

@@ -3,6 +3,8 @@ package com.hahaxueche.ui.activity.findCoach;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,14 +26,35 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.hahaxueche.BuildConfig;
+import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.user.coach.Partner;
 import com.hahaxueche.model.user.coach.ProductType;
 import com.hahaxueche.presenter.findCoach.PartnerDetailPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
+import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.view.findCoach.PartnerDetailView;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
+import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
+import com.sina.weibo.sdk.api.WebpageObject;
+import com.sina.weibo.sdk.api.WeiboMessage;
+import com.sina.weibo.sdk.api.share.BaseResponse;
+import com.sina.weibo.sdk.api.share.IWeiboHandler;
+import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
+import com.sina.weibo.sdk.api.share.SendMessageToWeiboRequest;
+import com.sina.weibo.sdk.constant.WBConstants;
+import com.sina.weibo.sdk.utils.Utility;
+import com.tencent.connect.share.QQShare;
+import com.tencent.connect.share.QzoneShare;
+import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
 
 import java.util.ArrayList;
 
@@ -42,10 +66,11 @@ import butterknife.OnClick;
  * Created by wangshirui on 2016/10/20.
  */
 
-public class PartnerDetailActivity extends HHBaseActivity implements PartnerDetailView {
+public class PartnerDetailActivity extends HHBaseActivity implements PartnerDetailView, IWeiboHandler.Response {
     private PartnerDetailPresenter mPresenter;
     private ImageView mIvBack;
     private TextView mTvTitle;
+    private ImageView mIvShare;
     @BindView(R.id.sv_main)
     ScrollView mSvMain;
     @BindView(R.id.tv_partner_name)
@@ -62,6 +87,21 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
     TextView mTvApplaud;
     @BindView(R.id.lly_prices)
     LinearLayout mLlyPrices;
+    /*****************
+     * 分享
+     ******************/
+    private ShareDialog shareDialog;
+    private IWXAPI wxApi; //微信api
+    private Tencent mTencent;//QQ
+    private IWeiboShareAPI mWeiboShareAPI;//新浪微博
+    private HHBaseApplication myApplication;
+    private String mTitle;
+    private String mDescription;
+    private String mImageUrl;
+    private String mUrl;
+    /*****************
+     * end
+     ******************/
 
     private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
 
@@ -77,11 +117,15 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
         if (intent.getParcelableExtra("partner") != null) {
             mPresenter.setPartner((Partner) intent.getParcelableExtra("partner"));
         }
+        regShareApi();
+        if (savedInstanceState != null) {
+            mWeiboShareAPI.handleWeiboResponse(getIntent(), this);
+        }
     }
 
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setCustomView(R.layout.actionbar_base);
+        actionBar.setCustomView(R.layout.actionbar_base_share);
         mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
         mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -92,6 +136,190 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
                 PartnerDetailActivity.this.finish();
             }
         });
+        mIvShare = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_share);
+        mIvShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (shareDialog == null) {
+                    shareDialog = new ShareDialog(getContext(), new ShareDialog.OnShareListener() {
+                        @Override
+                        public void onShare(int shareType) {
+                            switch (shareType) {
+                                case 0:
+                                    shareToWeixin();
+                                    break;
+                                case 1:
+                                    shareToFriendCircle();
+                                    break;
+                                case 2:
+                                    shareToQQ();
+                                    break;
+                                case 3:
+                                    shareToWeibo();
+                                    break;
+                                case 4:
+                                    shareToQZone();
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    });
+                }
+                shareDialog.show();
+            }
+        });
+    }
+
+    @Override
+    public void initShareData(Partner partner) {
+        mTitle = "哈哈学车-选驾校，挑教练，上哈哈学车";
+        mDescription = "好友力荐:\n哈哈学车优秀教练" + partner.name;
+        mImageUrl = "http://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
+        mUrl = BuildConfig.SERVER_URL + "/share/training_partners/" + partner.id;
+        HHLog.v("mUrl -> " + mUrl);
+    }
+
+    /**
+     * 获取分享API
+     */
+    private void regShareApi() {
+        myApplication = HHBaseApplication.get(getContext());
+        wxApi = myApplication.getIWXAPI();
+        mTencent = myApplication.getTencentAPI();
+        mWeiboShareAPI = myApplication.getWeiboAPI();
+    }
+
+    private void shareToQQ() {
+        ShareListener myListener = new ShareListener();
+        final Bundle params = new Bundle();
+        params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
+        params.putString(QQShare.SHARE_TO_QQ_TITLE, mTitle);
+        params.putString(QQShare.SHARE_TO_QQ_APP_NAME, "哈哈学车");
+        params.putString(QQShare.SHARE_TO_QQ_SUMMARY, mDescription);
+        params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, mImageUrl);
+        params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, mUrl);
+        mTencent.shareToQQ(this, params, myListener);
+    }
+
+    private void shareToQZone() {
+        ShareListener myListener = new ShareListener();
+        final Bundle params = new Bundle();
+        params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_APP);
+        params.putString(QzoneShare.SHARE_TO_QQ_TITLE, mTitle);
+        params.putString(QzoneShare.SHARE_TO_QQ_APP_NAME, "哈哈学车");
+        params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, mDescription);
+        params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, mUrl);
+        ArrayList<String> imgUrlList = new ArrayList<>();
+        imgUrlList.add(mImageUrl);
+        params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, imgUrlList);
+        mTencent.shareToQzone(this, params, myListener);
+    }
+
+    private void shareToWeibo() {
+        // 1. 初始化微博的分享消息
+        WeiboMessage weiboMessage = new WeiboMessage();
+        WebpageObject mediaObject = new WebpageObject();
+        mediaObject.identify = Utility.generateGUID();
+        mediaObject.title = mTitle;
+        mediaObject.description = mDescription;
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        // 设置 Bitmap 类型的图片到视频对象里         设置缩略图。 注意：最终压缩过的缩略图大小不得超过 32kb。
+        mediaObject.setThumbImage(bitmap);
+        mediaObject.actionUrl = mUrl;
+        mediaObject.defaultText = mTitle + mDescription;
+        weiboMessage.mediaObject = mediaObject;
+        // 2. 初始化从第三方到微博的消息请求
+        SendMessageToWeiboRequest request = new SendMessageToWeiboRequest();
+        // 用transaction唯一标识一个请求
+        request.transaction = String.valueOf(System.currentTimeMillis());
+        request.message = weiboMessage;
+        // 3. 发送请求消息到微博，唤起微博分享界面
+        mWeiboShareAPI.sendRequest(this, request);
+    }
+
+    private void shareToWeixin() {
+        WXWebpageObject webpage = new WXWebpageObject();
+        webpage.webpageUrl = mUrl;
+        WXMediaMessage msg = new WXMediaMessage(webpage);
+        msg.title = mTitle;
+        msg.description = mDescription;
+        Bitmap thumb = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        msg.thumbData = Utils.bmpToByteArray(thumb, true);
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.transaction = buildTransaction("webpage");
+        req.message = msg;
+        //SendMessageToWX.Req.WXSceneTimeline
+        req.scene = SendMessageToWX.Req.WXSceneSession;
+        wxApi.sendReq(req);
+    }
+
+    private void shareToFriendCircle() {
+        WXWebpageObject webpage = new WXWebpageObject();
+        webpage.webpageUrl = mUrl;
+        WXMediaMessage msg = new WXMediaMessage(webpage);
+        msg.title = mTitle;
+        msg.description = mDescription;
+        Bitmap thumb = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        msg.thumbData = Utils.bmpToByteArray(thumb, true);
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.transaction = buildTransaction("webpage");
+        req.message = msg;
+        req.scene = SendMessageToWX.Req.WXSceneTimeline;
+        wxApi.sendReq(req);
+    }
+
+    private String buildTransaction(final String type) {
+        return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
+    }
+
+    private class ShareListener implements IUiListener {
+
+        @Override
+        public void onCancel() {
+            showMessage("取消分享");
+        }
+
+        @Override
+        public void onComplete(Object arg0) {
+            showMessage("分享成功");
+        }
+
+        @Override
+        public void onError(UiError arg0) {
+            showMessage("分享失败");
+            HHLog.e("分享失败，原因：" + arg0.errorMessage);
+        }
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        // 从当前应用唤起微博并进行分享后，返回到当前应用时，需要在此处调用该函数
+        // 来接收微博客户端返回的数据；执行成功，返回 true，并调用
+        // {@link IWeiboHandler.Response#onResponse}；失败返回 false，不调用上述回调
+        mWeiboShareAPI.handleWeiboResponse(intent, this);
+    }
+
+    @Override
+    public void onResponse(BaseResponse baseResp) {
+        if (baseResp != null) {
+            Log.v("gibxin", "baseResp.errCode" + baseResp.errCode);
+            switch (baseResp.errCode) {
+                case WBConstants.ErrorCode.ERR_OK:
+                    showMessage("分享成功");
+                    break;
+                case WBConstants.ErrorCode.ERR_CANCEL:
+                    showMessage("取消分享");
+                    break;
+                case WBConstants.ErrorCode.ERR_FAIL:
+                    showMessage("分享失败");
+                    HHLog.e("分享失败，原因：" + baseResp.errMsg);
+                    break;
+            }
+        }
     }
 
     @Override
@@ -103,7 +331,13 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
     @Override
     public void showPartnerDetail(Partner partner) {
         mTvName.setText(partner.name);
-        mTvDescription.setText(partner.description);
+        if (partner.description != null && partner.description.size() > 0) {
+            String description = "";
+            for (String des : partner.description) {
+                description += des;
+            }
+            mTvDescription.setText(description);
+        }
         mIvAvatar.setImageURI(partner.avatar);
         mIsImages.updateImages(partner.images);
         int width = Utils.instence(this).getDm().widthPixels;
