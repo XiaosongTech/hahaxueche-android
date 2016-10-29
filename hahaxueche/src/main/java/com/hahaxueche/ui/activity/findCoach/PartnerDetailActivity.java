@@ -116,6 +116,8 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
         Intent intent = getIntent();
         if (intent.getParcelableExtra("partner") != null) {
             mPresenter.setPartner((Partner) intent.getParcelableExtra("partner"));
+        }else if(intent.getStringExtra("partnerId")!=null){
+            mPresenter.setPartner(intent.getStringExtra("partnerId"));
         }
         regShareApi();
         if (savedInstanceState != null) {

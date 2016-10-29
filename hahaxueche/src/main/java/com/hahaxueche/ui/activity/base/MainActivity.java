@@ -1,10 +1,14 @@
 package com.hahaxueche.ui.activity.base;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
+import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
+import com.hahaxueche.ui.activity.findCoach.PartnerDetailActivity;
 import com.hahaxueche.ui.fragment.community.CommunityFragment;
 import com.hahaxueche.ui.fragment.findCoach.FindCoachFragment;
 import com.hahaxueche.ui.fragment.homepage.HomepageFragment;
@@ -37,6 +41,20 @@ public class MainActivity extends HHBaseActivity {
 
         indicator = getIndicatorView("我的页面", R.layout.indicator_my_page);
         mTabHost.addTab(mTabHost.newTabSpec("myPage").setIndicator(indicator), MyPageFragment.class, null);
+
+        Intent intent = getIntent();
+        Bundle shareObject = intent.getBundleExtra("shareObject");
+        if (shareObject != null && !TextUtils.isEmpty(shareObject.getString("objectId", ""))) {
+            if (shareObject.getString("type", "").equals("coach_detail")) {
+                Intent startIntent = new Intent(getContext(), CoachDetailActivity.class);
+                startIntent.putExtra("coach_id", shareObject.getString("objectId", ""));
+                startActivity(startIntent);
+            } else if (shareObject.getString("type", "").equals("training_partner_detail")) {
+                Intent startIntent = new Intent(getContext(), PartnerDetailActivity.class);
+                startIntent.putExtra("partnerId", shareObject.getString("objectId", ""));
+                startActivity(startIntent);
+            }
+        }
     }
 
     private View getIndicatorView(String name, int layoutId) {

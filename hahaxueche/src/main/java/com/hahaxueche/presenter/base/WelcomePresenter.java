@@ -1,5 +1,7 @@
 package com.hahaxueche.presenter.base;
 
+import android.os.Bundle;
+
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.Constants;
@@ -24,6 +26,7 @@ public class WelcomePresenter implements Presenter<WelcomeView> {
     private WelcomeView mWelcomeView;
     private Subscription subscription;
     private HHBaseApplication application;
+    private Bundle mShareObject = null;
 
     public void attachView(WelcomeView view) {
         this.mWelcomeView = view;
@@ -90,12 +93,22 @@ public class WelcomePresenter implements Presenter<WelcomeView> {
                             if (!student.isCompleted()) {
                                 mWelcomeView.navigateToCompleteInfo();
                             } else {
-                                mWelcomeView.navigateToHomepage();
+                                mWelcomeView.navigateToHomepage(mShareObject);
                             }
                         }
                     });
         } else {
-            mWelcomeView.navigationToStartLogin();
+            if (mShareObject != null) {
+                HHBaseApplication application = HHBaseApplication.get(mWelcomeView.getContext());
+                application.getSharedPrefUtil().createFakeUser();
+                mWelcomeView.navigateToHomepage(mShareObject);
+            } else {
+                mWelcomeView.navigationToStartLogin();
+            }
         }
+    }
+
+    public void setShareObject(Bundle shareObject) {
+        this.mShareObject = shareObject;
     }
 }

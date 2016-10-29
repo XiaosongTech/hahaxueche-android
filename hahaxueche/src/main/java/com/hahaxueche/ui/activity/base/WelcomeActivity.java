@@ -33,6 +33,7 @@ public class WelcomeActivity extends HHBaseActivity implements WelcomeView, DSIn
         super.onStart();
         // 请直接复制下一行代码，粘贴到相应位置
         DeepShare.init(this, "c4e677e0fa60ceb4", this);
+        mPresenter.startApplication();
     }
 
 
@@ -44,7 +45,6 @@ public class WelcomeActivity extends HHBaseActivity implements WelcomeView, DSIn
         setTheme(R.style.AppThemeNoTitle);
         setContentView(R.layout.activity_welcome);
         ButterKnife.bind(this);
-        mPresenter.startApplication();
     }
 
     @Override
@@ -60,9 +60,12 @@ public class WelcomeActivity extends HHBaseActivity implements WelcomeView, DSIn
     }
 
     @Override
-    public void navigateToHomepage() {
+    public void navigateToHomepage(Bundle bundle) {
         ActivityCollector.finishAll();
         Intent intent = new Intent(getContext(), MainActivity.class);
+        if (bundle != null) {
+            intent.putExtra("shareObject", bundle);
+        }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
@@ -92,9 +95,16 @@ public class WelcomeActivity extends HHBaseActivity implements WelcomeView, DSIn
     public void onInappDataReturned(JSONObject params) {
         try {
             if (params == null) return;
-            HHLog.v("params.toString() -> " + params.toString());
+            HHLog.v("inapp_data -> " + params.toString());
             String type = params.getString("type");
-            HHLog.v("分享type -> " + type);
+            Bundle shareObject = new Bundle();
+            shareObject.putString("type", type);
+            if (type.equals("coach_detail")) {
+                shareObject.putString("objectId", params.getString("coach_id"));
+            } else if (type.equals("training_partner_detail")) {
+                shareObject.putString("objectId", params.getString("training_partner_id"));
+            }
+            mPresenter.setShareObject(shareObject);
         } catch (JSONException e) {
             e.printStackTrace();
         }

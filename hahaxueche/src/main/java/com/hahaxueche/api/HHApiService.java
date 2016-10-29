@@ -155,6 +155,9 @@ public interface HHApiService {
     @PUT("students/purchased_service")
     Observable<PurchasedService> payStage(@FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
 
+    @GET("training_partners/{id}")
+    Observable<Partner> getPartner(@Path("id") String partnerId);
+
 
     class Factory {
         public static HHApiService create() {

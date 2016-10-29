@@ -59,6 +59,28 @@ public class PartnerDetailPresenter implements Presenter<PartnerDetailView> {
         loadApplaud();
     }
 
+    public void setPartner(final String partnerId) {
+        HHApiService apiService = application.getApiService();
+        subscription = apiService.getPartner(partnerId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<Partner>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(Partner partner) {
+                        setPartner(partner);
+                    }
+                });
+    }
+
     private ArrayList<ProductType> getPrices() {
         ArrayList<ProductType> productTypes = new ArrayList<>();
         for (PartnerPrice price : mPartner.prices) {

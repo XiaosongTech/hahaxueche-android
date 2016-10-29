@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">哈哈学车</string>
     <string name="copyright">武汉小松科技有限公司 版权所有\nCopyright 2016-2016 All Rights Reserved</string>
     <string name="eventDetailsTips">1）好友通过您的专属二维码注册并成功报名，您的好友报名成功后，您将获得%1$s元，累计无上限，可随时提现。\n\n2）好友需通过您的专属二维码免费试学才能建立推荐关系。\n\n3）如发现作弊行为将取消用户活动资格，并扣除所获奖励。\n\n4）如对本活动规则有任何疑问，请联系哈哈学车客服：400-001-6006</string>
