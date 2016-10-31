@@ -87,7 +87,7 @@ public class PartnerDetailPresenter implements Presenter<PartnerDetailView> {
             String name = price.license_type == 1 ? "C1手动档" : "C2自动档";
             String label = price.duration + "h";
             int nameBackgroundResId = price.license_type == 1 ? R.drawable.rect_bg_orange_ssm : R.drawable.rect_bg_yellow_ssm;
-            ProductType productType = new ProductType(price.price, name, label, nameBackgroundResId, price.description);
+            ProductType productType = new ProductType(price.price, name, label, nameBackgroundResId, price.description,0);
             productTypes.add(productType);
         }
         return productTypes;

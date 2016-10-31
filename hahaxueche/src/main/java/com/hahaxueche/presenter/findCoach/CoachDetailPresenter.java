@@ -65,32 +65,29 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         if (mCoach == null) return;
         setCoachLabel();
         this.mCoachDetailView.showCoachDetail(mCoach);
-        this.mCoachDetailView.addPrices(getPrices());
+        int pos = 1;
+        if (mCoach.coach_group.training_cost != 0 || mCoach.coach_group.vip_price != 0) {
+            mCoachDetailView.addC1Label(pos++);
+            if (mCoach.coach_group.training_cost != 0) {
+                mCoachDetailView.addPrice(pos++, false, mCoach.coach_group.training_cost);
+            }
+            if (mCoach.coach_group.vip_price != 0) {
+                mCoachDetailView.addPrice(pos++, true, mCoach.coach_group.vip_price);
+            }
+        }
+        if (mCoach.coach_group.c2_price != 0 || mCoach.coach_group.c2_vip_price != 0) {
+            mCoachDetailView.addC2Label(pos++);
+            if (mCoach.coach_group.c2_price != 0) {
+                mCoachDetailView.addPrice(pos++, false, mCoach.coach_group.c2_price);
+            }
+            if (mCoach.coach_group.c2_vip_price != 0) {
+                mCoachDetailView.addPrice(pos++, true, mCoach.coach_group.c2_vip_price);
+            }
+        }
         this.mCoachDetailView.initShareData(mCoach);
         loadReviews();
         loadFollow();
         loadApplaud();
-    }
-
-    private ArrayList<ProductType> getPrices() {
-        ArrayList<ProductType> productTypes = new ArrayList<>();
-        if (mCoach.coach_group.training_cost != 0) {
-            ProductType price = new ProductType(mCoach.coach_group.market_price, "C1手动档", "超值", R.drawable.rect_bg_orange_ssm, "四人一车，性价比高");
-            productTypes.add(price);
-        }
-        if (mCoach.coach_group.vip_price != 0) {
-            ProductType price = new ProductType(mCoach.coach_group.vip_price, "C1手动档", "VIP", R.drawable.rect_bg_orange_ssm, "一人一车，极速拿证");
-            productTypes.add(price);
-        }
-        if (mCoach.coach_group.c2_price != 0) {
-            ProductType price = new ProductType(mCoach.coach_group.c2_price, "C2自动档", "超值", R.drawable.rect_bg_yellow_ssm, "四人一车，性价比高");
-            productTypes.add(price);
-        }
-        if (mCoach.coach_group.c2_vip_price != 0) {
-            ProductType price = new ProductType(mCoach.coach_group.c2_vip_price, "C2自动档", "VIP", R.drawable.rect_bg_yellow_ssm, "一人一车，极速拿证");
-            productTypes.add(price);
-        }
-        return productTypes;
     }
 
     public Coach getCoach() {
