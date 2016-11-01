@@ -164,9 +164,11 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
                 mPresenter.onlineAsk();
                 break;
             case R.id.rly_my_follow_coach:
+                mPresenter.clickMyFollowCount();
                 startActivity(new Intent(getContext(), FollowListActivity.class));
                 break;
             case R.id.rly_my_consultant:
+                mPresenter.clickMyAdviserCount();
                 if (mConsultantDialog == null) {
                     mConsultantDialog = new MyAdviserDialog(getContext(), mPresenter.getAdviser(), new MyAdviserDialog.onMyConsultantListener() {
                         @Override
@@ -185,17 +187,21 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
                 mConsultantDialog.show();
                 break;
             case R.id.rly_FAQ:
+                mPresenter.clickFAQCount();
                 startActivity(new Intent(getContext(), FAQActivity.class));
                 break;
             case R.id.rly_support_haha:
+                mPresenter.clickSupportHahaCount();
                 Uri uri = Uri.parse(URL_APP_STORE);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
                 break;
             case R.id.rly_software_info:
+                mPresenter.clickSoftwareInfoCount();
                 startActivity(new Intent(getContext(), SoftwareInfoActivity.class));
                 break;
             case R.id.rly_referer_friends:
+                mPresenter.clickReferCount();
                 startActivity(new Intent(getContext(), ReferFriendsActivity.class));
                 break;
             case R.id.iv_my_avatar:
@@ -231,7 +237,7 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
                 mPresenter.toMyCoach();
                 break;
             case R.id.rly_payment_stage:
-                startActivity(new Intent(getContext(), PaymentStageActivity.class));
+                mPresenter.clickPaymentStage();
                 break;
             default:
                 break;
@@ -259,6 +265,11 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
         Intent intent = new Intent(getContext(), MyCoachDetailActivity.class);
         intent.putExtra("coachId", coachId);
         startActivity(intent);
+    }
+
+    @Override
+    public void navigateToPaymentStage() {
+        startActivity(new Intent(getContext(), PaymentStageActivity.class));
     }
 
     @Override

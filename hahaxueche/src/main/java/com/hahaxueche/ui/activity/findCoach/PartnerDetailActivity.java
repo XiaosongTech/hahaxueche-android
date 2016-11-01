@@ -30,9 +30,9 @@ import com.hahaxueche.BuildConfig;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.user.coach.Partner;
-import com.hahaxueche.model.user.coach.ProductType;
 import com.hahaxueche.presenter.findCoach.PartnerDetailPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
+import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
 import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.view.findCoach.PartnerDetailView;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
@@ -48,10 +48,13 @@ import com.sina.weibo.sdk.constant.WBConstants;
 import com.sina.weibo.sdk.utils.Utility;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzoneShare;
+import com.tencent.mm.sdk.modelbase.BaseReq;
+import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
@@ -116,7 +119,7 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
         Intent intent = getIntent();
         if (intent.getParcelableExtra("partner") != null) {
             mPresenter.setPartner((Partner) intent.getParcelableExtra("partner"));
-        }else if(intent.getStringExtra("partnerId")!=null){
+        } else if (intent.getStringExtra("partnerId") != null) {
             mPresenter.setPartner(intent.getStringExtra("partnerId"));
         }
         regShareApi();
@@ -142,6 +145,7 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
         mIvShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPresenter.clickShareCount();
                 if (shareDialog == null) {
                     shareDialog = new ShareDialog(getContext(), new ShareDialog.OnShareListener() {
                         @Override
@@ -182,6 +186,149 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
         HHLog.v("mUrl -> " + mUrl);
     }
 
+    @Override
+    public void addC1Label(int pos) {
+        RelativeLayout rly = new RelativeLayout(this);
+        rly.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        View dividerView = new View(this);
+        RelativeLayout.LayoutParams viewParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.divider_width));
+        dividerView.setLayoutParams(viewParams);
+        dividerView.setBackgroundResource(R.color.haha_gray_divider);
+        rly.addView(dividerView);
+
+        TextView tvC1Label = new TextView(this);
+        RelativeLayout.LayoutParams labelParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        labelParams.setMargins(Utils.instence(this).dip2px(20), Utils.instence(this).dip2px(15), 0, 0);
+        tvC1Label.setLayoutParams(labelParams);
+        tvC1Label.setText("C1手动档");
+        tvC1Label.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
+        int tvLabelId = Utils.generateViewId();
+        tvC1Label.setId(tvLabelId);
+        rly.addView(tvC1Label);
+
+        TextView tvMore = new TextView(this);
+        RelativeLayout.LayoutParams tvMoreParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvMoreParams.setMargins(Utils.instence(this).dip2px(5), Utils.instence(this).dip2px(15), 0, 0);
+        tvMoreParams.addRule(RelativeLayout.RIGHT_OF, tvLabelId);
+        tvMore.setLayoutParams(tvMoreParams);
+        tvMore.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
+        tvMore.setBackgroundResource(R.drawable.rect_bg_gray_bd_gray_ssm);
+        tvMore.setText("?");
+        int padding = Utils.instence(this).dip2px(4);
+        tvMore.setPadding(padding, 0, padding, 0);
+        tvMore.setGravity(Gravity.CENTER);
+        tvMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BaseAlertSimpleDialog dialog = new BaseAlertSimpleDialog(getContext(), "什么是C1手动档？",
+                        "C1为手动挡小型车驾照，取得了C1类驾驶证的人可以驾驶C2类车");
+                dialog.show();
+            }
+        });
+        rly.addView(tvMore);
+
+        mLlyPrices.addView(rly, pos);
+    }
+
+    @Override
+    public void addC2Label(int pos) {
+        RelativeLayout rly = new RelativeLayout(this);
+        rly.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        View dividerView = new View(this);
+        RelativeLayout.LayoutParams viewParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.divider_width));
+        dividerView.setLayoutParams(viewParams);
+        dividerView.setBackgroundResource(R.color.haha_gray_divider);
+        rly.addView(dividerView);
+
+        TextView tvC2Label = new TextView(this);
+        RelativeLayout.LayoutParams labelParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        labelParams.setMargins(Utils.instence(this).dip2px(20), Utils.instence(this).dip2px(15), 0, 0);
+        tvC2Label.setLayoutParams(labelParams);
+        tvC2Label.setText("C2自动档");
+        tvC2Label.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
+        int tvLabelId = Utils.generateViewId();
+        tvC2Label.setId(tvLabelId);
+        rly.addView(tvC2Label);
+
+        TextView tvMore = new TextView(this);
+        RelativeLayout.LayoutParams tvMoreParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvMoreParams.setMargins(Utils.instence(this).dip2px(5), Utils.instence(this).dip2px(15), 0, 0);
+        tvMoreParams.addRule(RelativeLayout.RIGHT_OF, tvLabelId);
+        tvMore.setLayoutParams(tvMoreParams);
+        tvMore.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
+        tvMore.setBackgroundResource(R.drawable.rect_bg_gray_bd_gray_ssm);
+        tvMore.setText("?");
+        int padding = Utils.instence(this).dip2px(4);
+        tvMore.setPadding(padding, 0, padding, 0);
+        tvMore.setGravity(Gravity.CENTER);
+        tvMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BaseAlertSimpleDialog dialog = new BaseAlertSimpleDialog(getContext(), "什么是C2自动档？",
+                        "C2为自动挡小型车驾照，取得了C2类驾驶证的人不可以驾驶C1类车。" +
+                                "C2驾照培训费要稍贵于C1照。费用的差别主要是由于C2自动挡教练车数量比较少，使用过程中维修费用比较高所致。");
+                dialog.show();
+            }
+        });
+        rly.addView(tvMore);
+
+        mLlyPrices.addView(rly, pos);
+    }
+
+    @Override
+    public void addPrice(int pos, int price, int duration, String description) {
+        RelativeLayout rly = new RelativeLayout(this);
+        rly.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        TextView tvPriceLabel = new TextView(this);
+        RelativeLayout.LayoutParams tvLabelParams = new RelativeLayout.LayoutParams(Utils.instence(this).dip2px(60), ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvLabelParams.setMargins(Utils.instence(this).dip2px(20), Utils.instence(this).dip2px(15), 0, Utils.instence(this).dip2px(15));
+        tvPriceLabel.setLayoutParams(tvLabelParams);
+        tvPriceLabel.setText(duration + "h");
+        tvPriceLabel.setGravity(Gravity.CENTER);
+        int padding = Utils.instence(this).dip2px(2);
+        tvPriceLabel.setPadding(0, padding, 0, padding);
+        tvPriceLabel.setBackgroundResource(R.drawable.rect_bg_trans_bd_appcolor_ssm);
+        tvPriceLabel.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
+        int tvLabelId = Utils.generateViewId();
+        tvPriceLabel.setId(tvLabelId);
+        rly.addView(tvPriceLabel);
+
+        TextView tvRemarks = new TextView(this);
+        RelativeLayout.LayoutParams tvRemarksParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvRemarksParams.setMargins(Utils.instence(this).dip2px(10), 0, 0, 0);
+        tvRemarksParams.addRule(RelativeLayout.RIGHT_OF, tvLabelId);
+        tvRemarksParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        tvRemarks.setLayoutParams(tvRemarksParams);
+        tvRemarks.setText(description);
+        tvRemarks.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
+        tvRemarks.setTextSize(16);
+        rly.addView(tvRemarks);
+
+        TextView tvPrice = new TextView(this);
+        RelativeLayout.LayoutParams tvPriceParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvPriceParams.setMargins(0, 0, Utils.instence(this).dip2px(20), 0);
+        tvPriceParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+        tvPriceParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        tvPrice.setLayoutParams(tvPriceParams);
+        tvPrice.setText(Utils.getMoney(price));
+        tvPrice.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
+        tvPrice.setTextSize(16);
+        rly.addView(tvPrice);
+
+        View dividerView = new View(this);
+        RelativeLayout.LayoutParams viewParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.divider_width));
+        viewParams.addRule(RelativeLayout.BELOW, tvLabelId);
+        viewParams.setMargins(Utils.instence(this).dip2px(20), 0, 0, 0);
+        dividerView.setLayoutParams(viewParams);
+        dividerView.setBackgroundResource(R.color.haha_gray_divider);
+        rly.addView(dividerView);
+
+        mLlyPrices.addView(rly, pos);
+    }
+
     /**
      * 获取分享API
      */
@@ -193,7 +340,7 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
     }
 
     private void shareToQQ() {
-        ShareListener myListener = new ShareListener();
+        ShareQQListener myListener = new ShareQQListener();
         final Bundle params = new Bundle();
         params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
         params.putString(QQShare.SHARE_TO_QQ_TITLE, mTitle);
@@ -205,7 +352,7 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
     }
 
     private void shareToQZone() {
-        ShareListener myListener = new ShareListener();
+        ShareQZoneListener myListener = new ShareQZoneListener();
         final Bundle params = new Bundle();
         params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_APP);
         params.putString(QzoneShare.SHARE_TO_QQ_TITLE, mTitle);
@@ -253,6 +400,30 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
         req.message = msg;
         //SendMessageToWX.Req.WXSceneTimeline
         req.scene = SendMessageToWX.Req.WXSceneSession;
+        wxApi.handleIntent(getIntent(), new IWXAPIEventHandler() {
+            @Override
+            public void onReq(BaseReq baseReq) {
+
+            }
+
+            @Override
+            public void onResp(BaseResp baseResp) {
+                switch (baseResp.errCode) {
+                    case BaseResp.ErrCode.ERR_OK:
+                        mPresenter.clickShareSuccessCount("wechat_friend");
+                        showMessage("分享成功");
+                        break;
+                    case BaseResp.ErrCode.ERR_USER_CANCEL:
+                        showMessage("取消分享");
+                        break;
+                    case BaseResp.ErrCode.ERR_AUTH_DENIED:
+                        showMessage("分享失败");
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
         wxApi.sendReq(req);
     }
 
@@ -268,6 +439,30 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
         req.transaction = buildTransaction("webpage");
         req.message = msg;
         req.scene = SendMessageToWX.Req.WXSceneTimeline;
+        wxApi.handleIntent(getIntent(), new IWXAPIEventHandler() {
+            @Override
+            public void onReq(BaseReq baseReq) {
+
+            }
+
+            @Override
+            public void onResp(BaseResp baseResp) {
+                switch (baseResp.errCode) {
+                    case BaseResp.ErrCode.ERR_OK:
+                        mPresenter.clickShareSuccessCount("wechat_friend_zone");
+                        showMessage("分享成功");
+                        break;
+                    case BaseResp.ErrCode.ERR_USER_CANCEL:
+                        showMessage("取消分享");
+                        break;
+                    case BaseResp.ErrCode.ERR_AUTH_DENIED:
+                        showMessage("分享失败");
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
         wxApi.sendReq(req);
     }
 
@@ -275,7 +470,7 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
         return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
     }
 
-    private class ShareListener implements IUiListener {
+    private class ShareQQListener implements IUiListener {
 
         @Override
         public void onCancel() {
@@ -284,6 +479,28 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
 
         @Override
         public void onComplete(Object arg0) {
+            mPresenter.clickShareSuccessCount("QQ_friend");
+            showMessage("分享成功");
+        }
+
+        @Override
+        public void onError(UiError arg0) {
+            showMessage("分享失败");
+            HHLog.e("分享失败，原因：" + arg0.errorMessage);
+        }
+
+    }
+
+    private class ShareQZoneListener implements IUiListener {
+
+        @Override
+        public void onCancel() {
+            showMessage("取消分享");
+        }
+
+        @Override
+        public void onComplete(Object arg0) {
+            mPresenter.clickShareSuccessCount("qzone");
             showMessage("分享成功");
         }
 
@@ -311,6 +528,7 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
             Log.v("gibxin", "baseResp.errCode" + baseResp.errCode);
             switch (baseResp.errCode) {
                 case WBConstants.ErrorCode.ERR_OK:
+                    mPresenter.clickShareSuccessCount("weibo");
                     showMessage("分享成功");
                     break;
                 case WBConstants.ErrorCode.ERR_CANCEL:
@@ -389,15 +607,6 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
         mTvApplaud.startAnimation(animationSet);
     }
 
-    @Override
-    public void addPrices(ArrayList<ProductType> productTypes) {
-        if (productTypes == null || productTypes.size() < 1) return;
-        for (ProductType productType : productTypes) {
-            mLlyPrices.addView(getPriceAdapter(productType), 1 + productTypes.indexOf(productType));
-        }
-
-    }
-
     @OnClick({R.id.tv_applaud_count,
             R.id.tv_contact})
     public void onClick(View view) {
@@ -406,6 +615,7 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
                 mPresenter.applaud();
                 break;
             case R.id.tv_contact:
+                mPresenter.clickContactCount();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
                     //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
@@ -417,69 +627,6 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
                 break;
         }
 
-    }
-
-    private RelativeLayout getPriceAdapter(ProductType productType) {
-        RelativeLayout rly = new RelativeLayout(this);
-        LinearLayout.LayoutParams rlyParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        rly.setLayoutParams(rlyParams);
-
-        View view = new View(this);
-        RelativeLayout.LayoutParams viewParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.divider_width));
-        view.setLayoutParams(viewParams);
-        view.setBackgroundResource(R.color.haha_gray_divider);
-        rly.addView(view);
-
-        TextView tvName = new TextView(this);
-        RelativeLayout.LayoutParams tvNameParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        tvNameParams.setMargins(Utils.instence(this).dip2px(20), Utils.instence(this).dip2px(15), 0, 0);
-        tvName.setLayoutParams(tvNameParams);
-        tvName.setPadding(Utils.instence(this).dip2px(2), Utils.instence(this).dip2px(1), Utils.instence(this).dip2px(2), Utils.instence(this).dip2px(1));
-        tvName.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
-        tvName.setTextSize(12);
-        tvName.setBackgroundResource(productType.nameBackground);
-        tvName.setText(productType.name);
-        int tvNameId = Utils.generateViewId();
-        tvName.setId(tvNameId);
-        rly.addView(tvName);
-
-        TextView tvLabel = new TextView(this);
-        RelativeLayout.LayoutParams tvLabelParams = new RelativeLayout.LayoutParams(Utils.instence(this).dip2px(32), RelativeLayout.LayoutParams.WRAP_CONTENT);
-        tvLabelParams.setMargins(Utils.instence(this).dip2px(6), 0, 0, 0);
-        tvLabelParams.addRule(RelativeLayout.ALIGN_TOP, tvNameId);
-        tvLabelParams.addRule(RelativeLayout.RIGHT_OF, tvNameId);
-        tvLabel.setLayoutParams(tvLabelParams);
-        tvLabel.setPadding(Utils.instence(this).dip2px(1), Utils.instence(this).dip2px(1), Utils.instence(this).dip2px(1), Utils.instence(this).dip2px(1));
-        tvLabel.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
-        tvLabel.setTextSize(12);
-        tvLabel.setBackgroundResource(R.drawable.rect_bg_appcolor_ssm);
-        tvLabel.setGravity(Gravity.CENTER);
-        tvLabel.setText(productType.label);
-        rly.addView(tvLabel);
-
-        TextView tvPrice = new TextView(this);
-        RelativeLayout.LayoutParams tvPriceParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        tvPriceParams.setMargins(0, 0, Utils.instence(this).dip2px(20), 0);
-        tvPriceParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-        tvPriceParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-        tvPrice.setLayoutParams(tvPriceParams);
-        tvPrice.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
-        tvPrice.setTextSize(18);
-        tvPrice.setText(Utils.getMoney(productType.price));
-        rly.addView(tvPrice);
-
-        TextView tvRemark = new TextView(this);
-        RelativeLayout.LayoutParams tvRemarkParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        tvRemarkParams.setMargins(0, Utils.instence(this).dip2px(10), 0, Utils.instence(this).dip2px(15));
-        tvRemarkParams.addRule(RelativeLayout.ALIGN_LEFT, tvNameId);
-        tvRemarkParams.addRule(RelativeLayout.BELOW, tvNameId);
-        tvRemark.setLayoutParams(tvRemarkParams);
-        tvRemark.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
-        tvRemark.setTextSize(16);
-        tvRemark.setText(productType.remark);
-        rly.addView(tvRemark);
-
-        return rly;
     }
 
     @Override

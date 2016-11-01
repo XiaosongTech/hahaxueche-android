@@ -17,6 +17,7 @@ import com.hahaxueche.util.PhotoUtil;
 import com.qiyukf.unicorn.api.ConsultSource;
 import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFUserInfo;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
 import java.util.HashMap;
@@ -66,12 +67,20 @@ public class MyPagePresenter implements Presenter<MyPageView> {
      * 在线咨询
      */
     public void onlineAsk() {
+        //在线客服点击
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_online_support_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_online_support_tapped");
+        }
         String title = "聊天窗口的标题";
         // 设置访客来源，标识访客是从哪个页面发起咨询的，用于客服了解用户是从什么页面进入三个参数分别为来源页面的url，来源页面标题，来源页面额外信息（可自由定义）
         // 设置来源后，在客服会话界面的"用户资料"栏的页面项，可以看到这里设置的值。
         ConsultSource source = new ConsultSource("", "android", "");
         //登录用户添加用户信息
-        User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             YSFUserInfo userInfo = new YSFUserInfo();
             userInfo.userId = user.id;
@@ -218,8 +227,15 @@ public class MyPagePresenter implements Presenter<MyPageView> {
     }
 
     public void toMyCoach() {
-        HHApiService apiService = application.getApiService();
         User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            //我的教练点击
+            HashMap<String, String> map = new HashMap();
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_my_coach_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_my_coach_tapped");
+        }
         if (user == null || !user.isLogin()) {
             mMyPageView.alertToLogin();
         } else if (!user.student.hasPurchasedService()) {
@@ -229,4 +245,90 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         }
     }
 
+    public void clickPaymentStage() {
+        //打款状态点击
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_pay_coach_status_tapped", map);
+            if (user.student.hasPurchasedService()) {
+                mMyPageView.navigateToPaymentStage();
+            }
+        } else {
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_pay_coach_status_tapped");
+        }
+    }
+
+    public void clickMyFollowCount(){
+        //我关注教练点击
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_my_followed_coach_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_my_followed_coach_tapped");
+        }
+    }
+
+    public void clickMyAdviserCount(){
+        //我的顾问点击
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_my_advisor_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_my_advisor_tapped");
+        }
+    }
+
+    public void clickFAQCount(){
+        //常见问题点击
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_FAQ_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_FAQ_tapped");
+        }
+    }
+
+    public void clickSupportHahaCount(){
+        //支持小哈点击
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_rate_us_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_rate_us_tapped");
+        }
+    }
+
+    public void clickSoftwareInfoCount(){
+        //软件信息点击
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_version_check_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_version_check_tapped");
+        }
+    }
+
+    public void clickReferCount(){
+        //推荐有奖点击
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_refer_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_refer_tapped");
+        }
+    }
 }

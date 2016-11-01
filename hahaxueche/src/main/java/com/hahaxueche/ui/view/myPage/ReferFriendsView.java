@@ -29,4 +29,6 @@ public interface ReferFriendsView extends HHBaseView {
      * @param money
      */
     void setWithdrawMoney(String money);
+
+    void showMessage(String message);
 }

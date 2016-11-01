@@ -144,6 +144,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (mCoachArrayList != null && mCoachArrayList.size() > 0 && position > 0 && position - 1 < mCoachArrayList.size()) {
+            mPresenter.clickCoach(mCoachArrayList.get(position - 1).id);
             Intent intent = new Intent(getContext(), CoachDetailActivity.class);
             intent.putExtra("coach", mCoachArrayList.get(position - 1));
             startActivityForResult(intent, REQUEST_CODE_COACH_DETAIL);
@@ -152,6 +153,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
 
     @OnClick(R.id.fly_filter)
     public void showFilterDialog() {
+        mPresenter.clickFilterCount();
         if (mFilterDialog == null) {
             mFilterDialog = new CoachFilterDialog(getContext(), new CoachFilterDialog.OnFilterListener() {
                 @Override
@@ -178,6 +180,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
             mSortDialog = new CoachSortDialog(getContext(), new CoachSortDialog.OnSortListener() {
                 @Override
                 public void sort(int sortBy) {
+                    mPresenter.clickSortCount(sortBy);
                     mPresenter.setSortBy(sortBy);
                     mPresenter.fetchCoaches();
                 }

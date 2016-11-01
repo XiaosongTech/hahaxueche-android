@@ -176,6 +176,7 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
                 mPresenter.clickLeftIcon();
                 break;
             case R.id.iv_search:
+                mPresenter.clickSearchCount();
                 startActivity(new Intent(getContext(), SearchCoachActivity.class));
                 break;
             default:

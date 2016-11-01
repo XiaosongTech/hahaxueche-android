@@ -99,11 +99,17 @@ public class CommunityFragment extends HHBaseFragment implements CommunityView, 
         startActivity(intent);
     }
 
-    @OnClick(R.id.rly_test_lib)
+    @OnClick({R.id.rly_test_lib,
+            R.id.rly_group_buy})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rly_test_lib:
+                mPresenter.clickTestLibCount();
                 mActivity.startActivity(new Intent(getContext(), ExamLibraryActivity.class));
+                break;
+            case R.id.rly_group_buy:
+                mPresenter.clickGroupBuyCount();
+                break;
             default:
                 break;
         }

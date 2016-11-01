@@ -16,6 +16,7 @@ import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.MyCoachDetailView;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
 
@@ -83,6 +84,7 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
         this.mMyCoachDetailView.showCoachDetail(mCoach);
         loadFollow();
         loadApplaud();
+        pageStartCount();
     }
 
     public Coach getCoach() {
@@ -352,5 +354,36 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
                         }
                     });
         }
+    }
+
+    public void clickShareCount() {
+        //分享点击
+        HashMap<String, String> map = new HashMap();
+        if (mUser != null && mUser.isLogin()) {
+            map.put("student_id", mUser.student.id);
+        }
+        map.put("coach_id", mCoach.id);
+        MobclickAgent.onEvent(mMyCoachDetailView.getContext(), "my_coach_page_share_coach_tapped", map);
+    }
+
+    public void clickShareSuccessCount(String shareChannel) {
+        //分享成功
+        HashMap<String, String> map = new HashMap();
+        if (mUser != null && mUser.isLogin()) {
+            map.put("student_id", mUser.student.id);
+        }
+        map.put("coach_id", mCoach.id);
+        map.put("share_channel", shareChannel);
+        MobclickAgent.onEvent(mMyCoachDetailView.getContext(), "my_coach_page_share_coach_succeed", map);
+    }
+
+    public void pageStartCount() {
+        //教练详情展现
+        HashMap<String, String> map = new HashMap();
+        if (mUser != null && mUser.isLogin()) {
+            map.put("student_id", mUser.student.id);
+        }
+        map.put("coach_id", mCoach.id);
+        MobclickAgent.onEvent(mMyCoachDetailView.getContext(), "my_coach_page_viewed", map);
     }
 }

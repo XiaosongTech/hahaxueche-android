@@ -116,6 +116,7 @@ public class PartnerListFragment extends HHBaseFragment implements PartnerListVi
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (mPartnerArrayList != null && mPartnerArrayList.size() > 0 && position > 0 && position - 1 < mPartnerArrayList.size()) {
+            mPresenter.clickPartner(mPartnerArrayList.get(position - 1).id);
             Intent intent = new Intent(getContext(), PartnerDetailActivity.class);
             intent.putExtra("partner", mPartnerArrayList.get(position - 1));
             startActivityForResult(intent, REQUEST_CODE_PARTNER_DETAIL);
@@ -124,6 +125,7 @@ public class PartnerListFragment extends HHBaseFragment implements PartnerListVi
 
     @OnClick(R.id.fly_filter)
     public void showFilterDialog() {
+        mPresenter.clickFilterCount();
         if (mFilterDialog == null) {
             mFilterDialog = new PartnerFilterDialog(getContext(), new PartnerFilterDialog.OnFilterListener() {
                 @Override
@@ -142,6 +144,7 @@ public class PartnerListFragment extends HHBaseFragment implements PartnerListVi
             mSortDialog = new PartnerSortDialog(getContext(), new PartnerSortDialog.OnSortListener() {
                 @Override
                 public void sort(int sortBy) {
+                    mPresenter.clickSortCount(sortBy);
                     mPresenter.setSortBy(sortBy);
                     mPresenter.fetchPartners();
                 }

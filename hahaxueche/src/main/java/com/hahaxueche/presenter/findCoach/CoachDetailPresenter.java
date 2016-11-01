@@ -1,7 +1,8 @@
 package com.hahaxueche.presenter.findCoach;
 
+import android.text.TextUtils;
+
 import com.hahaxueche.HHBaseApplication;
-import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseBoolean;
 import com.hahaxueche.model.base.BaseItemType;
@@ -14,13 +15,12 @@ import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.Follow;
-import com.hahaxueche.model.user.coach.ProductType;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.CoachDetailView;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
+import com.umeng.analytics.MobclickAgent;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import rx.Observable;
@@ -43,6 +43,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
     private User mUser;
     private boolean isFollow;
     private boolean isApplaud;
+    private static final String WEB_URL_FREE_TRY = "http://m.hahaxueche.com/free_trial?promo_code=553353";
 
     @Override
     public void attachView(CoachDetailView view) {
@@ -88,6 +89,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         loadReviews();
         loadFollow();
         loadApplaud();
+        pageStartCount();
     }
 
     public Coach getCoach() {
@@ -224,6 +226,14 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
             mCoachDetailView.alertToLogin();
             return;
         }
+        //follow unfollow 点击
+        HashMap<String, String> countMap = new HashMap();
+        if (mUser != null && mUser.isLogin()) {
+            countMap.put("student_id", mUser.student.id);
+        }
+        countMap.put("coach_id", mCoach.id);
+        countMap.put("follow", isFollow ? "0" : "1");
+        MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_follow_unfollow_tapped", countMap);
         final HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", mUser.cell_phone);
@@ -316,6 +326,14 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
             mCoachDetailView.alertToLogin();
             return;
         }
+        //like unlike 点击
+        HashMap<String, String> countMap = new HashMap();
+        if (mUser != null && mUser.isLogin()) {
+            countMap.put("student_id", mUser.student.id);
+        }
+        countMap.put("coach_id", mCoach.id);
+        countMap.put("like", isApplaud ? "0" : "1");
+        MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_like_unlike_tapped", countMap);
         final HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", mUser.cell_phone);
@@ -410,4 +428,104 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         mCoachDetailView.navigateToPurchaseCoach(mCoach);
     }
 
+    public void clickPrice() {
+        if (mCoach == null) return;
+        //筛选点击
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+        }
+        map.put("coach_id", mCoach.id);
+        MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_price_detail_tapped", map);
+    }
+
+    public void freeTry() {
+        if (mCoach == null) return;
+        //免费试学URL
+        String url = WEB_URL_FREE_TRY;
+        url += "&coach_id=" + mCoach.id;
+        if (mUser != null && mUser.isLogin()) {
+            if (mUser.student.city_id >= 0) {
+                url += "&city_id=" + mUser.student.city_id;
+            }
+            if (!TextUtils.isEmpty(mUser.student.name)) {
+                url += "&name=" + mUser.student.name;
+            }
+            if (!TextUtils.isEmpty(mUser.student.cell_phone)) {
+                url += "&phone=" + mUser.student.cell_phone;
+            }
+
+        }
+        //免费试学点击
+        HashMap<String, String> map = new HashMap();
+        if (mUser != null && mUser.isLogin()) {
+            map.put("student_id", mUser.student.id);
+        }
+        map.put("coach_id", mCoach.id);
+        MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_free_trial_tapped", map);
+        HHLog.v("free try url -> " + url);
+        mCoachDetailView.openWebView(url);
+    }
+
+    public void clickCommentsCount() {
+        //学员评价点击
+        HashMap<String, String> map = new HashMap();
+        if (mUser != null && mUser.isLogin()) {
+            map.put("student_id", mUser.student.id);
+        }
+        map.put("coach_id", mCoach.id);
+        MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_comment_tapped", map);
+    }
+
+    public void clickShareCount() {
+        //分享点击
+        HashMap<String, String> map = new HashMap();
+        if (mUser != null && mUser.isLogin()) {
+            map.put("student_id", mUser.student.id);
+        }
+        map.put("coach_id", mCoach.id);
+        MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_share_coach_tapped", map);
+    }
+
+    public void clickShareSuccessCount(String shareChannel) {
+        //分享成功
+        HashMap<String, String> map = new HashMap();
+        if (mUser != null && mUser.isLogin()) {
+            map.put("student_id", mUser.student.id);
+        }
+        map.put("coach_id", mCoach.id);
+        map.put("share_channel", shareChannel);
+        MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_share_coach_succeed", map);
+    }
+
+    public void clickTrainFieldCount() {
+        //训练场地址点击
+        HashMap<String, String> map = new HashMap();
+        if (mUser != null && mUser.isLogin()) {
+            map.put("student_id", mUser.student.id);
+        }
+        map.put("coach_id", mCoach.id);
+        MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_field_tapped", map);
+    }
+
+    public void clickPurchaseCount() {
+        //立即购买点击
+        HashMap<String, String> map = new HashMap();
+        if (mUser != null && mUser.isLogin()) {
+            map.put("student_id", mUser.student.id);
+        }
+        map.put("coach_id", mCoach.id);
+        MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_purchase_tapped", map);
+    }
+
+    public void pageStartCount() {
+        //教练详情展现
+        HashMap<String, String> map = new HashMap();
+        if (mUser != null && mUser.isLogin()) {
+            map.put("student_id", mUser.student.id);
+        }
+        map.put("coach_id", mCoach.id);
+        MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_viewed", map);
+    }
 }

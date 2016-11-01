@@ -9,8 +9,10 @@ import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.ReferFriendsView;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -59,6 +61,7 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
                     @Override
                     public void onCompleted() {
                         mReferFriendsView.setQrCodeImage(mQrCodeUrl);
+                        pageStartCount();
                     }
 
                     @Override
@@ -92,5 +95,46 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
                 }
             }
         });
+    }
+
+    public String getQrCodeUrl() {
+        return mQrCodeUrl;
+    }
+
+    public void clickShareCount() {
+        //分享点击
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_share_pic_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_share_pic_tapped");
+        }
+
+    }
+
+    public void clickShareSuccessCount(String shareChannel) {
+        //分享成功
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+        }
+        map.put("share_channel", shareChannel);
+        MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_share_pic_succeed", map);
+    }
+
+    public void pageStartCount() {
+        //教练详情展现
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_viewed", map);
+        } else {
+            MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_viewed");
+        }
+
     }
 }

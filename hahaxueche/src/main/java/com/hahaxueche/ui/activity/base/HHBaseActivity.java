@@ -19,6 +19,7 @@ import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.view.base.HHBaseView;
 import com.hahaxueche.util.HHLog;
+import com.umeng.analytics.MobclickAgent;
 
 
 /**
@@ -177,6 +178,15 @@ public class HHBaseActivity extends AppCompatActivity implements HHBaseView {
             }
         });
         builder.create().show();
+    }
+
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
 }

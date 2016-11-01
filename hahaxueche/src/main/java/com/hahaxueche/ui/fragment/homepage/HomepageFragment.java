@@ -31,6 +31,7 @@ import com.hahaxueche.ui.dialog.login.CityChoseDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.homepage.HomepageView;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
+import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
@@ -126,6 +127,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                 mPresenter.openProcedure();
                 break;
             case R.id.frl_tel_ask:
+                mPresenter.phoneSupportCount();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
                     //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method

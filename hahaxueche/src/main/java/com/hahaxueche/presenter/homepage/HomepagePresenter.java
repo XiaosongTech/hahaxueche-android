@@ -23,6 +23,9 @@ import com.hahaxueche.util.Utils;
 import com.qiyukf.unicorn.api.ConsultSource;
 import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFUserInfo;
+import com.umeng.analytics.MobclickAgent;
+
+import java.util.HashMap;
 
 import rx.Subscription;
 
@@ -68,14 +71,41 @@ public class HomepagePresenter implements Presenter<HomepageView> {
     }
 
     public void openMyStrengths() {
+        //我的优势点击
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_strength_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_strength_tapped");
+        }
         mHomepageView.openWebView(WEB_URL_MY_STRENGTHS);
     }
 
     public void openBestCoaches() {
+        //教练页面点击
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_coach_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_coach_tapped");
+        }
         mHomepageView.openWebView(WEB_URL_BEST_COACHES);
     }
 
     public void openProcedure() {
+        //学车流程点击
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_process_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_process_tapped");
+        }
         mHomepageView.openWebView(WEB_URL_PROCEDURE);
     }
 
@@ -85,10 +115,27 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         if (user != null && user.student != null) {
             cityId = user.student.city_id;
         }
+        //顾问页面点击
+        HashMap<String, String> map = new HashMap();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_advisor_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_advisor_tapped");
+        }
         mHomepageView.openWebView(WEB_URL_FIND_ADVISER + "?city_id=" + cityId);
     }
 
     public void openFindDrivingSchool() {
+        //驾校页面点击
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_driving_school_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_driving_school_tapped");
+        }
         mHomepageView.openWebView(WEB_URL_FIND_DRIVING_SCHOOL);
     }
 
@@ -113,6 +160,26 @@ public class HomepagePresenter implements Presenter<HomepageView> {
                 title, // 聊天窗口的标题
                 source // 咨询的发起来源，包括发起咨询的url，title，描述信息等
         );
+        //在线客服点击
+        HashMap<String, String> map = new HashMap();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_online_support_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_online_support_tapped");
+        }
+    }
+
+    public void phoneSupportCount() {
+        //客服电话点击
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_phone_support_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_phone_support_tapped");
+        }
     }
 
     public void freeTry() {
@@ -130,6 +197,14 @@ public class HomepagePresenter implements Presenter<HomepageView> {
                 url += "&phone=" + user.student.cell_phone;
             }
 
+        }
+        //免费试学点击
+        HashMap<String, String> map = new HashMap();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_free_trial_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_free_trial_tapped");
         }
         HHLog.v("free try url -> " + url);
         mHomepageView.openWebView(url);

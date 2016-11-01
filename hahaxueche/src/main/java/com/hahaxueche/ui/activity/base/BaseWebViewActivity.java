@@ -102,7 +102,7 @@ public class BaseWebViewActivity extends HHBaseActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         try {
             baseWebView.getClass().getMethod("onResume").invoke(baseWebView, (Object[]) null);
         } catch (IllegalAccessException e) {
@@ -116,7 +116,7 @@ public class BaseWebViewActivity extends HHBaseActivity {
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         try {
             baseWebView.getClass().getMethod("onPause").invoke(baseWebView, (Object[]) null);
         } catch (IllegalAccessException e) {

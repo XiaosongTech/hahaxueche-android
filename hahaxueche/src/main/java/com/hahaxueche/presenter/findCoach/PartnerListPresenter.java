@@ -11,8 +11,10 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.PartnerListView;
 import com.hahaxueche.util.HHLog;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -136,5 +138,40 @@ public class PartnerListPresenter implements Presenter<PartnerListView> {
                         }
                     }
                 });
+    }
+
+    public void clickFilterCount() {
+        //筛选点击
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mPartnerListView.getContext(), "find_coach_page_filter_personal_coach_tapped", map);
+        }else {
+            MobclickAgent.onEvent(mPartnerListView.getContext(), "find_coach_page_filter_personal_coach_tapped");
+        }
+
+    }
+
+    public void clickSortCount(int sortBy) {
+        //筛选点击
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+        }
+        map.put("sort_type", String.valueOf(sortBy));
+        MobclickAgent.onEvent(mPartnerListView.getContext(), "find_coach_page_sort_personal_coach_tapped", map);
+    }
+
+    public void clickPartner(String partnerId) {
+        //筛选点击
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+        }
+        map.put("partner_id", partnerId);
+        MobclickAgent.onEvent(mPartnerListView.getContext(), "find_coach_page_personal_coach_tapped", map);
     }
 }

@@ -1,19 +1,17 @@
 package com.hahaxueche.presenter.findCoach;
 
 import com.hahaxueche.HHBaseApplication;
-import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Partner;
 import com.hahaxueche.model.user.coach.PartnerPrice;
-import com.hahaxueche.model.user.coach.ProductType;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.PartnerDetailView;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
+import com.umeng.analytics.MobclickAgent;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import rx.Observable;
@@ -54,9 +52,23 @@ public class PartnerDetailPresenter implements Presenter<PartnerDetailView> {
         this.mPartner = Partner;
         if (mPartner == null) return;
         this.mPartnerDetailView.showPartnerDetail(mPartner);
-        this.mPartnerDetailView.addPrices(getPrices());
+        int pos = 1;
+        boolean addC1Label = false;
+        boolean addC2Label = false;
+        for (PartnerPrice price : mPartner.prices) {
+            if (price.license_type == 1 && !addC1Label) {
+                mPartnerDetailView.addC1Label(pos++);
+                addC1Label = true;
+            }
+            if (price.license_type == 2 && !addC2Label) {
+                mPartnerDetailView.addC2Label(pos++);
+                addC2Label = true;
+            }
+            mPartnerDetailView.addPrice(pos++, price.price, price.duration, price.description);
+        }
         this.mPartnerDetailView.initShareData(mPartner);
         loadApplaud();
+        pageStartCount();
     }
 
     public void setPartner(final String partnerId) {
@@ -81,17 +93,6 @@ public class PartnerDetailPresenter implements Presenter<PartnerDetailView> {
                 });
     }
 
-    private ArrayList<ProductType> getPrices() {
-        ArrayList<ProductType> productTypes = new ArrayList<>();
-        for (PartnerPrice price : mPartner.prices) {
-            String name = price.license_type == 1 ? "C1手动档" : "C2自动档";
-            String label = price.duration + "h";
-            int nameBackgroundResId = price.license_type == 1 ? R.drawable.rect_bg_orange_ssm : R.drawable.rect_bg_yellow_ssm;
-            ProductType productType = new ProductType(price.price, name, label, nameBackgroundResId, price.description,0);
-            productTypes.add(productType);
-        }
-        return productTypes;
-    }
 
     public Partner getPartner() {
         return mPartner;
@@ -108,6 +109,14 @@ public class PartnerDetailPresenter implements Presenter<PartnerDetailView> {
             mPartnerDetailView.alertToLogin();
             return;
         }
+        //like unlike 点击
+        HashMap<String, String> countMap = new HashMap();
+        if (mUser != null && mUser.isLogin()) {
+            countMap.put("student_id", mUser.student.id);
+        }
+        countMap.put("partner_id", mPartner.id);
+        countMap.put("like", isApplaud ? "0" : "1");
+        MobclickAgent.onEvent(mPartnerDetailView.getContext(), "personal_coach_detail_page_like_unlike_tapped", countMap);
         final HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", mUser.cell_phone);
@@ -192,5 +201,46 @@ public class PartnerDetailPresenter implements Presenter<PartnerDetailView> {
                         }
                     });
         }
+    }
+
+    public void clickContactCount() {
+        //分享点击
+        HashMap<String, String> map = new HashMap();
+        if (mUser != null && mUser.isLogin()) {
+            map.put("student_id", mUser.student.id);
+        }
+        map.put("partner_id", mPartner.id);
+        MobclickAgent.onEvent(mPartnerDetailView.getContext(), "personal_coach_detail_page_call_coach_tapped", map);
+    }
+
+    public void clickShareCount() {
+        //分享点击
+        HashMap<String, String> map = new HashMap();
+        if (mUser != null && mUser.isLogin()) {
+            map.put("student_id", mUser.student.id);
+        }
+        map.put("partner_id", mPartner.id);
+        MobclickAgent.onEvent(mPartnerDetailView.getContext(), "personal_coach_detail_page_share_coach_tapped", map);
+    }
+
+    public void clickShareSuccessCount(String shareChannel) {
+        //分享成功
+        HashMap<String, String> map = new HashMap();
+        if (mUser != null && mUser.isLogin()) {
+            map.put("student_id", mUser.student.id);
+        }
+        map.put("partner_id", mPartner.id);
+        map.put("share_channel", shareChannel);
+        MobclickAgent.onEvent(mPartnerDetailView.getContext(), "personal_coach_detail_page_share_coach_succeed", map);
+    }
+
+    public void pageStartCount() {
+        //陪练详情展现
+        HashMap<String, String> map = new HashMap();
+        if (mUser != null && mUser.isLogin()) {
+            map.put("student_id", mUser.student.id);
+        }
+        map.put("partner_id", mPartner.id);
+        MobclickAgent.onEvent(mPartnerDetailView.getContext(), "personal_coach_detail_page_viewed", map);
     }
 }

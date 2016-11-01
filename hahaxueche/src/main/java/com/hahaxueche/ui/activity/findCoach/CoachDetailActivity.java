@@ -23,7 +23,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.RoundingParams;
@@ -34,13 +33,11 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.user.coach.Coach;
-import com.hahaxueche.model.user.coach.ProductType;
 import com.hahaxueche.model.user.coach.Review;
 import com.hahaxueche.presenter.findCoach.CoachDetailPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
-import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.view.findCoach.CoachDetailView;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
@@ -57,10 +54,13 @@ import com.sina.weibo.sdk.constant.WBConstants;
 import com.sina.weibo.sdk.utils.Utility;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzoneShare;
+import com.tencent.mm.sdk.modelbase.BaseReq;
+import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
@@ -353,6 +353,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         mIvShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPresenter.clickShareCount();
                 if (shareDialog == null) {
                     shareDialog = new ShareDialog(getContext(), new ShareDialog.OnShareListener() {
                         @Override
@@ -385,7 +386,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     }
 
     private void shareToQQ() {
-        ShareListener myListener = new ShareListener();
+        ShareQQListener myListener = new ShareQQListener();
         final Bundle params = new Bundle();
         params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
         params.putString(QQShare.SHARE_TO_QQ_TITLE, mTitle);
@@ -397,7 +398,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     }
 
     private void shareToQZone() {
-        ShareListener myListener = new ShareListener();
+        ShareQZoneListener myListener = new ShareQZoneListener();
         final Bundle params = new Bundle();
         params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_APP);
         params.putString(QzoneShare.SHARE_TO_QQ_TITLE, mTitle);
@@ -445,6 +446,30 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         req.message = msg;
         //SendMessageToWX.Req.WXSceneTimeline
         req.scene = SendMessageToWX.Req.WXSceneSession;
+        wxApi.handleIntent(getIntent(), new IWXAPIEventHandler() {
+            @Override
+            public void onReq(BaseReq baseReq) {
+
+            }
+
+            @Override
+            public void onResp(BaseResp baseResp) {
+                switch (baseResp.errCode) {
+                    case BaseResp.ErrCode.ERR_OK:
+                        mPresenter.clickShareSuccessCount("wechat_friend");
+                        showMessage("分享成功");
+                        break;
+                    case BaseResp.ErrCode.ERR_USER_CANCEL:
+                        showMessage("取消分享");
+                        break;
+                    case BaseResp.ErrCode.ERR_AUTH_DENIED:
+                        showMessage("分享失败");
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
         wxApi.sendReq(req);
     }
 
@@ -460,6 +485,30 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         req.transaction = buildTransaction("webpage");
         req.message = msg;
         req.scene = SendMessageToWX.Req.WXSceneTimeline;
+        wxApi.handleIntent(getIntent(), new IWXAPIEventHandler() {
+            @Override
+            public void onReq(BaseReq baseReq) {
+
+            }
+
+            @Override
+            public void onResp(BaseResp baseResp) {
+                switch (baseResp.errCode) {
+                    case BaseResp.ErrCode.ERR_OK:
+                        mPresenter.clickShareSuccessCount("wechat_friend_zone");
+                        showMessage("分享成功");
+                        break;
+                    case BaseResp.ErrCode.ERR_USER_CANCEL:
+                        showMessage("取消分享");
+                        break;
+                    case BaseResp.ErrCode.ERR_AUTH_DENIED:
+                        showMessage("分享失败");
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
         wxApi.sendReq(req);
     }
 
@@ -467,7 +516,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
     }
 
-    private class ShareListener implements IUiListener {
+    private class ShareQQListener implements IUiListener {
 
         @Override
         public void onCancel() {
@@ -476,6 +525,28 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
 
         @Override
         public void onComplete(Object arg0) {
+            mPresenter.clickShareSuccessCount("QQ_friend");
+            showMessage("分享成功");
+        }
+
+        @Override
+        public void onError(UiError arg0) {
+            showMessage("分享失败");
+            HHLog.e("分享失败，原因：" + arg0.errorMessage);
+        }
+
+    }
+
+    private class ShareQZoneListener implements IUiListener {
+
+        @Override
+        public void onCancel() {
+            showMessage("取消分享");
+        }
+
+        @Override
+        public void onComplete(Object arg0) {
+            mPresenter.clickShareSuccessCount("qzone");
             showMessage("分享成功");
         }
 
@@ -503,6 +574,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             Log.v("gibxin", "baseResp.errCode" + baseResp.errCode);
             switch (baseResp.errCode) {
                 case WBConstants.ErrorCode.ERR_OK:
+                    mPresenter.clickShareSuccessCount("weibo");
                     showMessage("分享成功");
                     break;
                 case WBConstants.ErrorCode.ERR_CANCEL:
@@ -598,7 +670,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             R.id.iv_follow,
             R.id.tv_applaud_count,
             R.id.tv_pay,
-            R.id.rly_training_field
+            R.id.rly_training_field,
+            R.id.tv_free_try
     })
     public void onClick(View view) {
         switch (view.getId()) {
@@ -606,10 +679,12 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 mPresenter.follow();
                 break;
             case R.id.fly_more_comments:
+                mPresenter.clickCommentsCount();
                 Intent intent = new Intent(getContext(), ReviewListActivity.class);
                 intent.putExtra("coach", mPresenter.getCoach());
                 startActivity(intent);
             case R.id.rly_price:
+                mPresenter.clickPrice();
                 intent = new Intent(getContext(), PriceActivity.class);
                 intent.putExtra("coach", mPresenter.getCoach());
                 startActivity(intent);
@@ -618,15 +693,21 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 mPresenter.applaud();
                 break;
             case R.id.tv_pay:
+                mPresenter.clickPurchaseCount();
                 mPresenter.purchaseCoach();
                 break;
             case R.id.rly_training_field:
+                mPresenter.clickTrainFieldCount();
                 Field field = mPresenter.getTrainingField();
                 if (field != null) {
                     intent = new Intent(getContext(), FieldMapActivity.class);
                     intent.putExtra("field", field);
                     startActivity(intent);
                 }
+                break;
+            case R.id.tv_free_try:
+                mPresenter.freeTry();
+                break;
             default:
                 break;
         }

@@ -2,10 +2,13 @@ package com.hahaxueche.presenter.community;
 
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.model.community.News;
+import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.community.CommunityView;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import rx.Subscription;
 
@@ -78,5 +81,31 @@ public class CommunityPresenter implements Presenter<CommunityView> {
         news2.read_count = 17204;
         mNewsArrayList.add(news2);
         mCommunityView.addMoreNewsList(mNewsArrayList);
+    }
+
+    public void clickGroupBuyCount() {
+        //团购点击
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            HashMap<String, String> map = new HashMap();
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mCommunityView.getContext(), "club_page_group_purchase_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mCommunityView.getContext(), "club_page_group_purchase_tapped");
+        }
+
+    }
+
+    public void clickTestLibCount() {
+        //在线题库点击
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            HashMap<String, String> map = new HashMap();
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mCommunityView.getContext(), "club_page_online_test_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mCommunityView.getContext(), "club_page_online_test_tapped");
+        }
+
     }
 }

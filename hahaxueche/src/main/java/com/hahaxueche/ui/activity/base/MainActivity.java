@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
+import com.hahaxueche.presenter.base.MainPresenter;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.PartnerDetailActivity;
 import com.hahaxueche.ui.fragment.community.CommunityFragment;
@@ -14,17 +16,21 @@ import com.hahaxueche.ui.fragment.findCoach.FindCoachFragment;
 import com.hahaxueche.ui.fragment.homepage.HomepageFragment;
 import com.hahaxueche.ui.fragment.myPage.MyPageFragment;
 import com.hahaxueche.ui.widget.FragmentTabHost;
+import com.hahaxueche.util.HHLog;
 
 /**
  * Created by wangshirui on 16/9/15.
  */
 public class MainActivity extends HHBaseActivity {
+    private MainPresenter mPresenter;
     private FragmentTabHost mTabHost = null;
     private View indicator = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPresenter = new MainPresenter();
+        mPresenter.attachView(this);
         setTheme(R.style.AppThemeNoTitle);
         setContentView(R.layout.activity_main);
         mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
@@ -42,6 +48,30 @@ public class MainActivity extends HHBaseActivity {
         indicator = getIndicatorView("我的页面", R.layout.indicator_my_page);
         mTabHost.addTab(mTabHost.newTabSpec("myPage").setIndicator(indicator), MyPageFragment.class, null);
 
+        mPresenter.viewHomepageCount();
+
+        mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String tabId) {
+                HHLog.v(tabId);
+                switch (tabId) {
+                    case "homepage":
+                        mPresenter.viewHomepageCount();
+                        break;
+                    case "findCoach":
+                        mPresenter.viewFindCoachCount();
+                        break;
+                    case "community":
+                        mPresenter.viewCommunityCount();
+                        break;
+                    case "myPage":
+                        mPresenter.viewMyPageCount();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
         Intent intent = getIntent();
         Bundle shareObject = intent.getBundleExtra("shareObject");
         if (shareObject != null && !TextUtils.isEmpty(shareObject.getString("objectId", ""))) {
@@ -66,6 +96,7 @@ public class MainActivity extends HHBaseActivity {
 
     @Override
     protected void onDestroy() {
+        mPresenter.detachView();
         super.onDestroy();
         mTabHost = null;
     }

@@ -124,7 +124,7 @@ public class CoachFilterDialog {
         int progress = (distanceTextList.size() - 1) * 100 / (distanceTextList.size() - 1);
         mCbsDistance.setProgress(progress >= 95 ? 95 : progress);
         mCbsDistance.setSelection(distanceTextList.size() - 1);
-        mSelectDistance = String.valueOf(myCity.filters.radius[distanceTextList.size() - 1]);
+        //mSelectDistance = String.valueOf(myCity.filters.radius[distanceTextList.size() - 1]);
         mCbsDistance.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -145,7 +145,7 @@ public class CoachFilterDialog {
         progress = (priceTextList.size() - 1) * 100 / (priceTextList.size() - 1);
         mCbsPrice.setProgress(progress >= 95 ? 95 : progress);
         mCbsPrice.setSelection(priceTextList.size() - 1);
-        mSelectPrice = String.valueOf(myCity.filters.prices[priceTextList.size() - 1]);
+        //mSelectPrice = String.valueOf(myCity.filters.prices[priceTextList.size() - 1]);
         mCbsPrice.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

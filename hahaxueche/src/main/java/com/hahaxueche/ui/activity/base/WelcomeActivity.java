@@ -14,6 +14,7 @@ import com.hahaxueche.ui.view.login.CompleteUserInfoView;
 import com.hahaxueche.util.HHLog;
 import com.singulariti.deepshare.DeepShare;
 import com.singulariti.deepshare.listeners.DSInappDataListener;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,6 +46,7 @@ public class WelcomeActivity extends HHBaseActivity implements WelcomeView, DSIn
         setTheme(R.style.AppThemeNoTitle);
         setContentView(R.layout.activity_welcome);
         ButterKnife.bind(this);
+        MobclickAgent.setDebugMode(true);
     }
 
     @Override

@@ -1,10 +1,7 @@
 package com.hahaxueche.ui.view.findCoach;
 
 import com.hahaxueche.model.user.coach.Partner;
-import com.hahaxueche.model.user.coach.ProductType;
 import com.hahaxueche.ui.view.base.HHBaseView;
-
-import java.util.ArrayList;
 
 /**
  * Created by wangshirui on 2016/10/20.
@@ -23,7 +20,11 @@ public interface PartnerDetailView extends HHBaseView {
 
     void startApplaudAnimation();
 
-    void addPrices(ArrayList<ProductType> productTypes);
-
     void initShareData(Partner partner);
+
+    void addC1Label(int pos);
+
+    void addC2Label(int pos);
+
+    void addPrice(int pos, int price, int duration, String description);
 }

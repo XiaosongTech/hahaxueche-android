@@ -126,7 +126,7 @@ public class StartLoginActivity extends HHBaseActivity implements ViewPager.OnPa
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         //开始自动翻页
         mLoginBanner.startTurning(2500);
