@@ -119,7 +119,7 @@ public class WithdrawPresenter implements Presenter<WithdrawView> {
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", user.cell_phone);
         final HashMap<String, Object> mapParam = new HashMap<>();
-        mapParam.put("amount", withdrawAmount);
+        mapParam.put("amount", withdrawMoney);
         mWithdrawView.showProgressDialog("提现中，请稍后...");
         subscription = apiService.isValidToken(user.session.access_token, map)
                 .flatMap(new Func1<BaseValid, Observable<BaseModel>>() {
@@ -138,7 +138,7 @@ public class WithdrawPresenter implements Presenter<WithdrawView> {
                     @Override
                     public void onCompleted() {
                         mWithdrawView.dismissProgressDialog();
-                        fetchStudent();
+                        mWithdrawView.back(true);
                     }
 
                     @Override
@@ -156,4 +156,5 @@ public class WithdrawPresenter implements Presenter<WithdrawView> {
                 });
 
     }
+
 }

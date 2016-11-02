@@ -22,6 +22,7 @@ import com.hahaxueche.ui.view.myPage.WithdrawView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by wangshirui on 2016/11/1.
@@ -48,13 +49,13 @@ public class WithdrawActivity extends HHBaseActivity implements WithdrawView, Sw
     TextView mTvBankRemarks;
     @BindView(R.id.fly_add_bank)
     FrameLayout mFlyAddBank;
-
+    public static int REQUEST_CODE_ADD_BANK_CARD = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPresenter = new WithdrawPresenter();
-        setContentView(R.layout.activity_software_info);
+        setContentView(R.layout.activity_withdraw);
         ButterKnife.bind(this);
         mPresenter.attachView(this);
         initActionBar();
@@ -101,6 +102,25 @@ public class WithdrawActivity extends HHBaseActivity implements WithdrawView, Sw
         });
     }
 
+    @OnClick({R.id.tv_confirm_withdraw,
+            R.id.fly_add_bank,
+            R.id.rly_bank_card})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv_confirm_withdraw:
+                mPresenter.withdraw(mEtWithdrawAmount.getText().toString());
+                break;
+            case R.id.fly_add_bank:
+                startActivityForResult(new Intent(getContext(), AddBankActivity.class), REQUEST_CODE_ADD_BANK_CARD);
+                break;
+            case R.id.rly_bank_card:
+                startActivityForResult(new Intent(getContext(), AddBankActivity.class), REQUEST_CODE_ADD_BANK_CARD);
+                break;
+            default:
+                break;
+        }
+    }
+
     @Override
     public void showMessage(String message) {
         Snackbar.make(mSrlRefresh, message, Snackbar.LENGTH_SHORT).show();
@@ -114,10 +134,6 @@ public class WithdrawActivity extends HHBaseActivity implements WithdrawView, Sw
         WithdrawActivity.this.finish();
     }
 
-    @Override
-    public void navigateToAddBank(BankCard bankCard) {
-
-    }
 
     @Override
     public void startRefresh() {
@@ -156,5 +172,15 @@ public class WithdrawActivity extends HHBaseActivity implements WithdrawView, Sw
     protected void onDestroy() {
         mPresenter.detachView();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_ADD_BANK_CARD) {
+            if (resultCode == RESULT_OK && null != data && data.getBooleanExtra("isUpdate", false)) {
+                mPresenter.fetchStudent();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

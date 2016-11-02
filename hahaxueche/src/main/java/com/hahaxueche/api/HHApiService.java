@@ -5,10 +5,12 @@ import com.hahaxueche.model.base.BaseBoolean;
 import com.hahaxueche.model.base.BaseModel;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.Constants;
+import com.hahaxueche.model.payment.BankCard;
 import com.hahaxueche.model.payment.PurchasedService;
 import com.hahaxueche.model.payment.WithdrawRecord;
 import com.hahaxueche.model.responseList.CoachResponseList;
 import com.hahaxueche.model.responseList.PartnerResponseList;
+import com.hahaxueche.model.responseList.ReferrerResponseList;
 import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.user.Student;
 import com.hahaxueche.model.user.User;
@@ -165,6 +167,17 @@ public interface HHApiService {
 
     @GET("bank_cards/withdraw_records")
     Observable<ArrayList<WithdrawRecord>> getWithdrawRecords(@Header("X-Access-Token") String accessToken);
+
+    @FormUrlEncoded
+    @POST("bank_cards")
+    Observable<BankCard> addBankCard(@FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
+
+    @GET("students/{id}/referees")
+    Observable<ReferrerResponseList> getReferrers(@Path("id") String studentId, @Query("page") int page,
+                                                  @Query("per_page") int perPage, @Header("X-Access-Token") String accessToken);
+
+    @GET
+    Observable<ReferrerResponseList> getReferrers(@Url String path, @Header("X-Access-Token") String accessToken);
 
     class Factory {
         public static HHApiService create() {

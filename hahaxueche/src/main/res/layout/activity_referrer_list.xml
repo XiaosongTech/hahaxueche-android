@@ -4,12 +4,15 @@
     android:layout_height="match_parent"
     android:background="@color/haha_white">
 
-    <ListView
-        android:id="@+id/lv_withdraw_records"
+    <com.hahaxueche.ui.widget.pullToRefreshView.XListView
+        android:id="@+id/xlv_referrer_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@drawable/divider_left_20dp"
+        android:divider="@color/haha_gray_divider"
         android:dividerHeight="@dimen/divider_width"
         android:footerDividersEnabled="false"
-        android:headerDividersEnabled="false"></ListView>
+        android:headerDividersEnabled="false"
+        android:visibility="visible">
+
+    </com.hahaxueche.ui.widget.pullToRefreshView.XListView>
 </FrameLayout>

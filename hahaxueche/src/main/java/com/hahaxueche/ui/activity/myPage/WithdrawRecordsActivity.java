@@ -13,6 +13,7 @@ import com.hahaxueche.presenter.myPage.WithdrawRecordsPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.adapter.myPage.WithdrawRecordAdapter;
 import com.hahaxueche.ui.view.myPage.WithdrawRecordsView;
+import com.hahaxueche.util.HHLog;
 
 import java.util.ArrayList;
 
@@ -29,6 +30,7 @@ public class WithdrawRecordsActivity extends HHBaseActivity implements WithdrawR
     TextView mTvTitle;
     @BindView(R.id.lv_withdraw_records)
     ListView mLvWithdrawRecords;
+    private WithdrawRecordAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +65,7 @@ public class WithdrawRecordsActivity extends HHBaseActivity implements WithdrawR
 
     @Override
     public void loadWithdrawRecords(ArrayList<WithdrawRecord> withdrawRecords) {
-        WithdrawRecordAdapter adapter = new WithdrawRecordAdapter(this, withdrawRecords);
+        adapter = new WithdrawRecordAdapter(this, withdrawRecords);
         mLvWithdrawRecords.setAdapter(adapter);
     }
 }

@@ -165,7 +165,8 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
     }
 
     @OnClick({R.id.tv_share_qr_code,
-            R.id.tv_withdraw})
+            R.id.tv_withdraw,
+            R.id.tv_withdraw_money})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_share_qr_code:
@@ -215,6 +216,10 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
                 break;
             case R.id.tv_withdraw:
                 mPresenter.clickWithdraw();
+                break;
+            case R.id.tv_withdraw_money:
+                mPresenter.clickReferrerList();
+                startActivity(new Intent(getContext(),ReferrerListActivity.class));
                 break;
             default:
                 break;

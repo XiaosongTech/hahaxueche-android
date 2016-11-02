@@ -12,8 +12,6 @@ public interface WithdrawView extends HHBaseView {
 
     void back(boolean isUpdate);
 
-    void navigateToAddBank(BankCard bankCard);
-
     void startRefresh();
 
     void stopRefresh();

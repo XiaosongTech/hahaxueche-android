@@ -49,7 +49,6 @@ public class WithdrawRecordAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         WithdrawRecordAdapter.ViewHolder holder;
-
         if (convertView != null) {
             holder = (WithdrawRecordAdapter.ViewHolder) convertView.getTag();
         } else {
