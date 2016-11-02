@@ -12,6 +12,7 @@ import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.view.base.WelcomeView;
 import com.hahaxueche.ui.view.login.CompleteUserInfoView;
 import com.hahaxueche.util.HHLog;
+import com.igexin.sdk.PushManager;
 import com.singulariti.deepshare.DeepShare;
 import com.singulariti.deepshare.listeners.DSInappDataListener;
 import com.umeng.analytics.MobclickAgent;
@@ -47,6 +48,7 @@ public class WelcomeActivity extends HHBaseActivity implements WelcomeView, DSIn
         setContentView(R.layout.activity_welcome);
         ButterKnife.bind(this);
         MobclickAgent.setDebugMode(true);
+        PushManager.getInstance().initialize(this.getApplicationContext());
     }
 
     @Override

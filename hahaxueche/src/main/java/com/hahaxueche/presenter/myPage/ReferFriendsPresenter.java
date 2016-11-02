@@ -53,6 +53,12 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
         mQrCodeUrl = null;
     }
 
+    public void refreshBonus() {
+        User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin()) return;
+        mReferFriendsView.setWithdrawMoney(Utils.getMoney(user.student.bonus_balance));
+    }
+
     private void getQrCodeUrl(User user) {
         subscription = redirectUrl(user)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -126,7 +132,6 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
     }
 
     public void pageStartCount() {
-        //教练详情展现
         HashMap<String, String> map = new HashMap();
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
@@ -135,6 +140,17 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
         } else {
             MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_viewed");
         }
+    }
 
+    public void clickWithdraw() {
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_cash_tapped", map);
+            mReferFriendsView.navigateToWithdraw();
+        } else {
+            MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_cash_tapped");
+        }
     }
 }

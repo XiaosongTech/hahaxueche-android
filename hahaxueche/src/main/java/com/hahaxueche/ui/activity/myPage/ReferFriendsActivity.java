@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -39,7 +37,6 @@ import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.view.myPage.ReferFriendsView;
 import com.hahaxueche.util.HHLog;
-import com.hahaxueche.util.Utils;
 import com.sina.weibo.sdk.api.ImageObject;
 import com.sina.weibo.sdk.api.WeiboMessage;
 import com.sina.weibo.sdk.api.share.BaseResponse;
@@ -49,24 +46,15 @@ import com.sina.weibo.sdk.api.share.SendMessageToWeiboRequest;
 import com.sina.weibo.sdk.constant.WBConstants;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzoneShare;
-import com.tencent.mm.sdk.modelbase.BaseReq;
-import com.tencent.mm.sdk.modelbase.BaseResp;
-import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
-import com.tencent.mm.sdk.modelmsg.WXImageObject;
-import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
-import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.sdk.openapi.IWXAPI;
-import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -111,6 +99,7 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
     private static final int PERMISSIONS_REQUEST_SHARE_QQ = 601;
     private static final int PERMISSIONS_REQUEST_SHARE_WX = 602;
     private static final int PERMISSIONS_REQUEST_SHARE_CIRCLE_FRIEND = 603;
+    private static final int REQUEST_CODE_WITHDRAW = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,7 +164,8 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
         return true;
     }
 
-    @OnClick({R.id.tv_share_qr_code})
+    @OnClick({R.id.tv_share_qr_code,
+            R.id.tv_withdraw})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_share_qr_code:
@@ -222,6 +212,9 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
                     });
                 }
                 shareDialog.show();
+                break;
+            case R.id.tv_withdraw:
+                mPresenter.clickWithdraw();
                 break;
             default:
                 break;
@@ -553,6 +546,12 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
     }
 
     @Override
+    public void navigateToWithdraw() {
+        Intent intent = new Intent(getContext(), WithdrawActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_WITHDRAW);
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == PERMISSIONS_REQUEST_SHARE_QQ) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -661,5 +660,15 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
 
             }
         }, CallerThreadExecutor.getInstance());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_WITHDRAW) {
+            if (resultCode == RESULT_OK && data != null && data.getBooleanExtra("isUpdate", false)) {
+                mPresenter.refreshBonus();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

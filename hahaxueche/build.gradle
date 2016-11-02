@@ -25,6 +25,7 @@ android {
         targetSdkVersion 24
         versionCode 25
         versionName "3.0.0"
+        multiDexEnabled true
     }
     // 友盟多渠道打包
     productFlavors {
@@ -55,6 +56,9 @@ android {
             buildConfigField "String", "SERVER_URL", properties.getProperty("serverUrl")
         }
     }
+    dexOptions {
+        javaMaxHeapSize "4g" //specify the heap size for the dex process
+    }
 }
 
 dependencies {
@@ -84,4 +88,6 @@ dependencies {
     compile 'me.grantland:autofittextview:0.2.+'
     compile files('libs/deepshare-v2.1.1.jar')
     compile 'com.umeng.analytics:analytics:latest.integration'
+    compile files('libs/GetuiSDK2.9.3.0.jar')
+    compile 'com.android.support:support-v4'
 }

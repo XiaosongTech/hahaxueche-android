@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/srl_refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="可提现"
+            android:textColor="@color/haha_white"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_available_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/haha_white"
+            android:textSize="38sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="本次提现"
+            android:textColor="@color/haha_white"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/et_withdraw_money"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="65dp"
+            android:layout_marginRight="65dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/rect_bg_white_bd_appcolor_corner"
+            android:gravity="center"
+            android:hint="输入想要提现的金额"
+            android:inputType="numberDecimal"
+            android:lines="1"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:textColor="@color/app_theme_color"
+            android:textColorHint="@color/haha_gray_text"
+            android:textSize="12sp" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            android:background="@color/haha_white">
+
+            <include layout="@layout/layout_withdraw" />
+        </ScrollView>
+    </LinearLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

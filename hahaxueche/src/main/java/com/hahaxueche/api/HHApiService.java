@@ -6,6 +6,7 @@ import com.hahaxueche.model.base.BaseModel;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.payment.PurchasedService;
+import com.hahaxueche.model.payment.WithdrawRecord;
 import com.hahaxueche.model.responseList.CoachResponseList;
 import com.hahaxueche.model.responseList.PartnerResponseList;
 import com.hahaxueche.model.responseList.ReviewResponseList;
@@ -158,6 +159,12 @@ public interface HHApiService {
     @GET("training_partners/{id}")
     Observable<Partner> getPartner(@Path("id") String partnerId);
 
+    @FormUrlEncoded
+    @POST("students/{id}/withdraw")
+    Observable<BaseModel> withdrawBonus(@FieldMap HashMap<String, Object> map, @Path("id") String studentId, @Header("X-Access-Token") String accessToken);
+
+    @GET("bank_cards/withdraw_records")
+    Observable<ArrayList<WithdrawRecord>> getWithdrawRecords(@Header("X-Access-Token") String accessToken);
 
     class Factory {
         public static HHApiService create() {
