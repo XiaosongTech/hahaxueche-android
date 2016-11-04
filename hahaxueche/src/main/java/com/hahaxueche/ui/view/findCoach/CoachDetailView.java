@@ -45,4 +45,6 @@ public interface CoachDetailView extends HHBaseView {
      * @param url
      */
     void openWebView(String url);
+
+    void alertToLogin(String alertMessage);
 }

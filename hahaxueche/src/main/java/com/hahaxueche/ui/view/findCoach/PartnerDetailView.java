@@ -27,4 +27,6 @@ public interface PartnerDetailView extends HHBaseView {
     void addC2Label(int pos);
 
     void addPrice(int pos, int price, int duration, String description);
+
+    void alertToLogin(String alertMessage);
 }

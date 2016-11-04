@@ -32,7 +32,10 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.community.Article;
 import com.hahaxueche.model.community.Comment;
 import com.hahaxueche.presenter.community.ArticlePresenter;
+import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
+import com.hahaxueche.ui.activity.login.StartLoginActivity;
+import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.dialog.community.CommentDialog;
 import com.hahaxueche.ui.view.community.ArticleView;
@@ -170,6 +173,27 @@ public class ArticleActivity extends HHBaseActivity implements ArticleView, IWei
         mImageUrl = "http://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
         mUrl = BuildConfig.MOBILE_URL + "/articles/" + article.id + "?view=raw";
         HHLog.v("mUrl -> " + mUrl);
+    }
+
+    @Override
+    public void alertToLogin(String alertMessage) {
+        BaseConfirmSimpleDialog dialog = new BaseConfirmSimpleDialog(getContext(), "请登录", alertMessage, "去登录", "知道了",
+                new BaseConfirmSimpleDialog.onConfirmListener() {
+                    @Override
+                    public boolean clickConfirm() {
+                        ActivityCollector.finishAll();
+                        Intent intent = new Intent(getContext(), StartLoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        return false;
+                    }
+                }, new BaseConfirmSimpleDialog.onCancelListener() {
+            @Override
+            public boolean clickCancel() {
+                return false;
+            }
+        });
+        dialog.show();
     }
 
     @Override

@@ -35,9 +35,12 @@ import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.Review;
 import com.hahaxueche.presenter.findCoach.CoachDetailPresenter;
+import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
+import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
+import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.view.findCoach.CoachDetailView;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
@@ -942,6 +945,27 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         rly.addView(divider);
 
         return rly;
+    }
+
+    @Override
+    public void alertToLogin(String alertMessage) {
+        BaseConfirmSimpleDialog dialog = new BaseConfirmSimpleDialog(getContext(), "请登录", alertMessage, "去登录", "知道了",
+                new BaseConfirmSimpleDialog.onConfirmListener() {
+                    @Override
+                    public boolean clickConfirm() {
+                        ActivityCollector.finishAll();
+                        Intent intent = new Intent(getContext(), StartLoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        return false;
+                    }
+                }, new BaseConfirmSimpleDialog.onCancelListener() {
+            @Override
+            public boolean clickCancel() {
+                return false;
+            }
+        });
+        dialog.show();
     }
 
     @Override

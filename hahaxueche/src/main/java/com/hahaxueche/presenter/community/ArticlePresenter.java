@@ -166,7 +166,7 @@ public class ArticlePresenter implements Presenter<ArticleView> {
         if (user != null && user.isLogin()) {
             mArticleView.showCommentDialog();
         } else {
-            mArticleView.alertToLogin();
+            mArticleView.alertToLogin("注册登录后,才可以评价文章哦～\n注册获得更多学车咨询!～");
         }
     }
 
@@ -188,7 +188,7 @@ public class ArticlePresenter implements Presenter<ArticleView> {
         countMap.put("like", isApplaud ? "0" : "1");
         MobclickAgent.onEvent(mArticleView.getContext(), "article_detail_page_like_unlike_tapped", countMap);
         if (user == null || !user.isLogin()) {
-            mArticleView.alertToLogin();
+            mArticleView.alertToLogin("注册登录后,才可以点赞文章哦～\n注册获得更多学车咨询!～");
             return;
         }
         final HHApiService apiService = application.getApiService();

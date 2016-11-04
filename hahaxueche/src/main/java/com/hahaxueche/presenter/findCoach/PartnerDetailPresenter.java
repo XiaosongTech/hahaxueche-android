@@ -106,7 +106,7 @@ public class PartnerDetailPresenter implements Presenter<PartnerDetailView> {
 
     public void applaud() {
         if (mUser == null || !mUser.isLogin()) {
-            mPartnerDetailView.alertToLogin();
+            mPartnerDetailView.alertToLogin("注册登录后,才可以点赞教练哦～\n注册获得更多学车咨询!～");
             return;
         }
         //like unlike 点击

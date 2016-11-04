@@ -31,8 +31,11 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.user.coach.Partner;
 import com.hahaxueche.presenter.findCoach.PartnerDetailPresenter;
+import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
+import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
+import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.view.findCoach.PartnerDetailView;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
@@ -329,6 +332,27 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
         rly.addView(dividerView);
 
         mLlyPrices.addView(rly, pos);
+    }
+
+    @Override
+    public void alertToLogin(String alertMessage) {
+        BaseConfirmSimpleDialog dialog = new BaseConfirmSimpleDialog(getContext(), "请登录", alertMessage, "去登录", "知道了",
+                new BaseConfirmSimpleDialog.onConfirmListener() {
+                    @Override
+                    public boolean clickConfirm() {
+                        ActivityCollector.finishAll();
+                        Intent intent = new Intent(getContext(), StartLoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        return false;
+                    }
+                }, new BaseConfirmSimpleDialog.onCancelListener() {
+            @Override
+            public boolean clickCancel() {
+                return false;
+            }
+        });
+        dialog.show();
     }
 
     /**

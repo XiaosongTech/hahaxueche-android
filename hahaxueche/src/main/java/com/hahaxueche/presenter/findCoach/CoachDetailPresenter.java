@@ -223,7 +223,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
 
     public void follow() {
         if (mUser == null || !mUser.isLogin()) {
-            mCoachDetailView.alertToLogin();
+            mCoachDetailView.alertToLogin("注册登录后,才可以关注教练哦～\n注册获得更多学车咨询!～");
             return;
         }
         //follow unfollow 点击
@@ -331,7 +331,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         countMap.put("like", isApplaud ? "0" : "1");
         MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_like_unlike_tapped", countMap);
         if (mUser == null || !mUser.isLogin()) {
-            mCoachDetailView.alertToLogin();
+            mCoachDetailView.alertToLogin("注册登录后,才可以点赞教练哦～\n注册获得更多学车咨询!～");
             return;
         }
         final HHApiService apiService = application.getApiService();
@@ -422,7 +422,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
 
     public void purchaseCoach() {
         if (mUser == null || !mUser.isLogin()) {
-            mCoachDetailView.alertToLogin();
+            mCoachDetailView.alertToLogin("注册登录后,才可以购买教练哦～\n注册获得更多学车咨询!～");
             return;
         } else if (mUser.student.hasPurchasedService()) {
             mCoachDetailView.showMessage("该学员已经购买过教练");
