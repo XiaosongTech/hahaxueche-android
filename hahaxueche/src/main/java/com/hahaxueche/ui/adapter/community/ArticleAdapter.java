@@ -1,15 +1,18 @@
 package com.hahaxueche.ui.adapter.community;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
-import com.hahaxueche.model.community.News;
+import com.hahaxueche.model.community.Article;
+import com.hahaxueche.ui.activity.community.ArticleActivity;
 import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
@@ -21,25 +24,27 @@ import butterknife.ButterKnife;
  * Created by wangshirui on 16/9/22.
  */
 
-public class NewsAdapter extends BaseAdapter {
+public class ArticleAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private Context mContext;
-    private ArrayList<News> mNewsList;
+    private ArrayList<Article> mArticleList;
+    private String mCategoryLabel;
 
-    public NewsAdapter(Context context, ArrayList<News> NewsList) {
+    public ArticleAdapter(Context context, ArrayList<Article> articleList, String categoryLabel) {
         inflater = LayoutInflater.from(context);
         mContext = context;
-        mNewsList = NewsList;
+        mArticleList = articleList;
+        mCategoryLabel = categoryLabel;
     }
 
     @Override
     public int getCount() {
-        return mNewsList.size();
+        return mArticleList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mNewsList.get(position);
+        return mArticleList.get(position);
     }
 
     @Override
@@ -54,19 +59,31 @@ public class NewsAdapter extends BaseAdapter {
         if (convertView != null) {
             holder = (ViewHolder) convertView.getTag();
         } else {
-            convertView = inflater.inflate(R.layout.adapter_news, parent, false);
+            convertView = inflater.inflate(R.layout.adapter_article, parent, false);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         }
-        News news = mNewsList.get(position);
-        holder.tvPublishDate.setText(news.date);
-        holder.tvSubTitle.setText(news.sub_title);
-        holder.ivNewPic.setImageURI(news.pic_url);
-        holder.tvTitle.setText(news.title);
-        holder.tvContent.setText(news.content);
-        holder.tvCommentCount.setText(Utils.getCount(news.comment_count));
-        holder.tvLikeCount.setText(Utils.getCount(news.like_count));
-        holder.tvReadCount.setText(Utils.getCount(news.read_count));
+        final Article article = mArticleList.get(position);
+        holder.tvPublishDate.setText(Utils.getDateDotFromUTC(article.created_at));
+        holder.tvSubTitle.setText(mCategoryLabel);
+        holder.ivNewPic.setImageURI(article.cover_image);
+        holder.tvTitle.setText(article.title);
+        holder.tvContent.setText(article.intro);
+        int commentCount = 0;
+        if (article.comments != null) {
+            commentCount = article.comments.size();
+        }
+        holder.tvCommentCount.setText(Utils.getCount(commentCount));
+        holder.tvLikeCount.setText(Utils.getCount(article.like_count));
+        holder.tvReadCount.setText(Utils.getCount(article.view_count));
+        holder.rlyAdapter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, ArticleActivity.class);
+                intent.putExtra("article", article);
+                mContext.startActivity(intent);
+            }
+        });
         return convertView;
     }
 
@@ -87,6 +104,8 @@ public class NewsAdapter extends BaseAdapter {
         TextView tvLikeCount;
         @BindView(R.id.tv_read_count)
         TextView tvReadCount;
+        @BindView(R.id.rly_adapter)
+        RelativeLayout rlyAdapter;
 
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);

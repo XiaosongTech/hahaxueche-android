@@ -68,7 +68,6 @@ public class PhotoAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(View v, int position) {
-        // TODO Auto-generated method stub
         ((ViewPager) v).addView(picViews.get(position));
         picViews.get(position).setOnClickListener(imgClickListener);
         return picViews.get(position);

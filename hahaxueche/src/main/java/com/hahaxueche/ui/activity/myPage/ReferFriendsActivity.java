@@ -90,7 +90,8 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
     private Tencent mTencent;//QQ
     private IWeiboShareAPI mWeiboShareAPI;//新浪微博
     private HHBaseApplication myApplication;
-
+    private ShareQQListener shareQQListener;
+    private ShareQZoneListener shareQZoneListener;
     /*****************
      * end
      ******************/
@@ -219,7 +220,7 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
                 break;
             case R.id.tv_withdraw_money:
                 mPresenter.clickReferrerList();
-                startActivity(new Intent(getContext(),ReferrerListActivity.class));
+                startActivity(new Intent(getContext(), ReferrerListActivity.class));
                 break;
             default:
                 break;
@@ -380,12 +381,12 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
                     }
                     // 最后通知图库更新
                     sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File("/sdcard/hahaxueche/qrcode.jpg"))));
-                    ShareQQListener myListener = new ShareQQListener();
+                    shareQQListener = new ShareQQListener();
                     final Bundle params = new Bundle();
                     params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_IMAGE);
                     params.putString(QQShare.SHARE_TO_QQ_APP_NAME, "哈哈学车");
                     params.putString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL, "/sdcard/hahaxueche/qrcode.jpg");
-                    mTencent.shareToQQ(ReferFriendsActivity.this, params, myListener);
+                    mTencent.shareToQQ(ReferFriendsActivity.this, params, shareQQListener);
                 }
             }
 
@@ -397,7 +398,7 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
     }
 
     private void shareToQZone() {
-        ShareQZoneListener myListener = new ShareQZoneListener();
+        shareQZoneListener = new ShareQZoneListener();
         final Bundle params = new Bundle();
         params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_APP);
         params.putString(QzoneShare.SHARE_TO_QQ_TITLE, "哈哈学车");
@@ -407,7 +408,7 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
         ArrayList<String> imgUrlList = new ArrayList<>();
         imgUrlList.add(mPresenter.getQrCodeUrl());
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, imgUrlList);
-        mTencent.shareToQzone(ReferFriendsActivity.this, params, myListener);
+        mTencent.shareToQzone(ReferFriendsActivity.this, params, shareQZoneListener);
     }
 
     private void shareToWeibo() {
@@ -448,7 +449,6 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
 
         @Override
         public void onCancel() {
-            HHLog.v("1111111");
             if (shareDialog != null) {
                 shareDialog.dismiss();
             }
@@ -457,7 +457,6 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
 
         @Override
         public void onComplete(Object arg0) {
-            HHLog.v("222222");
             if (shareDialog != null) {
                 shareDialog.dismiss();
             }
@@ -467,7 +466,6 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
 
         @Override
         public void onError(UiError arg0) {
-            HHLog.v("333333");
             if (shareDialog != null) {
                 shareDialog.dismiss();
             }
@@ -674,6 +672,8 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
                 mPresenter.refreshBonus();
             }
         }
+        Tencent.onActivityResultData(requestCode, resultCode, data, shareQQListener);
+        Tencent.onActivityResultData(requestCode, resultCode, data, shareQZoneListener);
         super.onActivityResult(requestCode, resultCode, data);
     }
 }

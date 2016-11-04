@@ -5,9 +5,11 @@ import com.hahaxueche.model.base.BaseBoolean;
 import com.hahaxueche.model.base.BaseModel;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.Constants;
+import com.hahaxueche.model.community.Article;
 import com.hahaxueche.model.payment.BankCard;
 import com.hahaxueche.model.payment.PurchasedService;
 import com.hahaxueche.model.payment.WithdrawRecord;
+import com.hahaxueche.model.responseList.ArticleResponseList;
 import com.hahaxueche.model.responseList.CoachResponseList;
 import com.hahaxueche.model.responseList.PartnerResponseList;
 import com.hahaxueche.model.responseList.ReferrerResponseList;
@@ -178,6 +180,25 @@ public interface HHApiService {
 
     @GET
     Observable<ReferrerResponseList> getReferrers(@Url String path, @Header("X-Access-Token") String accessToken);
+
+    @GET("articles")
+    Observable<ArticleResponseList> getArticles(@Query("page") int page, @Query("per_page") int perPage, @Query("is_popular") String isPopular,
+                                                @Query("category") String category, @Query("student_id") String studentId);
+
+    @GET
+    Observable<ArticleResponseList> getArticles(@Url String path);
+
+    @GET("articles/{id}")
+    Observable<Article> getArticle(@Path("id") String articleId);
+
+
+    @POST("students/{studentId}/liked_articles/{articleId}")
+    Observable<Article> likeArticle(@Path("studentId") String studentId, @Path("articleId") String articleId,
+                                    @Query("like") int like, @Header("X-Access-Token") String accessToken);
+
+    @POST("articles/{articleId}/comments")
+    Observable<Article> commentArticle(@Path("articleId") String articleId, @Query("student_id") String studentId,
+                                       @Query("content") String content, @Header("X-Access-Token") String accessToken);
 
     class Factory {
         public static HHApiService create() {

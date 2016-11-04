@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/haha_white">
+
+    <ListView
+        android:id="@+id/lv_article_comments"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@drawable/divider_left_20dp"
+        android:dividerHeight="@dimen/divider_width"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"></ListView>
+</FrameLayout>

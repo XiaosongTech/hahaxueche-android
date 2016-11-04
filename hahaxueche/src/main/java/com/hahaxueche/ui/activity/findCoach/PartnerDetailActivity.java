@@ -102,6 +102,8 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
     private String mDescription;
     private String mImageUrl;
     private String mUrl;
+    private ShareQQListener shareQQListener;
+    private ShareQZoneListener shareQZoneListener;
     /*****************
      * end
      ******************/
@@ -340,7 +342,7 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
     }
 
     private void shareToQQ() {
-        ShareQQListener myListener = new ShareQQListener();
+        shareQQListener = new ShareQQListener();
         final Bundle params = new Bundle();
         params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
         params.putString(QQShare.SHARE_TO_QQ_TITLE, mTitle);
@@ -348,11 +350,11 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
         params.putString(QQShare.SHARE_TO_QQ_SUMMARY, mDescription);
         params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, mImageUrl);
         params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, mUrl);
-        mTencent.shareToQQ(this, params, myListener);
+        mTencent.shareToQQ(this, params, shareQQListener);
     }
 
     private void shareToQZone() {
-        ShareQZoneListener myListener = new ShareQZoneListener();
+        shareQZoneListener = new ShareQZoneListener();
         final Bundle params = new Bundle();
         params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_APP);
         params.putString(QzoneShare.SHARE_TO_QQ_TITLE, mTitle);
@@ -362,7 +364,7 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
         ArrayList<String> imgUrlList = new ArrayList<>();
         imgUrlList.add(mImageUrl);
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, imgUrlList);
-        mTencent.shareToQzone(this, params, myListener);
+        mTencent.shareToQzone(this, params, shareQZoneListener);
     }
 
     private void shareToWeibo() {
@@ -408,6 +410,9 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
 
             @Override
             public void onResp(BaseResp baseResp) {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
                 switch (baseResp.errCode) {
                     case BaseResp.ErrCode.ERR_OK:
                         mPresenter.clickShareSuccessCount("wechat_friend");
@@ -447,6 +452,9 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
 
             @Override
             public void onResp(BaseResp baseResp) {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
                 switch (baseResp.errCode) {
                     case BaseResp.ErrCode.ERR_OK:
                         mPresenter.clickShareSuccessCount("wechat_friend_zone");
@@ -474,17 +482,26 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
 
         @Override
         public void onCancel() {
+            if (shareDialog != null) {
+                shareDialog.dismiss();
+            }
             showMessage("取消分享");
         }
 
         @Override
         public void onComplete(Object arg0) {
+            if (shareDialog != null) {
+                shareDialog.dismiss();
+            }
             mPresenter.clickShareSuccessCount("QQ_friend");
             showMessage("分享成功");
         }
 
         @Override
         public void onError(UiError arg0) {
+            if (shareDialog != null) {
+                shareDialog.dismiss();
+            }
             showMessage("分享失败");
             HHLog.e("分享失败，原因：" + arg0.errorMessage);
         }
@@ -495,17 +512,26 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
 
         @Override
         public void onCancel() {
+            if (shareDialog != null) {
+                shareDialog.dismiss();
+            }
             showMessage("取消分享");
         }
 
         @Override
         public void onComplete(Object arg0) {
+            if (shareDialog != null) {
+                shareDialog.dismiss();
+            }
             mPresenter.clickShareSuccessCount("qzone");
             showMessage("分享成功");
         }
 
         @Override
         public void onError(UiError arg0) {
+            if (shareDialog != null) {
+                shareDialog.dismiss();
+            }
             showMessage("分享失败");
             HHLog.e("分享失败，原因：" + arg0.errorMessage);
         }
@@ -525,7 +551,9 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
     @Override
     public void onResponse(BaseResponse baseResp) {
         if (baseResp != null) {
-            Log.v("gibxin", "baseResp.errCode" + baseResp.errCode);
+            if (shareDialog != null) {
+                shareDialog.dismiss();
+            }
             switch (baseResp.errCode) {
                 case WBConstants.ErrorCode.ERR_OK:
                     mPresenter.clickShareSuccessCount("weibo");
@@ -658,5 +686,12 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
                 showMessage("请允许拨打电话权限，不然无法直接拨号联系教练");
             }
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Tencent.onActivityResultData(requestCode, resultCode, data, shareQQListener);
+        Tencent.onActivityResultData(requestCode, resultCode, data, shareQZoneListener);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

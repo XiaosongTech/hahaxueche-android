@@ -322,10 +322,6 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
     }
 
     public void applaud() {
-        if (mUser == null || !mUser.isLogin()) {
-            mCoachDetailView.alertToLogin();
-            return;
-        }
         //like unlike 点击
         HashMap<String, String> countMap = new HashMap();
         if (mUser != null && mUser.isLogin()) {
@@ -334,6 +330,10 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         countMap.put("coach_id", mCoach.id);
         countMap.put("like", isApplaud ? "0" : "1");
         MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_like_unlike_tapped", countMap);
+        if (mUser == null || !mUser.isLogin()) {
+            mCoachDetailView.alertToLogin();
+            return;
+        }
         final HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", mUser.cell_phone);

@@ -2,18 +2,21 @@ package com.hahaxueche.ui.fragment.community;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.community.News;
+import com.hahaxueche.model.community.Article;
 import com.hahaxueche.presenter.community.CommunityPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.community.ArticleActivity;
 import com.hahaxueche.ui.activity.community.ExamLibraryActivity;
-import com.hahaxueche.ui.adapter.community.NewsAdapter;
+import com.hahaxueche.ui.adapter.community.ArticleAdapter;
+import com.hahaxueche.ui.adapter.community.ArticleListPageAdapter;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.community.CommunityView;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
@@ -27,19 +30,19 @@ import butterknife.OnClick;
 /**
  * Created by wangshirui on 16/9/13.
  */
-public class CommunityFragment extends HHBaseFragment implements CommunityView, XListView.IXListViewListener, AdapterView.OnItemClickListener {
-    private CommunityPresenter mPresenter;
+public class CommunityFragment extends HHBaseFragment implements CommunityView {
     private MainActivity mActivity;
-    @BindView(R.id.xlv_news)
-    XListView mXlvNews;
-    private NewsAdapter mNewsAdapter;
-    private ArrayList<News> mNewsArrayList;
+    private CommunityPresenter mPresenter;
+    @BindView(R.id.viewPager)
+    ViewPager mViewPager;
+    @BindView(R.id.tabLayout)
+    TabLayout mTabLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivity = (MainActivity) getActivity();
         mPresenter = new CommunityPresenter();
+        mActivity = (MainActivity) getActivity();
     }
 
     @Override
@@ -48,12 +51,11 @@ public class CommunityFragment extends HHBaseFragment implements CommunityView, 
         View view = inflater.inflate(R.layout.fragment_community, container, false);
         ButterKnife.bind(this, view);
         mPresenter.attachView(this);
-        mXlvNews.setPullRefreshEnable(true);
-        mXlvNews.setPullLoadEnable(true);
-        mXlvNews.setAutoLoadEnable(true);
-        mXlvNews.setXListViewListener(this);
-        mXlvNews.setOnItemClickListener(this);
-        mPresenter.fetchNews();
+        ArticleListPageAdapter adapter = new ArticleListPageAdapter(getChildFragmentManager(), getContext(), mPresenter.getArticleCaterories());
+        mViewPager.setAdapter(adapter);
+        mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
+        mViewPager.setOffscreenPageLimit(mTabLayout.getTabCount());
         return view;
     }
 
@@ -61,42 +63,6 @@ public class CommunityFragment extends HHBaseFragment implements CommunityView, 
     public void onDestroy() {
         mPresenter.detachView();
         super.onDestroy();
-    }
-
-    @Override
-    public void setPullLoadEnable(boolean enable) {
-        mXlvNews.setPullLoadEnable(enable);
-    }
-
-    @Override
-    public void refreshNewsList(ArrayList<News> newsArrayList) {
-        mNewsArrayList = newsArrayList;
-        mNewsAdapter = new NewsAdapter(getContext(), mNewsArrayList);
-        mXlvNews.setAdapter(mNewsAdapter);
-        mXlvNews.stopRefresh();
-        mXlvNews.stopLoadMore();
-    }
-
-    @Override
-    public void addMoreNewsList(ArrayList<News> newsArrayList) {
-        mNewsArrayList.addAll(newsArrayList);
-        mNewsAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onRefresh() {
-        mPresenter.fetchNews();
-    }
-
-    @Override
-    public void onLoadMore() {
-        mPresenter.loadMoreNews();
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(getContext(), ArticleActivity.class);
-        startActivity(intent);
     }
 
     @OnClick({R.id.rly_test_lib,

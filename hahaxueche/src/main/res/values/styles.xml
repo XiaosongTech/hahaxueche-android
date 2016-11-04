@@ -79,4 +79,14 @@
         <item name="android:textColor">@color/haha_gray_text</item>
     </style>
 
+    <style name="ArticleTabLayoutTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/haha_gray_text</item>
+    </style>
+
+    <style name="ArticleTabLayoutTextAppearanceInverse" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/haha_gray_text</item>
+    </style>
+
 </resources>

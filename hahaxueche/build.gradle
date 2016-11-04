@@ -50,10 +50,13 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "String", "SERVER_URL", properties.getProperty("serverUrl")
+            buildConfigField "String", "MOBILE_URL", properties.getProperty("mobieUrl")
+
         }
         debug {
             signingConfig signingConfigs.debugSign
             buildConfigField "String", "SERVER_URL", properties.getProperty("serverUrl")
+            buildConfigField "String", "MOBILE_URL", properties.getProperty("mobieUrl")
         }
     }
     dexOptions {

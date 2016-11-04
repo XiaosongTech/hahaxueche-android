@@ -47,7 +47,7 @@ public class WelcomeActivity extends HHBaseActivity implements WelcomeView, DSIn
         setTheme(R.style.AppThemeNoTitle);
         setContentView(R.layout.activity_welcome);
         ButterKnife.bind(this);
-        MobclickAgent.setDebugMode(true);
+        MobclickAgent.setDebugMode(false);
         PushManager.getInstance().initialize(this.getApplicationContext());
     }
 

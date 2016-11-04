@@ -20,6 +20,7 @@ public class Constants {
     public int version_code;
     public ArrayList<Bank> banks;
     public Statistics statistics;
+    public ArrayList<ArticleCategory> article_categories;
 
     public City getCity(int cityId) {
         City myCity = cities.get(0);
