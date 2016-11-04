@@ -98,7 +98,31 @@ public class ArticlePresenter implements Presenter<ArticleView> {
         HHLog.v(articleUrl);
         mArticleView.setWebViewUrl(articleUrl);
         mArticleView.initShareData(mArticle);
+        pageStartCount();
         loadCount();
+    }
+
+    public void setArticle(final String articleId) {
+        HHApiService apiService = application.getApiService();
+        subscription = apiService.getArticle(articleId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<Article>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Article article) {
+                        setArticle(article);
+                    }
+                });
     }
 
     public Article getArticle() {
@@ -148,6 +172,7 @@ public class ArticlePresenter implements Presenter<ArticleView> {
 
     private void loadApplaud() {
         isApplaud = (mArticle.liked == 1);
+        HHLog.v("isApplaud -> " + isApplaud);
         mArticleView.showApplaud(isApplaud);
         mArticleView.setApplaudCount(Utils.getCount(mArticle.like_count));
     }
@@ -270,5 +295,25 @@ public class ArticlePresenter implements Presenter<ArticleView> {
         map.put("article_id", mArticle.id);
         map.put("share_channel", shareChannel);
         MobclickAgent.onEvent(mArticleView.getContext(), "article_detail_page_share_article_succeed", map);
+    }
+
+    public void pageStartCount() {
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        map.put("article_id", mArticle.id);
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+        }
+        MobclickAgent.onEvent(mArticleView.getContext(), "article_detail_page_viewed", map);
+    }
+
+    public void clickCommentCount() {
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        map.put("article_id", mArticle.id);
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+        }
+        MobclickAgent.onEvent(mArticleView.getContext(), "article_detail_page_view_comment_tapped", map);
     }
 }

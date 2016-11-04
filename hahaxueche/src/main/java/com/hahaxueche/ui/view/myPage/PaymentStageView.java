@@ -2,6 +2,7 @@ package com.hahaxueche.ui.view.myPage;
 
 import android.text.Spanned;
 
+import com.hahaxueche.model.payment.PaymentStage;
 import com.hahaxueche.model.payment.PurchasedService;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.ui.view.base.HHBaseView;
@@ -20,4 +21,8 @@ public interface PaymentStageView extends HHBaseView {
     void enablePayStage(boolean enable);
 
     void setCurrentPayAmountText(Spanned text);
+
+    void showShareAppDialog();
+
+    void showReview(boolean isShowTitle, PaymentStage paymentStage, final boolean isShowShare);
 }

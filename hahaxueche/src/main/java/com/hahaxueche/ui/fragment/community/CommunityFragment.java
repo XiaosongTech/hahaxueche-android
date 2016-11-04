@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.community.Article;
@@ -27,6 +29,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by wangshirui on 16/9/13.
  */
@@ -37,6 +41,9 @@ public class CommunityFragment extends HHBaseFragment implements CommunityView {
     ViewPager mViewPager;
     @BindView(R.id.tabLayout)
     TabLayout mTabLayout;
+    @BindView(R.id.tv_headline)
+    TextView mTvHeadline;
+    private static final int REQUEST_CODE_ARTICLE = 11;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +73,8 @@ public class CommunityFragment extends HHBaseFragment implements CommunityView {
     }
 
     @OnClick({R.id.rly_test_lib,
-            R.id.rly_group_buy})
+            R.id.rly_group_buy,
+            R.id.fly_headline})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rly_test_lib:
@@ -76,8 +84,34 @@ public class CommunityFragment extends HHBaseFragment implements CommunityView {
             case R.id.rly_group_buy:
                 mPresenter.clickGroupBuyCount();
                 break;
+            case R.id.fly_headline:
+                Article headline = mPresenter.getHeadlineArticle();
+                if (headline != null) {
+                    Intent intent = new Intent(getContext(), ArticleActivity.class);
+                    intent.putExtra("articleId", headline.id);
+                    startActivityForResult(intent, REQUEST_CODE_ARTICLE);
+                }
+                break;
             default:
                 break;
         }
+    }
+
+    @Override
+    public void setHeadline(final Article article) {
+        mTvHeadline.setText(article.title);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_ARTICLE) {
+            if (resultCode == RESULT_OK && null != data) {
+                Article article = data.getParcelableExtra("article");
+                if (article != null) {
+                    mPresenter.setHeadlineArticle(article);
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

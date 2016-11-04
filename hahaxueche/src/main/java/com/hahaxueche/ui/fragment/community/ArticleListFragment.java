@@ -6,12 +6,10 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.community.Article;
 import com.hahaxueche.presenter.community.ArticleListPresenter;
-import com.hahaxueche.ui.activity.community.ArticleActivity;
 import com.hahaxueche.ui.adapter.community.ArticleAdapter;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.community.ArticleListView;
@@ -21,6 +19,8 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by wangshirui on 2016/11/3.
@@ -78,7 +78,7 @@ public class ArticleListFragment extends HHBaseFragment implements ArticleListVi
     @Override
     public void refreshNewsList(ArrayList<Article> articleArrayList) {
         mArticleArrayList = articleArrayList;
-        mArticleAdapter = new ArticleAdapter(getContext(), mArticleArrayList, mPresenter.getCategoryLabel());
+        mArticleAdapter = new ArticleAdapter(this, mArticleArrayList, mPresenter.getCategoryLabel());
         mXlvNews.setAdapter(mArticleAdapter);
         mXlvNews.stopRefresh();
         mXlvNews.stopLoadMore();
@@ -100,4 +100,25 @@ public class ArticleListFragment extends HHBaseFragment implements ArticleListVi
         mPresenter.loadMoreNews();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 12) {
+            if (resultCode == RESULT_OK && null != data) {
+                Article article = data.getParcelableExtra("article");
+                if (article != null) {
+                    for (Article art : mArticleArrayList) {
+                        if (art.id.equals(article.id)) {
+                            art.like_count = article.like_count;
+                            art.liked = article.liked;
+                            art.view_count = article.view_count;
+                            art.comments = article.comments;
+                            mArticleAdapter.notifyDataSetChanged();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

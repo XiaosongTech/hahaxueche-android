@@ -12,6 +12,7 @@ import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.PurchaseCoachView;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -72,6 +73,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         selectClassNormal();//默认C1 普通班
         mPurchaseCoachView.loadPaymentMethod(getPaymentMethod());
         paymentMethod = 0;
+        pageStartCount();
     }
 
     public void selectLicenseC1() {
@@ -145,6 +147,11 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
     }
 
     public void createCharge() {
+        clickPayCount();
+        if (mUser.student.hasPurchasedService()) {
+            mPurchaseCoachView.showMessage("该学员已经购买过教练");
+            return;
+        }
         if (productType < 0) {
             mPurchaseCoachView.showMessage("请选择课程类型");
             return;
@@ -259,5 +266,21 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                         }
                     }
                 });
+    }
+
+    public void pageStartCount() {
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        map.put("student_id", user.student.id);
+        map.put("student_id", mCoach.id);
+        MobclickAgent.onEvent(mPurchaseCoachView.getContext(), "pay_coach_status_page_viewed", map);
+    }
+
+    public void clickPayCount() {
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        map.put("student_id", user.student.id);
+        map.put("student_id", mCoach.id);
+        MobclickAgent.onEvent(mPurchaseCoachView.getContext(), "purchase_confirm_page_purchase_button_tapped", map);
     }
 }

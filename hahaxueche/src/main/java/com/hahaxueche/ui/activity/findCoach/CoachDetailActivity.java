@@ -36,7 +36,6 @@ import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.Review;
 import com.hahaxueche.presenter.findCoach.CoachDetailPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
-import com.hahaxueche.ui.activity.community.ArticleActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
 import com.hahaxueche.ui.dialog.ShareDialog;

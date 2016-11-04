@@ -157,8 +157,10 @@ public class ArticleActivity extends HHBaseActivity implements ArticleView, IWei
         Intent intent = getIntent();
         if (intent.getParcelableExtra("article") != null) {
             mPresenter.setArticle((Article) intent.getParcelableExtra("article"));
-            regShareApi();
+        } else {
+            mPresenter.setArticle(intent.getStringExtra("articleId"));
         }
+        regShareApi();
     }
 
     @Override
@@ -640,6 +642,7 @@ public class ArticleActivity extends HHBaseActivity implements ArticleView, IWei
         tvMoreComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPresenter.clickCommentCount();
                 Intent intent = new Intent(getContext(), ArticleCommentsActivity.class);
                 intent.putParcelableArrayListExtra("comments", mPresenter.getArticle().comments);
                 startActivity(intent);
@@ -682,5 +685,13 @@ public class ArticleActivity extends HHBaseActivity implements ArticleView, IWei
         Tencent.onActivityResultData(requestCode, resultCode, data, shareQQListener);
         Tencent.onActivityResultData(requestCode, resultCode, data, shareQZoneListener);
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void finish() {
+        Intent intent = new Intent();
+        intent.putExtra("article", mPresenter.getArticle());
+        setResult(RESULT_OK, intent);
+        super.finish();
     }
 }

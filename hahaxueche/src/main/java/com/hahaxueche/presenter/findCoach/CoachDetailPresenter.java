@@ -424,6 +424,9 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         if (mUser == null || !mUser.isLogin()) {
             mCoachDetailView.alertToLogin();
             return;
+        } else if (mUser.student.hasPurchasedService()) {
+            mCoachDetailView.showMessage("该学员已经购买过教练");
+            return;
         }
         mCoachDetailView.navigateToPurchaseCoach(mCoach);
     }

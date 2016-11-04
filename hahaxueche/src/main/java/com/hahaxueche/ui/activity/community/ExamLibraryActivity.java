@@ -9,11 +9,16 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
+import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.community.ExamPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.adapter.community.ExamLibraryPageAdapter;
 import com.hahaxueche.ui.dialog.ShareAppDialog;
+import com.umeng.analytics.MobclickAgent;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,6 +50,15 @@ public class ExamLibraryActivity extends HHBaseActivity {
         mTabLayout.setupWithViewPager(mViewPager);
         mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);
+        HHBaseApplication application = HHBaseApplication.get(getContext());
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(getContext(), "online_test_page_viewed", map);
+        } else {
+            MobclickAgent.onEvent(getContext(), "online_test_page_viewed");
+        }
     }
 
     @Override

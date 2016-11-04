@@ -200,6 +200,9 @@ public interface HHApiService {
     Observable<Article> commentArticle(@Path("articleId") String articleId, @Query("student_id") String studentId,
                                        @Query("content") String content, @Header("X-Access-Token") String accessToken);
 
+    @GET("articles/headline")
+    Observable<Article> getHeadline(@Query("student_id") String studentId);
+
     class Factory {
         public static HHApiService create() {
             HHLog.v("baseUrl -> " + baseUrl);

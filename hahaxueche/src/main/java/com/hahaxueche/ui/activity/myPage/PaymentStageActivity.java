@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
@@ -22,12 +23,17 @@ import com.hahaxueche.model.payment.PurchasedService;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.myPage.PaymentStagePresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
+import com.hahaxueche.ui.dialog.ShareAppDialog;
+import com.hahaxueche.ui.dialog.myPage.PaymentStageInfoDialog;
+import com.hahaxueche.ui.dialog.myPage.ReviewDialog;
+import com.hahaxueche.ui.dialog.myPage.TransferConfirmDialog;
 import com.hahaxueche.ui.view.myPage.PaymentStageView;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by wangshirui on 2016/10/26.
@@ -61,6 +67,7 @@ public class PaymentStageActivity extends HHBaseActivity implements PaymentStage
     TextView mTvCongratulation;
     @BindView(R.id.lly_payment_stages)
     LinearLayout mLlyPaymentStages;
+    private ShareAppDialog mShareDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,13 +119,25 @@ public class PaymentStageActivity extends HHBaseActivity implements PaymentStage
         mTvTotalAmount.setText(Utils.getMoney(ps.total_amount));
         mTvPaidAmount.setText(Utils.getMoney(ps.paid_amount));
         mTvUnpaidAmount.setText(Utils.getMoney(ps.unpaid_amount));
+        mLlyPaymentStages.removeAllViews();
         for (PaymentStage paymentStage : ps.payment_stages) {
             int pos = ps.payment_stages.indexOf(paymentStage);
             mLlyPaymentStages.addView(getPaymentStageAdapter(paymentStage, pos, ps.current_payment_stage), pos);
         }
+        TextView tvHints = new TextView(this);
+        LinearLayout.LayoutParams tvHintsParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        int margin = Utils.instence(this).dip2px(20);
+        tvHintsParams.setMargins(margin, margin, margin, margin);
+        tvHints.setLayoutParams(tvHintsParams);
+        tvHints.setLineSpacing(0, 1.2f);
+        tvHints.setText(getResources().getString(R.string.payment_stage_hints));
+        tvHints.setTextColor(ContextCompat.getColor(this, R.color.haha_gray_text));
+        tvHints.setTextSize(12);
+        mLlyPaymentStages.addView(tvHints);
     }
 
-    private View getPaymentStageAdapter(PaymentStage paymentStage, int position, int currentPaymentStage) {
+    private View getPaymentStageAdapter(final PaymentStage paymentStage, int position, int currentPaymentStage) {
         RelativeLayout rlyPaymentStage = new RelativeLayout(this);
         rlyPaymentStage.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT));
@@ -208,7 +227,7 @@ public class PaymentStageActivity extends HHBaseActivity implements PaymentStage
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         tvStateParam.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
         tvStateParam.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-        tvStateParam.setMargins(0, 0, Utils.instence(this).dip2px(40), 0);
+        tvStateParam.setMargins(0, 0, Utils.instence(this).dip2px(55), 0);
         tvState.setLayoutParams(tvStateParam);
         if (TextUtils.isEmpty(paymentStage.paid_at)) {
             tvState.setText("待打款");
@@ -239,16 +258,64 @@ public class PaymentStageActivity extends HHBaseActivity implements PaymentStage
             rlyPaymentStage.addView(tvPaidAt);
         }
 
-        //button
-        ImageView ivMessage = new ImageView(this);
-        RelativeLayout.LayoutParams ivMessageParam = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        ivMessageParam.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-        ivMessageParam.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-        ivMessageParam.setMargins(0, 0, Utils.instence(this).dip2px(15), 0);
-        ivMessage.setLayoutParams(ivMessageParam);
-        ivMessage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_paylist_message_btn));
-        rlyPaymentStage.addView(ivMessage);
+        //right button
+        if (TextUtils.isEmpty(paymentStage.paid_at) || !paymentStage.reviewable) {
+            ImageView ivMessage = new ImageView(this);
+            RelativeLayout.LayoutParams ivMessageParam = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            ivMessageParam.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+            ivMessageParam.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+            ivMessageParam.setMargins(0, 0, Utils.instence(this).dip2px(15), 0);
+            ivMessage.setLayoutParams(ivMessageParam);
+            ivMessage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_paylist_message_btn));
+            ivMessage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mPresenter.clickICount();
+                    PaymentStageInfoDialog dialog = new PaymentStageInfoDialog(getContext(), paymentStage.stage_name, paymentStage.description, true);
+                    dialog.show();
+                }
+            });
+            rlyPaymentStage.addView(ivMessage);
+        } else {
+            if (paymentStage.reviewed) {
+                //已评价
+                TextView tvReviewded = new TextView(this);
+                RelativeLayout.LayoutParams tvReviewdedParam = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+                tvReviewdedParam.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+                tvReviewdedParam.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+                tvReviewdedParam.setMargins(0, 0, Utils.instence(this).dip2px(10), 0);
+                tvReviewded.setLayoutParams(tvReviewdedParam);
+                tvReviewded.setText("已评价");
+                tvReviewded.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
+                tvReviewded.setGravity(Gravity.CENTER);
+                tvReviewded.setBackgroundResource(R.drawable.rect_bg_gray_divider_corner);
+                tvReviewded.setTextSize(10);
+                rlyPaymentStage.addView(tvReviewded);
+            } else {
+                //待评价
+                TextView tvForReview = new TextView(this);
+                RelativeLayout.LayoutParams tvForReviewParam = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+                tvForReviewParam.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+                tvForReviewParam.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+                tvForReviewParam.setMargins(0, 0, Utils.instence(this).dip2px(10), 0);
+                tvForReview.setLayoutParams(tvForReviewParam);
+                tvForReview.setText("待评价");
+                tvForReview.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
+                tvForReview.setGravity(Gravity.CENTER);
+                tvForReview.setBackgroundResource(R.drawable.rect_bg_appcolor_corner);
+                tvForReview.setTextSize(10);
+                tvForReview.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showReview(false, paymentStage, false);
+                    }
+                });
+                rlyPaymentStage.addView(tvForReview);
+            }
+        }
 
         return rlyPaymentStage;
     }
@@ -267,5 +334,55 @@ public class PaymentStageActivity extends HHBaseActivity implements PaymentStage
     @Override
     public void setCurrentPayAmountText(Spanned text) {
         mTvCurrentPayAmount.setText(text);
+    }
+
+    @Override
+    public void showShareAppDialog() {
+        if (mShareDialog == null) {
+            mShareDialog = new ShareAppDialog(getContext(), mPresenter.getBonus());
+        }
+        mShareDialog.show();
+    }
+
+    @OnClick({R.id.tv_sure_transfer})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv_sure_transfer:
+                mPresenter.clickPayCount();
+                TransferConfirmDialog dialog = new TransferConfirmDialog(this, mPresenter.getCurrentPaymentStage().description
+                        , new TransferConfirmDialog.OnBtnClickListener() {
+                    @Override
+                    public void onTransfer() {
+                        mPresenter.pay();
+                    }
+                });
+                dialog.show();
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 显示评价dialog
+     *
+     * @param isShowTitle
+     */
+    @Override
+    public void showReview(boolean isShowTitle, PaymentStage paymentStage, final boolean isShowShare) {
+        ReviewDialog reviewDialog = new ReviewDialog(this, isShowTitle, String.valueOf(paymentStage.stage_number), paymentStage.coach_user_id, paymentStage.stage_name, new ReviewDialog.OnBtnClickListener() {
+            @Override
+            public void onReview(String review, float score, String paymentStageNumber, String coachUserId) {
+                mPresenter.makeReview(paymentStageNumber, String.valueOf(score), review);
+            }
+
+            @Override
+            public void onCancel() {
+                if (isShowShare) {
+                    showShareAppDialog();
+                }
+            }
+        });
+        reviewDialog.show();
     }
 }

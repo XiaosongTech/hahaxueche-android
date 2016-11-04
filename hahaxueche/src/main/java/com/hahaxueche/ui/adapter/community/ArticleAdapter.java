@@ -2,6 +2,7 @@ package com.hahaxueche.ui.adapter.community;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
 import com.hahaxueche.model.community.Article;
 import com.hahaxueche.ui.activity.community.ArticleActivity;
+import com.hahaxueche.ui.fragment.community.ArticleListFragment;
 import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
@@ -26,13 +28,13 @@ import butterknife.ButterKnife;
 
 public class ArticleAdapter extends BaseAdapter {
     private LayoutInflater inflater;
-    private Context mContext;
+    private ArticleListFragment mFragment;
     private ArrayList<Article> mArticleList;
     private String mCategoryLabel;
 
-    public ArticleAdapter(Context context, ArrayList<Article> articleList, String categoryLabel) {
-        inflater = LayoutInflater.from(context);
-        mContext = context;
+    public ArticleAdapter(ArticleListFragment fragment, ArrayList<Article> articleList, String categoryLabel) {
+        inflater = LayoutInflater.from(fragment.getContext());
+        mFragment = fragment;
         mArticleList = articleList;
         mCategoryLabel = categoryLabel;
     }
@@ -79,9 +81,9 @@ public class ArticleAdapter extends BaseAdapter {
         holder.rlyAdapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, ArticleActivity.class);
+                Intent intent = new Intent(mFragment.getContext(), ArticleActivity.class);
                 intent.putExtra("article", article);
-                mContext.startActivity(intent);
+                mFragment.startActivityForResult(intent, 12);
             }
         });
         return convertView;

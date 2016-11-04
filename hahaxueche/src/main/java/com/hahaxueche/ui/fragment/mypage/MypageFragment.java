@@ -13,6 +13,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -66,6 +67,8 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     TextView mTvStudentPhase;
     @BindView(R.id.lly_main)
     LinearLayout mLlyMain;
+    @BindView(R.id.iv_payment_stage)
+    ImageView mIvPaymentArrow;
 
     private MyPagePresenter mPresenter;
     private MainActivity mActivity;
@@ -114,6 +117,11 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
         mTvStudentName.setText(student.name);
         mTvAccountBalance.setText(Utils.getMoney(student.getAccountBalance()));
         mTvPaymentStage.setText(student.getPaymentStageLabel());
+        if (student.hasPurchasedService()) {
+            mIvPaymentArrow.setVisibility(View.VISIBLE);
+        } else {
+            mIvPaymentArrow.setVisibility(View.GONE);
+        }
         mTvStudentPhase.setText(student.getStudentPhaseLabel());
     }
 
