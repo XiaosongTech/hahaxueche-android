@@ -2,20 +2,19 @@ package com.hahaxueche.ui.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
-import com.hahaxueche.utils.Util;
+import com.hahaxueche.util.Utils;
 
 /**
- * Created by gibxin on 2016/4/19.
+ * Created by wangshirui on 2016/10/9.
  */
+
 public class BaseConfirmSimpleDialog {
     private Context mContext;
     private TextView mTvTitle;
@@ -79,13 +78,9 @@ public class BaseConfirmSimpleDialog {
 
     public void show() {
         mDialog.show();
-//        if (contentView != null)
-//            contentView.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.in_downup));
     }
 
     public void dismiss() {
-//        if (contentView != null)
-//            contentView.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.out_updown));
         if (mDialog.isShowing())
             mDialog.dismiss();
     }
@@ -93,10 +88,8 @@ public class BaseConfirmSimpleDialog {
     private void setDialogParams() {
         Window window = mDialog.getWindow(); //得到对话框
         WindowManager.LayoutParams wl = window.getAttributes();
-        //wl.width = WindowManager.LayoutParams.MATCH_PARENT;
-        wl.width = Util.instence(mContext).getDm().widthPixels * 9 / 10;
+        wl.width = Utils.instence(mContext).getDm().widthPixels * 9 / 10;
         wl.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        //wl.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL; //设置重力
         wl.gravity = Gravity.CENTER;
         window.setAttributes(wl);
     }

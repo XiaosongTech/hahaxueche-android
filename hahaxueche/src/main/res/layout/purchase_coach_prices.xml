@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/section_margin_top"
+    android:background="@color/haha_white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_license_type_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:text="驾照类型"
+            android:textColor="@color/app_theme_color"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_C1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_license_type_label"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rect_bg_gray_sm"
+            android:paddingBottom="2dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="2dp"
+            android:text="C1手动档"
+            android:textColor="@color/haha_gray"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_C2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_license_type_label"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/tv_C1"
+            android:background="@drawable/rect_bg_gray_sm"
+            android:paddingBottom="2dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="2dp"
+            android:text="C2自动档"
+            android:textColor="@color/haha_gray"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_width"
+        android:layout_marginTop="15dp"
+        android:background="@color/haha_gray_divider" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_class_type_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:text="班别"
+            android:textColor="@color/app_theme_color"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_normal"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_class_type_label"
+            android:layout_below="@id/tv_class_type_label"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rect_bg_gray_sm"
+            android:gravity="center"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp"
+            android:text="超值"
+            android:textColor="@color/haha_gray"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_vip"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_normal"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/tv_normal"
+            android:background="@drawable/rect_bg_gray_sm"
+            android:gravity="center"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp"
+            android:text="VIP"
+            android:textColor="@color/haha_gray"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_width"
+        android:layout_marginTop="15dp"
+        android:background="@color/haha_gray_divider" />
+
+    <TextView
+        android:id="@+id/tv_total_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|right"
+        android:padding="20dp"
+        android:textColor="@color/app_theme_color"
+        android:textSize="16sp" />
+</LinearLayout>

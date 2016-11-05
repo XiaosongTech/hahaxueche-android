@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 
 import com.hahaxueche.R;
+import com.hahaxueche.ui.dialog.login.ButtonLayout;
 
 
 /**
@@ -75,12 +76,10 @@ public class FullScreenDialog extends Dialog {
     @Override
     public void show() {
         super.show();
-        buttonLayout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.in_downup));
     }
 
     @Override
     public void dismiss() {
         super.dismiss();
-        buttonLayout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.out_updown));
     }
 }

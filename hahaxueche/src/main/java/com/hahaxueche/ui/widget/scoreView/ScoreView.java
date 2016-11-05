@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -12,14 +11,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
-import com.hahaxueche.utils.Util;
+import com.hahaxueche.util.Utils;
 
 import java.text.DecimalFormat;
 
 /**
  * Created by luwei on 15-8-1.
  */
-public class ScoreView extends LinearLayout{
+public class ScoreView extends LinearLayout {
     protected Context context = null;
     private int divide = 0;
     public static final int TOTAL = 5;
@@ -38,7 +37,7 @@ public class ScoreView extends LinearLayout{
     }
 
     protected void init(int d){
-        divide = Util.instence(context).dip2px(d);
+        divide = Utils.instence(context).dip2px(d);
         setOrientation(HORIZONTAL);
         for (int i = 0 ; i < TOTAL; i++){
             addScore(divide,getEmptyStarId());

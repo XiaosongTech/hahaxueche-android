@@ -8,13 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.hahaxueche.utils.Util;
+import com.hahaxueche.util.Utils;
 
 import java.util.List;
+
 /**
  * Created by gibxin on 2016/2/13.
  */
-public class ImageSwitcher extends FrameLayout{
+public class ImageSwitcher extends FrameLayout {
     private ViewPager viewPager = null;
     private Indicator indicator = null;
     private Context context = null;
@@ -58,8 +59,8 @@ public class ImageSwitcher extends FrameLayout{
     private void addIndicator(){
         indicator = new Indicator(context);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, Util.instence(context).dip2px(12), Gravity.BOTTOM);
-        params.bottomMargin = Util.instence(context).dip2px(8);
+                ViewGroup.LayoutParams.MATCH_PARENT, Utils.instence(context).dip2px(12), Gravity.BOTTOM);
+        params.bottomMargin = Utils.instence(context).dip2px(8);
         addView(indicator, params);
     }
 
@@ -86,40 +87,40 @@ public class ImageSwitcher extends FrameLayout{
             indicator.setVisibility(View.VISIBLE);
         }
     }
-
-    public void updateImages(List<String> urls, int h){
-        if (photoAdapter == null){
-            photoAdapter = new PhotoAdapter(context);
-            photoAdapter.setOnImgItemClickListener(onImgItemClickListener);
-        }
-        viewPager.setAdapter(photoAdapter);
-        photoAdapter.update(urls, h);
-        indicator.setTotal(urls.size());
-        indicator.setCurrent(0);
-        if(urls.size()<2){
-            indicator.setVisibility(View.INVISIBLE);
-        }else{
-            indicator.setVisibility(View.VISIBLE);
-        }
-    }
-
-    public void updateImages(int[] res){
-        if (photoAdapter == null){
-            photoAdapter = new PhotoAdapter(context);
-            photoAdapter.setOnImgItemClickListener(onImgItemClickListener);
-        }
-        viewPager.setAdapter(photoAdapter);
-        photoAdapter.update(res);
-        indicator.setTotal(res.length);
-        indicator.setCurrent(0);
-        indicator.setRadius(Util.instence(context).dip2px(3));
-        indicator.setDivide(Util.instence(context).dip2px(13));
-        if(res.length<2){
-            indicator.setVisibility(View.INVISIBLE);
-        }else{
-            indicator.setVisibility(View.VISIBLE);
-        }
-    }
+//
+//    public void updateImages(List<String> urls, int h){
+//        if (photoAdapter == null){
+//            photoAdapter = new PhotoAdapter(context);
+//            photoAdapter.setOnImgItemClickListener(onImgItemClickListener);
+//        }
+//        viewPager.setAdapter(photoAdapter);
+//        photoAdapter.update(urls, h);
+//        indicator.setTotal(urls.size());
+//        indicator.setCurrent(0);
+//        if(urls.size()<2){
+//            indicator.setVisibility(View.INVISIBLE);
+//        }else{
+//            indicator.setVisibility(View.VISIBLE);
+//        }
+//    }
+//
+//    public void updateImages(int[] res){
+//        if (photoAdapter == null){
+//            photoAdapter = new PhotoAdapter(context);
+//            photoAdapter.setOnImgItemClickListener(onImgItemClickListener);
+//        }
+//        viewPager.setAdapter(photoAdapter);
+//        photoAdapter.update(res);
+//        indicator.setTotal(res.length);
+//        indicator.setCurrent(0);
+//        indicator.setRadius(Utils.instence(context).dip2px(3));
+//        indicator.setDivide(Utils.instence(context).dip2px(13));
+//        if(res.length<2){
+//            indicator.setVisibility(View.INVISIBLE);
+//        }else{
+//            indicator.setVisibility(View.VISIBLE);
+//        }
+//    }
 
     PhotoAdapter.OnImgItemClickListener onImgItemClickListener = new PhotoAdapter.OnImgItemClickListener()
     {

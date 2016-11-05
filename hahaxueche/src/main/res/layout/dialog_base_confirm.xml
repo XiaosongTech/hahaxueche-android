@@ -10,22 +10,22 @@
         android:id="@+id/tv_base_confirm_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
         android:background="@color/app_theme_color"
+        android:padding="20dp"
         android:textColor="@color/haha_white"
         android:textSize="20sp" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/haha_gray_light" />
+        android:layout_height="@dimen/divider_width"
+        android:background="@color/haha_gray_divider" />
 
     <TextView
         android:id="@+id/tv_base_confirm_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:textColor="@color/haha_gray_heavy"
+        android:textColor="@color/haha_gray"
         android:textSize="20sp" />
 
     <TextView
@@ -36,29 +36,31 @@
         android:lineSpacingMultiplier="1.2"
         android:textColor="@color/app_theme_color"
         android:textSize="16sp" />
+
     <View
         android:id="@+id/vw_base_confirm_tip_line"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="20dp"
+        android:layout_height="@dimen/divider_width"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:background="@color/haha_gray_light" />
+        android:layout_marginTop="20dp"
+        android:background="@color/haha_gray_divider" />
+
     <TextView
         android:id="@+id/vw_base_confirm_tips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:layout_marginTop="12dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:textColor="@color/haha_gray_heavier"/>
+        android:layout_marginTop="12dp"
+        android:textColor="@color/haha_gray"
+        android:textSize="14sp" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/divider_width"
         android:layout_marginTop="20dp"
-        android:background="@color/haha_gray_light" />
+        android:background="@color/haha_gray_divider" />
 
     <LinearLayout
         android:id="@+id/lly_pay_bottom"
@@ -73,15 +75,15 @@
             android:gravity="center"
             android:paddingBottom="15dp"
             android:paddingTop="15dp"
-            android:textColor="@color/fCTxtOrange"
+            android:textColor="@color/haha_orange"
             android:textSize="14sp" />
 
         <View
-            android:layout_width="0.5dp"
+            android:layout_width="@dimen/divider_width"
             android:layout_height="match_parent"
             android:layout_marginBottom="15dp"
             android:layout_marginTop="15dp"
-            android:background="@color/fCViewGray" />
+            android:background="@color/haha_gray_divider" />
 
         <TextView
             android:id="@+id/tv_base_confirm_sure"
@@ -91,7 +93,7 @@
             android:gravity="center"
             android:paddingBottom="15dp"
             android:paddingTop="15dp"
-            android:textColor="@color/fCTxtGreen"
+            android:textColor="@color/haha_green"
             android:textSize="14sp" />
     </LinearLayout>
 </LinearLayout>

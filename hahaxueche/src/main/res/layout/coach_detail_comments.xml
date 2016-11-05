@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lly_reviews"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/section_margin_top"
+    android:layout_marginTop="@dimen/section_margin_top"
+    android:background="@color/haha_white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="14dp"
+        android:paddingTop="14dp">
+
+        <TextView
+            android:id="@+id/tv_comments_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:drawableLeft="@drawable/ic_coachmsg_pingjia"
+            android:drawablePadding="6dp"
+            android:textColor="@color/app_theme_color"
+            android:textSize="14sp" />
+
+        <com.hahaxueche.ui.widget.scoreView.ScoreView
+            android:id="@+id/sv_average_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_width"
+        android:background="@color/haha_gray_divider" />
+
+    <FrameLayout
+        android:id="@+id/fly_more_comments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_more_reviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="14dp"
+            android:layout_marginTop="14dp"
+            android:text="点击查看更多"
+            android:textColor="@color/app_theme_color"
+            android:textSize="14sp" />
+    </FrameLayout>
+</LinearLayout>

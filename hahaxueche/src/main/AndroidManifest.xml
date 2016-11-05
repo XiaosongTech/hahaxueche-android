@@ -1,63 +1,64 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hahaxueche">
-
-    <uses-permission android:name="android.permission.FLASHLIGHT" />
-    <uses-permission android:name="android.permission.VIBRATE" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-
-    <!--MSSDK-->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!--用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+    <!--用于访问GPS定位-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+    <!--这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission>
+    <!--写入扩展存储，向扩展卡写入数据，用于写入缓存定位数据-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
-
-    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!--amap permission-->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
-    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <!-- iBeancon功能与个推3.0电子围栏功能所需要的权限为非必需的可选择权限，可以选择性配置，以便使用个推3.0电子围栏-->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- 个推3.0电子围栏功能所需权限 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- 自定义权限 -->
+    <uses-permission android:name="getui.permission.GetuiService.com.hahaxueche" />
+    <permission
+        android:name="getui.permission.GetuiService.com.hahaxueche"
+        android:protectionLevel="normal"></permission>
 
     <application
-        android:name=".MyApplication"
+        android:name=".HHBaseApplication"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="bef251a51713ec91fb35728ba0bb52ca" />
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="564582e767e58e049a001e48"></meta-data>
+            android:value="564a8a8067e58e74de006545"></meta-data>
         <!--release:564582e767e58e049a001e48 ; debug:564a8a8067e58e74de006545-->
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL_VALUE}" />
+        <!-- 个推SDK配置开始 --> <!-- 配置的第三方参数属性 -->
         <meta-data
-            android:name="io.branch.sdk.BranchKey"
-            android:value="key_live_admOW7BdL0Xjj3PlglQ6pikouvgINyy6" />
+            android:name="PUSH_APPID"
+            android:value="rL8azb2Rf08xOnLyM95un3" />
+        <meta-data
+            android:name="PUSH_APPKEY"
+            android:value="RV7ExaBUvBA17bdzO6mwk6" />
+        <meta-data
+            android:name="PUSH_APPSECRET"
+            android:value="WnZrlzC3Ta8LH9npNhyE07" />
 
         <activity
-            android:name=".ui.activity.WelcomeActivity"
+            android:name=".ui.activity.base.WelcomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTop"
@@ -67,97 +68,17 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".ui.activity.signupLogin.StartActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait">
             <intent-filter>
                 <data
-                    android:host="open"
-                    android:scheme="hhxc" />
+                    android:host="com.hahaxueche"
+                    android:scheme="dsc4e677e0fa60ceb4" />
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="bnc.lt"
-                    android:pathPrefix="/77Yi"
-                    android:scheme="https" />
-            </intent-filter>
-
         </activity>
-        <activity
-            android:name=".ui.activity.signupLogin.SignUpActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/sLSignUp"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.activity.signupLogin.LoginActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/sLLogin"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.activity.signupLogin.SignUpInfoActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/sLSignUpInfo"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.activity.index.IndexActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoAnimationTheme"></activity>
-        <activity
-            android:name=".ui.activity.findCoach.FindCoachActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoAnimationTheme"></activity>
-        <activity
-            android:name=".ui.activity.appointment.AppointmentActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoAnimationTheme"></activity>
-        <activity
-            android:name=".ui.activity.mySetting.MySettingActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoAnimationTheme"></activity>
-
-        <activity
-            android:name=".ui.fragment.BaseBottomTabFragment"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait">
-
-        </activity>
-        <activity
-            android:name=".ui.activity.findCoach.CoachDetailActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize|locale"
-            android:exported="true"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="io.branch.sdk.auto_link_keys"
-                android:value="coachId" />
-        </activity>
+        <!--QQ分享 start-->
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
@@ -175,10 +96,67 @@
             android:name="com.tencent.connect.common.AssistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!--QQ分享 end-->
+        <activity
+            android:name=".ui.activity.login.StartLoginActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.login.LoginActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.login.RegisterActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.login.CompleteUserInfoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.base.MainActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.base.BaseWebViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.myPage.FAQActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.myPage.SoftwareInfoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.myPage.ReferFriendsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.community.ArticleActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.findCoach.SearchCoachActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.findCoach.CoachDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activity.findCoach.ReviewListActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.myPage.FollowListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.findCoach.PurchaseCoachActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
         <!-- Ping++ SDK -->
         <activity
@@ -193,124 +171,152 @@
             android:exported="false"
             android:screenOrientation="behind"></activity>
         <activity
-            android:name=".ui.activity.mySetting.FollowCoachListActivity"
+            android:name="cmb.pb.ui.PBKeyboardActivity"
+            android:theme="@style/CmbDialogStyleBottom" />
+        <activity
+            android:name=".ui.activity.findCoach.PaySuccessActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.activity.mySetting.PaymentStageActivity"
+            android:name=".ui.activity.findCoach.FieldFilterActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.activity.findCoach.FindCoachMapFilterActivity"
+            android:name=".ui.activity.community.ExamLibraryActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.community.ExamActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.community.StartExamActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.findCoach.PartnerDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.findCoach.PriceActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.myPage.MyCoachDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activity.findCoach.FieldMapActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.activity.findCoach.MyCoachActivity"
+            android:name=".ui.activity.myPage.PaymentStageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.activity.base.BaseWebViewActivity"
+            android:name=".ui.activity.myPage.WithdrawActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask">
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.myPage.WithdrawRecordsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.myPage.AddBankActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.myPage.SelectBankActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.myPage.ReferrerListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.community.ArticleCommentsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.myPage.NoCourseActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.myPage.CourseActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
 
-        </activity>
-        <activity
-            android:name=".ui.activity.mySetting.ReferFriendsActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
-            android:configChanges="keyboardHidden|orientation"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize"></activity>
-        <activity
-            android:name=".ui.activity.mySetting.MakeMoneyInfoActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.activity.mySetting.WithdrawRecordListActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.activity.mySetting.WithdrawActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"></activity>
-        <activity
-            android:name=".ui.activity.mySetting.AddBankActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.activity.mySetting.SoftwareInfoActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.activity.signupLogin.AgreementActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.activity.findCoach.PurchaseCoachActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.activity.mySetting.FAQActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.activity.mySetting.MyCouponActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.activity.index.EventListActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.activity.mySetting.SelectOpenBankActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"></activity>
-        <activity
-            android:name=".ui.activity.index.ExamActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.activity.index.StartExamActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.activity.findCoach.PaySuccessActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"></activity>
-        <!--定位服务-->
-        <service android:name=".service.LocationService"></service>
-        <!--检测session有效性服务-->
-        <service android:name=".service.CheckSessionService"></service>
-
+        <service
+            android:name="cmb.pb.cmbsafe.CmbService"
+            android:exported="false" />
         <service android:name="com.amap.api.location.APSService"></service>
-
-        <receiver
-            android:name="io.branch.referral.InstallListener"
-            android:exported="true">
+        <!-- 配置SDK核心服务 -->
+        <service
+            android:name="com.igexin.sdk.PushService"
+            android:exported="true"
+            android:label="NotificationCenter"
+            android:process=":pushservice">
             <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
+                <action android:name="com.igexin.sdk.action.service.message" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.igexin.sdk.PushServiceUser"
+            android:exported="true"
+            android:label="NotificationCenterUser">
+            <intent-filter>
+                <action android:name="com.igexin.sdk.action.user.message" />
+            </intent-filter>
+        </service>
+
+        <receiver android:name="com.igexin.sdk.PushReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="com.igexin.sdk.action.refreshls" />
+                <!-- 以下三项为可选的action声明，可大大提高service存活率和消息到达速度 -->
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
             </intent-filter>
         </receiver>
-        <!--定时receiver-->
-        <receiver android:name=".receiver.AlarmReceiver" />
-        <service android:name="cmb.pb.cmbsafe.CmbService" android:exported="false"/>
-        <activity
-            android:name="cmb.pb.ui.PBKeyboardActivity"
-            android:theme="@style/CmbDialogStyleBottom" />
-    </application>
+        <receiver
+            android:name="com.igexin.sdk.PushManagerReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.igexin.sdk.action.pushmanager" />
+            </intent-filter>
+        </receiver>
 
+        <activity
+            android:name="com.igexin.sdk.PushActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:process=":pushservice"
+            android:taskAffinity="com.igexin.sdk.PushActivityTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.igexin.sdk.GActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:process=":pushservice"
+            android:taskAffinity="com.igexin.sdk.PushActivityTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <service
+            android:name="com.igexin.download.DownloadService"
+            android:process=":pushservice" />
+        <receiver android:name="com.igexin.download.DownloadReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        <provider
+            android:name="com.igexin.download.DownloadProvider"
+            android:authorities="downloads.com.hahaxueche"
+            android:exported="true"
+            android:process=":pushservice" />
+        <!-- 个推SDK配置结束 -->
+    </application>
 </manifest>

@@ -1,7 +1,5 @@
 package com.hahaxueche.ui.widget.comboSeekBar;
 
-import java.util.List;
-
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
@@ -11,6 +9,9 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 
 import com.hahaxueche.ui.widget.comboSeekBar.ComboSeekBar.Dot;
+import com.hahaxueche.util.HHLog;
+
+import java.util.List;
 
 /**
  * seekbar background with text on it.
@@ -43,7 +44,7 @@ public class CustomDrawable extends Drawable {
     public CustomDrawable(Drawable base, ComboSeekBar slider,
                           float thumbRadius, List<Dot> dots, int color, int textSize,
                           int selectedLineHeight, int unselectedLineHeight, int dotRadius,
-                          boolean isMultiline, int selectedLineColor) {
+                          boolean isMultiline, int selectedLineColor,int unSelectedColor,int selectedTextColor) {
         mIsMultiline = isMultiline;
         myBase = base;
         mDots = dots;
@@ -53,18 +54,18 @@ public class CustomDrawable extends Drawable {
         mSelectedLineColor = selectedLineColor;
         mDotRadius = dotRadius;
         textUnselected = new Paint(Paint.ANTI_ALIAS_FLAG);
-        textUnselected.setColor(color);
-        textUnselected.setAlpha(255);
+        textUnselected.setColor(unSelectedColor);
+        //textUnselected.setAlpha(255);
 
         textSelected = new Paint(Paint.ANTI_ALIAS_FLAG);
-        textSelected.setTypeface(Typeface.DEFAULT_BOLD);
-        textSelected.setColor(color);
-        textSelected.setAlpha(255);
+        //textSelected.setTypeface(Typeface.DEFAULT_BOLD);
+        textSelected.setColor(selectedTextColor);
+        //textSelected.setAlpha(255);
 
         mThumbRadius = thumbRadius;
 
         unselectLinePaint = new Paint();
-        unselectLinePaint.setColor(color);
+        unselectLinePaint.setColor(unSelectedColor);
 
         unselectLinePaint.setStrokeWidth(mUnselectedLineHeight);
 
@@ -76,19 +77,19 @@ public class CustomDrawable extends Drawable {
         selectCirclePaint.setColor(mSelectedLineColor);
 
         unSelectCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        unSelectCirclePaint.setColor(color);
+        unSelectCirclePaint.setColor(unSelectedColor);
 
 
         Rect textBounds = new Rect();
-        textSelected.setTextSize((int) (mTextSize * 2));
-        textSelected.getTextBounds("M", 0, 1, textBounds);
+        //textSelected.setTextSize((int) (mTextSize * 2));
+        //textSelected.getTextBounds("M", 0, 1, textBounds);
 
         textUnselected.setTextSize(mTextSize);
         textSelected.setTextSize(mTextSize);
 
         mTextHeight = textBounds.height();
         // mDotRadius = toPix(DOT_RADIUS);
-        mTextMargin = 3;
+        mTextMargin = 30;
     }
 
 
@@ -110,7 +111,6 @@ public class CustomDrawable extends Drawable {
 
     @Override
     public final void draw(Canvas canvas) {
-        System.out.println("--------draw");
         int height = this.getIntrinsicHeight() / 2;
         if (mDots.size() == 0) {
             canvas.drawLine(0, height, getBounds().right, height,
@@ -125,10 +125,9 @@ public class CustomDrawable extends Drawable {
                 selectIndex = i;
             }
         }
-        System.out.println("--------selected index=" + selectIndex);
         for (int i = 0; i < mDots.size(); i++) {
             Dot dot = mDots.get(i);
-            drawText(canvas, dot, dot.mX, height);
+            drawText(canvas, dot, dot.mX, height,selectIndex);
             if (i == selectIndex) {
                 canvas.drawLine(mDots.get(0).mX, height, dot.mX, height,
                         selectLinePaint);
@@ -149,7 +148,7 @@ public class CustomDrawable extends Drawable {
      * @param x      x cor.
      * @param y      y cor.
      */
-    private void drawText(Canvas canvas, Dot dot, float x, float y) {
+    private void drawText(Canvas canvas, Dot dot, float x, float y,int selectIndex) {
         final Rect textBounds = new Rect();
         textSelected.getTextBounds(dot.text, 0, dot.text.length(), textBounds);
         float xres;
@@ -162,23 +161,25 @@ public class CustomDrawable extends Drawable {
         }
 
         float yres;
-        // Если многострочный текст
         if (mIsMultiline) {
-            // Если четная точка, то сверху
             if ((dot.id % 2) == 0) {
                 yres = y - mTextMargin - mDotRadius;
             } else {
                 yres = y + mTextHeight;
             }
         } else {
-            yres = y - (mDotRadius * 2) + mTextMargin;
+            yres = y + (mDotRadius * 2) + mTextMargin;
         }
-
-        if (dot.isSelected) {
+        if(dot.id<=selectIndex){
+            canvas.drawText(dot.text, xres, yres, textSelected);
+        }else {
+            canvas.drawText(dot.text, xres, yres, textUnselected);
+        }
+        /*if (dot.isSelected) {
             canvas.drawText(dot.text, xres, yres, textSelected);
         } else {
             canvas.drawText(dot.text, xres, yres, textUnselected);
-        }
+        }*/
     }
 
     @Override
@@ -189,7 +190,7 @@ public class CustomDrawable extends Drawable {
         } else {
             int thumbHeight = (int) mThumbRadius * 2;
             int dotHeight = (int) mDotRadius * 2;
-            return Math.max(thumbHeight, dotHeight);
+            return (int) (Math.max(thumbHeight, dotHeight) + 100);
             // return (int) (mThumbRadius * 2);
             // return (int) (mThumbRadius + mTextMargin + mTextHeight +
             // mDotRadius);

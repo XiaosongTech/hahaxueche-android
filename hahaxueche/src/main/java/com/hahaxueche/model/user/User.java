@@ -1,74 +1,21 @@
 package com.hahaxueche.model.user;
 
-import com.hahaxueche.model.student.Student;
-
-import java.io.Serializable;
+import android.text.TextUtils;
 
 /**
- * Created by gibxin on 2016/1/22.
+ * Created by wangshirui on 16/9/10.
  */
-public class User implements Serializable{
-    private String id;
-    private String cell_phone;
-    private Session session;
-    private Student student;
-    private String code;
-    private String message;
-    private boolean isSuccess = true;
+public class User {
+    public String id;
+    public String cell_phone;
+    public Session session;
+    public Student student;
 
-    public String getId() {
-        return id;
+    public boolean isCompleted() {
+        return (student != null && student.city_id >= 0 && !TextUtils.isEmpty(student.name));
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getCell_phone() {
-        return cell_phone;
-    }
-
-    public void setCell_phone(String cell_phone) {
-        this.cell_phone = cell_phone;
-    }
-
-    public Session getSession() {
-        return session;
-    }
-
-    public void setSession(Session session) {
-        this.session = session;
-    }
-
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public boolean isSuccess() {
-        return isSuccess;
-    }
-
-    public void setIsSuccess(boolean isSuccess) {
-        this.isSuccess = isSuccess;
+    public boolean isLogin() {
+        return (session != null && !TextUtils.isEmpty(session.access_token) && student != null && !TextUtils.isEmpty(student.id));
     }
 }

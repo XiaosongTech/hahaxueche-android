@@ -2,193 +2,120 @@ package com.hahaxueche.ui.activity.findCoach;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.support.v7.app.ActionBar;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.coach.Coach;
-import com.hahaxueche.model.response.GetReviewsResponse;
-import com.hahaxueche.model.review.ReviewInfo;
-import com.hahaxueche.presenter.findCoach.FCCallbackListener;
-import com.hahaxueche.ui.adapter.findCoach.ReviewItemAdapter;
+import com.hahaxueche.model.user.coach.Coach;
+import com.hahaxueche.model.user.coach.Review;
+import com.hahaxueche.presenter.findCoach.ReviewListPresenter;
+import com.hahaxueche.ui.activity.base.HHBaseActivity;
+import com.hahaxueche.ui.adapter.findCoach.ReviewAdapter;
+import com.hahaxueche.ui.view.findCoach.ReviewListView;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
-import com.hahaxueche.utils.Util;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
- * 评论列表activity
- * Created by gibxin on 2016/2/27.
+ * Created by wangshirui on 2016/10/8.
  */
-public class ReviewListActivity extends FCBaseActivity implements XListView.IXListViewListener {
-    private List<ReviewInfo> mReviewInfoList = new ArrayList<>();
-    private ReviewItemAdapter mReviewItemAdapter;
-    private XListView xlvReviewList;
-    private String linkSelf;
-    private String linkNext;
-    private String linkPrevious;
-    private String page;
-    private String per_page = "10";
-    private String coach_user_id;
-    private boolean isOnLoadMore = false;
-    private TextView tvRlCommentCounts;//学员评价数量
-    private ScoreView svRlAverageRating;//综合得分
-    private Coach mCoach;
-    private ImageButton ibtnReviewListBack;
+
+public class ReviewListActivity extends HHBaseActivity implements ReviewListView, XListView.IXListViewListener {
+    private ReviewListPresenter mPresenter;
+    private ImageView mIvBack;
+    private TextView mTvTitle;
+    @BindView(R.id.tv_comments_count)
+    TextView mTvCommentsCount;
+    @BindView(R.id.sv_average_rating)
+    ScoreView mSvAverageRating;
+    @BindView(R.id.xlv_reviews)
+    XListView mXlvReviews;
+    private ReviewAdapter mReviewAdapter;
+    private ArrayList<Review> mReviewArrayList;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPresenter = new ReviewListPresenter();
         setContentView(R.layout.activity_review_list);
+        ButterKnife.bind(this);
+        mPresenter.attachView(this);
+        initActionBar();
         Intent intent = getIntent();
-        GetReviewsResponse getReviewsResponse = (GetReviewsResponse) intent.getSerializableExtra("getReviewsResponse");
-        mCoach = (Coach) intent.getSerializableExtra("coach");
-        coach_user_id = mCoach.getUser_id();
-        linkSelf = getReviewsResponse.getLinks().getSelf();
-        linkNext = getReviewsResponse.getLinks().getNext();
-        linkPrevious = getReviewsResponse.getLinks().getPrevious();
-        mReviewInfoList = getReviewsResponse.getData();
-        initView();
-        initEvent();
-        xlvReviewList.setPullRefreshEnable(true);
-        xlvReviewList.setPullLoadEnable(true);
-        xlvReviewList.setAutoLoadEnable(true);
-        xlvReviewList.setXListViewListener(this);
-        xlvReviewList.setRefreshTime(getTime());
-        if (TextUtils.isEmpty(linkNext)) {
-            xlvReviewList.setPullLoadEnable(false);
-        } else {
-            xlvReviewList.setPullLoadEnable(true);
+        if (intent.getParcelableExtra("coach") != null) {
+            mPresenter.setCoach((Coach) intent.getParcelableExtra("coach"));
+            mXlvReviews.setPullRefreshEnable(true);
+            mXlvReviews.setPullLoadEnable(true);
+            mXlvReviews.setAutoLoadEnable(true);
+            mXlvReviews.setXListViewListener(this);
+            mPresenter.fetchReviews();
         }
-        mReviewItemAdapter = new ReviewItemAdapter(this, mReviewInfoList, R.layout.view_review_list_item, false);
-        xlvReviewList.setAdapter(mReviewItemAdapter);
     }
 
-    private void initView() {
-        xlvReviewList = Util.instence(this).$(this, R.id.xlv_review_list);
-        tvRlCommentCounts = Util.instence(this).$(this, R.id.tv_rl_comments_count);
-        svRlAverageRating = Util.instence(this).$(this, R.id.sv_rl_average_rating);
-        ibtnReviewListBack = Util.instence(this).$(this, R.id.ibtn_review_list_back);
-        //学员评价数量
-        tvRlCommentCounts.setText("学员评价（" + mCoach.getReview_count() + "）");
-        //综合得分
-        float averageRating = 0;
-        if (!TextUtils.isEmpty(mCoach.getAverage_rating())) {
-            averageRating = Float.parseFloat(mCoach.getAverage_rating());
-        }
-        if (averageRating > 5) {
-            averageRating = 5;
-        }
-        svRlAverageRating.setScore(averageRating, true);
+    private void initActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setCustomView(R.layout.actionbar_base);
+        mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
+        mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        mTvTitle.setText("学员评价");
+        mIvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ReviewListActivity.this.finish();
+            }
+        });
     }
 
-    private void initEvent() {
-        ibtnReviewListBack.setOnClickListener(mClickListener);
+    @Override
+    protected void onDestroy() {
+        mPresenter.detachView();
+        super.onDestroy();
+    }
+
+    @Override
+    public void setPullLoadEnable(boolean enable) {
+        mXlvReviews.setPullLoadEnable(enable);
+    }
+
+    @Override
+    public void refreshReviewList(ArrayList<Review> reviewArrayList) {
+        mReviewArrayList = reviewArrayList;
+        mReviewAdapter = new ReviewAdapter(getContext(), mReviewArrayList);
+        mXlvReviews.setAdapter(mReviewAdapter);
+        mXlvReviews.stopRefresh();
+        mXlvReviews.stopLoadMore();
+    }
+
+    @Override
+    public void addMoreReviewList(ArrayList<Review> reviewArrayList) {
+        mReviewArrayList.addAll(reviewArrayList);
+        mReviewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setAverageRating(float score) {
+        mSvAverageRating.setScore(score, true);
+    }
+
+    @Override
+    public void setReviewedCount(String countText) {
+        mTvCommentsCount.setText(countText);
     }
 
     @Override
     public void onRefresh() {
-        System.out.println("---------onRefresh");
-        isOnLoadMore = false;
-        getReviewList();
-        if (TextUtils.isEmpty(linkNext)) {
-            xlvReviewList.setPullLoadEnable(false);
-        } else {
-            xlvReviewList.setPullLoadEnable(true);
-        }
+        mPresenter.fetchReviews();
     }
 
     @Override
     public void onLoadMore() {
-        if (!TextUtils.isEmpty(linkNext) && !isOnLoadMore) {
-            isOnLoadMore = true;
-            getReviewList(linkNext);
-        } else {
-            onLoad();
-        }
+        mPresenter.addMoreReviews();
     }
-
-    private void onLoad() {
-        xlvReviewList.stopRefresh();
-        xlvReviewList.stopLoadMore();
-        xlvReviewList.setRefreshTime(getTime());
-    }
-
-    private String getTime() {
-        return new SimpleDateFormat("MM-dd HH:mm:ss", Locale.CHINA).format(new Date());
-    }
-
-    private void getReviewList() {
-        this.fcPresenter.getReviewList(coach_user_id, page, per_page, new FCCallbackListener<GetReviewsResponse>() {
-            @Override
-            public void onSuccess(GetReviewsResponse data) {
-                mReviewInfoList = data.getData();
-                linkSelf = data.getLinks().getSelf();
-                linkNext = data.getLinks().getNext();
-                linkPrevious = data.getLinks().getPrevious();
-                if (TextUtils.isEmpty(linkNext)) {
-                    xlvReviewList.setPullLoadEnable(false);
-                } else {
-                    xlvReviewList.setPullLoadEnable(true);
-                }
-                mReviewItemAdapter = new ReviewItemAdapter(ReviewListActivity.this, mReviewInfoList, R.layout.view_review_list_item, false);
-                xlvReviewList.setAdapter(mReviewItemAdapter);
-                onLoad();
-            }
-
-            @Override
-            public void onFailure(String errorEvent, String message) {
-            }
-        });
-    }
-
-    private void getReviewList(String url) {
-        this.fcPresenter.getReviewList(url, new FCCallbackListener<GetReviewsResponse>() {
-            @Override
-            public void onSuccess(GetReviewsResponse data) {
-                ArrayList<ReviewInfo> newReviewList = data.getData();
-                if (newReviewList != null && newReviewList.size() > 0) {
-                    mReviewInfoList.addAll(newReviewList);
-                }
-                linkSelf = data.getLinks().getSelf();
-                linkNext = data.getLinks().getNext();
-                linkPrevious = data.getLinks().getPrevious();
-                if (TextUtils.isEmpty(linkNext)) {
-                    xlvReviewList.setPullLoadEnable(false);
-                } else {
-                    xlvReviewList.setPullLoadEnable(true);
-                }
-                if (mReviewItemAdapter != null) {
-                    mReviewItemAdapter.notifyDataSetChanged();
-                } else {
-                    mReviewItemAdapter = new ReviewItemAdapter(ReviewListActivity.this, mReviewInfoList, R.layout.view_review_list_item, false);
-                    xlvReviewList.setAdapter(mReviewItemAdapter);
-                }
-                onLoad();
-            }
-
-            @Override
-            public void onFailure(String errorEvent, String message) {
-            }
-        });
-    }
-
-    View.OnClickListener mClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.ibtn_review_list_back:
-                    ReviewListActivity.this.finish();
-                    break;
-            }
-        }
-    };
-
 }

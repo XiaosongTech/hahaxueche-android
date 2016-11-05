@@ -1,22 +1,9 @@
 <resources>
-    <dimen name="padding12dp">10dp</dimen>
-    <dimen name="height260dp">220dp</dimen>
-    <dimen name="padding10dp">6dp</dimen>
+    <dimen name="width80dp">60dp</dimen>
+    <dimen name="width_160dp">120dp</dimen>
     <dimen name="search_edittext_width">240dp</dimen>
     <dimen name="search_edittext_height">24dp</dimen>
-    <dimen name="marginleft20dp">10dp</dimen>
-    <dimen name="marginleft10dp">6dp</dimen>
-    <dimen name="marginleft5dp">2dp</dimen>
-    <dimen name="payment_adapter_spacing1">35dp</dimen>
-    <dimen name="payment_adapter_spacing2">120dp</dimen>
-    <dimen name="payment_adapter_spacing3">170dp</dimen>
-    <dimen name="margin30dp">15dp</dimen>
-    <dimen name="margin18dp">8dp</dimen>
-    <dimen name="margin35dp">22dp</dimen>
-    <dimen name="margin15dp">10dp</dimen>
-    <dimen name="width320dp">240dp</dimen>
-    <dimen name="width360dp">300dp</dimen>
-    <dimen name="height470dp">353dp</dimen>
     <dimen name="margin40dp">25dp</dimen>
-    <dimen name="width80dp">60dp</dimen>
+    <dimen name="width320dp">240dp</dimen>
+    <dimen name="text_size_14sp">12sp</dimen>
 </resources>

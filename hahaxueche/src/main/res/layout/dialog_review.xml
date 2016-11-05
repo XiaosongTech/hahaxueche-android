@@ -24,16 +24,15 @@
             android:id="@+id/tv_review_info_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="资料费打款成功！"
-            android:textColor="@color/fCTxtGreen"
+            android:textColor="@color/haha_green"
             android:textSize="18sp" />
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
+        android:layout_height="@dimen/divider_width"
         android:layout_marginTop="18dp"
-        android:background="@color/fCViewGray" />
+        android:background="@color/haha_gray_divider" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -45,8 +44,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="20dp"
-            android:text="@string/myScoreToCoach"
-            android:textColor="@color/fCTxtBlack"
+            android:text="给教练打分"
+            android:textColor="@color/haha_gray_dark"
             android:textSize="18sp" />
 
         <com.hahaxueche.ui.widget.scoreView.ClickScoreView
@@ -61,11 +60,11 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
+        android:layout_height="@dimen/divider_width"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="18dp"
-        android:background="@color/fCViewGray" />
+        android:background="@color/haha_gray_divider" />
 
     <EditText
         android:id="@+id/et_review"
@@ -77,14 +76,14 @@
         android:lineSpacingMultiplier="1.2"
         android:maxLength="100"
         android:padding="18dp"
-        android:textColor="@color/fCTxtGray"
-        android:textColorHint="@color/fCViewGray"
+        android:textColor="@color/haha_gray"
+        android:textColorHint="@color/haha_gray_text"
         android:textSize="14sp" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/fCViewGray" />
+        android:layout_height="@dimen/divider_width"
+        android:background="@color/haha_gray_divider" />
 
     <LinearLayout
         android:id="@+id/lly_pay_bottom"
@@ -99,16 +98,16 @@
             android:gravity="center"
             android:paddingBottom="15dp"
             android:paddingTop="15dp"
-            android:text="@string/myLaterReview"
-            android:textColor="@color/fCTxtOrange"
+            android:text="稍后评价"
+            android:textColor="@color/haha_orange"
             android:textSize="14sp" />
 
         <View
-            android:layout_width="0.5dp"
+            android:layout_width="@dimen/divider_width"
             android:layout_height="match_parent"
             android:layout_marginBottom="15dp"
             android:layout_marginTop="15dp"
-            android:background="@color/fCViewGray" />
+            android:background="@color/haha_gray_divider" />
 
         <TextView
             android:id="@+id/tv_sure_review"
@@ -118,8 +117,8 @@
             android:gravity="center"
             android:paddingBottom="15dp"
             android:paddingTop="15dp"
-            android:text="@string/mySureReview"
-            android:textColor="@color/fCTxtGreen"
+            android:text="确认评价"
+            android:textColor="@color/haha_green"
             android:textSize="14sp" />
 
     </LinearLayout>

@@ -2,91 +2,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@android:color/white">
+    android:background="@color/haha_white"
+    android:orientation="vertical">
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/app_theme_color">
-
-        <ImageButton
-            android:id="@+id/ibtn_review_list_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingRight="10dp"
-            android:background="@null"
-            android:src="@drawable/ic_arrow_back" />
-
-        <TextView
-            android:id="@+id/tv_coach_detail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/fCStudentComment"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
-    </RelativeLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/ic_coachmsg_pingjia" />
+        android:layout_marginBottom="14dp"
+        android:layout_marginTop="14dp">
 
         <TextView
-            android:id="@+id/tv_rl_comments_count"
+            android:id="@+id/tv_comments_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="6dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:drawableLeft="@drawable/ic_coachmsg_pingjia"
+            android:drawablePadding="6dp"
             android:textColor="@color/app_theme_color"
             android:textSize="14sp" />
 
         <com.hahaxueche.ui.widget.scoreView.ScoreView
-            android:id="@+id/sv_rl_average_rating"
-            android:layout_width="0dp"
+            android:id="@+id/sv_average_rating"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:layout_weight="1"
-            android:gravity="right|center_vertical">
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"></com.hahaxueche.ui.widget.scoreView.ScoreView>
 
-        </com.hahaxueche.ui.widget.scoreView.ScoreView>
+    </RelativeLayout>
 
-
-    </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="14dp"
-        android:background="@color/fCViewGray" />
+        android:layout_height="@dimen/divider_width"
+        android:background="@color/haha_gray_background" />
 
-    <LinearLayout
+    <com.hahaxueche.ui.widget.pullToRefreshView.XListView
+        android:id="@+id/xlv_reviews"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="12">
-        <com.hahaxueche.ui.widget.pullToRefreshView.XListView
-            android:id="@+id/xlv_review_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@drawable/layer_list_divider_small"
-            android:dividerHeight="1dp"
-            android:headerDividersEnabled="false"
-            android:footerDividersEnabled="false">
-
-        </com.hahaxueche.ui.widget.pullToRefreshView.XListView>
-
-    </LinearLayout>
-
-
+        android:layout_weight="1"
+        android:divider="@drawable/divider_left_20dp"
+        android:dividerHeight="@dimen/divider_width"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"></com.hahaxueche.ui.widget.pullToRefreshView.XListView>
 
 </LinearLayout>

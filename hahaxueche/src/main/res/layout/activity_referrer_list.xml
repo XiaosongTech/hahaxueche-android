@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/haha_white">
+
+    <com.hahaxueche.ui.widget.pullToRefreshView.XListView
+        android:id="@+id/xlv_referrer_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/haha_gray_divider"
+        android:dividerHeight="@dimen/divider_width"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
+        android:visibility="visible">
+
+    </com.hahaxueche.ui.widget.pullToRefreshView.XListView>
+</FrameLayout>

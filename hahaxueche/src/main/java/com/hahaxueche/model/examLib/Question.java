@@ -1,107 +1,29 @@
 package com.hahaxueche.model.examLib;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
 
-import com.hahaxueche.utils.ExamLib;
+import com.hahaxueche.util.ExamLib;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Created by wangshirui on 16/8/13.
+ * Created by wangshirui on 2016/10/18.
  */
-public class Question implements Serializable {
-    private String id;
-    private String question;
-    private String answer;
-    private String item1;
-    private String item2;
-    private String item3;
-    private String item4;
-    private String explains;
-    private String url;
-    private ArrayList<String> userAnswer;
-    private boolean isSubmit;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(String question) {
-        this.question = question;
-    }
-
-    public String getAnswer() {
-        return answer;
-    }
-
-    public void setAnswer(String answer) {
-        this.answer = answer;
-    }
-
-    public String getItem1() {
-        return item1;
-    }
-
-    public void setItem1(String item1) {
-        this.item1 = item1;
-    }
-
-    public String getItem2() {
-        return item2;
-    }
-
-    public void setItem2(String item2) {
-        this.item2 = item2;
-    }
-
-    public String getItem3() {
-        return item3;
-    }
-
-    public void setItem3(String item3) {
-        this.item3 = item3;
-    }
-
-    public String getItem4() {
-        return item4;
-    }
-
-    public void setItem4(String item4) {
-        this.item4 = item4;
-    }
-
-    public String getExplains() {
-        return explains;
-    }
-
-    public void setExplains(String explains) {
-        this.explains = explains;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public ArrayList<String> getUserAnswer() {
-        return userAnswer;
-    }
-
-    public void setUserAnswer(ArrayList<String> userAnswer) {
-        this.userAnswer = userAnswer;
-    }
+public class Question implements Parcelable {
+    public String id;
+    public String question;
+    public String answer;
+    public String item1;
+    public String item2;
+    public String item3;
+    public String item4;
+    public String explains;
+    public String url;
+    public ArrayList<String> userAnswer;
+    public boolean isSubmit;
 
     public String getQuestionType() {
         if (Integer.parseInt(answer) > 4) {
@@ -111,14 +33,6 @@ public class Question implements Serializable {
             return ExamLib.QUESTION_TYPE_TRUE_FALSE;
         }
         return ExamLib.QUESTION_TYPE_SINGLE_CHOICE;
-    }
-
-    public boolean isSubmit() {
-        return isSubmit;
-    }
-
-    public void setSubmit(boolean submit) {
-        isSubmit = submit;
     }
 
     /**
@@ -183,5 +97,51 @@ public class Question implements Serializable {
         } else {
             return userAnswer != null && userAnswer.size() > 0;
         }
+    }
+
+    protected Question(Parcel in) {
+        id = in.readString();
+        question = in.readString();
+        answer = in.readString();
+        item1 = in.readString();
+        item2 = in.readString();
+        item3 = in.readString();
+        item4 = in.readString();
+        explains = in.readString();
+        url = in.readString();
+        userAnswer = in.createStringArrayList();
+        isSubmit = in.readByte() != 0;
+    }
+
+    public static final Creator<Question> CREATOR = new Creator<Question>() {
+        @Override
+        public Question createFromParcel(Parcel in) {
+            return new Question(in);
+        }
+
+        @Override
+        public Question[] newArray(int size) {
+            return new Question[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(question);
+        dest.writeString(answer);
+        dest.writeString(item1);
+        dest.writeString(item2);
+        dest.writeString(item3);
+        dest.writeString(item4);
+        dest.writeString(explains);
+        dest.writeString(url);
+        dest.writeStringList(userAnswer);
+        dest.writeByte((byte) (isSubmit ? 1 : 0));
     }
 }

@@ -1,99 +1,22 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">哈哈学车</string>
-    <string name="title_activity_start">start</string>
-
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-    <string name="index">哈哈学车</string>
-    <string name="findCoach">寻找教练</string>
-    <string name="appointment">预约学车</string>
-    <string name="mySetting">我的页面</string>
-    <string name="user_registe_cancel_photo">取消</string>
-    <string name="user_registe_start_camera">拍照</string>
-    <string name="user_registe_start_album">从相册选择</string>
-    <string name="select_date">选择日期</string>
-
+    <string name="copyright">武汉小松科技有限公司 版权所有\nCopyright 2016-2016 All Rights Reserved</string>
+    <string name="eventDetailsTips">1）好友通过您的专属二维码注册并成功报名，您的好友报名成功后，您将获得%1$s元，累计无上限，可随时提现。\n\n2）好友需通过您的专属二维码免费试学才能建立推荐关系。\n\n3）如发现作弊行为将取消用户活动资格，并扣除所获奖励。\n\n4）如对本活动规则有任何疑问，请联系哈哈学车客服：400-001-6006</string>
+    <string name="eventDetailsTipsLaw">＊在法律允许的范围内，哈哈学车有权对活动规则进行解释</string>
     <string name="header_hint_refresh_normal">下拉刷新</string>
     <string name="header_hint_refresh_ready">松开刷新</string>
     <string name="header_hint_refresh_loading">正在加载</string>
     <string name="header_hint_refresh_time">时间：</string>
     <string name="footer_hint_load_normal">加载更多</string>
     <string name="footer_hint_load_ready">松开加载更多</string>
-    <!-- 分享 -->
-    <string name="qq">QQ</string>
-    <string name="qzone">空间</string>
-    <string name="weixin">微信</string>
-    <string name="friend_circle">朋友圈</string>
-    <string name="weixin_errcode_success">发送成功</string>
-    <string name="weixin_errcode_cancel">发送取消</string>
-    <string name="weixin_errcode_deny">发送被拒绝</string>
-    <string name="weixin_errcode_unknown">发送返回</string>
-
-    <string name="user_registe_down">完成</string>
-    <string name="coachSchedule">教练课程</string>
-    <string name="mySchedule">我的课程</string>
-    <string name="noScheduleTips">目前还没有新的课程，请您耐心等候哦~</string>
-    <string name="IKnow">我知道了</string>
-    <string name="NotHavingCoachTips">您还没有选择教练哦~</string>
-    <string name="FindCoachTips">赶快寻找属于自己的好教练，加入他们吧！</string>
-    <string name="choseCoach">选择教练</string>
-    <string name="scoreYourCoach">快来给你的教练评个分吧！</string>
-    <string name="confirmScore">确认评分</string>
-    <string name="laterScore">稍后评分</string>
-    <string name="refererAwards">推荐有奖</string>
-    <string name="referFriends">推荐好友</string>
-    <string name="alreadyMakeMoney">已赚取</string>
-    <string name="inviteFriends">邀请好友</string>
-    <string name="eventDetails">活动细则</string>
-    <string name="eventDetailsTips">1）好友通过您的专属二维码注册并成功报名，您的好友报名成功后，您将获得%1$s元，累计无上限，可随时提现。\n\n2）好友需通过您的专属二维码免费试学才能建立推荐关系。\n\n3）如发现作弊行为将取消用户活动资格，并扣除所获奖励。\n\n4）如对本活动规则有任何疑问，请联系哈哈学车客服：400-001-6006</string>
-    <string name="eventDetailsTipsLaw">＊在法律允许的范围内，哈哈学车有权对活动规则进行解释</string>
-    <string name="shareYourLinks">分享您的哈哈学车专属链接</string>
-    <string name="shareLinksTips">在哈哈学车上送给好友￥50\n当好友报名时您可以获得￥150</string>
-    <string name="smsShare">短信分享</string>
-    <string name="copyLink">复制链接</string>
-    <string name="pendingAmount">即将到账</string>
-    <string name="availableAmount">可提现</string>
-    <string name="withdrawnAmount">已提现</string>
-    <string name="wantWithdraw">我要提现</string>
-    <string name="thisWithdraw">本次提现</string>
-    <string name="enterWantWithdrawMoney">输入想要提现的金额</string>
-    <string name="alipay">支付宝</string>
-    <string name="alipayTips">推荐有支付宝的用户使用</string>
-    <string name="wechatpay">微信钱包（暂不支持）</string>
-    <string name="wechatpayTips">推荐安装微信5.0及以上版本使用</string>
-    <string name="cardPay">银行卡（暂不支持）</string>
-    <string name="cardPayTips">支持储蓄卡</string>
-    <string name="sureWithdraw">确认提现</string>
-    <string name="enterAlipayAccount">输入支付宝账号</string>
-    <string name="enterAlipayName">输入支付宝真实姓名</string>
-    <string name="confirm">确认</string>
-    <string name="cancel">取消</string>
-    <string name="enrollInfo">报名信息</string>
-    <string name="groupBuyRightNow">立刻抢团购</string>
-    <string name="makeMoneyNoReferTips">你推荐的小伙伴还没有报名，快去问问他们吧\n你也可以继续推荐更多好友赚取更多佣金哦</string>
-    <string name="supportHaha">支持小哈</string>
-    <string name="softwareInfo">软件信息</string>
-    <string name="versionCheck">版本检测</string>
-    <string name="copyright">武汉小松科技有限公司 版权所有\nCopyright 2016-2016 All Rights Reserved</string>
-    <string name="searchCoachName">搜索教练姓名</string>
-    <string name="historyRecord">历史记录</string>
-    <string name="purchaseCoach">购买教练</string>
-    <string name="onlyShowVIPCoach">只显示VIP教练</string>
-    <string name="priceDetail">价格明细</string>
-    <string name="selectClass">选择班级</string>
-    <string name="morePaymentMethod">更多支付方式</string>
-    <string name="hahaAgreement">点击“完成”即表示您同意并愿意\n遵守哈哈学车用户协议</string>
-    <string name="userAgreement">用户协议</string>
-    <string name="editUsername">修改名称</string>
-    <string name="save">保存</string>
-    <string name="fenqileUsage">哈哈学车携手国内领先的分期购物在线商城分期乐，达成战略合作，为大学生等年轻人提供“先消费后付款”、方便快捷的极致学车体验。采用分期方式报名的学员和支付全款的学员在学车过程中，同等享受优惠活动和哈哈学车的优质服务。点击查看>>分期学车详情</string>
-    <string name="contactTel"><Data><![CDATA[<font color="#616161">哈哈学车客服热线：</font><font color="#ff9e00">400-001-6006</font>]]></Data></string>
-    <string name="contactQQ"><Data><![CDATA[<font color="#616161">哈哈客服：</font><font color="#ff9e00">在线客服</font>]]></Data></string>
-    <string name="moreDetail">查看详情 >></string>
+    <string name="field_filter_hints"><![CDATA[<font color="#ff9e00">图标可多选</font><font color="#bbbbbb">，请选择地图上的图标</font><font color="#ff9e00">“查看训练场地址”</font><font color="#bbbbbb">，可查看教练场教练列表]]></string>
+    <string name="referDialogStr">好东西要分享给朋友，好友通过分享链接并报名哈哈学车后，你将获得%1$s现金奖励，更有机会获得保时捷试驾一日游，上不封顶哦~</string>
     <string name="examRule1">记分规则:模拟考试下不能修改答案,每答对1题得1分,合格标准90分,答题时间45分钟</string>
     <string name="examRule4">记分规则:模拟考试下不能修改答案,每答对1题得2分,合格标准90分,答题时间30分钟</string>
     <string name="passRemarks">本次模拟测试通过,下面的驾驶学习继续努力!</string>
     <string name="notPassRemarks">本次模拟测试不及格,练习后请继续尝试!</string>
-    <string name="referDialogStr">好东西要分享给朋友，好友通过分享链接并报名哈哈学车后，你将获得%1$s现金奖励，更有机会获得保时捷试驾一日游，上不封顶哦~</string>
-
+    <string name="partnerExplain">&#160;&#160;面向初学拿到驾照或有驾照数年未驾过车的学员提供的陪练服务，包括驾驶技术的提升、驾驶经验的传授、安全应变能力的强化，以及在考驾照中所学不到的交通繁忙道路的实际行驶，使学员在短时间内历练出高操的驾车技术，从而达到安全行车的目的。</string>
+    <string name="payment_stage_hints">学员支付的学费将由平台保管，每个阶段结束后，学员可以根据情况，点击确认打款按钮，点击后，
+    平台将阶段对应金额转给教练，然后进入下个阶段。每个阶段的金额会在点击付款后转到教练账号。</string>
+    <string name="myReviewHint">恭喜通过%1$s！您对哈哈学车的教练还满意吗？在这里写下给教练的评价吧！~\n（100字以内）</string>
 </resources>

@@ -1,84 +1,72 @@
 package com.hahaxueche.ui.activity.findCoach;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
+import android.support.v7.app.ActionBar;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.coach.Coach;
-import com.hahaxueche.model.student.PurchasedService;
-import com.hahaxueche.model.user.User;
-import com.hahaxueche.presenter.findCoach.FCCallbackListener;
-import com.hahaxueche.utils.SharedPreferencesUtil;
-import com.hahaxueche.utils.Util;
+import com.hahaxueche.model.payment.PurchasedService;
+import com.hahaxueche.model.user.coach.Coach;
+import com.hahaxueche.presenter.findCoach.PaySuccessPresenter;
+import com.hahaxueche.ui.activity.base.HHBaseActivity;
+import com.hahaxueche.ui.view.findCoach.PaySuccessView;
+import com.hahaxueche.util.Utils;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
- * Created by wangshirui on 16/9/3.
+ * Created by wangshirui on 2016/10/13.
  */
-public class PaySuccessActivity extends FCBaseActivity {
-    private TextView mTvCoachName;
-    private TextView mTvPayTime;
-    private TextView mTvPayAmount;
-    private TextView mTvOrderCode;
-    private TextView mTvShare;
-    private User mUser;
-    private Coach mCoach;//教练
+
+public class PaySuccessActivity extends HHBaseActivity implements PaySuccessView {
+    private PaySuccessPresenter mPresenter;
+    private ImageView mIvBack;
+    private TextView mTvTitle;
+    @BindView(R.id.tv_coach_name)
+    TextView mTvCoachName;
+    @BindView(R.id.tv_pay_amount)
+    TextView mTvPayAmount;
+    @BindView(R.id.tv_pay_time)
+    TextView mTvPayTime;
+    @BindView(R.id.tv_order_code)
+    TextView mTvOrderCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPresenter = new PaySuccessPresenter();
         setContentView(R.layout.activity_pay_success);
-        initViews();
-        loadDatas();
-        initEvents();
+        ButterKnife.bind(this);
+        mPresenter.attachView(this);
+        initActionBar();
     }
 
-    private void initViews() {
-        mTvCoachName = Util.instence(this).$(this, R.id.tv_coach_name);
-        mTvPayTime = Util.instence(this).$(this, R.id.tv_pay_time);
-        mTvPayAmount = Util.instence(this).$(this, R.id.tv_pay_amount);
-        mTvOrderCode = Util.instence(this).$(this, R.id.tv_order_code);
-        mTvShare = Util.instence(this).$(this, R.id.tv_share);
+    private void initActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setCustomView(R.layout.actionbar_base);
+        mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
+        mIvBack.setVisibility(View.GONE);
+        mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        mTvTitle.setText("付款成功");
     }
 
-    private void loadDatas() {
-        SharedPreferencesUtil spUtil = new SharedPreferencesUtil(PaySuccessActivity.this);
-        mUser = spUtil.getUser();
-        if (mUser == null || mUser.getStudent() == null || TextUtils.isEmpty(mUser.getStudent().getCurrent_coach_id())
-                || !mUser.getStudent().hasPurchasedService())
-            return;
-        String coach_id = mUser.getStudent().getCurrent_coach_id();
-        this.fcPresenter.getCoach(coach_id, mUser.getStudent().getId(), new FCCallbackListener<Coach>() {
-            @Override
-            public void onSuccess(Coach coach) {
-                mCoach = coach;
-                mTvCoachName.setText(mCoach.getName());
-                PurchasedService ps = mUser.getStudent().getPurchased_services().get(0);
-                mTvPayTime.setText(Util.getDateFromUTC(ps.getPaid_at()));
-                mTvPayAmount.setText(Util.getMoney(ps.getTotal_amount()));
-                mTvOrderCode.setText(ps.getOrder_no());
-            }
-
-            @Override
-            public void onFailure(String errorEvent, String message) {
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-            }
-        });
+    @Override
+    protected void onDestroy() {
+        mPresenter.detachView();
+        super.onDestroy();
     }
 
-    private void initEvents() {
-        mTvShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setResult(RESULT_OK, null);
-                finish();
-            }
-        });
+    @OnClick(R.id.tv_share)
+    public void share() {
+        setResult(RESULT_OK, null);
+        finish();
     }
 
     @Override
@@ -87,5 +75,13 @@ public class PaySuccessActivity extends FCBaseActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void loadPayInfo(Coach coach, PurchasedService ps) {
+        mTvCoachName.setText(coach.name);
+        mTvPayTime.setText(Utils.getDateFromUTC(ps.paid_at));
+        mTvPayAmount.setText(Utils.getMoney(ps.total_amount));
+        mTvOrderCode.setText(ps.order_no);
     }
 }

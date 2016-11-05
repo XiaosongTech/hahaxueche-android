@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/haha_white"
@@ -10,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.hahaxueche.ui.widget.circleImageView.CircleImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/civ_student_avatar"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -18,7 +19,12 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="15dp"
-            android:background="@drawable/ic_mypage_ava"></com.hahaxueche.ui.widget.circleImageView.CircleImageView>
+            fresco:placeholderImage="@drawable/ic_mypage_ava"
+            fresco:roundAsCircle="true"
+            fresco:roundingBorderColor="@color/haha_white"
+            fresco:roundingBorderWidth="4dp">
+
+        </com.facebook.drawee.view.SimpleDraweeView>
 
         <TextView
             android:id="@+id/tv_student_name"
@@ -27,7 +33,7 @@
             android:layout_alignTop="@id/civ_student_avatar"
             android:layout_marginTop="5dp"
             android:layout_toRightOf="@id/civ_student_avatar"
-            android:textColor="@color/haha_black_light"
+            android:textColor="@color/haha_gray_dark"
             android:textSize="18sp" />
 
         <TextView

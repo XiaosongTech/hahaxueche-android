@@ -7,11 +7,10 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
-import com.hahaxueche.utils.Util;
+import com.hahaxueche.util.Utils;
 
 /**
  * Created by gibxin on 2016/4/19.
@@ -113,7 +112,7 @@ public class BaseConfirmDialog {
         Window window = mDialog.getWindow(); //得到对话框
         WindowManager.LayoutParams wl = window.getAttributes();
         //wl.width = WindowManager.LayoutParams.MATCH_PARENT;
-        wl.width = Util.instence(mContext).getDm().widthPixels * 9 / 10;
+        wl.width = Utils.instence(mContext).getDm().widthPixels * 9 / 10;
         wl.height = WindowManager.LayoutParams.WRAP_CONTENT;
         //wl.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL; //设置重力
         wl.gravity = Gravity.CENTER;

@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:autofit="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/lly_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/haha_white">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1.班别介绍"
+                android:textColor="@color/haha_gray_dark"
+                android:textSize="18sp" />
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <FrameLayout
+                    android:layout_width="5dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/rect_bg_appcolor"></FrameLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:text="超值班"
+                    android:textColor="@color/haha_gray"
+                    android:textSize="16sp" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <me.grantland.widget.AutofitTextView
+                    android:layout_width="0dp"
+                    android:layout_height="25dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rect_bg_gray_bd_gray_ssm"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="四人一车"
+                    android:textColor="@color/app_theme_color"
+                    android:textSize="14sp"
+                    autofit:minTextSize="8sp" />
+
+                <me.grantland.widget.AutofitTextView
+                    android:layout_width="0dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rect_bg_gray_bd_gray_ssm"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="专属学车顾问"
+                    android:textColor="@color/app_theme_color"
+                    android:textSize="14sp"
+                    autofit:minTextSize="8sp" />
+
+                <me.grantland.widget.AutofitTextView
+                    android:layout_width="0dp"
+                    android:layout_height="25dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rect_bg_gray_bd_gray_ssm"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="超高性价比"
+                    android:textColor="@color/app_theme_color"
+                    android:textSize="14sp"
+                    autofit:minTextSize="8sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <me.grantland.widget.AutofitTextView
+                    android:layout_width="0dp"
+                    android:layout_height="25dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rect_bg_gray_bd_gray_ssm"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="绝无隐形收费"
+                    android:textColor="@color/app_theme_color"
+                    android:textSize="14sp"
+                    autofit:minTextSize="8sp" />
+
+                <me.grantland.widget.AutofitTextView
+                    android:layout_width="0dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rect_bg_gray_bd_gray_ssm"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="考前深度复训"
+                    android:textColor="@color/app_theme_color"
+                    android:textSize="14sp"
+                    autofit:minTextSize="8sp" />
+
+                <me.grantland.widget.AutofitTextView
+                    android:layout_width="0dp"
+                    android:layout_height="25dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rect_bg_gray_bd_gray_ssm"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="补考免培训费"
+                    android:textColor="@color/app_theme_color"
+                    android:textSize="14sp"
+                    autofit:minTextSize="8sp" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <FrameLayout
+                    android:layout_width="5dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/rect_bg_appcolor"></FrameLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:text="VIP班"
+                    android:textColor="@color/haha_gray"
+                    android:textSize="16sp" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <me.grantland.widget.AutofitTextView
+                    android:layout_width="0dp"
+                    android:layout_height="25dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rect_bg_gray_bd_gray_ssm"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="一人一车"
+                    android:textColor="@color/app_theme_color"
+                    android:textSize="14sp"
+                    autofit:minTextSize="8sp" />
+
+                <me.grantland.widget.AutofitTextView
+                    android:layout_width="0dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rect_bg_gray_bd_gray_ssm"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="专属学车顾问"
+                    android:textColor="@color/app_theme_color"
+                    android:textSize="14sp"
+                    autofit:minTextSize="8sp" />
+
+                <me.grantland.widget.AutofitTextView
+                    android:layout_width="0dp"
+                    android:layout_height="25dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rect_bg_gray_bd_gray_ssm"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="学车更效率"
+                    android:textColor="@color/app_theme_color"
+                    android:textSize="14sp"
+                    autofit:minTextSize="8sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <me.grantland.widget.AutofitTextView
+                    android:layout_width="0dp"
+                    android:layout_height="25dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rect_bg_gray_bd_gray_ssm"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="绝无隐形收费"
+                    android:textColor="@color/app_theme_color"
+                    android:textSize="14sp"
+                    autofit:minTextSize="8sp" />
+
+                <me.grantland.widget.AutofitTextView
+                    android:layout_width="0dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rect_bg_gray_bd_gray_ssm"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="考前深度复训"
+                    android:textColor="@color/app_theme_color"
+                    android:textSize="14sp"
+                    autofit:minTextSize="8sp" />
+
+                <me.grantland.widget.AutofitTextView
+                    android:layout_width="0dp"
+                    android:layout_height="25dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rect_bg_gray_bd_gray_ssm"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="补考免培训费"
+                    android:textColor="@color/app_theme_color"
+                    android:textSize="14sp"
+                    autofit:minTextSize="8sp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="2.费用明细"
+                android:textColor="@color/haha_gray_dark"
+                android:textSize="18sp" />
+
+            <TableLayout
+                android:id="@+id/table_fee"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/haha_gray_divider"
+                android:stretchColumns="0,1,2,3,4">
+
+                <TableRow>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0.5dp"
+                        android:background="@color/app_theme_color"
+                        android:gravity="center"
+                        android:padding="3dp"
+                        android:text="费用\\班别"
+                        android:textColor="@color/haha_white"
+                        android:textSize="@dimen/text_size_14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0.5dp"
+                        android:background="@color/app_theme_color"
+                        android:gravity="center"
+                        android:padding="3dp"
+                        android:text="C1超值班"
+                        android:textColor="@color/haha_white"
+                        android:textSize="@dimen/text_size_14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0.5dp"
+                        android:background="@color/app_theme_color"
+                        android:gravity="center"
+                        android:padding="3dp"
+                        android:text="C1VIP班"
+                        android:textColor="@color/haha_white"
+                        android:textSize="@dimen/text_size_14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_margin="0.5dp"
+                        android:background="@color/app_theme_color"
+                        android:gravity="center"
+                        android:padding="3dp"
+                        android:text="C2超值班"
+                        android:textColor="@color/haha_white"
+                        android:textSize="@dimen/text_size_14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0.5dp"
+                        android:background="@color/app_theme_color"
+                        android:gravity="center"
+                        android:padding="3dp"
+                        android:text="C2VIP班"
+                        android:textColor="@color/haha_white"
+                        android:textSize="@dimen/text_size_14sp" />
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0.5dp"
+                        android:background="@color/haha_white"
+                        android:gravity="center"
+                        android:padding="3dp"
+                        android:text="培训费"
+                        android:textColor="@color/haha_gray"
+                        android:textSize="@dimen/text_size_14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_train_fee_c1_normal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0.5dp"
+                        android:background="@color/haha_white"
+                        android:gravity="center"
+                        android:padding="3dp"
+                        android:textColor="@color/app_theme_color"
+                        android:textSize="@dimen/text_size_14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_train_fee_c1_vip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0.5dp"
+                        android:background="@color/haha_white"
+                        android:gravity="center"
+                        android:padding="3dp"
+                        android:textColor="@color/app_theme_color"
+                        android:textSize="@dimen/text_size_14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_train_fee_c2_normal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0.5dp"
+                        android:background="@color/haha_white"
+                        android:gravity="center"
+                        android:padding="3dp"
+                        android:textColor="@color/app_theme_color"
+                        android:textSize="@dimen/text_size_14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_train_fee_c2_vip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0.5dp"
+                        android:background="@color/haha_white"
+                        android:gravity="center"
+                        android:padding="3dp"
+                        android:textColor="@color/app_theme_color"
+                        android:textSize="@dimen/text_size_14sp" />
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0.5dp"
+                        android:background="@color/haha_white"
+                        android:gravity="center"
+                        android:padding="3dp"
+                        android:text="总费用"
+                        android:textColor="@color/haha_gray"
+                        android:textSize="@dimen/text_size_14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_total_fee_c1_normal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0.5dp"
+                        android:background="@color/haha_white"
+                        android:gravity="center"
+                        android:padding="3dp"
+                        android:textColor="@color/app_theme_color"
+                        android:textSize="@dimen/text_size_14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_total_fee_c1_vip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0.5dp"
+                        android:background="@color/haha_white"
+                        android:gravity="center"
+                        android:padding="3dp"
+                        android:textColor="@color/app_theme_color"
+                        android:textSize="@dimen/text_size_14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_total_fee_c2_normal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0.5dp"
+                        android:background="@color/haha_white"
+                        android:gravity="center"
+                        android:padding="3dp"
+                        android:textColor="@color/app_theme_color"
+                        android:textSize="@dimen/text_size_14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_total_fee_c2_vip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0.5dp"
+                        android:background="@color/haha_white"
+                        android:gravity="center"
+                        android:padding="3dp"
+                        android:textColor="@color/app_theme_color"
+                        android:textSize="@dimen/text_size_14sp" />
+                </TableRow>
+            </TableLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="3.额外可能产生的费用"
+                android:textColor="@color/haha_gray_dark"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/lly_other_fees"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="如教练收取额外费用，请联系客服400-001-6006"
+                    android:textColor="@color/app_theme_color" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

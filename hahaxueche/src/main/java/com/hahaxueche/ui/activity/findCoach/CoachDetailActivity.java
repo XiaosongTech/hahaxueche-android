@@ -1,76 +1,52 @@
 package com.hahaxueche.ui.activity.findCoach;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
-import android.widget.AdapterView;
-import android.widget.ImageButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.hahaxueche.MyApplication;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.hahaxueche.BuildConfig;
+import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
-import com.hahaxueche.api.net.HttpEngine;
-import com.hahaxueche.model.coach.BriefCoachInfo;
-import com.hahaxueche.model.coach.Coach;
-import com.hahaxueche.model.city.FieldModel;
-import com.hahaxueche.model.response.FollowResponse;
-import com.hahaxueche.model.response.GetReviewsResponse;
-import com.hahaxueche.model.review.ReviewInfo;
-import com.hahaxueche.model.city.City;
-import com.hahaxueche.model.city.CostItem;
-import com.hahaxueche.model.user.Session;
-import com.hahaxueche.model.student.Student;
-import com.hahaxueche.model.base.BaseApiResponse;
-import com.hahaxueche.model.base.BaseBoolean;
-import com.hahaxueche.model.base.BaseKeyValue;
-import com.hahaxueche.model.base.Constants;
-import com.hahaxueche.model.user.User;
-import com.hahaxueche.presenter.findCoach.FCCallbackListener;
-import com.hahaxueche.presenter.mySetting.MSCallbackListener;
-import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
-import com.hahaxueche.ui.activity.mySetting.ReferFriendsActivity;
-import com.hahaxueche.ui.activity.signupLogin.StartActivity;
-import com.hahaxueche.ui.adapter.findCoach.PeerCoachItemAdapter;
-import com.hahaxueche.ui.adapter.findCoach.ReviewItemAdapter;
-import com.hahaxueche.ui.dialog.AppointmentDialog;
-import com.hahaxueche.ui.dialog.BaseConfirmDialog;
+import com.hahaxueche.model.base.Field;
+import com.hahaxueche.model.responseList.ReviewResponseList;
+import com.hahaxueche.model.user.coach.Coach;
+import com.hahaxueche.model.user.coach.Review;
+import com.hahaxueche.presenter.findCoach.CoachDetailPresenter;
+import com.hahaxueche.ui.activity.ActivityCollector;
+import com.hahaxueche.ui.activity.base.HHBaseActivity;
+import com.hahaxueche.ui.activity.login.StartLoginActivity;
+import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
+import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
 import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
-import com.hahaxueche.ui.dialog.FeeDetailDialog;
-import com.hahaxueche.ui.dialog.ShareAppDialog;
-import com.hahaxueche.ui.dialog.ZoomImgDialog;
-import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
+import com.hahaxueche.ui.dialog.ShareDialog;
+import com.hahaxueche.ui.view.findCoach.CoachDetailView;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
-import com.hahaxueche.ui.widget.monitorScrollView.MonitorScrollView;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
-import com.hahaxueche.utils.SharedPreferencesUtil;
-import com.hahaxueche.utils.Util;
-import com.pingplusplus.android.PaymentActivity;
+import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.Utils;
 import com.sina.weibo.sdk.api.WebpageObject;
 import com.sina.weibo.sdk.api.WeiboMessage;
 import com.sina.weibo.sdk.api.share.BaseResponse;
@@ -79,734 +55,343 @@ import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
 import com.sina.weibo.sdk.api.share.SendMessageToWeiboRequest;
 import com.sina.weibo.sdk.constant.WBConstants;
 import com.sina.weibo.sdk.utils.Utility;
-import com.squareup.picasso.Picasso;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzoneShare;
+import com.tencent.mm.sdk.modelbase.BaseReq;
+import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
-import com.umeng.analytics.MobclickAgent;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
-import io.branch.indexing.BranchUniversalObject;
-import io.branch.referral.Branch;
-import io.branch.referral.BranchError;
-import io.branch.referral.util.LinkProperties;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
- * 教练详情Activity
- * Created by gibxin on 2016/2/13.
+ * Created by wangshirui on 16/10/5.
  */
-public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher.OnSwitchItemClickListener, IWeiboHandler.Response {
-    private MonitorScrollView msvCoachDetail;
-    private CircleImageView civCdCoachAvatar;//教练头像
-    private TextView tvCdCoachName;//教练姓名
-    private TextView tvCdCoachDescription;//教练描述
-    private ImageSwitcher isCdCoachDetail;//教练照片
-    private ZoomImgDialog zoomImgDialog = null;
-    private ImageButton ibtnCoachDetialBack;//回退按钮
-    private LinearLayout llyShare;//分享
-    private TextView tvSkillLevel;
-    private ShareAppDialog shareAppDialog;
-    private Coach mCoach;//教练
-    private ProgressDialog pd;//进度框
-    private ImageView ivIsGoldenCoach;
-    private ImageView ivIsGoldenCoachSmall;
-    private TextView tvSatisfactionRate;//满意度
-    private Constants mConstants;
-    private Session mSession;
-    private TextView tvTrainLocation;
-    private LinearLayout llyPeerCoachTitle;
-    private View vwMoreReviews;
-    private TextView tvLicenseType;
-    private TextView tvMoreReviews;
-    //关注
-    private LinearLayout llyFollow;
-    private ImageView ivFollow;
-    private TextView tvFollow;
-    private boolean isLogin = false;
-    private boolean isFollow = false;
-    private FeeDetailDialog feeDetailDialog;
-    private List<CostItem> mCostItemList;
-    private TextView tvCommentCounts;//学员评价数量
-    private ScoreView svAverageRating;//综合得分
-    //评论
-    private ListView lvReviewList;
-    private ReviewItemAdapter reviewItemAdapter;
-    //合作教练
-    private List<BriefCoachInfo> peerCoachList;
-    private ListView lvPeerCoach;
-    private PeerCoachItemAdapter peerCoachItemAdapter;
-    private GetReviewsResponse mGetReviewsResponse;
-    private LinearLayout llyMoreReviews;
-    //确认付款
-    private LinearLayout llySurePay;
-    //免费试学
-    private LinearLayout llyFreeLearn;
-    //学员
-    private Student mStudent;
-    //训练场地
-    private RelativeLayout rlyTrainLoaction;
-    //拿证价格
-    private TextView mTvNormalPrice;//通用价格
-    private TextView mTvOldNormalPrice;//原来的通用价格
-    private TextView mTvNormalPriceDetail;//通用价格明细
-    private RelativeLayout mRlyVIPPrice;
-    private TextView mTvVIPPrice;//VIP班价格
-    private TextView mTvOldVIPPrice;//原来的VIP价格
-    private TextView mTvVIPPriceDetail;//VIP班价格明细
-    private FieldModel mFieldModel;
-    private RelativeLayout mRlyCoachName;
-    private SharedPreferencesUtil spUtil;
-    private String coach_id;
+
+public class CoachDetailActivity extends HHBaseActivity implements CoachDetailView, IWeiboHandler.Response {
+    private CoachDetailPresenter mPresenter;
+    private ImageView mIvBack;
+    private TextView mTvTitle;
+    private ImageView mIvShare;
+    @BindView(R.id.sv_main)
+    ScrollView mSvMain;
+    @BindView(R.id.tv_coach_name)
+    TextView mTvName;
+    @BindView(R.id.tv_description)
+    TextView mTvDescription;
+    @BindView(R.id.iv_coach_avatar)
+    SimpleDraweeView mIvAvatar;
+    @BindView(R.id.is_coach_images)
+    ImageSwitcher mIsImages;
+    @BindView(R.id.rly_info_line)
+    RelativeLayout mRlyInfoLine;
+    @BindView(R.id.iv_is_golden_coach)
+    ImageView mIvGoldenCoach;
+    @BindView(R.id.tv_satisfaction_rate)
+    TextView mTvSatisfactionRate;
+    @BindView(R.id.tv_coach_level)
+    TextView mTvCoachLevel;
+    @BindView(R.id.tv_pass_days)
+    TextView mTvPassDays;
+    @BindView(R.id.tv_pass_rate)
+    TextView mTvPassRate;
+    @BindView(R.id.tv_train_location)
+    TextView mTvTrainLocation;
+    @BindView(R.id.tv_comments_count)
+    TextView mTvCommentsCount;
+    @BindView(R.id.sv_average_rating)
+    ScoreView mSvCoachScore;
+    @BindView(R.id.lly_train_school)
+    LinearLayout mLlyTrainSchool;
+    @BindView(R.id.tv_train_school)
+    TextView mTvTrainSchoolName;
+    @BindView(R.id.lly_peer_coaches)
+    LinearLayout mLlyPeerCoaches;
+    @BindView(R.id.lly_reviews)
+    LinearLayout mLlyReviews;
+    @BindView(R.id.fly_more_comments)
+    FrameLayout mFlyMoreComments;
+    @BindView(R.id.tv_more_reviews)
+    TextView mTvMoreReviews;
+    @BindView(R.id.iv_follow)
+    ImageView mIvFollow;
+    @BindView(R.id.tv_applaud_count)
+    TextView mTvApplaud;
+    @BindView(R.id.lly_prices)
+    LinearLayout mLlyPrices;
+    private ReviewResponseList mReviewResponse;
     /*****************
      * 分享
      ******************/
+    private ShareDialog shareDialog;
     private IWXAPI wxApi; //微信api
     private Tencent mTencent;//QQ
     private IWeiboShareAPI mWeiboShareAPI;//新浪微博
-    private MyApplication myApplication;
+    private HHBaseApplication myApplication;
     private String mTitle;
     private String mDescription;
     private String mImageUrl;
     private String mUrl;
+    private ShareQQListener shareQQListener;
+    private ShareQZoneListener shareQZoneListener;
     /*****************
      * end
      ******************/
-    private TextView mTvApplaudCount;
-    private ImageView mIvApplaud;
-    private boolean isApplaud;
-    private TextView mTvTrainSchoolName;//驾校名称
-    private LinearLayout mLlyTrainSchool;
+
+    private static final int REQUEST_CODE_PURCHASE_COACH = 1;
+    private static final int REQUEST_CODE_PAY_SUCCESS = 2;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Locale locale = Locale.CHINA;
-        Locale.setDefault(locale);
-        Configuration config = getResources().getConfiguration();
-        DisplayMetrics metrics = getResources().getDisplayMetrics();
-        config.locale = Locale.SIMPLIFIED_CHINESE;
-        getResources().updateConfiguration(config, metrics);
+        mPresenter = new CoachDetailPresenter();
         setContentView(R.layout.activity_coach_detail);
-        SharedPreferencesUtil spUtil = new SharedPreferencesUtil(this);
-        mConstants = spUtil.getConstants();
-        mSession = spUtil.getUser().getSession();
-        mStudent = spUtil.getUser().getStudent();
-        if (mSession != null && mStudent != null) {
-            isLogin = true;
-        }
-        //根据当前登录人的cityid，加载费用明细列表
-        if (mConstants != null) {
-            City myCity = spUtil.getMyCity();
-            if (myCity != null) {
-                mCostItemList = myCity.getFixed_cost_itemizer();
+        ButterKnife.bind(this);
+        mPresenter.attachView(this);
+        initActionBar();
+        Intent intent = getIntent();
+        if (intent.getParcelableExtra("coach") != null) {
+            mPresenter.setCoach((Coach) intent.getParcelableExtra("coach"));
+        } else {
+            String coach_id;
+            if (intent.getSerializableExtra("coachId") != null) {
+                coach_id = (String) intent.getSerializableExtra("coachId");
+            } else {
+                coach_id = getIntent().getStringExtra("coach_id");
             }
+            mPresenter.setCoach(coach_id);
         }
-        initView();
-        initEvent();
-        loadDatas();
         regShareApi();
         if (savedInstanceState != null) {
             mWeiboShareAPI.handleWeiboResponse(getIntent(), this);
         }
     }
 
+    @Override
+    public void initShareData(Coach coach) {
+        mTitle = "哈哈学车-选驾校，挑教练，上哈哈学车";
+        mDescription = "好友力荐:\n哈哈学车优秀教练" + coach.name;
+        mImageUrl = "http://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
+        mUrl = BuildConfig.SERVER_URL + "/share/coaches/" + coach.id;
+        HHLog.v("mUrl -> " + mUrl);
+    }
+
+    @Override
+    public void addC1Label(int pos) {
+        RelativeLayout rly = new RelativeLayout(this);
+        rly.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        View dividerView = new View(this);
+        RelativeLayout.LayoutParams viewParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.divider_width));
+        dividerView.setLayoutParams(viewParams);
+        dividerView.setBackgroundResource(R.color.haha_gray_divider);
+        rly.addView(dividerView);
+
+        TextView tvC1Label = new TextView(this);
+        RelativeLayout.LayoutParams labelParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        labelParams.setMargins(Utils.instence(this).dip2px(20), Utils.instence(this).dip2px(15), 0, 0);
+        tvC1Label.setLayoutParams(labelParams);
+        tvC1Label.setText("C1手动档");
+        tvC1Label.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
+        int tvLabelId = Utils.generateViewId();
+        tvC1Label.setId(tvLabelId);
+        rly.addView(tvC1Label);
+
+        TextView tvMore = new TextView(this);
+        RelativeLayout.LayoutParams tvMoreParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvMoreParams.setMargins(Utils.instence(this).dip2px(5), Utils.instence(this).dip2px(15), 0, 0);
+        tvMoreParams.addRule(RelativeLayout.RIGHT_OF, tvLabelId);
+        tvMore.setLayoutParams(tvMoreParams);
+        tvMore.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
+        tvMore.setBackgroundResource(R.drawable.rect_bg_gray_bd_gray_ssm);
+        tvMore.setText("?");
+        int padding = Utils.instence(this).dip2px(4);
+        tvMore.setPadding(padding, 0, padding, 0);
+        tvMore.setGravity(Gravity.CENTER);
+        tvMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BaseAlertSimpleDialog dialog = new BaseAlertSimpleDialog(getContext(), "什么是C1手动档？",
+                        "C1为手动挡小型车驾照，取得了C1类驾驶证的人可以驾驶C2类车");
+                dialog.show();
+            }
+        });
+        rly.addView(tvMore);
+
+        mLlyPrices.addView(rly, pos);
+    }
+
+    @Override
+    public void addC2Label(int pos) {
+        RelativeLayout rly = new RelativeLayout(this);
+        rly.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        View dividerView = new View(this);
+        RelativeLayout.LayoutParams viewParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.divider_width));
+        dividerView.setLayoutParams(viewParams);
+        dividerView.setBackgroundResource(R.color.haha_gray_divider);
+        rly.addView(dividerView);
+
+        TextView tvC2Label = new TextView(this);
+        RelativeLayout.LayoutParams labelParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        labelParams.setMargins(Utils.instence(this).dip2px(20), Utils.instence(this).dip2px(15), 0, 0);
+        tvC2Label.setLayoutParams(labelParams);
+        tvC2Label.setText("C2自动档");
+        tvC2Label.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
+        int tvLabelId = Utils.generateViewId();
+        tvC2Label.setId(tvLabelId);
+        rly.addView(tvC2Label);
+
+        TextView tvMore = new TextView(this);
+        RelativeLayout.LayoutParams tvMoreParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvMoreParams.setMargins(Utils.instence(this).dip2px(5), Utils.instence(this).dip2px(15), 0, 0);
+        tvMoreParams.addRule(RelativeLayout.RIGHT_OF, tvLabelId);
+        tvMore.setLayoutParams(tvMoreParams);
+        tvMore.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
+        tvMore.setBackgroundResource(R.drawable.rect_bg_gray_bd_gray_ssm);
+        tvMore.setText("?");
+        int padding = Utils.instence(this).dip2px(4);
+        tvMore.setPadding(padding, 0, padding, 0);
+        tvMore.setGravity(Gravity.CENTER);
+        tvMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BaseAlertSimpleDialog dialog = new BaseAlertSimpleDialog(getContext(), "什么是C2自动档？",
+                        "C2为自动挡小型车驾照，取得了C2类驾驶证的人不可以驾驶C1类车。" +
+                                "C2驾照培训费要稍贵于C1照。费用的差别主要是由于C2自动挡教练车数量比较少，使用过程中维修费用比较高所致。");
+                dialog.show();
+            }
+        });
+        rly.addView(tvMore);
+
+        mLlyPrices.addView(rly, pos);
+    }
+
+    @Override
+    public void addPrice(int pos, boolean isVIP, int price) {
+        RelativeLayout rly = new RelativeLayout(this);
+        rly.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        TextView tvPriceLabel = new TextView(this);
+        RelativeLayout.LayoutParams tvLabelParams = new RelativeLayout.LayoutParams(Utils.instence(this).dip2px(60), ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvLabelParams.setMargins(Utils.instence(this).dip2px(20), Utils.instence(this).dip2px(15), 0, Utils.instence(this).dip2px(15));
+        tvPriceLabel.setLayoutParams(tvLabelParams);
+        tvPriceLabel.setText(isVIP ? "VIP班" : "普通班");
+        tvPriceLabel.setGravity(Gravity.CENTER);
+        int padding = Utils.instence(this).dip2px(2);
+        tvPriceLabel.setPadding(0, padding, 0, padding);
+        tvPriceLabel.setBackgroundResource(isVIP ? R.drawable.rect_bg_trans_bd_yellow_ssm : R.drawable.rect_bg_trans_bd_appcolor_ssm);
+        tvPriceLabel.setTextColor(ContextCompat.getColor(this, isVIP ? R.color.haha_yellow : R.color.app_theme_color));
+        int tvLabelId = Utils.generateViewId();
+        tvPriceLabel.setId(tvLabelId);
+        rly.addView(tvPriceLabel);
+
+        TextView tvRemarks = new TextView(this);
+        RelativeLayout.LayoutParams tvRemarksParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvRemarksParams.setMargins(Utils.instence(this).dip2px(10), 0, 0, 0);
+        tvRemarksParams.addRule(RelativeLayout.RIGHT_OF, tvLabelId);
+        tvRemarksParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        tvRemarks.setLayoutParams(tvRemarksParams);
+        tvRemarks.setText(isVIP ? "一人一车，极速拿证" : "四人一车，性价比高");
+        tvRemarks.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
+        tvRemarks.setTextSize(16);
+        rly.addView(tvRemarks);
+
+        TextView tvPrice = new TextView(this);
+        RelativeLayout.LayoutParams tvPriceParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvPriceParams.setMargins(0, 0, Utils.instence(this).dip2px(20), 0);
+        tvPriceParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+        tvPriceParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        tvPrice.setLayoutParams(tvPriceParams);
+        tvPrice.setText(Utils.getMoney(price));
+        tvPrice.setTextColor(ContextCompat.getColor(this, isVIP ? R.color.haha_yellow : R.color.app_theme_color));
+        tvPrice.setTextSize(16);
+        rly.addView(tvPrice);
+
+        if (!isVIP) {
+            View dividerView = new View(this);
+            RelativeLayout.LayoutParams viewParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.divider_width));
+            viewParams.addRule(RelativeLayout.BELOW, tvLabelId);
+            viewParams.setMargins(Utils.instence(this).dip2px(20), 0, 0, 0);
+            dividerView.setLayoutParams(viewParams);
+            dividerView.setBackgroundResource(R.color.haha_gray_divider);
+            rly.addView(dividerView);
+        }
+
+        mLlyPrices.addView(rly, pos);
+    }
+
     /**
      * 获取分享API
      */
     private void regShareApi() {
-        myApplication = (MyApplication) this.getApplication();
+        myApplication = HHBaseApplication.get(getContext());
         wxApi = myApplication.getIWXAPI();
         mTencent = myApplication.getTencentAPI();
         mWeiboShareAPI = myApplication.getWeiboAPI();
     }
 
-    private void initView() {
-        msvCoachDetail = Util.instence(this).$(this, R.id.msv_coach_detail);
-        civCdCoachAvatar = Util.instence(this).$(this, R.id.cir_cd_coach_avatar);
-        llyPeerCoachTitle = Util.instence(this).$(this, R.id.lly_peer_coach_title);
-        vwMoreReviews = Util.instence(this).$(this, R.id.vw_more_reviews);
-        tvMoreReviews = Util.instence(this).$(this, R.id.tv_more_reviews);
-
-        tvCdCoachName = Util.instence(this).$(this, R.id.tv_cd_coach_name);
-        tvCdCoachDescription = Util.instence(this).$(this, R.id.tv_cd_coach_description);
-        ibtnCoachDetialBack = Util.instence(this).$(this, R.id.ibtn_coach_detail_back);
-        ivIsGoldenCoach = Util.instence(this).$(this, R.id.iv_cd_is_golden_coach);
-        tvSatisfactionRate = Util.instence(this).$(this, R.id.tv_satisfaction_rate);
-        tvSkillLevel = Util.instence(this).$(this, R.id.tv_skill_level);
-        ivIsGoldenCoachSmall = Util.instence(this).$(this, R.id.iv_cd_is_golden_coach_small);
-        tvTrainLocation = Util.instence(this).$(this, R.id.tv_train_location);
-        tvLicenseType = Util.instence(this).$(this, R.id.tv_license_type);
-        tvCommentCounts = Util.instence(this).$(this, R.id.tv_comments_count);
-        svAverageRating = Util.instence(this).$(this, R.id.sv_average_rating);
-        //关注
-        llyFollow = Util.instence(this).$(this, R.id.lly_follow);
-        ivFollow = Util.instence(this).$(this, R.id.iv_follow);
-        tvFollow = Util.instence(this).$(this, R.id.tv_follow);
-        //评论
-        lvReviewList = Util.instence(this).$(this, R.id.lv_reviews_list);
-        llyMoreReviews = Util.instence(this).$(this, R.id.lly_more_reviews);
-        lvPeerCoach = Util.instence(this).$(this, R.id.lv_peer_coach_list);
-        //确认付款
-        llySurePay = Util.instence(this).$(this, R.id.lly_sure_pay);
-        //免费试学
-        llyFreeLearn = Util.instence(this).$(this, R.id.lly_free_learn);
-
-        isCdCoachDetail = Util.instence(this).$(this, R.id.is_cd_coach_switcher);
-
-        llyShare = Util.instence(this).$(this, R.id.lly_share);
-        rlyTrainLoaction = Util.instence(this).$(this, R.id.rly_location);
-        mRlyCoachName = Util.instence(this).$(this, R.id.fl_cd_coach_name);
-        //价格
-        mTvNormalPrice = Util.instence(this).$(this, R.id.tv_normal_price);
-        mTvOldNormalPrice = Util.instence(this).$(this, R.id.tv_old_normal_price);
-        mTvNormalPriceDetail = Util.instence(this).$(this, R.id.tv_normal_price_detail);
-        mTvVIPPrice = Util.instence(this).$(this, R.id.tv_vip_price);
-        mTvOldVIPPrice = Util.instence(this).$(this, R.id.tv_old_vip_price);
-        mTvVIPPriceDetail = Util.instence(this).$(this, R.id.tv_vip_price_detail);
-        mRlyVIPPrice = Util.instence(this).$(this, R.id.rly_vip_price);
-        //点赞
-        mTvApplaudCount = Util.instence(this).$(this, R.id.tv_applaud_count);
-        mIvApplaud = Util.instence(this).$(this, R.id.iv_applaud);
-        mTvTrainSchoolName = Util.instence(this).$(this, R.id.tv_train_school);
-        mLlyTrainSchool = Util.instence(this).$(this, R.id.lly_train_school);
-    }
-
-    private void initEvent() {
-        isCdCoachDetail.setIndicatorRadius(Util.instence(this).dip2px(3));
-        isCdCoachDetail.setIndicatorDivide(Util.instence(this).dip2px(15));
-        isCdCoachDetail.setOnSwitchItemClickListener(this);
-        ibtnCoachDetialBack.setOnClickListener(mClickListener);
-        llyShare.setOnClickListener(mClickListener);
-        llyFollow.setOnClickListener(mClickListener);
-        llySurePay.setOnClickListener(mClickListener);
-        llyFreeLearn.setOnClickListener(mClickListener);
-        llyMoreReviews.setOnClickListener(mClickListener);
-        rlyTrainLoaction.setOnClickListener(mClickListener);
-        lvPeerCoach.setOnItemClickListener(mItemClickListener);
-        //价格
-        mTvNormalPriceDetail.setOnClickListener(mClickListener);
-        mTvVIPPriceDetail.setOnClickListener(mClickListener);
-        mIvApplaud.setOnClickListener(mClickListener);
-    }
-
-    /**
-     * 数据加载
-     */
-    private void loadDatas() {
-        if (pd != null) {
-            pd.dismiss();
-        }
-        pd = ProgressDialog.show(CoachDetailActivity.this, null, "数据加载中，请稍后……");
-        Intent intent = getIntent();
-        if (intent.getSerializableExtra("coach") != null) {
-            mCoach = (Coach) intent.getSerializableExtra("coach");
-            loadDetail();
-            loadReviews();
-            loadFollow();
-            loadApplaud();
-            if (pd != null) {
-                pd.dismiss();
-            }
-        } else {
-            if (intent.getSerializableExtra("coachId") != null) {
-                coach_id = (String) intent.getSerializableExtra("coachId");
-            } else {
-                coach_id = getIntent().getStringExtra("coach_id");
-            }
-            String studentId = "";
-            if (isLogin) {
-                studentId = mStudent.getId();
-            }
-            this.fcPresenter.getCoach(coach_id, studentId, new FCCallbackListener<Coach>() {
-                @Override
-                public void onSuccess(Coach coach) {
-                    mCoach = coach;
-                    loadDetail();
-                    loadReviews();
-                    loadFollow();
-                    loadApplaud();
-                    if (pd != null) {
-                        pd.dismiss();
-                    }
-                }
-
-                @Override
-                public void onFailure(String errorEvent, String message) {
-                    if (pd != null) {
-                        pd.dismiss();
-                    }
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-    }
-
-    /**
-     * 加载详情
-     */
-    private void loadDetail() {
-        tvCdCoachName.setText(mCoach.getName());
-        tvCdCoachDescription.setText(mCoach.getBio());
-        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
-        int width = wm.getDefaultDisplay().getWidth();
-        int height = Math.round(width * 4 / 5);
-        getCoachAvatar(mCoach.getAvatar(), civCdCoachAvatar);
-        isCdCoachDetail.updateImages(mCoach.getImages(), height);
-        RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-        isCdCoachDetail.setLayoutParams(p);
-        RelativeLayout.LayoutParams paramAvatar = new RelativeLayout.LayoutParams(Util.instence(this).dip2px(70), Util.instence(this).dip2px(70));
-        paramAvatar.setMargins(Util.instence(this).dip2px(30), height - Util.instence(this).dip2px(35), 0, 0);
-        civCdCoachAvatar.setLayoutParams(paramAvatar);
-        RelativeLayout.LayoutParams paramLlyFlCd = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        paramLlyFlCd.addRule(RelativeLayout.ALIGN_BOTTOM, civCdCoachAvatar.getId());
-        mRlyCoachName.setLayoutParams(paramLlyFlCd);
-        //金牌教练显示
-        if (mCoach.getSkill_level().equals("1")) {
-            ivIsGoldenCoach.setVisibility(View.VISIBLE);
-            ivIsGoldenCoachSmall.setVisibility(View.VISIBLE);
-        } else {
-            ivIsGoldenCoach.setVisibility(View.GONE);
-            ivIsGoldenCoachSmall.setVisibility(View.GONE);
-        }
-        tvSatisfactionRate.setText(mCoach.getSatisfaction_rate() + "%");
-        //金牌教练，优秀教练
-        List<BaseKeyValue> skillLevelList = mConstants.getSkill_levels();
-        for (BaseKeyValue skillLevel : skillLevelList) {
-            if (skillLevel.getId().equals(mCoach.getSkill_level())) {
-                tvSkillLevel.setText(skillLevel.getReadable_name());
-                break;
-            }
-        }
-        //价格
-        mTvNormalPrice.setText(Util.getMoney(mCoach.getCoach_group().getTraining_cost()));
-        mTvOldNormalPrice.setText("门市价：" + Util.getMoney(mCoach.getCoach_group().getMarket_price()));
-        mTvOldNormalPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-        if (mCoach.getVip() == 0) {
-            mRlyVIPPrice.setVisibility(View.GONE);
-        } else {
-            mRlyVIPPrice.setVisibility(View.VISIBLE);
-            mTvVIPPrice.setText(Util.getMoney(mCoach.getCoach_group().getVip_price()));
-            mTvOldVIPPrice.setText("门市价：" + Util.getMoney(mCoach.getCoach_group().getVip_market_price()));
-            mTvOldVIPPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-        }
-        //训练场地址
-        List<City> cityList = mConstants.getCities();
-        List<FieldModel> fieldList = mConstants.getFields();
-        for (FieldModel field : fieldList) {
-            if (field.getId().equals(mCoach.getCoach_group().getField_id())) {
-                for (City city : cityList) {
-                    if (city.getId().equals(field.getCity_id())) {
-                        tvTrainLocation.setText(city.getName() + field.getSection() + field.getStreet());
-                        mFieldModel = field;
-                        break;
-                    }
-                }
-            }
-        }
-        peerCoachList = mCoach.getPeer_coaches();
-        if (peerCoachList != null && peerCoachList.size() > 0) {
-            peerCoachItemAdapter = new PeerCoachItemAdapter(CoachDetailActivity.this, peerCoachList, R.layout.view_peer_coach_item);
-            lvPeerCoach.setAdapter(peerCoachItemAdapter);
-            setListViewHeightBasedOnChildren(lvPeerCoach);
-            msvCoachDetail.smoothScrollTo(0, 0);
-        } else {
-            llyPeerCoachTitle.setVisibility(View.GONE);
-        }
-
-
-        if (mCoach.getLicense_type().equals("1")) {
-            tvLicenseType.setText("C1手动档");
-        } else if (mCoach.getLicense_type().equals("2")) {
-            tvLicenseType.setText("C2自动档");
-        } else {
-            tvLicenseType.setText("C1手动档，C2自动挡");
-        }
-        //学员评价数量
-        tvCommentCounts.setText("学员评价（" + mCoach.getReview_count() + "）");
-        //综合得分
-        float averageRating = 0;
-        if (!TextUtils.isEmpty(mCoach.getAverage_rating())) {
-            averageRating = Float.parseFloat(mCoach.getAverage_rating());
-        }
-        if (averageRating > 5) {
-            averageRating = 5;
-        }
-        svAverageRating.setScore(averageRating, true);
-        if (!TextUtils.isEmpty(mCoach.getDriving_school())) {
-            mLlyTrainSchool.setVisibility(View.VISIBLE);
-            mTvTrainSchoolName.setText(mCoach.getDriving_school());
-        } else {
-            mLlyTrainSchool.setVisibility(View.GONE);
-        }
-    }
-
-    private void getCoachAvatar(String url, CircleImageView civCoachAvatar) {
-        final int iconWidth = Util.instence(this).dip2px(70);
-        final int iconHeight = iconWidth;
-        if (!TextUtils.isEmpty(url)) {
-            Picasso.with(this).load(url).resize(iconWidth, iconHeight)
-                    .into(civCoachAvatar);
-        }
-    }
-
-    private void loadReviews() {
-        this.fcPresenter.getReviewList(mCoach.getUser_id(), "", "10", new FCCallbackListener<GetReviewsResponse>() {
+    private void initActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setCustomView(R.layout.actionbar_base_share);
+        mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
+        mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        mTvTitle.setText("教练详情");
+        mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(GetReviewsResponse getReviewsResponse) {
-                mGetReviewsResponse = getReviewsResponse;
-                if (getReviewsResponse.getData() != null && getReviewsResponse.getData().size() > 0) {
-                    List<ReviewInfo> reviewInfos = new ArrayList<ReviewInfo>();
-                    for (int i = 0; i < getReviewsResponse.getData().size(); i++) {
-                        if (i == 2) break;
-                        reviewInfos.add(getReviewsResponse.getData().get(i));
-                    }
-
-                    reviewItemAdapter = new ReviewItemAdapter(CoachDetailActivity.this, reviewInfos, R.layout.view_review_list_item, true);
-                    lvReviewList.setAdapter(reviewItemAdapter);
-                    setListViewHeightBasedOnChildren(lvReviewList);
-                    msvCoachDetail.smoothScrollTo(0, 0);
-
-                } else {
-                    vwMoreReviews.setVisibility(View.GONE);
-                    tvMoreReviews.setText(mCoach.getName() + "教练目前还没有评价");
-                    tvMoreReviews.setTextColor(ContextCompat.getColor(CoachDetailActivity.this, R.color.haha_gray_heavy));
-                    llyMoreReviews.setClickable(false);
-                }
-            }
-
-            @Override
-            public void onFailure(String errorEvent, String message) {
-
+            public void onClick(View v) {
+                CoachDetailActivity.this.finish();
             }
         });
-    }
-
-    private void loadFollow() {
-        //显示关注按钮
-        if (isLogin) {
-            this.fcPresenter.isFollow(mCoach.getUser_id(), mSession.getAccess_token(), new FCCallbackListener<BaseBoolean>() {
-                @Override
-                public void onSuccess(BaseBoolean baseBoolean) {
-                    //已经关注
-                    if (baseBoolean.isTrue()) {
-                        setFollow();
-                        isFollow = true;
-                    }
-                }
-
-                @Override
-                public void onFailure(String errorEvent, String message) {
-                }
-            });
-        }
-    }
-
-    private void loadApplaud() {
-        if (isLogin) {
-            if (!TextUtils.isEmpty(mCoach.getLiked()) && mCoach.getLiked().equals("1")) {
-                mIvApplaud.setImageDrawable(ContextCompat.getDrawable(CoachDetailActivity.this, R.drawable.ic_list_best_click));
-                isApplaud = !isApplaud;
-            }
-        }
-        mTvApplaudCount.setText(String.valueOf(mCoach.getLike_count()));
-    }
-
-    @Override
-    public void onSwitchClick(String url, List<String> urls) {
-        if (zoomImgDialog == null)
-            zoomImgDialog = new ZoomImgDialog(this, R.style.zoom_dialog);
-        zoomImgDialog.setZoomImgeRes(url, urls, "");
-    }
-
-    View.OnClickListener mClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.ibtn_coach_detail_back:
-                    CoachDetailActivity.this.finish();
-                    break;
-                //分享
-                case R.id.lly_share:
-                    showShareAppDialog();
-                    break;
-                //关注
-                case R.id.lly_follow:
-                    if (isLogin) {
-                        if (isFollow) {
-                            CoachDetailActivity.this.fcPresenter.cancelFollow(mCoach.getUser_id(), mSession.getAccess_token(), new FCCallbackListener<BaseApiResponse>() {
-                                @Override
-                                public void onSuccess(BaseApiResponse data) {
-                                    setUnFollow();
-                                    isFollow = false;
-                                    Toast.makeText(context, "已取消关注！", Toast.LENGTH_SHORT).show();
-                                }
-
-                                @Override
-                                public void onFailure(String errorEvent, String message) {
-                                }
-                            });
-                        } else {
-                            CoachDetailActivity.this.fcPresenter.follow(mCoach.getUser_id(), "", mSession.getAccess_token(), new FCCallbackListener<FollowResponse>() {
-                                @Override
-                                public void onSuccess(FollowResponse data) {
-                                    setFollow();
-                                    isFollow = true;
-                                    Toast.makeText(context, "关注成功！", Toast.LENGTH_SHORT).show();
-                                }
-
-                                @Override
-                                public void onFailure(String errorEvent, String message) {
-                                }
-                            });
-                        }
-                    } else {
-                        alertToLogin();
-                    }
-                    break;
-                //拿证价格
-                case R.id.tv_normal_price_detail:
-                    feeDetailDialog = new FeeDetailDialog(CoachDetailActivity.this, mCostItemList, mCoach.getCoach_group().getTraining_cost(), "1", null);
-                    feeDetailDialog.show();
-                    break;
-                case R.id.tv_vip_price_detail:
-                    feeDetailDialog = new FeeDetailDialog(CoachDetailActivity.this, mCostItemList, mCoach.getCoach_group().getVip_price(), "1", null);
-                    feeDetailDialog.show();
-                    break;
-                //确认付款
-                case R.id.lly_sure_pay:
-                    if (isLogin) {
-                        if (mStudent.getPurchased_services() != null && mStudent.getPurchased_services().size() > 0) {
-                            Toast.makeText(context, "您已经选择过教练", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        Intent intent = new Intent(CoachDetailActivity.this, PurchaseCoachActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("coach", mCoach);
-                        intent.putExtras(bundle);
-                        startActivityForResult(intent, 1);
-                    } else {
-                        alertToLogin();
-                    }
-                    break;
-                //免费试学
-                case R.id.lly_free_learn:
-                    freeTry();
-                    break;
-                //加载评论列表页面
-                case R.id.lly_more_reviews:
-                    Intent intent = new Intent(CoachDetailActivity.this, ReviewListActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("getReviewsResponse", mGetReviewsResponse);
-                    bundle.putSerializable("coach", mCoach);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                    break;
-                //训练场
-                case R.id.rly_location:
-                    intent = new Intent(CoachDetailActivity.this, FieldMapActivity.class);
-                    bundle = new Bundle();
-                    bundle.putSerializable("fieldModel", mFieldModel);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                    break;
-                //点赞
-                case R.id.iv_applaud:
-                    applaudClick();
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
-
-    /**
-     * 设置显示关注
-     */
-    private void setFollow() {
-        ivFollow.setImageDrawable(getResources().getDrawable(R.drawable.ic_coachmsg_attention_on));
-        tvFollow.setTextColor(getResources().getColor(R.color.app_theme_color));
-    }
-
-    /**
-     * 设置未关注
-     */
-    private void setUnFollow() {
-        ivFollow.setImageDrawable(getResources().getDrawable(R.drawable.ic_coachmsg_attention_hold));
-        tvFollow.setTextColor(getResources().getColor(R.color.fCTxtGrayFade));
-    }
-
-
-    /**
-     * 提示去登录
-     */
-    private void alertToLogin() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(CoachDetailActivity.this);
-        builder.setTitle("提示");
-        builder.setIcon(R.drawable.ic_launcher);
-        builder.setMessage(R.string.fCPleaseLoginFirst);
-        builder.setPositiveButton(R.string.fCGoNow, new DialogInterface.OnClickListener() {
+        mIvShare = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_share);
+        mIvShare.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(CoachDetailActivity.this, StartActivity.class);
-                intent.putExtra("isBack", "1");
-                startActivity(intent);
-            }
-        });
-        builder.setNegativeButton(R.string.fCLookAround, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.create().show();
-    }
-
-    public void setListViewHeightBasedOnChildren(ListView listView) {
-        // 获取ListView对应的Adapter
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            return;
-        }
-
-        int totalHeight = 0;
-        for (int i = 0, len = listAdapter.getCount(); i < len; i++) {
-            // listAdapter.getCount()返回数据项的数目
-            View listItem = listAdapter.getView(i, null, listView);
-            // 计算子项View 的宽高
-            listItem.measure(0, 0);
-            // 统计所有子项的总高度
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        //params.height = Util.instence(this).dip2px(height) * listAdapter.getCount() + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        // listView.getDividerHeight()获取子项间分隔符占用的高度
-        // params.height最后得到整个ListView完整显示需要的高度
-        listView.setLayoutParams(params);
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1) {
-            if (resultCode == Activity.RESULT_OK) {
-                Intent intent = new Intent(getApplication(), PaySuccessActivity.class);
-                startActivityForResult(intent, 2);
-            }
-        } else if (requestCode == 2) {
-            navigateToShare();
-        }
-    }
-
-    AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (peerCoachList != null && peerCoachList.size() > 0 && position > -1 && position < peerCoachList.size()) {
-                Intent intent = new Intent(CoachDetailActivity.this, CoachDetailActivity.class);
-                intent.putExtra("coach_id", peerCoachList.get(position).getId());
-                startActivity(intent);
-            }
-        }
-    };
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        shareAppDialog = null;
-    }
-
-    private void showShareAppDialog() {
-        if (pd != null) {
-            pd.dismiss();
-        }
-        pd = ProgressDialog.show(CoachDetailActivity.this, null, "数据加载中，请稍后……");
-        BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
-                .setCanonicalIdentifier("coach/" + mCoach.getId())
-                .setTitle("Share Coach")
-                .setContentDescription("Share coach link")
-                .setContentIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
-                .addContentMetadata("coachId", mCoach.getId());
-        LinkProperties linkProperties = new LinkProperties().setChannel("android").setFeature("sharing");
-        branchUniversalObject.generateShortUrl(this, linkProperties, new Branch.BranchLinkCreateListener() {
-            @Override
-            public void onLinkCreate(final String url, BranchError error) {
-                pd.dismiss();
-                if (error == null) {
-                    Log.i("gibxin", "got my Branch link to share: " + url);
-                    shareAppDialog = new ShareAppDialog(CoachDetailActivity.this, new ShareAppDialog.OnShareListener() {
+            public void onClick(View v) {
+                mPresenter.clickShareCount();
+                if (shareDialog == null) {
+                    shareDialog = new ShareDialog(getContext(), new ShareDialog.OnShareListener() {
                         @Override
                         public void onShare(int shareType) {
-                            mTitle = "哈哈学车-开启快乐学车之旅吧～";
-                            mDescription = "好友力荐:\n哈哈学车优秀教练" + mCoach.getName();
-                            mImageUrl = "http://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
-                            try {
-                                mUrl = HttpEngine.BASE_SERVER_IP + "/share/coaches/" + mCoach.getId() + "?target=" + URLEncoder.encode(url, "utf-8");
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
+                            switch (shareType) {
+                                case 0:
+                                    shareToWeixin();
+                                    break;
+                                case 1:
+                                    shareToFriendCircle();
+                                    break;
+                                case 2:
+                                    shareToQQ();
+                                    break;
+                                case 3:
+                                    shareToWeibo();
+                                    break;
+                                case 4:
+                                    shareToQZone();
+                                    break;
+                                default:
+                                    break;
                             }
-                            share(shareType);
                         }
                     });
-                    shareAppDialog.show();
                 }
+                shareDialog.show();
             }
         });
-    }
-
-    private void share(int shareType) {
-        switch (shareType) {
-            case 0:
-                shareToWeixin();
-                break;
-            case 1:
-                shareToFriendCircle();
-                break;
-            case 2:
-                shareToQQ();
-                break;
-            case 3:
-                shareToWeibo();
-                break;
-            case 4:
-                shareToQZone();
-                break;
-            default:
-                break;
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (Branch.isAutoDeepLinkLaunch(this)) {
-            try {
-                String autoDeeplinkedValue = Branch.getInstance().getLatestReferringParams().getString("coachId");
-                coach_id = autoDeeplinkedValue;
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else {
-        }
     }
 
     private void shareToQQ() {
-        ShareListener myListener = new ShareListener();
+        shareQQListener = new ShareQQListener();
         final Bundle params = new Bundle();
         params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
         params.putString(QQShare.SHARE_TO_QQ_TITLE, mTitle);
@@ -814,11 +399,11 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         params.putString(QQShare.SHARE_TO_QQ_SUMMARY, mDescription);
         params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, mImageUrl);
         params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, mUrl);
-        mTencent.shareToQQ(this, params, myListener);
+        mTencent.shareToQQ(this, params, shareQQListener);
     }
 
     private void shareToQZone() {
-        ShareListener myListener = new ShareListener();
+        shareQZoneListener = new ShareQZoneListener();
         final Bundle params = new Bundle();
         params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_APP);
         params.putString(QzoneShare.SHARE_TO_QQ_TITLE, mTitle);
@@ -828,7 +413,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         ArrayList<String> imgUrlList = new ArrayList<>();
         imgUrlList.add(mImageUrl);
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, imgUrlList);
-        mTencent.shareToQzone(this, params, myListener);
+        mTencent.shareToQzone(this, params, shareQZoneListener);
     }
 
     private void shareToWeibo() {
@@ -838,7 +423,7 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         mediaObject.identify = Utility.generateGUID();
         mediaObject.title = mTitle;
         mediaObject.description = mDescription;
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
         // 设置 Bitmap 类型的图片到视频对象里         设置缩略图。 注意：最终压缩过的缩略图大小不得超过 32kb。
         mediaObject.setThumbImage(bitmap);
         mediaObject.actionUrl = mUrl;
@@ -859,13 +444,40 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         WXMediaMessage msg = new WXMediaMessage(webpage);
         msg.title = mTitle;
         msg.description = mDescription;
-        Bitmap thumb = BitmapFactory.decodeResource(CoachDetailActivity.this.getResources(), R.drawable.ic_launcher);
-        msg.thumbData = Util.bmpToByteArray(thumb, true);
+        Bitmap thumb = BitmapFactory.decodeResource(CoachDetailActivity.this.getResources(), R.mipmap.ic_launcher);
+        msg.thumbData = Utils.bmpToByteArray(thumb, true);
         SendMessageToWX.Req req = new SendMessageToWX.Req();
         req.transaction = buildTransaction("webpage");
         req.message = msg;
         //SendMessageToWX.Req.WXSceneTimeline
         req.scene = SendMessageToWX.Req.WXSceneSession;
+        wxApi.handleIntent(getIntent(), new IWXAPIEventHandler() {
+            @Override
+            public void onReq(BaseReq baseReq) {
+
+            }
+
+            @Override
+            public void onResp(BaseResp baseResp) {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
+                switch (baseResp.errCode) {
+                    case BaseResp.ErrCode.ERR_OK:
+                        mPresenter.clickShareSuccessCount("wechat_friend");
+                        showMessage("分享成功");
+                        break;
+                    case BaseResp.ErrCode.ERR_USER_CANCEL:
+                        showMessage("取消分享");
+                        break;
+                    case BaseResp.ErrCode.ERR_AUTH_DENIED:
+                        showMessage("分享失败");
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
         wxApi.sendReq(req);
     }
 
@@ -875,12 +487,39 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         WXMediaMessage msg = new WXMediaMessage(webpage);
         msg.title = mTitle;
         msg.description = mDescription;
-        Bitmap thumb = BitmapFactory.decodeResource(CoachDetailActivity.this.getResources(), R.drawable.ic_launcher);
-        msg.thumbData = Util.bmpToByteArray(thumb, true);
+        Bitmap thumb = BitmapFactory.decodeResource(CoachDetailActivity.this.getResources(), R.mipmap.ic_launcher);
+        msg.thumbData = Utils.bmpToByteArray(thumb, true);
         SendMessageToWX.Req req = new SendMessageToWX.Req();
         req.transaction = buildTransaction("webpage");
         req.message = msg;
         req.scene = SendMessageToWX.Req.WXSceneTimeline;
+        wxApi.handleIntent(getIntent(), new IWXAPIEventHandler() {
+            @Override
+            public void onReq(BaseReq baseReq) {
+
+            }
+
+            @Override
+            public void onResp(BaseResp baseResp) {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
+                switch (baseResp.errCode) {
+                    case BaseResp.ErrCode.ERR_OK:
+                        mPresenter.clickShareSuccessCount("wechat_friend_zone");
+                        showMessage("分享成功");
+                        break;
+                    case BaseResp.ErrCode.ERR_USER_CANCEL:
+                        showMessage("取消分享");
+                        break;
+                    case BaseResp.ErrCode.ERR_AUTH_DENIED:
+                        showMessage("分享失败");
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
         wxApi.sendReq(req);
     }
 
@@ -888,21 +527,62 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
         return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
     }
 
-    private class ShareListener implements IUiListener {
+    private class ShareQQListener implements IUiListener {
 
         @Override
         public void onCancel() {
-            Log.v("gibxin", "onCancel");
+            if (shareDialog != null) {
+                shareDialog.dismiss();
+            }
+            showMessage("取消分享");
         }
 
         @Override
         public void onComplete(Object arg0) {
-            Log.v("gibxin", "onComplete");
+            if (shareDialog != null) {
+                shareDialog.dismiss();
+            }
+            mPresenter.clickShareSuccessCount("QQ_friend");
+            showMessage("分享成功");
         }
 
         @Override
         public void onError(UiError arg0) {
-            Log.v("gibxin", "onError");
+            if (shareDialog != null) {
+                shareDialog.dismiss();
+            }
+            showMessage("分享失败");
+            HHLog.e("分享失败，原因：" + arg0.errorMessage);
+        }
+
+    }
+
+    private class ShareQZoneListener implements IUiListener {
+
+        @Override
+        public void onCancel() {
+            if (shareDialog != null) {
+                shareDialog.dismiss();
+            }
+            showMessage("取消分享");
+        }
+
+        @Override
+        public void onComplete(Object arg0) {
+            if (shareDialog != null) {
+                shareDialog.dismiss();
+            }
+            mPresenter.clickShareSuccessCount("qzone");
+            showMessage("分享成功");
+        }
+
+        @Override
+        public void onError(UiError arg0) {
+            if (shareDialog != null) {
+                shareDialog.dismiss();
+            }
+            showMessage("分享失败");
+            HHLog.e("分享失败，原因：" + arg0.errorMessage);
         }
 
     }
@@ -920,125 +600,393 @@ public class CoachDetailActivity extends FCBaseActivity implements ImageSwitcher
     @Override
     public void onResponse(BaseResponse baseResp) {
         if (baseResp != null) {
-            Log.v("gibxin", "baseResp.errCode" + baseResp.errCode);
+            if (shareDialog != null) {
+                shareDialog.dismiss();
+            }
             switch (baseResp.errCode) {
                 case WBConstants.ErrorCode.ERR_OK:
-                    Toast.makeText(CoachDetailActivity.this, "分享成功", Toast.LENGTH_LONG).show();
+                    mPresenter.clickShareSuccessCount("weibo");
+                    showMessage("分享成功");
                     break;
                 case WBConstants.ErrorCode.ERR_CANCEL:
-                    Toast.makeText(CoachDetailActivity.this, "取消分享", Toast.LENGTH_LONG).show();
+                    showMessage("取消分享");
                     break;
                 case WBConstants.ErrorCode.ERR_FAIL:
-                    Toast.makeText(CoachDetailActivity.this, "分享失败，原因：" + baseResp.errMsg, Toast.LENGTH_LONG).show();
+                    showMessage("分享失败");
+                    HHLog.e("分享失败，原因：" + baseResp.errMsg);
                     break;
             }
         }
     }
 
-    /**
-     * 点赞
-     */
-    private void applaudClick() {
-        if (isLogin) {
-            mIvApplaud.setClickable(false);
-            fcPresenter.applaudCoach(isApplaud, mStudent.getId(), mCoach.getId(), mSession.getAccess_token(), new FCCallbackListener<Coach>() {
-                @Override
-                public void onSuccess(final Coach coach) {
-                    mCoach = coach;
-                    if (isApplaud) {
-                        //取消点赞
-                        mIvApplaud.setImageDrawable(ContextCompat.getDrawable(CoachDetailActivity.this, R.drawable.ic_list_best_unclick));
-                        mTvApplaudCount.setText(String.valueOf(mCoach.getLike_count()));
-                        mIvApplaud.setClickable(true);
-                        isApplaud = !isApplaud;
-                    } else {
-                        //点赞
-                        AnimationSet animationSet = new AnimationSet(true);
-                        ScaleAnimation scaleAnimation = new ScaleAnimation(2f, 1f, 2f, 1f,
-                                Animation.RELATIVE_TO_SELF, 0.5f,
-                                Animation.RELATIVE_TO_SELF, 0.5f);
-                        scaleAnimation.setDuration(200);
-                        animationSet.addAnimation(scaleAnimation);
-                        animationSet.setFillAfter(true); //让其保持动画结束时的状态。
-                        mIvApplaud.startAnimation(animationSet);
-                        new Handler().postDelayed(new Runnable() {
-                            public void run() {
-                                mIvApplaud.setImageDrawable(ContextCompat.getDrawable(CoachDetailActivity.this, R.drawable.ic_list_best_click));
-                                mTvApplaudCount.setText(String.valueOf(mCoach.getLike_count()));
-                                mIvApplaud.setClickable(true);
-                                isApplaud = !isApplaud;
-                            }
-                        }, 200);
-                    }
-                }
 
-                @Override
-                public void onFailure(String errorEvent, String message) {
+    @Override
+    protected void onDestroy() {
+        mPresenter.detachView();
+        super.onDestroy();
+    }
 
-                }
-            });
+    @Override
+    public void showCoachDetail(Coach coach) {
+        mTvName.setText(coach.name);
+        mTvDescription.setText(coach.bio);
+        mIvAvatar.setImageURI(coach.avatar);
+        mIsImages.updateImages(coach.images);
+        int width = Utils.instence(this).getDm().widthPixels;
+        int height = Math.round(width * 4 / 5);
+        RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
+        mIsImages.setLayoutParams(p);
+        RelativeLayout.LayoutParams paramAvatar = new RelativeLayout.LayoutParams(Utils.instence(this).dip2px(70), Utils.instence(this).dip2px(70));
+        paramAvatar.setMargins(Utils.instence(this).dip2px(30), height - Utils.instence(this).dip2px(35), 0, 0);
+        mIvAvatar.setLayoutParams(paramAvatar);
+        RelativeLayout.LayoutParams paramLlyFlCd = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        paramLlyFlCd.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.iv_coach_avatar);
+        paramLlyFlCd.addRule(RelativeLayout.RIGHT_OF, R.id.iv_coach_avatar);
+        mRlyInfoLine.setLayoutParams(paramLlyFlCd);
+        //金牌教练显示
+        if (coach.skill_level.equals("1")) {
+            mIvGoldenCoach.setVisibility(View.VISIBLE);
+            mTvCoachLevel.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(this, R.drawable.ic_auth_golden), null);
         } else {
-            BaseConfirmSimpleDialog baseConfirmDialog = new BaseConfirmSimpleDialog(CoachDetailActivity.this, "请登录", "您只有注册后\n才可以给教练点赞哦~", "去登录", "知道了", new BaseConfirmSimpleDialog.onConfirmListener() {
-                @Override
-                public boolean clickConfirm() {
-                    Intent intent = new Intent(getApplication(), StartActivity.class);
-                    intent.putExtra("isBack", "1");
-                    startActivity(intent);
-                    return true;
-                }
-            }, new BaseConfirmSimpleDialog.onCancelListener() {
-                @Override
-                public boolean clickCancel() {
-                    return true;
-                }
-            });
-            baseConfirmDialog.show();
+            mIvGoldenCoach.setVisibility(View.GONE);
+            mTvCoachLevel.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         }
+
+        mTvSatisfactionRate.setText(Utils.getRate(coach.satisfaction_rate));
+        mTvCoachLevel.setText(coach.skill_level_label);
+        mTvPassDays.setText(coach.average_pass_days + "天");
+        mTvPassRate.setText(Utils.getRate(coach.stage_three_pass_rate));
+        mTvTrainLocation.setText(mPresenter.getTrainingFieldName());
+        ArrayList<Coach> peerCoaches = coach.peer_coaches;
+        if (peerCoaches != null && peerCoaches.size() > 0) {
+            for (Coach peerCoach : peerCoaches) {
+                mLlyPeerCoaches.addView(getPeerCoachAdapter(peerCoach));
+            }
+        } else {
+            mLlyPeerCoaches.setVisibility(View.GONE);
+        }
+        //学员评价数量
+        mTvCommentsCount.setText("学员评价（" + coach.review_count + "）");
+        //综合得分
+        float averageRating = 0;
+        if (!TextUtils.isEmpty(coach.average_rating)) {
+            averageRating = Float.parseFloat(coach.average_rating);
+        }
+        if (averageRating > 5) {
+            averageRating = 5;
+        }
+        mSvCoachScore.setScore(averageRating, true);
+        if (!TextUtils.isEmpty(coach.driving_school)) {
+            mLlyTrainSchool.setVisibility(View.VISIBLE);
+            mTvTrainSchoolName.setText(coach.driving_school);
+        } else {
+            mLlyTrainSchool.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Snackbar.make(mSvMain, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showNoReview(String coachName) {
+        mFlyMoreComments.setClickable(false);
+        mTvMoreReviews.setText(coachName + "教练目前还没有评价");
+        mTvMoreReviews.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
+    }
+
+    @OnClick({R.id.fly_more_comments,
+            R.id.rly_price,
+            R.id.iv_follow,
+            R.id.tv_applaud_count,
+            R.id.tv_pay,
+            R.id.rly_training_field,
+            R.id.tv_free_try
+    })
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_follow:
+                mPresenter.follow();
+                break;
+            case R.id.fly_more_comments:
+                mPresenter.clickCommentsCount();
+                Intent intent = new Intent(getContext(), ReviewListActivity.class);
+                intent.putExtra("coach", mPresenter.getCoach());
+                startActivity(intent);
+            case R.id.rly_price:
+                mPresenter.clickPrice();
+                intent = new Intent(getContext(), PriceActivity.class);
+                intent.putExtra("coach", mPresenter.getCoach());
+                startActivity(intent);
+                break;
+            case R.id.tv_applaud_count:
+                mPresenter.applaud();
+                break;
+            case R.id.tv_pay:
+                mPresenter.clickPurchaseCount();
+                mPresenter.purchaseCoach();
+                break;
+            case R.id.rly_training_field:
+                mPresenter.clickTrainFieldCount();
+                Field field = mPresenter.getTrainingField();
+                if (field != null) {
+                    intent = new Intent(getContext(), FieldMapActivity.class);
+                    intent.putExtra("field", field);
+                    startActivity(intent);
+                }
+                break;
+            case R.id.tv_free_try:
+                mPresenter.freeTry();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void showReviews(ReviewResponseList responseList) {
+        mReviewResponse = responseList;
+        int showReviewCount = responseList.data.size() > 3 ? 3 : responseList.data.size();
+        for (int i = 0; i < showReviewCount; i++) {
+            mLlyReviews.addView(getReviewAdapter(responseList.data.get(i), i == showReviewCount - 1), i + 2);
+        }
+    }
+
+    @Override
+    public void enableFollow(boolean enable) {
+        mIvFollow.setClickable(enable);
+    }
+
+    @Override
+    public void showFollow(boolean isFollow) {
+        if (isFollow) {
+            mIvFollow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_coachmsg_attention_on));
+        } else {
+            mIvFollow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_coachmsg_attention_hold));
+        }
+    }
+
+    @Override
+    public void enableApplaud(boolean enable) {
+        mTvApplaud.setClickable(enable);
+    }
+
+    @Override
+    public void showApplaud(boolean isApplaud) {
+        mTvApplaud.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(this, isApplaud ? R.drawable.ic_list_best_click : R.drawable.ic_list_best_unclick), null, null, null);
+    }
+
+    @Override
+    public void setApplaudCount(int count) {
+        mTvApplaud.setText(String.valueOf(count));
+    }
+
+    @Override
+    public void startApplaudAnimation() {
+        //点赞
+        AnimationSet animationSet = new AnimationSet(true);
+        ScaleAnimation scaleAnimation = new ScaleAnimation(2f, 1f, 2f, 1f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+        scaleAnimation.setDuration(200);
+        animationSet.addAnimation(scaleAnimation);
+        animationSet.setFillAfter(true); //让其保持动画结束时的状态。
+        mTvApplaud.startAnimation(animationSet);
+    }
+
+
+    @Override
+    public void navigateToPurchaseCoach(Coach coach) {
+        if (coach == null) return;
+        Intent intent = new Intent(getContext(), PurchaseCoachActivity.class);
+        intent.putExtra("coach", coach);
+        startActivityForResult(intent, REQUEST_CODE_PURCHASE_COACH);
+    }
+
+    private RelativeLayout getPeerCoachAdapter(final Coach coach) {
+        RelativeLayout rly = new RelativeLayout(this);
+        LinearLayout.LayoutParams rlyParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        rly.setLayoutParams(rlyParams);
+
+        SimpleDraweeView ivAvatar = new SimpleDraweeView(this);
+        GenericDraweeHierarchy hierarchy = ivAvatar.getHierarchy();
+        hierarchy.setPlaceholderImage(R.drawable.ic_coach_ava);
+        hierarchy.setRoundingParams(new RoundingParams().setRoundAsCircle(true));
+        RelativeLayout.LayoutParams ivAvatarParams = new RelativeLayout.LayoutParams(Utils.instence(this).dip2px(40), Utils.instence(this).dip2px(40));
+        ivAvatarParams.setMargins(Utils.instence(this).dip2px(20), Utils.instence(this).dip2px(15), Utils.instence(this).dip2px(10), Utils.instence(this).dip2px(15));
+        ivAvatar.setLayoutParams(ivAvatarParams);
+        ivAvatar.setImageURI(coach.avatar);
+        int ivAvatarId = Utils.generateViewId();
+        ivAvatar.setId(ivAvatarId);
+        rly.addView(ivAvatar);
+
+        TextView tvName = new TextView(this);
+        RelativeLayout.LayoutParams tvNameParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvNameParams.addRule(RelativeLayout.RIGHT_OF, ivAvatarId);
+        tvNameParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        tvName.setLayoutParams(tvNameParams);
+        tvName.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
+        tvName.setTextSize(16);
+        tvName.setText(coach.name);
+        rly.addView(tvName);
+
+        ImageView ivArrow = new ImageView(this);
+        RelativeLayout.LayoutParams ivArrowParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        ivArrowParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        ivArrowParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+        ivArrowParams.setMargins(0, 0, Utils.instence(this).dip2px(20), 0);
+        ivArrow.setLayoutParams(ivArrowParams);
+        ivArrow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_coachmsg_more_arrow));
+        rly.addView(ivArrow);
+
+        View divider = new View(this);
+        RelativeLayout.LayoutParams dividerParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.divider_width));
+        dividerParams.setMargins(Utils.instence(this).dip2px(20), 0, 0, 0);
+        dividerParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+        divider.setLayoutParams(dividerParams);
+        divider.setBackgroundColor(ContextCompat.getColor(this, R.color.haha_gray_divider));
+        rly.addView(divider);
+
+        //点击合作教练,查看详情
+        rly.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), CoachDetailActivity.class);
+                intent.putExtra("coach_id", coach.id);
+                startActivity(intent);
+            }
+        });
+
+        return rly;
+    }
+
+    private RelativeLayout getReviewAdapter(Review review, boolean isLastLine) {
+        RelativeLayout rly = new RelativeLayout(this);
+        LinearLayout.LayoutParams rlyParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        rly.setLayoutParams(rlyParams);
+
+        SimpleDraweeView ivAvatar = new SimpleDraweeView(this);
+        GenericDraweeHierarchy hierarchy = ivAvatar.getHierarchy();
+        hierarchy.setPlaceholderImage(R.drawable.ic_mypage_ava);
+        hierarchy.setRoundingParams(new RoundingParams().setRoundAsCircle(true));
+        RelativeLayout.LayoutParams ivAvatarParams = new RelativeLayout.LayoutParams(Utils.instence(this).dip2px(40), Utils.instence(this).dip2px(40));
+        ivAvatarParams.setMargins(Utils.instence(this).dip2px(20), Utils.instence(this).dip2px(15), 0, 0);
+        ivAvatar.setLayoutParams(ivAvatarParams);
+        ivAvatar.setImageURI(review.reviewer.avatar);
+        int ivAvatarId = Utils.generateViewId();
+        ivAvatar.setId(ivAvatarId);
+        rly.addView(ivAvatar);
+
+        TextView tvName = new TextView(this);
+        RelativeLayout.LayoutParams tvNameParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvNameParams.addRule(RelativeLayout.RIGHT_OF, ivAvatarId);
+        tvNameParams.addRule(RelativeLayout.ALIGN_TOP, ivAvatarId);
+        tvNameParams.setMargins(Utils.instence(this).dip2px(10), 0, 0, 0);
+        tvName.setLayoutParams(tvNameParams);
+        tvName.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
+        tvName.setTextSize(18);
+        tvName.setText(review.reviewer.name);
+        int tvNameId = Utils.generateViewId();
+        tvName.setId(tvNameId);
+        rly.addView(tvName);
+
+        TextView tvReviewDate = new TextView(this);
+        RelativeLayout.LayoutParams tvReviewDateParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvReviewDateParams.addRule(RelativeLayout.ALIGN_BOTTOM, tvNameId);
+        tvReviewDateParams.addRule(RelativeLayout.RIGHT_OF, tvNameId);
+        tvReviewDateParams.setMargins(Utils.instence(this).dip2px(6), 0, 0, 0);
+        tvReviewDate.setLayoutParams(tvReviewDateParams);
+        tvReviewDate.setTextColor(ContextCompat.getColor(this, R.color.haha_gray_text));
+        tvReviewDate.setTextSize(12);
+        tvReviewDate.setText(review.updated_at.substring(0, 10));
+        rly.addView(tvReviewDate);
+
+        ScoreView svScore = new ScoreView(this);
+        RelativeLayout.LayoutParams svScoreParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        svScoreParams.addRule(RelativeLayout.ALIGN_BOTTOM, tvNameId);
+        svScoreParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+        svScoreParams.setMargins(0, 0, Utils.instence(this).dip2px(20), 0);
+        svScore.setLayoutParams(svScoreParams);
+        float reviewerRating = 0;
+        if (!TextUtils.isEmpty(review.rating)) {
+            reviewerRating = Float.parseFloat(review.rating);
+        }
+        if (reviewerRating > 5) {
+            reviewerRating = 5;
+        }
+        svScore.setScore(reviewerRating, false);
+        rly.addView(svScore);
+
+        TextView tvComment = new TextView(this);
+        RelativeLayout.LayoutParams tvCommentParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvCommentParams.addRule(RelativeLayout.ALIGN_LEFT, tvNameId);
+        tvCommentParams.addRule(RelativeLayout.BELOW, tvNameId);
+        tvCommentParams.setMargins(0, Utils.instence(this).dip2px(10), Utils.instence(this).dip2px(20), 0);
+        tvComment.setLayoutParams(tvCommentParams);
+        tvComment.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
+        tvComment.setTextSize(12);
+        tvComment.setText(review.comment);
+        tvComment.setLineSpacing(0, 1.2f);
+        int tvCommentId = Utils.generateViewId();
+        tvComment.setId(tvCommentId);
+        rly.addView(tvComment);
+
+        View divider = new View(this);
+        RelativeLayout.LayoutParams dividerParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.divider_width));
+        if (!isLastLine) {
+            dividerParams.setMargins(Utils.instence(this).dip2px(20), Utils.instence(this).dip2px(15), 0, 0);
+        } else {
+            dividerParams.setMargins(0, Utils.instence(this).dip2px(15), 0, 0);
+        }
+        dividerParams.addRule(RelativeLayout.BELOW, tvCommentId);
+        divider.setLayoutParams(dividerParams);
+        divider.setBackgroundColor(ContextCompat.getColor(this, R.color.haha_gray_divider));
+        rly.addView(divider);
+
+        return rly;
+    }
+
+    @Override
+    public void alertToLogin(String alertMessage) {
+        BaseConfirmSimpleDialog dialog = new BaseConfirmSimpleDialog(getContext(), "请登录", alertMessage, "去登录", "知道了",
+                new BaseConfirmSimpleDialog.onConfirmListener() {
+                    @Override
+                    public boolean clickConfirm() {
+                        ActivityCollector.finishAll();
+                        Intent intent = new Intent(getContext(), StartLoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        return false;
+                    }
+                }, new BaseConfirmSimpleDialog.onCancelListener() {
+            @Override
+            public boolean clickCancel() {
+                return false;
+            }
+        });
+        dialog.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_PURCHASE_COACH) {
+            if (resultCode == Activity.RESULT_OK) {
+                startActivityForResult(new Intent(getContext(), PaySuccessActivity.class), REQUEST_CODE_PAY_SUCCESS);
+            }
+        } else if (requestCode == REQUEST_CODE_PAY_SUCCESS) {
+            startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+        }
+        Tencent.onActivityResultData(requestCode, resultCode, data, shareQQListener);
+        Tencent.onActivityResultData(requestCode, resultCode, data, shareQZoneListener);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     public void finish() {
         Intent intent = new Intent();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("coach", mCoach);
-        intent.putExtras(bundle);
-        Log.v("gibxin", "setResult -> " + RESULT_OK);
+        intent.putExtra("coach", mPresenter.getCoach());
         setResult(RESULT_OK, intent);
         super.finish();
     }
-
-    private void freeTry() {
-        Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
-        Bundle bundle = new Bundle();
-        //免费试学URL
-        String url = "http://m.hahaxueche.com/free_trial?promo_code=553353";
-        if (spUtil == null) {
-            spUtil = new SharedPreferencesUtil(getApplicationContext());
-        }
-        if (spUtil.getUser() != null && spUtil.getUser().getStudent() != null) {
-            if (!TextUtils.isEmpty(mCoach.getId())) {
-                url += "&coach_id=" + mCoach.getId();
-            }
-            if (!TextUtils.isEmpty(spUtil.getUser().getStudent().getCity_id())) {
-                url += "&city_id=" + spUtil.getUser().getStudent().getCity_id();
-            }
-            if (!TextUtils.isEmpty(spUtil.getUser().getStudent().getName())) {
-                url += "&name=" + spUtil.getUser().getStudent().getName();
-            }
-            if (!TextUtils.isEmpty(spUtil.getUser().getStudent().getCell_phone())) {
-                url += "&phone=" + spUtil.getUser().getStudent().getCell_phone();
-            }
-
-        }
-        Log.v("gibxin", "free try url -> " + url);
-        bundle.putString("url", url);
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
-
-    private void navigateToShare() {
-        Intent intent = new Intent(getApplication(), ReferFriendsActivity.class);
-        startActivity(intent);
-    }
-
 }

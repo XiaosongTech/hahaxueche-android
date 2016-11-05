@@ -1,150 +1,95 @@
 package com.hahaxueche.model.base;
 
-import com.hahaxueche.model.city.FieldModel;
-import com.hahaxueche.model.city.City;
-import com.hahaxueche.model.student.Bank;
-
 import java.util.ArrayList;
-import java.util.List;
 
 /**
- * 常量数据模型
- * Created by gibxin on 2016/2/3.
+ * Created by wangshirui on 16/9/8.
  */
 public class Constants {
-    private List<City> cities;
-    private List<FieldModel> fields;
-    private List<BaseKeyValue> skill_levels;
-    private ArrayList<Banner> new_login_banners;
-    private ArrayList<Banner> new_home_page_banners;
-    private ArrayList<String> login_banners;
-    private ArrayList<String> home_page_banners;
-    private List<BaseKeyValue> service_types;
-    private ArrayList<BannerHighlight> banner_highlights;
-    private String version_name;
-    private int version_code;
-    private ArrayList<Bank> banks;
-    private String message;
-    private String code;
-    private boolean isSuccess = true;
+    public ArrayList<City> cities;
+    public ArrayList<Field> fields;
+    public ArrayList<BaseItemType> license_types;
+    public ArrayList<BaseItemType> service_types;
+    public ArrayList<BaseItemType> product_types;
+    public ArrayList<BaseItemType> skill_levels;
+    public ArrayList<SortType> sort_by_keywords;
+    public ArrayList<Banner> new_login_banners;
+    public ArrayList<Banner> new_home_page_banners;
+    public ArrayList<BaseItemType> schedule_course_status;
+    public ArrayList<BannerHighlight> banner_highlights;
+    public String version_name;
+    public int version_code;
+    public ArrayList<Bank> banks;
+    public Statistics statistics;
+    public ArrayList<ArticleCategory> article_categories;
 
-    public List<City> getCities() {
-        return cities;
+    public City getCity(int cityId) {
+        City myCity = cities.get(0);
+        for (City city : cities) {
+            if (city.id == cityId) {
+                myCity = city;
+                break;
+            }
+        }
+        return myCity;
     }
 
-    public void setCities(List<City> cities) {
-        this.cities = cities;
+    public String getSectionName(String fieldId) {
+        String ret = "";
+        if (fields == null || fields.size() < 1) return ret;
+        for (Field field : fields) {
+            if (field.id.equals(fieldId)) {
+                ret = getCityName(field.city_id) + field.section;
+                break;
+            }
+        }
+        return ret;
     }
 
-    public List<FieldModel> getFields() {
-        return fields;
+    public String getCityName(int cityId) {
+        String ret = "";
+        if (cities == null || cities.size() < 1) return ret;
+        for (City city : cities) {
+            if (city.id == cityId) {
+                ret = city.name;
+                break;
+            }
+        }
+        return ret;
     }
 
-    public void setFields(List<FieldModel> fields) {
-        this.fields = fields;
+    public Field getField(String fieldId) {
+        Field ret = null;
+        if (fields != null && fields.size() > 0) {
+            for (Field field : fields) {
+                if (field.id.equals(fieldId)) {
+                    ret = field;
+                    break;
+                }
+            }
+        }
+        return ret;
     }
 
-    public List<BaseKeyValue> getSkill_levels() {
-        return skill_levels;
+    public ArrayList<Field> getFields(int cityId) {
+        ArrayList<Field> retFields = new ArrayList<>();
+        for (Field field : fields) {
+            if (field.city_id == cityId) {
+                retFields.add(field);
+            }
+        }
+        return retFields;
     }
 
-    public void setSkill_levels(List<BaseKeyValue> skill_levels) {
-        this.skill_levels = skill_levels;
-    }
-
-    public ArrayList<Banner> getNew_login_banners() {
-        return new_login_banners;
-    }
-
-    public void setNew_login_banners(ArrayList<Banner> new_login_banners) {
-        this.new_login_banners = new_login_banners;
-    }
-
-    public ArrayList<Banner> getNew_home_page_banners() {
-        return new_home_page_banners;
-    }
-
-    public void setNew_home_page_banners(ArrayList<Banner> new_home_page_banners) {
-        this.new_home_page_banners = new_home_page_banners;
-    }
-
-    public ArrayList<String> getLogin_banners() {
-        return login_banners;
-    }
-
-    public void setLogin_banners(ArrayList<String> login_banners) {
-        this.login_banners = login_banners;
-    }
-
-    public ArrayList<String> getHome_page_banners() {
-        return home_page_banners;
-    }
-
-    public void setHome_page_banners(ArrayList<String> home_page_banners) {
-        this.home_page_banners = home_page_banners;
-    }
-
-    public List<BaseKeyValue> getService_types() {
-        return service_types;
-    }
-
-    public void setService_types(List<BaseKeyValue> service_types) {
-        this.service_types = service_types;
-    }
-
-    public ArrayList<BannerHighlight> getBanner_highlights() {
-        return banner_highlights;
-    }
-
-    public void setBanner_highlights(ArrayList<BannerHighlight> banner_highlights) {
-        this.banner_highlights = banner_highlights;
-    }
-
-    public String getVersion_name() {
-        return version_name;
-    }
-
-    public void setVersion_name(String version_name) {
-        this.version_name = version_name;
-    }
-
-    public int getVersion_code() {
-        return version_code;
-    }
-
-    public void setVersion_code(int version_code) {
-        this.version_code = version_code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public boolean isSuccess() {
-        return isSuccess;
-    }
-
-    public void setIsSuccess(boolean isSuccess) {
-        this.isSuccess = isSuccess;
-    }
-
-    public ArrayList<Bank> getBanks() {
-        return banks;
-    }
-
-    public void setBanks(ArrayList<Bank> banks) {
-        this.banks = banks;
+    public String getCourseName(int cityId, int courseId) {
+        String ret = "";
+        City city = getCity(cityId);
+        for (Course course : city.courses) {
+            if (course.id == courseId) {
+                ret = course.display_name;
+                break;
+            }
+        }
+        return ret;
     }
 }

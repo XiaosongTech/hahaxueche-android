@@ -1,30 +1,35 @@
 <resources>
 
-    <!-- Base application theme.
-    <style name="AppTheme" parent="Theme.AppCompat">
-        <item name="windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsTranslucent">false</item>
-        <item name="android:windowBackground">@null</item>
-        <item name="android:windowFullscreen">false</item>
-    </style>
-     -->
-
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
 
         <!-- toolbar（actionbar）颜色 -->
-        <item name="colorPrimary">#ffe17b20</item>
+        <item name="colorPrimary">@color/app_theme_color</item>
         <!-- 状态栏颜色 -->
-        <item name="colorPrimaryDark">#ffcb670e</item>
+        <item name="colorPrimaryDark">@color/app_theme_color</item>
         <!-- 窗口的背景颜色 -->
         <item name="android:windowBackground">@color/app_theme_color</item>
-        <!-- SearchView -->
-        <item name="searchViewStyle">@style/MySearchViewStyle</item>
         <!--文字颜色-->
-        <item name="android:textColorPrimary">#fff</item>
+        <item name="android:textColorPrimary">@color/haha_gray</item>
     </style>
 
+    <style name="AppBaseThemeNoTitle" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <!-- toolbar（actionbar）颜色 -->
+        <item name="colorPrimary">@color/app_theme_color</item>
+        <!-- 状态栏颜色 -->
+        <item name="colorPrimaryDark">@color/app_theme_color</item>
+        <!-- 窗口的背景颜色 -->
+        <item name="android:windowBackground">@color/app_theme_color</item>
+        <!--文字颜色-->
+        <item name="android:textColorPrimary">@color/haha_gray</item>
+    </style>
+
+    <!-- Base application theme. -->
     <style name="AppTheme" parent="@style/AppBaseTheme">
+        <item name="android:windowAnimationStyle">@style/activityAnimation</item>
+    </style>
+
+    <style name="AppThemeNoTitle" parent="@style/AppBaseThemeNoTitle">
         <item name="android:windowAnimationStyle">@style/activityAnimation</item>
     </style>
 
@@ -36,28 +41,6 @@
         <item name="android:activityCloseExitAnimation">@anim/activity_slide_right_out</item>
     </style>
 
-    <style name="MySearchViewStyle" parent="Widget.AppCompat.SearchView">
-        <!--
-    Background for the search query section (e.g. EditText)
-    <item name="queryBackground">...</item>
-    Background for the actions section (e.g. voice, submit)
-    <item name="submitBackground">...</item>
-    Close button icon
-    <item name="closeIcon">...</item>
-    Search button icon
-    <item name="searchIcon">...</item>
-    Go/commit button icon
-    <item name="goIcon">...</item>
-    Voice search button icon
-    <item name="voiceIcon">...</item>
-    Commit icon shown in the query suggestion row
-    <item name="commitIcon">...</item>
-    Layout for query suggestion rows
-    <item name="suggestionRowLayout">...</item>
-        -->
-
-    </style>
-
     <style name="my_dialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
@@ -66,22 +49,6 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
     </style>
-
-    <style name="zoom_dialog" parent="@android:style/Theme.Dialog">
-        <item name="android:windowFrame">@null</item>
-        <!-- 状态栏颜色 -->
-        <item name="colorPrimaryDark">#ffcb670e</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:backgroundDimEnabled">false</item>
-        <item name="android:windowBackground">@android:color/black</item>
-    </style>
-
-    <style name="menu_labels_style">
-        <item name="android:background">@android:color/white</item>
-        <item name="android:textColor">@android:color/holo_blue_light</item>
-    </style>
-
 
     <style name="map_dialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
@@ -98,41 +65,28 @@
         <!--模糊-->
     </style>
 
-    <style name="NoAnimationTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowAnimationStyle">@style/noAnimation</item>
-        <item name="android:windowNoTitle">true</item>
-    </style>
-
-    <style name="noAnimation">
-        <item name="android:activityOpenEnterAnimation">@null</item>
-        <item name="android:activityOpenExitAnimation">@null</item>
-        <item name="android:activityCloseEnterAnimation">@null</item>
-        <item name="android:activityCloseExitAnimation">@null</item>
-        <item name="android:taskOpenEnterAnimation">@null</item>
-        <item name="android:taskOpenExitAnimation">@null</item>
-        <item name="android:taskCloseEnterAnimation">@null</item>
-        <item name="android:taskCloseExitAnimation">@null</item>
-        <item name="android:taskToFrontEnterAnimation">@null</item>
-        <item name="android:taskToFrontExitAnimation">@null</item>
-        <item name="android:taskToBackEnterAnimation">@null</item>
-        <item name="android:taskToBackExitAnimation">@null</item>
-    </style>
-
     <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/checkbox_style</item>
     </style>
 
-    <style name="FullScreen_Dialog_Transparent" parent="android:style/Theme.Dialog">
-
-        <item name="android:background">#60606060</item>
-        <!-- 设置自定义布局的背景透明 -->
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <!-- 设置window背景透明，也就是去边框 -->
+    <style name="MyTabLayoutTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/haha_gray_text</item>
     </style>
 
-    <style name="FullScreen_Dialog">
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowNoTitle">true</item>
+    <style name="MyTabLayoutTextAppearanceInverse" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/haha_gray_text</item>
+    </style>
+
+    <style name="ArticleTabLayoutTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/haha_gray_text</item>
+    </style>
+
+    <style name="ArticleTabLayoutTextAppearanceInverse" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/haha_gray_text</item>
     </style>
 
 </resources>

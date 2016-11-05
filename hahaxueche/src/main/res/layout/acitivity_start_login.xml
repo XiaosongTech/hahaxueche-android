@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.bigkoo.convenientbanner.ConvenientBanner
+                    android:id="@+id/banner_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    app:canLoop="true" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_start_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/rect_bg_trans_bd_white_corner"
+                android:gravity="center"
+                android:paddingBottom="12dp"
+                android:paddingTop="12dp"
+                android:text="登录"
+                android:textColor="@color/haha_white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_start_register"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginTop="13dp"
+                android:background="@drawable/rect_bg_trans_bd_white_corner"
+                android:gravity="center"
+                android:paddingBottom="12dp"
+                android:paddingTop="12dp"
+                android:text="注册"
+                android:textColor="@color/haha_white"
+                android:textSize="18sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginTop="26dp"
+                android:background="@color/haha_white" />
+
+            <TextView
+                android:id="@+id/tv_tourist_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="进去逛逛"
+                android:textColor="@color/haha_white"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

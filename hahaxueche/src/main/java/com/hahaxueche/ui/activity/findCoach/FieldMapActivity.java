@@ -4,11 +4,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
@@ -18,53 +20,72 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.hahaxueche.R;
-import com.hahaxueche.model.city.FieldModel;
-import com.hahaxueche.model.city.Location;
-import com.hahaxueche.utils.SharedPreferencesUtil;
-import com.hahaxueche.utils.Util;
+import com.hahaxueche.model.base.Field;
+import com.hahaxueche.presenter.findCoach.FieldMapPresenter;
+import com.hahaxueche.ui.activity.base.HHBaseActivity;
+import com.hahaxueche.ui.view.findCoach.FieldMapView;
+import com.hahaxueche.util.Utils;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
- * Created by gibxin on 2016/3/6.
+ * Created by wangshirui on 2016/10/26.
  */
-public class FieldMapActivity extends FCBaseActivity implements AMap.OnMarkerClickListener {
-    private AMap aMap;
-    private MapView mapView;
-    private MarkerOptions markerOption;
-    private ImageButton ibtnFieldMapBack;
-    private FieldModel mFieldModel;
+
+public class FieldMapActivity extends HHBaseActivity implements FieldMapView,  AMap.OnMarkerClickListener {
+    private FieldMapPresenter mPresenter;
+    private ImageView mIvBack;
+    private TextView mTvTitle;
     private TextView mTvGuide;
+    private MarkerOptions markerOption;
+    private AMap aMap;
+    @BindView(R.id.map)
+    MapView mapView;
+    @BindView(R.id.frl_main)
+    FrameLayout mFrlMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPresenter = new FieldMapPresenter();
         setContentView(R.layout.activity_field_map);
+        ButterKnife.bind(this);
+        mapView.onCreate(savedInstanceState);
+        mPresenter.attachView(this);
         Intent intent = getIntent();
-        mFieldModel = (FieldModel) intent.getExtras().getSerializable("fieldModel");
-        mapView = (MapView) findViewById(R.id.field_map);
-        mTvGuide = (TextView) findViewById(R.id.tv_guide);
-        mapView.onCreate(savedInstanceState); // 此方法必须重写
-        init();
+        if (intent.getParcelableExtra("field") != null) {
+            mPresenter.setField((Field) intent.getParcelableExtra("field"));
+            if (aMap == null) {
+                aMap = mapView.getMap();
+                addMarkersToMap();
+            }
+        }
+        initActionBar();
     }
 
-    /**
-     * 初始化AMap对象
-     */
-    private void init() {
-        ibtnFieldMapBack = (ImageButton) findViewById(R.id.ibtn_field_map_back);
-        ibtnFieldMapBack.setOnClickListener(mClickListener);
-        if (aMap == null) {
-            aMap = mapView.getMap();
-            setUpMap();
-        }
+    private void initActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setCustomView(R.layout.actionbar_field_map);
+        mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
+        mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
+        mTvGuide = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_guide);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        mTvTitle.setText("训练场地图");
+        mIvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FieldMapActivity.this.finish();
+            }
+        });
         mTvGuide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(FieldMapActivity.this);
-                builder.setIcon(R.drawable.ic_launcher);
                 builder.setTitle("导航");
                 //    指定下拉列表的显示数据
                 final String[] guides = {"高德", "百度"};
@@ -84,8 +105,70 @@ public class FieldMapActivity extends FCBaseActivity implements AMap.OnMarkerCli
         });
     }
 
-    private void setUpMap() {
-        addMarkersToMap();// 往地图上添加marker
+    /**
+     * 在地图上添加marker
+     */
+    private void addMarkersToMap() {
+        ArrayList<MarkerOptions> markerOptionlst = new ArrayList<MarkerOptions>();
+        markerOption = new MarkerOptions();
+        Field field = mPresenter.getField();
+        LatLng x = new LatLng(field.lat, field.lng);
+        markerOption.position(x);
+        markerOption.title(field.name).snippet(field.street);
+
+        markerOption.draggable(false);
+        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                .decodeResource(getResources(),
+                        R.drawable.ic_map_local_choseon)));
+        markerOptionlst.add(markerOption);
+        List<Marker> markerList = aMap.addMarkers(markerOptionlst, true);
+        //设定初始可视区域
+        aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(field.lat, field.lng), 14));
+    }
+
+    /**
+     * 启动高德地图导航
+     */
+    private void startAMap() {
+        Field field = mPresenter.getField();
+        if (Utils.instence(this).isApkInstall(this, "com.autonavi.minimap")) {
+            try {
+                Intent intent = Intent.getIntent("androidamap://viewMap?sourceApplication=哈哈学车&poiname=" +
+                        field.name + "&lat=" +
+                        field.lat + "&lon=" +
+                        field.lng + "&dev=0");
+                startActivity(intent);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        } else {
+            showMessage("请安装高德地图");
+        }
+    }
+
+    /**
+     * 启动百度地图导航
+     */
+    private void startBaiduMap() {
+        Field field = mPresenter.getField();
+        if (Utils.instence(this).isApkInstall(this, "com.baidu.BaiduMap")) {
+            try {
+                Intent intent = Intent.getIntent("intent://map/marker?coord_type=gcj02&location="
+                        + field.lat + "," + field.lng + "&title=" +
+                        field.name + "&content=" +
+                        field.description + "&src=yourCompanyName|yourAppName#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end");
+                startActivity(intent);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        } else {
+            showMessage("请安装百度地图");
+        }
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Snackbar.make(mFrlMain, message, Snackbar.LENGTH_SHORT).show();
     }
 
     /**
@@ -120,84 +203,13 @@ public class FieldMapActivity extends FCBaseActivity implements AMap.OnMarkerCli
      */
     @Override
     protected void onDestroy() {
+        mPresenter.detachView();
         super.onDestroy();
         mapView.onDestroy();
     }
 
-    /**
-     * 在地图上添加marker
-     */
-    private void addMarkersToMap() {
-        ArrayList<MarkerOptions> markerOptionlst = new ArrayList<MarkerOptions>();
-        markerOption = new MarkerOptions();
-        LatLng x = new LatLng(Double.parseDouble(mFieldModel.getLat()), Double.parseDouble(mFieldModel.getLng()));
-        markerOption.position(x);
-        markerOption.title(mFieldModel.getName()).snippet(mFieldModel.getStreet());
-
-        markerOption.draggable(false);
-        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                .decodeResource(getResources(),
-                        R.drawable.ic_map_local_choseon)));
-        markerOptionlst.add(markerOption);
-        List<Marker> markerList = aMap.addMarkers(markerOptionlst, true);
-        //设定初始可视区域
-        aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(mFieldModel.getLat()), Double.parseDouble(mFieldModel.getLng())), 14));
-    }
-
-    /**
-     * 对marker标注点点击响应事件
-     */
     @Override
-    public boolean onMarkerClick(final Marker marker) {
+    public boolean onMarkerClick(Marker marker) {
         return false;
-    }
-
-    View.OnClickListener mClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.ibtn_field_map_back:
-                    FieldMapActivity.this.finish();
-                    break;
-            }
-        }
-    };
-
-    /**
-     * 启动高德地图导航
-     */
-    private void startAMap() {
-        if (Util.instence(this).isApkInstall(this, "com.autonavi.minimap")) {
-            try {
-                Intent intent = Intent.getIntent("androidamap://viewMap?sourceApplication=哈哈学车&poiname=" +
-                        mFieldModel.getName() + "&lat=" +
-                        mFieldModel.getLat() + "&lon=" +
-                        mFieldModel.getLng() + "&dev=0");
-                startActivity(intent);
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-        } else {
-            Toast.makeText(this, "请安装高德地图", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /**
-     * 启动百度地图导航
-     */
-    private void startBaiduMap() {
-        if (Util.instence(this).isApkInstall(this, "com.baidu.BaiduMap")) {
-            try {
-                Intent intent = Intent.getIntent("intent://map/marker?coord_type=gcj02&location="
-                        + mFieldModel.getLat() + "," + mFieldModel.getLng() + "&title=" +
-                        mFieldModel.getName() + "&content=" +
-                        mFieldModel.getDescription() + "&src=yourCompanyName|yourAppName#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end");
-                startActivity(intent);
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-        } else {
-            Toast.makeText(this, "请安装百度地图", Toast.LENGTH_SHORT).show();
-        }
     }
 }

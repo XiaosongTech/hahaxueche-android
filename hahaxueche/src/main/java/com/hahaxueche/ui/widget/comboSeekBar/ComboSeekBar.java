@@ -1,8 +1,5 @@
 package com.hahaxueche.ui.widget.comboSeekBar;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -10,15 +7,17 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SeekBar;
 
 import com.hahaxueche.R;
+import com.hahaxueche.util.HHLog;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ComboSeekBar extends SeekBar {
 
@@ -35,6 +34,8 @@ public class ComboSeekBar extends SeekBar {
     private OnItemClickListener mItemClickListener;
     private Dot prevSelected = null;
     private int mColor;
+    private int mUnSelectedColor;
+    private int mSelectedTextColor;
     private int mTextSize;
     private int mDotRadius;
     private int mSelectedLineHeight;
@@ -62,6 +63,8 @@ public class ComboSeekBar extends SeekBar {
                 R.styleable.ComboSeekBar);
 
         mColor = a.getColor(R.styleable.ComboSeekBar_myColor, DEFAULT_COLOR);
+        mUnSelectedColor = a.getColor(R.styleable.ComboSeekBar_unSelectedColor, DEFAULT_COLOR);
+        mSelectedTextColor = a.getColor(R.styleable.ComboSeekBar_selectedTextColor, DEFAULT_COLOR);
         mTextSize = a.getDimensionPixelSize(R.styleable.ComboSeekBar_textSize,
                 DEFAULT_TEXT_SIZE);
         mDotRadius = a.getDimensionPixelSize(
@@ -91,7 +94,7 @@ public class ComboSeekBar extends SeekBar {
         setProgressDrawable(new CustomDrawable(this.getProgressDrawable(),
                 this, mThumb.getRadius(), mDots, mColor, mTextSize,
                 mSelectedLineHeight, mUnselectedLineHeight, mDotRadius,
-                mIsMultiline, mSelectdLineColor));
+                mIsMultiline, mSelectdLineColor, mUnSelectedColor, mSelectedTextColor));
 
         setPadding(0, 0, 0, 0);
         // init the first position when show
@@ -158,7 +161,7 @@ public class ComboSeekBar extends SeekBar {
         setProgressDrawable(new CustomDrawable(this.getProgressDrawable(),
                 this, mThumb.getRadius(), mDots, color, mTextSize,
                 mSelectedLineHeight, mUnselectedLineHeight, mDotRadius,
-                mIsMultiline, mSelectdLineColor));
+                mIsMultiline, mSelectdLineColor, mUnSelectedColor, mSelectedTextColor));
     }
 
     public void setSelection(int position) {
@@ -175,14 +178,13 @@ public class ComboSeekBar extends SeekBar {
             }
         }
 
-        System.out.println("------selected dots" + getSelectedDot());
         mThumb = new CustomThumbDrawable(getContext(), mColor, mThumbResource,
                 mThumbHeight, mThumbWidth);
         setThumb(mThumb);
         setProgressDrawable(new CustomDrawable(this.getProgressDrawable(),
                 this, mThumb.getRadius(), mDots, mColor, mTextSize,
                 mSelectedLineHeight, mUnselectedLineHeight, mDotRadius,
-                mIsMultiline, mSelectdLineColor));
+                mIsMultiline, mSelectdLineColor, mUnSelectedColor, mSelectedTextColor));
         /*postDelayed(new Runnable() {
             @Override
             public void run() {

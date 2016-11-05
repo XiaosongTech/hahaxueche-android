@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/lly_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/haha_gray_background"
+    android:orientation="vertical">
+
+    <com.hahaxueche.ui.widget.pullToRefreshView.XListView
+        android:id="@+id/xlv_schedule_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
+        app:loadMoreTxt="一大波课程接近中~~~"></com.hahaxueche.ui.widget.pullToRefreshView.XListView>
+
+    <LinearLayout
+        android:id="@+id/lly_empty"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_ap_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_nolist_bk_pic" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_ap_back"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.2"
+            android:text="目前还没有新的课程，请您耐心等候哦~"
+            android:textColor="@color/haha_gray_text"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

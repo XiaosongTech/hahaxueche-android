@@ -1,32 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/lly_refer_friends"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lly_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/app_theme_color"
-    android:orientation="vertical">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/app_theme_color">
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="付款成功"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
-    </RelativeLayout>
+    android:background="@color/haha_orange_fade">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/haha_orange_fade">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -46,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="付款成功"
-                android:textColor="@color/haha_black_light"
+                android:textColor="@color/haha_gray_dark"
                 android:textSize="20sp" />
 
             <LinearLayout
@@ -61,7 +42,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="付款教练"
-                    android:textColor="@color/haha_gray_heavier"
+                    android:textColor="@color/haha_gray_text"
                     android:textSize="18sp" />
 
                 <TextView
@@ -69,7 +50,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:textColor="@color/haha_black_light"
+                    android:textColor="@color/haha_gray_dark"
                     android:textSize="18sp" />
             </LinearLayout>
 
@@ -85,7 +66,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="付款金额"
-                    android:textColor="@color/haha_gray_heavier"
+                    android:textColor="@color/haha_gray_text"
                     android:textSize="18sp" />
 
                 <TextView
@@ -93,7 +74,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:textColor="@color/haha_black_light"
+                    android:textColor="@color/haha_gray_dark"
                     android:textSize="18sp" />
             </LinearLayout>
 
@@ -109,7 +90,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="付款时间"
-                    android:textColor="@color/haha_gray_heavier"
+                    android:textColor="@color/haha_gray_text"
                     android:textSize="18sp" />
 
                 <TextView
@@ -117,7 +98,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:textColor="@color/haha_black_light"
+                    android:textColor="@color/haha_gray_dark"
                     android:textSize="18sp" />
             </LinearLayout>
 
@@ -133,7 +114,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="订单编号"
-                    android:textColor="@color/haha_gray_heavier"
+                    android:textColor="@color/haha_gray_text"
                     android:textSize="18sp" />
 
                 <TextView
@@ -141,7 +122,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:textColor="@color/haha_black_light"
+                    android:textColor="@color/haha_gray_dark"
                     android:textSize="18sp" />
             </LinearLayout>
 
@@ -151,7 +132,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/rectangle_back_orange"
+                android:background="@drawable/rect_bg_appcolor_corner"
                 android:gravity="center"
                 android:paddingBottom="13dp"
                 android:paddingTop="13dp"
@@ -166,8 +147,8 @@
                 android:gravity="center"
                 android:lineSpacingMultiplier="1.2"
                 android:text="对订单有任何疑问可致电客服热线400-001-6006或在APP首页点击在线客服"
-                android:textColor="@color/haha_gray_heavy"
+                android:textColor="@color/haha_gray"
                 android:textSize="16sp" />
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+</FrameLayout>

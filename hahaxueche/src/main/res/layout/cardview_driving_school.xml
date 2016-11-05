@@ -1,0 +1,116 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/haha_white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:src="@drawable/ic_cup" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/iv_icon"
+            android:text="入驻驾校 权威认证"
+            android:textColor="@color/haha_gray_dark"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_driving_school_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
+            android:textColor="@color/haha_gray"
+            android:textSize="10sp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_width"
+        android:background="@color/haha_gray_divider" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_xiaoha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="14dp"
+            android:src="@drawable/pic_xiaoha_school" />
+
+        <TextView
+            android:id="@+id/tv_explain_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:layout_marginTop="18dp"
+            android:layout_toRightOf="@id/iv_xiaoha"
+            android:drawableLeft="@drawable/o_orange"
+            android:drawablePadding="5dp"
+            android:text="通过率高"
+            android:textColor="@color/haha_gray"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_explain_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/tv_explain_1"
+            android:layout_marginLeft="30dp"
+            android:layout_toRightOf="@id/tv_explain_1"
+            android:drawableLeft="@drawable/o_orange"
+            android:drawablePadding="5dp"
+            android:text="训练场地规范"
+            android:textColor="@color/haha_gray"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_explain_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_explain_1"
+            android:layout_marginLeft="18dp"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@id/iv_xiaoha"
+            android:drawableLeft="@drawable/o_orange"
+            android:drawablePadding="5dp"
+            android:text="品牌口碑佳"
+            android:textColor="@color/haha_gray"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_explain_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_explain_2"
+            android:layout_alignTop="@id/tv_explain_3"
+            android:drawableLeft="@drawable/o_orange"
+            android:drawablePadding="5dp"
+            android:text="权威驾校认证"
+            android:textColor="@color/haha_gray"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/arrow" />
+    </RelativeLayout>
+</LinearLayout>

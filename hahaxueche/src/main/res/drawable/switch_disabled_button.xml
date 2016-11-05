@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval"
     android:useLevel="false" >
-    <solid android:color="@color/filter_txt_white_heavy" />
+    <solid android:color="@color/haha_gray_divider" />
     <size android:width="22dp"
         android:height="22dp" />
 </shape>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/haha_white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+
+    <ListView
+        android:id="@+id/lv_loop_student"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@drawable/divider_left_20dp"
+        android:dividerHeight="@dimen/divider_width"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"></ListView>
+
+    <LinearLayout
+        android:id="@+id/lly_select_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/haha_white"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="您还没有选择教练哦～"
+            android:textColor="@color/app_theme_color"
+            android:textSize="22dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="赶快寻找属于自己的好教练，加入他们吧～"
+            android:textColor="@color/haha_gray"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_chose_coach"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="22dp"
+            android:background="@drawable/rect_bg_appcolor_ssm"
+            android:gravity="center"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:text="选择教练"
+            android:textColor="@color/haha_white"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_above="@id/lly_select_area"
+        android:background="@drawable/rect_gradient_white" />
+</RelativeLayout>

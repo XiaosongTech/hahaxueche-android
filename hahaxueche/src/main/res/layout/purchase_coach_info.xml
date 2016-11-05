@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/haha_white">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/iv_coach_avatar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="20dp"
+        fresco:placeholderImage="@drawable/ic_coach_ava"
+        fresco:roundAsCircle="true"
+        fresco:roundingBorderColor="@color/haha_white"
+        fresco:roundingBorderWidth="3dp"></com.facebook.drawee.view.SimpleDraweeView>
+
+    <RelativeLayout
+        android:id="@+id/rly_first_line"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/iv_coach_avatar"
+        android:layout_toRightOf="@id/iv_coach_avatar">
+
+        <TextView
+            android:id="@+id/tv_coach_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textColor="@color/haha_gray_dark"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/iv_is_golden_coach"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:layout_toRightOf="@id/tv_coach_name"
+            android:src="@drawable/ic_auth_golden" />
+
+        <include
+            android:id="@+id/lly_train_school"
+            layout="@layout/layout_train_school"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:layout_toRightOf="@id/iv_is_golden_coach" />
+
+        <TextView
+            android:id="@+id/tv_coach_teach_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:textColor="@color/haha_gray"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <com.hahaxueche.ui.widget.scoreView.ScoreView
+        android:id="@+id/sv_coach_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/rly_first_line"
+        android:layout_below="@id/rly_first_line"
+        android:layout_marginTop="6dp"></com.hahaxueche.ui.widget.scoreView.ScoreView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/sv_coach_score"
+        android:layout_below="@id/sv_coach_score"
+        android:layout_marginTop="6dp">
+
+        <TextView
+            android:id="@+id/tv_coach_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:drawableLeft="@drawable/ic_list_local_btn"
+            android:drawablePadding="3dp"
+            android:textColor="@color/haha_gray_text"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="3dp"
+            android:layout_toRightOf="@id/tv_coach_location"
+            android:textColor="@color/haha_gray_text"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_applaud_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:drawableLeft="@drawable/ic_list_best_small"
+            android:drawablePadding="3dp"
+            android:textColor="@color/app_theme_color"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

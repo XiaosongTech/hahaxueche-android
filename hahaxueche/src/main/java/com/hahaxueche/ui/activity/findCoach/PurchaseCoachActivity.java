@@ -1,411 +1,356 @@
 package com.hahaxueche.ui.activity.findCoach;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
-import com.hahaxueche.model.base.Constants;
-import com.hahaxueche.model.city.City;
-import com.hahaxueche.model.city.CostItem;
-import com.hahaxueche.model.city.FieldModel;
-import com.hahaxueche.model.coach.Coach;
-import com.hahaxueche.model.student.Payment;
-import com.hahaxueche.model.student.Student;
-import com.hahaxueche.model.user.Session;
-import com.hahaxueche.model.user.User;
-import com.hahaxueche.presenter.findCoach.FCCallbackListener;
-import com.hahaxueche.presenter.mySetting.MSCallbackListener;
-import com.hahaxueche.ui.adapter.findCoach.PaymentAdapter;
-import com.hahaxueche.ui.dialog.FeeDetailDialog;
-import com.hahaxueche.ui.dialog.MapDialog;
-import com.hahaxueche.ui.util.DistanceUtil;
-import com.hahaxueche.ui.widget.circleImageView.CircleImageView;
+import com.hahaxueche.model.base.Field;
+import com.hahaxueche.model.payment.PaymentMethod;
+import com.hahaxueche.model.user.coach.Coach;
+import com.hahaxueche.presenter.findCoach.PurchaseCoachPresenter;
+import com.hahaxueche.ui.activity.base.HHBaseActivity;
+import com.hahaxueche.ui.view.findCoach.PurchaseCoachView;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
-import com.hahaxueche.utils.SharedPreferencesUtil;
-import com.hahaxueche.utils.Util;
-import com.pingplusplus.android.PaymentActivity;
+import com.hahaxueche.util.DistanceUtil;
+import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.Utils;
 import com.pingplusplus.android.Pingpp;
-import com.squareup.picasso.Picasso;
-import com.umeng.analytics.MobclickAgent;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
- * Created by Administrator on 2016/5/27.
+ * Created by wangshirui on 2016/10/12.
  */
-public class PurchaseCoachActivity extends FCBaseActivity {
-    private TextView mTvCoachName;
-    private TextView mTvCoachTeachTime;
-    private TextView mTvCoachPoints;
-    private CircleImageView mCivCoachAvatar;
-    private ImageView mIvIsGoldenCoach;
-    private ScoreView mSvCoachScore;
-    private TextView mTvCoachLocation;
-    private LinearLayout mLlyCoachLocation;
-    private TextView mTvDistance;
-    private ListView mLvPayment;
-    private PaymentAdapter mPaymentAdapter;
-    private TextView mTvSurePay;
-    private ImageButton mIbtnBack;
-    private ProgressDialog pd;//进度框
-    //拿证价格
-    private RelativeLayout mRlyNormalPrice;
-    private ImageView mIvSelectNormal;
-    private TextView mTvNormalPrice;//通用价格
-    private TextView mTvOldNormalPrice;//原来的通用价格
-    private TextView mTvNormalPriceDetail;//通用价格明细
-    private RelativeLayout mRlyVIPPrice;
-    private ImageView mIvSelectVIP;
-    private TextView mTvVIPPrice;//VIP班价格
-    private TextView mTvOldVIPPrice;//原来的VIP价格
-    private TextView mTvVIPPriceDetail;//VIP班价格明细
-    private TextView mTvApplaudCount;
-    private TextView mTvTrainSchool;
-    private LinearLayout mLlyTrainSchool;
 
-    private Coach mCoach;
-    private List<Payment> mPaymentList;
-    private MapDialog mapDialog;
-    private FieldModel mFieldModel;
-    private SharedPreferencesUtil spUtil;
-    private String myLat;
-    private String myLng;
-    private Constants mConstants;
-    private List<FieldModel> fieldsList;
-    private List<City> cityList;
-    private Session mSession;
-    private Student mStudent;
-    private String mProductType = "";
-    private List<CostItem> mCostItemList;
-    private String method = "";
+public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoachView {
+    private PurchaseCoachPresenter mPresenter;
+    private ImageView mIvBack;
+    private TextView mTvTitle;
+    @BindView(R.id.iv_coach_avatar)
+    SimpleDraweeView mIvCoachAvatar;
+    @BindView(R.id.tv_coach_name)
+    TextView mTvCoachName;
+    @BindView(R.id.iv_is_golden_coach)
+    ImageView mIvIsGoldenCoach;
+    @BindView(R.id.tv_train_school)
+    TextView mTvTrainSchool;
+    @BindView(R.id.lly_train_school)
+    LinearLayout mLlyTrainSchool;
+    @BindView(R.id.tv_coach_teach_time)
+    TextView mTvCoachTeachTime;
+    @BindView(R.id.sv_coach_score)
+    ScoreView mSvCoachScore;
+    @BindView(R.id.tv_coach_location)
+    TextView mTvCoachLocation;
+    @BindView(R.id.tv_distance)
+    TextView mTvDistance;
+    @BindView(R.id.tv_applaud_count)
+    TextView mTvApplaudCount;
+    @BindView(R.id.lly_purchase)
+    LinearLayout mLlyPurchase;
+    @BindView(R.id.lly_main)
+    LinearLayout mLlyMain;
+    @BindView(R.id.tv_C1)
+    TextView mTvC1;
+    @BindView(R.id.tv_C2)
+    TextView mTvC2;
+    @BindView(R.id.tv_normal)
+    TextView mTvNormal;
+    @BindView(R.id.tv_vip)
+    TextView mTvVip;
+    @BindView(R.id.tv_total_amount)
+    TextView mTvTotalAmount;
+
+    private HHBaseApplication application;
+    private int[] selectIds = new int[3];
+    private int selectId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPresenter = new PurchaseCoachPresenter();
+        application = HHBaseApplication.get(getContext());
         setContentView(R.layout.activity_purchase_coach);
-        initViews();
-        loadDatas();
-        initEvents();
+        ButterKnife.bind(this);
+        mPresenter.attachView(this);
+        initActionBar();
+        Intent intent = getIntent();
+        if (intent.getParcelableExtra("coach") != null) {
+            mPresenter.setCoach((Coach) intent.getParcelableExtra("coach"));
+        }
     }
 
-    private void initViews() {
-        mTvCoachName = Util.instence(this).$(this, R.id.tv_coach_name);
-        mTvCoachTeachTime = Util.instence(this).$(this, R.id.tv_coach_teach_time);
-        mTvCoachPoints = Util.instence(this).$(this, R.id.tv_coach_points);
-        mCivCoachAvatar = Util.instence(this).$(this, R.id.cir_coach_avatar);
-        mIvIsGoldenCoach = Util.instence(this).$(this, R.id.iv_is_golden_coach);
-        mSvCoachScore = Util.instence(this).$(this, R.id.sv_coach_score);
-        mTvCoachLocation = Util.instence(this).$(this, R.id.tv_coach_location);
-        mLlyCoachLocation = Util.instence(this).$(this, R.id.lly_coach_location);
-        mTvDistance = Util.instence(this).$(this, R.id.tv_distance);
-        mLvPayment = Util.instence(this).$(this, R.id.lv_payment);
-        mTvSurePay = Util.instence(this).$(this, R.id.tv_sure_pay);
-        mIbtnBack = Util.instence(this).$(this, R.id.ibtn_back);
-        //价格
-        mRlyNormalPrice = Util.instence(this).$(this, R.id.rly_normal_price);
-        mIvSelectNormal = Util.instence(this).$(this, R.id.iv_select_normal);
-        mTvNormalPrice = Util.instence(this).$(this, R.id.tv_normal_price);
-        mTvOldNormalPrice = Util.instence(this).$(this, R.id.tv_old_normal_price);
-        mTvNormalPriceDetail = Util.instence(this).$(this, R.id.tv_normal_price_detail);
-        mRlyVIPPrice = Util.instence(this).$(this, R.id.rly_vip_price);
-        mIvSelectVIP = Util.instence(this).$(this, R.id.iv_select_vip);
-        mTvVIPPrice = Util.instence(this).$(this, R.id.tv_vip_price);
-        mTvOldVIPPrice = Util.instence(this).$(this, R.id.tv_old_vip_price);
-        mTvVIPPriceDetail = Util.instence(this).$(this, R.id.tv_vip_price_detail);
-        mTvApplaudCount = Util.instence(this).$(this, R.id.tv_applaud_count);
-        mTvTrainSchool = Util.instence(this).$(this, R.id.tv_train_school);
-        mLlyTrainSchool = Util.instence(this).$(this, R.id.lly_train_school);
+    private void initActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setCustomView(R.layout.actionbar_base);
+        mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
+        mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        mTvTitle.setText("购买教练");
+        mIvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PurchaseCoachActivity.this.finish();
+            }
+        });
     }
 
-    private void loadDatas() {
-        //教练信息
-        mCoach = (Coach) getIntent().getExtras().getSerializable("coach");
-        spUtil = new SharedPreferencesUtil(context);
-        mConstants = spUtil.getConstants();
-        if (mConstants != null) {
-            fieldsList = mConstants.getFields();
-            cityList = mConstants.getCities();
-            City myCity = spUtil.getMyCity();
-            if (myCity != null) {
-                mCostItemList = myCity.getFixed_cost_itemizer();
-            }
-        }
-        if (spUtil.getLocation() != null) {
-            myLat = spUtil.getLocation().getLat();
-            myLng = spUtil.getLocation().getLng();
-        }
-        mSession = spUtil.getUser().getSession();
-        mStudent = spUtil.getUser().getStudent();
-        //教练姓名
-        mTvCoachName.setText(mCoach.getName());
-        //教龄
-        DecimalFormat dfInt = new DecimalFormat("#####");
-        double coachExperiences = 0d;
-        if (!TextUtils.isEmpty(mCoach.getExperiences())) {
-            coachExperiences = Double.parseDouble(mCoach.getExperiences());
-        }
-        mTvCoachTeachTime.setText(dfInt.format(coachExperiences) + "年教龄");
-        //价格
-        mTvNormalPrice.setText(Util.getMoney(mCoach.getCoach_group().getTraining_cost()));
-        mTvOldNormalPrice.setText(Util.getMoney(mCoach.getCoach_group().getMarket_price()));
-        mTvOldNormalPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-        if (mCoach.getVip() == 0) {
-            //没有vip的
-            mRlyVIPPrice.setVisibility(View.GONE);
-            selectClass(0);
-        } else {
-            mRlyVIPPrice.setVisibility(View.VISIBLE);
-            mTvVIPPrice.setText(Util.getMoney(mCoach.getCoach_group().getVip_price()));
-            mTvOldVIPPrice.setText(Util.getMoney(mCoach.getCoach_group().getVip_market_price()));
-            mTvOldVIPPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-            refreshPayButton();
-        }
-        mTvApplaudCount.setText(String.valueOf(mCoach.getLike_count()));
-        //头像
-        getCoachAvatar(mCoach.getAvatar(), mCivCoachAvatar);
-        //金牌教练
-        if (mCoach.getSkill_level().equals("1")) {
-            mIvIsGoldenCoach.setVisibility(View.VISIBLE);
-        } else {
-            mIvIsGoldenCoach.setVisibility(View.GONE);
-        }
-        //评分
-        mTvCoachPoints.setText(mCoach.getAverage_rating() + " (" + mCoach.getReview_count() + ")");
-        float score = Float.parseFloat(mCoach.getAverage_rating());
-        if (score > 5) {
-            score = 5;
-        }
-        mSvCoachScore.setScore(score, false);
-        //训练场地址
-        if (fieldsList != null) {
-            for (FieldModel fieldsModel : fieldsList) {
-                if (fieldsModel.getId().equals(mCoach.getCoach_group().getField_id())) {
-                    for (City city : cityList) {
-                        if (city.getId().equals(fieldsModel.getCity_id())) {
-                            mTvCoachLocation.setText(city.getName() + fieldsModel.getSection());
-                            break;
-                        }
-                    }
-                    mFieldModel = fieldsModel;
-                    break;
-                }
-            }
-        }
-        //距离
-        if (!TextUtils.isEmpty(myLat) && !TextUtils.isEmpty(myLng) && !TextUtils.isEmpty(mFieldModel.getLat()) && !TextUtils.isEmpty(mFieldModel.getLng())) {
-            String kmString = DistanceUtil.getDistanceKm(Double.parseDouble(myLng), Double.parseDouble(myLat), Double.parseDouble(mFieldModel.getLng()), Double.parseDouble(mFieldModel.getLat()));
-            String infoText = "距您" + kmString + "km";
-            SpannableStringBuilder style = new SpannableStringBuilder(infoText);
-            style.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.app_theme_color)), 2, 2 + kmString.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-            mTvDistance.setText(style);
-        }
-        if (!TextUtils.isEmpty(mCoach.getDriving_school())) {
+    @Override
+    protected void onDestroy() {
+        mPresenter.detachView();
+        super.onDestroy();
+    }
+
+    @OnClick(R.id.tv_sure_pay)
+    public void createCharge() {
+        mPresenter.createCharge();
+    }
+
+    @OnClick(R.id.tv_C1)
+    public void clickTvC1() {
+        mPresenter.selectLicenseC1();
+    }
+
+    @OnClick(R.id.tv_C2)
+    public void clickTvC2() {
+        mPresenter.selectLicenseC2();
+    }
+
+    @OnClick(R.id.tv_normal)
+    public void clickTvNormal() {
+        mPresenter.selectClassNormal();
+    }
+
+    @OnClick(R.id.tv_vip)
+    public void clickTvVip() {
+        mPresenter.selectClassVip();
+    }
+
+    @Override
+    public void loadCoachInfo(Coach coach) {
+        mIvCoachAvatar.setImageURI(coach.avatar);
+        mTvCoachName.setText(coach.name);
+        mIvIsGoldenCoach.setVisibility(coach.skill_level.equals("1") ? View.VISIBLE : View.GONE);
+        if (!TextUtils.isEmpty(coach.driving_school)) {
             mLlyTrainSchool.setVisibility(View.VISIBLE);
-            mTvTrainSchool.setText(mCoach.getDriving_school());
+            mTvTrainSchool.setText(coach.driving_school);
         } else {
             mLlyTrainSchool.setVisibility(View.GONE);
         }
-        mLlyCoachLocation.setOnClickListener(new View.OnClickListener() {
+        mTvCoachTeachTime.setText(coach.experiences + "年教龄");
+        //综合得分
+        float averageRating = 0;
+        if (!TextUtils.isEmpty(coach.average_rating)) {
+            averageRating = Float.parseFloat(coach.average_rating);
+        }
+        if (averageRating > 5) {
+            averageRating = 5;
+        }
+        mSvCoachScore.setScore(averageRating, true);
+        mTvCoachLocation.setText(application.getConstants().getSectionName(coach.coach_group.field_id));
+        final Field myField = application.getConstants().getField(coach.coach_group.field_id);
+        if (application.getMyLocation() != null && myField != null) {
+            String kmString = DistanceUtil.getDistanceKm(application.getMyLocation().lng, application.getMyLocation().lat, myField.lng, myField.lat);
+            String infoText = "距您" + kmString + "km";
+            SpannableStringBuilder style = new SpannableStringBuilder(infoText);
+            style.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.app_theme_color)), 2, 2 + kmString.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+            mTvDistance.setText(style);
+        }
+        mTvApplaudCount.setText(String.valueOf(coach.liked));
+    }
+
+    @Override
+    public void loadPaymentMethod(ArrayList<PaymentMethod> paymentMethods) {
+        if (paymentMethods == null || paymentMethods.size() < 1) return;
+        for (PaymentMethod paymentMethod : paymentMethods) {
+            mLlyPurchase.addView(getPaymentAdapter(paymentMethod, paymentMethods.indexOf(paymentMethod)), 1 + paymentMethods.indexOf(paymentMethod));
+        }
+    }
+
+    @Override
+    public void showLicenseC1() {
+        mTvC1.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showLicenseC2() {
+        mTvC2.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showClassVIP() {
+        mTvVip.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void selectLicenseC1() {
+        mTvC1.setBackgroundResource(R.drawable.rect_bg_appcolor_sm);
+        mTvC1.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
+    }
+
+    @Override
+    public void selectLicenseC2() {
+        mTvC2.setBackgroundResource(R.drawable.rect_bg_appcolor_sm);
+        mTvC2.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
+    }
+
+    @Override
+    public void unSelectLicense() {
+        mTvC1.setBackgroundResource(R.drawable.rect_bg_gray_sm);
+        mTvC1.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
+        mTvC2.setBackgroundResource(R.drawable.rect_bg_gray_sm);
+        mTvC2.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
+    }
+
+    @Override
+    public void selectClassNormal() {
+        mTvNormal.setBackgroundResource(R.drawable.rect_bg_appcolor_sm);
+        mTvNormal.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
+    }
+
+    @Override
+    public void selectClassVip() {
+        mTvVip.setBackgroundResource(R.drawable.rect_bg_appcolor_sm);
+        mTvVip.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
+    }
+
+    @Override
+    public void unSelectClass() {
+        mTvNormal.setBackgroundResource(R.drawable.rect_bg_gray_sm);
+        mTvNormal.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
+        mTvVip.setBackgroundResource(R.drawable.rect_bg_gray_sm);
+        mTvVip.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
+    }
+
+    private RelativeLayout getPaymentAdapter(final PaymentMethod paymentMethod, int i) {
+        RelativeLayout rly = new RelativeLayout(this);
+        rly.setBackgroundResource(R.color.haha_white);
+        LinearLayout.LayoutParams rlyParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        rly.setLayoutParams(rlyParams);
+
+        if (i != 0) {
+            View view = new View(this);
+            RelativeLayout.LayoutParams viewParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.divider_width));
+            viewParams.setMargins(Utils.instence(this).dip2px(20), 0, 0, 0);
+            view.setLayoutParams(viewParams);
+            view.setBackgroundResource(R.color.haha_gray_divider);
+            rly.addView(view);
+        }
+
+        ImageView mIvLogo = new ImageView(this);
+        RelativeLayout.LayoutParams ivLogoParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        ivLogoParams.setMargins(Utils.instence(this).dip2px(20), Utils.instence(this).dip2px(15), 0, 0);
+        mIvLogo.setLayoutParams(ivLogoParams);
+        mIvLogo.setImageDrawable(ContextCompat.getDrawable(this, paymentMethod.drawableLogo));
+        int ivLogoId = Utils.generateViewId();
+        mIvLogo.setId(ivLogoId);
+        rly.addView(mIvLogo);
+
+
+        TextView tvName = new TextView(this);
+        RelativeLayout.LayoutParams tvNameParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        tvNameParams.setMargins(Utils.instence(this).dip2px(15), 0, 0, 0);
+        tvNameParams.addRule(RelativeLayout.ALIGN_TOP, ivLogoId);
+        tvNameParams.addRule(RelativeLayout.RIGHT_OF, ivLogoId);
+        tvName.setLayoutParams(tvNameParams);
+        tvName.setTextSize(16);
+        tvName.setTextColor(ContextCompat.getColor(this, R.color.haha_gray_dark));
+        tvName.setText(paymentMethod.name);
+        int tvNameId = Utils.generateViewId();
+        tvName.setId(tvNameId);
+        rly.addView(tvName);
+
+        TextView tvRemark = new TextView(this);
+        RelativeLayout.LayoutParams tvRemarkParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        tvRemarkParams.setMargins(0, Utils.instence(this).dip2px(6), 0, Utils.instence(this).dip2px(15));
+        tvRemarkParams.addRule(RelativeLayout.ALIGN_LEFT, tvNameId);
+        tvRemarkParams.addRule(RelativeLayout.BELOW, tvNameId);
+        tvRemark.setLayoutParams(tvRemarkParams);
+        tvRemark.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
+        tvRemark.setTextSize(12);
+        tvRemark.setText(paymentMethod.remark);
+        rly.addView(tvRemark);
+
+        ImageView mIvSelect = new ImageView(this);
+        RelativeLayout.LayoutParams ivSelectParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        ivSelectParams.setMargins(0, 0, Utils.instence(this).dip2px(20), 0);
+        ivSelectParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+        ivSelectParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        mIvSelect.setLayoutParams(ivSelectParams);
+        mIvSelect.setImageDrawable(ContextCompat.getDrawable(this, i == 0 ? R.drawable.ic_cashout_chack_btn : R.drawable.ic_cashout_unchack_btn));
+        final int ivSelectId = Utils.generateViewId();
+        mIvSelect.setId(ivSelectId);
+        rly.addView(mIvSelect);
+        selectIds[i] = ivSelectId;
+        rly.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mapDialog = new MapDialog(PurchaseCoachActivity.this, R.style.map_dialog, mFieldModel, v, null);
-                mapDialog.show();
+                selectId = ivSelectId;
+                selectPayments();
+                mPresenter.setPaymentMethod(paymentMethod.id);
             }
         });
-        //支付信息
-        loadPaymentMethod();
-        mPaymentAdapter = new PaymentAdapter(PurchaseCoachActivity.this, mPaymentList, R.layout.adapter_payment);
-        mLvPayment.setAdapter(mPaymentAdapter);
-        setListViewHeightBasedOnChildren(mLvPayment);
+        return rly;
     }
 
-    private void initEvents() {
-        mIbtnBack.setOnClickListener(mClickListener);
-        mLvPayment.setOnItemClickListener(mItemClickListener);
-        mTvSurePay.setOnClickListener(mClickListener);
-        mTvNormalPriceDetail.setOnClickListener(mClickListener);
-        mTvVIPPriceDetail.setOnClickListener(mClickListener);
-        mIvSelectNormal.setOnClickListener(mClickListener);
-        mIvSelectVIP.setOnClickListener(mClickListener);
-        mRlyNormalPrice.setOnClickListener(mClickListener);
-        mRlyVIPPrice.setOnClickListener(mClickListener);
-    }
-
-    private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            if (mPaymentList.size() > i) {
-                Payment selPayment = mPaymentList.get(i);
-                if (!selPayment.isSelect() && mPaymentList.get(i).isActive()) {
-                    for (Payment payment : mPaymentList) {
-                        if (payment.isActive()) {
-                            payment.setSelect(false);
-                        }
-                    }
-                    mPaymentList.get(i).setSelect(true);
-                    mPaymentAdapter.notifyDataSetChanged();
-                }
+    public void selectPayments() {
+        for (int id : selectIds) {
+            ImageView ivSelect = ButterKnife.findById(this, id);
+            if (id == selectId) {
+                ivSelect.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_cashout_chack_btn));
+            } else {
+                ivSelect.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_cashout_unchack_btn));
             }
         }
-    };
-
-    private View.OnClickListener mClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()) {
-                case R.id.ibtn_back:
-                    PurchaseCoachActivity.this.finish();
-                    break;
-                case R.id.tv_sure_pay:
-                    //确认支付
-                    pay();
-                    break;
-                case R.id.tv_normal_price_detail:
-                    //正常价格明细
-                    FeeDetailDialog feeDetailDialog = new FeeDetailDialog(PurchaseCoachActivity.this, mCostItemList, mCoach.getCoach_group().getTraining_cost(), "1", null);
-                    feeDetailDialog.show();
-                    break;
-                case R.id.tv_vip_price_detail:
-                    //VIP价格明细
-                    feeDetailDialog = new FeeDetailDialog(PurchaseCoachActivity.this, mCostItemList, mCoach.getCoach_group().getVip_price(), "1", null);
-                    feeDetailDialog.show();
-                    break;
-                case R.id.rly_normal_price:
-                    selectClass(0);
-                    break;
-                case R.id.rly_vip_price:
-                    selectClass(1);
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
-
-    private void getCoachAvatar(String url, CircleImageView civCoachAvatar) {
-        final int iconWidth = Util.instence(context).dip2px(60);
-        final int iconHeight = iconWidth;
-        if (!TextUtils.isEmpty(url)) {
-            Picasso.with(context).load(url).resize(iconWidth, iconHeight)
-                    .into(civCoachAvatar);
-        }
     }
 
-    /**
-     * 支付
-     */
-    private void pay() {
-        //调用获取charge
-        //method:0 是alipay 1 是分期乐
-        for (Payment payment : mPaymentList) {
-            if (payment.isSelect()) {
-                method = String.valueOf(payment.getMethod());
-            }
-        }
-        if (pd != null) {
-            pd.dismiss();
-        }
-        pd = ProgressDialog.show(PurchaseCoachActivity.this, null, "跳转中，请稍后……");
-        fcPresenter.createCharge(mCoach.getId(), mSession.getAccess_token(), method, mProductType,
-                new FCCallbackListener<String>() {
-                    @Override
-                    public void onSuccess(String charge) {
-                        pd.dismiss();
-                        //调用ping++
-                        Pingpp.createPayment(PurchaseCoachActivity.this, charge);
-                        /*try {
-                            Intent intent = new Intent(PurchaseCoachActivity.this, PaymentActivity.class);
-                            intent.putExtra(PaymentActivity.EXTRA_CHARGE, charge);
-                            startActivityForResult(intent, 1);
-                        }catch (Exception e){
-                        }*/
-                    }
 
-                    @Override
-                    public void onFailure(String errorEvent, String message) {
-                        pd.dismiss();
-                    }
-                });
+    @Override
+    public void setTotalAmountText(String text) {
+        mTvTotalAmount.setText(text);
     }
 
-    private void loadPaymentMethod() {
-        mPaymentList = new ArrayList<>();
-        Payment alipay = new Payment(R.drawable.ic_alipay_icon, "支付宝", "推荐有支付宝账号的用户使用", true, true, 0);
-        Payment fqlpay = new Payment(R.drawable.logo_fenqile, "分期乐", "推荐分期使用", false, true, 1);
-        Payment cardPay = new Payment(R.drawable.ic_cardpay_icon, "银行卡支付", "安全极速支付,无需开通网银", false, true, 4);
-        mPaymentList.add(alipay);
-        mPaymentList.add(fqlpay);
-        mPaymentList.add(cardPay);
+    @Override
+    public void showMessage(String message) {
+        Snackbar.make(mLlyMain, message, Snackbar.LENGTH_SHORT).show();
     }
 
-//    private void loadMorePaymentMethod() {
-//        Payment wxpay = new Payment(R.drawable.ic_wechatpay_icon, "微信支付", "", false, false);
-//        Payment cardPay = new Payment(R.drawable.ic_cardpay_icon, "银行卡支付", "推荐有支付宝账号的用户使用", false, false);
-//        mPaymentList.add(wxpay);
-//        mPaymentList.add(cardPay);
-//        mRlyMorePayment.setVisibility(View.GONE);
-//        mPaymentAdapter.notifyDataSetChanged();
-//        setListViewHeightBasedOnChildren(mLvPayment);
-//    }
+    @Override
+    public void callPingpp(String charge) {
+        HHLog.v(charge);
+        Pingpp.createPayment(this, charge);
+    }
 
-    public void setListViewHeightBasedOnChildren(ListView listView) {
-        // 获取ListView对应的Adapter
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            return;
-        }
-
-        int totalHeight = 0;
-        for (int i = 0, len = listAdapter.getCount(); i < len; i++) {
-            // listAdapter.getCount()返回数据项的数目
-            View listItem = listAdapter.getView(i, null, listView);
-            // 计算子项View 的宽高
-            listItem.measure(0, 0);
-            // 统计所有子项的总高度
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        //params.height = Util.instence(this).dip2px(height) * listAdapter.getCount() + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        // listView.getDividerHeight()获取子项间分隔符占用的高度
-        // params.height最后得到整个ListView完整显示需要的高度
-        listView.setLayoutParams(params);
+    @Override
+    public void paySuccess() {
+        setResult(RESULT_OK, null);
+        finish();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //支付页面返回处理
         if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
-            if (pd != null) {
-                pd.dismiss();
-            }
-            pd = ProgressDialog.show(PurchaseCoachActivity.this, null, "数据加载中，请稍后……");
             if (resultCode == Activity.RESULT_OK) {
-                if (null == spUtil) {
-                    spUtil = new SharedPreferencesUtil(this);
-                }
                 String result = data.getExtras().getString("pay_result");
                 /* 处理返回值
                  * "success" - 支付成功
@@ -417,104 +362,15 @@ public class PurchaseCoachActivity extends FCBaseActivity {
                 String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
 
                 if (result.equals("success")) {
-                    //更新SharedPreferences中的student
-                    this.msPresenter.getStudentForever(mStudent.getId(), mSession.getAccess_token(), new MSCallbackListener<Student>() {
-                        @Override
-                        public void onSuccess(Student data) {
-                            mStudent = data;
-                            User user = spUtil.getUser();
-                            user.setStudent(mStudent);
-                            spUtil.setUser(user);
-                            if (!TextUtils.isEmpty(data.getCurrent_coach_id())) {
-                                fcPresenter.getCoach(data.getCurrent_coach_id(), mStudent.getId(), new FCCallbackListener<Coach>() {
-                                    @Override
-                                    public void onSuccess(Coach coach) {
-                                        if (pd != null) {
-                                            pd.dismiss();
-                                        }
-                                        MobclickAgent.onEvent(context, "did_purchase_coach");
-                                        spUtil.setCurrentCoach(coach);
-                                        setResult(RESULT_OK, null);
-                                        finish();
-                                    }
-
-                                    @Override
-                                    public void onFailure(String errorEvent, String message) {
-                                        if (pd != null) {
-                                            pd.dismiss();
-                                        }
-                                    }
-                                });
-                            } else {
-                                if (pd != null) {
-                                    pd.dismiss();
-                                }
-                                MobclickAgent.onEvent(context, "did_purchase_coach");
-                                setResult(RESULT_OK, null);
-                                finish();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(String errorEvent, String message) {
-                            if (pd != null) {
-                                pd.dismiss();
-                            }
-                        }
-                    });
+                    mPresenter.getStudentUtilHasCoach();
                 } else if (result.equals("cancel")) {
-                    if (pd != null) {
-                        pd.dismiss();
-                    }
-                    Toast.makeText(context, "取消支付", Toast.LENGTH_SHORT).show();
+                    showMessage("取消支付");
                 } else if (result.equals("invalid")) {
-                    if (pd != null) {
-                        pd.dismiss();
-                    }
-                    Toast.makeText(context, "支付插件未安装", Toast.LENGTH_SHORT).show();
+                    showMessage("支付插件未安装");
                 } else {
-                    if (pd != null) {
-                        pd.dismiss();
-                    }
-                    Toast.makeText(context, "支付失败", Toast.LENGTH_SHORT).show();
+                    showMessage("支付失败");
                 }
             }
-        }
-    }
-
-    /**
-     * 选择班级
-     *
-     * @param selectClass
-     */
-    private void selectClass(int selectClass) {
-        if (mProductType.equals(String.valueOf(selectClass))) {
-            return;
-        } else {
-            mProductType = String.valueOf(selectClass);
-        }
-        mIvSelectVIP.setImageDrawable(ContextCompat.getDrawable(PurchaseCoachActivity.this, R.drawable.ic_cashout_unchack_btn));
-        mIvSelectNormal.setImageDrawable(ContextCompat.getDrawable(PurchaseCoachActivity.this, R.drawable.ic_cashout_unchack_btn));
-        if (mProductType.equals("0")) {
-            mIvSelectNormal.setImageDrawable(ContextCompat.getDrawable(PurchaseCoachActivity.this, R.drawable.ic_cashout_chack_btn));
-            mTvSurePay.setText("确认支付" + Util.getMoney(mCoach.getCoach_group().getTraining_cost()));
-        } else if (mProductType.equals("1")) {
-            mIvSelectVIP.setImageDrawable(ContextCompat.getDrawable(PurchaseCoachActivity.this, R.drawable.ic_cashout_chack_btn));
-            mTvSurePay.setText("确认支付" + Util.getMoney(mCoach.getCoach_group().getVip_price()));
-        }
-        refreshPayButton();
-    }
-
-    /**
-     * 付款按钮控制
-     */
-    private void refreshPayButton() {
-        if (!TextUtils.isEmpty(mProductType)) {
-            mTvSurePay.setAlpha(1);
-            mTvSurePay.setClickable(true);
-        } else {
-            mTvSurePay.setAlpha(0.6f);
-            mTvSurePay.setClickable(false);
         }
     }
 }
