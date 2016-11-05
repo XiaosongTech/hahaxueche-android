@@ -6,6 +6,7 @@ import com.hahaxueche.model.base.BaseModel;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.community.Article;
+import com.hahaxueche.model.course.ScheduleEvent;
 import com.hahaxueche.model.payment.BankCard;
 import com.hahaxueche.model.payment.PurchasedService;
 import com.hahaxueche.model.payment.WithdrawRecord;
@@ -14,6 +15,7 @@ import com.hahaxueche.model.responseList.CoachResponseList;
 import com.hahaxueche.model.responseList.PartnerResponseList;
 import com.hahaxueche.model.responseList.ReferrerResponseList;
 import com.hahaxueche.model.responseList.ReviewResponseList;
+import com.hahaxueche.model.responseList.ScheduleEventResponseList;
 import com.hahaxueche.model.user.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Coach;
@@ -202,6 +204,26 @@ public interface HHApiService {
 
     @GET("articles/headline")
     Observable<Article> getHeadline(@Query("student_id") String studentId);
+
+    @POST("students/{studentId}/{scheduleEventId}/schedule")
+    Observable<ScheduleEvent> bookSchedule(@Path("studentId") String studentId, @Path("scheduleEventId") String scheduleEventId,
+                                           @Header("X-Access-Token") String accessToken);
+
+    @GET("students/{id}/course_schedules")
+    Observable<ScheduleEventResponseList> getSchedules(@Path("id") String studentId, @Query("page") int page,
+                                                       @Query("per_page") int perPage, @Query("booked") int booked,
+                                                       @Header("X-Access-Token") String accessToken);
+
+    @GET
+    Observable<ScheduleEventResponseList> getSchedules(@Url String path, @Header("X-Access-Token") String accessToken);
+
+    @POST("students/{studentId}/{scheduleEventId}/unschedule")
+    Observable<BaseModel> cancelSchedule(@Path("studentId") String studentId, @Path("scheduleEventId") String scheduleEventId,
+                                         @Header("X-Access-Token") String accessToken);
+
+    @POST("students/{studentId}/{scheduleEventId}/review_schedule_event")
+    Observable<Review> reviewSchedule(@Path("studentId") String studentId, @Path("scheduleEventId") String scheduleEventId,
+                                      @Query("rating") float rating, @Header("X-Access-Token") String accessToken);
 
     class Factory {
         public static HHApiService create() {

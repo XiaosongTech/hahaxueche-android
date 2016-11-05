@@ -80,4 +80,16 @@ public class Constants {
         }
         return retFields;
     }
+
+    public String getCourseName(int cityId, int courseId) {
+        String ret = "";
+        City city = getCity(cityId);
+        for (Course course : city.courses) {
+            if (course.id == courseId) {
+                ret = course.display_name;
+                break;
+            }
+        }
+        return ret;
+    }
 }

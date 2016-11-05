@@ -24,6 +24,7 @@ import com.hahaxueche.presenter.myPage.MyPagePresenter;
 import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
+import com.hahaxueche.ui.activity.myPage.CourseActivity;
 import com.hahaxueche.ui.activity.myPage.FAQActivity;
 import com.hahaxueche.ui.activity.myPage.FollowListActivity;
 import com.hahaxueche.ui.activity.myPage.MyCoachDetailActivity;
@@ -293,7 +294,7 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
 
     @Override
     public void navigateToMyCourse() {
-
+        startActivity(new Intent(getContext(), CourseActivity.class));
     }
 
     @Override
