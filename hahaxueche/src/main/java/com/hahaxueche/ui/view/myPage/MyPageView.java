@@ -24,4 +24,8 @@ public interface MyPageView extends HHBaseView {
     void toMyCoach(String coachId);
 
     void navigateToPaymentStage();
+
+    void navigateToNoCourse();
+
+    void navigateToMyCourse();
 }

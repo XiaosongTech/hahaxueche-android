@@ -27,6 +27,7 @@ import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.activity.myPage.FAQActivity;
 import com.hahaxueche.ui.activity.myPage.FollowListActivity;
 import com.hahaxueche.ui.activity.myPage.MyCoachDetailActivity;
+import com.hahaxueche.ui.activity.myPage.NoCourseActivity;
 import com.hahaxueche.ui.activity.myPage.PaymentStageActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.activity.myPage.SoftwareInfoActivity;
@@ -79,6 +80,7 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     private PhotoUtil mPhotoUtil;
     private String mAlbumPicturePath = null;
     private MyAdviserDialog mConsultantDialog;
+    private static final int REQUEST_CODE_NO_COURSE = 12;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -165,7 +167,8 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
             R.id.iv_my_avatar,
             R.id.tv_logout,
             R.id.rly_my_coach,
-            R.id.rly_payment_stage})
+            R.id.rly_payment_stage,
+            R.id.rly_my_course})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rly_online_service:
@@ -247,6 +250,9 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
             case R.id.rly_payment_stage:
                 mPresenter.clickPaymentStage();
                 break;
+            case R.id.rly_my_course:
+                mPresenter.clickMyCourse();
+                break;
             default:
                 break;
         }
@@ -278,6 +284,16 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     @Override
     public void navigateToPaymentStage() {
         startActivity(new Intent(getContext(), PaymentStageActivity.class));
+    }
+
+    @Override
+    public void navigateToNoCourse() {
+        startActivityForResult(new Intent(getContext(), NoCourseActivity.class), REQUEST_CODE_NO_COURSE);
+    }
+
+    @Override
+    public void navigateToMyCourse() {
+
     }
 
     @Override
@@ -343,6 +359,11 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
                 showMessage("取消头像设置");
             } else {
                 showMessage("设置头像失败");
+            }
+        } else if (requestCode == REQUEST_CODE_NO_COURSE) {
+            if (resultCode == RESULT_OK && null != data) {
+                int tab = data.getIntExtra("showTab", 1);
+                mActivity.selectTab(tab);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

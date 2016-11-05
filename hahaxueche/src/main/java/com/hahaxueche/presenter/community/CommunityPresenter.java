@@ -26,6 +26,7 @@ public class CommunityPresenter implements Presenter<CommunityView> {
     private Subscription subscription;
     private HHBaseApplication application;
     private Article mHeadlineArticle;
+    private static final String WEB_URL_GROUP_BUY = "http://m.hahaxueche.com/share/tuan";
 
     public void attachView(CommunityView view) {
         this.mCommunityView = view;
@@ -54,7 +55,7 @@ public class CommunityPresenter implements Presenter<CommunityView> {
         } else {
             MobclickAgent.onEvent(mCommunityView.getContext(), "club_page_group_purchase_tapped");
         }
-
+        mCommunityView.openWebView(WEB_URL_GROUP_BUY);
     }
 
     public void clickTestLibCount() {

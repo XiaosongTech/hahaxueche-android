@@ -260,7 +260,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         }
     }
 
-    public void clickMyFollowCount(){
+    public void clickMyFollowCount() {
         //我关注教练点击
         HashMap<String, String> map = new HashMap();
         User user = application.getSharedPrefUtil().getUser();
@@ -272,7 +272,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         }
     }
 
-    public void clickMyAdviserCount(){
+    public void clickMyAdviserCount() {
         //我的顾问点击
         HashMap<String, String> map = new HashMap();
         User user = application.getSharedPrefUtil().getUser();
@@ -284,7 +284,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         }
     }
 
-    public void clickFAQCount(){
+    public void clickFAQCount() {
         //常见问题点击
         HashMap<String, String> map = new HashMap();
         User user = application.getSharedPrefUtil().getUser();
@@ -296,7 +296,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         }
     }
 
-    public void clickSupportHahaCount(){
+    public void clickSupportHahaCount() {
         //支持小哈点击
         HashMap<String, String> map = new HashMap();
         User user = application.getSharedPrefUtil().getUser();
@@ -308,7 +308,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         }
     }
 
-    public void clickSoftwareInfoCount(){
+    public void clickSoftwareInfoCount() {
         //软件信息点击
         HashMap<String, String> map = new HashMap();
         User user = application.getSharedPrefUtil().getUser();
@@ -320,7 +320,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         }
     }
 
-    public void clickReferCount(){
+    public void clickReferCount() {
         //推荐有奖点击
         HashMap<String, String> map = new HashMap();
         User user = application.getSharedPrefUtil().getUser();
@@ -329,6 +329,22 @@ public class MyPagePresenter implements Presenter<MyPageView> {
             MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_refer_tapped", map);
         } else {
             MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_refer_tapped");
+        }
+    }
+
+    public void clickMyCourse() {
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_my_course_tapped", map);
+            if (user.student.hasPurchasedService()) {
+                mMyPageView.navigateToMyCourse();
+            } else {
+                mMyPageView.navigateToNoCourse();
+            }
+        } else {
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_my_course_tapped");
         }
     }
 }

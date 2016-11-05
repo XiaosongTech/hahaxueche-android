@@ -4,10 +4,12 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
 import com.hahaxueche.ui.activity.ActivityCollector;
+import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.view.base.HHBaseView;
@@ -80,6 +82,31 @@ public class HHBaseFragment extends Fragment implements HHBaseView {
         if (progressDialog != null) {
             progressDialog.dismiss();
         }
+    }
+
+    /**
+     * 打开webview
+     *
+     * @param url
+     * @param isShowShare 是否显示分享链接
+     */
+    public void openWebView(String url, String title, boolean isShowShare) {
+        Intent intent = new Intent(getContext(), BaseWebViewActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("url", url);
+        bundle.putString("title", title);
+        bundle.putBoolean("isShowShare", isShowShare);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    /**
+     * 打开webview
+     *
+     * @param url
+     */
+    public void openWebView(String url) {
+        openWebView(url, "", true);
     }
 
 

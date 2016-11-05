@@ -16,6 +16,7 @@ public class Constants {
     public ArrayList<Banner> new_login_banners;
     public ArrayList<Banner> new_home_page_banners;
     public ArrayList<BaseItemType> schedule_course_status;
+    public ArrayList<BannerHighlight> banner_highlights;
     public String version_name;
     public int version_code;
     public ArrayList<Bank> banks;

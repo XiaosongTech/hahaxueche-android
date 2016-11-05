@@ -94,6 +94,12 @@ public class MainActivity extends HHBaseActivity {
         return v;
     }
 
+    public void selectTab(int tab) {
+        if (mTabHost != null) {
+            mTabHost.setCurrentTab(tab);
+        }
+    }
+
     @Override
     protected void onDestroy() {
         mPresenter.detachView();

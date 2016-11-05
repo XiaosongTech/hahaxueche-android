@@ -43,6 +43,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
     private static final String WEB_URL_BEST_COACHES = "http://m.hahaxueche.com/share/best-coaches";
     private static final String WEB_URL_FIND_ADVISER = "http://m.hahaxueche.com/share/zhaoguwen";
     private static final String WEB_URL_FIND_DRIVING_SCHOOL = "http://m.hahaxueche.com/share/zhaojiaxiao";
+    private static final String WEB_URL_GROUP_BUY = "http://m.hahaxueche.com/share/tuan";
 
     private HHBaseApplication application;
     private Constants constants;
@@ -137,6 +138,19 @@ public class HomepagePresenter implements Presenter<HomepageView> {
             MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_driving_school_tapped");
         }
         mHomepageView.openWebView(WEB_URL_FIND_DRIVING_SCHOOL);
+    }
+
+    public void openGroupBuy() {
+        //团购点击
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_group_purchase_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_group_purchase_tapped");
+        }
+        mHomepageView.openWebView(WEB_URL_GROUP_BUY);
     }
 
     /**

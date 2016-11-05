@@ -151,7 +151,7 @@ public class HHBaseActivity extends AppCompatActivity implements HHBaseView {
      * @param url
      */
     public void openWebView(String url) {
-        openWebView(url, "", false);
+        openWebView(url, "", true);
     }
 
     /**
@@ -184,6 +184,7 @@ public class HHBaseActivity extends AppCompatActivity implements HHBaseView {
         super.onResume();
         MobclickAgent.onResume(this);
     }
+
     public void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
