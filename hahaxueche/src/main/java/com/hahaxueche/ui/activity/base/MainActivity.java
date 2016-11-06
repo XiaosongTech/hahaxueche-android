@@ -72,6 +72,7 @@ public class MainActivity extends HHBaseActivity {
                 }
             }
         });
+        mTabHost.getTabWidget().setDividerDrawable(null);
         Intent intent = getIntent();
         Bundle shareObject = intent.getBundleExtra("shareObject");
         if (shareObject != null && !TextUtils.isEmpty(shareObject.getString("objectId", ""))) {
