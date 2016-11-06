@@ -76,10 +76,15 @@ public class PriceActivity extends HHBaseActivity implements PriceView {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setCustomView(R.layout.actionbar_base);
         mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
-        mIvBack.setVisibility(View.GONE);
         mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         mTvTitle.setText("拿证价格");
+        mIvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PriceActivity.this.finish();
+            }
+        });
     }
 
     @Override

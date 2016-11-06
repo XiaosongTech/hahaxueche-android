@@ -20,7 +20,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="14dp"
-                android:layout_marginLeft="18dp"
+                android:layout_marginLeft="@dimen/margin_18dp"
                 android:layout_marginTop="14dp"
                 android:src="@drawable/clock" />
 
@@ -63,7 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="14dp"
-                android:layout_marginLeft="18dp"
+                android:layout_marginLeft="@dimen/margin_18dp"
                 android:layout_marginTop="14dp"
                 android:src="@drawable/exercise" />
 

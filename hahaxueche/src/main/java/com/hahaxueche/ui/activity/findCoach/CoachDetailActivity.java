@@ -714,6 +714,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 Intent intent = new Intent(getContext(), ReviewListActivity.class);
                 intent.putExtra("coach", mPresenter.getCoach());
                 startActivity(intent);
+                break;
             case R.id.rly_price:
                 mPresenter.clickPrice();
                 intent = new Intent(getContext(), PriceActivity.class);
