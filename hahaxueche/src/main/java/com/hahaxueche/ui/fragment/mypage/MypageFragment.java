@@ -37,6 +37,7 @@ import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.community.MyAdviserDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.myPage.MyPageView;
+import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.PhotoUtil;
 import com.hahaxueche.util.Utils;
 
@@ -82,6 +83,7 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     private String mAlbumPicturePath = null;
     private MyAdviserDialog mConsultantDialog;
     private static final int REQUEST_CODE_NO_COURSE = 12;
+    private static final int REQUEST_CODE_PAYMENT_STAGE = 13;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -284,7 +286,7 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
 
     @Override
     public void navigateToPaymentStage() {
-        startActivity(new Intent(getContext(), PaymentStageActivity.class));
+        startActivityForResult(new Intent(getContext(), PaymentStageActivity.class), REQUEST_CODE_PAYMENT_STAGE);
     }
 
     @Override
@@ -366,6 +368,8 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
                 int tab = data.getIntExtra("showTab", 1);
                 mActivity.selectTab(tab);
             }
+        } else if (requestCode == REQUEST_CODE_PAYMENT_STAGE) {
+            mPresenter.fetchStudent();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
