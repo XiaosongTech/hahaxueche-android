@@ -1,14 +1,15 @@
 package com.hahaxueche.ui.activity.findCoach;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -29,7 +30,6 @@ import java.util.LinkedList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnTextChanged;
 
 /**
  * Created by wangshirui on 16/10/4.
@@ -187,7 +187,7 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
     }
 
     @Override
-    public void loadCoachList(ArrayList<Coach> coachList) {
+    public void loadCoachList(final ArrayList<Coach> coachList) {
         mFlyMain.removeAllViews();
         if (coachList != null && coachList.size() > 0) {
             FrameLayout.LayoutParams paramMain = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
@@ -209,6 +209,16 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
             tvFooter.setLayoutParams(paramsTvFooter);
             listView.addFooterView(tvFooter);
             listView.setFooterDividersEnabled(false);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if (position < coachList.size()) {
+                        Intent intent = new Intent(getContext(), CoachDetailActivity.class);
+                        intent.putExtra("coach", coachList.get(position));
+                        startActivity(intent);
+                    }
+                }
+            });
             mFlyMain.addView(listView);
         } else {
             //未搜索到教练
