@@ -11,13 +11,11 @@ import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.base.WelcomeView;
 import com.hahaxueche.util.HHLog;
 
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 
 /**
  * Created by wangshirui on 16/9/18.
@@ -83,7 +81,13 @@ public class WelcomePresenter implements Presenter<WelcomeView> {
 
                         @Override
                         public void onError(Throwable e) {
-                            mWelcomeView.navigationToStartLogin();
+                            if (mShareObject != null) {
+                                HHBaseApplication application = HHBaseApplication.get(mWelcomeView.getContext());
+                                application.getSharedPrefUtil().createFakeUser();
+                                mWelcomeView.navigateToHomepage(mShareObject);
+                            } else {
+                                mWelcomeView.navigationToStartLogin();
+                            }
                             HHLog.e(e.getMessage());
                         }
 

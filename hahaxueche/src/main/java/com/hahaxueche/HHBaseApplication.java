@@ -14,6 +14,7 @@ import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.HahaCache;
 import com.hahaxueche.util.SharedPrefUtil;
 import com.hahaxueche.util.share.ShareConstants;
+import com.microquation.linkedme.android.LinkedME;
 import com.qiyukf.unicorn.api.SavePowerConfig;
 import com.qiyukf.unicorn.api.StatusBarNotificationConfig;
 import com.qiyukf.unicorn.api.Unicorn;
@@ -27,7 +28,6 @@ import com.tencent.tauth.Tencent;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
@@ -102,6 +102,16 @@ public class HHBaseApplication extends Application {
         HahaCache.context = getApplicationContext();
         regToShare();
         Unicorn.init(this, "2f328da38ac77ce6d796c2977248f7e2", options(), new FrescoImageLoader());
+        try {
+            if (BuildConfig.DEBUG) {
+                //设置debug模式下打印LinkedME日志
+                LinkedME.getInstance(this).setDebug();
+            } else {
+                LinkedME.getInstance(this);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // 如果返回值为null，则全部使用默认参数。

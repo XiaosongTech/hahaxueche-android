@@ -13,14 +13,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.hahaxueche.R;
 import com.hahaxueche.ui.activity.ActivityCollector;
-import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.view.base.HHBaseView;
 import com.hahaxueche.util.HHLog;
 import com.umeng.analytics.MobclickAgent;
-
 
 /**
  * Created by wangshirui on 16/9/8.
@@ -189,5 +186,4 @@ public class HHBaseActivity extends AppCompatActivity implements HHBaseView {
         super.onPause();
         MobclickAgent.onPause(this);
     }
-
 }
