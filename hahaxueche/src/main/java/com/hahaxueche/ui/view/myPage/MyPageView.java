@@ -28,4 +28,6 @@ public interface MyPageView extends HHBaseView {
     void navigateToNoCourse();
 
     void navigateToMyCourse();
+
+    void editUsername(String name);
 }

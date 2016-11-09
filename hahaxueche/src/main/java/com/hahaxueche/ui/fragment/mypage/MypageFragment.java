@@ -35,6 +35,7 @@ import com.hahaxueche.ui.activity.myPage.SoftwareInfoActivity;
 import com.hahaxueche.ui.dialog.AvatarDialog;
 import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.community.MyAdviserDialog;
+import com.hahaxueche.ui.dialog.myPage.EditUsernameDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.myPage.MyPageView;
 import com.hahaxueche.util.HHLog;
@@ -82,6 +83,7 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     private PhotoUtil mPhotoUtil;
     private String mAlbumPicturePath = null;
     private MyAdviserDialog mConsultantDialog;
+    private EditUsernameDialog mEditUsernameDialog;
     private static final int REQUEST_CODE_NO_COURSE = 12;
     private static final int REQUEST_CODE_PAYMENT_STAGE = 13;
 
@@ -171,7 +173,8 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
             R.id.tv_logout,
             R.id.rly_my_coach,
             R.id.rly_payment_stage,
-            R.id.rly_my_course})
+            R.id.rly_my_course,
+            R.id.iv_edit_username})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rly_online_service:
@@ -256,6 +259,17 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
             case R.id.rly_my_course:
                 mPresenter.clickMyCourse();
                 break;
+            case R.id.iv_edit_username:
+                if (mEditUsernameDialog == null) {
+                    mEditUsernameDialog = new EditUsernameDialog(getContext(), new EditUsernameDialog.OnButtonClickListener() {
+                        @Override
+                        public void save(String username) {
+                            mPresenter.editUsername(username);
+                        }
+                    });
+                }
+                mEditUsernameDialog.show();
+                break;
             default:
                 break;
         }
@@ -297,6 +311,11 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     @Override
     public void navigateToMyCourse() {
         startActivity(new Intent(getContext(), CourseActivity.class));
+    }
+
+    @Override
+    public void editUsername(String name) {
+        mTvStudentName.setText(name);
     }
 
     @Override

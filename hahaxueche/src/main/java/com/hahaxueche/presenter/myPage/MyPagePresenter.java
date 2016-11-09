@@ -347,4 +347,56 @@ public class MyPagePresenter implements Presenter<MyPageView> {
             MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_my_course_tapped");
         }
     }
+
+    public void editUsername(final String username) {
+        final User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin()) return;
+        final HHApiService apiService = application.getApiService();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("cell_phone", user.cell_phone);
+        final HashMap<String, Object> mapParam = new HashMap<>();
+        mapParam.put("name", username);
+        mapParam.put("city_id", user.student.city_id);
+        subscription = apiService.isValidToken(user.session.access_token, map)
+                .flatMap(new Func1<BaseValid, Observable<Student>>() {
+                    @Override
+                    public Observable<Student> call(BaseValid baseValid) {
+                        if (baseValid.valid) {
+                            return apiService.completeUserInfo(user.student.id, user.session.access_token, mapParam);
+                        } else {
+                            return application.getSessionObservable();
+                        }
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<Student>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        mMyPageView.showProgressDialog("更新中，请稍后...");
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        mMyPageView.dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mMyPageView.dismissProgressDialog();
+                        if (ErrorUtil.isInvalidSession(e)) {
+                            mMyPageView.forceOffline();
+                        }
+                        HHLog.e(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(Student student) {
+                        application.getSharedPrefUtil().updateStudent(student);
+                        mMyPageView.editUsername(student.name);
+                    }
+                });
+
+    }
 }
