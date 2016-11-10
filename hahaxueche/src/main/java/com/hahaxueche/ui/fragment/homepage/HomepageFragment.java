@@ -92,22 +92,24 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
 
     @Override
     public void initBanners(ArrayList<Banner> bannerArrayList) {
-        int screenWidth = Utils.instence(getContext()).getDm().widthPixels;
-        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(screenWidth, screenWidth / 5 * 2);
-        mHomepageBanner.setLayoutParams(p);
-        ArrayList<String> networkImages = new ArrayList<>();
-        for (Banner banner : bannerArrayList) {
-            networkImages.add(banner.image_url);
-        }
-        mHomepageBanner.setPages(new CBViewHolderCreator<NetworkImageHolderView>() {
-            @Override
-            public NetworkImageHolderView createHolder() {
-                return new NetworkImageHolderView();
+        if (bannerArrayList != null && bannerArrayList.size() > 0) {
+            int screenWidth = Utils.instence(getContext()).getDm().widthPixels;
+            LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(screenWidth, screenWidth / 5 * 2);
+            mHomepageBanner.setLayoutParams(p);
+            ArrayList<String> networkImages = new ArrayList<>();
+            for (Banner banner : bannerArrayList) {
+                networkImages.add(banner.image_url);
             }
-        }, networkImages)
-                .setPageIndicator(new int[]{R.drawable.icon_point, R.drawable.icon_point_pre})
-                .setOnItemClickListener(this);
-        mHomepageBanner.notifyDataSetChanged();
+            mHomepageBanner.setPages(new CBViewHolderCreator<NetworkImageHolderView>() {
+                @Override
+                public NetworkImageHolderView createHolder() {
+                    return new NetworkImageHolderView();
+                }
+            }, networkImages)
+                    .setPageIndicator(new int[]{R.drawable.icon_point, R.drawable.icon_point_pre})
+                    .setOnItemClickListener(this);
+            mHomepageBanner.notifyDataSetChanged();
+        }
     }
 
     @OnClick({R.id.fly_my_strength,

@@ -52,9 +52,11 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         this.mHomepageView = view;
         application = HHBaseApplication.get(mHomepageView.getContext());
         constants = application.getConstants();
-        mHomepageView.initBanners(constants.new_home_page_banners);
-        loadStatistics();
-        loadCityChoseDialog();
+        if (constants != null) {
+            mHomepageView.initBanners(constants.new_home_page_banners);
+            loadStatistics();
+            loadCityChoseDialog();
+        }
     }
 
     public void detachView() {
