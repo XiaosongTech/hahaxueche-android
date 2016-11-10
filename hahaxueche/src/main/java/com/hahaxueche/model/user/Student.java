@@ -8,6 +8,7 @@ import com.hahaxueche.model.payment.BankCard;
 import com.hahaxueche.model.payment.Coupon;
 import com.hahaxueche.model.payment.PaymentStage;
 import com.hahaxueche.model.payment.PurchasedService;
+import com.hahaxueche.model.payment.Voucher;
 
 import java.util.ArrayList;
 
@@ -28,37 +29,23 @@ public class Student implements Parcelable {
     public int bonus_balance;
     public BankCard bank_card;
     public ArrayList<Coupon> coupons;
+    public ArrayList<Voucher> vouchers;
 
     public Student() {
 
     }
 
-    protected Student(Parcel in) {
-        id = in.readString();
-        cell_phone = in.readString();
-        name = in.readString();
-        city_id = in.readInt();
-        user_id = in.readString();
-        avatar = in.readString();
-        current_coach_id = in.readString();
-        phase = in.readInt();
-        current_course = in.readInt();
-        bonus_balance = in.readInt();
-        bank_card = in.readParcelable(BankCard.class.getClassLoader());
-        coupons = in.createTypedArrayList(Coupon.CREATOR);
+    public String getStudentPhaseLabel() {
+        if (isPurchasedService()) {
+            return "目前阶段：" + getPaymentStageLabel();
+        } else {
+            return "目前阶段：未付款";
+        }
     }
 
-    public static final Creator<Student> CREATOR = new Creator<Student>() {
-        @Override
-        public Student createFromParcel(Parcel in) {
-            return new Student(in);
-        }
-
-        @Override
-        public Student[] newArray(int size) {
-            return new Student[size];
-        }
-    };
+    public boolean hasPurchasedService() {
+        return !TextUtils.isEmpty(current_coach_id) && purchased_services != null && purchased_services.size() > 0;
+    }
 
     private boolean isPurchasedService() {
         return purchased_services != null && purchased_services.size() > 0;
@@ -101,17 +88,33 @@ public class Student implements Parcelable {
         }
     }
 
-    public String getStudentPhaseLabel() {
-        if (isPurchasedService()) {
-            return "目前阶段：" + getPaymentStageLabel();
-        } else {
-            return "目前阶段：未付款";
-        }
+    protected Student(Parcel in) {
+        id = in.readString();
+        cell_phone = in.readString();
+        name = in.readString();
+        city_id = in.readInt();
+        user_id = in.readString();
+        avatar = in.readString();
+        current_coach_id = in.readString();
+        phase = in.readInt();
+        current_course = in.readInt();
+        bonus_balance = in.readInt();
+        bank_card = in.readParcelable(BankCard.class.getClassLoader());
+        coupons = in.createTypedArrayList(Coupon.CREATOR);
+        vouchers = in.createTypedArrayList(Voucher.CREATOR);
     }
 
-    public boolean hasPurchasedService() {
-        return !TextUtils.isEmpty(current_coach_id) && purchased_services != null && purchased_services.size() > 0;
-    }
+    public static final Creator<Student> CREATOR = new Creator<Student>() {
+        @Override
+        public Student createFromParcel(Parcel in) {
+            return new Student(in);
+        }
+
+        @Override
+        public Student[] newArray(int size) {
+            return new Student[size];
+        }
+    };
 
     @Override
     public int describeContents() {
@@ -132,5 +135,6 @@ public class Student implements Parcelable {
         dest.writeInt(bonus_balance);
         dest.writeParcelable(bank_card, flags);
         dest.writeTypedList(coupons);
+        dest.writeTypedList(vouchers);
     }
 }
