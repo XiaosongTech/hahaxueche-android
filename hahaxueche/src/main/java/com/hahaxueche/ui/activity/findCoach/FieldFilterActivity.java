@@ -240,7 +240,6 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
             markerOptionlst.add(markerOption);
         }
         if (aMap != null) {
-            ArrayList<Field> selectFields = mPresenter.getSelectFields();
             List<Marker> markerList = aMap.addMarkers(markerOptionlst, true);
             for (Marker marker : markerList) {
                 Field field = fields.get(markerList.indexOf(marker));

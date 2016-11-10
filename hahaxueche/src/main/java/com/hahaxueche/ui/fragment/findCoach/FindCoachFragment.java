@@ -187,11 +187,9 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_FIELD_FILTER) {
-            if (resultCode == RESULT_OK && null != data) {
+            if (resultCode == RESULT_OK) {
                 ArrayList<Field> fields = data.getParcelableArrayListExtra("selectFields");
-                if (fields != null) {
-                    mCoachListFragment.setSelectFields(fields);
-                }
+                mCoachListFragment.setSelectFields(fields);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

@@ -8,6 +8,7 @@ import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.FieldFilterView;
+import com.hahaxueche.util.HHLog;
 
 import java.util.ArrayList;
 
@@ -77,8 +78,8 @@ public class FieldFilterPresenter implements Presenter<FieldFilterView> {
             mFieldFilterView.setSelectFieldText(getSelectFieldText());
             return true;
         }
-        if (mSelectFields.contains(field)) {
-            mSelectFields.remove(field);
+        if (containsSelectField(field)) {
+            removeSelectField(field);
             mFieldFilterView.setSelectFieldText(getSelectFieldText());
             return false;
         } else {
@@ -86,6 +87,16 @@ public class FieldFilterPresenter implements Presenter<FieldFilterView> {
             mFieldFilterView.setSelectFieldText(getSelectFieldText());
             return true;
         }
+    }
+
+    private boolean removeSelectField(Field field) {
+        if (mSelectFields == null || mSelectFields.size() < 1) return false;
+        for (Field selectField : mSelectFields) {
+            if (selectField.id.equals(field.id)) {
+                return mSelectFields.remove(selectField);
+            }
+        }
+        return false;
     }
 
     private String getSelectFieldText() {
