@@ -95,7 +95,9 @@ public class CoachAdapter extends BaseAdapter {
         holder.ivCoachAvatar.setImageURI(coach.avatar);
         holder.tvCoachTeachTime.setText(coach.experiences + "年教龄");
         holder.tvCoachPoints.setText(coach.average_rating + " (" + coach.review_count + ")");
-        holder.tvCoachActualPrice.setText(Utils.getMoney(coach.coach_group.training_cost));
+        if (coach.coach_group != null) {
+            holder.tvCoachActualPrice.setText(Utils.getMoney(coach.coach_group.training_cost));
+        }
         if (coach.skill_level.equals("1")) {
             holder.ivIsGoldenCoach.setVisibility(View.VISIBLE);
         } else {

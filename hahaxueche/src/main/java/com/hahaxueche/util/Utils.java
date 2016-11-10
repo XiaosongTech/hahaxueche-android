@@ -91,18 +91,36 @@ public class Utils {
     }
 
     public static String getMoney(double price) {
+        String ret = "";
         DecimalFormat dfInt = new DecimalFormat("#####.##");
-        return "￥" + dfInt.format(price / 100.0);
+        try {
+            ret = "￥" + dfInt.format(price / 100.0);
+        } catch (Exception e) {
+            HHLog.e(e.getMessage());
+        }
+        return ret;
     }
 
     public static String getMoneyYuan(double price) {
+        String ret = "";
         DecimalFormat dfInt = new DecimalFormat("#####.##");
-        return dfInt.format(price / 100.0) + "元";
+        try {
+            ret = dfInt.format(price / 100.0) + "元";
+        } catch (Exception e) {
+            HHLog.e(e.getMessage());
+        }
+        return ret;
     }
 
     public static String getCount(int count) {
+        String ret = "";
         DecimalFormat dfInt = new DecimalFormat("#####.#");
-        return count > 9999 ? (dfInt.format(count / 10000.0) + "万") : String.valueOf(count);
+        try {
+            ret = count > 9999 ? (dfInt.format(count / 10000.0) + "万") : String.valueOf(count);
+        } catch (Exception e) {
+            HHLog.e(e.getMessage());
+        }
+        return ret;
     }
 
     public static String getRate(String rate) {
@@ -117,7 +135,7 @@ public class Utils {
     }
 
     public static String getDateFromUTC(String UTCTime) {
-        String localTimeStr = null;
+        String localTimeStr = "";
         DateFormat UTCformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -131,7 +149,7 @@ public class Utils {
     }
 
     public static String getDateDotFromUTC(String UTCTime) {
-        String localTimeStr = null;
+        String localTimeStr = "";
         DateFormat UTCformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         DateFormat format = new SimpleDateFormat("yyyy.MM.dd");
         try {
@@ -145,7 +163,7 @@ public class Utils {
     }
 
     public static String getMonthDayFromUTC(String UTCTime) {
-        String localTimeStr = null;
+        String localTimeStr = "";
         DateFormat UTCformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         DateFormat format = new SimpleDateFormat("MM-dd");
         try {
