@@ -222,7 +222,6 @@ public class ExamFragment extends Fragment {
             //含有链接的文字说明
             CharSequence explainStr = explains;
             final String url = explains.substring(explains.indexOf("http://"), explains.indexOf("html") + 4);
-            Log.v("gibxin", "test url -> " + url);
             SpannableString spexplainStr = new SpannableString(explainStr);
             spexplainStr.setSpan(new ClickableSpan() {
                 @Override

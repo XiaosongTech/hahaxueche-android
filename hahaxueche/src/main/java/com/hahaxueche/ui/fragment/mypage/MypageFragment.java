@@ -28,6 +28,7 @@ import com.hahaxueche.ui.activity.myPage.CourseActivity;
 import com.hahaxueche.ui.activity.myPage.FAQActivity;
 import com.hahaxueche.ui.activity.myPage.FollowListActivity;
 import com.hahaxueche.ui.activity.myPage.MyCoachDetailActivity;
+import com.hahaxueche.ui.activity.myPage.MyVoucherActivity;
 import com.hahaxueche.ui.activity.myPage.NoCourseActivity;
 import com.hahaxueche.ui.activity.myPage.PaymentStageActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
@@ -174,7 +175,8 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
             R.id.rly_my_coach,
             R.id.rly_payment_stage,
             R.id.rly_my_course,
-            R.id.iv_edit_username})
+            R.id.iv_edit_username,
+            R.id.rly_my_voucher})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rly_online_service:
@@ -268,6 +270,9 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
                 }
                 mEditUsernameDialog.show();
                 break;
+            case R.id.rly_my_voucher:
+                mPresenter.clickMyVoucher();
+                break;
             default:
                 break;
         }
@@ -309,6 +314,11 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     @Override
     public void navigateToMyCourse() {
         startActivity(new Intent(getContext(), CourseActivity.class));
+    }
+
+    @Override
+    public void navigateToMyVoucher() {
+        startActivity(new Intent(getContext(), MyVoucherActivity.class));
     }
 
     @Override
