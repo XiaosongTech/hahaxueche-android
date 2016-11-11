@@ -28,26 +28,22 @@ public class BaseConfirmSimpleDialog {
     private Dialog mDialog;
     private View contentView;
 
-    private onConfirmListener mConfirmListener;
-    private onCancelListener mCancelListener;
+    private onClickListener mOnClickListener;
 
-    public interface onConfirmListener {
-        public boolean clickConfirm();
+    public interface onClickListener {
+        void clickConfirm();
+
+        void clickCancel();
     }
 
-    public interface onCancelListener {
-        public boolean clickCancel();
-    }
-
-    public BaseConfirmSimpleDialog(Context context, String title, String subtitle, String confirmString, String cancelString, onConfirmListener confirmListener, onCancelListener cancelListener) {
+    public BaseConfirmSimpleDialog(Context context, String title, String subtitle, String confirmString, String cancelString, onClickListener onClickListener) {
         mDialog = new Dialog(context, R.style.my_dialog);
         mContext = context;
         mTitle = title;
         mSubtitle = subtitle;
         mConfirmString = confirmString;
         mCancelString = cancelString;
-        mConfirmListener = confirmListener;
-        mCancelListener = cancelListener;
+        mOnClickListener = onClickListener;
         initView();
         initEvent();
         loadDatas();
@@ -100,11 +96,11 @@ public class BaseConfirmSimpleDialog {
             switch (v.getId()) {
                 case R.id.tv_base_confirm_sure:
                     mDialog.dismiss();
-                    mConfirmListener.clickConfirm();
+                    mOnClickListener.clickConfirm();
                     break;
                 case R.id.tv_base_confirm_cancel:
                     mDialog.dismiss();
-                    mCancelListener.clickCancel();
+                    mOnClickListener.clickCancel();
                     break;
                 default:
                     break;

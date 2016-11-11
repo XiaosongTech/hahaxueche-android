@@ -218,18 +218,16 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
             final int lastPos = spUtil.getExamPosition(mExamType);
             if (lastPos > 0) {
                 BaseConfirmSimpleDialog baseConfirmSimpleDialog = new BaseConfirmSimpleDialog(ExamActivity.this, "提示", "上次练习到" + (lastPos + 1) + "题,是否继续?",
-                        "继续上次", "重新开始", new BaseConfirmSimpleDialog.onConfirmListener() {
+                        "继续上次", "重新开始", new BaseConfirmSimpleDialog.onClickListener() {
                     @Override
-                    public boolean clickConfirm() {
+                    public void clickConfirm() {
                         mCurrentPosition = lastPos + 1;
                         mPager.setCurrentItem(mCurrentPosition);
-                        return true;
                     }
-                }, new BaseConfirmSimpleDialog.onCancelListener() {
+
                     @Override
-                    public boolean clickCancel() {
+                    public void clickCancel() {
                         spUtil.clearExamPosition(mExamType);
-                        return true;
                     }
                 });
                 baseConfirmSimpleDialog.show();
@@ -278,21 +276,20 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
                         } else {
                             //其他模式,提示是否从头开始
                             BaseConfirmSimpleDialog baseConfirmSimpleDialog = new BaseConfirmSimpleDialog(ExamActivity.this, "提示", "已经是最后一题,是否从头开始?",
-                                    "从头开始", "再看看", new BaseConfirmSimpleDialog.onConfirmListener() {
+                                    "从头开始", "再看看", new BaseConfirmSimpleDialog.onClickListener() {
                                 @Override
-                                public boolean clickConfirm() {
+                                public void clickConfirm() {
                                     for (Question question : mQuestionList) {
                                         question.userAnswer = null;
                                     }
                                     spUtil.clearExamPosition(mExamType);
                                     mCurrentPosition = 0;
                                     mPager.setCurrentItem(mCurrentPosition);
-                                    return true;
                                 }
-                            }, new BaseConfirmSimpleDialog.onCancelListener() {
+
                                 @Override
-                                public boolean clickCancel() {
-                                    return true;
+                                public void clickCancel() {
+
                                 }
                             });
                             baseConfirmSimpleDialog.show();
@@ -399,16 +396,14 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
     private void submitExam() {
         if (mExamLib.isShowForceSubmitDialog()) {//有未回答的问题,强制提交
             BaseConfirmSimpleDialog baseConfirmSimpleDialog = new BaseConfirmSimpleDialog(ExamActivity.this, "交卷提示",
-                    mExamLib.getForceSubmitDialogHints(), "确认交卷", "继续做题", new BaseConfirmSimpleDialog.onConfirmListener() {
+                    mExamLib.getForceSubmitDialogHints(), "确认交卷", "继续做题", new BaseConfirmSimpleDialog.onClickListener() {
                 @Override
-                public boolean clickConfirm() {
+                public void clickConfirm() {
                     submit();
-                    return true;
                 }
-            }, new BaseConfirmSimpleDialog.onCancelListener() {
+
                 @Override
-                public boolean clickCancel() {
-                    return true;
+                public void clickCancel() {
                 }
             });
             baseConfirmSimpleDialog.show();
@@ -455,17 +450,15 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
                 mExamLib.addWrongQuestion(question);
                 if (mExamLib.isShowContinueDialog()) {//错题超过及格线,提示提交
                     BaseConfirmSimpleDialog baseConfirmSimpleDialog = new BaseConfirmSimpleDialog(ExamActivity.this, "交卷提示",
-                            mExamLib.getContinueDialogHints(), "确认交卷", "继续做题", new BaseConfirmSimpleDialog.onConfirmListener() {
+                            mExamLib.getContinueDialogHints(), "确认交卷", "继续做题", new BaseConfirmSimpleDialog.onClickListener() {
                         @Override
-                        public boolean clickConfirm() {
+                        public void clickConfirm() {
                             submit();
-                            return true;
                         }
-                    }, new BaseConfirmSimpleDialog.onCancelListener() {
+
                         @Override
-                        public boolean clickCancel() {
+                        public void clickCancel() {
                             mExamLib.setContinue(true);
-                            return true;
                         }
                     });
                     baseConfirmSimpleDialog.show();

@@ -114,16 +114,14 @@ public class ScheduleListFragment extends HHBaseFragment implements ScheduleList
         BaseConfirmDialog dialog = new BaseConfirmDialog(getContext(), "预约课程",
                 "您预约了课程", "日期：" + day + "\n时间：" + startTime + "-" + endTime + "\n科目：" + courseName,
                 "您最多只能预约2节课, 确定预约这节课吗？",
-                "确认", "取消", new BaseConfirmDialog.onConfirmListener() {
+                "确认", "取消", new BaseConfirmDialog.onClickListener() {
             @Override
-            public boolean clickConfirm() {
+            public void clickConfirm() {
                 mPresenter.bookSchedule(scheduleEventId);
-                return true;
             }
-        }, new BaseConfirmDialog.onCancelListener() {
+
             @Override
-            public boolean clickCancel() {
-                return true;
+            public void clickCancel() {
             }
         });
         dialog.show();
@@ -133,16 +131,14 @@ public class ScheduleListFragment extends HHBaseFragment implements ScheduleList
     public void showCancelDialog(String day, String startTime, String endTime, String courseName, final String scheduleEventId) {
         BaseConfirmDialog dialog = new BaseConfirmDialog(getContext(), "取消课程", "您是否要取消课程？",
                 "日期：" + day + "\n时间：" + startTime + "-" + endTime + "\n科目：" + courseName, "",
-                "暂不取消", "取消课程", new BaseConfirmDialog.onConfirmListener() {
+                "暂不取消", "取消课程", new BaseConfirmDialog.onClickListener() {
             @Override
-            public boolean clickConfirm() {
-                return true;
+            public void clickConfirm() {
             }
-        }, new BaseConfirmDialog.onCancelListener() {
+
             @Override
-            public boolean clickCancel() {
+            public void clickCancel() {
                 mPresenter.cancelSchedule(scheduleEventId);
-                return true;
             }
         });
         dialog.show();

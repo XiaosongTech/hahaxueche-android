@@ -236,16 +236,14 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
                 break;
             case R.id.tv_logout:
                 BaseConfirmSimpleDialog baseConfirmSimpleDialog = new BaseConfirmSimpleDialog(getContext(),
-                        "哈哈学车", "是否退出登录？", "确定", "取消", new BaseConfirmSimpleDialog.onConfirmListener() {
+                        "哈哈学车", "是否退出登录？", "确定", "取消", new BaseConfirmSimpleDialog.onClickListener() {
                     @Override
-                    public boolean clickConfirm() {
+                    public void clickConfirm() {
                         mPresenter.logOut();
-                        return true;
                     }
-                }, new BaseConfirmSimpleDialog.onCancelListener() {
+
                     @Override
-                    public boolean clickCancel() {
-                        return false;
+                    public void clickCancel() {
                     }
                 });
                 baseConfirmSimpleDialog.show();
