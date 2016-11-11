@@ -39,6 +39,12 @@ public class MyVoucherActivity extends HHBaseActivity implements MyVoucherView, 
     LinearLayout mLlyVouchers;
     @BindView(R.id.srl_main)
     SwipeRefreshLayout mSrlMain;
+    @BindView(R.id.iv_no_voucher)
+    ImageView mIvNoVoucher;
+    @BindView(R.id.tv_no_voucher)
+    TextView mTvNoVoucher;
+    @BindView(R.id.tv_voucher_rules)
+    TextView mTvVoucherRules;
 
 
     @Override
@@ -70,6 +76,9 @@ public class MyVoucherActivity extends HHBaseActivity implements MyVoucherView, 
 
     @Override
     public void loadVouchers(ArrayList<Voucher> vouchers) {
+        mIvNoVoucher.setVisibility(View.GONE);
+        mTvNoVoucher.setVisibility(View.GONE);
+        mTvVoucherRules.setVisibility(View.VISIBLE);
         for (Voucher voucher : vouchers) {
             RelativeLayout rly = new RelativeLayout(this);
             LinearLayout.LayoutParams rlyParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -144,7 +153,9 @@ public class MyVoucherActivity extends HHBaseActivity implements MyVoucherView, 
 
     @Override
     public void showNoVoucher() {
-
+        mIvNoVoucher.setVisibility(View.VISIBLE);
+        mTvNoVoucher.setVisibility(View.VISIBLE);
+        mTvVoucherRules.setVisibility(View.GONE);
     }
 
     @Override
