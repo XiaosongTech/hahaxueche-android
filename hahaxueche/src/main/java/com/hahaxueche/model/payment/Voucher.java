@@ -16,6 +16,7 @@ public class Voucher implements Parcelable {
     public String code;
     public int amount;
     public int status;
+    public boolean isSelect;
 
     protected Voucher(Parcel in) {
         id = in.readString();
@@ -25,6 +26,7 @@ public class Voucher implements Parcelable {
         code = in.readString();
         amount = in.readInt();
         status = in.readInt();
+        isSelect = in.readByte() != 0;
     }
 
     public static final Creator<Voucher> CREATOR = new Creator<Voucher>() {
@@ -53,5 +55,6 @@ public class Voucher implements Parcelable {
         dest.writeString(code);
         dest.writeInt(amount);
         dest.writeInt(status);
+        dest.writeByte((byte) (isSelect ? 1 : 0));
     }
 }

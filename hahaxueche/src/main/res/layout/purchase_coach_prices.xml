@@ -116,6 +116,46 @@
         android:layout_marginTop="15dp"
         android:background="@color/haha_gray_divider" />
 
+    <RelativeLayout
+        android:id="@+id/rly_voucher"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_voucher_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:textColor="@color/haha_gray" />
+
+        <ImageView
+            android:id="@+id/iv_more_voucher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/arrow" />
+
+        <TextView
+            android:id="@+id/tv_voucher_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/iv_more_voucher"
+            android:textColor="@color/haha_red_text" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_width"
+            android:layout_below="@id/tv_voucher_title"
+            android:background="@color/haha_gray_divider" />
+
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/tv_total_amount"
         android:layout_width="match_parent"

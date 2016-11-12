@@ -275,6 +275,10 @@
             android:name=".ui.activity.myPage.MyVoucherActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.myPage.SelectVoucherActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
 
         <service
             android:name="cmb.pb.cmbsafe.CmbService"
