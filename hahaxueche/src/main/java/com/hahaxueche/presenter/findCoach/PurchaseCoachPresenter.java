@@ -176,6 +176,9 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         mapParam.put("coach_id", mCoach.id);
         mapParam.put("method", paymentMethod);
         mapParam.put("product_type", productType);
+        if (mSelectVoucher != null) {
+            mapParam.put("voucher_id", mSelectVoucher.id);
+        }
         subscription = apiService.isValidToken(mUser.session.access_token, map)
                 .flatMap(new Func1<BaseValid, Observable<ResponseBody>>() {
                     @Override

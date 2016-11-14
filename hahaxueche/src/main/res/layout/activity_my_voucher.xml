@@ -45,7 +45,7 @@
                 android:visibility="gone" />
 
             <TextView
-                android:id="@+id/tv_customer_service"
+                android:id="@+id/tv_no_voucher"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -53,12 +53,24 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="18dp"
                 android:lineSpacingMultiplier="1.2"
-                android:text="联系学车顾问400-001-6006 或 在线客服咨询代金券"
-                android:textColor="@color/app_theme_color"
+                android:text="Sorry,您还没有代金券"
+                android:textColor="@color/haha_gray"
                 android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/tv_no_voucher"
+                android:id="@+id/tv_customer_service"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:lineSpacingMultiplier="1.2"
+                android:text="联系学车顾问400-001-6006 或 在线客服咨询代金券"
+                android:textColor="@color/haha_gray"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_catch_voucher"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -67,7 +79,7 @@
                 android:layout_marginRight="20dp"
                 android:lineSpacingMultiplier="1.2"
                 android:text="抓住这个磨人的小妖精"
-                android:textColor="@color/app_theme_color"
+                android:textColor="@color/haha_gray"
                 android:textSize="12sp" />
 
         </LinearLayout>

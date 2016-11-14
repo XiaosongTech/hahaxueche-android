@@ -1,9 +1,22 @@
 package com.hahaxueche.ui.activity.findCoach;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -37,6 +50,8 @@ public class PriceActivity extends HHBaseActivity implements PriceView {
     private PricePresenter mPresenter;
     private ImageView mIvBack;
     private TextView mTvTitle;
+    @BindView(R.id.frl_main)
+    FrameLayout mFrlMain;
     @BindView(R.id.table_fee)
     TableLayout mTableFee;
     @BindView(R.id.lly_other_fees)
@@ -57,6 +72,9 @@ public class PriceActivity extends HHBaseActivity implements PriceView {
     TextView mTvTotalFeeC2Normal;
     @BindView(R.id.tv_total_fee_c2_vip)
     TextView mTvTotalFeeC2VIP;
+    @BindView(R.id.tv_customer_service)
+    TextView mTvCustomerService;
+    private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +88,7 @@ public class PriceActivity extends HHBaseActivity implements PriceView {
             mPresenter.showPrice((Coach) intent.getParcelableExtra("coach"));
         }
         initActionBar();
+        initCusomterSerice();
     }
 
     private void initActionBar() {
@@ -85,6 +104,53 @@ public class PriceActivity extends HHBaseActivity implements PriceView {
                 PriceActivity.this.finish();
             }
         });
+    }
+
+    private void initCusomterSerice() {
+        String customerService = mTvCustomerService.getText().toString();
+        CharSequence customerServiceStr = customerService;
+        SpannableString spCustomerServiceStr = new SpannableString(customerServiceStr);
+        spCustomerServiceStr.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
+                    //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+                } else {
+                    // Android version is lesser than 6.0 or the permission is already granted.
+                    contactService();
+                }
+            }
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(ContextCompat.getColor(getContext(), R.color.app_theme_color));
+                ds.setUnderlineText(true);
+                ds.clearShadowLayer();
+            }
+        }, customerService.indexOf("400"), customerService.indexOf("6006") + 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spCustomerServiceStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.app_theme_color)),
+                customerService.indexOf("400"), customerService.indexOf("6006") + 4, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spCustomerServiceStr.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                mPresenter.onlineAsk();
+            }
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(ContextCompat.getColor(getContext(), R.color.app_theme_color));
+                ds.setUnderlineText(true);
+                ds.clearShadowLayer();
+            }
+        }, customerService.indexOf("在线客服"), customerService.indexOf("在线客服") + 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spCustomerServiceStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.app_theme_color)),
+                customerService.indexOf("在线客服"), customerService.indexOf("在线客服") + 4, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mTvCustomerService.setText(spCustomerServiceStr);
+        mTvCustomerService.setHighlightColor(ContextCompat.getColor(getContext(), R.color.app_theme_color));
+        mTvCustomerService.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @Override
@@ -207,5 +273,33 @@ public class PriceActivity extends HHBaseActivity implements PriceView {
     @Override
     public void setTotalFeeC2VIP(String fee) {
         mTvTotalFeeC2VIP.setText(fee);
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Snackbar.make(mFrlMain, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 联系客服
+     */
+    private void contactService() {
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:4000016006"));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        startActivity(intent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_CELL_PHONE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                contactService();
+            } else {
+                showMessage("请允许拨打电话权限，不然无法直接拨号联系客服");
+            }
+        }
     }
 }
