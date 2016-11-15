@@ -5,11 +5,13 @@ import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.payment.PaymentMethod;
+import com.hahaxueche.model.payment.Voucher;
 import com.hahaxueche.model.user.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.PurchaseCoachView;
+import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
 import com.umeng.analytics.MobclickAgent;
@@ -42,6 +44,8 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
     private int classType;//0 普通版; 1 vip
     private int productType = -1;
     private int paymentMethod = -1;
+    private Voucher mSelectVoucher;
+    private ArrayList<Voucher> mVoucherList;
 
     @Override
     public void attachView(PurchaseCoachView view) {
@@ -57,6 +61,8 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         application = null;
         mCoach = null;
         mUser = null;
+        mSelectVoucher = null;
+        mVoucherList = null;
     }
 
     public void setCoach(Coach coach) {
@@ -71,6 +77,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         }
         selectLicenseC1();
         selectClassNormal();//默认C1 普通班
+        fetchAvailableVouchers();//更新代金券信息
         mPurchaseCoachView.loadPaymentMethod(getPaymentMethod());
         paymentMethod = 0;
         pageStartCount();
@@ -111,18 +118,26 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
     }
 
     private void setProductType() {
+        int voucherAmount = mSelectVoucher != null ? mSelectVoucher.amount : 0;
+        int totalAmount = 0;
         if (license == 1 && classType == 0) {
             productType = 0;
-            mPurchaseCoachView.setTotalAmountText("总价： " + Utils.getMoney(mCoach.coach_group.training_cost));
+            totalAmount = mCoach.coach_group.training_cost;
         } else if (license == 1 && classType == 1) {
             productType = 1;
-            mPurchaseCoachView.setTotalAmountText("总价： " + Utils.getMoney(mCoach.coach_group.vip_price));
+            totalAmount = mCoach.coach_group.vip_price;
         } else if (license == 2 && classType == 0) {
             productType = 2;
-            mPurchaseCoachView.setTotalAmountText("总价： " + Utils.getMoney(mCoach.coach_group.c2_price));
+            totalAmount = mCoach.coach_group.c2_price;
         } else if (license == 2 && classType == 1) {
             productType = 3;
-            mPurchaseCoachView.setTotalAmountText("总价： " + Utils.getMoney(mCoach.coach_group.c2_vip_price));
+            totalAmount = mCoach.coach_group.c2_vip_price;
+        }
+        if (voucherAmount > 0) {
+            mPurchaseCoachView.setTotalAmountWithVoucher("总价:" + Utils.getMoney(totalAmount) + " 立减:" + Utils.getMoney(voucherAmount),
+                    Utils.getMoney(totalAmount - voucherAmount));
+        } else {
+            mPurchaseCoachView.setTotalAmountText("总价: " + Utils.getMoney(totalAmount));
         }
     }
 
@@ -168,6 +183,9 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         mapParam.put("coach_id", mCoach.id);
         mapParam.put("method", paymentMethod);
         mapParam.put("product_type", productType);
+        if (mSelectVoucher != null) {
+            mapParam.put("voucher_id", mSelectVoucher.id);
+        }
         subscription = apiService.isValidToken(mUser.session.access_token, map)
                 .flatMap(new Func1<BaseValid, Observable<ResponseBody>>() {
                     @Override
@@ -268,6 +286,66 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                 });
     }
 
+    private void fetchAvailableVouchers() {
+        final HHApiService apiService = application.getApiService();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("cell_phone", mUser.cell_phone);
+        subscription = apiService.isValidToken(mUser.session.access_token, map)
+                .flatMap(new Func1<BaseValid, Observable<ArrayList<Voucher>>>() {
+                    @Override
+                    public Observable<ArrayList<Voucher>> call(BaseValid baseValid) {
+                        if (baseValid.valid) {
+                            return apiService.getAvailableVouchers(mUser.student.id, mCoach.id, mUser.session.access_token);
+                        } else {
+                            return application.getSessionObservable();
+                        }
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<ArrayList<Voucher>>() {
+
+                    @Override
+                    public void onCompleted() {
+                        loadVoucher();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (ErrorUtil.isInvalidSession(e)) {
+                            mPurchaseCoachView.forceOffline();
+                        }
+                        HHLog.e(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<Voucher> vouchers) {
+                        mVoucherList = vouchers;
+                    }
+                });
+    }
+
+    private void loadVoucher() {
+        if (mVoucherList != null && mVoucherList.size() > 0) {
+            mPurchaseCoachView.showSelectVoucher(true);
+            setSelectVoucher(mVoucherList.get(0));
+            if (mVoucherList.size() == 1) {
+                //有一张代金券，直接使用不选择
+                mPurchaseCoachView.setVoucherSelectable(false);
+            } else {
+                mPurchaseCoachView.setVoucherSelectable(true);
+            }
+        } else {
+            mPurchaseCoachView.showSelectVoucher(false);
+        }
+    }
+
+    public void setSelectVoucher(Voucher voucher) {
+        this.mSelectVoucher = voucher;
+        mPurchaseCoachView.setVoucher(mSelectVoucher);
+        setProductType();
+    }
+
     public void pageStartCount() {
         HashMap<String, String> map = new HashMap();
         User user = application.getSharedPrefUtil().getUser();
@@ -282,5 +360,20 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         map.put("student_id", user.student.id);
         map.put("student_id", mCoach.id);
         MobclickAgent.onEvent(mPurchaseCoachView.getContext(), "purchase_confirm_page_purchase_button_tapped", map);
+    }
+
+    public ArrayList<Voucher> getVoucherList() {
+        return mVoucherList;
+    }
+
+    public void setVoucherList(ArrayList<Voucher> voucherList) {
+        mVoucherList = voucherList;
+        if (mVoucherList == null || mVoucherList.size() < 1) return;
+        for (Voucher voucher : mVoucherList) {
+            if (voucher.isSelect) {
+                setSelectVoucher(voucher);
+                break;
+            }
+        }
     }
 }

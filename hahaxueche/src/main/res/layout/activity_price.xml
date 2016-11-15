@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:autofit="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/lly_main"
+    android:id="@+id/frl_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/haha_white">
@@ -454,11 +454,12 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_customer_service"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="如教练收取额外费用，请联系客服400-001-6006"
-                    android:textColor="@color/app_theme_color" />
+                    android:text="对订单有任何疑问，可致电400-001-6006 或 点击联系：在线客服"
+                    android:textColor="@color/haha_gray" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

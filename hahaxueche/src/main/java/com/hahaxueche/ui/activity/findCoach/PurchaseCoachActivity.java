@@ -22,9 +22,11 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.payment.PaymentMethod;
+import com.hahaxueche.model.payment.Voucher;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.findCoach.PurchaseCoachPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
+import com.hahaxueche.ui.activity.myPage.SelectVoucherActivity;
 import com.hahaxueche.ui.view.findCoach.PurchaseCoachView;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
 import com.hahaxueche.util.DistanceUtil;
@@ -80,10 +82,23 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     TextView mTvVip;
     @BindView(R.id.tv_total_amount)
     TextView mTvTotalAmount;
+    @BindView(R.id.rly_voucher)
+    RelativeLayout mRlyVoucher;
+    @BindView(R.id.tv_voucher_title)
+    TextView mTvVoucherTitle;
+    @BindView(R.id.tv_voucher_amount)
+    TextView mTvVoucherAmount;
+    @BindView(R.id.iv_more_voucher)
+    ImageView mIvMoreVoucher;
+    @BindView(R.id.tv_total_amount_text)
+    TextView mTvTotalAmountText;
+    @BindView(R.id.tv_total_amount_label)
+    TextView mTvTotalAmountLabel;
 
     private HHBaseApplication application;
     private int[] selectIds = new int[3];
     private int selectId;
+    private static final int REQUEST_CODE_SELECT_VOUCHERS = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,29 +136,37 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
         super.onDestroy();
     }
 
-    @OnClick(R.id.tv_sure_pay)
-    public void createCharge() {
-        mPresenter.createCharge();
-    }
-
-    @OnClick(R.id.tv_C1)
-    public void clickTvC1() {
-        mPresenter.selectLicenseC1();
-    }
-
-    @OnClick(R.id.tv_C2)
-    public void clickTvC2() {
-        mPresenter.selectLicenseC2();
-    }
-
-    @OnClick(R.id.tv_normal)
-    public void clickTvNormal() {
-        mPresenter.selectClassNormal();
-    }
-
-    @OnClick(R.id.tv_vip)
-    public void clickTvVip() {
-        mPresenter.selectClassVip();
+    @OnClick({R.id.tv_sure_pay,
+            R.id.tv_C1,
+            R.id.tv_C2,
+            R.id.tv_normal,
+            R.id.tv_vip,
+            R.id.rly_voucher})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv_sure_pay:
+                mPresenter.createCharge();
+                break;
+            case R.id.tv_C1:
+                mPresenter.selectLicenseC1();
+                break;
+            case R.id.tv_C2:
+                mPresenter.selectLicenseC2();
+                break;
+            case R.id.tv_normal:
+                mPresenter.selectClassNormal();
+                break;
+            case R.id.tv_vip:
+                mPresenter.selectClassVip();
+                break;
+            case R.id.rly_voucher:
+                Intent intent = new Intent(getContext(), SelectVoucherActivity.class);
+                intent.putParcelableArrayListExtra("voucherList", mPresenter.getVoucherList());
+                startActivityForResult(intent, REQUEST_CODE_SELECT_VOUCHERS);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -327,7 +350,17 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
 
     @Override
     public void setTotalAmountText(String text) {
+        mTvTotalAmountLabel.setVisibility(View.GONE);
+        mTvTotalAmountText.setVisibility(View.GONE);
         mTvTotalAmount.setText(text);
+    }
+
+    @Override
+    public void setTotalAmountWithVoucher(String voucherText, String amountText) {
+        mTvTotalAmountLabel.setVisibility(View.VISIBLE);
+        mTvTotalAmountText.setVisibility(View.VISIBLE);
+        mTvTotalAmountText.setText(voucherText);
+        mTvTotalAmount.setText(amountText);
     }
 
     @Override
@@ -345,6 +378,28 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     public void paySuccess() {
         setResult(RESULT_OK, null);
         finish();
+    }
+
+    @Override
+    public void setVoucherSelectable(boolean select) {
+        if (select) {//代金券可选择
+            mIvMoreVoucher.setVisibility(View.VISIBLE);
+            mRlyVoucher.setClickable(true);
+        } else {
+            mIvMoreVoucher.setVisibility(View.INVISIBLE);
+            mRlyVoucher.setClickable(false);
+        }
+    }
+
+    @Override
+    public void showSelectVoucher(boolean isShow) {
+        mRlyVoucher.setVisibility(isShow ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setVoucher(Voucher voucher) {
+        mTvVoucherAmount.setText("-" + Utils.getMoney(voucher.amount));
+        mTvVoucherTitle.setText(voucher.title);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -371,6 +426,12 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
                     showMessage("支付失败");
                 }
             }
+        } else if (requestCode == REQUEST_CODE_SELECT_VOUCHERS) {
+            if (resultCode == RESULT_OK) {
+                ArrayList<Voucher> vouchers = data.getParcelableArrayListExtra("voucherList");
+                mPresenter.setVoucherList(vouchers);
+            }
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

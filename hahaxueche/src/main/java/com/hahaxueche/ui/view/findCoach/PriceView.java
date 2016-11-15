@@ -31,4 +31,6 @@ public interface PriceView extends HHBaseView {
 
     void setTotalFeeC2VIP(String fee);
 
+    void showMessage(String message);
+
 }

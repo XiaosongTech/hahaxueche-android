@@ -1,6 +1,7 @@
 package com.hahaxueche.ui.view.findCoach;
 
 import com.hahaxueche.model.payment.PaymentMethod;
+import com.hahaxueche.model.payment.Voucher;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.ui.view.base.HHBaseView;
 
@@ -35,9 +36,17 @@ public interface PurchaseCoachView extends HHBaseView {
 
     void setTotalAmountText(String text);
 
+    void setTotalAmountWithVoucher(String voucherText, String amountText);
+
     void showMessage(String message);
 
     void callPingpp(String charge);
 
     void paySuccess();
+
+    void setVoucherSelectable(boolean select);
+
+    void showSelectVoucher(boolean isShow);
+
+    void setVoucher(Voucher voucher);
 }

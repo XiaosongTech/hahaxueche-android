@@ -75,12 +75,14 @@
                 <!-- 此处scheme值需要替换为后台设置中的scheme值 -->
                 <data android:scheme="hhxc" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
             <!-- APP Links方式,Android 23版本及以后支持 -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- 以下pathPrefix值需要替换为后台设置中 App ID 的值-->
@@ -267,6 +269,14 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activity.myPage.CourseActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.myPage.MyVoucherActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.myPage.SelectVoucherActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
 

@@ -28,6 +28,7 @@ import com.hahaxueche.ui.activity.myPage.CourseActivity;
 import com.hahaxueche.ui.activity.myPage.FAQActivity;
 import com.hahaxueche.ui.activity.myPage.FollowListActivity;
 import com.hahaxueche.ui.activity.myPage.MyCoachDetailActivity;
+import com.hahaxueche.ui.activity.myPage.MyVoucherActivity;
 import com.hahaxueche.ui.activity.myPage.NoCourseActivity;
 import com.hahaxueche.ui.activity.myPage.PaymentStageActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
@@ -174,7 +175,9 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
             R.id.rly_my_coach,
             R.id.rly_payment_stage,
             R.id.rly_my_course,
-            R.id.iv_edit_username})
+            R.id.iv_edit_username,
+            R.id.rly_my_voucher,
+            R.id.rly_activate_voucher})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rly_online_service:
@@ -236,16 +239,14 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
                 break;
             case R.id.tv_logout:
                 BaseConfirmSimpleDialog baseConfirmSimpleDialog = new BaseConfirmSimpleDialog(getContext(),
-                        "哈哈学车", "是否退出登录？", "确定", "取消", new BaseConfirmSimpleDialog.onConfirmListener() {
+                        "哈哈学车", "是否退出登录？", "确定", "取消", new BaseConfirmSimpleDialog.onClickListener() {
                     @Override
-                    public boolean clickConfirm() {
+                    public void clickConfirm() {
                         mPresenter.logOut();
-                        return true;
                     }
-                }, new BaseConfirmSimpleDialog.onCancelListener() {
+
                     @Override
-                    public boolean clickCancel() {
-                        return false;
+                    public void clickCancel() {
                     }
                 });
                 baseConfirmSimpleDialog.show();
@@ -269,6 +270,12 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
                     });
                 }
                 mEditUsernameDialog.show();
+                break;
+            case R.id.rly_my_voucher:
+                mPresenter.clickMyVoucher();
+                break;
+            case R.id.rly_activate_voucher:
+                mPresenter.activateVoucher();
                 break;
             default:
                 break;
@@ -311,6 +318,11 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     @Override
     public void navigateToMyCourse() {
         startActivity(new Intent(getContext(), CourseActivity.class));
+    }
+
+    @Override
+    public void navigateToMyVoucher() {
+        startActivity(new Intent(getContext(), MyVoucherActivity.class));
     }
 
     @Override

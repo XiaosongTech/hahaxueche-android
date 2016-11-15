@@ -29,5 +29,14 @@ public interface MyPageView extends HHBaseView {
 
     void navigateToMyCourse();
 
+    void navigateToMyVoucher();
+
     void editUsername(String name);
+
+    /**
+     * 打开webview
+     *
+     * @param url
+     */
+    void openWebView(String url);
 }

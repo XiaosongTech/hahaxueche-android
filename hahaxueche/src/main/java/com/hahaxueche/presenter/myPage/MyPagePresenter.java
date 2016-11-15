@@ -2,6 +2,7 @@ package com.hahaxueche.presenter.myPage;
 
 import android.text.TextUtils;
 
+import com.hahaxueche.BuildConfig;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseModel;
@@ -41,6 +42,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
     private HHBaseApplication application;
     private Student mStudent;
     private Adviser mAdviser;
+    private static final String WEB_URL_ACTIVATE_VOUCHER = BuildConfig.MOBILE_URL + "/share/jihuo";
 
     public void attachView(MyPageView view) {
         this.mMyPageView = view;
@@ -348,6 +350,10 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         }
     }
 
+    public void clickMyVoucher() {
+        mMyPageView.navigateToMyVoucher();
+    }
+
     public void editUsername(final String username) {
         final User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) return;
@@ -398,5 +404,15 @@ public class MyPagePresenter implements Presenter<MyPageView> {
                     }
                 });
 
+    }
+
+    public void activateVoucher() {
+        String url = WEB_URL_ACTIVATE_VOUCHER;
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            url += "?phone=" + user.cell_phone;
+        }
+        HHLog.v(url);
+        mMyPageView.openWebView(url);
     }
 }

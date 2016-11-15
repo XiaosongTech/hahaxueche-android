@@ -178,21 +178,20 @@ public class ArticleActivity extends HHBaseActivity implements ArticleView, IWei
     @Override
     public void alertToLogin(String alertMessage) {
         BaseConfirmSimpleDialog dialog = new BaseConfirmSimpleDialog(getContext(), "请登录", alertMessage, "去登录", "知道了",
-                new BaseConfirmSimpleDialog.onConfirmListener() {
+                new BaseConfirmSimpleDialog.onClickListener() {
                     @Override
-                    public boolean clickConfirm() {
+                    public void clickConfirm() {
                         ActivityCollector.finishAll();
                         Intent intent = new Intent(getContext(), StartLoginActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-                        return false;
                     }
-                }, new BaseConfirmSimpleDialog.onCancelListener() {
-            @Override
-            public boolean clickCancel() {
-                return false;
-            }
-        });
+
+                    @Override
+                    public void clickCancel() {
+
+                    }
+                });
         dialog.show();
     }
 

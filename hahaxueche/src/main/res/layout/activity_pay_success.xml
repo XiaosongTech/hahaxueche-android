@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/lly_main"
+    android:id="@+id/frl_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/haha_orange_fade">
@@ -141,12 +141,13 @@
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/tv_customer_service"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:gravity="center"
                 android:lineSpacingMultiplier="1.2"
-                android:text="对订单有任何疑问可致电客服热线400-001-6006或在APP首页点击在线客服"
+                android:text="对订单有任何疑问可致电客服热线400-001-6006或点击在线客服"
                 android:textColor="@color/haha_gray"
                 android:textSize="16sp" />
         </LinearLayout>

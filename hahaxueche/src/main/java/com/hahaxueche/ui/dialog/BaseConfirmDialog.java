@@ -33,18 +33,15 @@ public class BaseConfirmDialog {
     private Dialog mDialog;
     private View contentView;
 
-    private onConfirmListener mConfirmListener;
-    private onCancelListener mCancelListener;
+    private onClickListener mOnClickListener;
 
-    public interface onConfirmListener {
-        public boolean clickConfirm();
+    public interface onClickListener {
+        void clickConfirm();
+
+        void clickCancel();
     }
 
-    public interface onCancelListener {
-        public boolean clickCancel();
-    }
-
-    public BaseConfirmDialog(Context context, String title, String subtitle, String content, String tip, String confirmString, String cancelString, onConfirmListener confirmListener, onCancelListener cancelListener) {
+    public BaseConfirmDialog(Context context, String title, String subtitle, String content, String tip, String confirmString, String cancelString, onClickListener onClickListener) {
         mDialog = new Dialog(context, R.style.my_dialog);
         mContext = context;
         mTitle = title;
@@ -53,8 +50,7 @@ public class BaseConfirmDialog {
         mConfirmString = confirmString;
         mCancelString = cancelString;
         mContent = content;
-        mConfirmListener = confirmListener;
-        mCancelListener = cancelListener;
+        mOnClickListener = onClickListener;
         initView();
         initEvent();
         loadDatas();
@@ -97,13 +93,9 @@ public class BaseConfirmDialog {
 
     public void show() {
         mDialog.show();
-//        if (contentView != null)
-//            contentView.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.in_downup));
     }
 
     public void dismiss() {
-//        if (contentView != null)
-//            contentView.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.out_updown));
         if (mDialog.isShowing())
             mDialog.dismiss();
     }
@@ -111,10 +103,8 @@ public class BaseConfirmDialog {
     private void setDialogParams() {
         Window window = mDialog.getWindow(); //得到对话框
         WindowManager.LayoutParams wl = window.getAttributes();
-        //wl.width = WindowManager.LayoutParams.MATCH_PARENT;
         wl.width = Utils.instence(mContext).getDm().widthPixels * 9 / 10;
         wl.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        //wl.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL; //设置重力
         wl.gravity = Gravity.CENTER;
         window.setAttributes(wl);
     }
@@ -125,11 +115,11 @@ public class BaseConfirmDialog {
             switch (v.getId()) {
                 case R.id.tv_base_confirm_sure:
                     mDialog.dismiss();
-                    mConfirmListener.clickConfirm();
+                    mOnClickListener.clickConfirm();
                     break;
                 case R.id.tv_base_confirm_cancel:
                     mDialog.dismiss();
-                    mCancelListener.clickCancel();
+                    mOnClickListener.clickCancel();
                     break;
                 default:
                     break;
