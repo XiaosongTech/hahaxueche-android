@@ -135,6 +135,7 @@ public class HHBaseActivity extends AppCompatActivity implements HHBaseView {
     public void openWebView(String url, String title, boolean isShowShare) {
         Intent intent = new Intent(getApplication(), BaseWebViewActivity.class);
         Bundle bundle = new Bundle();
+        HHLog.v("webview url -> " + url);
         bundle.putString("url", url);
         bundle.putString("title", title);
         bundle.putBoolean("isShowShare", isShowShare);

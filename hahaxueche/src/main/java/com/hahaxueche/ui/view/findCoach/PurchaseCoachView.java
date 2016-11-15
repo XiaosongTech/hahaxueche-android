@@ -36,6 +36,8 @@ public interface PurchaseCoachView extends HHBaseView {
 
     void setTotalAmountText(String text);
 
+    void setTotalAmountWithVoucher(String voucherText, String amountText);
+
     void showMessage(String message);
 
     void callPingpp(String charge);

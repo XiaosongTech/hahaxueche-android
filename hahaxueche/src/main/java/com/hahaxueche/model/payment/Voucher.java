@@ -3,6 +3,8 @@ package com.hahaxueche.model.payment;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 /**
  * 代金券
  * Created by wangshirui on 2016/11/10.
@@ -16,6 +18,7 @@ public class Voucher implements Parcelable {
     public String code;
     public int amount;
     public int status;
+    public ArrayList<String> coaches;
     public boolean isSelect;
 
     protected Voucher(Parcel in) {
@@ -26,6 +29,7 @@ public class Voucher implements Parcelable {
         code = in.readString();
         amount = in.readInt();
         status = in.readInt();
+        coaches = in.createStringArrayList();
         isSelect = in.readByte() != 0;
     }
 
@@ -55,6 +59,7 @@ public class Voucher implements Parcelable {
         dest.writeString(code);
         dest.writeInt(amount);
         dest.writeInt(status);
+        dest.writeStringList(coaches);
         dest.writeByte((byte) (isSelect ? 1 : 0));
     }
 }

@@ -45,7 +45,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
     private int productType = -1;
     private int paymentMethod = -1;
     private Voucher mSelectVoucher;
-    private ArrayList<Voucher> mUnUsedVoucherList;
+    private ArrayList<Voucher> mVoucherList;
 
     @Override
     public void attachView(PurchaseCoachView view) {
@@ -62,7 +62,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         mCoach = null;
         mUser = null;
         mSelectVoucher = null;
-        mUnUsedVoucherList = null;
+        mVoucherList = null;
     }
 
     public void setCoach(Coach coach) {
@@ -77,7 +77,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         }
         selectLicenseC1();
         selectClassNormal();//默认C1 普通班
-        refreshVoucher();//更新代金券信息
+        fetchAvailableVouchers();//更新代金券信息
         mPurchaseCoachView.loadPaymentMethod(getPaymentMethod());
         paymentMethod = 0;
         pageStartCount();
@@ -119,18 +119,25 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
 
     private void setProductType() {
         int voucherAmount = mSelectVoucher != null ? mSelectVoucher.amount : 0;
+        int totalAmount = 0;
         if (license == 1 && classType == 0) {
             productType = 0;
-            mPurchaseCoachView.setTotalAmountText("总价： " + Utils.getMoney(mCoach.coach_group.training_cost - voucherAmount));
+            totalAmount = mCoach.coach_group.training_cost;
         } else if (license == 1 && classType == 1) {
             productType = 1;
-            mPurchaseCoachView.setTotalAmountText("总价： " + Utils.getMoney(mCoach.coach_group.vip_price - voucherAmount));
+            totalAmount = mCoach.coach_group.vip_price;
         } else if (license == 2 && classType == 0) {
             productType = 2;
-            mPurchaseCoachView.setTotalAmountText("总价： " + Utils.getMoney(mCoach.coach_group.c2_price - voucherAmount));
+            totalAmount = mCoach.coach_group.c2_price;
         } else if (license == 2 && classType == 1) {
             productType = 3;
-            mPurchaseCoachView.setTotalAmountText("总价： " + Utils.getMoney(mCoach.coach_group.c2_vip_price - voucherAmount));
+            totalAmount = mCoach.coach_group.c2_vip_price;
+        }
+        if (voucherAmount > 0) {
+            mPurchaseCoachView.setTotalAmountWithVoucher("总价:" + Utils.getMoney(totalAmount) + " 立减:" + Utils.getMoney(voucherAmount),
+                    Utils.getMoney(totalAmount - voucherAmount));
+        } else {
+            mPurchaseCoachView.setTotalAmountText("总价: " + Utils.getMoney(totalAmount));
         }
     }
 
@@ -279,17 +286,16 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                 });
     }
 
-    public void refreshVoucher() {
-        if (mUser == null || !mUser.isLogin()) return;
+    private void fetchAvailableVouchers() {
         final HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", mUser.cell_phone);
         subscription = apiService.isValidToken(mUser.session.access_token, map)
-                .flatMap(new Func1<BaseValid, Observable<Student>>() {
+                .flatMap(new Func1<BaseValid, Observable<ArrayList<Voucher>>>() {
                     @Override
-                    public Observable<Student> call(BaseValid baseValid) {
+                    public Observable<ArrayList<Voucher>> call(BaseValid baseValid) {
                         if (baseValid.valid) {
-                            return apiService.getStudent(mUser.student.id, mUser.session.access_token);
+                            return apiService.getAvailableVouchers(mUser.student.id, mCoach.id, mUser.session.access_token);
                         } else {
                             return application.getSessionObservable();
                         }
@@ -297,7 +303,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
-                .subscribe(new Subscriber<Student>() {
+                .subscribe(new Subscriber<ArrayList<Voucher>>() {
 
                     @Override
                     public void onCompleted() {
@@ -313,29 +319,19 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                     }
 
                     @Override
-                    public void onNext(Student student) {
-                        application.getSharedPrefUtil().updateStudent(student);
-                        if (student.vouchers != null && student.vouchers.size() > 0) {
-                            for (Voucher voucher : student.vouchers) {
-                                if (voucher.status == 0) {
-                                    if (mUnUsedVoucherList == null) {
-                                        mUnUsedVoucherList = new ArrayList<>();
-                                    }
-                                    mUnUsedVoucherList.add(voucher);
-                                }
-                            }
-                        }
+                    public void onNext(ArrayList<Voucher> vouchers) {
+                        mVoucherList = vouchers;
                     }
                 });
     }
 
     private void loadVoucher() {
-        if (mUnUsedVoucherList != null && mUnUsedVoucherList.size() > 0) {
+        if (mVoucherList != null && mVoucherList.size() > 0) {
             mPurchaseCoachView.showSelectVoucher(true);
-            if (mUnUsedVoucherList.size() == 1) {
+            setSelectVoucher(mVoucherList.get(0));
+            if (mVoucherList.size() == 1) {
                 //有一张代金券，直接使用不选择
                 mPurchaseCoachView.setVoucherSelectable(false);
-                setSelectVoucher(mUnUsedVoucherList.get(0));
             } else {
                 mPurchaseCoachView.setVoucherSelectable(true);
             }
@@ -366,14 +362,14 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         MobclickAgent.onEvent(mPurchaseCoachView.getContext(), "purchase_confirm_page_purchase_button_tapped", map);
     }
 
-    public ArrayList<Voucher> getUnUsedVoucherList() {
-        return mUnUsedVoucherList;
+    public ArrayList<Voucher> getVoucherList() {
+        return mVoucherList;
     }
 
-    public void setUnUsedVoucherList(ArrayList<Voucher> voucherList) {
-        mUnUsedVoucherList = voucherList;
-        if (mUnUsedVoucherList == null || mUnUsedVoucherList.size() < 1) return;
-        for (Voucher voucher : mUnUsedVoucherList) {
+    public void setVoucherList(ArrayList<Voucher> voucherList) {
+        mVoucherList = voucherList;
+        if (mVoucherList == null || mVoucherList.size() < 1) return;
+        for (Voucher voucher : mVoucherList) {
             if (voucher.isSelect) {
                 setSelectVoucher(voucher);
                 break;

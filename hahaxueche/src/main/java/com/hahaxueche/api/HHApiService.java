@@ -9,6 +9,7 @@ import com.hahaxueche.model.community.Article;
 import com.hahaxueche.model.course.ScheduleEvent;
 import com.hahaxueche.model.payment.BankCard;
 import com.hahaxueche.model.payment.PurchasedService;
+import com.hahaxueche.model.payment.Voucher;
 import com.hahaxueche.model.payment.WithdrawRecord;
 import com.hahaxueche.model.responseList.ArticleResponseList;
 import com.hahaxueche.model.responseList.CoachResponseList;
@@ -224,6 +225,10 @@ public interface HHApiService {
     @POST("students/{studentId}/{scheduleEventId}/review_schedule_event")
     Observable<Review> reviewSchedule(@Path("studentId") String studentId, @Path("scheduleEventId") String scheduleEventId,
                                       @Query("rating") float rating, @Header("X-Access-Token") String accessToken);
+
+    @GET("students/{id}/vouchers")
+    Observable<ArrayList<Voucher>> getAvailableVouchers(@Path("id") String studentId, @Query("coach_id") String coachId,
+                                                        @Header("X-Access-Token") String accessToken);
 
     class Factory {
         public static HHApiService create() {

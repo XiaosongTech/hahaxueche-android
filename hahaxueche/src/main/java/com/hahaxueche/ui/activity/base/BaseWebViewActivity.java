@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.View;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -11,6 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
+import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
+import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
+import com.hahaxueche.util.HHLog;
 import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.tauth.Tencent;
@@ -66,6 +71,15 @@ public class BaseWebViewActivity extends HHBaseActivity {
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 view.clearCache(true);
+            }
+        });
+        baseWebView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+                BaseAlertSimpleDialog dialog = new BaseAlertSimpleDialog(getContext(), "哈哈学车", message);
+                dialog.show();
+                return true;
+                //return super.onJsAlert(view, url, message, result);
             }
         });
         WebSettings mWebSettings = baseWebView.getSettings();

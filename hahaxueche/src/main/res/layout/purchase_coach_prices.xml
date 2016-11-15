@@ -156,12 +156,37 @@
 
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/tv_total_amount"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center|right"
-        android:padding="20dp"
-        android:textColor="@color/app_theme_color"
-        android:textSize="16sp" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_total_amount_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:textColor="@color/haha_gray" />
+
+        <TextView
+            android:id="@+id/tv_total_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/app_theme_color"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_total_amount_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="2dp"
+            android:layout_toLeftOf="@id/tv_total_amount"
+            android:text="实付:"
+            android:textColor="@color/haha_gray" />
+    </RelativeLayout>
 </LinearLayout>

@@ -90,6 +90,10 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     TextView mTvVoucherAmount;
     @BindView(R.id.iv_more_voucher)
     ImageView mIvMoreVoucher;
+    @BindView(R.id.tv_total_amount_text)
+    TextView mTvTotalAmountText;
+    @BindView(R.id.tv_total_amount_label)
+    TextView mTvTotalAmountLabel;
 
     private HHBaseApplication application;
     private int[] selectIds = new int[3];
@@ -157,7 +161,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
                 break;
             case R.id.rly_voucher:
                 Intent intent = new Intent(getContext(), SelectVoucherActivity.class);
-                intent.putParcelableArrayListExtra("voucherList", mPresenter.getUnUsedVoucherList());
+                intent.putParcelableArrayListExtra("voucherList", mPresenter.getVoucherList());
                 startActivityForResult(intent, REQUEST_CODE_SELECT_VOUCHERS);
                 break;
             default:
@@ -346,7 +350,17 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
 
     @Override
     public void setTotalAmountText(String text) {
+        mTvTotalAmountLabel.setVisibility(View.GONE);
+        mTvTotalAmountText.setVisibility(View.GONE);
         mTvTotalAmount.setText(text);
+    }
+
+    @Override
+    public void setTotalAmountWithVoucher(String voucherText, String amountText) {
+        mTvTotalAmountLabel.setVisibility(View.VISIBLE);
+        mTvTotalAmountText.setVisibility(View.VISIBLE);
+        mTvTotalAmountText.setText(voucherText);
+        mTvTotalAmount.setText(amountText);
     }
 
     @Override
@@ -415,7 +429,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
         } else if (requestCode == REQUEST_CODE_SELECT_VOUCHERS) {
             if (resultCode == RESULT_OK) {
                 ArrayList<Voucher> vouchers = data.getParcelableArrayListExtra("voucherList");
-                mPresenter.setUnUsedVoucherList(vouchers);
+                mPresenter.setVoucherList(vouchers);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

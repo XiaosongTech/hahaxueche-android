@@ -14,6 +14,7 @@ public class PurchasedService {
     public int current_payment_stage;
     public int paid_amount;
     public int unpaid_amount;
+    public int actual_amount;
     public String paid_at;
     public String order_no;
     public int product_type;

@@ -97,6 +97,7 @@ public class MyVoucherActivity extends HHBaseActivity implements MyVoucherView, 
         mTvNoVoucher.setVisibility(View.GONE);
         mTvCatchVoucher.setVisibility(View.GONE);
         mTvVoucherRules.setVisibility(View.VISIBLE);
+        mTvCustomerService.setGravity(Gravity.LEFT);
         for (Voucher voucher : vouchers) {
             RelativeLayout rly = new RelativeLayout(this);
             LinearLayout.LayoutParams rlyParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -175,6 +176,7 @@ public class MyVoucherActivity extends HHBaseActivity implements MyVoucherView, 
         mTvNoVoucher.setVisibility(View.VISIBLE);
         mTvCatchVoucher.setVisibility(View.VISIBLE);
         mTvVoucherRules.setVisibility(View.GONE);
+        mTvCustomerService.setGravity(Gravity.CENTER);
     }
 
     @Override

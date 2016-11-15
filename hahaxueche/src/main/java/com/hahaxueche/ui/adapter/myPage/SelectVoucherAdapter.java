@@ -2,6 +2,7 @@ package com.hahaxueche.ui.adapter.myPage;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,7 +62,11 @@ public class SelectVoucherAdapter extends BaseAdapter {
         Voucher voucher = mVoucherList.get(position);
         holder.tvAmount.setText(Utils.getMoney(voucher.amount));
         holder.tvTitle.setText(voucher.title);
-        holder.tvExpiredAt.setText("有效期至 " + voucher.expired_at);
+        if (!TextUtils.isEmpty(voucher.expired_at)) {
+            holder.tvExpiredAt.setText("有效期至 " + voucher.expired_at);
+        } else {
+            holder.tvExpiredAt.setText("长期有效");
+        }
         holder.ivSelect.setImageDrawable(ContextCompat.getDrawable(mContext,
                 voucher.isSelect ? R.drawable.ic_cashout_chack_btn : R.drawable.ic_cashout_unchack_btn));
         return convertView;

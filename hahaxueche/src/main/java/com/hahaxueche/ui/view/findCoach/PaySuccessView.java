@@ -10,4 +10,6 @@ import com.hahaxueche.ui.view.base.HHBaseView;
 
 public interface PaySuccessView extends HHBaseView {
     void loadPayInfo(Coach coach, PurchasedService ps);
+
+    void showMessage(String message);
 }
