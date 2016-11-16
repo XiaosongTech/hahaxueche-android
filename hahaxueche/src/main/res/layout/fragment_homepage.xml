@@ -111,8 +111,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/haha_white"
-                app:cardCornerRadius="5dp"
-                app:cardElevation="5dp">
+                app:cardCornerRadius="5dp">
 
                 <include layout="@layout/cardview_driving_school" />
 
@@ -126,8 +125,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/haha_white"
-                app:cardCornerRadius="5dp"
-                app:cardElevation="5dp">
+                app:cardCornerRadius="5dp">
 
                 <include layout="@layout/cardview_coach" />
 
@@ -139,8 +137,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:background="@color/haha_white"
-                app:cardCornerRadius="5dp"
-                app:cardElevation="5dp">
+                app:cardCornerRadius="5dp">
 
                 <include layout="@layout/cardview_adviser" />
 
