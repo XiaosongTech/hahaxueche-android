@@ -176,8 +176,7 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
             R.id.rly_payment_stage,
             R.id.rly_my_course,
             R.id.iv_edit_username,
-            R.id.rly_my_voucher,
-            R.id.rly_activate_voucher})
+            R.id.rly_my_voucher})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rly_online_service:
@@ -273,9 +272,6 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
                 break;
             case R.id.rly_my_voucher:
                 mPresenter.clickMyVoucher();
-                break;
-            case R.id.rly_activate_voucher:
-                mPresenter.activateVoucher();
                 break;
             default:
                 break;
