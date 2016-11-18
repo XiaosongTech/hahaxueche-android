@@ -42,6 +42,7 @@ import com.hahaxueche.ui.view.myPage.MyPageView;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.PhotoUtil;
 import com.hahaxueche.util.Utils;
+import com.jauker.widget.BadgeView;
 
 import java.io.File;
 
@@ -74,6 +75,10 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     LinearLayout mLlyMain;
     @BindView(R.id.iv_payment_stage)
     ImageView mIvPaymentArrow;
+    @BindView(R.id.view_badge)
+    View mViewBadge;
+    @BindView(R.id.iv_more_voucher)
+    ImageView mIvMoreVoucher;
 
     private MyPagePresenter mPresenter;
     private MainActivity mActivity;
@@ -176,8 +181,7 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
             R.id.rly_payment_stage,
             R.id.rly_my_course,
             R.id.iv_edit_username,
-            R.id.rly_my_voucher,
-            R.id.rly_activate_voucher})
+            R.id.rly_my_voucher})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rly_online_service:
@@ -274,9 +278,6 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
             case R.id.rly_my_voucher:
                 mPresenter.clickMyVoucher();
                 break;
-            case R.id.rly_activate_voucher:
-                mPresenter.activateVoucher();
-                break;
             default:
                 break;
         }
@@ -328,6 +329,20 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     @Override
     public void editUsername(String name) {
         mTvStudentName.setText(name);
+    }
+
+    @Override
+    public void setVoucherBadge(boolean hasBadge) {
+        if (hasBadge) {
+            mViewBadge.setVisibility(View.VISIBLE);
+            mIvMoreVoucher.setVisibility(View.GONE);
+            BadgeView badge = new BadgeView(getContext());
+            badge.setTargetView(mViewBadge);
+            badge.setBadgeCount(1);
+        } else {
+            mViewBadge.setVisibility(View.GONE);
+            mIvMoreVoucher.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

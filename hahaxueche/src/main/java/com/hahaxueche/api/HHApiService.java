@@ -230,6 +230,10 @@ public interface HHApiService {
     Observable<ArrayList<Voucher>> getAvailableVouchers(@Path("id") String studentId, @Query("coach_id") String coachId,
                                                         @Header("X-Access-Token") String accessToken);
 
+    @FormUrlEncoded
+    @POST("vouchers")
+    Observable<Voucher> addVoucher(@FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
+
     class Factory {
         public static HHApiService create() {
             HHLog.v("baseUrl -> " + baseUrl);

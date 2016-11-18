@@ -34,6 +34,11 @@ public interface MyPageView extends HHBaseView {
     void editUsername(String name);
 
     /**
+     * 设置代金券未读显示
+     */
+    void setVoucherBadge(boolean hasBadge);
+
+    /**
      * 打开webview
      *
      * @param url

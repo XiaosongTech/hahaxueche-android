@@ -3,7 +3,9 @@
     android:id="@+id/srl_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/haha_gray_background">
+    android:background="@color/haha_gray_background"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -13,6 +15,43 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/et_voucher_code"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rect_bg_white_sm"
+                    android:hint="请输入优惠码"
+                    android:inputType="text"
+                    android:lines="1"
+                    android:padding="6dp"
+                    android:textColor="@color/haha_gray"
+                    android:textColorHint="@color/haha_gray_text"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_activate_voucher"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rect_bg_appcolor_sm"
+                    android:paddingBottom="3dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="3dp"
+                    android:text="激活"
+                    android:textColor="@color/haha_white"
+                    android:textSize="16sp" />
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/iv_no_voucher"
