@@ -42,6 +42,7 @@ import com.hahaxueche.ui.view.myPage.MyPageView;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.PhotoUtil;
 import com.hahaxueche.util.Utils;
+import com.jauker.widget.BadgeView;
 
 import java.io.File;
 
@@ -74,6 +75,10 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     LinearLayout mLlyMain;
     @BindView(R.id.iv_payment_stage)
     ImageView mIvPaymentArrow;
+    @BindView(R.id.view_badge)
+    View mViewBadge;
+    @BindView(R.id.iv_more_voucher)
+    ImageView mIvMoreVoucher;
 
     private MyPagePresenter mPresenter;
     private MainActivity mActivity;
@@ -324,6 +329,18 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     @Override
     public void editUsername(String name) {
         mTvStudentName.setText(name);
+    }
+
+    @Override
+    public void setVoucherBadge(boolean hasBadge) {
+        if (hasBadge) {
+            mIvMoreVoucher.setVisibility(View.GONE);
+            BadgeView badge = new BadgeView(getContext());
+            badge.setTargetView(mViewBadge);
+            badge.setBadgeCount(1);
+        } else {
+            mIvMoreVoucher.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

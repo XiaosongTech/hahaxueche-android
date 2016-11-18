@@ -98,4 +98,5 @@ dependencies {
     compile 'me.grantland:autofittextview:0.2.+'
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile files('libs/LinkedME-Android-Deep-Linking-SDK-V1.0.5.jar')
+    compile files('libs/badgeview.jar')
 }

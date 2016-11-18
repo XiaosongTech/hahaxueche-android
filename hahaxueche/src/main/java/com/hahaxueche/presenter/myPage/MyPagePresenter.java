@@ -7,6 +7,7 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseModel;
 import com.hahaxueche.model.base.BaseValid;
+import com.hahaxueche.model.payment.Voucher;
 import com.hahaxueche.model.user.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.employee.Adviser;
@@ -52,6 +53,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
             mMyPageView.showLoggedInView();
             mStudent = user.student;
             mMyPageView.loadStudentInfo(mStudent);
+            showVoucherBadge(mStudent);
             fetchAdviser();
         } else {
             mMyPageView.showNotLoginView();
@@ -133,8 +135,10 @@ public class MyPagePresenter implements Presenter<MyPageView> {
 
                         @Override
                         public void onNext(Student student) {
+                            mStudent = student;
                             application.getSharedPrefUtil().updateStudent(student);
                             mMyPageView.loadStudentInfo(student);
+                            showVoucherBadge(student);
                         }
                     });
         }
@@ -195,7 +199,9 @@ public class MyPagePresenter implements Presenter<MyPageView> {
                     @Override
                     public void onNext(Student student) {
                         application.getSharedPrefUtil().updateStudent(student);
+                        mStudent = student;
                         mMyPageView.loadStudentInfo(student);
+                        showVoucherBadge(student);
                     }
                 });
 
@@ -414,5 +420,17 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         }
         HHLog.v(url);
         mMyPageView.openWebView(url);
+    }
+
+    private void showVoucherBadge(Student student) {
+        if (student == null || student.vouchers == null || student.vouchers.size() < 1) return;
+        boolean hasUnUsedVoucher = false;
+        for (Voucher voucher : student.vouchers) {
+            if (voucher.status == 0) {
+                hasUnUsedVoucher = true;
+                break;
+            }
+        }
+        mMyPageView.setVoucherBadge(hasUnUsedVoucher);
     }
 }
