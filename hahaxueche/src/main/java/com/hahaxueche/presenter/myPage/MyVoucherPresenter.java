@@ -1,8 +1,11 @@
 package com.hahaxueche.presenter.myPage;
 
+import android.text.TextUtils;
+
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseValid;
+import com.hahaxueche.model.payment.Voucher;
 import com.hahaxueche.model.user.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
@@ -93,6 +96,58 @@ public class MyVoucherPresenter implements Presenter<MyVoucherView> {
                         } else {
                             mMyVoucherView.showNoVoucher();
                         }
+                    }
+                });
+    }
+
+    public void addVoucher(String code) {
+        if (TextUtils.isEmpty(code)) {
+            mMyVoucherView.showMessage("优惠码不能为空！");
+            return;
+        }
+        if (mUser == null || !mUser.isLogin()) return;
+        final HHApiService apiService = application.getApiService();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("cell_phone", mUser.cell_phone);
+        final HashMap<String, Object> mapParam = new HashMap<>();
+        mapParam.put("phone", mUser.cell_phone);
+        mapParam.put("code", code);
+        subscription = apiService.isValidToken(mUser.session.access_token, map)
+                .flatMap(new Func1<BaseValid, Observable<Voucher>>() {
+                    @Override
+                    public Observable<Voucher> call(BaseValid baseValid) {
+                        if (baseValid.valid) {
+                            return apiService.addVoucher(mapParam, mUser.session.access_token);
+                        } else {
+                            return application.getSessionObservable();
+                        }
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<Voucher>() {
+
+                    @Override
+                    public void onCompleted() {
+                        mMyVoucherView.showMessage("代金券激活成功！");
+                        getVouchers();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mMyVoucherView.stopRefresh();
+                        if (ErrorUtil.isInvalidSession(e)) {
+                            mMyVoucherView.forceOffline();
+                        } else if (ErrorUtil.isHttp404(e)) {
+                            mMyVoucherView.showMessage("输入的优惠码不存在！");
+                        } else if (ErrorUtil.isHttp422(e)) {
+                            mMyVoucherView.showMessage("该代金券已存在！");
+                        }
+                        HHLog.e(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(Voucher voucher) {
                     }
                 });
     }

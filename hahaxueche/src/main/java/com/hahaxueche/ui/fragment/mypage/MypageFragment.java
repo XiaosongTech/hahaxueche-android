@@ -334,11 +334,13 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     @Override
     public void setVoucherBadge(boolean hasBadge) {
         if (hasBadge) {
+            mViewBadge.setVisibility(View.VISIBLE);
             mIvMoreVoucher.setVisibility(View.GONE);
             BadgeView badge = new BadgeView(getContext());
             badge.setTargetView(mViewBadge);
             badge.setBadgeCount(1);
         } else {
+            mViewBadge.setVisibility(View.GONE);
             mIvMoreVoucher.setVisibility(View.VISIBLE);
         }
     }

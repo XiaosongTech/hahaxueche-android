@@ -22,6 +22,7 @@ import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by wangshirui on 2016/11/11.
@@ -61,6 +63,8 @@ public class MyVoucherActivity extends HHBaseActivity implements MyVoucherView, 
     TextView mTvCustomerService;
     @BindView(R.id.tv_catch_voucher)
     TextView mTvCatchVoucher;
+    @BindView(R.id.et_voucher_code)
+    EditText mEtVoucherCode;
     private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
 
 
@@ -89,6 +93,17 @@ public class MyVoucherActivity extends HHBaseActivity implements MyVoucherView, 
                 MyVoucherActivity.this.finish();
             }
         });
+    }
+
+    @OnClick({R.id.tv_activate_voucher})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv_activate_voucher:
+                mPresenter.addVoucher(mEtVoucherCode.getText().toString());
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -145,7 +160,11 @@ public class MyVoucherActivity extends HHBaseActivity implements MyVoucherView, 
             tvExpiredAtParams.addRule(RelativeLayout.BELOW, tvTitleId);
             tvExpiredAtParams.setMargins(0, Utils.instence(this).dip2px(5), Utils.instence(this).dip2px(15), 0);
             tvExpiredAt.setLayoutParams(tvExpiredAtParams);
-            tvExpiredAt.setText("有效期至 " + voucher.expired_at);
+            if (!TextUtils.isEmpty(voucher.expired_at)) {
+                tvExpiredAt.setText("有效期至 " + voucher.expired_at);
+            } else {
+                tvExpiredAt.setText("长期有效");
+            }
             tvExpiredAt.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
             tvExpiredAt.setTextSize(12);
             rly.addView(tvExpiredAt);

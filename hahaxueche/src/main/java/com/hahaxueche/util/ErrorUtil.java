@@ -20,6 +20,10 @@ public class ErrorUtil {
         return error instanceof HttpException && ((HttpException) error).code() == 400;
     }
 
+    public static boolean isHttp404(Throwable error) {
+        return error instanceof HttpException && ((HttpException) error).code() == 404;
+    }
+
     public static boolean isInvalidSession(Throwable error) {
         return error.getMessage().equals(INVALID_SESSION);
     }
