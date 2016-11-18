@@ -226,6 +226,11 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     }
 
     @Override
+    public void hideClassVIP() {
+        mTvVip.setVisibility(View.GONE);
+    }
+
+    @Override
     public void selectLicenseC1() {
         mTvC1.setBackgroundResource(R.drawable.rect_bg_appcolor_sm);
         mTvC1.setTextColor(ContextCompat.getColor(this, R.color.haha_white));

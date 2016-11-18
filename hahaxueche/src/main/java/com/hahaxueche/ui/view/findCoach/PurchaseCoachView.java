@@ -22,6 +22,8 @@ public interface PurchaseCoachView extends HHBaseView {
 
     void showClassVIP();
 
+    void hideClassVIP();
+
     void selectLicenseC1();
 
     void selectLicenseC2();

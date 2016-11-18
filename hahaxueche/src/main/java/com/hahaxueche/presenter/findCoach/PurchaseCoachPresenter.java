@@ -89,6 +89,9 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         mPurchaseCoachView.selectLicenseC1();
         if (mCoach.coach_group.vip_price != 0) {
             mPurchaseCoachView.showClassVIP();
+        } else {
+            selectClassNormal();
+            mPurchaseCoachView.hideClassVIP();
         }
         setProductType();
     }
@@ -99,6 +102,9 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         mPurchaseCoachView.selectLicenseC2();
         if (mCoach.coach_group.c2_vip_price != 0) {
             mPurchaseCoachView.showClassVIP();
+        } else {
+            selectClassNormal();
+            mPurchaseCoachView.hideClassVIP();
         }
         setProductType();
     }
