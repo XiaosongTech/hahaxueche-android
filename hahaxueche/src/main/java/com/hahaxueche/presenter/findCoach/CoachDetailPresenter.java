@@ -2,6 +2,7 @@ package com.hahaxueche.presenter.findCoach;
 
 import android.text.TextUtils;
 
+import com.hahaxueche.BuildConfig;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseBoolean;
@@ -43,7 +44,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
     private User mUser;
     private boolean isFollow;
     private boolean isApplaud;
-    private static final String WEB_URL_FREE_TRY = "http://m.hahaxueche.com/free_trial?promo_code=553353";
+    private static final String WEB_URL_FREE_TRY = BuildConfig.MOBILE_URL + "/free_trial?promo_code=553353";
 
     @Override
     public void attachView(CoachDetailView view) {

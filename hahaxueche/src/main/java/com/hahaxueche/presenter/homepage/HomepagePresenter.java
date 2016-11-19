@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 
+import com.hahaxueche.BuildConfig;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Constants;
@@ -39,11 +40,11 @@ public class HomepagePresenter implements Presenter<HomepageView> {
     private static final String WEB_URL_ABOUT_COACH = "http://staging.hahaxueche.net/#/coach";
     private static final String WEB_URL_MY_STRENGTHS = "http://activity.hahaxueche.com/share/features";
     private static final String WEB_URL_PROCEDURE = "http://activity.hahaxueche.com/share/steps";
-    private static final String WEB_URL_FREE_TRY = "http://m.hahaxueche.com/free_trial?promo_code=553353";
-    private static final String WEB_URL_BEST_COACHES = "http://m.hahaxueche.com/share/best-coaches";
-    private static final String WEB_URL_FIND_ADVISER = "http://m.hahaxueche.com/share/zhaoguwen";
-    private static final String WEB_URL_FIND_DRIVING_SCHOOL = "http://m.hahaxueche.com/share/zhaojiaxiao";
-    private static final String WEB_URL_GROUP_BUY = "http://m.hahaxueche.com/share/tuan";
+    private static final String WEB_URL_FREE_TRY = BuildConfig.MOBILE_URL + "/free_trial?promo_code=553353";
+    private static final String WEB_URL_BEST_COACHES = BuildConfig.MOBILE_URL + "/share/best-coaches";
+    private static final String WEB_URL_FIND_ADVISER = BuildConfig.MOBILE_URL + "/share/zhaoguwen";
+    private static final String WEB_URL_FIND_DRIVING_SCHOOL = BuildConfig.MOBILE_URL + "/share/zhaojiaxiao";
+    private static final String WEB_URL_GROUP_BUY = BuildConfig.MOBILE_URL + "/share/tuan";
 
     private HHBaseApplication application;
     private Constants constants;
