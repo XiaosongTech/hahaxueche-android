@@ -145,11 +145,7 @@ public class ExamLib {
     }
 
     public boolean isAnsweredAll() {
-        if (mAnsweredQuestionList != null && mAnsweredQuestionList.size() > 0) {
-            return mAnsweredQuestionList.size() == mQuestionCount;
-        } else {
-            return false;
-        }
+        return mAnsweredQuestionList != null && mAnsweredQuestionList.size() > 0 && mAnsweredQuestionList.size() == mQuestionCount;
     }
 
     /**
