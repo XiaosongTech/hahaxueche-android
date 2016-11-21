@@ -109,7 +109,7 @@ public class FieldMapActivity extends HHBaseActivity implements FieldMapView,  A
      * 在地图上添加marker
      */
     private void addMarkersToMap() {
-        ArrayList<MarkerOptions> markerOptionlst = new ArrayList<MarkerOptions>();
+        ArrayList<MarkerOptions> markerOptionlst = new ArrayList<>();
         markerOption = new MarkerOptions();
         Field field = mPresenter.getField();
         LatLng x = new LatLng(field.lat, field.lng);

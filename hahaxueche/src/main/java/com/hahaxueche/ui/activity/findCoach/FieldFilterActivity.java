@@ -226,7 +226,7 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
     }
 
     public void setFields(ArrayList<Field> fields) {
-        ArrayList<MarkerOptions> markerOptionlst = new ArrayList<MarkerOptions>();
+        ArrayList<MarkerOptions> markerOptionlst = new ArrayList<>();
         for (Field field : fields) {
             markerOption = new MarkerOptions();
             LatLng x = new LatLng(field.lat, field.lng);

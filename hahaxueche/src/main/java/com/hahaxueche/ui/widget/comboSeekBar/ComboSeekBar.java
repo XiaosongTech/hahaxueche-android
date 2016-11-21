@@ -30,7 +30,7 @@ public class ComboSeekBar extends SeekBar {
     private static final int DEFAULT_THUMB_HEIGHT = 50;
 
     private CustomThumbDrawable mThumb;
-    private List<Dot> mDots = new ArrayList<Dot>();
+    private List<Dot> mDots = new ArrayList<>();
     private OnItemClickListener mItemClickListener;
     private Dot prevSelected = null;
     private int mColor;

@@ -360,7 +360,7 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
         private final WeakReference<ExamActivity> mActivity;
 
         public MyHandler(ExamActivity activity) {
-            mActivity = new WeakReference<ExamActivity>(activity);
+            mActivity = new WeakReference<>(activity);
         }
 
         @Override
