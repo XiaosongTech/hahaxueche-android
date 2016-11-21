@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="12dp"
             android:paddingLeft="14dp"
+            android:paddingRight="14dp"
             android:paddingTop="12dp"
             android:text="历史记录"
             android:textColor="@color/haha_gray_text"

@@ -23,6 +23,7 @@
         android:maxLines="1"
         android:paddingBottom="7dp"
         android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:paddingTop="7dp"
         android:textColor="@color/haha_gray_dark"
         android:textColorHint="@color/haha_gray_text"

@@ -64,6 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:text="手动档(C1)"
                 android:textColor="@color/haha_gray"
                 android:textSize="12sp" />
@@ -81,6 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:text="自动档(C2)"
                 android:textColor="@color/haha_gray"
                 android:textSize="12sp" />

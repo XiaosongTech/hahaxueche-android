@@ -262,10 +262,10 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
                         e.printStackTrace();
                     }
                     // 最后通知图库更新
-                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File("/sdcard/hahaxueche/qrcode.jpg"))));
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg"))));
 
                     //微信官方api的分享图片方法,图片模式与转发的不一样,二维码无法识别,尼玛!!
-                    Uri uriToImage = Uri.fromFile(new File("/sdcard/hahaxueche/qrcode.jpg"));
+                    Uri uriToImage = Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg"));
                     Intent shareIntent = new Intent();
                     //发送图片到朋友圈
                     //ComponentName comp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI");
@@ -322,9 +322,9 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
                         e.printStackTrace();
                     }
                     // 最后通知图库更新
-                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File("/sdcard/hahaxueche/qrcode.jpg"))));
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg"))));
 
-                    Uri uriToImage = Uri.fromFile(new File("/sdcard/hahaxueche/qrcode.jpg"));
+                    Uri uriToImage = Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg"));
                     Intent shareIntent = new Intent();
                     //发送图片到朋友圈
                     ComponentName comp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI");
@@ -380,12 +380,12 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
                         e.printStackTrace();
                     }
                     // 最后通知图库更新
-                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File("/sdcard/hahaxueche/qrcode.jpg"))));
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg"))));
                     shareQQListener = new ShareQQListener();
                     final Bundle params = new Bundle();
                     params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_IMAGE);
                     params.putString(QQShare.SHARE_TO_QQ_APP_NAME, "哈哈学车");
-                    params.putString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL, "/sdcard/hahaxueche/qrcode.jpg");
+                    params.putString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL, Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg");
                     mTencent.shareToQQ(ReferFriendsActivity.this, params, shareQQListener);
                 }
             }
@@ -653,7 +653,7 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
                         e.printStackTrace();
                     }
                     // 最后通知图库更新
-                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File("/sdcard/hahaxueche/qrcode.jpg"))));
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg"))));
                     showMessage("图片保存成功");
                 }
             }

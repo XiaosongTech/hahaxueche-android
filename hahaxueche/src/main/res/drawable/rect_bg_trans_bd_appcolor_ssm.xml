@@ -8,7 +8,6 @@
             <!-- 圆角 -->
             <corners android:radius="2dp" />
             <solid android:color="@android:color/transparent" />
-            //背景色
         </shape>
     </item>
 
