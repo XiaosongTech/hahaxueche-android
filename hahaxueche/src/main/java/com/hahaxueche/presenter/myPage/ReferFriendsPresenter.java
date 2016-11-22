@@ -46,7 +46,8 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
         mReferFriendsView.setWithdrawMoney(Utils.getMoney(user.student.bonus_balance));
         String eventDetailTips = mReferFriendsView.getContext().getResources().getString(R.string.eventDetailsTips);
         City myCity = application.getConstants().getCity(user.student.city_id);
-        mReferFriendsView.setReferRules(String.format(eventDetailTips, Utils.getMoney(myCity.referer_bonus)));
+        mReferFriendsView.setReferRules(String.format(eventDetailTips, Utils.getMoney(myCity.referee_bonus)
+                , Utils.getMoney(myCity.referee_bonus), Utils.getMoney(myCity.referer_bonus)));
         mReferFriendsView.setMyCityReferImage(myCity.referral_banner);
 
     }
