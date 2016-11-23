@@ -74,9 +74,6 @@ import butterknife.OnClick;
 
 public class PartnerDetailActivity extends HHBaseActivity implements PartnerDetailView, IWeiboHandler.Response {
     private PartnerDetailPresenter mPresenter;
-    private ImageView mIvBack;
-    private TextView mTvTitle;
-    private ImageView mIvShare;
     @BindView(R.id.sv_main)
     ScrollView mSvMain;
     @BindView(R.id.tv_partner_name)
@@ -136,8 +133,8 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setCustomView(R.layout.actionbar_base_share);
-        mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
-        mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
+        ImageView mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
+        TextView mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         mTvTitle.setText("教练详情");
         mIvBack.setOnClickListener(new View.OnClickListener() {
@@ -146,7 +143,7 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
                 PartnerDetailActivity.this.finish();
             }
         });
-        mIvShare = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_share);
+        ImageView mIvShare = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_share);
         mIvShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

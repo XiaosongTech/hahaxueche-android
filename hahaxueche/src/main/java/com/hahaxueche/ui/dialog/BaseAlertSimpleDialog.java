@@ -23,7 +23,6 @@ public class BaseAlertSimpleDialog {
     private String mTitle;
     private String mContent;
     private Dialog mDialog;
-    private View contentView;
 
 
     public BaseAlertSimpleDialog(Context context, String title, String content) {
@@ -38,7 +37,7 @@ public class BaseAlertSimpleDialog {
     }
 
     private void initView() {
-        contentView = View.inflate(mContext, R.layout.dialog_base_alert_simple, null);
+        View contentView = View.inflate(mContext, R.layout.dialog_base_alert_simple, null);
         mTvTitle = (TextView) contentView.findViewById(R.id.tv_title);
         mTvContent = (TextView) contentView.findViewById(R.id.tv_content);
         mTvKnow = (TextView) contentView.findViewById(R.id.tv_know);

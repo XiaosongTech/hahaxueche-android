@@ -27,7 +27,6 @@ import butterknife.OnClick;
 
 public class ExamLibraryFragment extends HHBaseFragment {
     private String mExamType;
-    private HHBaseApplication application;
     private User user;
 
     public static ExamLibraryFragment newInstance(String type) {
@@ -43,7 +42,7 @@ public class ExamLibraryFragment extends HHBaseFragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         mExamType = bundle.getString("type", ExamLib.EXAM_TYPE_1);
-        application = HHBaseApplication.get(getContext());
+        HHBaseApplication application = HHBaseApplication.get(getContext());
         user = application.getSharedPrefUtil().getUser();
     }
 

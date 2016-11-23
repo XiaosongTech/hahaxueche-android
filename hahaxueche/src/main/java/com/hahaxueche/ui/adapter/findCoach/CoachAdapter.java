@@ -36,14 +36,11 @@ import butterknife.ButterKnife;
  */
 
 public class CoachAdapter extends BaseAdapter {
-    private LayoutInflater inflater;
     private Context mContext;
     private ArrayList<Coach> mCoachList;
     private HHBaseApplication application;
-    private LayoutInflater inflator;
 
     public CoachAdapter(Context context, ArrayList<Coach> coachList) {
-        inflater = LayoutInflater.from(context);
         mContext = context;
         mCoachList = coachList;
         application = HHBaseApplication.get(mContext);
@@ -69,7 +66,7 @@ public class CoachAdapter extends BaseAdapter {
         View view = convertView;
         final ViewHolder holder;
         if (view == null) {
-            inflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflator.inflate(R.layout.adapter_coach, null);
             holder = new ViewHolder();
             holder.tvCoachName = ButterKnife.findById(view, R.id.tv_coach_name);

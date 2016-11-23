@@ -24,7 +24,6 @@ import butterknife.ButterKnife;
 public class EditUsernameDialog {
     private Context mContext;
     private Dialog mDialog;
-    private View contentView;
     private EditText mEtUsername;//用户名
     private ImageView mIvClear;//清除按钮
     private TextView mTvCancel;//取消
@@ -45,7 +44,7 @@ public class EditUsernameDialog {
     }
 
     private void initView() {
-        contentView = View.inflate(mContext, R.layout.dialog_edit_username, null);
+        View contentView = View.inflate(mContext, R.layout.dialog_edit_username, null);
         mEtUsername = ButterKnife.findById(contentView, R.id.et_username);
         mIvClear = ButterKnife.findById(contentView, R.id.iv_clear);
         mTvCancel = ButterKnife.findById(contentView, R.id.tv_cancel);

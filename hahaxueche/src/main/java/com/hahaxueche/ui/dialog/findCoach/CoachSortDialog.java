@@ -20,7 +20,6 @@ import butterknife.ButterKnife;
 public class CoachSortDialog {
     private Context mContext;
     private Dialog mDialog;
-    private View contentView;
     private TextView mTvSortAuto;
     private TextView mTvSortDistance;
     private TextView mTvSortComment;
@@ -42,7 +41,7 @@ public class CoachSortDialog {
     }
 
     private void initView() {
-        contentView = View.inflate(mContext, R.layout.dialog_coach_sort, null);
+        View contentView = View.inflate(mContext, R.layout.dialog_coach_sort, null);
         mTvSortAuto = ButterKnife.findById(contentView, R.id.tv_sort_auto);
         mTvSortDistance = ButterKnife.findById(contentView, R.id.tv_sort_distance);
         mTvSortComment = ButterKnife.findById(contentView, R.id.tv_sort_comment);

@@ -61,8 +61,6 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     public AMapLocationClient mLocationClient;
     //定位回调监听器
     public AMapLocationListener mLocationListener;
-    //定位参数
-    private AMapLocationClientOption mLocationOption;
 
     private static final int REQUEST_CODE_COACH_DETAIL = 1;
 
@@ -240,7 +238,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
         };
         mLocationClient.setLocationListener(mLocationListener);
         //初始化定位参数
-        mLocationOption = new AMapLocationClientOption();
+        AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
         //设置是否允许模拟位置,默认为false，不允许模拟位置
         mLocationOption.setMockEnable(true);
         //设置定位间隔,单位毫秒,默认为2000ms

@@ -26,7 +26,6 @@ import butterknife.ButterKnife;
 public class CityChoseDialog {
     private Context mContext;
     private Dialog mDialog;
-    private View contentView;
     private TextView mTvSure;
     private GridView mGvCities;
     private onConfirmListener mConfirmListener;
@@ -47,7 +46,7 @@ public class CityChoseDialog {
     }
 
     private void initView() {
-        contentView = View.inflate(mContext, R.layout.dialog_city_chose, null);
+        View contentView = View.inflate(mContext, R.layout.dialog_city_chose, null);
         mTvSure = ButterKnife.findById(contentView, R.id.tv_sure);
         mGvCities = ButterKnife.findById(contentView, R.id.gv_cities);
         mDialog.setContentView(contentView);

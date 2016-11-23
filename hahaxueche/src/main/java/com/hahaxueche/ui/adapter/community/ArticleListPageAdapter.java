@@ -15,12 +15,10 @@ import java.util.ArrayList;
  */
 
 public class ArticleListPageAdapter extends FragmentPagerAdapter {
-    private Context context;
     private ArrayList<ArticleCategory> mArticleCategories;
 
     public ArticleListPageAdapter(FragmentManager fm, Context context, ArrayList<ArticleCategory> articleCategories) {
         super(fm);
-        this.context = context;
         this.mArticleCategories = articleCategories;
     }
 

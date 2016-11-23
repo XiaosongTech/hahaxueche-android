@@ -101,7 +101,6 @@ public class ArticleActivity extends HHBaseActivity implements ArticleView, IWei
     private IWXAPI wxApi; //微信api
     private Tencent mTencent;//QQ
     private IWeiboShareAPI mWeiboShareAPI;//新浪微博
-    private HHBaseApplication myApplication;
     private String mTitle;
     private String mDescription;
     private String mImageUrl;
@@ -252,7 +251,7 @@ public class ArticleActivity extends HHBaseActivity implements ArticleView, IWei
      * 获取分享API
      */
     private void regShareApi() {
-        myApplication = HHBaseApplication.get(getContext());
+        HHBaseApplication myApplication = HHBaseApplication.get(getContext());
         wxApi = myApplication.getIWXAPI();
         mTencent = myApplication.getTencentAPI();
         mWeiboShareAPI = myApplication.getWeiboAPI();

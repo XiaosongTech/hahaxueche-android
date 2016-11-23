@@ -22,12 +22,10 @@ import butterknife.ButterKnife;
 
 public class WithdrawRecordAdapter extends BaseAdapter {
     private LayoutInflater inflater;
-    private Context mContext;
     private ArrayList<WithdrawRecord> mWithdrawRecordList;
 
     public WithdrawRecordAdapter(Context context, ArrayList<WithdrawRecord> WithdrawRecordArrayList) {
         inflater = LayoutInflater.from(context);
-        mContext = context;
         mWithdrawRecordList = WithdrawRecordArrayList;
     }
 

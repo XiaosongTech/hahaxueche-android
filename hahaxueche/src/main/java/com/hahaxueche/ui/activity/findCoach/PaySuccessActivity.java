@@ -41,8 +41,6 @@ import butterknife.OnClick;
 
 public class PaySuccessActivity extends HHBaseActivity implements PaySuccessView {
     private PaySuccessPresenter mPresenter;
-    private ImageView mIvBack;
-    private TextView mTvTitle;
     @BindView(R.id.tv_coach_name)
     TextView mTvCoachName;
     @BindView(R.id.tv_pay_amount)
@@ -71,9 +69,9 @@ public class PaySuccessActivity extends HHBaseActivity implements PaySuccessView
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setCustomView(R.layout.actionbar_base);
-        mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
+        ImageView mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
         mIvBack.setVisibility(View.GONE);
-        mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
+        TextView mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         mTvTitle.setText("付款成功");
     }

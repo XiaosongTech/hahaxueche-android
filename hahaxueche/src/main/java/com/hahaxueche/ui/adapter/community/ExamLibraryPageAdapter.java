@@ -15,11 +15,9 @@ import com.hahaxueche.util.ExamLib;
 public class ExamLibraryPageAdapter extends FragmentPagerAdapter {
     public final int COUNT = 2;
     private String[] titles = new String[]{"科目一", "科目四"};
-    private Context context;
 
     public ExamLibraryPageAdapter(FragmentManager fm, Context context) {
         super(fm);
-        this.context = context;
     }
 
     @Override

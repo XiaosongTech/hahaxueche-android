@@ -24,7 +24,6 @@ import me.grantland.widget.AutofitTextView;
 public class MyAdviserDialog {
     private Context mContext;
     private Dialog mDialog;
-    private View contentView;
     private ImageView mIvCall;
     private TextView mTvName;
     private SimpleDraweeView mIvAvatar;
@@ -48,7 +47,7 @@ public class MyAdviserDialog {
     }
 
     private void initView() {
-        contentView = View.inflate(mContext, R.layout.dialog_my_adviser, null);
+        View contentView = View.inflate(mContext, R.layout.dialog_my_adviser, null);
         mTvName = ButterKnife.findById(contentView, R.id.tv_consultant_name);
         mTvDescription = ButterKnife.findById(contentView, R.id.tv_description);
         mIvAvatar = ButterKnife.findById(contentView, R.id.iv_avatar);

@@ -89,7 +89,6 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
     private IWXAPI wxApi; //微信api
     private Tencent mTencent;//QQ
     private IWeiboShareAPI mWeiboShareAPI;//新浪微博
-    private HHBaseApplication myApplication;
     private ShareQQListener shareQQListener;
     private ShareQZoneListener shareQZoneListener;
     /*****************
@@ -153,7 +152,7 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
      * 获取分享API
      */
     private void regShareApi() {
-        myApplication = HHBaseApplication.get(getContext());
+        HHBaseApplication myApplication = HHBaseApplication.get(getContext());
         wxApi = myApplication.getIWXAPI();
         mTencent = myApplication.getTencentAPI();
         mWeiboShareAPI = myApplication.getWeiboAPI();

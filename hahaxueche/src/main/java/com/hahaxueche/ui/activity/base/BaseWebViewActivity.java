@@ -35,7 +35,6 @@ public class BaseWebViewActivity extends HHBaseActivity {
     ImageView mIvBack;
     TextView mTvTitle;
     private String url;
-    private boolean isShowShare;
 
     /*****************
      * 分享
@@ -43,7 +42,6 @@ public class BaseWebViewActivity extends HHBaseActivity {
     private IWXAPI wxApi; //微信api
     private Tencent mTencent;//QQ
     private IWeiboShareAPI mWeiboShareAPI;//新浪微博
-    private String mTitle;
     private String mDescription;
     private String mImageUrl;
 
@@ -146,8 +144,6 @@ public class BaseWebViewActivity extends HHBaseActivity {
     private void loadDatas() {
         Intent intent = getIntent();
         url = intent.getStringExtra("url");
-        isShowShare = intent.getBooleanExtra("isShowShare", false);
-        mTitle = intent.getStringExtra("title");
     }
 
 //    private void loadShare() {

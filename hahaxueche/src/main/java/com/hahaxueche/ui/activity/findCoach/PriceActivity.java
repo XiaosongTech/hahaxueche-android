@@ -48,8 +48,6 @@ import butterknife.ButterKnife;
 
 public class PriceActivity extends HHBaseActivity implements PriceView {
     private PricePresenter mPresenter;
-    private ImageView mIvBack;
-    private TextView mTvTitle;
     @BindView(R.id.frl_main)
     FrameLayout mFrlMain;
     @BindView(R.id.table_fee)
@@ -94,8 +92,8 @@ public class PriceActivity extends HHBaseActivity implements PriceView {
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setCustomView(R.layout.actionbar_base);
-        mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
-        mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
+        ImageView mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
+        TextView mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         mTvTitle.setText("拿证价格");
         mIvBack.setOnClickListener(new View.OnClickListener() {

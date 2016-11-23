@@ -20,7 +20,6 @@ import com.hahaxueche.util.Utils;
 public class ShareAppDialog {
     private Context mContext;
     private Dialog mDialog;
-    private View contentView;
     private TextView mTvRefuse;
     private TextView mTvShare;
     private TextView mTvShareTxt;
@@ -37,7 +36,7 @@ public class ShareAppDialog {
     }
 
     private void initView() {
-        contentView = View.inflate(mContext, R.layout.dialog_share_app, null);
+        View contentView = View.inflate(mContext, R.layout.dialog_share_app, null);
         mTvRefuse = (TextView) contentView.findViewById(R.id.tv_refuse);
         mTvShare = (TextView) contentView.findViewById(R.id.tv_share);
         mTvShareTxt = (TextView) contentView.findViewById(R.id.tv_share_txt);

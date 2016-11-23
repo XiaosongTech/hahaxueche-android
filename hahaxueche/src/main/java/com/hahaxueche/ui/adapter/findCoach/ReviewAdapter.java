@@ -24,12 +24,10 @@ import butterknife.ButterKnife;
 
 public class ReviewAdapter extends BaseAdapter {
     private LayoutInflater inflater;
-    private Context mContext;
     private ArrayList<Review> mReviewList;
 
     public ReviewAdapter(Context context, ArrayList<Review> reviewArrayList) {
         inflater = LayoutInflater.from(context);
-        mContext = context;
         mReviewList = reviewArrayList;
     }
 

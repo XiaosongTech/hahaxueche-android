@@ -26,11 +26,8 @@ import butterknife.ButterKnife;
 
 public class WithdrawRecordsActivity extends HHBaseActivity implements WithdrawRecordsView {
     private WithdrawRecordsPresenter mPresenter;
-    ImageView mIvBack;
-    TextView mTvTitle;
     @BindView(R.id.lv_withdraw_records)
     ListView mLvWithdrawRecords;
-    private WithdrawRecordAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +42,8 @@ public class WithdrawRecordsActivity extends HHBaseActivity implements WithdrawR
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setCustomView(R.layout.actionbar_base);
-        mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
-        mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
+        ImageView mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
+        TextView mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         mTvTitle.setText("已提现");
         mIvBack.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +62,7 @@ public class WithdrawRecordsActivity extends HHBaseActivity implements WithdrawR
 
     @Override
     public void loadWithdrawRecords(ArrayList<WithdrawRecord> withdrawRecords) {
-        adapter = new WithdrawRecordAdapter(this, withdrawRecords);
+        WithdrawRecordAdapter adapter = new WithdrawRecordAdapter(this, withdrawRecords);
         mLvWithdrawRecords.setAdapter(adapter);
     }
 }
