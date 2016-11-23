@@ -103,8 +103,7 @@ public class PaySuccessActivity extends HHBaseActivity implements PaySuccessView
 
     public void changeCustomerService() {
         String customerService = mTvCustomerService.getText().toString();
-        CharSequence customerServiceStr = customerService;
-        SpannableString spCustomerServiceStr = new SpannableString(customerServiceStr);
+        SpannableString spCustomerServiceStr = new SpannableString(customerService);
         spCustomerServiceStr.setSpan(new ClickableSpan() {
             @Override
             public void onClick(View widget) {

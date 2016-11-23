@@ -124,8 +124,7 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
     public Field getTrainingField() {
         if (mCoach == null) return null;
         Constants constants = application.getConstants();
-        Field field = constants.getField(mCoach.coach_group.field_id);
-        return field;
+        return constants.getField(mCoach.coach_group.field_id);
     }
 
     private void loadFollow() {

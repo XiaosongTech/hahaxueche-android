@@ -106,8 +106,7 @@ public class PriceActivity extends HHBaseActivity implements PriceView {
 
     private void initCusomterSerice() {
         String customerService = mTvCustomerService.getText().toString();
-        CharSequence customerServiceStr = customerService;
-        SpannableString spCustomerServiceStr = new SpannableString(customerServiceStr);
+        SpannableString spCustomerServiceStr = new SpannableString(customerService);
         spCustomerServiceStr.setSpan(new ClickableSpan() {
             @Override
             public void onClick(View widget) {
