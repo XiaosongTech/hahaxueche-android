@@ -22,14 +22,11 @@ import butterknife.ButterKnife;
  */
 
 public class PartnerAdapter extends BaseAdapter {
-    private LayoutInflater inflater;
     private Context mContext;
     private ArrayList<Partner> mPartnerList;
     private HHBaseApplication application;
-    private LayoutInflater inflator;
 
     public PartnerAdapter(Context context, ArrayList<Partner> PartnerList) {
-        inflater = LayoutInflater.from(context);
         mContext = context;
         mPartnerList = PartnerList;
         application = HHBaseApplication.get(mContext);
@@ -55,7 +52,7 @@ public class PartnerAdapter extends BaseAdapter {
         View view = convertView;
         final ViewHolder holder;
         if (view == null) {
-            inflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflator.inflate(R.layout.adapter_partner, null);
             holder = new ViewHolder();
             holder.tvPartnerName = ButterKnife.findById(view, R.id.tv_partner_name);

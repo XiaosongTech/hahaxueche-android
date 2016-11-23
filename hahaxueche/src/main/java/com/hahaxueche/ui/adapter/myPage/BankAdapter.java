@@ -21,12 +21,10 @@ import butterknife.ButterKnife;
 
 public class BankAdapter extends BaseAdapter {
     private LayoutInflater inflater;
-    private Context mContext;
     private ArrayList<Bank> mBankList;
 
     public BankAdapter(Context context, ArrayList<Bank> BankArrayList) {
         inflater = LayoutInflater.from(context);
-        mContext = context;
         mBankList = BankArrayList;
     }
 

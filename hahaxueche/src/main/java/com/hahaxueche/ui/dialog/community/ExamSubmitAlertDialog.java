@@ -20,7 +20,6 @@ public class ExamSubmitAlertDialog {
     private TextView mTvAlertInfo;
     private TextView mTvSure;
     private Dialog mDialog;
-    private View contentView;
     private String mAlertInfo;
     private onConfirmListener mConfirmListener;
 
@@ -40,7 +39,7 @@ public class ExamSubmitAlertDialog {
     }
 
     private void initView() {
-        contentView = View.inflate(mContext, R.layout.dialog_exam_submit_alert, null);
+        View contentView = View.inflate(mContext, R.layout.dialog_exam_submit_alert, null);
         mTvAlertInfo = (TextView) contentView.findViewById(R.id.tv_alert_info);
         mTvSure = (TextView) contentView.findViewById(R.id.tv_sure);
         mDialog.setContentView(contentView);

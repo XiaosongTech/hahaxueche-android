@@ -104,7 +104,7 @@ public class NoCourseActivity extends HHBaseActivity implements NoCourseView {
         private final WeakReference<NoCourseActivity> mActivity;
 
         public MyHandler(NoCourseActivity activity) {
-            mActivity = new WeakReference<NoCourseActivity>(activity);
+            mActivity = new WeakReference<>(activity);
         }
 
         @Override

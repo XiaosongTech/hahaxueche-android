@@ -7,7 +7,6 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AnimationUtils;
 
 import com.hahaxueche.R;
 import com.hahaxueche.ui.dialog.login.ButtonLayout;

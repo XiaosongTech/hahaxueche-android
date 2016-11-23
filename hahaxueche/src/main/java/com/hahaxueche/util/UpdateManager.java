@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -39,7 +40,7 @@ public class UpdateManager {
 
     private Dialog downloadDialog;
     /* 下载包安装路径 */
-    private static final String savePath = "/sdcard/hahaxueche/";
+    private static final String savePath = Environment.getExternalStorageDirectory() + "/hahaxueche/";
 
     private static final String saveFileName = savePath + "hahaxueche.apk";
 
@@ -70,19 +71,18 @@ public class UpdateManager {
                     break;
             }
         }
-
-        ;
     };
 
     public UpdateManager(Context context) {
         this.mContext = context;
     }
+
     //外部接口让主Activity调用
-    public void checkUpdateInfo(){
+    public void checkUpdateInfo() {
         showNoticeDialog();
     }
 
-    private void showNoticeDialog(){
+    private void showNoticeDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("软件版本更新");
         builder.setMessage(updateMsg);

@@ -74,6 +74,7 @@ public class PhotoUtil {
                 filetwo.createNewFile();
             }
         } catch (Exception e) {
+            HHLog.e(e.getMessage());
         }
     }
 
@@ -87,8 +88,7 @@ public class PhotoUtil {
     public InputStream Bitmap2IS(Bitmap bm) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        InputStream sbs = new ByteArrayInputStream(baos.toByteArray());
-        return sbs;
+        return new ByteArrayInputStream(baos.toByteArray());
     }
 
     public Bitmap decodeUriAsBitmap(Uri uri) {

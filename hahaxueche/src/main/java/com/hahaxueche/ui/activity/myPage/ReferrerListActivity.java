@@ -25,8 +25,6 @@ import butterknife.ButterKnife;
 
 public class ReferrerListActivity extends HHBaseActivity implements ReferrerListView, XListView.IXListViewListener {
     private ReferrerListPresenter mPresenter;
-    private ImageView mIvBack;
-    private TextView mTvTitle;
     @BindView(R.id.xlv_referrer_list)
     XListView mXlvReferrers;
     private ReferrerAdapter mReferrerAdapter;
@@ -50,8 +48,8 @@ public class ReferrerListActivity extends HHBaseActivity implements ReferrerList
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setCustomView(R.layout.actionbar_base);
-        mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
-        mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
+        ImageView mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
+        TextView mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         mTvTitle.setText("推荐有奖");
         mIvBack.setOnClickListener(new View.OnClickListener() {

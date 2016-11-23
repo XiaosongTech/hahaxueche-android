@@ -39,7 +39,6 @@ import com.hahaxueche.ui.dialog.community.MyAdviserDialog;
 import com.hahaxueche.ui.dialog.myPage.EditUsernameDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.myPage.MyPageView;
-import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.PhotoUtil;
 import com.hahaxueche.util.Utils;
 import com.jauker.widget.BadgeView;

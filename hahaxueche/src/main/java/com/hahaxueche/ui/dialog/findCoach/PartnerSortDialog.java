@@ -20,7 +20,6 @@ import butterknife.ButterKnife;
 public class PartnerSortDialog {
     private Context mContext;
     private Dialog mDialog;
-    private View contentView;
     private TextView mTvSortPrice;
     private TextView mTvSortLike;
     private OnSortListener mOnSortListener;
@@ -39,7 +38,7 @@ public class PartnerSortDialog {
     }
 
     private void initView() {
-        contentView = View.inflate(mContext, R.layout.dialog_partner_sort, null);
+        View contentView = View.inflate(mContext, R.layout.dialog_partner_sort, null);
         mTvSortPrice = ButterKnife.findById(contentView, R.id.tv_sort_price);
         mTvSortLike = ButterKnife.findById(contentView, R.id.tv_sort_like);
         mDialog.setContentView(contentView);

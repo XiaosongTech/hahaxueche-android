@@ -6,11 +6,9 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 
-
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +17,13 @@ import java.util.List;
  * Created by gibxin on 2016/2/13.
  */
 public class PhotoAdapter extends PagerAdapter {
-    private List<View> picViews = new ArrayList<View>();
+    private List<View> picViews = new ArrayList<>();
     private Context context = null;
 
     private OnImgItemClickListener mListener;
 
     public interface OnImgItemClickListener {
-        public void onItemClickEvent(String imgUrl, List<String> urls);
+        void onItemClickEvent(String imgUrl, List<String> urls);
     }
 
     public void setOnImgItemClickListener(OnImgItemClickListener listener) {
@@ -118,7 +116,7 @@ public class PhotoAdapter extends PagerAdapter {
     View.OnClickListener imgClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            List<String> urls = new ArrayList<String>();
+            List<String> urls = new ArrayList<>();
             for (View view : picViews) {
                 urls.add(view.getTag().toString());
             }

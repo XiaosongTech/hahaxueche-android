@@ -10,7 +10,6 @@ import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.base.Location;
 import com.hahaxueche.ui.widget.FrescoImageLoader;
 import com.hahaxueche.util.ErrorUtil;
-import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.HahaCache;
 import com.hahaxueche.util.SharedPrefUtil;
 import com.hahaxueche.util.share.ShareConstants;

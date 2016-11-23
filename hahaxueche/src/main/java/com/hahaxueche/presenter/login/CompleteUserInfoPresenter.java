@@ -4,7 +4,6 @@ import android.text.TextUtils;
 
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
-import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.user.Student;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.login.CompleteUserInfoView;

@@ -1,12 +1,10 @@
 package com.hahaxueche.util;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
-import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.examLib.Question;
 import com.hahaxueche.model.user.Student;
 import com.hahaxueche.model.user.User;

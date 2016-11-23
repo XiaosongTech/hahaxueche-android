@@ -23,8 +23,6 @@ import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.findCoach.CoachListPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
-import com.hahaxueche.ui.activity.findCoach.FieldFilterActivity;
-import com.hahaxueche.ui.activity.findCoach.SearchCoachActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachAdapter;
 import com.hahaxueche.ui.dialog.findCoach.CoachFilterDialog;
 import com.hahaxueche.ui.dialog.findCoach.CoachSortDialog;
@@ -61,8 +59,6 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     public AMapLocationClient mLocationClient;
     //定位回调监听器
     public AMapLocationListener mLocationListener;
-    //定位参数
-    private AMapLocationClientOption mLocationOption;
 
     private static final int REQUEST_CODE_COACH_DETAIL = 1;
 
@@ -240,7 +236,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
         };
         mLocationClient.setLocationListener(mLocationListener);
         //初始化定位参数
-        mLocationOption = new AMapLocationClientOption();
+        AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
         //设置是否允许模拟位置,默认为false，不允许模拟位置
         mLocationOption.setMockEnable(true);
         //设置定位间隔,单位毫秒,默认为2000ms

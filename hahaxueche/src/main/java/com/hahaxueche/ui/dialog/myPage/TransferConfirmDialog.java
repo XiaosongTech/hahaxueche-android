@@ -19,7 +19,6 @@ import com.hahaxueche.R;
  * Created by gibxin on 2016/3/3.
  */
 public class TransferConfirmDialog extends Dialog implements View.OnClickListener {
-    private Context mContext;
     private TextView tvPsDescriptionDialog;
     private TextView tvSureTransferDialog;
     private TextView tvTransferNotNow;
@@ -27,12 +26,12 @@ public class TransferConfirmDialog extends Dialog implements View.OnClickListene
     private String mDescription;
 
     public interface OnBtnClickListener {
-        public void onTransfer();
+        void onTransfer();
     }
 
     public TransferConfirmDialog(Context context, String description, OnBtnClickListener listener) {
         super(context);
-        mContext = context;
+        Context mContext = context;
         mListener = listener;
         mDescription = description;
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);

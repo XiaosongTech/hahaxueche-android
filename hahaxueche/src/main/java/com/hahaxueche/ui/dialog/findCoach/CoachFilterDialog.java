@@ -29,7 +29,6 @@ import butterknife.ButterKnife;
 public class CoachFilterDialog {
     private Context mContext;
     private Dialog mDialog;
-    private View contentView;
     private ComboSeekBar mCbsDistance;
     private ComboSeekBar mCbsPrice;
     private TextView mTvCancel;
@@ -57,7 +56,7 @@ public class CoachFilterDialog {
     }
 
     private void initView() {
-        contentView = View.inflate(mContext, R.layout.dialog_coach_filter, null);
+        View contentView = View.inflate(mContext, R.layout.dialog_coach_filter, null);
         mCbsDistance = ButterKnife.findById(contentView, R.id.cbs_distinct);
         mCbsPrice = ButterKnife.findById(contentView, R.id.cbs_price);
         mTvCancel = ButterKnife.findById(contentView, R.id.tv_cancel);

@@ -24,7 +24,7 @@ public class ImageSwitcher extends FrameLayout {
     public OnSwitchItemClickListener mListener;
 
     public interface  OnSwitchItemClickListener{
-        public void onSwitchClick(String url, List<String> urls);
+        void onSwitchClick(String url, List<String> urls);
     }
 
     public ImageSwitcher(Context context) {

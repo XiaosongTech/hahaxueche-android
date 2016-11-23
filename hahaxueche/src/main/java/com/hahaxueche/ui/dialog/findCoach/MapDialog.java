@@ -51,7 +51,7 @@ public class MapDialog extends AlertDialog implements AMap.OnMarkerClickListener
     private MapDialogDismissListener mListener;
 
     public interface MapDialogDismissListener {
-        public boolean dialogDismiss();
+        boolean dialogDismiss();
     }
 
     public MapDialog(Context context) {
@@ -94,7 +94,7 @@ public class MapDialog extends AlertDialog implements AMap.OnMarkerClickListener
 
     private void initMap() {
         if (mField != null) {
-            ArrayList<MarkerOptions> markerOptionlst = new ArrayList<MarkerOptions>();
+            ArrayList<MarkerOptions> markerOptionlst = new ArrayList<>();
             markerOption = new MarkerOptions();
             LatLng x = new LatLng(mField.lat, mField.lng);
             markerOption.position(x);

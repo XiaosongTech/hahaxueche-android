@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
 import java.io.ByteArrayOutputStream;
@@ -73,10 +72,7 @@ public class Utils {
             e.printStackTrace();
             return false;
         }
-        if (intent == null)
-            return false;
-        else
-            return true;
+        return intent != null;
     }
 
     /**

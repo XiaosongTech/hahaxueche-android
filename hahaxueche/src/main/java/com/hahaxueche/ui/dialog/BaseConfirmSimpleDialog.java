@@ -26,7 +26,6 @@ public class BaseConfirmSimpleDialog {
     private String mConfirmString;
     private String mCancelString;
     private Dialog mDialog;
-    private View contentView;
 
     private onClickListener mOnClickListener;
 
@@ -51,7 +50,7 @@ public class BaseConfirmSimpleDialog {
     }
 
     private void initView() {
-        contentView = View.inflate(mContext, R.layout.dialog_base_confirm_simple, null);
+        View contentView = View.inflate(mContext, R.layout.dialog_base_confirm_simple, null);
         mTvTitle = (TextView) contentView.findViewById(R.id.tv_base_confirm_title);
         mTvSubtitle = (TextView) contentView.findViewById(R.id.tv_base_confirm_subtitle);
         mTvConfirm = (TextView) contentView.findViewById(R.id.tv_base_confirm_sure);

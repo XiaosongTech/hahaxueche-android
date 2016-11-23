@@ -124,8 +124,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
     public Field getTrainingField() {
         if (mCoach == null) return null;
         Constants constants = application.getConstants();
-        Field field = constants.getField(mCoach.coach_group.field_id);
-        return field;
+        return constants.getField(mCoach.coach_group.field_id);
     }
 
     public void setCoach(String coachId) {

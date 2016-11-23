@@ -23,12 +23,10 @@ import butterknife.ButterKnife;
 
 public class ArticleCommentAdapter extends BaseAdapter {
     private LayoutInflater inflater;
-    private Context mContext;
     private ArrayList<Comment> mArticleCommentList;
 
     public ArticleCommentAdapter(Context context, ArrayList<Comment> ArticleCommentArrayList) {
         inflater = LayoutInflater.from(context);
-        mContext = context;
         mArticleCommentList = ArticleCommentArrayList;
     }
 

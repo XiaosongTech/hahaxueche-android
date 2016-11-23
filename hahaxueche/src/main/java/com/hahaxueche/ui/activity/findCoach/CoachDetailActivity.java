@@ -4,13 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,9 +78,6 @@ import butterknife.OnClick;
 
 public class CoachDetailActivity extends HHBaseActivity implements CoachDetailView, IWeiboHandler.Response {
     private CoachDetailPresenter mPresenter;
-    private ImageView mIvBack;
-    private TextView mTvTitle;
-    private ImageView mIvShare;
     @BindView(R.id.sv_main)
     ScrollView mSvMain;
     @BindView(R.id.tv_coach_name)
@@ -344,8 +339,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setCustomView(R.layout.actionbar_base_share);
-        mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
-        mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
+        ImageView mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
+        TextView mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         mTvTitle.setText("教练详情");
         mIvBack.setOnClickListener(new View.OnClickListener() {
@@ -354,7 +349,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 CoachDetailActivity.this.finish();
             }
         });
-        mIvShare = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_share);
+        ImageView mIvShare = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_share);
         mIvShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

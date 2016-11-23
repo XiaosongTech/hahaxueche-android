@@ -2,16 +2,12 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item>
-        <shape
-            android:shape="rectangle">
+        <shape android:shape="rectangle">
             <!-- 描边 -->
-            <stroke
-                android:width="0.6dp"
-                android:color="@color/haha_gray_divider"/>
+            <stroke android:width="0.6dp" android:color="@color/haha_gray_divider" />
             <!-- 圆角 -->
-            <corners
-                android:radius="2dp"/>
-            <solid android:color="@color/haha_gray_background" />  //背景色
+            <corners android:radius="2dp" />
+            <solid android:color="@color/haha_gray_background" />
         </shape>
     </item>
 

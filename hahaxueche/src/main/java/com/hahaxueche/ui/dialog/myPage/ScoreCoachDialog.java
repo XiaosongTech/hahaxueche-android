@@ -20,13 +20,12 @@ public class ScoreCoachDialog {
     private Context mContext;
     private ClickScoreView csvScore;
     private Dialog mDialog;
-    private View contentView;
     private TextView tvConfirm;
     private TextView tvCancel;
     private onScoreListener mOnScoreListener;
 
     public interface onScoreListener {
-        public void onScore(float score);
+        void onScore(float score);
     }
 
     public ScoreCoachDialog(Context context, onScoreListener onScoreListener) {
@@ -39,7 +38,7 @@ public class ScoreCoachDialog {
     }
 
     private void initView() {
-        contentView = View.inflate(mContext, R.layout.dialog_score, null);
+        View contentView = View.inflate(mContext, R.layout.dialog_score, null);
         csvScore = (ClickScoreView) contentView.findViewById(R.id.csv_score);
         tvConfirm = (TextView) contentView.findViewById(R.id.tv_dialog_score_confirm);
         tvCancel = (TextView) contentView.findViewById(R.id.tv_dialog_score_cancel);

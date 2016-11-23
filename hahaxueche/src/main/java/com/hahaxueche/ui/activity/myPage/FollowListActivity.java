@@ -28,8 +28,6 @@ import butterknife.ButterKnife;
 
 public class FollowListActivity extends HHBaseActivity implements FollowListView, XListView.IXListViewListener, AdapterView.OnItemClickListener {
     private FollowListPresenter mPresenter;
-    private ImageView mIvBack;
-    private TextView mTvTitle;
     @BindView(R.id.xlv_coaches)
     XListView mXlvCoaches;
     @BindView(R.id.tv_empty)
@@ -57,8 +55,8 @@ public class FollowListActivity extends HHBaseActivity implements FollowListView
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setCustomView(R.layout.actionbar_base);
-        mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
-        mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
+        ImageView mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
+        TextView mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         mTvTitle.setText("我关注的教练");
         mIvBack.setOnClickListener(new View.OnClickListener() {

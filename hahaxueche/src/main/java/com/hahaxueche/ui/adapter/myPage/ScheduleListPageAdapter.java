@@ -14,11 +14,9 @@ import com.hahaxueche.ui.fragment.myPage.ScheduleListFragment;
 public class ScheduleListPageAdapter extends FragmentPagerAdapter {
     public final int COUNT = 2;
     private String[] titles = new String[]{"教练课程", "我的课程"};
-    private Context context;
 
     public ScheduleListPageAdapter(FragmentManager fm, Context context) {
         super(fm);
-        this.context = context;
     }
 
     @Override

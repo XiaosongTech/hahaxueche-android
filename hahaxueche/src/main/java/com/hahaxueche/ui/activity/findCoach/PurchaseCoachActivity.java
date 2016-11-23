@@ -46,8 +46,6 @@ import butterknife.OnClick;
 
 public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoachView {
     private PurchaseCoachPresenter mPresenter;
-    private ImageView mIvBack;
-    private TextView mTvTitle;
     @BindView(R.id.iv_coach_avatar)
     SimpleDraweeView mIvCoachAvatar;
     @BindView(R.id.tv_coach_name)
@@ -118,8 +116,8 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setCustomView(R.layout.actionbar_base);
-        mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
-        mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
+        ImageView mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
+        TextView mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         mTvTitle.setText("购买教练");
         mIvBack.setOnClickListener(new View.OnClickListener() {

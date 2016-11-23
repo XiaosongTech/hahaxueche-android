@@ -41,8 +41,6 @@ import butterknife.OnClick;
 
 public class PaySuccessActivity extends HHBaseActivity implements PaySuccessView {
     private PaySuccessPresenter mPresenter;
-    private ImageView mIvBack;
-    private TextView mTvTitle;
     @BindView(R.id.tv_coach_name)
     TextView mTvCoachName;
     @BindView(R.id.tv_pay_amount)
@@ -71,9 +69,9 @@ public class PaySuccessActivity extends HHBaseActivity implements PaySuccessView
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setCustomView(R.layout.actionbar_base);
-        mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
+        ImageView mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
         mIvBack.setVisibility(View.GONE);
-        mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
+        TextView mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         mTvTitle.setText("付款成功");
     }
@@ -92,10 +90,7 @@ public class PaySuccessActivity extends HHBaseActivity implements PaySuccessView
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
+        return keyCode == KeyEvent.KEYCODE_BACK || super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -108,8 +103,7 @@ public class PaySuccessActivity extends HHBaseActivity implements PaySuccessView
 
     public void changeCustomerService() {
         String customerService = mTvCustomerService.getText().toString();
-        CharSequence customerServiceStr = customerService;
-        SpannableString spCustomerServiceStr = new SpannableString(customerServiceStr);
+        SpannableString spCustomerServiceStr = new SpannableString(customerService);
         spCustomerServiceStr.setSpan(new ClickableSpan() {
             @Override
             public void onClick(View widget) {

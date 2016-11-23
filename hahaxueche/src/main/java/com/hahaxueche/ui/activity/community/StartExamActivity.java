@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,7 +18,6 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.community.ExamPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.dialog.ShareAppDialog;
-import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.util.ExamLib;
 import com.hahaxueche.util.SharedPrefUtil;
 

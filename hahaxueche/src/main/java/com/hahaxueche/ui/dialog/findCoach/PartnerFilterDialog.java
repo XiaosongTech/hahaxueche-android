@@ -26,7 +26,6 @@ import butterknife.ButterKnife;
 public class PartnerFilterDialog {
     private Context mContext;
     private Dialog mDialog;
-    private View contentView;
     private ComboSeekBar mCbsPrice;
     private TextView mTvCancel;
     private TextView mTvSure;
@@ -50,7 +49,7 @@ public class PartnerFilterDialog {
     }
 
     private void initView() {
-        contentView = View.inflate(mContext, R.layout.dialog_partner_filter, null);
+        View contentView = View.inflate(mContext, R.layout.dialog_partner_filter, null);
         mCbsPrice = ButterKnife.findById(contentView, R.id.cbs_price);
         mTvCancel = ButterKnife.findById(contentView, R.id.tv_cancel);
         mTvSure = ButterKnife.findById(contentView, R.id.tv_sure);

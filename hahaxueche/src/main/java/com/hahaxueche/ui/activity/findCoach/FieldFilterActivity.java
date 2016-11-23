@@ -40,8 +40,6 @@ import butterknife.OnClick;
 
 public class FieldFilterActivity extends HHBaseActivity implements FieldFilterView, LocationSource, AMapLocationListener {
     private FieldFilterPresenter mPresenter;
-    private ImageView mIvBack;
-    private TextView mTvTitle;
     private OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
     private AMapLocationClientOption mLocationOption;
@@ -74,8 +72,8 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setCustomView(R.layout.actionbar_base);
-        mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
-        mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
+        ImageView mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
+        TextView mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         mTvTitle.setText("训练场地图");
         mIvBack.setOnClickListener(new View.OnClickListener() {
@@ -226,7 +224,7 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
     }
 
     public void setFields(ArrayList<Field> fields) {
-        ArrayList<MarkerOptions> markerOptionlst = new ArrayList<MarkerOptions>();
+        ArrayList<MarkerOptions> markerOptionlst = new ArrayList<>();
         for (Field field : fields) {
             markerOption = new MarkerOptions();
             LatLng x = new LatLng(field.lat, field.lng);

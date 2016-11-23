@@ -27,7 +27,6 @@ public class ArticleCommentsActivity extends HHBaseActivity {
     TextView mTvTitle;
     @BindView(R.id.lv_article_comments)
     ListView mLvArticleComments;
-    private ArticleCommentAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +37,7 @@ public class ArticleCommentsActivity extends HHBaseActivity {
         Intent intent = getIntent();
         if (intent.getParcelableArrayListExtra("comments") != null) {
             ArrayList<Comment> comments = intent.getParcelableArrayListExtra("comments");
-            adapter = new ArticleCommentAdapter(this, comments);
+            ArticleCommentAdapter adapter = new ArticleCommentAdapter(this, comments);
             mLvArticleComments.setAdapter(adapter);
         }
     }

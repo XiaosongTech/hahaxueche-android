@@ -28,8 +28,6 @@ import butterknife.ButterKnife;
 
 public class ReviewListActivity extends HHBaseActivity implements ReviewListView, XListView.IXListViewListener {
     private ReviewListPresenter mPresenter;
-    private ImageView mIvBack;
-    private TextView mTvTitle;
     @BindView(R.id.tv_comments_count)
     TextView mTvCommentsCount;
     @BindView(R.id.sv_average_rating)
@@ -61,8 +59,8 @@ public class ReviewListActivity extends HHBaseActivity implements ReviewListView
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setCustomView(R.layout.actionbar_base);
-        mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
-        mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
+        ImageView mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
+        TextView mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         mTvTitle.setText("学员评价");
         mIvBack.setOnClickListener(new View.OnClickListener() {

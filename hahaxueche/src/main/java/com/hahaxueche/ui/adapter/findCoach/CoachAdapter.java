@@ -25,10 +25,8 @@ import com.hahaxueche.ui.widget.scoreView.ScoreView;
 import com.hahaxueche.util.DistanceUtil;
 import com.hahaxueche.util.Utils;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -36,14 +34,11 @@ import butterknife.ButterKnife;
  */
 
 public class CoachAdapter extends BaseAdapter {
-    private LayoutInflater inflater;
     private Context mContext;
     private ArrayList<Coach> mCoachList;
     private HHBaseApplication application;
-    private LayoutInflater inflator;
 
     public CoachAdapter(Context context, ArrayList<Coach> coachList) {
-        inflater = LayoutInflater.from(context);
         mContext = context;
         mCoachList = coachList;
         application = HHBaseApplication.get(mContext);
@@ -69,7 +64,7 @@ public class CoachAdapter extends BaseAdapter {
         View view = convertView;
         final ViewHolder holder;
         if (view == null) {
-            inflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflator.inflate(R.layout.adapter_coach, null);
             holder = new ViewHolder();
             holder.tvCoachName = ButterKnife.findById(view, R.id.tv_coach_name);
