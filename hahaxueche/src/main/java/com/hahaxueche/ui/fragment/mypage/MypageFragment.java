@@ -78,6 +78,10 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     View mViewBadge;
     @BindView(R.id.iv_more_voucher)
     ImageView mIvMoreVoucher;
+    @BindView(R.id.view_badge_contract)
+    View mViewBadgeContract;
+    @BindView(R.id.iv_more_contract)
+    ImageView mIvMoreContract;
 
     private MyPagePresenter mPresenter;
     private MainActivity mActivity;
@@ -180,7 +184,8 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
             R.id.rly_payment_stage,
             R.id.rly_my_course,
             R.id.iv_edit_username,
-            R.id.rly_my_voucher})
+            R.id.rly_my_voucher,
+            R.id.rly_my_contract})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rly_online_service:
@@ -277,6 +282,9 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
             case R.id.rly_my_voucher:
                 mPresenter.clickMyVoucher();
                 break;
+            case R.id.rly_my_contract:
+                mPresenter.clickMyContract();
+                break;
             default:
                 break;
         }
@@ -342,6 +350,37 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
             mViewBadge.setVisibility(View.GONE);
             mIvMoreVoucher.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void setContractBadge(boolean hasBadge) {
+        if (hasBadge) {
+            mViewBadgeContract.setVisibility(View.VISIBLE);
+            mIvMoreContract.setVisibility(View.GONE);
+            BadgeView badge = new BadgeView(getContext());
+            badge.setTargetView(mViewBadgeContract);
+            badge.setBadgeCount(1);
+        } else {
+            mViewBadgeContract.setVisibility(View.GONE);
+            mIvMoreContract.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void alertToFindCoach() {
+        BaseConfirmSimpleDialog dialog = new BaseConfirmSimpleDialog(getContext(), "哈哈学车",
+                "您还没有报名哟~\n快去选选心仪的教练报名学车吧~", "去逛逛", "取消", new BaseConfirmSimpleDialog.onClickListener() {
+            @Override
+            public void clickConfirm() {
+                mActivity.selectTab(1);
+            }
+
+            @Override
+            public void clickCancel() {
+
+            }
+        });
+        dialog.show();
     }
 
     @Override

@@ -433,4 +433,12 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         }
         mMyPageView.setVoucherBadge(hasUnUsedVoucher);
     }
+
+    public void clickMyContract() {
+        User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin()) return;
+        if (!user.student.hasPurchasedService()) {
+            mMyPageView.alertToFindCoach();
+        }
+    }
 }

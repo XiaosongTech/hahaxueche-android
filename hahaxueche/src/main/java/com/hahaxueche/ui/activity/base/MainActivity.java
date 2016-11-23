@@ -19,6 +19,7 @@ import com.hahaxueche.ui.fragment.homepage.HomepageFragment;
 import com.hahaxueche.ui.fragment.myPage.MyPageFragment;
 import com.hahaxueche.ui.widget.FragmentTabHost;
 import com.hahaxueche.util.HHLog;
+import com.jauker.widget.BadgeView;
 
 /**
  * Created by wangshirui on 16/9/15.
@@ -27,6 +28,7 @@ public class MainActivity extends HHBaseActivity {
     private MainPresenter mPresenter;
     private FragmentTabHost mTabHost = null;
     private View indicator = null;
+    private View mViewBadgeMyPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,17 +40,18 @@ public class MainActivity extends HHBaseActivity {
         mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
 
-        indicator = getIndicatorView("哈哈学车", R.layout.indicator_homepage);
-        mTabHost.addTab(mTabHost.newTabSpec("homepage").setIndicator(indicator), HomepageFragment.class, null);
+        mTabHost.addTab(mTabHost.newTabSpec("homepage").setIndicator(getLayoutInflater().inflate(R.layout.indicator_homepage, null)),
+                HomepageFragment.class, null);
 
-        indicator = getIndicatorView("寻找教练", R.layout.indicator_find_coach);
-        mTabHost.addTab(mTabHost.newTabSpec("findCoach").setIndicator(indicator), FindCoachFragment.class, null);
+        mTabHost.addTab(mTabHost.newTabSpec("findCoach").setIndicator(getLayoutInflater().inflate(R.layout.indicator_find_coach, null)),
+                FindCoachFragment.class, null);
 
-        indicator = getIndicatorView("小哈俱乐部", R.layout.indicator_community);
-        mTabHost.addTab(mTabHost.newTabSpec("community").setIndicator(indicator), CommunityFragment.class, null);
+        mTabHost.addTab(mTabHost.newTabSpec("community").setIndicator(getLayoutInflater().inflate(R.layout.indicator_community, null)),
+                CommunityFragment.class, null);
 
-        indicator = getIndicatorView("我的页面", R.layout.indicator_my_page);
-        mTabHost.addTab(mTabHost.newTabSpec("myPage").setIndicator(indicator), MyPageFragment.class, null);
+        View myPageIndicator = getLayoutInflater().inflate(R.layout.indicator_my_page, null);
+        mViewBadgeMyPage = myPageIndicator.findViewById(R.id.view_badge_my_page);
+        mTabHost.addTab(mTabHost.newTabSpec("myPage").setIndicator(myPageIndicator), MyPageFragment.class, null);
 
         mPresenter.viewHomepageCount();
 
@@ -88,18 +91,23 @@ public class MainActivity extends HHBaseActivity {
                 startActivity(startIntent);
             }
         }
-    }
-
-    private View getIndicatorView(String name, int layoutId) {
-        View v = getLayoutInflater().inflate(layoutId, null);
-        TextView tv = (TextView) v.findViewById(R.id.tabText);
-        tv.setText(name);
-        return v;
+        setMyPageBadge(true);
     }
 
     public void selectTab(int tab) {
         if (mTabHost != null) {
             mTabHost.setCurrentTab(tab);
+        }
+    }
+
+    public void setMyPageBadge(boolean hasBadge) {
+        if (hasBadge) {
+            mViewBadgeMyPage.setVisibility(View.VISIBLE);
+            BadgeView badge = new BadgeView(getContext());
+            badge.setTargetView(mViewBadgeMyPage);
+            badge.setBadgeCount(1);
+        } else {
+            mViewBadgeMyPage.setVisibility(View.GONE);
         }
     }
 

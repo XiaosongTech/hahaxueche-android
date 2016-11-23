@@ -105,9 +105,11 @@
 
                 <include layout="@layout/my_page_voucher" />
 
-                <include layout="@layout/my_page_course_info" />
-
                 <include layout="@layout/my_page_customer_service" />
+
+                <include layout="@layout/my_page_contract" />
+
+                <include layout="@layout/my_page_course_info" />
 
                 <include layout="@layout/my_page_usage" />
 
