@@ -74,6 +74,7 @@ public class PhotoUtil {
                 filetwo.createNewFile();
             }
         } catch (Exception e) {
+            HHLog.e(e.getMessage());
         }
     }
 

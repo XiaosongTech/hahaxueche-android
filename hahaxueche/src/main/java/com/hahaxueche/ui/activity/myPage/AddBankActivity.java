@@ -17,6 +17,7 @@ import com.hahaxueche.model.payment.BankCard;
 import com.hahaxueche.presenter.myPage.AddBankPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.view.myPage.AddBankView;
+import com.hahaxueche.util.HHLog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -121,7 +122,7 @@ public class AddBankActivity extends HHBaseActivity implements AddBankView {
                         mPresenter.setOpenAccountBank(bank);
                     }
                 } catch (Exception e) {
-
+                    HHLog.e(e.getMessage());
                 }
             }
         }
