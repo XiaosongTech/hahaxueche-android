@@ -106,13 +106,8 @@ public class HHBaseActivity extends AppCompatActivity implements HHBaseView {
             v.getLocationInWindow(l);
             int left = l[0], top = l[1], bottom = top + v.getHeight(), right = left
                     + v.getWidth();
-            if (ev.getX() > left && ev.getX() < right && ev.getY() > top
-                    && ev.getY() < bottom) {
-                // 点击EditText的事件，忽略它。
-                return false;
-            } else {
-                return true;
-            }
+            return !(ev.getX() > left && ev.getX() < right && ev.getY() > top
+                    && ev.getY() < bottom);
         }
         // 如果焦点不是EditText则忽略，这个发生在视图刚绘制完，第一个焦点不在EditView上，和用户用轨迹球选择其他的焦点
         return false;

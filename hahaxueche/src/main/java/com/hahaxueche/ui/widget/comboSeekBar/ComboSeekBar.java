@@ -171,11 +171,7 @@ public class ComboSeekBar extends SeekBar {
         }
 
         for (Dot dot : mDots) {
-            if (mDots.indexOf(dot) == position) {
-                dot.isSelected = true;
-            } else {
-                dot.isSelected = false;
-            }
+            dot.isSelected = mDots.indexOf(dot) == position;
         }
 
         mThumb = new CustomThumbDrawable(getContext(), mColor, mThumbResource,
@@ -216,7 +212,7 @@ public class ComboSeekBar extends SeekBar {
     }
 
     private void handleClick(Dot selected) {
-        if ((prevSelected == null) || (prevSelected.equals(selected) == false)) {
+        if (prevSelected == null || !prevSelected.equals(selected)) {
             if (mItemClickListener != null) {
                 mItemClickListener.onItemClick(null, this, selected.id,
                         selected.id);

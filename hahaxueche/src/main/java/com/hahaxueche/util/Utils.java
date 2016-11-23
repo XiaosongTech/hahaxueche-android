@@ -73,10 +73,7 @@ public class Utils {
             e.printStackTrace();
             return false;
         }
-        if (intent == null)
-            return false;
-        else
-            return true;
+        return intent != null;
     }
 
     /**
