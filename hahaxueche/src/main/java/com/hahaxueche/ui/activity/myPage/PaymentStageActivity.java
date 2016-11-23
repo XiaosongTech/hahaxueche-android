@@ -1,6 +1,5 @@
 package com.hahaxueche.ui.activity.myPage;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -14,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
@@ -28,7 +26,6 @@ import com.hahaxueche.ui.dialog.myPage.PaymentStageInfoDialog;
 import com.hahaxueche.ui.dialog.myPage.ReviewDialog;
 import com.hahaxueche.ui.dialog.myPage.TransferConfirmDialog;
 import com.hahaxueche.ui.view.myPage.PaymentStageView;
-import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
 
 import butterknife.BindView;

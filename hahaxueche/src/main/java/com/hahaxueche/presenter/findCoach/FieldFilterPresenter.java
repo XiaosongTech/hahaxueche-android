@@ -8,7 +8,6 @@ import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.FieldFilterView;
-import com.hahaxueche.util.HHLog;
 
 import java.util.ArrayList;
 

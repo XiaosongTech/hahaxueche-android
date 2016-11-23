@@ -7,12 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.course.ScheduleEvent;
-import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.myPage.ScheduleListPresenter;
 import com.hahaxueche.ui.adapter.myPage.ScheduleEventAdapter;
 import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;

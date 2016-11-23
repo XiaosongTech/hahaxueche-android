@@ -6,10 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.bigkoo.convenientbanner.holder.Holder;
-import com.facebook.common.util.UriUtil;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.hahaxueche.R;
 
 /**
  * Created by gibxin on 2016/2/18.

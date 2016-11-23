@@ -14,7 +14,6 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 
 import com.hahaxueche.R;
-import com.hahaxueche.util.HHLog;
 
 import java.util.ArrayList;
 import java.util.List;

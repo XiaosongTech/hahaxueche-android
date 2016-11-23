@@ -13,7 +13,6 @@ import com.hahaxueche.presenter.myPage.WithdrawRecordsPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.adapter.myPage.WithdrawRecordAdapter;
 import com.hahaxueche.ui.view.myPage.WithdrawRecordsView;
-import com.hahaxueche.util.HHLog;
 
 import java.util.ArrayList;
 

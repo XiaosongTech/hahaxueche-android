@@ -4,8 +4,6 @@ import android.text.TextUtils;
 
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
-import com.hahaxueche.model.base.City;
-import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.responseList.PartnerResponseList;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
@@ -13,7 +11,6 @@ import com.hahaxueche.ui.view.findCoach.PartnerListView;
 import com.hahaxueche.util.HHLog;
 import com.umeng.analytics.MobclickAgent;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import rx.Subscriber;

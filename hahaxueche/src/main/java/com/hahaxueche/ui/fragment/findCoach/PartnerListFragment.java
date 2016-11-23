@@ -14,7 +14,6 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.user.coach.Partner;
 import com.hahaxueche.presenter.findCoach.PartnerListPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
-import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.PartnerDetailActivity;
 import com.hahaxueche.ui.adapter.findCoach.PartnerAdapter;
 import com.hahaxueche.ui.dialog.findCoach.PartnerFilterDialog;

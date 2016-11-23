@@ -3,24 +3,18 @@ package com.hahaxueche.ui.activity.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
-import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
+import com.hahaxueche.model.base.Banner;
 import com.hahaxueche.presenter.login.StartLoginPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
-import com.hahaxueche.model.base.Banner;
-import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.view.login.StartLoginView;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
-import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;

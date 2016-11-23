@@ -4,7 +4,6 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.base.HHBaseView;
-import com.hahaxueche.util.HHLog;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;

@@ -26,7 +26,6 @@ import com.hahaxueche.model.user.coach.Review;
 import com.hahaxueche.model.user.employee.Adviser;
 import com.hahaxueche.util.HHLog;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -50,8 +49,6 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.Url;
 import rx.Observable;
-
-import static android.R.attr.path;
 
 /**
  * Created by wangshirui on 16/9/8.

@@ -7,8 +7,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
@@ -17,13 +15,9 @@ import com.hahaxueche.presenter.community.CommunityPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.community.ArticleActivity;
 import com.hahaxueche.ui.activity.community.ExamLibraryActivity;
-import com.hahaxueche.ui.adapter.community.ArticleAdapter;
 import com.hahaxueche.ui.adapter.community.ArticleListPageAdapter;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.community.CommunityView;
-import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -10,8 +10,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
 
-import com.hahaxueche.util.HHLog;
-
 /**
  * seekbar background with text on it.
  *

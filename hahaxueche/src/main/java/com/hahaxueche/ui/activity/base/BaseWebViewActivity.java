@@ -14,8 +14,6 @@ import android.widget.TextView;
 
 import com.hahaxueche.R;
 import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
-import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
-import com.hahaxueche.util.HHLog;
 import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.tauth.Tencent;

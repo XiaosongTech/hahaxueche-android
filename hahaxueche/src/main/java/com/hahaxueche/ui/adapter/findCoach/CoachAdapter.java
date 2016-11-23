@@ -25,10 +25,8 @@ import com.hahaxueche.ui.widget.scoreView.ScoreView;
 import com.hahaxueche.util.DistanceUtil;
 import com.hahaxueche.util.Utils;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**

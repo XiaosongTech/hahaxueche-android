@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.City;
-import com.hahaxueche.util.HHLog;
 
 import java.util.ArrayList;
 
