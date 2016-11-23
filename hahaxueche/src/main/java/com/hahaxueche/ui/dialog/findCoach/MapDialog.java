@@ -51,7 +51,7 @@ public class MapDialog extends AlertDialog implements AMap.OnMarkerClickListener
     private MapDialogDismissListener mListener;
 
     public interface MapDialogDismissListener {
-        public boolean dialogDismiss();
+        boolean dialogDismiss();
     }
 
     public MapDialog(Context context) {

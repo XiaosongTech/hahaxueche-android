@@ -32,7 +32,7 @@ public class ButtonLayout extends LinearLayout implements View.OnClickListener {
     }
 
     public interface OnButtonClickListener {
-        public void onClick(View v, int index);
+        void onClick(View v, int index);
     }
 
     public ButtonLayout(Context context, AttributeSet attrs) {

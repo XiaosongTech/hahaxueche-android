@@ -25,7 +25,7 @@ public class PhotoAdapter extends PagerAdapter {
     private OnImgItemClickListener mListener;
 
     public interface OnImgItemClickListener {
-        public void onItemClickEvent(String imgUrl, List<String> urls);
+        void onItemClickEvent(String imgUrl, List<String> urls);
     }
 
     public void setOnImgItemClickListener(OnImgItemClickListener listener) {

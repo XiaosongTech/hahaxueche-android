@@ -71,8 +71,6 @@ public class UpdateManager {
                     break;
             }
         }
-
-        ;
     };
 
     public UpdateManager(Context context) {
