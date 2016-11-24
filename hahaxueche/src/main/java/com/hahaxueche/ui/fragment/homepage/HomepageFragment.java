@@ -24,11 +24,13 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.base.Banner;
 import com.hahaxueche.model.base.City;
 import com.hahaxueche.presenter.homepage.HomepagePresenter;
+import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.dialog.login.CityChoseDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.homepage.HomepageView;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
+import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
@@ -36,6 +38,8 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by wangshirui on 16/9/13.
@@ -58,6 +62,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
 
     private CityChoseDialog mCityChoseDialog;
     private static final int PERMISSIONS_REQUEST_SDCARD = 600;
+    private static final int REQUEST_CODE_WEBVIEW = 14;
 
 
     @Override
@@ -227,7 +232,30 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
 
     @Override
     public void openWebView(String url) {
-        mActivity.openWebView(url);
+        this.openWebView(url, "", false);
+    }
+
+    @Override
+    public void openWebView(String url, String title, boolean isShowShare) {
+        Intent intent = new Intent(getContext(), BaseWebViewActivity.class);
+        Bundle bundle = new Bundle();
+        HHLog.v("webview url -> " + url);
+        bundle.putString("url", url);
+        bundle.putString("title", title);
+        bundle.putBoolean("isShowShare", isShowShare);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_CODE_WEBVIEW);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_WEBVIEW) {
+            if (resultCode == RESULT_OK && null != data) {
+                int tab = data.getIntExtra("showTab", 1);
+                mActivity.selectTab(tab);
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 
