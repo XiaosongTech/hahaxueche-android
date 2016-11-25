@@ -439,6 +439,8 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         if (user == null || !user.isLogin()) return;
         if (!user.student.hasPurchasedService()) {
             mMyPageView.alertToFindCoach();
+        } else {
+            mMyPageView.navigateToUploadIdCard();
         }
     }
 }

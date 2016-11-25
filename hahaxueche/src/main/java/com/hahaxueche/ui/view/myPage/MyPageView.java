@@ -53,4 +53,6 @@ public interface MyPageView extends HHBaseView {
     void openWebView(String url);
 
     void alertToFindCoach();
+
+    void navigateToUploadIdCard();
 }

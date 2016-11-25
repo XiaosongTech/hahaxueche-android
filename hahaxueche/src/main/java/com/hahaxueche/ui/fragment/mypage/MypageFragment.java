@@ -33,6 +33,7 @@ import com.hahaxueche.ui.activity.myPage.NoCourseActivity;
 import com.hahaxueche.ui.activity.myPage.PaymentStageActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.activity.myPage.SoftwareInfoActivity;
+import com.hahaxueche.ui.activity.myPage.UploadIdCardActivity;
 import com.hahaxueche.ui.dialog.AvatarDialog;
 import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.community.MyAdviserDialog;
@@ -381,6 +382,11 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
             }
         });
         dialog.show();
+    }
+
+    @Override
+    public void navigateToUploadIdCard() {
+        startActivity(new Intent(getContext(), UploadIdCardActivity.class));
     }
 
     @Override
