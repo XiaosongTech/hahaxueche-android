@@ -20,9 +20,9 @@
 
     <View
         android:id="@+id/view_badge_my_page"
-        android:layout_width="5dp"
-        android:layout_height="5dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_alignTop="@id/tabText"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="-5dp"
         android:layout_toRightOf="@id/tabText" />
 </RelativeLayout>
