@@ -82,8 +82,8 @@ public class PaySuccessActivity extends HHBaseActivity implements PaySuccessView
         super.onDestroy();
     }
 
-    @OnClick(R.id.tv_share)
-    public void share() {
+    @OnClick(R.id.tv_sign)
+    public void sign() {
         setResult(RESULT_OK, null);
         finish();
     }

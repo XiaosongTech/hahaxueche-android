@@ -37,6 +37,7 @@ import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
+import com.hahaxueche.ui.activity.myPage.UploadIdCardActivity;
 import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
 import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.ShareDialog;
@@ -145,6 +146,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
 
     private static final int REQUEST_CODE_PURCHASE_COACH = 1;
     private static final int REQUEST_CODE_PAY_SUCCESS = 2;
+    private static final int REQUEST_CODE_UPLOAD_ID_CARD = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -969,6 +971,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 startActivityForResult(new Intent(getContext(), PaySuccessActivity.class), REQUEST_CODE_PAY_SUCCESS);
             }
         } else if (requestCode == REQUEST_CODE_PAY_SUCCESS) {
+            startActivityForResult(new Intent(getContext(), UploadIdCardActivity.class), REQUEST_CODE_UPLOAD_ID_CARD);
+        } else if (requestCode == REQUEST_CODE_UPLOAD_ID_CARD) {
             startActivity(new Intent(getContext(), ReferFriendsActivity.class));
         }
         Tencent.onActivityResultData(requestCode, resultCode, data, shareQQListener);

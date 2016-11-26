@@ -96,6 +96,7 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     private EditUsernameDialog mEditUsernameDialog;
     private static final int REQUEST_CODE_NO_COURSE = 12;
     private static final int REQUEST_CODE_PAYMENT_STAGE = 13;
+    private static final int REQUEST_CODE_UPLOAD_ID_CARD = 3;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -386,7 +387,7 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
 
     @Override
     public void navigateToUploadIdCard() {
-        startActivity(new Intent(getContext(), UploadIdCardActivity.class));
+        startActivityForResult(new Intent(getContext(), UploadIdCardActivity.class), REQUEST_CODE_UPLOAD_ID_CARD);
     }
 
     @Override
@@ -460,6 +461,8 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
             }
         } else if (requestCode == REQUEST_CODE_PAYMENT_STAGE) {
             mPresenter.fetchStudent();
+        } else if (requestCode == REQUEST_CODE_UPLOAD_ID_CARD) {
+            startActivity(new Intent(getContext(), ReferFriendsActivity.class));
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

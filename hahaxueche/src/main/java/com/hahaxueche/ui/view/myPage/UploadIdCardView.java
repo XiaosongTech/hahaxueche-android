@@ -8,4 +8,6 @@ import com.hahaxueche.ui.view.base.HHBaseView;
 
 public interface UploadIdCardView extends HHBaseView {
     void showMessage(String message);
+
+    void navigateToUserContract();
 }

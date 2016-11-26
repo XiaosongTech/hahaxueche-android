@@ -88,6 +88,14 @@ public class Student implements Parcelable {
         }
     }
 
+    public boolean isSigned() {
+        return true;
+    }
+
+    public boolean isUploadedIdInfo() {
+        return true;
+    }
+
     protected Student(Parcel in) {
         id = in.readString();
         cell_phone = in.readString();

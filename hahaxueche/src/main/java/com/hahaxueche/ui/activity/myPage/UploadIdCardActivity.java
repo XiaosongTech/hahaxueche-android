@@ -16,6 +16,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -25,6 +26,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
 import com.hahaxueche.presenter.myPage.UploadIdCardPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
+import com.hahaxueche.ui.dialog.BaseAlertDialog;
+import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.myPage.UploadIdCardDialog;
 import com.hahaxueche.ui.view.myPage.UploadIdCardView;
 import com.hahaxueche.util.HHLog;
@@ -53,6 +56,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
 
     public static final int TAKE_A_PICTURE = 10;
     public static final int SELECET_A_PICTURE = 50;
+    private boolean isFromPaySuccess;//是否从付款成功页面跳转来的
     @BindView(R.id.sv_main)
     ScrollView mSvMain;
     @BindView(R.id.iv_id_card_face)
@@ -63,6 +67,10 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+        if (intent != null) {
+            isFromPaySuccess = intent.getBooleanExtra("isFromPaySuccess", false);
+        }
         mPresenter = new UploadIdCardPresenter();
         setContentView(R.layout.activity_upload_id_card);
         ButterKnife.bind(this);
@@ -80,7 +88,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UploadIdCardActivity.this.finish();
+                showLaterSubmitDialog();
             }
         });
     }
@@ -92,7 +100,9 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     }
 
     @OnClick({R.id.rly_id_card_face,
-            R.id.rly_id_card_face_back})
+            R.id.rly_id_card_face_back,
+            R.id.tv_submit,
+            R.id.tv_later_submit})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rly_id_card_face:
@@ -117,6 +127,12 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                     showPhotoDialog();
                 }
                 break;
+            case R.id.tv_submit:
+                mPresenter.uploadIdCard();
+                break;
+            case R.id.tv_later_submit:
+                showLaterSubmitDialog();
+                break;
             default:
                 break;
         }
@@ -125,6 +141,11 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     @Override
     public void showMessage(String message) {
         Snackbar.make(mSvMain, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void navigateToUserContract() {
+
     }
 
     private void showPhotoDialog() {
@@ -173,6 +194,57 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("image/*");
         startActivityForResult(intent, SELECET_A_PICTURE);
+    }
+
+    /**
+     * 稍后上传，提示
+     */
+    private void showLaterSubmitDialog() {
+        BaseConfirmSimpleDialog dialog = new BaseConfirmSimpleDialog(getContext(), "友情提醒", "如果不上传您的信息，\n我们无法保障您的合法权益！",
+                "继续上传", "稍后上传",
+                new BaseConfirmSimpleDialog.onClickListener() {
+                    @Override
+                    public void clickConfirm() {
+                        //do nothing
+                    }
+
+                    @Override
+                    public void clickCancel() {
+                        showShareDialog();
+                    }
+                });
+        dialog.show();
+    }
+
+    /**
+     * 分享得现金提示
+     */
+    private void showShareDialog() {
+        String shareText = mPresenter.getShareText();
+        if (isFromPaySuccess) {
+            shareText = "恭喜您！报名成功，" + shareText;
+        }
+        BaseAlertDialog dialog = new BaseAlertDialog(getContext(), "推荐好友", shareText, "分享得现金",
+                new BaseAlertDialog.onButtonClickListener() {
+                    @Override
+                    public void sure() {
+                        setResult(RESULT_OK, null);
+                        finish();
+                    }
+                });
+        dialog.show();
+    }
+
+    /**
+     * 禁止back键
+     *
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return keyCode == KeyEvent.KEYCODE_BACK || super.onKeyDown(keyCode, event);
     }
 
     @Override
