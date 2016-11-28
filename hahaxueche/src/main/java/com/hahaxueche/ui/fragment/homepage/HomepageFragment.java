@@ -114,24 +114,20 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         }
     }
 
-    @OnClick({R.id.fly_my_strength,
-            R.id.fly_procedure,
-            R.id.frl_tel_ask,
+    @OnClick({R.id.tv_procedure,
+            R.id.tv_tel_ask,
             R.id.cv_coach,
-            R.id.frl_online_ask,
+            R.id.tv_online_ask,
             R.id.iv_free_try,
             R.id.cv_adviser,
             R.id.cv_driving_school,
-            R.id.frl_group_buy})
+            R.id.tv_group_buy})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.fly_my_strength:
-                mPresenter.openMyStrengths();
-                break;
-            case R.id.fly_procedure:
+            case R.id.tv_procedure:
                 mPresenter.openProcedure();
                 break;
-            case R.id.frl_tel_ask:
+            case R.id.tv_tel_ask:
                 mPresenter.phoneSupportCount();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
@@ -144,7 +140,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             case R.id.cv_coach:
                 mPresenter.openBestCoaches();
                 break;
-            case R.id.frl_online_ask:
+            case R.id.tv_online_ask:
                 mPresenter.onlineAsk();
                 break;
             case R.id.iv_free_try:
@@ -156,7 +152,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             case R.id.cv_driving_school:
                 mPresenter.openFindDrivingSchool();
                 break;
-            case R.id.frl_group_buy:
+            case R.id.tv_group_buy:
                 mPresenter.openGroupBuy();
                 break;
             default:
