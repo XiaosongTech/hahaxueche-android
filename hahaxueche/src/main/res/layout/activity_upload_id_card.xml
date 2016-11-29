@@ -21,16 +21,18 @@
             android:lineSpacingMultiplier="1.2"
             android:padding="10dp"
             android:text="@string/upload_id_card_hints"
-            android:textColor="@color/haha_white" />
+            android:textColor="@color/haha_white"
+            android:visibility="gone" />
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/rly_id_card_face"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="20dp"
-            android:background="@color/haha_white">
+            android:background="@color/haha_white"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tv_id_card_face"
@@ -45,16 +47,14 @@
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/iv_id_card_face"
-                android:layout_width="167dp"
-                android:layout_height="102dp"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="41dp"
-                android:layout_marginTop="20dp"
+                android:layout_width="0dp"
+                android:layout_height="142dp"
                 android:layout_toRightOf="@id/tv_id_card_face"
+                android:layout_weight="1"
                 fresco:placeholderImage="@drawable/idcard_a" />
-        </RelativeLayout>
+        </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/rly_id_card_face_back"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -76,14 +76,12 @@
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/iv_id_card_face_back"
-                android:layout_width="167dp"
-                android:layout_height="102dp"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="41dp"
-                android:layout_marginTop="20dp"
+                android:layout_width="0dp"
+                android:layout_height="142dp"
                 android:layout_toRightOf="@id/tv_id_card_face_back"
+                android:layout_weight="1"
                 fresco:placeholderImage="@drawable/idcard_b" />
-        </RelativeLayout>
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -118,5 +116,17 @@
             android:layout_marginTop="10dp"
             android:text="稍后提交"
             android:textColor="@color/haha_gray_text" />
+
+        <TextView
+            android:id="@+id/tv_customer_service"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.2"
+            android:text="对协议有任何疑问可致电客服热线400-001-6006或点击在线客服"
+            android:textColor="@color/haha_gray" />
     </LinearLayout>
 </ScrollView>

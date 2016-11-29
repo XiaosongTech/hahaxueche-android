@@ -95,6 +95,12 @@ public class MyVoucherActivity extends HHBaseActivity implements MyVoucherView, 
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        mPresenter.detachView();
+        super.onDestroy();
+    }
+
     @OnClick({R.id.tv_activate_voucher})
     public void onClick(View view) {
         switch (view.getId()) {

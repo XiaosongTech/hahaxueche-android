@@ -14,8 +14,17 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -53,6 +62,10 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     public static final String IMAGE_FILE_B_NAME = "faceBImage.jpeg";
     private File fileFaceA = null;
     private File fileFaceB = null;
+    private Uri uriFaceA = null;
+    private Uri uriFaceB = null;
+    private String imageUrlA = null;
+    private String imageUrlB = null;
 
     public static final int TAKE_A_PICTURE = 10;
     public static final int SELECET_A_PICTURE = 50;
@@ -63,6 +76,10 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     SimpleDraweeView mIvIdCardFace;
     @BindView(R.id.iv_id_card_face_back)
     SimpleDraweeView mIvIdCardFaceBack;
+    @BindView(R.id.tv_customer_service)
+    TextView mTvCustomerService;
+
+    private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +93,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
         ButterKnife.bind(this);
         mPresenter.attachView(this);
         initActionBar();
+        changeCustomerService();
     }
 
     private void initActionBar() {
@@ -128,7 +146,15 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                 }
                 break;
             case R.id.tv_submit:
-                mPresenter.uploadIdCard();
+                if (TextUtils.isEmpty(imageUrlA)) {
+                    showMessage("请上传身份证正面");
+                    return;
+                }
+                if (TextUtils.isEmpty(imageUrlB)) {
+                    showMessage("请上传身份证反面");
+                    return;
+                }
+                mPresenter.uploadInfo();
                 break;
             case R.id.tv_later_submit:
                 showLaterSubmitDialog();
@@ -144,8 +170,23 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     }
 
     @Override
-    public void navigateToUserContract() {
+    public void navigateToUserContract(String pdfUrl) {
+        Intent intent = new Intent(getContext(), MyContractActivity.class);
+        intent.putExtra("pdfUrl", pdfUrl);
+        startActivity(intent);
+    }
 
+    @Override
+    public void setFaceImage(String imageUrl) {
+        mIvIdCardFace.setImageURI(imageUrl);
+        imageUrlA = imageUrl;
+
+    }
+
+    @Override
+    public void setFaceBackImage(String imageUrl) {
+        mIvIdCardFaceBack.setImageURI(imageUrl);
+        imageUrlB = imageUrl;
     }
 
     private void showPhotoDialog() {
@@ -235,6 +276,53 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
         dialog.show();
     }
 
+    public void changeCustomerService() {
+        String customerService = mTvCustomerService.getText().toString();
+        SpannableString spCustomerServiceStr = new SpannableString(customerService);
+        spCustomerServiceStr.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
+                    //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+                } else {
+                    // Android version is lesser than 6.0 or the permission is already granted.
+                    contactService();
+                }
+            }
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(ContextCompat.getColor(getContext(), R.color.app_theme_color));
+                ds.setUnderlineText(true);
+                ds.clearShadowLayer();
+            }
+        }, customerService.indexOf("400"), customerService.indexOf("6006") + 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spCustomerServiceStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.app_theme_color)),
+                customerService.indexOf("400"), customerService.indexOf("6006") + 4, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spCustomerServiceStr.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                mPresenter.onlineAsk();
+            }
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(ContextCompat.getColor(getContext(), R.color.app_theme_color));
+                ds.setUnderlineText(true);
+                ds.clearShadowLayer();
+            }
+        }, customerService.indexOf("在线客服"), customerService.indexOf("在线客服") + 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spCustomerServiceStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.app_theme_color)),
+                customerService.indexOf("在线客服"), customerService.indexOf("在线客服") + 4, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mTvCustomerService.setText(spCustomerServiceStr);
+        mTvCustomerService.setHighlightColor(ContextCompat.getColor(getContext(), R.color.app_theme_color));
+        mTvCustomerService.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+
     /**
      * 禁止back键
      *
@@ -247,6 +335,17 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
         return keyCode == KeyEvent.KEYCODE_BACK || super.onKeyDown(keyCode, event);
     }
 
+    /**
+     * 联系客服
+     */
+    private void contactService() {
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:4000016006"));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        startActivity(intent);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == PERMISSIONS_REQUEST_SDCARD) {
@@ -256,6 +355,13 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
             } else {
                 showMessage("请允许读写sdcard权限，不然我们无法完成图像采集操作");
             }
+        } else if (requestCode == PERMISSIONS_REQUEST_CELL_PHONE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                contactService();
+            } else {
+                showMessage("请允许拨打电话权限，不然无法直接拨号联系客服");
+            }
         }
     }
 
@@ -264,9 +370,11 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
         if (requestCode == TAKE_A_PICTURE) {
             if (resultCode == RESULT_OK) {
                 if (choseImageFace == 0) {
-                    mIvIdCardFace.setImageURI(Uri.fromFile(new File(IMGPATH, IMAGE_FILE_A_NAME)));
+                    uriFaceA = Uri.fromFile(new File(IMGPATH, IMAGE_FILE_A_NAME));
+                    mPresenter.uploadIdCard(uriFaceA.getPath(), 0);
                 } else {
-                    mIvIdCardFaceBack.setImageURI(Uri.fromFile(new File(IMGPATH, IMAGE_FILE_B_NAME)));
+                    uriFaceB = Uri.fromFile(new File(IMGPATH, IMAGE_FILE_B_NAME));
+                    mPresenter.uploadIdCard(uriFaceB.getPath(), 1);
                 }
             } else {
                 showMessage("取消拍照");
@@ -284,9 +392,11 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                     return;
                 }
                 if (choseImageFace == 0) {
-                    mIvIdCardFace.setImageURI(Uri.fromFile(new File(filePath)));
+                    uriFaceA = Uri.fromFile(new File(filePath));
+                    mPresenter.uploadIdCard(uriFaceA.getPath(), 0);
                 } else {
-                    mIvIdCardFaceBack.setImageURI(Uri.fromFile(new File(filePath)));
+                    uriFaceB = Uri.fromFile(new File(filePath));
+                    mPresenter.uploadIdCard(uriFaceB.getPath(), 1);
                 }
             } else if (resultCode == RESULT_CANCELED) {
                 showMessage("取消相册选择");
@@ -438,4 +548,37 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
         }
         return path;
     }
+
+    /*private void compressImage(Uri uri) {
+        int MAX_IMAGE_SIZE = 200 * 1024; // max final file size
+        Bitmap bmpPic = BitmapFactory.decodeFile(uri.getPath());
+        if ((bmpPic.getWidth() >= 1024) && (bmpPic.getHeight() >= 1024)) {
+            BitmapFactory.Options bmpOptions = new BitmapFactory.Options();
+            bmpOptions.inSampleSize = 1;
+            while ((bmpPic.getWidth() >= 1024) && (bmpPic.getHeight() >= 1024)) {
+                bmpOptions.inSampleSize++;
+                bmpPic = BitmapFactory.decodeFile(uri.getPath(), bmpOptions);
+            }
+            HHLog.d("Resize: " + bmpOptions.inSampleSize);
+        }
+        int compressQuality = 104; // quality decreasing by 5 every loop. (start from 99)
+        int streamLength = MAX_IMAGE_SIZE;
+        while (streamLength >= MAX_IMAGE_SIZE) {
+            ByteArrayOutputStream bmpStream = new ByteArrayOutputStream();
+            compressQuality -= 5;
+            HHLog.d("Quality: " + compressQuality);
+            bmpPic.compress(Bitmap.CompressFormat.JPEG, compressQuality, bmpStream);
+            byte[] bmpPicByteArray = bmpStream.toByteArray();
+            streamLength = bmpPicByteArray.length;
+            HHLog.d("Size: " + streamLength);
+        }
+        try {
+            FileOutputStream bmpFile = new FileOutputStream(uri.getPath());
+            bmpPic.compress(Bitmap.CompressFormat.JPEG, compressQuality, bmpFile);
+            bmpFile.flush();
+            bmpFile.close();
+        } catch (Exception e) {
+            HHLog.e("Error on saving file: " + e.getMessage());
+        }
+    }*/
 }

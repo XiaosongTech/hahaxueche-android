@@ -9,5 +9,9 @@ import com.hahaxueche.ui.view.base.HHBaseView;
 public interface UploadIdCardView extends HHBaseView {
     void showMessage(String message);
 
-    void navigateToUserContract();
+    void navigateToUserContract(String pdfUrl);
+
+    void setFaceImage(String imageUrl);
+
+    void setFaceBackImage(String imageUrl);
 }
