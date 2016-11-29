@@ -57,13 +57,12 @@ public class DownloadContractManager {
         this.mContext = context;
         this.pdfUrl = url;
         this.onDownloadListener = listener;
-        downloadPdf();
     }
 
     /**
      * 下载pdf
      */
-    private void downloadPdf() {
+    public void downloadPdf() {
         downLoadThread = new Thread(mdownPdfRunnable);
         downLoadThread.start();
     }

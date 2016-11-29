@@ -1,6 +1,6 @@
 package com.hahaxueche.ui.view.myPage;
 
-import com.hahaxueche.model.user.Student;
+import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.ui.view.base.HHBaseView;
 
 /**
@@ -55,4 +55,8 @@ public interface MyPageView extends HHBaseView {
     void alertToFindCoach();
 
     void navigateToUploadIdCard();
+
+    void navigateToSignContract();
+
+    void navigateToMyContract();
 }

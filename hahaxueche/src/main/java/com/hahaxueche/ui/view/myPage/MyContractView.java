@@ -12,4 +12,6 @@ public interface MyContractView extends HHBaseView {
     void setPdf(String url);
 
     void setSignEnable(boolean enable);
+
+    void showShare();
 }

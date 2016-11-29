@@ -8,7 +8,7 @@ import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseModel;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.payment.Voucher;
-import com.hahaxueche.model.user.Student;
+import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.employee.Adviser;
 import com.hahaxueche.presenter.Presenter;
@@ -439,8 +439,12 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         if (user == null || !user.isLogin()) return;
         if (!user.student.hasPurchasedService()) {
             mMyPageView.alertToFindCoach();
-        } else {
+        } else if (!user.student.isUploadedIdInfo()) {
             mMyPageView.navigateToUploadIdCard();
+        } else if (!user.student.isSigned()) {
+            mMyPageView.navigateToSignContract();
+        } else {
+            mMyPageView.navigateToMyContract();
         }
     }
 }

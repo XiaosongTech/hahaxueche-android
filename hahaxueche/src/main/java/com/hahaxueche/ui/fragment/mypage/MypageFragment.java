@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
-import com.hahaxueche.model.user.Student;
+import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.presenter.myPage.MyPagePresenter;
 import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.MainActivity;
@@ -28,6 +28,7 @@ import com.hahaxueche.ui.activity.myPage.CourseActivity;
 import com.hahaxueche.ui.activity.myPage.FAQActivity;
 import com.hahaxueche.ui.activity.myPage.FollowListActivity;
 import com.hahaxueche.ui.activity.myPage.MyCoachDetailActivity;
+import com.hahaxueche.ui.activity.myPage.MyContractActivity;
 import com.hahaxueche.ui.activity.myPage.MyVoucherActivity;
 import com.hahaxueche.ui.activity.myPage.NoCourseActivity;
 import com.hahaxueche.ui.activity.myPage.PaymentStageActivity;
@@ -97,6 +98,7 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     private static final int REQUEST_CODE_NO_COURSE = 12;
     private static final int REQUEST_CODE_PAYMENT_STAGE = 13;
     private static final int REQUEST_CODE_UPLOAD_ID_CARD = 3;
+    private static final int REQUEST_CODE_MY_CONTRACT = 4;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -391,6 +393,16 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     }
 
     @Override
+    public void navigateToSignContract() {
+        startActivityForResult(new Intent(getContext(), MyContractActivity.class), REQUEST_CODE_MY_CONTRACT);
+    }
+
+    @Override
+    public void navigateToMyContract() {
+        startActivityForResult(new Intent(getContext(), MyContractActivity.class), REQUEST_CODE_MY_CONTRACT);
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == PERMISSIONS_REQUEST_CELL_PHONE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -462,7 +474,13 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
         } else if (requestCode == REQUEST_CODE_PAYMENT_STAGE) {
             mPresenter.fetchStudent();
         } else if (requestCode == REQUEST_CODE_UPLOAD_ID_CARD) {
-            startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+            if (resultCode == RESULT_OK) {
+                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+            }
+        } else if (requestCode == REQUEST_CODE_MY_CONTRACT) {
+            if (resultCode == RESULT_OK) {
+                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

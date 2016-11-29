@@ -73,7 +73,6 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
                         mUploadIdCardView.navigateToUserContract(idCardUrl.agreement_url);
                     }
                 });
-
     }
 
     public String getShareText() {

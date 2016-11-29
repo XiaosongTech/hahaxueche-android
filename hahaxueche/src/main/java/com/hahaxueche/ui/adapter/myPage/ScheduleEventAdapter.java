@@ -14,7 +14,7 @@ import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
 import com.hahaxueche.model.course.ScheduleEvent;
-import com.hahaxueche.model.user.Student;
+import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.presenter.myPage.ScheduleListPresenter;
 import com.hahaxueche.util.Utils;
 

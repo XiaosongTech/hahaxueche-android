@@ -80,6 +80,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     TextView mTvCustomerService;
 
     private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
+    private static final int REQUEST_CODE_MY_CONTRACT = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,7 +174,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     public void navigateToUserContract(String pdfUrl) {
         Intent intent = new Intent(getContext(), MyContractActivity.class);
         intent.putExtra("pdfUrl", pdfUrl);
-        startActivity(intent);
+        startActivityForResult(new Intent(getContext(), UploadIdCardActivity.class), REQUEST_CODE_MY_CONTRACT);
     }
 
     @Override
@@ -400,6 +401,11 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                 }
             } else if (resultCode == RESULT_CANCELED) {
                 showMessage("取消相册选择");
+            }
+        } else if (requestCode == REQUEST_CODE_MY_CONTRACT) {
+            if (resultCode == RESULT_OK) {
+                setResult(RESULT_OK, null);
+                finish();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

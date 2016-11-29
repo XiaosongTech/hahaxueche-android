@@ -2,6 +2,8 @@ package com.hahaxueche.model.user;
 
 import android.text.TextUtils;
 
+import com.hahaxueche.model.user.student.Student;
+
 /**
  * Created by wangshirui on 16/9/10.
  */

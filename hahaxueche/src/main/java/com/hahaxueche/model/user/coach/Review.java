@@ -3,7 +3,7 @@ package com.hahaxueche.model.user.coach;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.hahaxueche.model.user.Student;
+import com.hahaxueche.model.user.student.Student;
 
 /**
  * Created by wangshirui on 16/10/6.

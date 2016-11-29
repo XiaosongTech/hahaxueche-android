@@ -18,7 +18,7 @@ import com.hahaxueche.model.responseList.ReferrerResponseList;
 import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.responseList.ScheduleEventResponseList;
 import com.hahaxueche.model.user.IdCardUrl;
-import com.hahaxueche.model.user.Student;
+import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.Follow;
@@ -239,6 +239,9 @@ public interface HHApiService {
 
     @GET("students/{id}/agreement")
     Observable<IdCardUrl> createAgreement(@Path("id") String studentId);
+
+    @POST("students/{id}/agreement")
+    Observable<Student> signAgreement(@Path("id") String studentId, @Header("X-Access-Token") String accessToken);
 
     class Factory {
         public static HHApiService create() {
