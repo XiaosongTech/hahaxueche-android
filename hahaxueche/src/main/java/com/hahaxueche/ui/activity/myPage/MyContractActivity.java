@@ -61,6 +61,7 @@ public class MyContractActivity extends HHBaseActivity implements MyContractView
         Intent intent = getIntent();
         if (intent != null && !TextUtils.isEmpty(intent.getStringExtra("pdfUrl"))) {
             setPdf(intent.getStringExtra("pdfUrl"));
+            mPresenter.signContractViewCount();
         } else {
             mPresenter.getAgreementUrl();
         }
@@ -83,6 +84,7 @@ public class MyContractActivity extends HHBaseActivity implements MyContractView
         mIvSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPresenter.clickSettingIcon();
                 MyContractDialog dialog = new MyContractDialog(MyContractActivity.this);
                 dialog.show();
             }
@@ -130,6 +132,7 @@ public class MyContractActivity extends HHBaseActivity implements MyContractView
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
+                        mPresenter.clickAgreement();
                         mPresenter.sign();
                     }
                 }
@@ -175,6 +178,7 @@ public class MyContractActivity extends HHBaseActivity implements MyContractView
     }
 
     public void openPdf() {
+        mPresenter.clickDownloadAgreement();
         try {
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -189,6 +193,7 @@ public class MyContractActivity extends HHBaseActivity implements MyContractView
     }
 
     public void sendEmail() {
+        mPresenter.clickSendAgreement();
         EnterEmailDialog dialog = new EnterEmailDialog(getContext(), new EnterEmailDialog.OnButtonClickListener() {
             @Override
             public void send(String email) {

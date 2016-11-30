@@ -15,6 +15,7 @@ import com.hahaxueche.ui.view.myPage.MyContractView;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
 
@@ -53,7 +54,9 @@ public class MyContractPresenter implements Presenter<MyContractView> {
         if (!TextUtils.isEmpty(user.student.agreement_url)) {
             mMyContractView.setPdf(user.student.agreement_url);
             mMyContractView.setSignEnable(false);
+            myContractViewCount();
         } else {
+            signContractViewCount();
             HHApiService apiService = application.getApiService();
             subscription = apiService.createAgreement(user.student.id)
                     .observeOn(AndroidSchedulers.mainThread())
@@ -130,6 +133,60 @@ public class MyContractPresenter implements Presenter<MyContractView> {
                         application.getSharedPrefUtil().updateStudent(student);
                     }
                 });
+    }
+
+    public void myContractViewCount(){
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+        }
+        MobclickAgent.onEvent(mMyContractView.getContext(), "my_contract_page_viewed", map);
+    }
+
+    public void signContractViewCount(){
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+        }
+        MobclickAgent.onEvent(mMyContractView.getContext(), "sign_contract_page_viewed", map);
+    }
+
+    public void clickAgreement(){
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+        }
+        MobclickAgent.onEvent(mMyContractView.getContext(), "sign_contract_check_box_checked", map);
+    }
+
+    public void clickSettingIcon(){
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+        }
+        MobclickAgent.onEvent(mMyContractView.getContext(), "my_contract_page_top_right_button_tapped", map);
+    }
+
+    public void clickSendAgreement(){
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+        }
+        MobclickAgent.onEvent(mMyContractView.getContext(), "my_contract_page_send_by_email_tapped", map);
+    }
+
+    public void clickDownloadAgreement(){
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+        }
+        MobclickAgent.onEvent(mMyContractView.getContext(), "my_contract_page_download_tapped", map);
     }
 
     public String getShareText() {

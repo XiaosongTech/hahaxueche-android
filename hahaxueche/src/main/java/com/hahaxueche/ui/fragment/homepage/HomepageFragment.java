@@ -24,8 +24,12 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.base.Banner;
 import com.hahaxueche.model.base.City;
 import com.hahaxueche.presenter.homepage.HomepagePresenter;
+import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.base.MainActivity;
+import com.hahaxueche.ui.activity.login.StartLoginActivity;
+import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
+import com.hahaxueche.ui.dialog.BaseAlertDialog;
 import com.hahaxueche.ui.dialog.login.CityChoseDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.homepage.HomepageView;
@@ -114,6 +118,26 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         }
     }
 
+    @Override
+    public void navigateToReferFriends() {
+        startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+    }
+
+    @Override
+    public void alertToRegister() {
+        BaseAlertDialog dialog = new BaseAlertDialog(getContext(), "推荐好友", mPresenter.getShareText(), "去注册！",
+                new BaseAlertDialog.onButtonClickListener() {
+                    @Override
+                    public void sure() {
+                        ActivityCollector.finishAll();
+                        Intent intent = new Intent(getContext(), StartLoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                });
+        dialog.show();
+    }
+
     @OnClick({R.id.tv_procedure,
             R.id.tv_tel_ask,
             R.id.cv_coach,
@@ -121,7 +145,11 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             R.id.iv_free_try,
             R.id.cv_adviser,
             R.id.cv_driving_school,
-            R.id.tv_group_buy})
+            R.id.tv_group_buy,
+            R.id.tv_test_lib,
+            R.id.tv_ensure_pass,
+            R.id.tv_platform_guard,
+            R.id.tv_refer_friends})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_procedure:
@@ -154,6 +182,18 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                 break;
             case R.id.tv_group_buy:
                 mPresenter.openGroupBuy();
+                break;
+            case R.id.tv_test_lib:
+                mPresenter.clickTestLib();
+                break;
+            case R.id.tv_ensure_pass:
+                mPresenter.clickEnsurePass();
+                break;
+            case R.id.tv_platform_guard:
+                mPresenter.clickPlatformGuard();
+                break;
+            case R.id.tv_refer_friends:
+                mPresenter.clickReferFriends();
                 break;
             default:
                 break;

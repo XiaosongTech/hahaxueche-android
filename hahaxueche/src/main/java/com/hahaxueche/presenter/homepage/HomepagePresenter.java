@@ -13,6 +13,7 @@ import android.text.style.ForegroundColorSpan;
 import com.hahaxueche.BuildConfig;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
+import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.base.Statistics;
 import com.hahaxueche.model.user.User;
@@ -288,5 +289,59 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public void clickTestLib() {
+        User user = application.getSharedPrefUtil().getUser();
+        HashMap<String, String> map = new HashMap();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_online_test_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_online_test_tapped");
+        }
+    }
+
+    public void clickEnsurePass() {
+        User user = application.getSharedPrefUtil().getUser();
+        HashMap<String, String> map = new HashMap();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_course_one_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_course_one_tapped");
+        }
+    }
+
+    public void clickPlatformGuard() {
+        User user = application.getSharedPrefUtil().getUser();
+        HashMap<String, String> map = new HashMap();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_platform_guard_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_platform_guard_tapped");
+        }
+    }
+
+    public void clickReferFriends() {
+        User user = application.getSharedPrefUtil().getUser();
+        HashMap<String, String> map = new HashMap();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_refer_friends_tapped", map);
+            mHomepageView.navigateToReferFriends();
+        } else {
+            MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_refer_friends_tapped");
+            mHomepageView.alertToRegister();
+        }
+    }
+
+    public String getShareText() {
+        User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin()) return "";
+        String shareText = mHomepageView.getContext().getResources().getString(R.string.homepage_share_dialog_text);
+        City myCity = application.getConstants().getCity(user.student.city_id);
+        return String.format(shareText, Utils.getMoney(myCity.referer_bonus), Utils.getMoney(myCity.referee_bonus));
     }
 }

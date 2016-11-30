@@ -23,4 +23,5 @@
     <string name="upload_id_card_hints">请上传您的身份证信息，我们将会生成您的哈哈学车专属学员电子协议，该协议将在您的学车途中保障您的利益，同时也有助于教练尽快开展教学活动！若不上传您的真实信息，我们将无法保障您的合法权益！</string>
     <string name="upload_share_dialog_text">现在分享给好友即有机会获得%1$s元返现！好友报名学车立减%2$s元！快去分享吧～</string>
     <string name="sign_share_dialog_text">恭喜您！签署协议成功！可在"我的页面"-"我的协议"里面查看。\n现在分享给好友即有机会获得%1$s元返现！好友报名学车立减%2$s元！快去分享吧～</string>
+    <string name="homepage_share_dialog_text">注册登录后，就能邀请好友啦！每成功邀请一名好友你就能获得现金%1$s元，好友获得%2$s元学车代金券！赶快行动吧！</string>
 </resources>

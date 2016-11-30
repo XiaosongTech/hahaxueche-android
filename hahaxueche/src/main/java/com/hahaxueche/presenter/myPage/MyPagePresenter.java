@@ -437,6 +437,13 @@ public class MyPagePresenter implements Presenter<MyPageView> {
 
     public void clickMyContract() {
         User user = application.getSharedPrefUtil().getUser();
+        HashMap<String, String> map = new HashMap();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_contract_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_contract_tapped");
+        }
         if (user == null || !user.isLogin()) return;
         if (!user.student.hasPurchasedService()) {
             mMyPageView.alertToFindCoach();

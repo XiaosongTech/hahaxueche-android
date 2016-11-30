@@ -147,6 +147,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                 }
                 break;
             case R.id.tv_submit:
+                mPresenter.clickUploadInfo();
                 if (TextUtils.isEmpty(imageUrlA)) {
                     showMessage("请上传身份证正面");
                     return;
@@ -158,6 +159,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                 mPresenter.uploadInfo();
                 break;
             case R.id.tv_later_submit:
+                mPresenter.clickLaterSubmit();
                 showLaterSubmitDialog();
                 break;
             default:
@@ -248,11 +250,12 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                 new BaseConfirmSimpleDialog.onClickListener() {
                     @Override
                     public void clickConfirm() {
-                        //do nothing
+                        mPresenter.clickConfirmPop();
                     }
 
                     @Override
                     public void clickCancel() {
+                        mPresenter.clickCancelPop();
                         showShareDialog();
                     }
                 });
