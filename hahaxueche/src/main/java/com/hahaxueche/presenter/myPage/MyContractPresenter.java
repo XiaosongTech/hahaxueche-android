@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
+import com.hahaxueche.model.base.BaseSuccess;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.user.IdCardUrl;
@@ -135,7 +136,56 @@ public class MyContractPresenter implements Presenter<MyContractView> {
                 });
     }
 
-    public void myContractViewCount(){
+    public void setAgreementEmail(String email) {
+        final HHApiService apiService = application.getApiService();
+        final User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin()) return;
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("cell_phone", user.cell_phone);
+        final HashMap<String, Object> mapParam = new HashMap<>();
+        mapParam.put("email", email);
+        subscription = apiService.isValidToken(user.session.access_token, map)
+                .flatMap(new Func1<BaseValid, Observable<BaseSuccess>>() {
+                    @Override
+                    public Observable<BaseSuccess> call(BaseValid baseValid) {
+                        if (baseValid.valid) {
+                            return apiService.sendAgreementEmail(user.student.id, mapParam, user.session.access_token);
+                        } else {
+                            return application.getSessionObservable();
+                        }
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<BaseSuccess>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        mMyContractView.showProgressDialog("邮件发送中，请稍后...");
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        mMyContractView.dismissProgressDialog();
+                        mMyContractView.showMessage("协议已发送指定邮箱");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mMyContractView.dismissProgressDialog();
+                        if (ErrorUtil.isInvalidSession(e)) {
+                            mMyContractView.forceOffline();
+                        }
+                        HHLog.e(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(BaseSuccess baseSuccess) {
+                    }
+                });
+    }
+
+    public void myContractViewCount() {
         HashMap<String, String> map = new HashMap();
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
@@ -144,7 +194,7 @@ public class MyContractPresenter implements Presenter<MyContractView> {
         MobclickAgent.onEvent(mMyContractView.getContext(), "my_contract_page_viewed", map);
     }
 
-    public void signContractViewCount(){
+    public void signContractViewCount() {
         HashMap<String, String> map = new HashMap();
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
@@ -153,7 +203,7 @@ public class MyContractPresenter implements Presenter<MyContractView> {
         MobclickAgent.onEvent(mMyContractView.getContext(), "sign_contract_page_viewed", map);
     }
 
-    public void clickAgreement(){
+    public void clickAgreement() {
         HashMap<String, String> map = new HashMap();
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
@@ -162,7 +212,7 @@ public class MyContractPresenter implements Presenter<MyContractView> {
         MobclickAgent.onEvent(mMyContractView.getContext(), "sign_contract_check_box_checked", map);
     }
 
-    public void clickSettingIcon(){
+    public void clickSettingIcon() {
         HashMap<String, String> map = new HashMap();
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
@@ -171,7 +221,7 @@ public class MyContractPresenter implements Presenter<MyContractView> {
         MobclickAgent.onEvent(mMyContractView.getContext(), "my_contract_page_top_right_button_tapped", map);
     }
 
-    public void clickSendAgreement(){
+    public void clickSendAgreement() {
         HashMap<String, String> map = new HashMap();
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
@@ -180,7 +230,7 @@ public class MyContractPresenter implements Presenter<MyContractView> {
         MobclickAgent.onEvent(mMyContractView.getContext(), "my_contract_page_send_by_email_tapped", map);
     }
 
-    public void clickDownloadAgreement(){
+    public void clickDownloadAgreement() {
         HashMap<String, String> map = new HashMap();
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {

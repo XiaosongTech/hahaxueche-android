@@ -197,7 +197,7 @@ public class MyContractActivity extends HHBaseActivity implements MyContractView
         EnterEmailDialog dialog = new EnterEmailDialog(getContext(), new EnterEmailDialog.OnButtonClickListener() {
             @Override
             public void send(String email) {
-                showMessage(email);
+                mPresenter.setAgreementEmail(email);
             }
         });
         dialog.show();

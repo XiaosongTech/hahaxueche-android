@@ -3,6 +3,7 @@ package com.hahaxueche.api;
 import com.hahaxueche.BuildConfig;
 import com.hahaxueche.model.base.BaseBoolean;
 import com.hahaxueche.model.base.BaseModel;
+import com.hahaxueche.model.base.BaseSuccess;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.community.Article;
@@ -242,6 +243,10 @@ public interface HHApiService {
 
     @POST("students/{id}/agreement")
     Observable<Student> signAgreement(@Path("id") String studentId, @Header("X-Access-Token") String accessToken);
+
+    @FormUrlEncoded
+    @POST("students/{id}/agreement_mail")
+    Observable<BaseSuccess> sendAgreementEmail(@Path("id") String studentId, @FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
 
     class Factory {
         public static HHApiService create() {
