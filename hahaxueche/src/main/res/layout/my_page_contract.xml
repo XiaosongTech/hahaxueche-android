@@ -53,8 +53,10 @@
 
         <View
             android:id="@+id/view_badge_contract"
-            android:layout_width="5dp"
-            android:layout_height="5dp"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:visibility="gone"
+            android:background="@drawable/badge_red"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp" />

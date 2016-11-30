@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TabHost;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
@@ -19,8 +18,6 @@ import com.hahaxueche.ui.fragment.homepage.HomepageFragment;
 import com.hahaxueche.ui.fragment.myPage.MyPageFragment;
 import com.hahaxueche.ui.view.base.MainView;
 import com.hahaxueche.ui.widget.FragmentTabHost;
-import com.hahaxueche.util.HHLog;
-import com.jauker.widget.BadgeView;
 
 /**
  * Created by wangshirui on 16/9/15.
@@ -109,9 +106,6 @@ public class MainActivity extends HHBaseActivity implements MainView {
     public void setMyPageBadge(boolean hasBadge) {
         if (hasBadge) {
             mViewBadgeMyPage.setVisibility(View.VISIBLE);
-            BadgeView badge = new BadgeView(getContext());
-            badge.setTargetView(mViewBadgeMyPage);
-            badge.setBadgeCount(1);
         } else {
             mViewBadgeMyPage.setVisibility(View.GONE);
         }

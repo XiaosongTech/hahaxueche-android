@@ -21,9 +21,9 @@ import java.net.URL;
 public class DownloadContractManager {
     private Context mContext;
     private String pdfUrl;
-    private static final String savePath = Environment.getExternalStorageDirectory() + "/hahaxueche/pdf/";
+    private static final String savePath = Environment.getExternalStorageDirectory().getPath() + "/hahaxueche/pdf/";
 
-    private static final String saveFileName = savePath + "contract.pdf";
+    private static final String saveFileName = "contract.pdf";
     private static final int DOWN_UPDATE = 1;
 
     private static final int DOWN_OVER = 2;
@@ -45,7 +45,7 @@ public class DownloadContractManager {
                 case DOWN_UPDATE:
                     break;
                 case DOWN_OVER:
-                    onDownloadListener.finish(Uri.fromFile(new File(saveFileName)));
+                    onDownloadListener.finish(Uri.fromFile(new File(savePath, saveFileName)));
                     break;
                 default:
                     break;
@@ -79,17 +79,19 @@ public class DownloadContractManager {
                 int length = conn.getContentLength();
                 InputStream is = conn.getInputStream();
 
-                File file = new File(savePath);
-                if (!file.exists()) {
-                    file.mkdir();
+                File pdfPath = new File(savePath);
+                if (!pdfPath.exists()) {
+                    pdfPath.mkdir();
                 }
-                String apkFile = saveFileName;
-                File ApkFile = new File(apkFile);
-                FileOutputStream fos = new FileOutputStream(ApkFile);
-
+                File pdfFile = new File(savePath, saveFileName);
+                if (pdfFile.exists()) {
+                    pdfFile.delete();
+                }
+                HHLog.v("path -> " + pdfFile.getPath());
+                pdfFile.createNewFile();
+                FileOutputStream fos = new FileOutputStream(pdfFile);
                 int count = 0;
                 byte buf[] = new byte[1024];
-
                 do {
                     int numread = is.read(buf);
                     count += numread;

@@ -57,11 +57,19 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<IdCardUrl>() {
                     @Override
+                    public void onStart() {
+                        super.onStart();
+                        mUploadIdCardView.showProgressDialog("数据上传中，请稍后...");
+                    }
+
+                    @Override
                     public void onCompleted() {
+                        mUploadIdCardView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        mUploadIdCardView.dismissProgressDialog();
                         HHLog.e(e.getMessage());
                         if (ErrorUtil.isHttp422(e)) {
                             mUploadIdCardView.showMessage("身份认证失败，请确认图片后信息重新上传！");
@@ -100,11 +108,19 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<IdCardUrl>() {
                     @Override
+                    public void onStart() {
+                        super.onStart();
+                        mUploadIdCardView.showProgressDialog("图片上传中，请稍后...");
+                    }
+
+                    @Override
                     public void onCompleted() {
+                        mUploadIdCardView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        mUploadIdCardView.dismissProgressDialog();
                         HHLog.e(e.getMessage());
                     }
 

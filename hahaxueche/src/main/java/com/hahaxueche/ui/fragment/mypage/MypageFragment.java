@@ -43,7 +43,6 @@ import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.myPage.MyPageView;
 import com.hahaxueche.util.PhotoUtil;
 import com.hahaxueche.util.Utils;
-import com.jauker.widget.BadgeView;
 
 import java.io.File;
 
@@ -143,6 +142,7 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
             mIvPaymentArrow.setVisibility(View.GONE);
         }
         mTvStudentPhase.setText(student.getStudentPhaseLabel());
+        mActivity.controlMyPageBadge();
     }
 
     @Override
@@ -347,9 +347,6 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
         if (hasBadge) {
             mViewBadge.setVisibility(View.VISIBLE);
             mIvMoreVoucher.setVisibility(View.GONE);
-            BadgeView badge = new BadgeView(getContext());
-            badge.setTargetView(mViewBadge);
-            badge.setBadgeCount(1);
         } else {
             mViewBadge.setVisibility(View.GONE);
             mIvMoreVoucher.setVisibility(View.VISIBLE);
@@ -361,9 +358,6 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
         if (hasBadge) {
             mViewBadgeContract.setVisibility(View.VISIBLE);
             mIvMoreContract.setVisibility(View.GONE);
-            BadgeView badge = new BadgeView(getContext());
-            badge.setTargetView(mViewBadgeContract);
-            badge.setBadgeCount(1);
         } else {
             mViewBadgeContract.setVisibility(View.GONE);
             mIvMoreContract.setVisibility(View.VISIBLE);
@@ -475,11 +469,12 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
             mPresenter.fetchStudent();
         } else if (requestCode == REQUEST_CODE_UPLOAD_ID_CARD) {
             if (resultCode == RESULT_OK) {
+                mActivity.controlMyPageBadge();
                 startActivity(new Intent(getContext(), ReferFriendsActivity.class));
             }
         } else if (requestCode == REQUEST_CODE_MY_CONTRACT) {
             if (resultCode == RESULT_OK) {//已签订协议
-                mActivity.setMyPageBadge(false);
+                mActivity.controlMyPageBadge();
                 startActivity(new Intent(getContext(), ReferFriendsActivity.class));
             }
         }

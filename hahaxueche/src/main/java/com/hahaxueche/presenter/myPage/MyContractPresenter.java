@@ -60,11 +60,19 @@ public class MyContractPresenter implements Presenter<MyContractView> {
                     .subscribeOn(application.defaultSubscribeScheduler())
                     .subscribe(new Subscriber<IdCardUrl>() {
                         @Override
+                        public void onStart() {
+                            super.onStart();
+                            mMyContractView.showProgressDialog();
+                        }
+
+                        @Override
                         public void onCompleted() {
+                            mMyContractView.dismissProgressDialog();
                         }
 
                         @Override
                         public void onError(Throwable e) {
+                            mMyContractView.dismissProgressDialog();
                             HHLog.e(e.getMessage());
                         }
 
@@ -97,12 +105,20 @@ public class MyContractPresenter implements Presenter<MyContractView> {
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<Student>() {
                     @Override
+                    public void onStart() {
+                        super.onStart();
+                        mMyContractView.showProgressDialog("数据上传中，请稍后...");
+                    }
+
+                    @Override
                     public void onCompleted() {
+                        mMyContractView.dismissProgressDialog();
                         mMyContractView.showShare();
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        mMyContractView.dismissProgressDialog();
                         if (ErrorUtil.isInvalidSession(e)) {
                             mMyContractView.forceOffline();
                         }

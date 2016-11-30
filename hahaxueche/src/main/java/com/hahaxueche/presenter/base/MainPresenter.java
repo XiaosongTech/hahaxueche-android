@@ -78,7 +78,7 @@ public class MainPresenter implements Presenter<MainView> {
     public void setMyPageBadge() {
         User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) return;
-        if (user.student.hasPurchasedService() && !(user.student.isUploadedIdInfo() || user.student.isSigned())) {
+        if (user.student.hasPurchasedService() && (!user.student.isUploadedIdInfo() || !user.student.isSigned())) {
             mBaseView.setMyPageBadge(true);
         } else {
             mBaseView.setMyPageBadge(false);

@@ -174,7 +174,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     public void navigateToUserContract(String pdfUrl) {
         Intent intent = new Intent(getContext(), MyContractActivity.class);
         intent.putExtra("pdfUrl", pdfUrl);
-        startActivityForResult(new Intent(getContext(), UploadIdCardActivity.class), REQUEST_CODE_MY_CONTRACT);
+        startActivityForResult(intent, REQUEST_CODE_MY_CONTRACT);
     }
 
     @Override
@@ -213,9 +213,10 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
         } else {
             fileFaceB = new File(IMGPATH, IMAGE_FILE_B_NAME);
             try {
-                if (!fileFaceB.exists()) {
-                    fileFaceB.createNewFile();
+                if (fileFaceB.exists()) {
+                    fileFaceB.delete();
                 }
+                fileFaceB.createNewFile();
             } catch (Exception e) {
                 HHLog.e(e.getMessage());
             }
