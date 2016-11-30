@@ -54,6 +54,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
             mStudent = user.student;
             mMyPageView.loadStudentInfo(mStudent);
             showVoucherBadge(mStudent);
+            setContractBadge();
             fetchAdviser();
         } else {
             mMyPageView.showNotLoginView();
@@ -445,6 +446,17 @@ public class MyPagePresenter implements Presenter<MyPageView> {
             mMyPageView.navigateToSignContract();
         } else {
             mMyPageView.navigateToMyContract();
+        }
+    }
+
+    public void setContractBadge() {
+        User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin()) return;
+        if (user.student.hasPurchasedService() && !(user.student.isUploadedIdInfo() || user.student.isSigned())) {
+            //已购买但是未签订协议或者上传资料
+            mMyPageView.setContractBadge(true);
+        } else {
+            mMyPageView.setContractBadge(false);
         }
     }
 }

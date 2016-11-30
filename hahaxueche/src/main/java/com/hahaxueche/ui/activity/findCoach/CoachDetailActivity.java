@@ -971,7 +971,9 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 startActivityForResult(new Intent(getContext(), PaySuccessActivity.class), REQUEST_CODE_PAY_SUCCESS);
             }
         } else if (requestCode == REQUEST_CODE_PAY_SUCCESS) {
-            startActivityForResult(new Intent(getContext(), UploadIdCardActivity.class), REQUEST_CODE_UPLOAD_ID_CARD);
+            Intent intent = new Intent(getContext(), UploadIdCardActivity.class);
+            intent.putExtra("isFromPaySuccess", true);
+            startActivityForResult(intent, REQUEST_CODE_UPLOAD_ID_CARD);
         } else if (requestCode == REQUEST_CODE_UPLOAD_ID_CARD) {
             startActivity(new Intent(getContext(), ReferFriendsActivity.class));
         }

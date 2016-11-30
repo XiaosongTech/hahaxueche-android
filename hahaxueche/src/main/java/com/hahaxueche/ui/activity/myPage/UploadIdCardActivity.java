@@ -333,7 +333,12 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return keyCode == KeyEvent.KEYCODE_BACK || super.onKeyDown(keyCode, event);
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            showLaterSubmitDialog();
+            return true;
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
     }
 
     /**

@@ -478,10 +478,12 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
                 startActivity(new Intent(getContext(), ReferFriendsActivity.class));
             }
         } else if (requestCode == REQUEST_CODE_MY_CONTRACT) {
-            if (resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {//已签订协议
+                mActivity.setMyPageBadge(false);
                 startActivity(new Intent(getContext(), ReferFriendsActivity.class));
             }
         }
+        mPresenter.setContractBadge();
         super.onActivityResult(requestCode, resultCode, data);
     }
 

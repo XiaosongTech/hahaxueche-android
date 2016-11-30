@@ -17,6 +17,7 @@ import com.hahaxueche.ui.fragment.community.CommunityFragment;
 import com.hahaxueche.ui.fragment.findCoach.FindCoachFragment;
 import com.hahaxueche.ui.fragment.homepage.HomepageFragment;
 import com.hahaxueche.ui.fragment.myPage.MyPageFragment;
+import com.hahaxueche.ui.view.base.MainView;
 import com.hahaxueche.ui.widget.FragmentTabHost;
 import com.hahaxueche.util.HHLog;
 import com.jauker.widget.BadgeView;
@@ -24,7 +25,7 @@ import com.jauker.widget.BadgeView;
 /**
  * Created by wangshirui on 16/9/15.
  */
-public class MainActivity extends HHBaseActivity {
+public class MainActivity extends HHBaseActivity implements MainView {
     private MainPresenter mPresenter;
     private FragmentTabHost mTabHost = null;
     private View indicator = null;
@@ -58,7 +59,7 @@ public class MainActivity extends HHBaseActivity {
         mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String tabId) {
-                HHLog.v(tabId);
+                mPresenter.setMyPageBadge();
                 switch (tabId) {
                     case "homepage":
                         mPresenter.viewHomepageCount();
@@ -91,7 +92,11 @@ public class MainActivity extends HHBaseActivity {
                 startActivity(startIntent);
             }
         }
-        setMyPageBadge(true);
+        controlMyPageBadge();
+    }
+
+    public void controlMyPageBadge() {
+        mPresenter.setMyPageBadge();
     }
 
     public void selectTab(int tab) {
@@ -100,6 +105,7 @@ public class MainActivity extends HHBaseActivity {
         }
     }
 
+    @Override
     public void setMyPageBadge(boolean hasBadge) {
         if (hasBadge) {
             mViewBadgeMyPage.setVisibility(View.VISIBLE);

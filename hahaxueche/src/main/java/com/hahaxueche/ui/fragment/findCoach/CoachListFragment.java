@@ -201,6 +201,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                     }
                 }
             }
+            mActivity.controlMyPageBadge();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
