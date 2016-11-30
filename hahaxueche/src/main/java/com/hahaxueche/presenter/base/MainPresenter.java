@@ -84,4 +84,26 @@ public class MainPresenter implements Presenter<MainView> {
             mBaseView.setMyPageBadge(false);
         }
     }
+
+    public void controlSignDialog(){
+        User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin()) return;
+        if (user.student.hasPurchasedService() && (!user.student.isUploadedIdInfo() || !user.student.isSigned())) {
+            mBaseView.showSignDialog();
+        }
+    }
+
+    public void clickMyContract() {
+        User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin()) return;
+        if (!user.student.hasPurchasedService()) {
+           return;
+        } else if (!user.student.isUploadedIdInfo()) {
+            mBaseView.navigateToUploadIdCard();
+        } else if (!user.student.isSigned()) {
+            mBaseView.navigateToSignContract();
+        } else {
+            mBaseView.navigateToMyContract();
+        }
+    }
 }

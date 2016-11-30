@@ -6,4 +6,12 @@ package com.hahaxueche.ui.view.base;
 
 public interface MainView extends HHBaseView {
     void setMyPageBadge(boolean hasBadge);
+
+    void showSignDialog();
+
+    void navigateToUploadIdCard();
+
+    void navigateToSignContract();
+
+    void navigateToMyContract();
 }

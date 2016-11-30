@@ -12,6 +12,10 @@ import com.hahaxueche.R;
 import com.hahaxueche.presenter.base.MainPresenter;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.PartnerDetailActivity;
+import com.hahaxueche.ui.activity.myPage.MyContractActivity;
+import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
+import com.hahaxueche.ui.activity.myPage.UploadIdCardActivity;
+import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.fragment.community.CommunityFragment;
 import com.hahaxueche.ui.fragment.findCoach.FindCoachFragment;
 import com.hahaxueche.ui.fragment.homepage.HomepageFragment;
@@ -27,6 +31,8 @@ public class MainActivity extends HHBaseActivity implements MainView {
     private FragmentTabHost mTabHost = null;
     private View indicator = null;
     private View mViewBadgeMyPage;
+    private static final int REQUEST_CODE_UPLOAD_ID_CARD = 3;
+    private static final int REQUEST_CODE_MY_CONTRACT = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +96,7 @@ public class MainActivity extends HHBaseActivity implements MainView {
             }
         }
         controlMyPageBadge();
+        mPresenter.controlSignDialog();
     }
 
     public void controlMyPageBadge() {
@@ -109,6 +116,38 @@ public class MainActivity extends HHBaseActivity implements MainView {
         } else {
             mViewBadgeMyPage.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void showSignDialog() {
+        BaseConfirmSimpleDialog dialog = new BaseConfirmSimpleDialog(getContext(), "友情提醒", "快去上传资料签署专属学员协议吧！",
+                "去上传", "取消", new BaseConfirmSimpleDialog.onClickListener() {
+            @Override
+            public void clickConfirm() {
+                mPresenter.clickMyContract();
+            }
+
+            @Override
+            public void clickCancel() {
+
+            }
+        });
+        dialog.show();
+    }
+
+    @Override
+    public void navigateToUploadIdCard() {
+        startActivityForResult(new Intent(getContext(), UploadIdCardActivity.class), REQUEST_CODE_UPLOAD_ID_CARD);
+    }
+
+    @Override
+    public void navigateToSignContract() {
+        startActivityForResult(new Intent(getContext(), MyContractActivity.class), REQUEST_CODE_MY_CONTRACT);
+    }
+
+    @Override
+    public void navigateToMyContract() {
+        startActivityForResult(new Intent(getContext(), MyContractActivity.class), REQUEST_CODE_MY_CONTRACT);
     }
 
     @Override
@@ -134,5 +173,21 @@ public class MainActivity extends HHBaseActivity implements MainView {
         }
         return super.onKeyDown(keyCode, event);
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_UPLOAD_ID_CARD) {
+            if (resultCode == RESULT_OK) {
+                controlMyPageBadge();
+                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+            }
+        } else if (requestCode == REQUEST_CODE_MY_CONTRACT) {
+            if (resultCode == RESULT_OK) {//已签订协议
+                controlMyPageBadge();
+                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
