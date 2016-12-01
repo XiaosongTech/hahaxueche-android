@@ -33,7 +33,10 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.presenter.myPage.ReferFriendsPresenter;
+import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
+import com.hahaxueche.ui.activity.login.StartLoginActivity;
+import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.view.myPage.ReferFriendsView;
 import com.hahaxueche.util.HHLog;
@@ -160,7 +163,11 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
 
     @OnLongClick(R.id.iv_qr_code)
     public boolean longClickImage() {
-        showSaveImageDialog();
+        if (mPresenter.isLogin()) {
+            showSaveImageDialog();
+        } else {
+            alertToLogin();
+        }
         return true;
     }
 
@@ -171,6 +178,10 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
         switch (view.getId()) {
             case R.id.tv_share_qr_code:
                 mPresenter.clickShareCount();
+                if (!mPresenter.isLogin()) {
+                    alertToLogin();
+                    return;
+                }
                 if (TextUtils.isEmpty(mPresenter.getQrCodeUrl())) {
                     return;
                 }
@@ -219,7 +230,6 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
                 break;
             case R.id.tv_withdraw_money:
                 mPresenter.clickReferrerList();
-                startActivity(new Intent(getContext(), ReferrerListActivity.class));
                 break;
             default:
                 break;
@@ -554,6 +564,11 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
     }
 
     @Override
+    public void navigateToReferList() {
+        startActivity(new Intent(getContext(), ReferrerListActivity.class));
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == PERMISSIONS_REQUEST_SHARE_QQ) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -674,5 +689,25 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
         Tencent.onActivityResultData(requestCode, resultCode, data, shareQQListener);
         Tencent.onActivityResultData(requestCode, resultCode, data, shareQZoneListener);
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void alertToLogin() {
+        BaseConfirmSimpleDialog dialog = new BaseConfirmSimpleDialog(getContext(), "提示", "请先登录或者注册", "去登录", "知道了",
+                new BaseConfirmSimpleDialog.onClickListener() {
+                    @Override
+                    public void clickConfirm() {
+                        ActivityCollector.finishAll();
+                        Intent intent = new Intent(getContext(), StartLoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void clickCancel() {
+
+                    }
+                });
+        dialog.show();
     }
 }

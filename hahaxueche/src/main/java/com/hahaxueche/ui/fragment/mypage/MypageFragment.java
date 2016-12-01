@@ -57,14 +57,16 @@ import static android.app.Activity.RESULT_OK;
  * Created by wangshirui on 16/9/13.
  */
 public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeRefreshLayout.OnRefreshListener {
-    @BindView(R.id.lly_not_login)
-    LinearLayout mLlyNotLogin;
     @BindView(R.id.srl_my_page)
     SwipeRefreshLayout mSrlMyPage;
     @BindView(R.id.iv_my_avatar)
     SimpleDraweeView mIvMyAvatar;
     @BindView(R.id.tv_student_name)
     TextView mTvStudentName;
+    @BindView(R.id.iv_edit_username)
+    ImageView mIvEditUsername;
+    @BindView(R.id.tv_login)
+    TextView mTvLogin;
     @BindView(R.id.tv_account_balance)
     TextView mTvAccountBalance;
     @BindView(R.id.tv_payment_stage)
@@ -83,6 +85,10 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     View mViewBadgeContract;
     @BindView(R.id.iv_more_contract)
     ImageView mIvMoreContract;
+    @BindView(R.id.tv_logout)
+    TextView mTvLogout;
+    @BindView(R.id.tv_to_login)
+    TextView mTvToLogin;
 
     private MyPagePresenter mPresenter;
     private MainActivity mActivity;
@@ -119,15 +125,21 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     }
 
     @Override
-    public void showNotLoginView() {
-        mLlyNotLogin.setVisibility(View.VISIBLE);
-        mSrlMyPage.setVisibility(View.GONE);
+    public void showNotLogin() {
+        mTvStudentName.setVisibility(View.GONE);
+        mIvEditUsername.setVisibility(View.GONE);
+        mTvLogin.setVisibility(View.VISIBLE);
+        mTvLogout.setVisibility(View.GONE);
+        mTvToLogin.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void showLoggedInView() {
-        mLlyNotLogin.setVisibility(View.GONE);
-        mSrlMyPage.setVisibility(View.VISIBLE);
+    public void showLogin() {
+        mTvStudentName.setVisibility(View.VISIBLE);
+        mIvEditUsername.setVisibility(View.VISIBLE);
+        mTvLogin.setVisibility(View.GONE);
+        mTvLogout.setVisibility(View.VISIBLE);
+        mTvToLogin.setVisibility(View.GONE);
     }
 
     @Override
@@ -146,7 +158,6 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     }
 
     @Override
-    @OnClick(R.id.tv_back_login)
     public void finishToStartLogin() {
         ActivityCollector.finishAll();
         Intent intent = new Intent(getContext(), StartLoginActivity.class);
@@ -189,7 +200,9 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
             R.id.rly_my_course,
             R.id.iv_edit_username,
             R.id.rly_my_voucher,
-            R.id.rly_my_contract})
+            R.id.rly_my_contract,
+            R.id.tv_login,
+            R.id.tv_to_login})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rly_online_service:
@@ -197,10 +210,18 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
                 break;
             case R.id.rly_my_follow_coach:
                 mPresenter.clickMyFollowCount();
+                if (!mPresenter.isLogin()) {
+                    alertToLogin();
+                    return;
+                }
                 startActivity(new Intent(getContext(), FollowListActivity.class));
                 break;
             case R.id.rly_my_consultant:
                 mPresenter.clickMyAdviserCount();
+                if (!mPresenter.isLogin()) {
+                    mPresenter.openFindAdviser();
+                    return;
+                }
                 if (mConsultantDialog == null) {
                     mConsultantDialog = new MyAdviserDialog(getContext(), mPresenter.getAdviser(), new MyAdviserDialog.onMyConsultantListener() {
                         @Override
@@ -237,6 +258,10 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
                 startActivity(new Intent(getContext(), ReferFriendsActivity.class));
                 break;
             case R.id.iv_my_avatar:
+                if (!mPresenter.isLogin()) {
+                    alertToLogin();
+                    return;
+                }
                 // Check the SDK version and whether the permission is already granted or not.
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                         (mActivity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
@@ -264,6 +289,10 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
                 baseConfirmSimpleDialog.show();
                 break;
             case R.id.rly_my_coach:
+                if (!mPresenter.isLogin()) {
+                    alertToLogin();
+                    return;
+                }
                 mPresenter.toMyCoach();
                 break;
             case R.id.rly_payment_stage:
@@ -288,6 +317,15 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
                 break;
             case R.id.rly_my_contract:
                 mPresenter.clickMyContract();
+                break;
+            case R.id.tv_login:
+                alertToLogin();
+                break;
+            case R.id.tv_to_login:
+                ActivityCollector.finishAll();
+                intent = new Intent(getContext(), StartLoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
                 break;
             default:
                 break;
@@ -397,6 +435,11 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     }
 
     @Override
+    public void disableRefresh() {
+        mSrlMyPage.setEnabled(false);
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == PERMISSIONS_REQUEST_CELL_PHONE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -491,6 +534,26 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
 
     private void showAvatarDialog() {
         AvatarDialog dialog = new AvatarDialog(this);
+        dialog.show();
+    }
+
+    @Override
+    public void alertToLogin() {
+        BaseConfirmSimpleDialog dialog = new BaseConfirmSimpleDialog(getContext(), "提示", "请先登录或者注册", "去登录", "知道了",
+                new BaseConfirmSimpleDialog.onClickListener() {
+                    @Override
+                    public void clickConfirm() {
+                        ActivityCollector.finishAll();
+                        Intent intent = new Intent(getContext(), StartLoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void clickCancel() {
+
+                    }
+                });
         dialog.show();
     }
 }

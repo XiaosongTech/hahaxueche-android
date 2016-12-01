@@ -41,15 +41,20 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
         this.mReferFriendsView = view;
         application = HHBaseApplication.get(mReferFriendsView.getContext());
         User user = application.getSharedPrefUtil().getUser();
-        if (user == null || !user.isLogin()) return;
-        getQrCodeUrl(user);
-        mReferFriendsView.setWithdrawMoney(Utils.getMoney(user.student.bonus_balance));
+
+        if (user == null || !user.isLogin()) {
+            getQrCodeUrl(user);
+            mReferFriendsView.setWithdrawMoney(Utils.getMoney(user.student.bonus_balance));
+        }
+        int cityId = 0;
+        if (user != null && user.student != null) {
+            cityId = user.student.city_id;
+        }
         String eventDetailTips = mReferFriendsView.getContext().getResources().getString(R.string.eventDetailsTips);
-        City myCity = application.getConstants().getCity(user.student.city_id);
+        City myCity = application.getConstants().getCity(cityId);
         mReferFriendsView.setReferRules(String.format(eventDetailTips, Utils.getMoney(myCity.referee_bonus)
                 , Utils.getMoney(myCity.referee_bonus), Utils.getMoney(myCity.referer_bonus)));
         mReferFriendsView.setMyCityReferImage(myCity.referral_banner);
-
     }
 
     public void detachView() {
@@ -191,6 +196,7 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
             mReferFriendsView.navigateToWithdraw();
         } else {
             MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_cash_tapped");
+            mReferFriendsView.alertToLogin();
         }
     }
 
@@ -200,8 +206,15 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
             MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_check_balance_tapped", map);
+            mReferFriendsView.navigateToReferList();
         } else {
             MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_check_balance_tapped");
+            mReferFriendsView.alertToLogin();
         }
+    }
+
+    public boolean isLogin() {
+        User user = application.getSharedPrefUtil().getUser();
+        return user != null && user.isLogin();
     }
 }

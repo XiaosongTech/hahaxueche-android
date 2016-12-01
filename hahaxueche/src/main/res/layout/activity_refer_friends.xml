@@ -36,6 +36,7 @@
                 android:layout_marginTop="10dp"
                 android:drawablePadding="8dp"
                 android:drawableRight="@drawable/ic_arrow_more_white"
+                android:text="0"
                 android:textColor="@color/haha_white"
                 android:textSize="24sp" />
 

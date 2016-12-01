@@ -44,20 +44,22 @@ public class MyPagePresenter implements Presenter<MyPageView> {
     private Student mStudent;
     private Adviser mAdviser;
     private static final String WEB_URL_ACTIVATE_VOUCHER = BuildConfig.MOBILE_URL + "/share/jihuo";
+    private static final String WEB_URL_FIND_ADVISER = BuildConfig.MOBILE_URL + "/share/zhaoguwen";
 
     public void attachView(MyPageView view) {
         this.mMyPageView = view;
         application = HHBaseApplication.get(mMyPageView.getContext());
         User user = application.getSharedPrefUtil().getUser();
         if (user.isLogin()) {
-            mMyPageView.showLoggedInView();
+            mMyPageView.showLogin();
             mStudent = user.student;
             mMyPageView.loadStudentInfo(mStudent);
             showVoucherBadge(mStudent);
             setContractBadge();
             fetchAdviser();
         } else {
-            mMyPageView.showNotLoginView();
+            mMyPageView.showNotLogin();
+            mMyPageView.disableRefresh();
         }
     }
 
@@ -266,6 +268,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
             }
         } else {
             MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_pay_coach_status_tapped");
+            mMyPageView.alertToLogin();
         }
     }
 
@@ -354,6 +357,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
             }
         } else {
             MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_my_course_tapped");
+            mMyPageView.alertToLogin();
         }
     }
 
@@ -444,8 +448,9 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         } else {
             MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_contract_tapped");
         }
-        if (user == null || !user.isLogin()) return;
-        if (!user.student.hasPurchasedService()) {
+        if (user == null || !user.isLogin()) {
+            mMyPageView.alertToLogin();
+        } else if (!user.student.hasPurchasedService()) {
             mMyPageView.alertToFindCoach();
         } else if (!user.student.isUploadedIdInfo()) {
             mMyPageView.navigateToUploadIdCard();
@@ -465,5 +470,19 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         } else {
             mMyPageView.setContractBadge(false);
         }
+    }
+
+    public boolean isLogin() {
+        User user = application.getSharedPrefUtil().getUser();
+        return user != null && user.isLogin();
+    }
+
+    public void openFindAdviser() {
+        int cityId = 0;
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.student != null) {
+            cityId = user.student.city_id;
+        }
+        mMyPageView.openWebView(WEB_URL_FIND_ADVISER + "?city_id=" + cityId);
     }
 }
