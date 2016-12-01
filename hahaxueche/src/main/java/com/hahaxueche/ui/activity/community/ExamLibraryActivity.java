@@ -3,19 +3,24 @@ package com.hahaxueche.ui.activity.community;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.text.SpannableString;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.presenter.community.ExamLibraryPresenter;
 import com.hahaxueche.presenter.community.ExamPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.adapter.community.ExamLibraryPageAdapter;
 import com.hahaxueche.ui.dialog.ShareAppDialog;
+import com.hahaxueche.ui.view.community.ExamLibraryView;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
@@ -27,20 +32,30 @@ import butterknife.ButterKnife;
  * Created by wangshirui on 2016/10/18.
  */
 
-public class ExamLibraryActivity extends HHBaseActivity {
+public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryView {
     ImageView mIvBack;
     TextView mTvTitle;
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
     @BindView(R.id.tabLayout)
     TabLayout mTabLayout;
+    @BindView(R.id.iv_pass)
+    ImageView mIvPass;
+    @BindView(R.id.lly_not_login)
+    LinearLayout mLlyNotLogin;
+    @BindView(R.id.lly_not_purchase)
+    LinearLayout mLlyNotPurchase;
+    @BindView(R.id.lly_scores)
+    LinearLayout mLlyScores;
+    @BindView(R.id.tv_insurance_count)
+    TextView mTvInsuranceCount;
     private ShareAppDialog mShareDialog;
-    private ExamPresenter mPresenter;
+    private ExamLibraryPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter = new ExamPresenter();
+        mPresenter = new ExamLibraryPresenter();
         setContentView(R.layout.activity_exam_library);
         ButterKnife.bind(this);
         mPresenter.attachView(this);
@@ -80,7 +95,7 @@ public class ExamLibraryActivity extends HHBaseActivity {
                 ExamLibraryActivity.this.finish();
             }
         });
-        mTvTitle.setText("在线题库");
+        mTvTitle.setText("科一保过");
     }
 
     @Override
@@ -94,5 +109,34 @@ public class ExamLibraryActivity extends HHBaseActivity {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void showNotLogin() {
+        mIvPass.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.protectioncard_noget));
+        mLlyNotLogin.setVisibility(View.VISIBLE);
+        mLlyNotPurchase.setVisibility(View.GONE);
+        mLlyScores.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showNotPurchase() {
+        mIvPass.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.protectioncard_get));
+        mLlyNotLogin.setVisibility(View.GONE);
+        mLlyNotPurchase.setVisibility(View.VISIBLE);
+        mLlyScores.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showScores() {
+        mIvPass.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.protectioncard_get));
+        mLlyNotLogin.setVisibility(View.GONE);
+        mLlyNotPurchase.setVisibility(View.GONE);
+        mLlyScores.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setInsuranceCount(SpannableString ss) {
+        mTvInsuranceCount.setText(ss);
     }
 }
