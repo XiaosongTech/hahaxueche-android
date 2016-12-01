@@ -202,6 +202,7 @@ public class RegisterPresenter implements Presenter<RegisterView> {
         map.put("password", password);
         map.put("password_confirmation", password);
         map.put("user_type", TYPE_STUDENT);
+        map.put("source", 0);//从app注册
         subscription = apiService.createSession(map)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
