@@ -57,4 +57,8 @@ public interface HomepageView extends HHBaseView {
      * @param bannerArrayList
      */
     void initBanners(ArrayList<Banner> bannerArrayList);
+
+    void navigateToReferFriends();
+
+    void alertToRegister();
 }

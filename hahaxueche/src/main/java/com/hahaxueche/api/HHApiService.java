@@ -3,6 +3,7 @@ package com.hahaxueche.api;
 import com.hahaxueche.BuildConfig;
 import com.hahaxueche.model.base.BaseBoolean;
 import com.hahaxueche.model.base.BaseModel;
+import com.hahaxueche.model.base.BaseSuccess;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.community.Article;
@@ -17,7 +18,8 @@ import com.hahaxueche.model.responseList.PartnerResponseList;
 import com.hahaxueche.model.responseList.ReferrerResponseList;
 import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.responseList.ScheduleEventResponseList;
-import com.hahaxueche.model.user.Student;
+import com.hahaxueche.model.user.IdCardUrl;
+import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.Follow;
@@ -47,6 +49,7 @@ import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 import retrofit2.http.Url;
 import rx.Observable;
 
@@ -230,6 +233,20 @@ public interface HHApiService {
     @FormUrlEncoded
     @POST("vouchers")
     Observable<Voucher> addVoucher(@FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
+
+    @Multipart
+    @POST("students/{id}/id_card")
+    Observable<IdCardUrl> uploadIdCard(@Path("id") String studentId, @Header("X-Access-Token") String accessToken, @Part MultipartBody.Part file, @QueryMap HashMap<String, Object> map);
+
+    @GET("students/{id}/agreement")
+    Observable<IdCardUrl> createAgreement(@Path("id") String studentId);
+
+    @POST("students/{id}/agreement")
+    Observable<Student> signAgreement(@Path("id") String studentId, @Header("X-Access-Token") String accessToken);
+
+    @FormUrlEncoded
+    @POST("students/{id}/agreement_mail")
+    Observable<BaseSuccess> sendAgreementEmail(@Path("id") String studentId, @FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
 
     class Factory {
         public static HHApiService create() {

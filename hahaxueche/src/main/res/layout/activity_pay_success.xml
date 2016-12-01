@@ -127,7 +127,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tv_share"
+                android:id="@+id/tv_sign"
                 android:layout_width="@dimen/width320dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -136,7 +136,7 @@
                 android:gravity="center"
                 android:paddingBottom="13dp"
                 android:paddingTop="13dp"
-                android:text="分享得现金"
+                android:text="签订专属协议"
                 android:textColor="@color/haha_white"
                 android:textSize="16sp" />
 

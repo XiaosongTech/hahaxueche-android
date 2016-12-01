@@ -8,7 +8,7 @@ import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseModel;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.payment.Voucher;
-import com.hahaxueche.model.user.Student;
+import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.employee.Adviser;
 import com.hahaxueche.presenter.Presenter;
@@ -54,6 +54,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
             mStudent = user.student;
             mMyPageView.loadStudentInfo(mStudent);
             showVoucherBadge(mStudent);
+            setContractBadge();
             fetchAdviser();
         } else {
             mMyPageView.showNotLoginView();
@@ -432,5 +433,37 @@ public class MyPagePresenter implements Presenter<MyPageView> {
             }
         }
         mMyPageView.setVoucherBadge(hasUnUsedVoucher);
+    }
+
+    public void clickMyContract() {
+        User user = application.getSharedPrefUtil().getUser();
+        HashMap<String, String> map = new HashMap();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_contract_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_contract_tapped");
+        }
+        if (user == null || !user.isLogin()) return;
+        if (!user.student.hasPurchasedService()) {
+            mMyPageView.alertToFindCoach();
+        } else if (!user.student.isUploadedIdInfo()) {
+            mMyPageView.navigateToUploadIdCard();
+        } else if (!user.student.isSigned()) {
+            mMyPageView.navigateToSignContract();
+        } else {
+            mMyPageView.navigateToMyContract();
+        }
+    }
+
+    public void setContractBadge() {
+        User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin()) return;
+        if (user.student.hasPurchasedService() && (!user.student.isUploadedIdInfo() || !user.student.isSigned())) {
+            //已购买但是未签订协议或者上传资料
+            mMyPageView.setContractBadge(true);
+        } else {
+            mMyPageView.setContractBadge(false);
+        }
     }
 }

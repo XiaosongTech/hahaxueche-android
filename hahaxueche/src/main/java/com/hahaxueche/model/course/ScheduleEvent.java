@@ -1,6 +1,6 @@
 package com.hahaxueche.model.course;
 
-import com.hahaxueche.model.user.Student;
+import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.model.user.coach.Coach;
 
 import java.util.ArrayList;

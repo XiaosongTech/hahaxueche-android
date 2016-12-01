@@ -1,19 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:gravity="center">
+    android:layout_gravity="center">
 
     <TextView
         android:id="@+id/tabText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_marginBottom="4dp"
         android:layout_marginTop="4dp"
         android:drawablePadding="4dp"
         android:drawableTop="@drawable/bottom_my_page_selector"
         android:focusable="true"
+        android:text="我的页面"
         android:textColor="@drawable/bottom_text_selector"
         android:textSize="10sp" />
-</LinearLayout>
+
+    <View
+        android:id="@+id/view_badge_my_page"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_alignTop="@id/tabText"
+        android:layout_marginLeft="-5dp"
+        android:layout_toRightOf="@id/tabText"
+        android:background="@drawable/badge_red"
+        android:visibility="gone" />
+</RelativeLayout>

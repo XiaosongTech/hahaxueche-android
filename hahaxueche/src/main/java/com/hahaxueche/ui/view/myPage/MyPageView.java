@@ -1,6 +1,6 @@
 package com.hahaxueche.ui.view.myPage;
 
-import com.hahaxueche.model.user.Student;
+import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.ui.view.base.HHBaseView;
 
 /**
@@ -39,9 +39,24 @@ public interface MyPageView extends HHBaseView {
     void setVoucherBadge(boolean hasBadge);
 
     /**
+     * 设置协议未读显示
+     *
+     * @param hasBadge
+     */
+    void setContractBadge(boolean hasBadge);
+
+    /**
      * 打开webview
      *
      * @param url
      */
     void openWebView(String url);
+
+    void alertToFindCoach();
+
+    void navigateToUploadIdCard();
+
+    void navigateToSignContract();
+
+    void navigateToMyContract();
 }

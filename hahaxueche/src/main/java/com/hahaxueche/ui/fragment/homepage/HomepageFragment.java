@@ -24,8 +24,12 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.base.Banner;
 import com.hahaxueche.model.base.City;
 import com.hahaxueche.presenter.homepage.HomepagePresenter;
+import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.base.MainActivity;
+import com.hahaxueche.ui.activity.login.StartLoginActivity;
+import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
+import com.hahaxueche.ui.dialog.BaseAlertDialog;
 import com.hahaxueche.ui.dialog.login.CityChoseDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.homepage.HomepageView;
@@ -114,24 +118,44 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         }
     }
 
-    @OnClick({R.id.fly_my_strength,
-            R.id.fly_procedure,
-            R.id.frl_tel_ask,
+    @Override
+    public void navigateToReferFriends() {
+        startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+    }
+
+    @Override
+    public void alertToRegister() {
+        BaseAlertDialog dialog = new BaseAlertDialog(getContext(), "推荐好友", mPresenter.getShareText(), "去注册！",
+                new BaseAlertDialog.onButtonClickListener() {
+                    @Override
+                    public void sure() {
+                        ActivityCollector.finishAll();
+                        Intent intent = new Intent(getContext(), StartLoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                });
+        dialog.show();
+    }
+
+    @OnClick({R.id.tv_procedure,
+            R.id.tv_tel_ask,
             R.id.cv_coach,
-            R.id.frl_online_ask,
+            R.id.tv_online_ask,
             R.id.iv_free_try,
             R.id.cv_adviser,
             R.id.cv_driving_school,
-            R.id.frl_group_buy})
+            R.id.tv_group_buy,
+            R.id.tv_test_lib,
+            R.id.tv_ensure_pass,
+            R.id.tv_platform_guard,
+            R.id.tv_refer_friends})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.fly_my_strength:
-                mPresenter.openMyStrengths();
-                break;
-            case R.id.fly_procedure:
+            case R.id.tv_procedure:
                 mPresenter.openProcedure();
                 break;
-            case R.id.frl_tel_ask:
+            case R.id.tv_tel_ask:
                 mPresenter.phoneSupportCount();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
@@ -144,7 +168,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             case R.id.cv_coach:
                 mPresenter.openBestCoaches();
                 break;
-            case R.id.frl_online_ask:
+            case R.id.tv_online_ask:
                 mPresenter.onlineAsk();
                 break;
             case R.id.iv_free_try:
@@ -156,8 +180,20 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             case R.id.cv_driving_school:
                 mPresenter.openFindDrivingSchool();
                 break;
-            case R.id.frl_group_buy:
+            case R.id.tv_group_buy:
                 mPresenter.openGroupBuy();
+                break;
+            case R.id.tv_test_lib:
+                mPresenter.clickTestLib();
+                break;
+            case R.id.tv_ensure_pass:
+                mPresenter.clickEnsurePass();
+                break;
+            case R.id.tv_platform_guard:
+                mPresenter.clickPlatformGuard();
+                break;
+            case R.id.tv_refer_friends:
+                mPresenter.clickReferFriends();
                 break;
             default:
                 break;

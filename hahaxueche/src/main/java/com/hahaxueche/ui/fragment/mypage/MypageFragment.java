@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
-import com.hahaxueche.model.user.Student;
+import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.presenter.myPage.MyPagePresenter;
 import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.MainActivity;
@@ -28,11 +28,13 @@ import com.hahaxueche.ui.activity.myPage.CourseActivity;
 import com.hahaxueche.ui.activity.myPage.FAQActivity;
 import com.hahaxueche.ui.activity.myPage.FollowListActivity;
 import com.hahaxueche.ui.activity.myPage.MyCoachDetailActivity;
+import com.hahaxueche.ui.activity.myPage.MyContractActivity;
 import com.hahaxueche.ui.activity.myPage.MyVoucherActivity;
 import com.hahaxueche.ui.activity.myPage.NoCourseActivity;
 import com.hahaxueche.ui.activity.myPage.PaymentStageActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.activity.myPage.SoftwareInfoActivity;
+import com.hahaxueche.ui.activity.myPage.UploadIdCardActivity;
 import com.hahaxueche.ui.dialog.AvatarDialog;
 import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.community.MyAdviserDialog;
@@ -41,7 +43,6 @@ import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.myPage.MyPageView;
 import com.hahaxueche.util.PhotoUtil;
 import com.hahaxueche.util.Utils;
-import com.jauker.widget.BadgeView;
 
 import java.io.File;
 
@@ -78,6 +79,10 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     View mViewBadge;
     @BindView(R.id.iv_more_voucher)
     ImageView mIvMoreVoucher;
+    @BindView(R.id.view_badge_contract)
+    View mViewBadgeContract;
+    @BindView(R.id.iv_more_contract)
+    ImageView mIvMoreContract;
 
     private MyPagePresenter mPresenter;
     private MainActivity mActivity;
@@ -91,6 +96,8 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     private EditUsernameDialog mEditUsernameDialog;
     private static final int REQUEST_CODE_NO_COURSE = 12;
     private static final int REQUEST_CODE_PAYMENT_STAGE = 13;
+    private static final int REQUEST_CODE_UPLOAD_ID_CARD = 3;
+    private static final int REQUEST_CODE_MY_CONTRACT = 4;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -135,6 +142,7 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
             mIvPaymentArrow.setVisibility(View.GONE);
         }
         mTvStudentPhase.setText(student.getStudentPhaseLabel());
+        mActivity.controlMyPageBadge();
     }
 
     @Override
@@ -180,7 +188,8 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
             R.id.rly_payment_stage,
             R.id.rly_my_course,
             R.id.iv_edit_username,
-            R.id.rly_my_voucher})
+            R.id.rly_my_voucher,
+            R.id.rly_my_contract})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rly_online_service:
@@ -277,6 +286,9 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
             case R.id.rly_my_voucher:
                 mPresenter.clickMyVoucher();
                 break;
+            case R.id.rly_my_contract:
+                mPresenter.clickMyContract();
+                break;
             default:
                 break;
         }
@@ -335,13 +347,53 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
         if (hasBadge) {
             mViewBadge.setVisibility(View.VISIBLE);
             mIvMoreVoucher.setVisibility(View.GONE);
-            BadgeView badge = new BadgeView(getContext());
-            badge.setTargetView(mViewBadge);
-            badge.setBadgeCount(1);
         } else {
             mViewBadge.setVisibility(View.GONE);
             mIvMoreVoucher.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void setContractBadge(boolean hasBadge) {
+        if (hasBadge) {
+            mViewBadgeContract.setVisibility(View.VISIBLE);
+            mIvMoreContract.setVisibility(View.GONE);
+        } else {
+            mViewBadgeContract.setVisibility(View.GONE);
+            mIvMoreContract.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void alertToFindCoach() {
+        BaseConfirmSimpleDialog dialog = new BaseConfirmSimpleDialog(getContext(), "哈哈学车",
+                "您还没有报名哟~\n快去选选心仪的教练报名学车吧~", "去逛逛", "取消", new BaseConfirmSimpleDialog.onClickListener() {
+            @Override
+            public void clickConfirm() {
+                mActivity.selectTab(1);
+            }
+
+            @Override
+            public void clickCancel() {
+
+            }
+        });
+        dialog.show();
+    }
+
+    @Override
+    public void navigateToUploadIdCard() {
+        startActivityForResult(new Intent(getContext(), UploadIdCardActivity.class), REQUEST_CODE_UPLOAD_ID_CARD);
+    }
+
+    @Override
+    public void navigateToSignContract() {
+        startActivityForResult(new Intent(getContext(), MyContractActivity.class), REQUEST_CODE_MY_CONTRACT);
+    }
+
+    @Override
+    public void navigateToMyContract() {
+        startActivityForResult(new Intent(getContext(), MyContractActivity.class), REQUEST_CODE_MY_CONTRACT);
     }
 
     @Override
@@ -415,7 +467,18 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
             }
         } else if (requestCode == REQUEST_CODE_PAYMENT_STAGE) {
             mPresenter.fetchStudent();
+        } else if (requestCode == REQUEST_CODE_UPLOAD_ID_CARD) {
+            if (resultCode == RESULT_OK) {
+                mActivity.controlMyPageBadge();
+                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+            }
+        } else if (requestCode == REQUEST_CODE_MY_CONTRACT) {
+            if (resultCode == RESULT_OK) {//已签订协议
+                mActivity.controlMyPageBadge();
+                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+            }
         }
+        mPresenter.setContractBadge();
         super.onActivityResult(requestCode, resultCode, data);
     }
 

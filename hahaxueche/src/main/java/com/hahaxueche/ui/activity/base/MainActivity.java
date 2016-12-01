@@ -6,27 +6,33 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TabHost;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
 import com.hahaxueche.presenter.base.MainPresenter;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.PartnerDetailActivity;
+import com.hahaxueche.ui.activity.myPage.MyContractActivity;
+import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
+import com.hahaxueche.ui.activity.myPage.UploadIdCardActivity;
+import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.fragment.community.CommunityFragment;
 import com.hahaxueche.ui.fragment.findCoach.FindCoachFragment;
 import com.hahaxueche.ui.fragment.homepage.HomepageFragment;
 import com.hahaxueche.ui.fragment.myPage.MyPageFragment;
+import com.hahaxueche.ui.view.base.MainView;
 import com.hahaxueche.ui.widget.FragmentTabHost;
-import com.hahaxueche.util.HHLog;
 
 /**
  * Created by wangshirui on 16/9/15.
  */
-public class MainActivity extends HHBaseActivity {
+public class MainActivity extends HHBaseActivity implements MainView {
     private MainPresenter mPresenter;
     private FragmentTabHost mTabHost = null;
     private View indicator = null;
+    private View mViewBadgeMyPage;
+    private static final int REQUEST_CODE_UPLOAD_ID_CARD = 3;
+    private static final int REQUEST_CODE_MY_CONTRACT = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,24 +44,25 @@ public class MainActivity extends HHBaseActivity {
         mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
 
-        indicator = getIndicatorView("哈哈学车", R.layout.indicator_homepage);
-        mTabHost.addTab(mTabHost.newTabSpec("homepage").setIndicator(indicator), HomepageFragment.class, null);
+        mTabHost.addTab(mTabHost.newTabSpec("homepage").setIndicator(getLayoutInflater().inflate(R.layout.indicator_homepage, null)),
+                HomepageFragment.class, null);
 
-        indicator = getIndicatorView("寻找教练", R.layout.indicator_find_coach);
-        mTabHost.addTab(mTabHost.newTabSpec("findCoach").setIndicator(indicator), FindCoachFragment.class, null);
+        mTabHost.addTab(mTabHost.newTabSpec("findCoach").setIndicator(getLayoutInflater().inflate(R.layout.indicator_find_coach, null)),
+                FindCoachFragment.class, null);
 
-        indicator = getIndicatorView("小哈俱乐部", R.layout.indicator_community);
-        mTabHost.addTab(mTabHost.newTabSpec("community").setIndicator(indicator), CommunityFragment.class, null);
+        mTabHost.addTab(mTabHost.newTabSpec("community").setIndicator(getLayoutInflater().inflate(R.layout.indicator_community, null)),
+                CommunityFragment.class, null);
 
-        indicator = getIndicatorView("我的页面", R.layout.indicator_my_page);
-        mTabHost.addTab(mTabHost.newTabSpec("myPage").setIndicator(indicator), MyPageFragment.class, null);
+        View myPageIndicator = getLayoutInflater().inflate(R.layout.indicator_my_page, null);
+        mViewBadgeMyPage = myPageIndicator.findViewById(R.id.view_badge_my_page);
+        mTabHost.addTab(mTabHost.newTabSpec("myPage").setIndicator(myPageIndicator), MyPageFragment.class, null);
 
         mPresenter.viewHomepageCount();
 
         mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String tabId) {
-                HHLog.v(tabId);
+                mPresenter.setMyPageBadge();
                 switch (tabId) {
                     case "homepage":
                         mPresenter.viewHomepageCount();
@@ -88,19 +95,59 @@ public class MainActivity extends HHBaseActivity {
                 startActivity(startIntent);
             }
         }
+        controlMyPageBadge();
+        mPresenter.controlSignDialog();
     }
 
-    private View getIndicatorView(String name, int layoutId) {
-        View v = getLayoutInflater().inflate(layoutId, null);
-        TextView tv = (TextView) v.findViewById(R.id.tabText);
-        tv.setText(name);
-        return v;
+    public void controlMyPageBadge() {
+        mPresenter.setMyPageBadge();
     }
 
     public void selectTab(int tab) {
         if (mTabHost != null) {
             mTabHost.setCurrentTab(tab);
         }
+    }
+
+    @Override
+    public void setMyPageBadge(boolean hasBadge) {
+        if (hasBadge) {
+            mViewBadgeMyPage.setVisibility(View.VISIBLE);
+        } else {
+            mViewBadgeMyPage.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void showSignDialog() {
+        BaseConfirmSimpleDialog dialog = new BaseConfirmSimpleDialog(getContext(), "友情提醒", "快去上传资料签署专属学员协议吧！",
+                "去上传", "取消", new BaseConfirmSimpleDialog.onClickListener() {
+            @Override
+            public void clickConfirm() {
+                mPresenter.clickMyContract();
+            }
+
+            @Override
+            public void clickCancel() {
+
+            }
+        });
+        dialog.show();
+    }
+
+    @Override
+    public void navigateToUploadIdCard() {
+        startActivityForResult(new Intent(getContext(), UploadIdCardActivity.class), REQUEST_CODE_UPLOAD_ID_CARD);
+    }
+
+    @Override
+    public void navigateToSignContract() {
+        startActivityForResult(new Intent(getContext(), MyContractActivity.class), REQUEST_CODE_MY_CONTRACT);
+    }
+
+    @Override
+    public void navigateToMyContract() {
+        startActivityForResult(new Intent(getContext(), MyContractActivity.class), REQUEST_CODE_MY_CONTRACT);
     }
 
     @Override
@@ -126,5 +173,21 @@ public class MainActivity extends HHBaseActivity {
         }
         return super.onKeyDown(keyCode, event);
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_UPLOAD_ID_CARD) {
+            if (resultCode == RESULT_OK) {
+                controlMyPageBadge();
+                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+            }
+        } else if (requestCode == REQUEST_CODE_MY_CONTRACT) {
+            if (resultCode == RESULT_OK) {//已签订协议
+                controlMyPageBadge();
+                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
