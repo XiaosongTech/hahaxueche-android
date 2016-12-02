@@ -72,7 +72,8 @@
         android:id="@+id/fly_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/haha_white">
+        android:background="@color/haha_white"
+        android:visibility="gone">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/iv_image_url"
@@ -81,6 +82,22 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"
             fresco:placeholderImage="@drawable/ic_question_pic" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/fly_video"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/haha_white"
+        android:visibility="gone">
+
+        <VideoView
+            android:id="@+id/video_question"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp" />
 
     </FrameLayout>
 

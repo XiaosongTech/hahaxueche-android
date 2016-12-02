@@ -133,7 +133,7 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
             if (questions != null && questions.size() > 0) {
                 ArrayList<String> urls = new ArrayList<>();
                 for (Question question : questions) {
-                    String explains = question.explains;
+                    String explains = question.explain;
                     if (explains.contains("http://")) {
                         String url = explains.substring(explains.indexOf("http://"), explains.indexOf("html") + 4);
                         if (!urls.contains(url)) {
@@ -212,6 +212,9 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
             mIvSubmitExam.setVisibility(View.GONE);
         } else if (mExamMode.equals(ExamLib.TEST_MODE_CHECK_WRONG)) {
             mTvTitle.setText("查看错题");
+            mIvSubmitExam.setVisibility(View.GONE);
+        } else if (mExamMode.equals(ExamLib.TEST_MODE_TURN)) {
+            mTvTitle.setText("顺序练题");
             mIvSubmitExam.setVisibility(View.GONE);
         }
         if (mExamMode.equals(ExamLib.TEST_MODE_TURN)) {//顺序联系,提示是否继续上次位置
@@ -435,7 +438,7 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
     @Override
     public void answer(Question question) {
         if (mExamLib == null) return;
-        mExamLib.addAnsweredQuestion(question.id);
+        mExamLib.addAnsweredQuestion(question.questionid);
         if (mExamLib.isAnsweredAll()) {//已经回答完全部问题
             ExamSubmitAlertDialog alertDialog = new ExamSubmitAlertDialog(ExamActivity.this, mExamLib.getAllAnsweredHints(), new ExamSubmitAlertDialog.onConfirmListener() {
                 @Override

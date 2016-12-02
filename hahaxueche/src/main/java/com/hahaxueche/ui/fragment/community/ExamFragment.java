@@ -2,6 +2,7 @@ package com.hahaxueche.ui.fragment.community;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -53,7 +55,9 @@ public class ExamFragment extends Fragment {
     private TextView mTvCollect;
     private TextView mTvRemove;
     private FrameLayout mFlyImage;
+    private FrameLayout mFlyVideo;
     private SimpleDraweeView mIvUrl;
+    private VideoView mVideo;
     private RelativeLayout mRlyItem1;
     private RelativeLayout mRlyItem2;
     private TextView mTvItem1Label;
@@ -152,7 +156,9 @@ public class ExamFragment extends Fragment {
         mTvCollect = ButterKnife.findById(view, R.id.tv_collect);
         mTvRemove = ButterKnife.findById(view, R.id.tv_remove_collect);
         mFlyImage = ButterKnife.findById(view, R.id.fly_image);
+        mFlyVideo = ButterKnife.findById(view, R.id.fly_video);
         mIvUrl = ButterKnife.findById(view, R.id.iv_image_url);
+        mVideo = ButterKnife.findById(view, R.id.video_question);
         mTvItem1Label = ButterKnife.findById(view, R.id.tv_item1_label);
         mTvItem2Label = ButterKnife.findById(view, R.id.tv_item2_label);
         mTvItem3Label = ButterKnife.findById(view, R.id.tv_item3_label);
@@ -186,12 +192,11 @@ public class ExamFragment extends Fragment {
     private void loadDatas() {
         mTvQuestionType.setText(mQuestion.getQuestionType());
         mTvQuestion.setText(mQuestion.question);
-        //加载图片
-        if (TextUtils.isEmpty(mQuestion.url)) {
-            mFlyImage.setVisibility(View.GONE);
-        } else {
+        //加载media
+        if (mQuestion.mediatype.equals("1")) {
+            mFlyVideo.setVisibility(View.GONE);
             mFlyImage.setVisibility(View.VISIBLE);
-            Uri uri = Uri.parse(mQuestion.url);
+            Uri uri = Uri.parse(mQuestion.mediacontent);
             DraweeController draweeController =
                     Fresco.newDraweeControllerBuilder()
                             .setUri(uri)
@@ -200,7 +205,25 @@ public class ExamFragment extends Fragment {
             mIvUrl.setController(draweeController);
             GenericDraweeHierarchy hierarchy = mIvUrl.getHierarchy();
             hierarchy.setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
+        } else if (mQuestion.mediatype.equals("2")) {
+            mFlyVideo.setVisibility(View.VISIBLE);
+            mFlyImage.setVisibility(View.GONE);
+            Uri mVideoUri = Uri.parse(mQuestion.mediacontent);
+            mVideo.setVideoPath(mVideoUri.toString());
+            mVideo.start();
+            mVideo.requestFocus();
+            mVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mp.start();
+                    mp.setLooping(true);
+
+                }
+            });
+        } else {
+            mFlyVideo.setVisibility(View.GONE);
+            mFlyImage.setVisibility(View.GONE);
         }
         //判断题
         if (mQuestion.getQuestionType().equals(ExamLib.QUESTION_TYPE_TRUE_FALSE)) {
@@ -211,12 +234,12 @@ public class ExamFragment extends Fragment {
         } else {
             mRlyItem3.setVisibility(View.VISIBLE);
             mRlyItem4.setVisibility(View.VISIBLE);
-            mTvItem1.setText(mQuestion.item1);
-            mTvItem2.setText(mQuestion.item2);
-            mTvItem3.setText(mQuestion.item3);
-            mTvItem4.setText(mQuestion.item4);
+            mTvItem1.setText(mQuestion.answers.get(0) != null ? mQuestion.answers.get(0) : "");
+            mTvItem2.setText(mQuestion.answers.get(1) != null ? mQuestion.answers.get(1) : "");
+            mTvItem3.setText(mQuestion.answers.get(2) != null ? mQuestion.answers.get(2) : "");
+            mTvItem4.setText(mQuestion.answers.get(3) != null ? mQuestion.answers.get(3) : "");
         }
-        String explains = mQuestion.explains;
+        String explains = mQuestion.explain;
         if (explains.contains("http://")) {
             //含有链接的文字说明
             CharSequence explainStr = explains;
@@ -245,7 +268,7 @@ public class ExamFragment extends Fragment {
             mTvExplain.setHighlightColor(ContextCompat.getColor(getContext(), R.color.haha_blue));
             mTvExplain.setMovementMethod(LinkMovementMethod.getInstance());
         } else {
-            mTvExplain.setText(mQuestion.explains);
+            mTvExplain.setText(mQuestion.explain);
         }
 
         mLlyExplain.setVisibility(View.GONE);
@@ -362,11 +385,6 @@ public class ExamFragment extends Fragment {
         mTvItem3Label.setTextColor(ContextCompat.getColor(getContext(), userAnswerList.contains("3") ? R.color.app_theme_color : R.color.haha_gray_text));
         mTvItem4Label.setBackgroundResource(userAnswerList.contains("4") ? R.drawable.circle_half_appcolor : R.drawable.circle_gray);
         mTvItem4Label.setTextColor(ContextCompat.getColor(getContext(), userAnswerList.contains("4") ? R.color.app_theme_color : R.color.haha_gray_text));
-        if (!mQuestion.isCorrect()) {
-            //错题计入我的题库
-            spUtil.addQuestionCollect(mExamType, mQuestion.id);
-            displayCollect();
-        }
     }
 
     /**
@@ -375,81 +393,14 @@ public class ExamFragment extends Fragment {
     private void displayAnswer() {
         //如果是多选题,每个选项都显示对错,与用户选择的答案无关
         if (mQuestion.getQuestionType().equals(ExamLib.QUESTION_TYPE_MULTI_CHOICE)) {
-            if (mQuestion.answer.equals("1")) {//A
-                setItemView(mTvItem1Label, mIvItem1, true);
-                setItemView(mTvItem2Label, mIvItem2, false);
-                setItemView(mTvItem3Label, mIvItem3, false);
-                setItemView(mTvItem4Label, mIvItem4, false);
-            } else if (mQuestion.answer.equals("2")) {//B
-                setItemView(mTvItem1Label, mIvItem1, false);
-                setItemView(mTvItem2Label, mIvItem2, true);
-                setItemView(mTvItem3Label, mIvItem3, false);
-                setItemView(mTvItem4Label, mIvItem4, false);
-            } else if (mQuestion.answer.equals("3")) {//C
-                setItemView(mTvItem1Label, mIvItem1, false);
-                setItemView(mTvItem2Label, mIvItem2, false);
-                setItemView(mTvItem3Label, mIvItem3, true);
-                setItemView(mTvItem4Label, mIvItem4, false);
-            } else if (mQuestion.answer.equals("4")) {//D
-                setItemView(mTvItem1Label, mIvItem1, false);
-                setItemView(mTvItem2Label, mIvItem2, false);
-                setItemView(mTvItem3Label, mIvItem3, false);
-                setItemView(mTvItem4Label, mIvItem4, true);
-            } else if (mQuestion.answer.equals("7")) {//AB
-                setItemView(mTvItem1Label, mIvItem1, true);
-                setItemView(mTvItem2Label, mIvItem2, true);
-                setItemView(mTvItem3Label, mIvItem3, false);
-                setItemView(mTvItem4Label, mIvItem4, false);
-            } else if (mQuestion.answer.equals("8")) {//AC
-                setItemView(mTvItem1Label, mIvItem1, true);
-                setItemView(mTvItem2Label, mIvItem2, false);
-                setItemView(mTvItem3Label, mIvItem3, true);
-                setItemView(mTvItem4Label, mIvItem4, false);
-            } else if (mQuestion.answer.equals("9")) {//AD
-                setItemView(mTvItem1Label, mIvItem1, true);
-                setItemView(mTvItem2Label, mIvItem2, false);
-                setItemView(mTvItem3Label, mIvItem3, false);
-                setItemView(mTvItem4Label, mIvItem4, true);
-            } else if (mQuestion.answer.equals("10")) {//BC
-                setItemView(mTvItem1Label, mIvItem1, false);
-                setItemView(mTvItem2Label, mIvItem2, true);
-                setItemView(mTvItem3Label, mIvItem3, true);
-                setItemView(mTvItem4Label, mIvItem4, false);
-            } else if (mQuestion.answer.equals("11")) {//BD
-                setItemView(mTvItem1Label, mIvItem1, false);
-                setItemView(mTvItem2Label, mIvItem2, true);
-                setItemView(mTvItem3Label, mIvItem3, false);
-                setItemView(mTvItem4Label, mIvItem4, true);
-            } else if (mQuestion.answer.equals("12")) {//CD
-                setItemView(mTvItem1Label, mIvItem1, false);
-                setItemView(mTvItem2Label, mIvItem2, false);
-                setItemView(mTvItem3Label, mIvItem3, true);
-                setItemView(mTvItem4Label, mIvItem4, true);
-            } else if (mQuestion.answer.equals("13")) {//ABC
-                setItemView(mTvItem1Label, mIvItem1, true);
-                setItemView(mTvItem2Label, mIvItem2, true);
-                setItemView(mTvItem3Label, mIvItem3, true);
-                setItemView(mTvItem4Label, mIvItem4, false);
-            } else if (mQuestion.answer.equals("14")) {//ABD
-                setItemView(mTvItem1Label, mIvItem1, true);
-                setItemView(mTvItem2Label, mIvItem2, true);
-                setItemView(mTvItem3Label, mIvItem3, false);
-                setItemView(mTvItem4Label, mIvItem4, true);
-            } else if (mQuestion.answer.equals("15")) {//ACD
-                setItemView(mTvItem1Label, mIvItem1, true);
-                setItemView(mTvItem2Label, mIvItem2, false);
-                setItemView(mTvItem3Label, mIvItem3, true);
-                setItemView(mTvItem4Label, mIvItem4, true);
-            } else if (mQuestion.answer.equals("16")) {//BCD
-                setItemView(mTvItem1Label, mIvItem1, false);
-                setItemView(mTvItem2Label, mIvItem2, true);
-                setItemView(mTvItem3Label, mIvItem3, true);
-                setItemView(mTvItem4Label, mIvItem4, true);
-            } else if (mQuestion.answer.equals("17")) {//ABCD
-                setItemView(mTvItem1Label, mIvItem1, true);
-                setItemView(mTvItem2Label, mIvItem2, true);
-                setItemView(mTvItem3Label, mIvItem3, true);
-                setItemView(mTvItem4Label, mIvItem4, true);
+            setItemView(mTvItem1Label, mIvItem1, mQuestion.answer_arr.contains("1"));
+            setItemView(mTvItem2Label, mIvItem2, mQuestion.answer_arr.contains("2"));
+            setItemView(mTvItem3Label, mIvItem3, mQuestion.answer_arr.contains("3"));
+            setItemView(mTvItem4Label, mIvItem4, mQuestion.answer_arr.contains("4"));
+            if (!mQuestion.isCorrect()) {
+                //错题计入我的题库
+                spUtil.addQuestionCollect(mExamType, mQuestion.questionid);
+                displayCollect();
             }
         } else {
             if (mQuestion.answer.equals("1")) {
@@ -472,7 +423,7 @@ public class ExamFragment extends Fragment {
                     setItemView(mTvItem4Label, mIvItem4, false);
                 }
                 //错题计入我的题库
-                spUtil.addQuestionCollect(mExamType, mQuestion.id);
+                spUtil.addQuestionCollect(mExamType, mQuestion.questionid);
                 displayCollect();
             }
         }
@@ -490,7 +441,7 @@ public class ExamFragment extends Fragment {
         } else {
             mTvRemove.setVisibility(View.GONE);
             mTvCollect.setVisibility(View.VISIBLE);
-            if (spUtil.isQuestionCollect(mExamType, mQuestion.id)) {
+            if (spUtil.isQuestionCollect(mExamType, mQuestion.questionid)) {
                 mTvCollect.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(getContext(), R.drawable.ic_question_alcollect), null, null);
             } else {
                 mTvCollect.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(getContext(), R.drawable.ic_question_collect), null, null);
@@ -502,7 +453,7 @@ public class ExamFragment extends Fragment {
      * 收藏题目
      */
     private void collectQuestion() {
-        String questionId = mQuestion.id;
+        String questionId = mQuestion.questionid;
         if (spUtil.isQuestionCollect(mExamType, questionId)) {
             spUtil.removeQuestionCollect(mExamType, questionId);
         } else {
@@ -512,7 +463,7 @@ public class ExamFragment extends Fragment {
     }
 
     private void removeCollectQuesion() {
-        spUtil.removeQuestionCollect(mExamType, mQuestion.id);
+        spUtil.removeQuestionCollect(mExamType, mQuestion.questionid);
         mOnCollectRemoveListener.onCollectRemove(mPageNumber);
     }
 
