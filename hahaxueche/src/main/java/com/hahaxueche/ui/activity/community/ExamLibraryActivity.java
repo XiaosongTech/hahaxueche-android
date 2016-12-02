@@ -16,7 +16,6 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.community.ExamLibraryPresenter;
-import com.hahaxueche.presenter.community.ExamPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.adapter.community.ExamLibraryPageAdapter;
 import com.hahaxueche.ui.dialog.ShareAppDialog;

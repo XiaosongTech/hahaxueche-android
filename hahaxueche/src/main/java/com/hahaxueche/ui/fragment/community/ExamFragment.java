@@ -33,6 +33,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
 import com.hahaxueche.model.examLib.Question;
 import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
+import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.util.ExamLib;
 import com.hahaxueche.util.SharedPrefUtil;
 
@@ -43,7 +44,7 @@ import butterknife.ButterKnife;
 /**
  * Created by wangshirui on 16/8/13.
  */
-public class ExamFragment extends Fragment {
+public class ExamFragment extends HHBaseFragment {
 
     public static final String ARG_PAGE = "pageNumber";
     public static final String ARG_QUESTION = "question";

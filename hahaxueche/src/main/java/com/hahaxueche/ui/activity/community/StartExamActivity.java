@@ -15,9 +15,10 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.examLib.Question;
 import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.model.user.User;
-import com.hahaxueche.presenter.community.ExamPresenter;
+import com.hahaxueche.presenter.community.StartExamPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.dialog.ShareAppDialog;
+import com.hahaxueche.ui.view.community.StartExamView;
 import com.hahaxueche.util.ExamLib;
 import com.hahaxueche.util.SharedPrefUtil;
 
@@ -30,7 +31,7 @@ import butterknife.ButterKnife;
  * Created by wangshirui on 2016/10/18.
  */
 
-public class StartExamActivity extends HHBaseActivity {
+public class StartExamActivity extends HHBaseActivity implements StartExamView {
     private SharedPrefUtil spUtil;
 
     ImageView mIvBack;
@@ -82,12 +83,12 @@ public class StartExamActivity extends HHBaseActivity {
     private static final int REQUEST_CODE_EXAM_ACTIVITY = 0;
 
     private ShareAppDialog mShareDialog;
-    private ExamPresenter mPresenter;
+    private StartExamPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter = new ExamPresenter();
+        mPresenter = new StartExamPresenter();
         setContentView(R.layout.activity_start_exam);
         ButterKnife.bind(this);
         mPresenter.attachView(this);
@@ -290,6 +291,7 @@ public class StartExamActivity extends HHBaseActivity {
                 mExamScore = data.getStringExtra("score");
                 mExamTime = data.getStringExtra("time");
                 mStatus = data.getStringExtra("status");
+                mPresenter.submitExamResults(mExamType, mExamScore);
                 refreshUI();
             }
         }

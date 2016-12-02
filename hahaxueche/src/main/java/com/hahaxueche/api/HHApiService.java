@@ -19,6 +19,7 @@ import com.hahaxueche.model.responseList.ReferrerResponseList;
 import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.responseList.ScheduleEventResponseList;
 import com.hahaxueche.model.user.IdCardUrl;
+import com.hahaxueche.model.user.student.ExamResult;
 import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Coach;
@@ -247,6 +248,13 @@ public interface HHApiService {
     @FormUrlEncoded
     @POST("students/{id}/agreement_mail")
     Observable<BaseSuccess> sendAgreementEmail(@Path("id") String studentId, @FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
+
+    @FormUrlEncoded
+    @POST("students/{id}/exam_results")
+    Observable<ExamResult> submitExamResult(@Path("id") String studentId, @FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
+
+    @GET("students/{id}/exam_results")
+    Observable<ArrayList<ExamResult>> getExamResults(@Path("id") String studentId, @Query("from") int fromScore, @Header("X-Access-Token") String accessToken);
 
     class Factory {
         public static HHApiService create() {

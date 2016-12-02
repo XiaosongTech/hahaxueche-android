@@ -26,10 +26,12 @@ import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.R;
 import com.hahaxueche.model.examLib.Question;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.presenter.community.ExamPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.community.ExamSubmitAlertDialog;
 import com.hahaxueche.ui.fragment.community.ExamFragment;
+import com.hahaxueche.ui.view.community.ExamView;
 import com.hahaxueche.util.ExamLib;
 import com.hahaxueche.util.SharedPrefUtil;
 import com.hahaxueche.util.Utils;
@@ -49,7 +51,7 @@ import butterknife.ButterKnife;
  * Created by wangshirui on 2016/10/18.
  */
 
-public class ExamActivity extends HHBaseActivity implements ExamFragment.OnCollectRemoveListener, ExamFragment.OnMockExamAnsweredListener {
+public class ExamActivity extends HHBaseActivity implements ExamFragment.OnCollectRemoveListener, ExamFragment.OnMockExamAnsweredListener, ExamView {
     private ImageView mIvBack;
     private TextView mTvTitle;
     private ImageView mIvSubmitExam;
@@ -62,6 +64,7 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
     TextView mTvNext;
     @BindView(R.id.tv_page)
     TextView mTvPage;
+    private ExamPresenter mPresenter;
 
     private ArrayList<Question> mQuestionList = new ArrayList<>();
     private int mCurrentPosition;
@@ -79,8 +82,10 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPresenter = new ExamPresenter();
         setContentView(R.layout.activity_exam);
         ButterKnife.bind(this);
+        mPresenter.attachView(this);
         spUtil = new SharedPrefUtil(getContext());
         initActionBar();
         initQuestionList();
@@ -468,6 +473,12 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
                 }
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        mPresenter.detachView();
+        super.onDestroy();
     }
 
     @Override
