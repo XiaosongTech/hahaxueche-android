@@ -29,12 +29,14 @@ import com.hahaxueche.ui.view.community.ExamLibraryView;
 import com.hahaxueche.util.ExamLib;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
+import com.sina.weibo.sdk.api.ImageObject;
+import com.sina.weibo.sdk.api.TextObject;
 import com.sina.weibo.sdk.api.WebpageObject;
-import com.sina.weibo.sdk.api.WeiboMessage;
+import com.sina.weibo.sdk.api.WeiboMultiMessage;
 import com.sina.weibo.sdk.api.share.BaseResponse;
 import com.sina.weibo.sdk.api.share.IWeiboHandler;
 import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
-import com.sina.weibo.sdk.api.share.SendMessageToWeiboRequest;
+import com.sina.weibo.sdk.api.share.SendMultiMessageToWeiboRequest;
 import com.sina.weibo.sdk.constant.WBConstants;
 import com.sina.weibo.sdk.utils.Utility;
 import com.tencent.connect.share.QQShare;
@@ -213,7 +215,7 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
 
     @Override
     public void initShareData(String desc) {
-        mTitle = "哈哈学车-选驾校，挑教练，上哈哈学车";
+        mTitle = "科一不过包陪";
         mDescription = desc;
         mImageUrl = "http://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
         mUrl = BuildConfig.SERVER_URL + "/share/training_partners/";
@@ -320,22 +322,31 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
 
     private void shareToWeibo() {
         // 1. 初始化微博的分享消息
-        WeiboMessage weiboMessage = new WeiboMessage();
+        WeiboMultiMessage weiboMessage = new WeiboMultiMessage();
+        ImageObject imageObject = new ImageObject();
+        Bitmap thumbBmp = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.share_qrcode), 400, 150, true);
+        // 设置 Bitmap 类型的图片到视频对象里
+        // 设置缩略图。 注意：最终压缩过的缩略图大小不得超过 32kb。
+        imageObject.setImageObject(thumbBmp);
+        TextObject textObject = new TextObject();
+        textObject.text = mTitle;
         WebpageObject mediaObject = new WebpageObject();
         mediaObject.identify = Utility.generateGUID();
-        mediaObject.title = mTitle;
+        mediaObject.title = "链接";
         mediaObject.description = mDescription;
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-        // 设置 Bitmap 类型的图片到视频对象里         设置缩略图。 注意：最终压缩过的缩略图大小不得超过 32kb。
-        mediaObject.setThumbImage(bitmap);
+        mediaObject.setThumbImage(thumbBmp);
         mediaObject.actionUrl = mUrl;
-        mediaObject.defaultText = mTitle + mDescription;
+
+        weiboMessage.imageObject = imageObject;
+        weiboMessage.textObject = textObject;
         weiboMessage.mediaObject = mediaObject;
+
         // 2. 初始化从第三方到微博的消息请求
-        SendMessageToWeiboRequest request = new SendMessageToWeiboRequest();
-        // 用transaction唯一标识一个请求
+        SendMultiMessageToWeiboRequest request = new SendMultiMessageToWeiboRequest();
+        // 用transaction唯一标识一个请求*/
         request.transaction = String.valueOf(System.currentTimeMillis());
-        request.message = weiboMessage;
+        request.multiMessage = weiboMessage;
+
         // 3. 发送请求消息到微博，唤起微博分享界面
         mWeiboShareAPI.sendRequest(this, request);
     }
