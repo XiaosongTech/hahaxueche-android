@@ -36,15 +36,19 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
     private Subscription subscription;
     private HHBaseApplication application;
     private String mQrCodeUrl;
+    private String mDefaultQrCodeUrl = BuildConfig.DEBUG ? "http://q1.hahaxueche.com/refer_template5.png?watermark/3/image/aHR0cDovL3MtaW1nLmhhaGF4dWVjaGUubmV0L2RlZmF1bHRfZnJlZV90cmlhbF9xcmNvZGUucG5n/dissolve/100/gravity/SouthWest/dx/120/dy/80" :
+            "http://q1.hahaxueche.com/refer_template5.png?watermark/3/image/aHR0cDovL3AtaW1nLmhhaGF4dWVjaGUuY29tL2RlZmF1bHRfZnJlZV90cmlhbF9xcmNvZGUucG5n/dissolve/100/gravity/SouthWest/dx/120/dy/80";
 
     public void attachView(ReferFriendsView view) {
         this.mReferFriendsView = view;
         application = HHBaseApplication.get(mReferFriendsView.getContext());
         User user = application.getSharedPrefUtil().getUser();
 
-        if (user == null || !user.isLogin()) {
+        if (user != null && user.isLogin()) {
             getQrCodeUrl(user);
             mReferFriendsView.setWithdrawMoney(Utils.getMoney(user.student.bonus_balance));
+        } else {
+            mReferFriendsView.setQrCodeImage(mDefaultQrCodeUrl);
         }
         int cityId = 0;
         if (user != null && user.student != null) {
