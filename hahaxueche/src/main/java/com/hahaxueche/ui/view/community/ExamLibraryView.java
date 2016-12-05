@@ -13,7 +13,7 @@ public interface ExamLibraryView extends HHBaseView {
 
     void showNotPurchase();
 
-    void showScores();
+    void showScores(int passCount);
 
     void setInsuranceCount(SpannableString ss);
 }

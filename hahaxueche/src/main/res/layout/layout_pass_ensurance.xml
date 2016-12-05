@@ -82,9 +82,10 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/iv_score1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_hahapass1" />
+                android:src="@drawable/ic_nopass1" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -94,6 +95,7 @@
                 android:src="@drawable/ic_loading" />
 
             <ImageView
+                android:id="@+id/iv_score2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_nopass2" />
@@ -106,6 +108,7 @@
                 android:src="@drawable/ic_loading" />
 
             <ImageView
+                android:id="@+id/iv_score3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_nopass3" />
@@ -118,6 +121,7 @@
                 android:src="@drawable/ic_loading" />
 
             <ImageView
+                android:id="@+id/iv_score4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_nopass4" />
@@ -130,12 +134,14 @@
                 android:src="@drawable/ic_loading" />
 
             <ImageView
+                android:id="@+id/iv_score5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_nopass5" />
         </LinearLayout>
 
         <TextView
+            android:id="@+id/tv_pass_score_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"

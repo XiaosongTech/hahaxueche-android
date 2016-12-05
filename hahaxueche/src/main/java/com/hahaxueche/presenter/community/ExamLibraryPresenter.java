@@ -40,15 +40,7 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
     public void attachView(ExamLibraryView view) {
         this.mExamLibraryView = view;
         application = HHBaseApplication.get(mExamLibraryView.getContext());
-        User user = application.getSharedPrefUtil().getUser();
-        if (user == null || !user.isLogin()) {
-            mExamLibraryView.showNotLogin();
-        } else if (!user.student.hasPurchasedService()) {
-            mExamLibraryView.showNotPurchase();
-        } else {
-            mExamLibraryView.showScores();
-            fetchScores(user);
-        }
+        fetchScoures();
         String text = Utils.getCount(11999) + "人已获得保过卡";
         SpannableString ss = new SpannableString(text);
         ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mExamLibraryView.getContext(), R.color.app_theme_color)), 0, text.indexOf("人"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -61,6 +53,53 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
         application = null;
     }
 
+    public void fetchScoures() {
+        final User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin()) {
+            mExamLibraryView.showNotLogin();
+        } else if (!user.student.hasPurchasedService()) {
+            mExamLibraryView.showNotPurchase();
+        } else {
+            final HHApiService apiService = application.getApiService();
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("cell_phone", user.cell_phone);
+            subscription = apiService.isValidToken(user.session.access_token, map)
+                    .flatMap(new Func1<BaseValid, Observable<ArrayList<ExamResult>>>() {
+                        @Override
+                        public Observable<ArrayList<ExamResult>> call(BaseValid baseValid) {
+                            if (baseValid.valid) {
+                                return apiService.getExamResults(user.student.id, 90, user.session.access_token);
+                            } else {
+                                return application.getSessionObservable();
+                            }
+                        }
+                    })
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(application.defaultSubscribeScheduler())
+                    .subscribe(new Subscriber<ArrayList<ExamResult>>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            if (ErrorUtil.isInvalidSession(e)) {
+                                mExamLibraryView.forceOffline();
+                            }
+                            HHLog.e(e.getMessage());
+                        }
+
+                        @Override
+                        public void onNext(ArrayList<ExamResult> examResults) {
+                            if (examResults != null) {
+                                mExamLibraryView.showScores(examResults.size());
+                            }
+                        }
+                    });
+        }
+    }
+
     public int getBonus() {
         int cityId = 0;
         User user = application.getSharedPrefUtil().getUser();
@@ -68,42 +107,5 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
             cityId = user.student.city_id;
         }
         return application.getConstants().getCity(cityId).referer_bonus;
-    }
-
-    private void fetchScores(final User user) {
-        final HHApiService apiService = application.getApiService();
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("cell_phone", user.cell_phone);
-        subscription = apiService.isValidToken(user.session.access_token, map)
-                .flatMap(new Func1<BaseValid, Observable<ArrayList<ExamResult>>>() {
-                    @Override
-                    public Observable<ArrayList<ExamResult>> call(BaseValid baseValid) {
-                        if (baseValid.valid) {
-                            return apiService.getExamResults(user.student.id, 90, user.session.access_token);
-                        } else {
-                            return application.getSessionObservable();
-                        }
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(application.defaultSubscribeScheduler())
-                .subscribe(new Subscriber<ArrayList<ExamResult>>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        if (ErrorUtil.isInvalidSession(e)) {
-                            mExamLibraryView.forceOffline();
-                        }
-                        HHLog.e(e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(ArrayList<ExamResult> examResults) {
-                    }
-                });
     }
 }

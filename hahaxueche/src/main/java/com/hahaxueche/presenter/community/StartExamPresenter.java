@@ -63,6 +63,7 @@ public class StartExamPresenter implements Presenter<StartExamView> {
             mapParam.put("course", 1);
         }
         mapParam.put("score", Integer.parseInt(score.substring(0, score.indexOf("分"))));
+        //mapParam.put("score", 91);
         subscription = apiService.isValidToken(user.session.access_token, map)
                 .flatMap(new Func1<BaseValid, Observable<ExamResult>>() {
                     @Override
