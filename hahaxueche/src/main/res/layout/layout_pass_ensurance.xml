@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="15dp"
     android:background="@color/haha_white"
     android:gravity="center_horizontal"
     android:orientation="vertical"
@@ -149,6 +150,16 @@
             android:textColor="@color/app_theme_color" />
 
         <TextView
+            android:id="@+id/tv_to_exam"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/rect_bg_appcolor_sm"
+            android:padding="8dp"
+            android:text="去模拟"
+            android:textColor="@color/haha_white" />
+
+        <TextView
             android:id="@+id/tv_share_scores"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -156,7 +167,9 @@
             android:background="@drawable/rect_bg_appcolor_sm"
             android:padding="8dp"
             android:text="晒成绩"
-            android:textColor="@color/haha_white" />
+            android:textColor="@color/haha_white"
+            android:visibility="gone" />
+
     </LinearLayout>
 
 

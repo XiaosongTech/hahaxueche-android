@@ -121,6 +121,6 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
         codeList.add("IDBD-692");
         codeList.add("MIMK-039");
         Collections.shuffle(codeList);//打乱顺序
-        return "【车号" + codeList.get(0) + "】哈哈老司机开车了，快打卡上车拿科一科四保过卡！捂脸~内有惊喜！";
+        return "科一保过卡免费送！考不过现金赔！【" + codeList.get(0) + "】哈哈老司机要开车了，捂脸~~内有惊喜";
     }
 }

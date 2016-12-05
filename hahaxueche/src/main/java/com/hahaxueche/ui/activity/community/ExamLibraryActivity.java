@@ -22,11 +22,11 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.community.ExamLibraryPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
-import com.hahaxueche.ui.activity.findCoach.PartnerDetailActivity;
 import com.hahaxueche.ui.adapter.community.ExamLibraryPageAdapter;
 import com.hahaxueche.ui.dialog.ShareAppDialog;
 import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.view.community.ExamLibraryView;
+import com.hahaxueche.util.ExamLib;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
 import com.sina.weibo.sdk.api.WebpageObject;
@@ -93,6 +93,10 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
     TextView mTvPassScoreText;
     @BindView(R.id.sv_main)
     ScrollView mSvMain;
+    @BindView(R.id.tv_share_scores)
+    TextView mTvShareScores;
+    @BindView(R.id.tv_to_exam)
+    TextView mTvToExam;
     private ShareAppDialog mShareDialog;
     private ExamLibraryPresenter mPresenter;
     /*****************
@@ -164,7 +168,8 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
         mTvTitle.setText("科一保过");
     }
 
-    @OnClick({R.id.tv_share_scores})
+    @OnClick({R.id.tv_share_scores,
+            R.id.tv_to_exam})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_share_scores:
@@ -195,6 +200,11 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
                     });
                 }
                 shareDialog.show();
+                break;
+            case R.id.tv_to_exam:
+                Intent intent = new Intent(this, StartExamActivity.class);
+                intent.putExtra("examType", ExamLib.EXAM_TYPE_1);
+                startActivityForResult(intent, 2);
                 break;
             default:
                 break;
@@ -259,6 +269,11 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
         mIvScore5.setImageDrawable(ContextCompat.getDrawable(this, passCount > 4 ? R.drawable.ic_hahapass5 : R.drawable.ic_nopass5));
         if (passCount > 0) {
             mTvPassScoreText.setText("您已在" + (passCount > 5 ? 5 : passCount) + "次模拟考试中获得90分以上的成绩。");
+            mTvShareScores.setVisibility(View.VISIBLE);
+            mTvToExam.setVisibility(View.GONE);
+        } else {
+            mTvShareScores.setVisibility(View.GONE);
+            mTvToExam.setVisibility(View.VISIBLE);
         }
     }
 
