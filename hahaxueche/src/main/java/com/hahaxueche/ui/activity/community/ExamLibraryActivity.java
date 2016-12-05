@@ -23,6 +23,7 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.community.ExamLibraryPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.adapter.community.ExamLibraryPageAdapter;
+import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
 import com.hahaxueche.ui.dialog.ShareAppDialog;
 import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.view.community.ExamLibraryView;
@@ -171,7 +172,8 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
     }
 
     @OnClick({R.id.tv_share_scores,
-            R.id.tv_to_exam})
+            R.id.tv_to_exam,
+            R.id.iv_pass})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_share_scores:
@@ -208,17 +210,23 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
                 intent.putExtra("examType", ExamLib.EXAM_TYPE_1);
                 startActivityForResult(intent, 2);
                 break;
+            case R.id.iv_pass:
+                BaseAlertSimpleDialog dialog = new BaseAlertSimpleDialog(getContext(), "什么是保过卡？",
+                        "在哈哈学车平台上注册登录，即可获得保过卡。\n学员在哈哈学车平台报名后，通过哈哈学车APP模拟科目一考试5次成绩均在90分以上，" +
+                                "并分享至第三方平台即可发起理赔，当科目一考试未通过可凭借成绩单获得全额赔付120元。");
+                dialog.show();
+                break;
             default:
                 break;
         }
     }
 
     @Override
-    public void initShareData(String desc) {
+    public void initShareData(String desc, String shareUrl) {
         mTitle = "科一不过包陪";
         mDescription = desc;
         mImageUrl = "http://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
-        mUrl = BuildConfig.SERVER_URL + "/share/training_partners/";
+        mUrl = shareUrl;
         HHLog.v("mUrl -> " + mUrl);
     }
 

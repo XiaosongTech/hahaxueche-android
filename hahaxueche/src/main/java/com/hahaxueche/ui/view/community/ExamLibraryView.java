@@ -19,5 +19,5 @@ public interface ExamLibraryView extends HHBaseView {
 
     void showMessage(String message);
 
-    void initShareData(String description);
+    void initShareData(String description, String shareUrl);
 }

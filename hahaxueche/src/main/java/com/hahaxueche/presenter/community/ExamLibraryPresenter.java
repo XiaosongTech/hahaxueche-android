@@ -7,6 +7,8 @@ import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 
+import com.google.gson.Gson;
+import com.hahaxueche.BuildConfig;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
@@ -37,6 +39,7 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
     private ExamLibraryView mExamLibraryView;
     private Subscription subscription;
     private HHBaseApplication application;
+    private static final String WEB_URL_GROUP_BUY = BuildConfig.MOBILE_URL + "/share/baoguoka";
 
     public void attachView(ExamLibraryView view) {
         this.mExamLibraryView = view;
@@ -46,7 +49,7 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
         SpannableString ss = new SpannableString(text);
         ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mExamLibraryView.getContext(), R.color.app_theme_color)), 0, text.indexOf("人"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         mExamLibraryView.setInsuranceCount(ss);
-        mExamLibraryView.initShareData(getShareDescription());
+
     }
 
     public void detachView() {
@@ -97,6 +100,7 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
                         public void onNext(ArrayList<ExamResult> examResults) {
                             if (examResults != null) {
                                 mExamLibraryView.showScores(examResults.size());
+                                mExamLibraryView.initShareData(getShareDescription(), getShareUrl(examResults));
                             }
                         }
                     });
@@ -122,5 +126,11 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
         codeList.add("MIMK-039");
         Collections.shuffle(codeList);//打乱顺序
         return "科一保过卡免费送！考不过现金赔！【" + codeList.get(0) + "】哈哈老司机要开车了，捂脸~~内有惊喜";
+    }
+
+    private String getShareUrl(ArrayList<ExamResult> examResults) {
+        Gson gson = new Gson();
+        String content = gson.toJson(examResults);
+        return WEB_URL_GROUP_BUY + "?content=" + content + "&promo_code=406808";
     }
 }
