@@ -21,8 +21,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.R;
 import com.hahaxueche.model.examLib.Question;
 import com.hahaxueche.model.user.User;
@@ -40,7 +38,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -111,7 +108,6 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
     }
 
     private void initQuestionList() {
-        Gson mGson = new Gson();
         mIntent = getIntent();
         mExamType = mIntent.getStringExtra("examType");
         mExamMode = mIntent.getStringExtra("examMode");
@@ -123,18 +119,7 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
                 Toast.makeText(ExamActivity.this, "加载试题失败,请重试", Toast.LENGTH_SHORT).show();
             }
         } else {
-            ArrayList<Question> questions = null;
-            try {
-                Type type = new TypeToken<ArrayList<Question>>() {
-                }.getType();
-                if (mExamType.equals(ExamLib.EXAM_TYPE_1)) {
-                    questions = mGson.fromJson(getJson("course1.txt"), type);
-                } else {
-                    questions = mGson.fromJson(getJson("course4.txt"), type);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            ArrayList<Question> questions = mPresenter.getQuestions(mExamType);
             if (questions != null && questions.size() > 0) {
                 ArrayList<String> urls = new ArrayList<>();
                 for (Question question : questions) {
@@ -443,7 +428,7 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
     @Override
     public void answer(Question question) {
         if (mExamLib == null) return;
-        mExamLib.addAnsweredQuestion(question.questionid);
+        mExamLib.addAnsweredQuestion(question.question_id);
         if (mExamLib.isAnsweredAll()) {//已经回答完全部问题
             ExamSubmitAlertDialog alertDialog = new ExamSubmitAlertDialog(ExamActivity.this, mExamLib.getAllAnsweredHints(), new ExamSubmitAlertDialog.onConfirmListener() {
                 @Override

@@ -5,13 +5,11 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
-import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
@@ -35,6 +33,7 @@ import com.hahaxueche.model.examLib.Question;
 import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.util.ExamLib;
+import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.SharedPrefUtil;
 
 import java.util.ArrayList;
@@ -191,13 +190,15 @@ public class ExamFragment extends HHBaseFragment {
     }
 
     private void loadDatas() {
+        if (mQuestion == null) return;
+        HHLog.v("mQuestion" + mQuestion.toString());
         mTvQuestionType.setText(mQuestion.getQuestionType());
         mTvQuestion.setText(mQuestion.question);
         //加载media
-        if (mQuestion.mediatype.equals("1")) {
+        if (mQuestion.media_type.equals("1")) {
             mFlyVideo.setVisibility(View.GONE);
             mFlyImage.setVisibility(View.VISIBLE);
-            Uri uri = Uri.parse(mQuestion.mediacontent);
+            Uri uri = Uri.parse(mQuestion.media_content);
             DraweeController draweeController =
                     Fresco.newDraweeControllerBuilder()
                             .setUri(uri)
@@ -206,10 +207,10 @@ public class ExamFragment extends HHBaseFragment {
             mIvUrl.setController(draweeController);
             GenericDraweeHierarchy hierarchy = mIvUrl.getHierarchy();
             hierarchy.setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
-        } else if (mQuestion.mediatype.equals("2")) {
+        } else if (mQuestion.media_type.equals("2")) {
             mFlyVideo.setVisibility(View.VISIBLE);
             mFlyImage.setVisibility(View.GONE);
-            Uri mVideoUri = Uri.parse(mQuestion.mediacontent);
+            Uri mVideoUri = Uri.parse(mQuestion.media_content);
             mVideo.setVideoPath(mVideoUri.toString());
             mVideo.start();
             mVideo.requestFocus();
@@ -400,7 +401,7 @@ public class ExamFragment extends HHBaseFragment {
             setItemView(mTvItem4Label, mIvItem4, mQuestion.answer_arr.contains("4"));
             if (!mQuestion.isCorrect()) {
                 //错题计入我的题库
-                spUtil.addQuestionCollect(mExamType, mQuestion.questionid);
+                spUtil.addQuestionCollect(mExamType, mQuestion.question_id);
                 displayCollect();
             }
         } else {
@@ -424,7 +425,7 @@ public class ExamFragment extends HHBaseFragment {
                     setItemView(mTvItem4Label, mIvItem4, false);
                 }
                 //错题计入我的题库
-                spUtil.addQuestionCollect(mExamType, mQuestion.questionid);
+                spUtil.addQuestionCollect(mExamType, mQuestion.question_id);
                 displayCollect();
             }
         }
@@ -442,7 +443,7 @@ public class ExamFragment extends HHBaseFragment {
         } else {
             mTvRemove.setVisibility(View.GONE);
             mTvCollect.setVisibility(View.VISIBLE);
-            if (spUtil.isQuestionCollect(mExamType, mQuestion.questionid)) {
+            if (spUtil.isQuestionCollect(mExamType, mQuestion.question_id)) {
                 mTvCollect.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(getContext(), R.drawable.ic_question_alcollect), null, null);
             } else {
                 mTvCollect.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(getContext(), R.drawable.ic_question_collect), null, null);
@@ -454,7 +455,7 @@ public class ExamFragment extends HHBaseFragment {
      * 收藏题目
      */
     private void collectQuestion() {
-        String questionId = mQuestion.questionid;
+        String questionId = mQuestion.question_id;
         if (spUtil.isQuestionCollect(mExamType, questionId)) {
             spUtil.removeQuestionCollect(mExamType, questionId);
         } else {
@@ -464,7 +465,7 @@ public class ExamFragment extends HHBaseFragment {
     }
 
     private void removeCollectQuesion() {
-        spUtil.removeQuestionCollect(mExamType, mQuestion.questionid);
+        spUtil.removeQuestionCollect(mExamType, mQuestion.question_id);
         mOnCollectRemoveListener.onCollectRemove(mPageNumber);
     }
 

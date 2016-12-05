@@ -14,32 +14,33 @@ import java.util.Collections;
  */
 
 public class Question implements Parcelable {
-    public String questionid;
+    public String question_id;
     public String question;
     public String answer;
     public ArrayList<String> answers;
     public String explain;
-    public String mediatype;//0：没有，1：图片，2：mp4
-    public String mediacontent;
-    public String optiontype;//0：判断，1：单选，2：多选
-    public String chapterid;
+    public String media_type;//0：没有，1：图片，2：mp4
+    public String media_content;
+    public String option_type;//0：判断，1：单选，2：多选
+    public String chapter_id;
     public ArrayList<String> answer_arr;
-    public String chapterDesc;
+    public String chapter_desc;
     public ArrayList<String> userAnswer;
     public boolean isSubmit;
 
+
     protected Question(Parcel in) {
-        questionid = in.readString();
+        question_id = in.readString();
         question = in.readString();
         answer = in.readString();
         answers = in.createStringArrayList();
         explain = in.readString();
-        mediatype = in.readString();
-        mediacontent = in.readString();
-        optiontype = in.readString();
-        chapterid = in.readString();
+        media_type = in.readString();
+        media_content = in.readString();
+        option_type = in.readString();
+        chapter_id = in.readString();
         answer_arr = in.createStringArrayList();
-        chapterDesc = in.readString();
+        chapter_desc = in.readString();
         userAnswer = in.createStringArrayList();
         isSubmit = in.readByte() != 0;
     }
@@ -57,13 +58,19 @@ public class Question implements Parcelable {
     };
 
     public String getQuestionType() {
-        if (optiontype.equals("0")) {
-            return ExamLib.QUESTION_TYPE_TRUE_FALSE;
-        } else if (optiontype.equals("2")) {
-            return ExamLib.QUESTION_TYPE_MULTI_CHOICE;
-        } else {
-            return ExamLib.QUESTION_TYPE_SINGLE_CHOICE;
+        try {
+            if (option_type.equals("0")) {
+                return ExamLib.QUESTION_TYPE_TRUE_FALSE;
+            } else if (option_type.equals("2")) {
+                return ExamLib.QUESTION_TYPE_MULTI_CHOICE;
+            } else {
+                return ExamLib.QUESTION_TYPE_SINGLE_CHOICE;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
         }
+
     }
 
     public boolean isCorrect() {
@@ -96,17 +103,17 @@ public class Question implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(questionid);
+        dest.writeString(question_id);
         dest.writeString(question);
         dest.writeString(answer);
         dest.writeStringList(answers);
         dest.writeString(explain);
-        dest.writeString(mediatype);
-        dest.writeString(mediacontent);
-        dest.writeString(optiontype);
-        dest.writeString(chapterid);
+        dest.writeString(media_type);
+        dest.writeString(media_content);
+        dest.writeString(option_type);
+        dest.writeString(chapter_id);
         dest.writeStringList(answer_arr);
-        dest.writeString(chapterDesc);
+        dest.writeString(chapter_desc);
         dest.writeStringList(userAnswer);
         dest.writeByte((byte) (isSubmit ? 1 : 0));
     }

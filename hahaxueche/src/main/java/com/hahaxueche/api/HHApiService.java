@@ -8,6 +8,7 @@ import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.community.Article;
 import com.hahaxueche.model.course.ScheduleEvent;
+import com.hahaxueche.model.examLib.Question;
 import com.hahaxueche.model.payment.BankCard;
 import com.hahaxueche.model.payment.PurchasedService;
 import com.hahaxueche.model.payment.Voucher;
@@ -255,6 +256,9 @@ public interface HHApiService {
 
     @GET("students/{id}/exam_results")
     Observable<ArrayList<ExamResult>> getExamResults(@Path("id") String studentId, @Query("from") int fromScore, @Query("course") int course, @Header("X-Access-Token") String accessToken);
+
+    @GET("exam_questions")
+    Observable<ArrayList<Question>> getQuestions(@Query("course") int course);
 
     class Factory {
         public static HHApiService create() {

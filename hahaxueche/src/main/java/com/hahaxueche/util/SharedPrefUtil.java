@@ -150,7 +150,7 @@ public class SharedPrefUtil {
     public ArrayList<Question> getCollectList(ArrayList<Question> questions, String examType) {
         ArrayList<Question> collectList = new ArrayList();
         for (Question question : questions) {
-            if (isQuestionCollect(examType, question.questionid)) {
+            if (isQuestionCollect(examType, question.question_id)) {
                 collectList.add(question);
             }
         }
