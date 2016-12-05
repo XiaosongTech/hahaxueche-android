@@ -225,7 +225,7 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
                 mShareDialog.show();
             }
         } else if (requestCode == 2) {
-            mPresenter.fetchScoures();
+            mPresenter.fetchScores();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

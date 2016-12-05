@@ -41,7 +41,7 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
     public void attachView(ExamLibraryView view) {
         this.mExamLibraryView = view;
         application = HHBaseApplication.get(mExamLibraryView.getContext());
-        fetchScoures();
+        fetchScores();
         String text = Utils.getCount(11999) + "人已获得保过卡";
         SpannableString ss = new SpannableString(text);
         ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mExamLibraryView.getContext(), R.color.app_theme_color)), 0, text.indexOf("人"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -55,7 +55,7 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
         application = null;
     }
 
-    public void fetchScoures() {
+    public void fetchScores() {
         final User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) {
             mExamLibraryView.showNotLogin();
@@ -70,7 +70,8 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
                         @Override
                         public Observable<ArrayList<ExamResult>> call(BaseValid baseValid) {
                             if (baseValid.valid) {
-                                return apiService.getExamResults(user.student.id, 90, user.session.access_token);
+                                //90分以上 科目一
+                                return apiService.getExamResults(user.student.id, 90, 0, user.session.access_token);
                             } else {
                                 return application.getSessionObservable();
                             }

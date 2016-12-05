@@ -254,7 +254,7 @@ public interface HHApiService {
     Observable<ExamResult> submitExamResult(@Path("id") String studentId, @FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
 
     @GET("students/{id}/exam_results")
-    Observable<ArrayList<ExamResult>> getExamResults(@Path("id") String studentId, @Query("from") int fromScore, @Header("X-Access-Token") String accessToken);
+    Observable<ArrayList<ExamResult>> getExamResults(@Path("id") String studentId, @Query("from") int fromScore, @Query("course") int course, @Header("X-Access-Token") String accessToken);
 
     class Factory {
         public static HHApiService create() {
