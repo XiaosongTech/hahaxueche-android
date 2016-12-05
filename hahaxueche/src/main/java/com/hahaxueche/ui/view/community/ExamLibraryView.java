@@ -16,4 +16,8 @@ public interface ExamLibraryView extends HHBaseView {
     void showScores(int passCount);
 
     void setInsuranceCount(SpannableString ss);
+
+    void showMessage(String message);
+
+    void initShareData(String description);
 }

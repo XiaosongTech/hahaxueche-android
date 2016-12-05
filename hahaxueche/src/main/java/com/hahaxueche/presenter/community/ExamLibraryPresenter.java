@@ -20,6 +20,7 @@ import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import rx.Observable;
@@ -45,6 +46,7 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
         SpannableString ss = new SpannableString(text);
         ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mExamLibraryView.getContext(), R.color.app_theme_color)), 0, text.indexOf("人"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         mExamLibraryView.setInsuranceCount(ss);
+        mExamLibraryView.initShareData(getShareDescription());
     }
 
     public void detachView() {
@@ -107,5 +109,17 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
             cityId = user.student.city_id;
         }
         return application.getConstants().getCity(cityId).referer_bonus;
+    }
+
+    private String getShareDescription() {
+        ArrayList<String> codeList = new ArrayList<>();
+        codeList.add("AZ-521");
+        codeList.add("MDS-339");
+        codeList.add("TEK-071");
+        codeList.add("MIDE-295");
+        codeList.add("IDBD-692");
+        codeList.add("MIMK-039");
+        Collections.shuffle(codeList);//打乱顺序
+        return "【车号" + codeList.get(0) + "】哈哈老司机开车了，快打卡上车拿科一科四保过卡！捂脸~内有惊喜！";
     }
 }
