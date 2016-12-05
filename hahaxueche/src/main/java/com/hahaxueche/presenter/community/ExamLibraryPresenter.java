@@ -42,7 +42,7 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
         this.mExamLibraryView = view;
         application = HHBaseApplication.get(mExamLibraryView.getContext());
         fetchScores();
-        String text = Utils.getCount(11999) + "人已获得保过卡";
+        String text = Utils.getCount(application.getConstants().statistics.student_count) + "人已获得保过卡";
         SpannableString ss = new SpannableString(text);
         ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mExamLibraryView.getContext(), R.color.app_theme_color)), 0, text.indexOf("人"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         mExamLibraryView.setInsuranceCount(ss);

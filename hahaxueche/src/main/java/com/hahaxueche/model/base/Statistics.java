@@ -7,4 +7,5 @@ public class Statistics {
     public int driving_school_count;
     public int paid_student_count;
     public int coach_count;
+    public int student_count;
 }
