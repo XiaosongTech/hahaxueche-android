@@ -33,4 +33,6 @@ public interface ReferFriendsView extends HHBaseView {
     void showMessage(String message);
 
     void navigateToWithdraw();
+
+    void navigateToReferList();
 }
