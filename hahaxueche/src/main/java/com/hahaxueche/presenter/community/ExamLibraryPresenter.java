@@ -6,6 +6,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Base64;
 
 import com.google.gson.Gson;
 import com.hahaxueche.BuildConfig;
@@ -15,12 +16,14 @@ import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.student.ExamResult;
+import com.hahaxueche.model.user.student.MExamResult;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.community.ExamLibraryView;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -129,8 +132,23 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
     }
 
     private String getShareUrl(ArrayList<ExamResult> examResults) {
+        if (examResults == null || examResults.size() < 1) return "";
+        //1.选一个最好的成绩
+        ExamResult bestResult = examResults.get(0);
+        for (ExamResult examResult : examResults) {
+            if (examResult.score > bestResult.score) {
+                bestResult = examResult;
+            }
+        }
+        //2.转化成m端需要端model格式
+        MExamResult mExamResult = new MExamResult();
+        mExamResult.date = Utils.getDateDotFromUTC(bestResult.created_at);
+        mExamResult.score = bestResult.score;
+        //3.转成json
         Gson gson = new Gson();
-        String content = gson.toJson(examResults);
-        return WEB_URL_GROUP_BUY + "?content=" + content + "&promo_code=406808";
+        String result = gson.toJson(mExamResult);
+        //4.base64 safe url encoding
+        String encodedResult = new String(Base64.encode(result.getBytes(), Base64.URL_SAFE | Base64.NO_WRAP));
+        return WEB_URL_GROUP_BUY + "?promo_code=406808&result=" + encodedResult;
     }
 }
