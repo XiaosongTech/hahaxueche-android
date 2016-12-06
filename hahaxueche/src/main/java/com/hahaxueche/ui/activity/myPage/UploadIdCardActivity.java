@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -41,7 +43,9 @@ import com.hahaxueche.ui.dialog.myPage.UploadIdCardDialog;
 import com.hahaxueche.ui.view.myPage.UploadIdCardView;
 import com.hahaxueche.util.HHLog;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -381,9 +385,11 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
             if (resultCode == RESULT_OK) {
                 if (choseImageFace == 0) {
                     uriFaceA = Uri.fromFile(new File(IMGPATH, IMAGE_FILE_A_NAME));
+                    compressImage(uriFaceA);
                     mPresenter.uploadIdCard(uriFaceA.getPath(), 0);
                 } else {
                     uriFaceB = Uri.fromFile(new File(IMGPATH, IMAGE_FILE_B_NAME));
+                    compressImage(uriFaceB);
                     mPresenter.uploadIdCard(uriFaceB.getPath(), 1);
                 }
             } else {
@@ -391,7 +397,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
             }
         } else if (requestCode == SELECET_A_PICTURE) {
             if (resultCode == RESULT_OK && null != data) {
-                String filePath = null;
+                String filePath;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     filePath = getPathAfterKitKat(data.getData());
                 } else {
@@ -403,9 +409,11 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                 }
                 if (choseImageFace == 0) {
                     uriFaceA = Uri.fromFile(new File(filePath));
+                    compressImage(uriFaceA);
                     mPresenter.uploadIdCard(uriFaceA.getPath(), 0);
                 } else {
                     uriFaceB = Uri.fromFile(new File(filePath));
+                    compressImage(uriFaceB);
                     mPresenter.uploadIdCard(uriFaceB.getPath(), 1);
                 }
             } else if (resultCode == RESULT_CANCELED) {
@@ -564,7 +572,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
         return path;
     }
 
-    /*private void compressImage(Uri uri) {
+    private void compressImage(Uri uri) {
         int MAX_IMAGE_SIZE = 200 * 1024; // max final file size
         Bitmap bmpPic = BitmapFactory.decodeFile(uri.getPath());
         if ((bmpPic.getWidth() >= 1024) && (bmpPic.getHeight() >= 1024)) {
@@ -595,5 +603,5 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
         } catch (Exception e) {
             HHLog.e("Error on saving file: " + e.getMessage());
         }
-    }*/
+    }
 }

@@ -21,7 +21,9 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.community.ExamLibraryPresenter;
+import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
+import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.adapter.community.ExamLibraryPageAdapter;
 import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
 import com.hahaxueche.ui.dialog.ShareAppDialog;
@@ -173,7 +175,8 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
 
     @OnClick({R.id.tv_share_scores,
             R.id.tv_to_exam,
-            R.id.iv_pass})
+            R.id.iv_pass,
+            R.id.tv_login})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_share_scores:
@@ -215,6 +218,12 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
                         "在哈哈学车平台上注册登录，即可获得保过卡。\n学员在哈哈学车平台报名后，通过哈哈学车APP模拟科目一考试5次成绩均在90分以上，" +
                                 "并分享至第三方平台即可发起理赔，当科目一考试未通过可凭借成绩单获得全额赔付120元。");
                 dialog.show();
+                break;
+            case R.id.tv_login:
+                ActivityCollector.finishAll();
+                intent = new Intent(getContext(), StartLoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
                 break;
             default:
                 break;
