@@ -22,6 +22,7 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.presenter.myPage.MyPagePresenter;
 import com.hahaxueche.ui.activity.ActivityCollector;
+import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.activity.myPage.CourseActivity;
@@ -42,6 +43,7 @@ import com.hahaxueche.ui.dialog.community.MyAdviserDialog;
 import com.hahaxueche.ui.dialog.myPage.EditUsernameDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.myPage.MyPageView;
+import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.PhotoUtil;
 import com.hahaxueche.util.Utils;
 
@@ -105,6 +107,7 @@ public class MypageFragment extends HHBaseFragment implements MyPageView, SwipeR
     private static final int REQUEST_CODE_PAYMENT_STAGE = 13;
     private static final int REQUEST_CODE_UPLOAD_ID_CARD = 3;
     private static final int REQUEST_CODE_MY_CONTRACT = 4;
+    private static final int REQUEST_CODE_WEBVIEW = 14;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -526,6 +529,11 @@ public class MypageFragment extends HHBaseFragment implements MyPageView, SwipeR
                 mActivity.controlMyPageBadge();
                 startActivity(new Intent(getContext(), ReferFriendsActivity.class));
             }
+        } else if (requestCode == REQUEST_CODE_WEBVIEW) {
+            if (resultCode == RESULT_OK && null != data) {
+                int tab = data.getIntExtra("showTab", 1);
+                mActivity.selectTab(tab);
+            }
         }
         mPresenter.setContractBadge();
         super.onActivityResult(requestCode, resultCode, data);
@@ -561,5 +569,22 @@ public class MypageFragment extends HHBaseFragment implements MyPageView, SwipeR
                     }
                 });
         dialog.show();
+    }
+
+    @Override
+    public void openWebView(String url) {
+        this.openWebView(url, "", false);
+    }
+
+    @Override
+    public void openWebView(String url, String title, boolean isShowShare) {
+        Intent intent = new Intent(getContext(), BaseWebViewActivity.class);
+        Bundle bundle = new Bundle();
+        HHLog.v("webview url -> " + url);
+        bundle.putString("url", url);
+        bundle.putString("title", title);
+        bundle.putBoolean("isShowShare", isShowShare);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_CODE_WEBVIEW);
     }
 }
