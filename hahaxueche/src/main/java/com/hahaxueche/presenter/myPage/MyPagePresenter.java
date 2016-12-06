@@ -362,7 +362,12 @@ public class MyPagePresenter implements Presenter<MyPageView> {
     }
 
     public void clickMyVoucher() {
-        mMyPageView.navigateToMyVoucher();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            mMyPageView.navigateToMyVoucher();
+        } else {
+            mMyPageView.navigateToNotLoginVoucher();
+        }
     }
 
     public void editUsername(final String username) {

@@ -61,4 +61,6 @@ public interface MyPageView extends HHBaseView {
     void navigateToMyContract();
 
     void disableRefresh();
+
+    void navigateToNotLoginVoucher();
 }

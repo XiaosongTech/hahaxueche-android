@@ -31,6 +31,7 @@ import com.hahaxueche.ui.activity.myPage.MyCoachDetailActivity;
 import com.hahaxueche.ui.activity.myPage.MyContractActivity;
 import com.hahaxueche.ui.activity.myPage.MyVoucherActivity;
 import com.hahaxueche.ui.activity.myPage.NoCourseActivity;
+import com.hahaxueche.ui.activity.myPage.NotLoginVoucherActivity;
 import com.hahaxueche.ui.activity.myPage.PaymentStageActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.activity.myPage.SoftwareInfoActivity;
@@ -437,6 +438,11 @@ public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeR
     @Override
     public void disableRefresh() {
         mSrlMyPage.setEnabled(false);
+    }
+
+    @Override
+    public void navigateToNotLoginVoucher() {
+        startActivity(new Intent(getContext(), NotLoginVoucherActivity.class));
     }
 
     @Override

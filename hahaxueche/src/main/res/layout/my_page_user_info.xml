@@ -41,7 +41,7 @@
         android:layout_below="@id/iv_my_avatar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:text="未登录/注册"
+        android:text="注册/登录"
         android:textColor="@color/haha_white"
         android:textSize="18sp" />
 
