@@ -1,7 +1,6 @@
 package com.hahaxueche.ui.fragment.homepage;
 
 import android.Manifest;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -33,6 +32,7 @@ import com.hahaxueche.presenter.homepage.HomepagePresenter;
 import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.base.MainActivity;
+import com.hahaxueche.ui.activity.community.ExamLibraryActivity;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.dialog.BaseAlertDialog;
@@ -154,6 +154,11 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                     }
                 });
         dialog.show();
+    }
+
+    @Override
+    public void navigateToExamLibrary() {
+        startActivity(new Intent(getContext(), ExamLibraryActivity.class));
     }
 
     @OnClick({R.id.tv_procedure,

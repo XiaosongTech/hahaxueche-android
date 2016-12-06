@@ -241,7 +241,7 @@ public interface HHApiService {
     Observable<IdCardUrl> uploadIdCard(@Path("id") String studentId, @Header("X-Access-Token") String accessToken, @Part MultipartBody.Part file, @QueryMap HashMap<String, Object> map);
 
     @GET("students/{id}/agreement")
-    Observable<IdCardUrl> createAgreement(@Path("id") String studentId);
+    Observable<IdCardUrl> createAgreement(@Path("id") String studentId, @Header("X-Access-Token") String accessToken);
 
     @POST("students/{id}/agreement")
     Observable<Student> signAgreement(@Path("id") String studentId, @Header("X-Access-Token") String accessToken);

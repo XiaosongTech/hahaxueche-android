@@ -26,15 +26,11 @@
                 android:id="@+id/iv_free_try"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:background="@color/haha_white"
                 android:padding="10dp"
                 android:src="@drawable/button_freetry"
                 fresco:viewAspectRatio="3.14" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/divider_width"
-                android:background="@color/haha_gray_divider" />
 
             <include layout="@layout/homepage_navigation" />
 

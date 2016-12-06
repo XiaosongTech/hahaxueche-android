@@ -13,7 +13,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 
-import com.hahaxueche.ui.fragment.myPage.MyPageFragment;
+import com.hahaxueche.ui.fragment.myPage.MypageFragment;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -27,7 +27,7 @@ import java.io.InputStream;
  * 以及设置头像，启动裁剪等功能
  */
 public class PhotoUtil {
-    private MyPageFragment mMyPageFragment;
+    private MypageFragment mMypageFragment;
 
     //保存图片本地路径
     public static final String ACCOUNT_DIR = Environment.getExternalStorageDirectory().getPath()
@@ -51,8 +51,8 @@ public class PhotoUtil {
 
     public Uri uritempFile = null;
 
-    public PhotoUtil(MyPageFragment myPageFragment) {
-        mMyPageFragment = myPageFragment;
+    public PhotoUtil(MypageFragment mypageFragment) {
+        mMypageFragment = mypageFragment;
     }
 
     public void creatFile() {
@@ -94,7 +94,7 @@ public class PhotoUtil {
     public Bitmap decodeUriAsBitmap(Uri uri) {
         Bitmap bitmap = null;
         try {
-            bitmap = BitmapFactory.decodeStream(mMyPageFragment.getActivity().getContentResolver().openInputStream(uri));
+            bitmap = BitmapFactory.decodeStream(mMypageFragment.getActivity().getContentResolver().openInputStream(uri));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             return null;
@@ -107,7 +107,7 @@ public class PhotoUtil {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT,
                 Uri.fromFile(new File(IMGPATH, IMAGE_FILE_NAME)));
-        mMyPageFragment.startActivityForResult(intent, TAKE_A_PICTURE);
+        mMypageFragment.startActivityForResult(intent, TAKE_A_PICTURE);
     }
 
     /**
@@ -129,7 +129,7 @@ public class PhotoUtil {
                 Uri.fromFile(new File(IMGPATH, IMAGE_FILE_NAME)));
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         intent.putExtra("noFaceDetection", true); // no face detection
-        mMyPageFragment.startActivityForResult(intent, SELECT_A_PICTURE);
+        mMypageFragment.startActivityForResult(intent, SELECT_A_PICTURE);
     }
 
 
@@ -141,7 +141,7 @@ public class PhotoUtil {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("image/*");
-        mMyPageFragment.startActivityForResult(intent, SELECET_A_PICTURE_AFTER_KIKAT);
+        mMypageFragment.startActivityForResult(intent, SELECET_A_PICTURE_AFTER_KIKAT);
     }
 
     /**
@@ -168,7 +168,7 @@ public class PhotoUtil {
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uritempFile);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
 
-        mMyPageFragment.startActivityForResult(intent, SET_PICTURE);
+        mMypageFragment.startActivityForResult(intent, SET_PICTURE);
     }
 
     /**
@@ -192,7 +192,7 @@ public class PhotoUtil {
                 Uri.fromFile(new File(IMGPATH, IMAGE_FILE_NAME)));
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         intent.putExtra("noFaceDetection", true);
-        mMyPageFragment.startActivityForResult(intent, SET_ALBUM_PICTURE_KITKAT);
+        mMypageFragment.startActivityForResult(intent, SET_ALBUM_PICTURE_KITKAT);
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)

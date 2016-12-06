@@ -59,7 +59,7 @@ public class MyContractPresenter implements Presenter<MyContractView> {
         } else {
             signContractViewCount();
             HHApiService apiService = application.getApiService();
-            subscription = apiService.createAgreement(user.student.id)
+            subscription = apiService.createAgreement(user.student.id, user.session.access_token)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(application.defaultSubscribeScheduler())
                     .subscribe(new Subscriber<IdCardUrl>() {

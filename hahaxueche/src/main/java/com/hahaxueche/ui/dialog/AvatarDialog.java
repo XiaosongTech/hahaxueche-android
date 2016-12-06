@@ -4,7 +4,7 @@ import android.os.Build;
 import android.view.View;
 
 import com.hahaxueche.ui.dialog.login.ButtonLayout;
-import com.hahaxueche.ui.fragment.myPage.MyPageFragment;
+import com.hahaxueche.ui.fragment.myPage.MypageFragment;
 import com.hahaxueche.util.PhotoUtil;
 import com.hahaxueche.util.Utils;
 
@@ -13,7 +13,7 @@ import com.hahaxueche.util.Utils;
  * Created by gibxin on 2016/2/10.
  */
 public class AvatarDialog extends FullScreenDialog {
-    private MyPageFragment myPageFragment;
+    private MypageFragment mypageFragment;
     //版本比较：是否是4.4及以上版本
     private final boolean mIsKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
@@ -24,10 +24,10 @@ public class AvatarDialog extends FullScreenDialog {
     //头像相关工具类
     private PhotoUtil mPhotoUtil;
 
-    public AvatarDialog(MyPageFragment myPageFragment) {
-        super(myPageFragment.getContext());
-        this.myPageFragment = myPageFragment;
-        mPhotoUtil = new PhotoUtil(myPageFragment);
+    public AvatarDialog(MypageFragment mypageFragment) {
+        super(mypageFragment.getContext());
+        this.mypageFragment = mypageFragment;
+        mPhotoUtil = new PhotoUtil(mypageFragment);
         mPhotoUtil.creatFile();
 
         buttonLayout.setButtonTxt(new String[]{"拍照", "从相册选择"});
@@ -46,8 +46,8 @@ public class AvatarDialog extends FullScreenDialog {
                     if (mIsKitKat) {
                         mPhotoUtil.selectImageUriAfterKikat();
                     } else {
-                        mPhotoUtil.cropImageUri(Utils.instence(myPageFragment.getContext()).dip2px(output_X),
-                                Utils.instence(myPageFragment.getContext()).dip2px(output_Y));
+                        mPhotoUtil.cropImageUri(Utils.instence(mypageFragment.getContext()).dip2px(output_X),
+                                Utils.instence(mypageFragment.getContext()).dip2px(output_Y));
                     }
                     break;
 

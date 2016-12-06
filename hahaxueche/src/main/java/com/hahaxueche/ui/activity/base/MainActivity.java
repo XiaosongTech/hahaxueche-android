@@ -19,7 +19,7 @@ import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.fragment.community.CommunityFragment;
 import com.hahaxueche.ui.fragment.findCoach.FindCoachFragment;
 import com.hahaxueche.ui.fragment.homepage.HomepageFragment;
-import com.hahaxueche.ui.fragment.myPage.MyPageFragment;
+import com.hahaxueche.ui.fragment.myPage.MypageFragment;
 import com.hahaxueche.ui.view.base.MainView;
 import com.hahaxueche.ui.widget.FragmentTabHost;
 
@@ -55,7 +55,7 @@ public class MainActivity extends HHBaseActivity implements MainView {
 
         View myPageIndicator = getLayoutInflater().inflate(R.layout.indicator_my_page, null);
         mViewBadgeMyPage = myPageIndicator.findViewById(R.id.view_badge_my_page);
-        mTabHost.addTab(mTabHost.newTabSpec("myPage").setIndicator(myPageIndicator), MyPageFragment.class, null);
+        mTabHost.addTab(mTabHost.newTabSpec("myPage").setIndicator(myPageIndicator), MypageFragment.class, null);
 
         mPresenter.viewHomepageCount();
 

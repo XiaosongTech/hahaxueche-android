@@ -57,7 +57,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by wangshirui on 16/9/13.
  */
-public class MyPageFragment extends HHBaseFragment implements MyPageView, SwipeRefreshLayout.OnRefreshListener {
+public class MypageFragment extends HHBaseFragment implements MyPageView, SwipeRefreshLayout.OnRefreshListener {
     @BindView(R.id.srl_my_page)
     SwipeRefreshLayout mSrlMyPage;
     @BindView(R.id.iv_my_avatar)

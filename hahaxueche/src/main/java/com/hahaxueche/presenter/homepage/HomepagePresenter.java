@@ -46,6 +46,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
     private static final String WEB_URL_FIND_ADVISER = BuildConfig.MOBILE_URL + "/share/zhaoguwen";
     private static final String WEB_URL_FIND_DRIVING_SCHOOL = BuildConfig.MOBILE_URL + "/share/zhaojiaxiao";
     private static final String WEB_URL_GROUP_BUY = BuildConfig.MOBILE_URL + "/share/tuan";
+    private static final String WEB_URL_PLATFORM_GUARD = BuildConfig.MOBILE_URL + "/assurance";
 
     private HHBaseApplication application;
     private Constants constants;
@@ -300,6 +301,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         } else {
             MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_online_test_tapped");
         }
+        mHomepageView.navigateToExamLibrary();
     }
 
     public void clickEnsurePass() {
@@ -311,6 +313,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         } else {
             MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_course_one_tapped");
         }
+        mHomepageView.navigateToExamLibrary();
     }
 
     public void clickPlatformGuard() {
@@ -322,6 +325,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         } else {
             MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_platform_guard_tapped");
         }
+        mHomepageView.openWebView(WEB_URL_PLATFORM_GUARD);
     }
 
     public void clickReferFriends() {
@@ -338,10 +342,13 @@ public class HomepagePresenter implements Presenter<HomepageView> {
     }
 
     public String getShareText() {
+        int cityId = 0;
         User user = application.getSharedPrefUtil().getUser();
-        if (user == null || !user.isLogin()) return "";
+        if (user != null && user.student != null) {
+            cityId = user.student.city_id;
+        }
         String shareText = mHomepageView.getContext().getResources().getString(R.string.homepage_share_dialog_text);
-        City myCity = application.getConstants().getCity(user.student.city_id);
+        City myCity = application.getConstants().getCity(cityId);
         return String.format(shareText, Utils.getMoney(myCity.referer_bonus), Utils.getMoney(myCity.referee_bonus));
     }
 }

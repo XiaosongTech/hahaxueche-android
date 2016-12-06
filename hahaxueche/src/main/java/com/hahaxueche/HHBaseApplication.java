@@ -92,19 +92,33 @@ public class HHBaseApplication extends Application {
     }
 
     public Constants getConstants() {
+        if (constants == null) {
+            SharedPrefUtil spUtil = new SharedPrefUtil(this);
+            constants = spUtil.getConstants();
+        }
         return constants;
     }
 
     public ArrayList<Question> getQuestions1() {
+        if (questions1 == null) {
+            SharedPrefUtil spUtil = new SharedPrefUtil(this);
+            questions1 = spUtil.getQuestions1();
+        }
         return questions1;
     }
 
     public ArrayList<Question> getQuestions4() {
+        if (questions4 == null) {
+            SharedPrefUtil spUtil = new SharedPrefUtil(this);
+            questions4 = spUtil.getQuestions4();
+        }
         return questions4;
     }
 
     public void setConstants(Constants constants) {
         this.constants = constants;
+        SharedPrefUtil spUtil = new SharedPrefUtil(this);
+        spUtil.setConstants(constants);
     }
 
     public SharedPrefUtil getSharedPrefUtil() {
@@ -118,7 +132,6 @@ public class HHBaseApplication extends Application {
         Fresco.initialize(this);
         spUtil = new SharedPrefUtil(this);
         HahaCache.context = getApplicationContext();
-        regToShare();
         Unicorn.init(this, "2f328da38ac77ce6d796c2977248f7e2", options(), new FrescoImageLoader());
         try {
             if (BuildConfig.DEBUG) {
@@ -146,6 +159,8 @@ public class HHBaseApplication extends Application {
                     @Override
                     public void onNext(ArrayList<Question> questions) {
                         questions1 = questions;
+                        SharedPrefUtil spUtil = new SharedPrefUtil(getApplicationContext());
+                        spUtil.setQuestions1(questions1);
                     }
                 });
         subscription = getApiService().getQuestions(1)
@@ -164,6 +179,8 @@ public class HHBaseApplication extends Application {
                     @Override
                     public void onNext(ArrayList<Question> questions) {
                         questions4 = questions;
+                        SharedPrefUtil spUtil = new SharedPrefUtil(getApplicationContext());
+                        spUtil.setQuestions1(questions4);
                     }
                 });
     }
@@ -188,23 +205,26 @@ public class HHBaseApplication extends Application {
         myLocation.lng = lng;
     }
 
-    private void regToShare() {
-        wxApi = WXAPIFactory.createWXAPI(this, ShareConstants.APP_ID, true);
-        wxApi.registerApp(ShareConstants.APP_ID);
-        mTencent = Tencent.createInstance(ShareConstants.APP_ID_QQ, this);
-        mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(this, ShareConstants.WEIBO_APP_KEY);
-        mWeiboShareAPI.registerApp();
-    }
-
     public IWXAPI getIWXAPI() {
+        if (wxApi == null) {
+            wxApi = WXAPIFactory.createWXAPI(this, ShareConstants.APP_ID, true);
+            wxApi.registerApp(ShareConstants.APP_ID);
+        }
         return wxApi;
     }
 
     public Tencent getTencentAPI() {
+        if (mTencent == null) {
+            mTencent = Tencent.createInstance(ShareConstants.APP_ID_QQ, this);
+        }
         return mTencent;
     }
 
     public IWeiboShareAPI getWeiboAPI() {
+        if (mWeiboShareAPI == null) {
+            mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(this, ShareConstants.WEIBO_APP_KEY);
+            mWeiboShareAPI.registerApp();
+        }
         return mWeiboShareAPI;
     }
 

@@ -111,13 +111,13 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/tv_online_ask"
+                android:id="@+id/tv_tel_ask"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:drawablePadding="5dp"
-                android:drawableTop="@drawable/ic_customerservice"
-                android:text="在线客服"
+                android:drawableTop="@drawable/ic_phone"
+                android:text="电话咨询"
                 android:textColor="@color/haha_gray"
                 android:textSize="12sp" />
         </FrameLayout>
@@ -128,13 +128,13 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/tv_tel_ask"
+                android:id="@+id/tv_online_ask"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:drawablePadding="5dp"
-                android:drawableTop="@drawable/ic_phone"
-                android:text="电话咨询"
+                android:drawableTop="@drawable/ic_customerservice"
+                android:text="在线客服"
                 android:textColor="@color/haha_gray"
                 android:textSize="12sp" />
         </FrameLayout>

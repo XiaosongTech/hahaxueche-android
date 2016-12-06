@@ -54,7 +54,7 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
         HHApiService apiService = application.getApiService();
         User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) return;
-        subscription = apiService.createAgreement(user.student.id)
+        subscription = apiService.createAgreement(user.student.id, user.session.access_token)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<IdCardUrl>() {
@@ -176,7 +176,7 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
         MobclickAgent.onEvent(mUploadIdCardView.getContext(), "upload_id_page_cancel_tapped", map);
     }
 
-    public void clickCancelPop(){
+    public void clickCancelPop() {
         HashMap<String, String> map = new HashMap();
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
@@ -185,7 +185,7 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
         MobclickAgent.onEvent(mUploadIdCardView.getContext(), "upload_id_page_popup_cancel_tapped", map);
     }
 
-    public void clickConfirmPop(){
+    public void clickConfirmPop() {
         HashMap<String, String> map = new HashMap();
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
@@ -194,7 +194,7 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
         MobclickAgent.onEvent(mUploadIdCardView.getContext(), "upload_id_page_popup_confirm_tapped", map);
     }
 
-    public void clickUploadInfo(){
+    public void clickUploadInfo() {
         HashMap<String, String> map = new HashMap();
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
