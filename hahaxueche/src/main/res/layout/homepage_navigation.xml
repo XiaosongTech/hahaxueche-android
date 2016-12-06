@@ -94,23 +94,6 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/tv_procedure"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:drawablePadding="5dp"
-                android:drawableTop="@drawable/ic_flow"
-                android:text="学车流程"
-                android:textColor="@color/haha_gray"
-                android:textSize="12sp" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
                 android:id="@+id/tv_refer_friends"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -152,6 +135,23 @@
                 android:drawablePadding="5dp"
                 android:drawableTop="@drawable/ic_phone"
                 android:text="电话咨询"
+                android:textColor="@color/haha_gray"
+                android:textSize="12sp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tv_procedure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:drawablePadding="5dp"
+                android:drawableTop="@drawable/ic_flow"
+                android:text="学车流程"
                 android:textColor="@color/haha_gray"
                 android:textSize="12sp" />
         </FrameLayout>

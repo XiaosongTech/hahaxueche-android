@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/crl_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,14 +22,14 @@
                 android:layout_height="wrap_content"
                 app:canLoop="true" />
 
-            <ImageView
+            <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/iv_free_try"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/haha_white"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:src="@drawable/button_free" />
+                android:padding="10dp"
+                android:src="@drawable/button_freetry"
+                fresco:viewAspectRatio="3.14" />
 
             <View
                 android:layout_width="match_parent"

@@ -40,7 +40,7 @@
                 android:layout_toRightOf="@id/tv_amount"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:text="哈哈学车无门槛代金券"
+                android:text="试学就送代金券"
                 android:textColor="@color/haha_gray_dark"
                 android:textSize="14sp" />
 

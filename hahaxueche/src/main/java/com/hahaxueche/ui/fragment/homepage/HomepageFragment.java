@@ -1,6 +1,7 @@
 package com.hahaxueche.ui.fragment.homepage;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -20,6 +21,11 @@ import android.widget.TextView;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Banner;
 import com.hahaxueche.model.base.City;
@@ -63,6 +69,8 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     TextView mTvCoachCount;
     @BindView(R.id.tv_paid_student_count)
     TextView mTvPaidStudentCount;
+    @BindView(R.id.iv_free_try)
+    SimpleDraweeView mIvFreeTry;
 
     private CityChoseDialog mCityChoseDialog;
     private static final int PERMISSIONS_REQUEST_SDCARD = 600;
@@ -82,6 +90,16 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
         ButterKnife.bind(this, view);
         mPresenter.attachView(this);
+        Uri uri = Uri.parse("res://com.hahaxueche)/" + R.drawable.button_freetry);
+        DraweeController draweeController =
+                Fresco.newDraweeControllerBuilder()
+                        .setUri(uri)
+                        .setAutoPlayAnimations(true) // 设置加载图片完成后是否直接进行播放
+                        .build();
+        mIvFreeTry.setController(draweeController);
+        GenericDraweeHierarchy hierarchy = mIvFreeTry.getHierarchy();
+        hierarchy.setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
+
         // Check the SDK version and whether the permission is already granted or not.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                 (mActivity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
