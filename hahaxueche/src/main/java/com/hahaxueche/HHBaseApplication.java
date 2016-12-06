@@ -8,8 +8,10 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.base.Location;
+import com.hahaxueche.model.examLib.Question;
 import com.hahaxueche.ui.widget.FrescoImageLoader;
 import com.hahaxueche.util.ErrorUtil;
+import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.HahaCache;
 import com.hahaxueche.util.SharedPrefUtil;
 import com.hahaxueche.util.share.ShareConstants;
@@ -25,9 +27,13 @@ import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.tencent.tauth.Tencent;
 
+import java.util.ArrayList;
+
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
@@ -44,6 +50,9 @@ public class HHBaseApplication extends Application {
     private IWXAPI wxApi;
     private Tencent mTencent;
     private IWeiboShareAPI mWeiboShareAPI;
+    private ArrayList<Question> questions1;
+    private ArrayList<Question> questions4;
+    private Subscription subscription;
 
     public static HHBaseApplication get(Context context) {
         return (HHBaseApplication) context.getApplicationContext();
@@ -86,6 +95,14 @@ public class HHBaseApplication extends Application {
         return constants;
     }
 
+    public ArrayList<Question> getQuestions1() {
+        return questions1;
+    }
+
+    public ArrayList<Question> getQuestions4() {
+        return questions4;
+    }
+
     public void setConstants(Constants constants) {
         this.constants = constants;
     }
@@ -113,6 +130,42 @@ public class HHBaseApplication extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        subscription = getApiService().getQuestions(0)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(defaultSubscribeScheduler())
+                .subscribe(new Subscriber<ArrayList<Question>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<Question> questions) {
+                        questions1 = questions;
+                    }
+                });
+        subscription = getApiService().getQuestions(1)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(defaultSubscribeScheduler())
+                .subscribe(new Subscriber<ArrayList<Question>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<Question> questions) {
+                        questions4 = questions;
+                    }
+                });
     }
 
     // 如果返回值为null，则全部使用默认参数。

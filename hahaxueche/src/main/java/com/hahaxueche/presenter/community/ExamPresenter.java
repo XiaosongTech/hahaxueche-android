@@ -1,34 +1,32 @@
 package com.hahaxueche.presenter.community;
 
 import com.hahaxueche.HHBaseApplication;
-import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.examLib.Question;
 import com.hahaxueche.presenter.Presenter;
-import com.hahaxueche.ui.view.base.HHBaseView;
+import com.hahaxueche.ui.view.community.ExamView;
+import com.hahaxueche.util.ExamLib;
+
+import java.util.ArrayList;
 
 /**
- * Created by wangshirui on 2016/10/18.
+ * Created by wangshirui on 2016/12/2.
  */
 
-public class ExamPresenter implements Presenter<HHBaseView> {
-    private HHBaseView mBaseView;
+public class ExamPresenter implements Presenter<ExamView> {
+    private ExamView mExamView;
     private HHBaseApplication application;
 
-    public void attachView(HHBaseView view) {
-        this.mBaseView = view;
-        application = HHBaseApplication.get(mBaseView.getContext());
+    public void attachView(ExamView view) {
+        this.mExamView = view;
+        application = HHBaseApplication.get(mExamView.getContext());
     }
 
     public void detachView() {
-        this.mBaseView = null;
+        this.mExamView = null;
         application = null;
     }
 
-    public int getBonus() {
-        int cityId = 0;
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.student != null) {
-            cityId = user.student.city_id;
-        }
-        return application.getConstants().getCity(cityId).referer_bonus;
+    public ArrayList<Question> getQuestions(String examType) {
+        return examType.equals(ExamLib.EXAM_TYPE_1) ? application.getQuestions1() : application.getQuestions4();
     }
 }

@@ -21,15 +21,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.R;
 import com.hahaxueche.model.examLib.Question;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.presenter.community.ExamPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.community.ExamSubmitAlertDialog;
 import com.hahaxueche.ui.fragment.community.ExamFragment;
+import com.hahaxueche.ui.view.community.ExamView;
 import com.hahaxueche.util.ExamLib;
 import com.hahaxueche.util.SharedPrefUtil;
 import com.hahaxueche.util.Utils;
@@ -38,7 +38,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -49,7 +48,7 @@ import butterknife.ButterKnife;
  * Created by wangshirui on 2016/10/18.
  */
 
-public class ExamActivity extends HHBaseActivity implements ExamFragment.OnCollectRemoveListener, ExamFragment.OnMockExamAnsweredListener {
+public class ExamActivity extends HHBaseActivity implements ExamFragment.OnCollectRemoveListener, ExamFragment.OnMockExamAnsweredListener, ExamView {
     private ImageView mIvBack;
     private TextView mTvTitle;
     private ImageView mIvSubmitExam;
@@ -62,6 +61,7 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
     TextView mTvNext;
     @BindView(R.id.tv_page)
     TextView mTvPage;
+    private ExamPresenter mPresenter;
 
     private ArrayList<Question> mQuestionList = new ArrayList<>();
     private int mCurrentPosition;
@@ -79,8 +79,10 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPresenter = new ExamPresenter();
         setContentView(R.layout.activity_exam);
         ButterKnife.bind(this);
+        mPresenter.attachView(this);
         spUtil = new SharedPrefUtil(getContext());
         initActionBar();
         initQuestionList();
@@ -106,7 +108,6 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
     }
 
     private void initQuestionList() {
-        Gson mGson = new Gson();
         mIntent = getIntent();
         mExamType = mIntent.getStringExtra("examType");
         mExamMode = mIntent.getStringExtra("examMode");
@@ -118,22 +119,11 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
                 Toast.makeText(ExamActivity.this, "加载试题失败,请重试", Toast.LENGTH_SHORT).show();
             }
         } else {
-            ArrayList<Question> questions = null;
-            try {
-                Type type = new TypeToken<ArrayList<Question>>() {
-                }.getType();
-                if (mExamType.equals(ExamLib.EXAM_TYPE_1)) {
-                    questions = mGson.fromJson(getJson("course1.txt"), type);
-                } else {
-                    questions = mGson.fromJson(getJson("course4.txt"), type);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            ArrayList<Question> questions = mPresenter.getQuestions(mExamType);
             if (questions != null && questions.size() > 0) {
                 ArrayList<String> urls = new ArrayList<>();
                 for (Question question : questions) {
-                    String explains = question.explains;
+                    String explains = question.explain;
                     if (explains.contains("http://")) {
                         String url = explains.substring(explains.indexOf("http://"), explains.indexOf("html") + 4);
                         if (!urls.contains(url)) {
@@ -212,6 +202,9 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
             mIvSubmitExam.setVisibility(View.GONE);
         } else if (mExamMode.equals(ExamLib.TEST_MODE_CHECK_WRONG)) {
             mTvTitle.setText("查看错题");
+            mIvSubmitExam.setVisibility(View.GONE);
+        } else if (mExamMode.equals(ExamLib.TEST_MODE_TURN)) {
+            mTvTitle.setText("顺序练题");
             mIvSubmitExam.setVisibility(View.GONE);
         }
         if (mExamMode.equals(ExamLib.TEST_MODE_TURN)) {//顺序联系,提示是否继续上次位置
@@ -435,7 +428,7 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
     @Override
     public void answer(Question question) {
         if (mExamLib == null) return;
-        mExamLib.addAnsweredQuestion(question.id);
+        mExamLib.addAnsweredQuestion(question.question_id);
         if (mExamLib.isAnsweredAll()) {//已经回答完全部问题
             ExamSubmitAlertDialog alertDialog = new ExamSubmitAlertDialog(ExamActivity.this, mExamLib.getAllAnsweredHints(), new ExamSubmitAlertDialog.onConfirmListener() {
                 @Override
@@ -465,6 +458,12 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
                 }
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        mPresenter.detachView();
+        super.onDestroy();
     }
 
     @Override

@@ -115,6 +115,6 @@ public class ExamLibraryFragment extends HHBaseFragment {
     private void navigateToStartExam() {
         Intent intent = new Intent(getActivity(), StartExamActivity.class);
         intent.putExtra("examType", mExamType);
-        getActivity().startActivity(intent);
+        getActivity().startActivityForResult(intent, 2);
     }
 }

@@ -8,6 +8,7 @@ import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.community.Article;
 import com.hahaxueche.model.course.ScheduleEvent;
+import com.hahaxueche.model.examLib.Question;
 import com.hahaxueche.model.payment.BankCard;
 import com.hahaxueche.model.payment.PurchasedService;
 import com.hahaxueche.model.payment.Voucher;
@@ -19,6 +20,7 @@ import com.hahaxueche.model.responseList.ReferrerResponseList;
 import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.responseList.ScheduleEventResponseList;
 import com.hahaxueche.model.user.IdCardUrl;
+import com.hahaxueche.model.user.student.ExamResult;
 import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Coach;
@@ -247,6 +249,16 @@ public interface HHApiService {
     @FormUrlEncoded
     @POST("students/{id}/agreement_mail")
     Observable<BaseSuccess> sendAgreementEmail(@Path("id") String studentId, @FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
+
+    @FormUrlEncoded
+    @POST("students/{id}/exam_results")
+    Observable<ExamResult> submitExamResult(@Path("id") String studentId, @FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
+
+    @GET("students/{id}/exam_results")
+    Observable<ArrayList<ExamResult>> getExamResults(@Path("id") String studentId, @Query("from") int fromScore, @Query("course") int course, @Header("X-Access-Token") String accessToken);
+
+    @GET("exam_questions")
+    Observable<ArrayList<Question>> getQuestions(@Query("course") int course);
 
     class Factory {
         public static HHApiService create() {

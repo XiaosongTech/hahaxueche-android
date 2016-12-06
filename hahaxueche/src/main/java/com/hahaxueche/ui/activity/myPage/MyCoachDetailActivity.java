@@ -231,7 +231,7 @@ public class MyCoachDetailActivity extends HHBaseActivity implements MyCoachDeta
         mediaObject.identify = Utility.generateGUID();
         mediaObject.title = mTitle;
         mediaObject.description = mDescription;
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.share_qrcode);
         // 设置 Bitmap 类型的图片到视频对象里         设置缩略图。 注意：最终压缩过的缩略图大小不得超过 32kb。
         mediaObject.setThumbImage(bitmap);
         mediaObject.actionUrl = mUrl;
