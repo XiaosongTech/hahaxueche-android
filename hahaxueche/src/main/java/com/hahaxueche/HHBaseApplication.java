@@ -22,7 +22,6 @@ import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFOptions;
 import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
 import com.sina.weibo.sdk.api.share.WeiboShareSDK;
-import com.squareup.leakcanary.LeakCanary;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.tencent.tauth.Tencent;
@@ -122,13 +121,15 @@ public class HHBaseApplication extends Application {
     }
 
     public SharedPrefUtil getSharedPrefUtil() {
+        if (spUtil == null) {
+            spUtil = new SharedPrefUtil(this);
+        }
         return spUtil;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        LeakCanary.install(this);
         Fresco.initialize(this);
         spUtil = new SharedPrefUtil(this);
         HahaCache.context = getApplicationContext();
