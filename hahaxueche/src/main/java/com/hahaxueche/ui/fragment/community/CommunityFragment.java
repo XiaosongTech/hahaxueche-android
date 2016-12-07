@@ -18,6 +18,7 @@ import com.hahaxueche.ui.activity.community.ExamLibraryActivity;
 import com.hahaxueche.ui.adapter.community.ArticleListPageAdapter;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.community.CommunityView;
+import com.hahaxueche.util.HHLog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,6 +39,7 @@ public class CommunityFragment extends HHBaseFragment implements CommunityView {
     @BindView(R.id.tv_headline)
     TextView mTvHeadline;
     private static final int REQUEST_CODE_ARTICLE = 11;
+    private static final int REQUEST_CODE_EXAM_LIBRARY = 12;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,7 +75,7 @@ public class CommunityFragment extends HHBaseFragment implements CommunityView {
         switch (view.getId()) {
             case R.id.rly_test_lib:
                 mPresenter.clickTestLibCount();
-                mActivity.startActivity(new Intent(getContext(), ExamLibraryActivity.class));
+                startActivityForResult(new Intent(getContext(), ExamLibraryActivity.class), REQUEST_CODE_EXAM_LIBRARY);
                 break;
             case R.id.rly_group_buy:
                 mPresenter.clickGroupBuyCount();
@@ -104,6 +106,12 @@ public class CommunityFragment extends HHBaseFragment implements CommunityView {
                 if (article != null) {
                     mPresenter.setHeadlineArticle(article);
                 }
+            }
+        } else if (requestCode == REQUEST_CODE_EXAM_LIBRARY) {
+            HHLog.v("111111");
+            if (resultCode == RESULT_OK && null != data) {
+                int tab = data.getIntExtra("showTab", 1);
+                mActivity.selectTab(tab);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

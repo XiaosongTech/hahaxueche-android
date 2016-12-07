@@ -176,7 +176,8 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
     @OnClick({R.id.tv_share_scores,
             R.id.tv_to_exam,
             R.id.iv_pass,
-            R.id.tv_login})
+            R.id.tv_login,
+            R.id.tv_purchase})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_share_scores:
@@ -224,6 +225,12 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
                 intent = new Intent(getContext(), StartLoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                break;
+            case R.id.tv_purchase:
+                intent = new Intent();
+                intent.putExtra("showTab", 1);
+                setResult(RESULT_OK, intent);
+                finish();
                 break;
             default:
                 break;
