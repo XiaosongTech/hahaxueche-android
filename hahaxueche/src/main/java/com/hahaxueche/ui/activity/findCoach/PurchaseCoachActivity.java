@@ -52,6 +52,8 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     TextView mTvCoachName;
     @BindView(R.id.iv_is_golden_coach)
     ImageView mIvIsGoldenCoach;
+    @BindView(R.id.iv_is_cash_pledge)
+    ImageView mIvCashPledge;
     @BindView(R.id.tv_train_school)
     TextView mTvTrainSchool;
     @BindView(R.id.lly_train_school)
@@ -172,6 +174,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
         mIvCoachAvatar.setImageURI(coach.avatar);
         mTvCoachName.setText(coach.name);
         mIvIsGoldenCoach.setVisibility(coach.skill_level.equals("1") ? View.VISIBLE : View.GONE);
+        mIvCashPledge.setVisibility(coach.cash_pledge == 1 ? View.VISIBLE : View.GONE);
         if (!TextUtils.isEmpty(coach.driving_school)) {
             mLlyTrainSchool.setVisibility(View.VISIBLE);
             mTvTrainSchool.setText(coach.driving_school);

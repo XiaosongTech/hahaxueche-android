@@ -45,6 +45,15 @@
             android:layout_toRightOf="@id/tv_coach_name"
             android:src="@drawable/ic_auth_golden_big" />
 
+        <ImageView
+            android:id="@+id/iv_is_cash_pledge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:layout_toRightOf="@id/iv_is_golden_coach"
+            android:src="@drawable/ic_bao_big" />
+
         <include
             android:id="@+id/lly_train_school"
             layout="@layout/layout_train_school"
@@ -52,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="6dp"
-            android:layout_toRightOf="@id/iv_is_golden_coach" />
+            android:layout_toRightOf="@id/iv_is_cash_pledge" />
 
         <TextView
             android:id="@+id/tv_applaud_count"

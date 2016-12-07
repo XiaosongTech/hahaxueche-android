@@ -95,6 +95,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     RelativeLayout mRlyInfoLine;
     @BindView(R.id.iv_is_golden_coach)
     ImageView mIvGoldenCoach;
+    @BindView(R.id.iv_is_cash_pledge)
+    ImageView mIvCashPledge;
     @BindView(R.id.tv_satisfaction_rate)
     TextView mTvSatisfactionRate;
     @BindView(R.id.tv_coach_level)
@@ -659,7 +661,12 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             mIvGoldenCoach.setVisibility(View.GONE);
             mTvCoachLevel.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         }
-
+        //保证金
+        if (coach.cash_pledge == 1) {
+            mIvCashPledge.setVisibility(View.VISIBLE);
+        } else {
+            mIvCashPledge.setVisibility(View.GONE);
+        }
         mTvSatisfactionRate.setText(Utils.getRate(coach.satisfaction_rate));
         mTvCoachLevel.setText(coach.skill_level_label);
         mTvPassDays.setText(coach.average_pass_days + "天");

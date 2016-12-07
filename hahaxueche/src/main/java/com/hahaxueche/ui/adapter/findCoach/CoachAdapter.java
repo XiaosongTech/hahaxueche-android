@@ -73,6 +73,7 @@ public class CoachAdapter extends BaseAdapter {
             holder.tvCoachActualPrice = ButterKnife.findById(view, R.id.tv_coach_actual_price);
             holder.ivCoachAvatar = ButterKnife.findById(view, R.id.iv_coach_avatar);
             holder.ivIsGoldenCoach = ButterKnife.findById(view, R.id.iv_is_golden_coach);
+            holder.ivCashPledge = ButterKnife.findById(view, R.id.iv_is_cash_pledge);
             holder.svCoachScore = ButterKnife.findById(view, R.id.sv_coach_score);
             holder.tvCoachLocation = ButterKnife.findById(view, R.id.tv_coach_location);
             holder.rlyCoachLocation = ButterKnife.findById(view, R.id.rly_third_line);
@@ -93,11 +94,8 @@ public class CoachAdapter extends BaseAdapter {
         if (coach.coach_group != null) {
             holder.tvCoachActualPrice.setText(Utils.getMoney(coach.coach_group.training_cost));
         }
-        if (coach.skill_level.equals("1")) {
-            holder.ivIsGoldenCoach.setVisibility(View.VISIBLE);
-        } else {
-            holder.ivIsGoldenCoach.setVisibility(View.GONE);
-        }
+        holder.ivIsGoldenCoach.setVisibility(coach.skill_level.equals("1") ? View.VISIBLE : View.GONE);
+        holder.ivCashPledge.setVisibility(coach.cash_pledge == 1 ? View.VISIBLE : View.GONE);
         float score = Float.parseFloat(coach.average_rating);
         if (score > 5) {
             score = 5;
@@ -153,6 +151,7 @@ public class CoachAdapter extends BaseAdapter {
         TextView tvCoachActualPrice;
         SimpleDraweeView ivCoachAvatar;
         ImageView ivIsGoldenCoach;
+        ImageView ivCashPledge;
         ScoreView svCoachScore;
         TextView tvCoachLocation;
         RelativeLayout rlyCoachLocation;
