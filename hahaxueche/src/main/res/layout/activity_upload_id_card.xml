@@ -90,7 +90,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="20dp"
             android:lineSpacingMultiplier="1.2"
-            android:text="*请确保您的二代身份证处于有效期内\n**所以信息已经经过加密处理，保证您的信息安全"
+            android:text="*请确保您的二代身份证处于有效期内\n**所有信息已经经过加密处理，保证您的信息安全"
             android:textColor="@color/app_theme_color" />
 
         <TextView
