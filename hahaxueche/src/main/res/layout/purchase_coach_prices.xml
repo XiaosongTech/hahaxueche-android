@@ -110,6 +110,20 @@
 
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/lly_person_voucher"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="15dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_width"
+            android:background="@color/haha_gray_divider" />
+
+    </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/divider_width"

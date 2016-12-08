@@ -344,6 +344,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         } else {
             mPurchaseCoachView.showSelectVoucher(false);
         }
+        loadPersonVoucher();
     }
 
     public void setSelectVoucher(Voucher voucher) {
@@ -381,5 +382,12 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                 break;
             }
         }
+    }
+
+    private void loadPersonVoucher() {
+        mPurchaseCoachView.showPersonVoucher(true);
+        mPurchaseCoachView.addPersonVoucher("徐璐学车顾问学员优惠", "-" + Utils.getMoney(100));
+        mPurchaseCoachView.addPersonVoucher("王璇和金牌教练学员优惠", "-" + Utils.getMoney(100));
+        mPurchaseCoachView.showPersonVoucher(false);
     }
 }
