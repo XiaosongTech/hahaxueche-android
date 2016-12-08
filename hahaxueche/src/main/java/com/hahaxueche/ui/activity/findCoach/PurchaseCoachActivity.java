@@ -161,7 +161,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
                 break;
             case R.id.rly_voucher:
                 Intent intent = new Intent(getContext(), SelectVoucherActivity.class);
-                intent.putParcelableArrayListExtra("voucherList", mPresenter.getVoucherList());
+                intent.putParcelableArrayListExtra("voucherList", mPresenter.getUnCumulativeVoucherList());
                 startActivityForResult(intent, REQUEST_CODE_SELECT_VOUCHERS);
                 break;
             default:
@@ -397,7 +397,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     }
 
     @Override
-    public void showSelectVoucher(boolean isShow) {
+    public void showUnCumulativeVoucher(boolean isShow) {
         mRlyVoucher.setVisibility(isShow ? View.VISIBLE : View.GONE);
     }
 
@@ -408,12 +408,12 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     }
 
     @Override
-    public void showPersonVoucher(boolean isShow) {
+    public void showCumulativeVoucher(boolean isShow) {
         mLlyPersonVoucher.setVisibility(isShow ? View.VISIBLE : View.GONE);
     }
 
     @Override
-    public void addPersonVoucher(String title, String price) {
+    public void addCumulativeVoucher(String title, String price) {
         RelativeLayout rlyVoucher = new RelativeLayout(this);
         LinearLayout.LayoutParams rlyVoucherParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -453,7 +453,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         tvPriceParam.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
         tvPriceParam.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-        tvPriceParam.setMargins(0, 0, Utils.instence(this).dip2px(20), 0);
+        tvPriceParam.setMargins(0, 0, Utils.instence(this).dip2px(30), 0);
         tvPrice.setLayoutParams(tvPriceParam);
         tvPrice.setText(price);
         tvPrice.setTextColor(ContextCompat.getColor(this, R.color.haha_red_text));
@@ -489,7 +489,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
         } else if (requestCode == REQUEST_CODE_SELECT_VOUCHERS) {
             if (resultCode == RESULT_OK) {
                 ArrayList<Voucher> vouchers = data.getParcelableArrayListExtra("voucherList");
-                mPresenter.setVoucherList(vouchers);
+                mPresenter.setUnCumulativeVoucherList(vouchers);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

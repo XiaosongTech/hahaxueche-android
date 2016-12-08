@@ -48,11 +48,11 @@ public interface PurchaseCoachView extends HHBaseView {
 
     void setVoucherSelectable(boolean select);
 
-    void showSelectVoucher(boolean isShow);
+    void showUnCumulativeVoucher(boolean isShow);
 
     void setVoucher(Voucher voucher);
 
-    void showPersonVoucher(boolean isShow);
+    void showCumulativeVoucher(boolean isShow);
 
-    void addPersonVoucher(String title, String price);
+    void addCumulativeVoucher(String title, String price);
 }

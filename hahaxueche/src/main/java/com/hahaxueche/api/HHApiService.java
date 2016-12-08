@@ -230,7 +230,7 @@ public interface HHApiService {
 
     @GET("students/{id}/vouchers")
     Observable<ArrayList<Voucher>> getAvailableVouchers(@Path("id") String studentId, @Query("coach_id") String coachId,
-                                                        @Header("X-Access-Token") String accessToken);
+                                                        @Query("cumulative") String cumulative, @Header("X-Access-Token") String accessToken);
 
     @FormUrlEncoded
     @POST("vouchers")

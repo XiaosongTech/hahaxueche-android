@@ -114,8 +114,8 @@
         android:id="@+id/lly_person_voucher"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="15dp">
+        android:layout_marginTop="15dp"
+        android:orientation="vertical">
 
         <View
             android:layout_width="match_parent"
@@ -157,9 +157,9 @@
             android:id="@+id/tv_voucher_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@id/iv_more_voucher"
+            android:layout_marginRight="30dp"
             android:textColor="@color/haha_red_text" />
 
         <View
