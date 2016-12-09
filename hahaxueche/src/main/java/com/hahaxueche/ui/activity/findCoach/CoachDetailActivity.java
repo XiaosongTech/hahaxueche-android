@@ -988,14 +988,16 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
 
     @Override
     public void setCoachBadge(boolean isGolden) {
-        mTvCoachLevel.setCompoundDrawablesWithIntrinsicBounds(null,
+        mTvBadgeLevel.setCompoundDrawablesWithIntrinsicBounds(null,
                 ContextCompat.getDrawable(this, isGolden ? R.drawable.ic_jinpaijiaolian : R.drawable.ic_jiaolianrenzheng), null, null);
+        mTvBadgeLevel.setText(isGolden ? "金牌教练" : "教练认证");
     }
 
     @Override
     public void setPayBadge(boolean isCashPledge) {
         mTvBadgePay.setCompoundDrawablesWithIntrinsicBounds(null,
                 ContextCompat.getDrawable(this, isCashPledge ? R.drawable.ic_xianxiangpeifu : R.drawable.ic_mianfeishixue), null, null);
+        mTvBadgePay.setText(isCashPledge ? "先行赔付" : "免费试学");
     }
 
     @Override
