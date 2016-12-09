@@ -10,11 +10,4 @@ import com.hahaxueche.ui.view.base.HHBaseView;
 public interface CommunityView extends HHBaseView {
 
     void setHeadline(Article article);
-
-    /**
-     * 打开webview
-     *
-     * @param url
-     */
-    void openWebView(String url);
 }

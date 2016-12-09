@@ -13,11 +13,4 @@ public interface NotLoginVoucherView extends HHBaseView {
     void changeCustomerService();
 
     void showMessage(String message);
-
-    /**
-     * 打开webview
-     *
-     * @param url
-     */
-    void openWebView(String url);
 }

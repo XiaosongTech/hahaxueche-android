@@ -12,6 +12,7 @@ import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.view.base.HHBaseView;
+import com.hahaxueche.util.HHLog;
 
 /**
  * Created by wangshirui on 16/9/17.
@@ -66,6 +67,16 @@ public class HHBaseFragment extends Fragment implements HHBaseView {
     }
 
     @Override
+    public void openWebView(String url) {
+        Intent intent = new Intent(getContext(), BaseWebViewActivity.class);
+        Bundle bundle = new Bundle();
+        HHLog.v("webview url -> " + url);
+        bundle.putString("url", url);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    @Override
     public void showProgressDialog() {
         showProgressDialog("数据加载中，请稍后……");
     }
@@ -82,31 +93,5 @@ public class HHBaseFragment extends Fragment implements HHBaseView {
             progressDialog.dismiss();
         }
     }
-
-    /**
-     * 打开webview
-     *
-     * @param url
-     * @param isShowShare 是否显示分享链接
-     */
-    public void openWebView(String url, String title, boolean isShowShare) {
-        Intent intent = new Intent(getContext(), BaseWebViewActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("url", url);
-        bundle.putString("title", title);
-        bundle.putBoolean("isShowShare", isShowShare);
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
-
-    /**
-     * 打开webview
-     *
-     * @param url
-     */
-    public void openWebView(String url) {
-        openWebView(url, "", true);
-    }
-
 
 }

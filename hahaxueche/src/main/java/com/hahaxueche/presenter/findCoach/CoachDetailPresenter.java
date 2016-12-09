@@ -20,6 +20,7 @@ import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.CoachDetailView;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.WebViewUrl;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
@@ -44,7 +45,6 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
     private User mUser;
     private boolean isFollow;
     private boolean isApplaud;
-    private static final String WEB_URL_FREE_TRY = BuildConfig.MOBILE_URL + "/free_trial?promo_code=553353";
 
     @Override
     public void attachView(CoachDetailView view) {
@@ -448,7 +448,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
     public void freeTry() {
         if (mCoach == null) return;
         //免费试学URL
-        String url = WEB_URL_FREE_TRY;
+        String url = WebViewUrl.WEB_URL_FREE_TRY;
         url += "&coach_id=" + mCoach.id;
         if (mUser != null && mUser.isLogin()) {
             if (mUser.student.city_id >= 0) {
@@ -532,5 +532,9 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         }
         map.put("coach_id", mCoach.id);
         MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_viewed", map);
+    }
+
+    public void clickPlatformAssurance() {
+        mCoachDetailView.openWebView(WebViewUrl.WEB_URL_PLATFORM_GUARD);
     }
 }

@@ -2,20 +2,20 @@ package com.hahaxueche.presenter.myPage;
 
 import android.text.TextUtils;
 
-import com.hahaxueche.BuildConfig;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseModel;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.payment.Voucher;
-import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.employee.Adviser;
+import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.MyPageView;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.PhotoUtil;
+import com.hahaxueche.util.WebViewUrl;
 import com.qiyukf.unicorn.api.ConsultSource;
 import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFUserInfo;
@@ -43,8 +43,6 @@ public class MyPagePresenter implements Presenter<MyPageView> {
     private HHBaseApplication application;
     private Student mStudent;
     private Adviser mAdviser;
-    private static final String WEB_URL_ACTIVATE_VOUCHER = BuildConfig.MOBILE_URL + "/share/jihuo";
-    private static final String WEB_URL_FIND_ADVISER = BuildConfig.MOBILE_URL + "/share/zhaoguwen";
 
     public void attachView(MyPageView view) {
         this.mMyPageView = view;
@@ -422,16 +420,6 @@ public class MyPagePresenter implements Presenter<MyPageView> {
 
     }
 
-    public void activateVoucher() {
-        String url = WEB_URL_ACTIVATE_VOUCHER;
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            url += "?phone=" + user.cell_phone;
-        }
-        HHLog.v(url);
-        mMyPageView.openWebView(url);
-    }
-
     private void showVoucherBadge(Student student) {
         if (student == null || student.vouchers == null || student.vouchers.size() < 1) return;
         boolean hasUnUsedVoucher = false;
@@ -488,6 +476,6 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         if (user != null && user.student != null) {
             cityId = user.student.city_id;
         }
-        mMyPageView.openWebView(WEB_URL_FIND_ADVISER + "?city_id=" + cityId);
+        mMyPageView.openWebView(WebViewUrl.WEB_URL_FIND_ADVISER + "?city_id=" + cityId);
     }
 }

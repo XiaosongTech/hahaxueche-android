@@ -19,4 +19,6 @@ public interface HHBaseView {
     void forceOffline();
 
     void alertToLogin();
+
+    void openWebView(String url);
 }

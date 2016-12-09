@@ -22,6 +22,7 @@ import com.hahaxueche.ui.view.homepage.HomepageView;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.UpdateManager;
 import com.hahaxueche.util.Utils;
+import com.hahaxueche.util.WebViewUrl;
 import com.qiyukf.unicorn.api.ConsultSource;
 import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFUserInfo;
@@ -37,16 +38,6 @@ import rx.Subscription;
 public class HomepagePresenter implements Presenter<HomepageView> {
     private HomepageView mHomepageView;
     private Subscription subscription;
-    private static final String WEB_URL_ABOUT_HAHA = "http://staging.hahaxueche.net/#/student";
-    private static final String WEB_URL_ABOUT_COACH = "http://staging.hahaxueche.net/#/coach";
-    private static final String WEB_URL_MY_STRENGTHS = "http://activity.hahaxueche.com/share/features";
-    private static final String WEB_URL_PROCEDURE = "http://activity.hahaxueche.com/share/steps";
-    private static final String WEB_URL_FREE_TRY = BuildConfig.MOBILE_URL + "/free_trial?promo_code=553353";
-    private static final String WEB_URL_BEST_COACHES = BuildConfig.MOBILE_URL + "/share/best-coaches";
-    private static final String WEB_URL_FIND_ADVISER = BuildConfig.MOBILE_URL + "/share/zhaoguwen";
-    private static final String WEB_URL_FIND_DRIVING_SCHOOL = BuildConfig.MOBILE_URL + "/share/zhaojiaxiao";
-    private static final String WEB_URL_GROUP_BUY = BuildConfig.MOBILE_URL + "/share/tuan";
-    private static final String WEB_URL_PLATFORM_GUARD = BuildConfig.MOBILE_URL + "/assurance";
 
     private HHBaseApplication application;
     private Constants constants;
@@ -69,11 +60,11 @@ public class HomepagePresenter implements Presenter<HomepageView> {
     }
 
     public void openAboutHaha() {
-        mHomepageView.openWebView(WEB_URL_ABOUT_HAHA);
+        mHomepageView.openWebView(WebViewUrl.WEB_URL_ABOUT_HAHA);
     }
 
     public void openAboutCoach() {
-        mHomepageView.openWebView(WEB_URL_ABOUT_COACH);
+        mHomepageView.openWebView(WebViewUrl.WEB_URL_ABOUT_COACH);
     }
 
     public void openMyStrengths() {
@@ -86,7 +77,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         } else {
             MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_strength_tapped");
         }
-        mHomepageView.openWebView(WEB_URL_MY_STRENGTHS);
+        mHomepageView.openWebView(WebViewUrl.WEB_URL_MY_STRENGTHS);
     }
 
     public void openBestCoaches() {
@@ -99,7 +90,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         } else {
             MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_coach_tapped");
         }
-        mHomepageView.openWebView(WEB_URL_BEST_COACHES);
+        mHomepageView.openWebView(WebViewUrl.WEB_URL_BEST_COACHES);
     }
 
     public void openProcedure() {
@@ -112,7 +103,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         } else {
             MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_process_tapped");
         }
-        mHomepageView.openWebView(WEB_URL_PROCEDURE);
+        mHomepageView.openWebView(WebViewUrl.WEB_URL_PROCEDURE);
     }
 
     public void openFindAdviser() {
@@ -129,7 +120,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         } else {
             MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_advisor_tapped");
         }
-        mHomepageView.openWebView(WEB_URL_FIND_ADVISER + "?city_id=" + cityId);
+        mHomepageView.openWebView(WebViewUrl.WEB_URL_FIND_ADVISER + "?city_id=" + cityId);
     }
 
     public void openFindDrivingSchool() {
@@ -142,7 +133,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         } else {
             MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_driving_school_tapped");
         }
-        mHomepageView.openWebView(WEB_URL_FIND_DRIVING_SCHOOL);
+        mHomepageView.openWebView(WebViewUrl.WEB_URL_FIND_DRIVING_SCHOOL);
     }
 
     public void openGroupBuy() {
@@ -155,7 +146,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         } else {
             MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_group_purchase_tapped");
         }
-        mHomepageView.openWebView(WEB_URL_GROUP_BUY);
+        mHomepageView.openWebView(WebViewUrl.WEB_URL_GROUP_BUY);
     }
 
     /**
@@ -203,7 +194,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
 
     public void freeTry() {
         //免费试学URL
-        String url = WEB_URL_FREE_TRY;
+        String url = WebViewUrl.WEB_URL_FREE_TRY;
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             if (user.student.city_id >= 0) {
@@ -325,7 +316,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         } else {
             MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_platform_guard_tapped");
         }
-        mHomepageView.openWebView(WEB_URL_PLATFORM_GUARD);
+        mHomepageView.openWebView(WebViewUrl.WEB_URL_PLATFORM_GUARD);
     }
 
     public void clickReferFriends() {

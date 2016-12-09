@@ -721,7 +721,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             R.id.tv_applaud_count,
             R.id.tv_pay,
             R.id.rly_training_field,
-            R.id.tv_free_try
+            R.id.tv_free_try,
+            R.id.lly_platform_assurance
     })
     public void onClick(View view) {
         switch (view.getId()) {
@@ -758,6 +759,9 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 break;
             case R.id.tv_free_try:
                 mPresenter.freeTry();
+                break;
+            case R.id.lly_platform_assurance:
+                mPresenter.clickPlatformAssurance();
                 break;
             default:
                 break;
