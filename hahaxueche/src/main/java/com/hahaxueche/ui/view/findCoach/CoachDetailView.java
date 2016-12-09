@@ -47,4 +47,8 @@ public interface CoachDetailView extends HHBaseView {
     void openWebView(String url);
 
     void alertToLogin(String alertMessage);
+
+    void setCoachBadge(boolean isGolden);
+
+    void setPayBadge(boolean isCashPledge);
 }

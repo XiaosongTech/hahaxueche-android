@@ -86,6 +86,8 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
                 mCoachDetailView.addPrice(pos++, true, mCoach.coach_group.c2_vip_price);
             }
         }
+        mCoachDetailView.setCoachBadge(coach.skill_level.equals("1"));
+        mCoachDetailView.setPayBadge(coach.has_cash_pledge == 1);
         this.mCoachDetailView.initShareData(mCoach);
         loadReviews();
         loadFollow();

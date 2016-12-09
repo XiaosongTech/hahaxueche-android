@@ -23,6 +23,8 @@
 
             <include layout="@layout/coach_detail_training_field" />
 
+            <include layout="@layout/coach_detail_platform_assurance" />
+
             <include layout="@layout/coach_detail_other" />
 
             <include layout="@layout/coach_detail_peer_coaches" />

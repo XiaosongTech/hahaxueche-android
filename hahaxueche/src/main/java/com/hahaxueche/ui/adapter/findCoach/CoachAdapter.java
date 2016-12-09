@@ -95,7 +95,7 @@ public class CoachAdapter extends BaseAdapter {
             holder.tvCoachActualPrice.setText(Utils.getMoney(coach.coach_group.training_cost));
         }
         holder.ivIsGoldenCoach.setVisibility(coach.skill_level.equals("1") ? View.VISIBLE : View.GONE);
-        holder.ivCashPledge.setVisibility(coach.cash_pledge == 1 ? View.VISIBLE : View.GONE);
+        holder.ivCashPledge.setVisibility(coach.has_cash_pledge == 1 ? View.VISIBLE : View.GONE);
         float score = Float.parseFloat(coach.average_rating);
         if (score > 5) {
             score = 5;

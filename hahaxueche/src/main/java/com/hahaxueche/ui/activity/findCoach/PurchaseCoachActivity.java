@@ -174,7 +174,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
         mIvCoachAvatar.setImageURI(coach.avatar);
         mTvCoachName.setText(coach.name);
         mIvIsGoldenCoach.setVisibility(coach.skill_level.equals("1") ? View.VISIBLE : View.GONE);
-        mIvCashPledge.setVisibility(coach.cash_pledge == 1 ? View.VISIBLE : View.GONE);
+        mIvCashPledge.setVisibility(coach.has_cash_pledge == 1 ? View.VISIBLE : View.GONE);
         if (!TextUtils.isEmpty(coach.driving_school)) {
             mLlyTrainSchool.setVisibility(View.VISIBLE);
             mTvTrainSchool.setText(coach.driving_school);

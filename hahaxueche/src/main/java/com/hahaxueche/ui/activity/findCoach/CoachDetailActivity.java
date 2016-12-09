@@ -129,6 +129,10 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     TextView mTvApplaud;
     @BindView(R.id.lly_prices)
     LinearLayout mLlyPrices;
+    @BindView(R.id.tv_badge_level)
+    TextView mTvBadgeLevel;
+    @BindView(R.id.tv_badge_pay)
+    TextView mTvBadgePay;
     private ReviewResponseList mReviewResponse;
     /*****************
      * 分享
@@ -662,7 +666,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             mTvCoachLevel.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         }
         //保证金
-        if (coach.cash_pledge == 1) {
+        if (coach.has_cash_pledge == 1) {
             mIvCashPledge.setVisibility(View.VISIBLE);
         } else {
             mIvCashPledge.setVisibility(View.GONE);
@@ -980,6 +984,18 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                     }
                 });
         dialog.show();
+    }
+
+    @Override
+    public void setCoachBadge(boolean isGolden) {
+        mTvCoachLevel.setCompoundDrawablesWithIntrinsicBounds(null,
+                ContextCompat.getDrawable(this, isGolden ? R.drawable.ic_jinpaijiaolian : R.drawable.ic_jiaolianrenzheng), null, null);
+    }
+
+    @Override
+    public void setPayBadge(boolean isCashPledge) {
+        mTvBadgePay.setCompoundDrawablesWithIntrinsicBounds(null,
+                ContextCompat.getDrawable(this, isCashPledge ? R.drawable.ic_xianxiangpeifu : R.drawable.ic_mianfeishixue), null, null);
     }
 
     @Override
