@@ -15,10 +15,20 @@
     <!--这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission>
     <!--写入扩展存储，向扩展卡写入数据，用于写入缓存定位数据-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
+    <!--阿里移动推送相关权限-->
+    <!--Android 6.0版本可去除，用于选举信息（通道复用）的同步-->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <!--选举使用，当应用有删除或者更新时需要重新选举，复用推送通道-->
+    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_CHANGED" />
+    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_REPLACED" />
+    <uses-permission android:name="android.permission.RESTART_PACKAGES" />
+    <!--补偿通道GCM使用，不使用可去除-->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <!-- 允许task重排序 -->
+    <uses-permission android:name="android.permission.REORDER_TASKS" />
 
     <application
         android:name=".HHBaseApplication"
@@ -40,6 +50,12 @@
         <meta-data
             android:name="linkedme.sdk.key"
             android:value="linkedme_live_6e02127dcdac518550bb02a4450c5f3c" />
+        <meta-data
+            android:name="com.alibaba.app.appkey"
+            android:value="23260416" /> <!-- aliyun push appKey -->
+        <meta-data
+            android:name="com.alibaba.app.appsecret"
+            android:value="996121506d96c60827a917c2ca26ab14" /> <!-- aliyun push appSecret -->
 
         <activity
             android:name=".ui.activity.base.WelcomeActivity"
@@ -277,5 +293,66 @@
             android:name="cmb.pb.cmbsafe.CmbService"
             android:exported="false" />
         <service android:name="com.amap.api.location.APSService"></service>
+
+        <!-- aliyun push 通道保持服务 -->
+        <service android:name="com.alibaba.sdk.android.push.ChannelService"
+            android:exported="true" android:process=":channel">
+            <intent-filter>
+                <action android:name="com.taobao.accs.intent.action.SERVICE"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.agoo.android.intent.action.PING_V4" />
+                <category android:name="taobao" />
+            </intent-filter>
+        </service>
+        <!-- aliyun push 消息接收服务 -->
+        <service android:name="com.alibaba.sdk.android.push.MsgService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.taobao.accs.intent.action.RECEIVE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.alibaba.sdk.android.push.NOTIFY_ACTION" />
+            </intent-filter>
+        </service>
+        <!-- aliyun push 消息接收增强服务（可提高通知/消息达到率）-->
+        <service android:name="com.alibaba.sdk.android.push.channel.TaobaoRecvService" android:exported="true">
+            <intent-filter>
+                <action android:name="org.android.agoo.client.MessageReceiverService"/>
+            </intent-filter>
+        </service>
+
+        <!-- aliyun push 消息接收监听器-->
+        <receiver android:name="com.alibaba.sdk.android.push.MessageReceiver">
+            <intent-filter>
+                <action android:name="com.alibaba.push2.action.NOTIFICATION_OPENED"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.alibaba.push2.action.NOTIFICATION_REMOVED"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.taobao.accs.intent.action.COMMAND" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.taobao.taobao.intent.action.COMMAND" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.agoo.android.intent.action.RECEIVE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 </manifest>

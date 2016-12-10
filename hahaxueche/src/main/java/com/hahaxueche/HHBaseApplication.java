@@ -4,6 +4,9 @@ import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
+import com.alibaba.sdk.android.push.CloudPushService;
+import com.alibaba.sdk.android.push.CommonCallback;
+import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.Constants;
@@ -130,6 +133,7 @@ public class HHBaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        initCloudChannel(this);//aliyun push
         Fresco.initialize(this);
         spUtil = new SharedPrefUtil(this);
         HahaCache.context = getApplicationContext();
@@ -236,4 +240,28 @@ public class HHBaseApplication extends Application {
 
     }
 
+    /**
+     * 初始化云推送通道
+     *
+     * @param applicationContext
+     */
+    private void initCloudChannel(Context applicationContext) {
+        PushServiceFactory.init(applicationContext);
+        CloudPushService pushService = PushServiceFactory.getCloudPushService();
+        HHLog.v("0000");
+        pushService.register(applicationContext, new CommonCallback() {
+            @Override
+            public void onSuccess(String response) {
+                HHLog.v("11111");
+                HHLog.v("init cloudchannel success");
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+                HHLog.v("2222222");
+                HHLog.v("init cloudchannel failed -- errorcode:" + errorCode + " -- errorMessage:" + errorMessage);
+            }
+        });
+        HHLog.v("pushService.getDeviceId -> " + pushService.getDeviceId());
+    }
 }
