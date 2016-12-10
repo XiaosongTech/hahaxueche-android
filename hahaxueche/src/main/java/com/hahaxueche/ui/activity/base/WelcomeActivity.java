@@ -11,7 +11,6 @@ import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.view.base.WelcomeView;
 import com.hahaxueche.ui.view.login.CompleteUserInfoView;
 import com.hahaxueche.util.HHLog;
-import com.igexin.sdk.PushManager;
 import com.microquation.linkedme.android.LinkedME;
 import com.microquation.linkedme.android.callback.LMReferralCloseListener;
 import com.microquation.linkedme.android.callback.LMSimpleInitListener;
@@ -61,7 +60,6 @@ public class WelcomeActivity extends HHBaseActivity implements WelcomeView {
         setContentView(R.layout.activity_welcome);
         ButterKnife.bind(this);
         MobclickAgent.setDebugMode(false);
-        PushManager.getInstance().initialize(this.getApplicationContext());
     }
 
     @Override
