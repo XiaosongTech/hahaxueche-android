@@ -51,12 +51,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "String", "SERVER_URL", properties.getProperty("serverUrl")
             buildConfigField "String", "MOBILE_URL", properties.getProperty("mobieUrl")
+            buildConfigField "String", "MI_PUSH_APP_ID", properties.getProperty("miPushAppId")
+            buildConfigField "String", "MI_PUSH_APP_KEY", properties.getProperty("miPushAppKey")
 
         }
         debug {
             signingConfig signingConfigs.debugSign
             buildConfigField "String", "SERVER_URL", properties.getProperty("serverUrl")
             buildConfigField "String", "MOBILE_URL", properties.getProperty("mobieUrl")
+            buildConfigField "String", "MI_PUSH_APP_ID", properties.getProperty("miPushAppId")
+            buildConfigField "String", "MI_PUSH_APP_KEY", properties.getProperty("miPushAppKey")
         }
     }
     dexOptions {
