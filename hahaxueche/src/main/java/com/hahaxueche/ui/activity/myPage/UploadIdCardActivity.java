@@ -573,35 +573,51 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     }
 
     private void compressImage(Uri uri) {
-        int MAX_IMAGE_SIZE = 200 * 1024; // max final file size
-        Bitmap bmpPic = BitmapFactory.decodeFile(uri.getPath());
-        if ((bmpPic.getWidth() >= 1024) && (bmpPic.getHeight() >= 1024)) {
-            BitmapFactory.Options bmpOptions = new BitmapFactory.Options();
-            bmpOptions.inSampleSize = 1;
-            while ((bmpPic.getWidth() >= 1024) && (bmpPic.getHeight() >= 1024)) {
-                bmpOptions.inSampleSize++;
-                bmpPic = BitmapFactory.decodeFile(uri.getPath(), bmpOptions);
-            }
-            HHLog.d("Resize: " + bmpOptions.inSampleSize);
-        }
-        int compressQuality = 104; // quality decreasing by 5 every loop. (start from 99)
-        int streamLength = MAX_IMAGE_SIZE;
-        while (streamLength >= MAX_IMAGE_SIZE) {
-            ByteArrayOutputStream bmpStream = new ByteArrayOutputStream();
-            compressQuality -= 5;
-            HHLog.d("Quality: " + compressQuality);
-            bmpPic.compress(Bitmap.CompressFormat.JPEG, compressQuality, bmpStream);
-            byte[] bmpPicByteArray = bmpStream.toByteArray();
-            streamLength = bmpPicByteArray.length;
-            HHLog.d("Size: " + streamLength);
-        }
+        // First decode with inJustDecodeBounds=true to check dimensions
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(uri.getPath(), options);
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, 1000, 1000);
+        HHLog.v("options.inSampleSize" + options.inSampleSize);
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        Bitmap bmpPic = BitmapFactory.decodeFile(uri.getPath(), options);
         try {
             FileOutputStream bmpFile = new FileOutputStream(uri.getPath());
-            bmpPic.compress(Bitmap.CompressFormat.JPEG, compressQuality, bmpFile);
+            bmpPic.compress(Bitmap.CompressFormat.JPEG, 100, bmpFile);
             bmpFile.flush();
             bmpFile.close();
         } catch (Exception e) {
             HHLog.e("Error on saving file: " + e.getMessage());
+        } finally {
+            if (bmpPic != null && !bmpPic.isRecycled()) {
+                bmpPic.recycle();
+                bmpPic = null;
+                System.gc();
+            }
         }
+    }
+
+    public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        HHLog.v("calculateInSampleSize height" + height);
+        HHLog.v("calculateInSampleSize width" + width);
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    || (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 }
