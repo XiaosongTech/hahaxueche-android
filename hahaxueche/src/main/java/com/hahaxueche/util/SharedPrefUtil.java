@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.examLib.Question;
 import com.hahaxueche.model.user.student.Student;
@@ -12,6 +13,7 @@ import com.hahaxueche.model.user.User;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by wangshirui on 16/9/10.
@@ -121,7 +123,9 @@ public class SharedPrefUtil {
 
     public void addQuestionCollect(String examType, String id) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        ArrayList<String> collectList = mGson.fromJson(prefs.getString(examType + "collectList", ""), ArrayList.class);
+        ArrayList<String> collectList = mGson.fromJson(prefs.getString(examType +
+                "collectList", ""), new TypeToken<List<Question>>() {
+        }.getType());
         if (collectList != null) {
             if (!collectList.contains(id)) {
                 collectList.add(id);
@@ -135,7 +139,9 @@ public class SharedPrefUtil {
 
     public void removeQuestionCollect(String examType, String id) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        ArrayList<String> collectList = mGson.fromJson(prefs.getString(examType + "collectList", ""), ArrayList.class);
+        ArrayList<String> collectList = mGson.fromJson(prefs.getString(examType +
+                "collectList", ""), new TypeToken<List<Question>>() {
+        }.getType());
         if (collectList != null && collectList.contains(id)) {
             collectList.remove(id);
         }
@@ -144,7 +150,9 @@ public class SharedPrefUtil {
 
     public boolean isQuestionCollect(String examType, String id) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        ArrayList<String> collectList = mGson.fromJson(prefs.getString(examType + "collectList", ""), ArrayList.class);
+        ArrayList<String> collectList = mGson.fromJson(prefs.getString(examType +
+                "collectList", ""), new TypeToken<List<Question>>() {
+        }.getType());
         return (collectList != null && collectList.contains(id));
     }
 
@@ -170,7 +178,9 @@ public class SharedPrefUtil {
 
     public ArrayList<Question> getQuestions1() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return mGson.fromJson(prefs.getString("questions1Serialize", ""), ArrayList.class);
+        return mGson.fromJson(prefs.getString("questions1Serialize", ""),
+                new TypeToken<List<Question>>() {
+                }.getType());
     }
 
     public void setQuestions1(ArrayList<Question> questions1) {
@@ -180,7 +190,9 @@ public class SharedPrefUtil {
 
     public ArrayList<Question> getQuestions4() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return mGson.fromJson(prefs.getString("questions4Serialize", ""), ArrayList.class);
+        return mGson.fromJson(prefs.getString("questions4Serialize", ""),
+                new TypeToken<List<Question>>() {
+                }.getType());
     }
 
     public void setQuestions4(ArrayList<Question> questions4) {
