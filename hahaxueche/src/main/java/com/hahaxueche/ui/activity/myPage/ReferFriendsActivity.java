@@ -93,6 +93,7 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
      ******************/
     private ReferDetailDialog mReferDetailDialog;
     private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
+    private static final int PERMISSIONS_REQUEST_SEND_SMS = 603;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,6 +207,12 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
                                 case 4:
                                     shareToQZone();
                                     break;
+                                case 5:
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, PERMISSIONS_REQUEST_SEND_SMS);
+                                    } else {
+                                        shareToSms();
+                                    }
                                 default:
                                     break;
                             }
@@ -531,6 +538,19 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
             } else {
                 showMessage("请允许拨打电话权限，不然无法直接拨号联系客服");
             }
+        } else if (requestCode == PERMISSIONS_REQUEST_SEND_SMS) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                shareToSms();
+            } else {
+                showMessage("请允许发送短信权限，不然无法分享到短信");
+            }
         }
+    }
+
+    private void shareToSms() {
+        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"));
+        intent.putExtra("sms_body", mTitle + mDescription + mUrl);
+        startActivity(intent);
     }
 }

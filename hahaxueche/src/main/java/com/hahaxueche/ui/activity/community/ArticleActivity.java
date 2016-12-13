@@ -1,8 +1,12 @@
 package com.hahaxueche.ui.activity.community;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -111,6 +115,7 @@ public class ArticleActivity extends HHBaseActivity implements ArticleView, IWei
      * end
      ******************/
     private ArticlePresenter mPresenter;
+    private static final int PERMISSIONS_REQUEST_SEND_SMS = 603;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -236,6 +241,12 @@ public class ArticleActivity extends HHBaseActivity implements ArticleView, IWei
                                 case 4:
                                     shareToQZone();
                                     break;
+                                case 5:
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, PERMISSIONS_REQUEST_SEND_SMS);
+                                    } else {
+                                        shareToSms();
+                                    }
                                 default:
                                     break;
                             }
@@ -724,5 +735,23 @@ public class ArticleActivity extends HHBaseActivity implements ArticleView, IWei
         intent.putExtra("article", mPresenter.getArticle());
         setResult(RESULT_OK, intent);
         super.finish();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_SEND_SMS) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                shareToSms();
+            } else {
+                showMessage("请允许发送短信权限，不然无法分享到短信");
+            }
+        }
+    }
+
+    private void shareToSms() {
+        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"));
+        intent.putExtra("sms_body", mTitle + mUrl);
+        startActivity(intent);
     }
 }
