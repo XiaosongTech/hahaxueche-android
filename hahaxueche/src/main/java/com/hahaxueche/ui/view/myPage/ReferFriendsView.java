@@ -9,7 +9,5 @@ import com.hahaxueche.ui.view.base.HHBaseView;
 public interface ReferFriendsView extends HHBaseView {
     void showMessage(String message);
 
-    void navigateToWithdraw();
-
-    void navigateToReferList();
+    void navigateToMyRefer();
 }

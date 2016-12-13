@@ -139,27 +139,9 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
     }
 
     public void clickWithdraw() {
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_cash_tapped", map);
-            mReferFriendsView.navigateToWithdraw();
+        if (isLogin()) {
+            mReferFriendsView.navigateToMyRefer();
         } else {
-            MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_cash_tapped");
-            mReferFriendsView.alertToLogin();
-        }
-    }
-
-    public void clickReferrerList() {
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_check_balance_tapped", map);
-            mReferFriendsView.navigateToReferList();
-        } else {
-            MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_check_balance_tapped");
             mReferFriendsView.alertToLogin();
         }
     }

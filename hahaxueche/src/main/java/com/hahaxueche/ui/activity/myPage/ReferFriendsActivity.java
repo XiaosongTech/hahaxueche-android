@@ -151,7 +151,7 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
         mTvWithdraw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mPresenter.clickWithdraw();
             }
         });
     }
@@ -470,13 +470,8 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
     }
 
     @Override
-    public void navigateToWithdraw() {
-        startActivity(new Intent(getContext(), WithdrawActivity.class));
-    }
-
-    @Override
-    public void navigateToReferList() {
-        startActivity(new Intent(getContext(), ReferrerListActivity.class));
+    public void navigateToMyRefer() {
+        startActivity(new Intent(getContext(), MyReferActivity.class));
     }
 
     @Override
