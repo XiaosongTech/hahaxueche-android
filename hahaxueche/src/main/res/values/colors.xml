@@ -21,4 +21,6 @@
     <color name="title_color">#333333</color>
     <color name="haha_orange_fade">#fffbf0</color>
     <color name="haha_blue">#009fff</color>
+    <color name="haha_brown">#8b572a</color>
+    <color name="haha_red">#ff5555</color>
 </resources>

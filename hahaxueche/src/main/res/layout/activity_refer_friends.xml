@@ -1,149 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/sv_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/haha_gray_background">
+    android:background="@color/haha_white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:background="@color/app_theme_color">
-
-            <TextView
-                android:id="@+id/tv_withdraw_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="20dp"
-                android:text="可提现"
-                android:textColor="@color/haha_white"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tv_withdraw_money"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@id/tv_withdraw_label"
-                android:layout_below="@id/tv_withdraw_label"
-                android:layout_marginTop="10dp"
-                android:drawablePadding="8dp"
-                android:drawableRight="@drawable/ic_arrow_more_white"
-                android:text="0"
-                android:textColor="@color/haha_white"
-                android:textSize="24sp" />
-
-            <TextView
-                android:id="@+id/tv_withdraw"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/rect_bg_trans_bd_white_sm"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="5dp"
-                android:text="提现"
-                android:textColor="@color/haha_white"
-                android:textSize="14sp" />
-        </RelativeLayout>
-
-        <LinearLayout
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/haha_white"
+            android:scaleType="centerCrop"
+            android:src="@drawable/pic_shareforaward" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/pic_200" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
             android:gravity="center"
-            android:orientation="vertical">
+            android:lineSpacingMultiplier="1.2"
+            android:text="分享哈哈学车，好友可得200元\n新人专享代金券"
+            android:textColor="@color/haha_brown" />
 
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/iv_qr_code"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                fresco:viewAspectRatio="1" />
-
-            <TextView
-                android:id="@+id/tv_share_qr_code"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="24dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="24dp"
-                android:background="@drawable/rect_bg_appcolor_corner"
-                android:gravity="center"
-                android:paddingBottom="16dp"
-                android:paddingTop="16dp"
-                android:text="点击分享, 赚回学费"
-                android:textColor="@color/haha_white"
-                android:textSize="16sp" />
-
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/iv_refer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                fresco:viewAspectRatio="1.1" />
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp">
-
-            <ImageView
-                android:id="@+id/iv_dash"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:background="@drawable/divider_dash_line" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:background="@color/haha_gray_background"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="活动细则"
-                android:textColor="@color/haha_gray"
-                android:textSize="14sp" />
-
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/tv_refer_rules"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="33dp"
-            android:layout_marginRight="33dp"
-            android:layout_marginTop="18dp"
-            android:lineSpacingExtra="2dp"
-            android:text="@string/eventDetailsTips"
-            android:textColor="@color/haha_gray"
-            android:textSize="12sp" />
+            android:layout_marginTop="20dp"
+            android:src="@drawable/pic_double200" />
+
+        <TextView
+            android:id="@+id/tv_refer_double"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.2"
+            android:text="好友报名后再奖励你200元，累计\n无上线，随时可提现 详情"
+            android:textColor="@color/haha_brown" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="15dp"
-            android:lineSpacingExtra="2dp"
-            android:text="@string/eventDetailsTipsLaw"
-            android:textColor="@color/app_theme_color"
-            android:textSize="12sp" />
+            android:layout_marginTop="20dp"
+            android:text="点击分享，各得200元"
+            android:textColor="@color/haha_brown"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/haha_red"
+            android:paddingBottom="8dp"
+            android:paddingLeft="60dp"
+            android:paddingRight="60dp"
+            android:paddingTop="8dp"
+            android:text="立刻分享"
+            android:textColor="@color/haha_white"
+            android:textSize="18sp" />
     </LinearLayout>
 </ScrollView>

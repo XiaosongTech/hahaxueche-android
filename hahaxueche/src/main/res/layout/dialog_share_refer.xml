@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/haha_white"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:padding="5dp"
+        android:src="@drawable/button_close2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="爱分享的人运气不会太差～"
+        android:textColor="@color/app_theme_color"
+        android:textSize="16sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="成功邀请好友，一起平分400元！"
+        android:textColor="@color/app_theme_color"
+        android:textSize="16sp" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="10dp"
+        android:stretchColumns="0,1,2,3">
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/tv_share_qq"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="4dp"
+                android:drawableTop="@drawable/ic_coachmsg_sharecoach_qq"
+                android:gravity="center"
+                android:text="QQ"
+                android:textColor="@color/haha_gray" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_span="2" />
+
+            <TextView
+                android:id="@+id/tv_share_sms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:drawablePadding="4dp"
+                android:drawableTop="@drawable/ic_message"
+                android:gravity="center"
+                android:text="短信"
+                android:textColor="@color/haha_gray" />
+        </TableRow>
+
+        <TableRow android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/tv_share_qzone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="4dp"
+                android:drawableTop="@drawable/ic_coachmsg_sharecoach_kongjian"
+                android:gravity="center"
+                android:text="空间"
+                android:textColor="@color/haha_gray" />
+
+            <TextView
+                android:id="@+id/tv_share_weixin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="4dp"
+                android:drawableTop="@drawable/ic_coachmsg_sharecoach_wechat"
+                android:gravity="center"
+                android:text="微信"
+                android:textColor="@color/haha_gray" />
+
+            <TextView
+                android:id="@+id/tv_share_friend_circle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="4dp"
+                android:drawableTop="@drawable/ic_coachmsg_sharecoach_friendgroup"
+                android:gravity="center"
+                android:text="朋友圈"
+                android:textColor="@color/haha_gray" />
+
+            <TextView
+                android:id="@+id/tv_share_weibo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="4dp"
+                android:drawableTop="@drawable/ic_coachmsg_sharecoach_weibo"
+                android:gravity="center"
+                android:text="微博"
+                android:textColor="@color/haha_gray" />
+        </TableRow>
+    </TableLayout>
+</LinearLayout>
