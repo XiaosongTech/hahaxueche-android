@@ -20,6 +20,9 @@ public class Voucher implements Parcelable {
     public int status;
     public ArrayList<String> coaches;
     public boolean isSelect;
+    public int voucher_type_id;
+    public String voucher_type_label;
+    public int cumulative;
 
     protected Voucher(Parcel in) {
         id = in.readString();
@@ -31,6 +34,9 @@ public class Voucher implements Parcelable {
         status = in.readInt();
         coaches = in.createStringArrayList();
         isSelect = in.readByte() != 0;
+        voucher_type_id = in.readInt();
+        voucher_type_label = in.readString();
+        cumulative = in.readInt();
     }
 
     public static final Creator<Voucher> CREATOR = new Creator<Voucher>() {
@@ -61,5 +67,8 @@ public class Voucher implements Parcelable {
         dest.writeInt(status);
         dest.writeStringList(coaches);
         dest.writeByte((byte) (isSelect ? 1 : 0));
+        dest.writeInt(voucher_type_id);
+        dest.writeString(voucher_type_label);
+        dest.writeInt(cumulative);
     }
 }

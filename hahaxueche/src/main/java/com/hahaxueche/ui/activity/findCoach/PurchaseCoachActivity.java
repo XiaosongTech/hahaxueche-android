@@ -94,6 +94,8 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     TextView mTvTotalAmountText;
     @BindView(R.id.tv_total_amount_label)
     TextView mTvTotalAmountLabel;
+    @BindView(R.id.lly_person_voucher)
+    LinearLayout mLlyPersonVoucher;
 
     private HHBaseApplication application;
     private int[] selectIds = new int[3];
@@ -161,7 +163,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
                 break;
             case R.id.rly_voucher:
                 Intent intent = new Intent(getContext(), SelectVoucherActivity.class);
-                intent.putParcelableArrayListExtra("voucherList", mPresenter.getVoucherList());
+                intent.putParcelableArrayListExtra("voucherList", mPresenter.getUnCumulativeVoucherList());
                 startActivityForResult(intent, REQUEST_CODE_SELECT_VOUCHERS);
                 break;
             default:
@@ -398,7 +400,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     }
 
     @Override
-    public void showSelectVoucher(boolean isShow) {
+    public void showUnCumulativeVoucher(boolean isShow) {
         mRlyVoucher.setVisibility(isShow ? View.VISIBLE : View.GONE);
     }
 
@@ -406,6 +408,61 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     public void setVoucher(Voucher voucher) {
         mTvVoucherAmount.setText("-" + Utils.getMoney(voucher.amount));
         mTvVoucherTitle.setText(voucher.title);
+    }
+
+    @Override
+    public void showCumulativeVoucher(boolean isShow) {
+        mLlyPersonVoucher.setVisibility(isShow ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void addCumulativeVoucher(String title, String price) {
+        RelativeLayout rlyVoucher = new RelativeLayout(this);
+        LinearLayout.LayoutParams rlyVoucherParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        rlyVoucherParam.setMargins(0, Utils.instence(this).dip2px(20), 0, 0);
+        rlyVoucher.setLayoutParams(rlyVoucherParam);
+
+        TextView tvIcon = new TextView(this);
+        RelativeLayout.LayoutParams tvIconParam = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvIconParam.setMargins(Utils.instence(this).dip2px(20), 0, 0, 0);
+        tvIconParam.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        tvIcon.setLayoutParams(tvIconParam);
+        tvIcon.setText("惠");
+        tvIcon.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
+        tvIcon.setBackgroundResource(R.drawable.rect_bg_orange_ssm);
+        tvIcon.setTextSize(12);
+        tvIcon.setPadding(Utils.instence(this).dip2px(3), Utils.instence(this).dip2px(1),
+                Utils.instence(this).dip2px(3), Utils.instence(this).dip2px(1));
+        int tvIconId = Utils.generateViewId();
+        tvIcon.setId(tvIconId);
+        rlyVoucher.addView(tvIcon);
+
+        TextView tvTitle = new TextView(this);
+        RelativeLayout.LayoutParams tvTitleParam = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvTitleParam.addRule(RelativeLayout.RIGHT_OF, tvIconId);
+        tvTitleParam.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        tvTitleParam.setMargins(Utils.instence(this).dip2px(5), 0, 0, 0);
+        tvTitle.setLayoutParams(tvTitleParam);
+        tvTitle.setText(title);
+        tvTitle.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
+        tvTitle.setTextSize(12);
+        rlyVoucher.addView(tvTitle);
+
+        TextView tvPrice = new TextView(this);
+        RelativeLayout.LayoutParams tvPriceParam = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvPriceParam.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        tvPriceParam.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+        tvPriceParam.setMargins(0, 0, Utils.instence(this).dip2px(30), 0);
+        tvPrice.setLayoutParams(tvPriceParam);
+        tvPrice.setText(price);
+        tvPrice.setTextColor(ContextCompat.getColor(this, R.color.haha_red_text));
+        rlyVoucher.addView(tvPrice);
+
+        mLlyPersonVoucher.addView(rlyVoucher);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -435,7 +492,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
         } else if (requestCode == REQUEST_CODE_SELECT_VOUCHERS) {
             if (resultCode == RESULT_OK) {
                 ArrayList<Voucher> vouchers = data.getParcelableArrayListExtra("voucherList");
-                mPresenter.setVoucherList(vouchers);
+                mPresenter.setUnCumulativeVoucherList(vouchers);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

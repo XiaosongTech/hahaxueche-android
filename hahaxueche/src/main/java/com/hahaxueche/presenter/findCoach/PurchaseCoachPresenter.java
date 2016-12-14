@@ -45,7 +45,8 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
     private int productType = -1;
     private int paymentMethod = -1;
     private Voucher mSelectVoucher;
-    private ArrayList<Voucher> mVoucherList;
+    private ArrayList<Voucher> mUnCumulativeVoucherList;
+    private ArrayList<Voucher> mCumulativeVoucherList;
 
     @Override
     public void attachView(PurchaseCoachView view) {
@@ -62,7 +63,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         mCoach = null;
         mUser = null;
         mSelectVoucher = null;
-        mVoucherList = null;
+        mUnCumulativeVoucherList = null;
     }
 
     public void setCoach(Coach coach) {
@@ -77,7 +78,8 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         }
         selectLicenseC1();
         selectClassNormal();//默认C1 普通班
-        fetchAvailableVouchers();//更新代金券信息
+        fetchCumulativeVouchers();//代金券
+        fetchUnCumulativeVouchers();
         mPurchaseCoachView.loadPaymentMethod(getPaymentMethod());
         paymentMethod = 0;
         pageStartCount();
@@ -126,6 +128,12 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
     private void setProductType() {
         int voucherAmount = mSelectVoucher != null ? mSelectVoucher.amount : 0;
         int totalAmount = 0;
+        //可叠加代金券的优惠金额
+        if (mCumulativeVoucherList != null && mCumulativeVoucherList.size() > 0) {
+            for (Voucher voucher : mCumulativeVoucherList) {
+                voucherAmount += voucher.amount;
+            }
+        }
         if (license == 1 && classType == 0) {
             productType = 0;
             totalAmount = mCoach.coach_group.training_cost;
@@ -292,7 +300,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                 });
     }
 
-    private void fetchAvailableVouchers() {
+    private void fetchCumulativeVouchers() {
         final HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", mUser.cell_phone);
@@ -301,7 +309,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                     @Override
                     public Observable<ArrayList<Voucher>> call(BaseValid baseValid) {
                         if (baseValid.valid) {
-                            return apiService.getAvailableVouchers(mUser.student.id, mCoach.id, mUser.session.access_token);
+                            return apiService.getAvailableVouchers(mUser.student.id, mCoach.id, "1", mUser.session.access_token);
                         } else {
                             return application.getSessionObservable();
                         }
@@ -313,7 +321,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
 
                     @Override
                     public void onCompleted() {
-                        loadVoucher();
+                        loadCumulativeVoucher();
                     }
 
                     @Override
@@ -326,24 +334,86 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
 
                     @Override
                     public void onNext(ArrayList<Voucher> vouchers) {
-                        mVoucherList = vouchers;
+                        categoryVouchers(vouchers);
                     }
                 });
     }
 
-    private void loadVoucher() {
-        if (mVoucherList != null && mVoucherList.size() > 0) {
-            mPurchaseCoachView.showSelectVoucher(true);
-            setSelectVoucher(mVoucherList.get(0));
-            if (mVoucherList.size() == 1) {
-                //有一张代金券，直接使用不选择
-                mPurchaseCoachView.setVoucherSelectable(false);
+    private void fetchUnCumulativeVouchers() {
+        final HHApiService apiService = application.getApiService();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("cell_phone", mUser.cell_phone);
+        subscription = apiService.isValidToken(mUser.session.access_token, map)
+                .flatMap(new Func1<BaseValid, Observable<ArrayList<Voucher>>>() {
+                    @Override
+                    public Observable<ArrayList<Voucher>> call(BaseValid baseValid) {
+                        if (baseValid.valid) {
+                            return apiService.getAvailableVouchers(mUser.student.id, mCoach.id, "0", mUser.session.access_token);
+                        } else {
+                            return application.getSessionObservable();
+                        }
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<ArrayList<Voucher>>() {
+
+                    @Override
+                    public void onCompleted() {
+                        loadUnCumulativeVoucher();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (ErrorUtil.isInvalidSession(e)) {
+                            mPurchaseCoachView.forceOffline();
+                        }
+                        HHLog.e(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<Voucher> vouchers) {
+                        categoryVouchers(vouchers);
+                    }
+                });
+    }
+
+    /**
+     * 优惠券分类
+     *
+     * @param vouchers
+     */
+    private void categoryVouchers(ArrayList<Voucher> vouchers) {
+        if (vouchers == null || vouchers.size() < 1) return;
+        for (Voucher voucher : vouchers) {
+            if (voucher.cumulative == 1) {
+                if (mCumulativeVoucherList == null) {
+                    mCumulativeVoucherList = new ArrayList<>();
+                }
+                mCumulativeVoucherList.add(voucher);
             } else {
-                mPurchaseCoachView.setVoucherSelectable(true);
+                if (mUnCumulativeVoucherList == null) {
+                    mUnCumulativeVoucherList = new ArrayList<>();
+                }
+                mUnCumulativeVoucherList.add(voucher);
             }
-        } else {
-            mPurchaseCoachView.showSelectVoucher(false);
         }
+    }
+
+    private void loadUnCumulativeVoucher() {
+        if (mUnCumulativeVoucherList == null || mUnCumulativeVoucherList.size() < 1) {
+            mPurchaseCoachView.showUnCumulativeVoucher(false);
+            return;
+        }
+        mPurchaseCoachView.showUnCumulativeVoucher(true);
+        setSelectVoucher(mUnCumulativeVoucherList.get(0));
+        if (mUnCumulativeVoucherList.size() == 1) {
+            //有一张代金券，直接使用不选择
+            mPurchaseCoachView.setVoucherSelectable(false);
+        } else {
+            mPurchaseCoachView.setVoucherSelectable(true);
+        }
+
     }
 
     public void setSelectVoucher(Voucher voucher) {
@@ -368,18 +438,33 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         MobclickAgent.onEvent(mPurchaseCoachView.getContext(), "purchase_confirm_page_purchase_button_tapped", map);
     }
 
-    public ArrayList<Voucher> getVoucherList() {
-        return mVoucherList;
+    public ArrayList<Voucher> getUnCumulativeVoucherList() {
+        return mUnCumulativeVoucherList;
     }
 
-    public void setVoucherList(ArrayList<Voucher> voucherList) {
-        mVoucherList = voucherList;
-        if (mVoucherList == null || mVoucherList.size() < 1) return;
-        for (Voucher voucher : mVoucherList) {
+    public void setUnCumulativeVoucherList(ArrayList<Voucher> voucherList) {
+        mUnCumulativeVoucherList = voucherList;
+        if (mUnCumulativeVoucherList == null || mUnCumulativeVoucherList.size() < 1) return;
+        for (Voucher voucher : mUnCumulativeVoucherList) {
             if (voucher.isSelect) {
                 setSelectVoucher(voucher);
                 break;
             }
         }
+    }
+
+    /**
+     * 加载可叠加代金券
+     */
+    private void loadCumulativeVoucher() {
+        if (mCumulativeVoucherList == null || mCumulativeVoucherList.size() < 1) {
+            mPurchaseCoachView.showCumulativeVoucher(false);
+            return;
+        }
+        mPurchaseCoachView.showCumulativeVoucher(true);
+        for (Voucher voucher : mCumulativeVoucherList) {
+            mPurchaseCoachView.addCumulativeVoucher(voucher.title, "-" + Utils.getMoney(voucher.amount));
+        }
+        setProductType();
     }
 }
