@@ -31,7 +31,7 @@ public class UpdateManager {
     private Context mContext;
 
     //返回的安装包url
-    private String apkUrl = "http://apk.hahaxueche.net/hahaxueche.apk";
+    private String apkUrl = "https://haha-production.oss-cn-hangzhou.aliyuncs.com/hahaxueche.apk";
 
     //提示语
     private String updateMsg = "有最新的软件包哦，亲快下载吧~";

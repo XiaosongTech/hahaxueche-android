@@ -241,7 +241,7 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
     public void initShareData(String desc, String shareUrl) {
         mTitle = "科一不过包陪";
         mDescription = desc;
-        mImageUrl = "http://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
+        mImageUrl = "https://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
         mUrl = shareUrl;
         HHLog.v("mUrl -> " + mUrl);
     }

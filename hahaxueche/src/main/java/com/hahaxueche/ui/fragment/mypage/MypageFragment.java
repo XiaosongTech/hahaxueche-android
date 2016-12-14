@@ -46,6 +46,7 @@ import com.hahaxueche.ui.view.myPage.MyPageView;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.PhotoUtil;
 import com.hahaxueche.util.Utils;
+import com.hahaxueche.util.WebViewUrl;
 
 import java.io.File;
 
@@ -97,8 +98,6 @@ public class MypageFragment extends HHBaseFragment implements MyPageView, SwipeR
     private MainActivity mActivity;
     private static final int PERMISSIONS_REQUEST_SDCARD = 600;
     private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
-    private static final String WEB_URL_ABOUT_HAHA = "http://staging.hahaxueche.net/#/student";
-    private static final String URL_APP_STORE = "http://a.app.qq.com/o/simple.jsp?pkgname=com.hahaxueche";
     private PhotoUtil mPhotoUtil;
     private String mAlbumPicturePath = null;
     private MyAdviserDialog mConsultantDialog;
@@ -249,7 +248,7 @@ public class MypageFragment extends HHBaseFragment implements MyPageView, SwipeR
                 break;
             case R.id.rly_support_haha:
                 mPresenter.clickSupportHahaCount();
-                Uri uri = Uri.parse(URL_APP_STORE);
+                Uri uri = Uri.parse(WebViewUrl.URL_APP_STORE);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
                 break;

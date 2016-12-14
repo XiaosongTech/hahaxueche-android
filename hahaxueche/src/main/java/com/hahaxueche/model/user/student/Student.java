@@ -33,10 +33,12 @@ public class Student implements Parcelable {
     public ArrayList<Voucher> vouchers;
     public String agreement_url;
     public IdCard identity_card;
+    public String user_identity_id;
 
     public Student() {
 
     }
+
 
     protected Student(Parcel in) {
         id = in.readString();
@@ -54,6 +56,7 @@ public class Student implements Parcelable {
         vouchers = in.createTypedArrayList(Voucher.CREATOR);
         agreement_url = in.readString();
         identity_card = in.readParcelable(IdCard.class.getClassLoader());
+        user_identity_id = in.readString();
     }
 
     public static final Creator<Student> CREATOR = new Creator<Student>() {
@@ -151,5 +154,6 @@ public class Student implements Parcelable {
         dest.writeTypedList(vouchers);
         dest.writeString(agreement_url);
         dest.writeParcelable(identity_card, flags);
+        dest.writeString(user_identity_id);
     }
 }

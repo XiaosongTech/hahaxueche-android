@@ -122,6 +122,7 @@ public class MainPresenter implements Presenter<MainView> {
         if (!user.student.hasPurchasedService() && user.student.vouchers != null && user.student.vouchers.size() > 0) {
             Voucher maxVoucher = getMaxVoucher(user.student.vouchers);
             if (maxVoucher != null) {
+                mBaseView.initShareData();
                 mBaseView.showVoucherDialog(user.student.id, maxVoucher);
             }
         }

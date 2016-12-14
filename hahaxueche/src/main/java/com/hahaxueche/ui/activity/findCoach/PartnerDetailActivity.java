@@ -191,7 +191,7 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
     public void initShareData(Partner partner) {
         mTitle = "哈哈学车-选驾校，挑教练，上哈哈学车";
         mDescription = "好友力荐:\n哈哈学车优秀教练" + partner.name;
-        mImageUrl = "http://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
+        mImageUrl = "https://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
         mUrl = BuildConfig.SERVER_URL + "/share/training_partners/" + partner.id;
         HHLog.v("mUrl -> " + mUrl);
     }

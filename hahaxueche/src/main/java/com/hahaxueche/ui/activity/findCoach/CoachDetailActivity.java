@@ -190,7 +190,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     public void initShareData(Coach coach) {
         mTitle = "哈哈学车-选驾校，挑教练，上哈哈学车";
         mDescription = "好友力荐:\n哈哈学车优秀教练" + coach.name;
-        mImageUrl = "http://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
+        mImageUrl = "https://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
         mUrl = BuildConfig.SERVER_URL + "/share/coaches/" + coach.id;
         HHLog.v("mUrl -> " + mUrl);
     }

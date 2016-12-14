@@ -36,16 +36,13 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
     private Subscription subscription;
     private HHBaseApplication application;
     private String mQrCodeUrl;
-    private String mDefaultQrCodeUrl = BuildConfig.DEBUG ? "http://q1.hahaxueche.com/refer_template5.png?watermark/3/image/aHR0cDovL3MtaW1nLmhhaGF4dWVjaGUubmV0L2RlZmF1bHRfZnJlZV90cmlhbF9xcmNvZGUucG5n/dissolve/100/gravity/SouthWest/dx/120/dy/80" :
-            "http://q1.hahaxueche.com/refer_template5.png?watermark/3/image/aHR0cDovL3AtaW1nLmhhaGF4dWVjaGUuY29tL2RlZmF1bHRfZnJlZV90cmlhbF9xcmNvZGUucG5n/dissolve/100/gravity/SouthWest/dx/120/dy/80";
 
     public void attachView(ReferFriendsView view) {
         this.mReferFriendsView = view;
         application = HHBaseApplication.get(mReferFriendsView.getContext());
         User user = application.getSharedPrefUtil().getUser();
-
         if (user != null && user.isLogin()) {
-            getQrCodeUrl(user);
+            mReferFriendsView.initShareData(user.student.user_identity_id);
         }
     }
 
@@ -54,30 +51,6 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
         if (subscription != null) subscription.unsubscribe();
         application = null;
         mQrCodeUrl = null;
-    }
-
-    private void getQrCodeUrl(User user) {
-        subscription = redirectUrl(user)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(application.defaultSubscribeScheduler())
-                .subscribe(new Subscriber<String>() {
-                    @Override
-                    public void onCompleted() {
-                        pageStartCount();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(String s) {
-                        mQrCodeUrl = s;
-                        HHLog.v("QrCodeUrl -> " + mQrCodeUrl);
-                    }
-                });
-
     }
 
     private Observable<String> redirectUrl(final User user) {
@@ -110,7 +83,7 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
             MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_share_pic_tapped", map);
-            mReferFriendsView.showShareDialog(user.student.id);
+            mReferFriendsView.showShareDialog();
         } else {
             MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_share_pic_tapped");
             mReferFriendsView.alertToLogin();

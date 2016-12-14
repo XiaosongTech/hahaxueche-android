@@ -36,6 +36,7 @@ import com.hahaxueche.ui.dialog.myPage.ShareReferDialog;
 import com.hahaxueche.ui.view.myPage.ReferFriendsView;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
+import com.hahaxueche.util.WebViewUrl;
 import com.sina.weibo.sdk.api.ImageObject;
 import com.sina.weibo.sdk.api.TextObject;
 import com.sina.weibo.sdk.api.WebpageObject;
@@ -167,11 +168,12 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
         mWeiboShareAPI = myApplication.getWeiboAPI();
     }
 
-    public void initShareData() {
-        mTitle = "";
-        mDescription = "";
-        mImageUrl = "http://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
-        mUrl = "";
+    @Override
+    public void initShareData(String userIdentityId) {
+        mTitle = "新人大礼包";
+        mDescription = "HI，知道你想学车，再送你200元代金券一张，怕你考不过，再送你一张保过卡，比心❤️️";
+        mImageUrl = "https://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
+        mUrl = WebViewUrl.WEB_URL_DALIBAO + "&referrer_id=" + userIdentityId;
         HHLog.v("mUrl -> " + mUrl);
     }
 
@@ -442,9 +444,10 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
     }
 
     @Override
-    public void showShareDialog(String studentId) {
+    public void showShareDialog() {
+        if (TextUtils.isEmpty(mUrl)) return;
         if (shareDialog == null) {
-            shareDialog = new ShareReferDialog(getContext(), studentId, new ShareDialog.OnShareListener() {
+            shareDialog = new ShareReferDialog(getContext(), mUrl, new ShareDialog.OnShareListener() {
                 @Override
                 public void onShare(int shareType) {
                     switch (shareType) {

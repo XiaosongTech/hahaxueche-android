@@ -37,6 +37,7 @@ import com.hahaxueche.ui.view.base.MainView;
 import com.hahaxueche.ui.widget.FragmentTabHost;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
+import com.hahaxueche.util.WebViewUrl;
 import com.sina.weibo.sdk.api.ImageObject;
 import com.sina.weibo.sdk.api.TextObject;
 import com.sina.weibo.sdk.api.WebpageObject;
@@ -170,11 +171,12 @@ public class MainActivity extends HHBaseActivity implements MainView, IWeiboHand
         mWeiboShareAPI = myApplication.getWeiboAPI();
     }
 
+    @Override
     public void initShareData() {
-        mTitle = "";
-        mDescription = "";
-        mImageUrl = "http://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
-        mUrl = "";
+        mTitle = "新人大礼包";
+        mDescription = "HI，知道你想学车，再送你200元代金券一张，怕你考不过，再送你一张保过卡，比心❤️️";
+        mImageUrl = "https://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
+        mUrl = WebViewUrl.WEB_URL_DALIBAO;
         HHLog.v("mUrl -> " + mUrl);
     }
 
@@ -239,8 +241,9 @@ public class MainActivity extends HHBaseActivity implements MainView, IWeiboHand
                 new MainShareDialog.OnButtonClickListener() {
                     @Override
                     public void shareToFriends() {
+                        if (TextUtils.isEmpty(mUrl)) return;
                         if (shareDialog == null) {
-                            shareDialog = new ShareReferDialog(getContext(), "", new ShareDialog.OnShareListener() {
+                            shareDialog = new ShareReferDialog(getContext(), mUrl, new ShareDialog.OnShareListener() {
                                 @Override
                                 public void onShare(int shareType) {
                                     switch (shareType) {

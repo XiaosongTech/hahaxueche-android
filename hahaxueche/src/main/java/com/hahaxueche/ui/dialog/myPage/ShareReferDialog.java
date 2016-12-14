@@ -24,6 +24,7 @@ import com.hahaxueche.BuildConfig;
 import com.hahaxueche.R;
 import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.WebViewUrl;
 
 import java.util.Hashtable;
 
@@ -45,8 +46,7 @@ public class ShareReferDialog extends Dialog {
     private ImageView mIvQrCode;
     private static int QR_WIDTH = 300;
     private static int QR_HEIGHT = 300;
-    private static final String WEB_URL_DALIBAO = BuildConfig.MOBILE_URL + "/share/xin-ren-da-li-bao?promo_code=553353";
-    private String mQrCodeUrl;
+    private String mUrl;
 
     public interface OnShareListener {
         void onShare(int shareType);
@@ -54,16 +54,16 @@ public class ShareReferDialog extends Dialog {
 
     private ShareDialog.OnShareListener mOnShareListener;
 
-    public ShareReferDialog(Context context, String student_id, ShareDialog.OnShareListener onShareListener) {
+    public ShareReferDialog(Context context, String url, ShareDialog.OnShareListener onShareListener) {
         super(context);
         mContext = context;
+        mUrl = url;
         mOnShareListener = onShareListener;
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_share_refer, null);
         setContentView(view);
         initView(view);
-        createQrCodeUrl(student_id);
         generateQrCode();
         Window dialogWindow = this.getWindow();
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
@@ -73,24 +73,16 @@ public class ShareReferDialog extends Dialog {
         dialogWindow.setAttributes(lp);
     }
 
-    private void createQrCodeUrl(String studentId) {
-        mQrCodeUrl = WEB_URL_DALIBAO;
-        if (!TextUtils.isEmpty(studentId)) {
-            mQrCodeUrl += "&referrer_id=" + studentId;
-        }
-        HHLog.v("mQrCodeUrl -> " + mQrCodeUrl);
-    }
-
     private void generateQrCode() {
         try {
             //判断URL合法性
-            if (mQrCodeUrl == null || "".equals(mQrCodeUrl) || mQrCodeUrl.length() < 1) {
+            if (mUrl == null || "".equals(mUrl) || mUrl.length() < 1) {
                 return;
             }
             Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();
             hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
             //图像数据转换，使用了矩阵转换
-            BitMatrix bitMatrix = new QRCodeWriter().encode(mQrCodeUrl, BarcodeFormat.QR_CODE, QR_WIDTH, QR_HEIGHT, hints);
+            BitMatrix bitMatrix = new QRCodeWriter().encode(mUrl, BarcodeFormat.QR_CODE, QR_WIDTH, QR_HEIGHT, hints);
             int[] pixels = new int[QR_WIDTH * QR_HEIGHT];
             //下面这里按照二维码的算法，逐个生成二维码的图片，
             //两个for循环是图片横列扫描的结果

@@ -2,6 +2,7 @@ package com.hahaxueche.ui.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -48,7 +49,11 @@ public class MainShareDialog {
     private void loadDatas() {
         mTvVoucherAmount.setText(Utils.getMoney(mVoucher.amount));
         mTvVoucherName.setText(mVoucher.title);
-        mTvVoucherExpiredAt.setText("有效期 " + mVoucher.expired_at);
+        if (!TextUtils.isEmpty(mVoucher.expired_at)) {
+            mTvVoucherExpiredAt.setText("有效期 " + mVoucher.expired_at);
+        } else {
+            mTvVoucherExpiredAt.setText("长期有效");
+        }
     }
 
     private void initView() {

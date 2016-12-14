@@ -18,4 +18,6 @@ public interface MainView extends HHBaseView {
     void navigateToMyContract();
 
     void showVoucherDialog(String studentId, Voucher voucher);
+
+    void initShareData();
 }

@@ -174,7 +174,7 @@ public class ArticleActivity extends HHBaseActivity implements ArticleView, IWei
     public void initShareData(Article article) {
         mTitle = article.title;
         mDescription = article.intro;
-        mImageUrl = "http://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
+        mImageUrl = "https://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
         mUrl = BuildConfig.MOBILE_URL + "/articles/" + article.id + "?view=raw";
         HHLog.v("mUrl -> " + mUrl);
     }
