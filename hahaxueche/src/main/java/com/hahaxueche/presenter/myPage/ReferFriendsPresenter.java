@@ -110,8 +110,10 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
             MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_share_pic_tapped", map);
+            mReferFriendsView.showShareDialog(user.student.id);
         } else {
             MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_share_pic_tapped");
+            mReferFriendsView.alertToLogin();
         }
 
     }

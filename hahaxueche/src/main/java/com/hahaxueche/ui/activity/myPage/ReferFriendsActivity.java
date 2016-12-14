@@ -180,46 +180,6 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
         switch (view.getId()) {
             case R.id.tv_share:
                 mPresenter.clickShareCount();
-                if (!mPresenter.isLogin()) {
-                    alertToLogin();
-                    return;
-                }
-                if (TextUtils.isEmpty(mPresenter.getQrCodeUrl())) {
-                    return;
-                }
-                if (shareDialog == null) {
-                    shareDialog = new ShareReferDialog(getContext(), new ShareDialog.OnShareListener() {
-                        @Override
-                        public void onShare(int shareType) {
-                            switch (shareType) {
-                                case 0:
-                                    shareToWeixin();
-                                    break;
-                                case 1:
-                                    shareToFriendCircle();
-                                    break;
-                                case 2:
-                                    shareToQQ();
-                                    break;
-                                case 3:
-                                    shareToWeibo();
-                                    break;
-                                case 4:
-                                    shareToQZone();
-                                    break;
-                                case 5:
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-                                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, PERMISSIONS_REQUEST_SEND_SMS);
-                                    } else {
-                                        shareToSms();
-                                    }
-                                default:
-                                    break;
-                            }
-                        }
-                    });
-                }
-                shareDialog.show();
                 break;
             default:
                 break;
@@ -479,6 +439,43 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
     @Override
     public void navigateToMyRefer() {
         startActivity(new Intent(getContext(), MyReferActivity.class));
+    }
+
+    @Override
+    public void showShareDialog(String studentId) {
+        if (shareDialog == null) {
+            shareDialog = new ShareReferDialog(getContext(), studentId, new ShareDialog.OnShareListener() {
+                @Override
+                public void onShare(int shareType) {
+                    switch (shareType) {
+                        case 0:
+                            shareToWeixin();
+                            break;
+                        case 1:
+                            shareToFriendCircle();
+                            break;
+                        case 2:
+                            shareToQQ();
+                            break;
+                        case 3:
+                            shareToWeibo();
+                            break;
+                        case 4:
+                            shareToQZone();
+                            break;
+                        case 5:
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                                requestPermissions(new String[]{Manifest.permission.SEND_SMS}, PERMISSIONS_REQUEST_SEND_SMS);
+                            } else {
+                                shareToSms();
+                            }
+                        default:
+                            break;
+                    }
+                }
+            });
+        }
+        shareDialog.show();
     }
 
     @Override

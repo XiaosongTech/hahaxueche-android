@@ -10,4 +10,6 @@ public interface ReferFriendsView extends HHBaseView {
     void showMessage(String message);
 
     void navigateToMyRefer();
+
+    void showShareDialog(String studentId);
 }

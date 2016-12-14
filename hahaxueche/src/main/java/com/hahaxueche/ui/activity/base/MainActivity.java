@@ -234,13 +234,13 @@ public class MainActivity extends HHBaseActivity implements MainView, IWeiboHand
     }
 
     @Override
-    public void showVoucherDialog(Voucher voucher) {
+    public void showVoucherDialog(final String studentId, Voucher voucher) {
         MainShareDialog dialog = new MainShareDialog(getContext(), voucher,
                 new MainShareDialog.OnButtonClickListener() {
                     @Override
                     public void shareToFriends() {
                         if (shareDialog == null) {
-                            shareDialog = new ShareReferDialog(getContext(), new ShareDialog.OnShareListener() {
+                            shareDialog = new ShareReferDialog(getContext(), "", new ShareDialog.OnShareListener() {
                                 @Override
                                 public void onShare(int shareType) {
                                     switch (shareType) {
