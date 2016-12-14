@@ -95,6 +95,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     RelativeLayout mRlyInfoLine;
     @BindView(R.id.iv_is_golden_coach)
     ImageView mIvGoldenCoach;
+    @BindView(R.id.iv_is_cash_pledge)
+    ImageView mIvCashPledge;
     @BindView(R.id.tv_satisfaction_rate)
     TextView mTvSatisfactionRate;
     @BindView(R.id.tv_coach_level)
@@ -127,6 +129,10 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     TextView mTvApplaud;
     @BindView(R.id.lly_prices)
     LinearLayout mLlyPrices;
+    @BindView(R.id.tv_badge_level)
+    TextView mTvBadgeLevel;
+    @BindView(R.id.tv_badge_pay)
+    TextView mTvBadgePay;
     private ReviewResponseList mReviewResponse;
     /*****************
      * 分享
@@ -659,7 +665,12 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             mIvGoldenCoach.setVisibility(View.GONE);
             mTvCoachLevel.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         }
-
+        //保证金
+        if (coach.has_cash_pledge == 1) {
+            mIvCashPledge.setVisibility(View.VISIBLE);
+        } else {
+            mIvCashPledge.setVisibility(View.GONE);
+        }
         mTvSatisfactionRate.setText(Utils.getRate(coach.satisfaction_rate));
         mTvCoachLevel.setText(coach.skill_level_label);
         mTvPassDays.setText(coach.average_pass_days + "天");
@@ -710,7 +721,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             R.id.tv_applaud_count,
             R.id.tv_pay,
             R.id.rly_training_field,
-            R.id.tv_free_try
+            R.id.tv_free_try,
+            R.id.lly_platform_assurance
     })
     public void onClick(View view) {
         switch (view.getId()) {
@@ -747,6 +759,9 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 break;
             case R.id.tv_free_try:
                 mPresenter.freeTry();
+                break;
+            case R.id.lly_platform_assurance:
+                mPresenter.clickPlatformAssurance();
                 break;
             default:
                 break;
@@ -973,6 +988,20 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                     }
                 });
         dialog.show();
+    }
+
+    @Override
+    public void setCoachBadge(boolean isGolden) {
+        mTvBadgeLevel.setCompoundDrawablesWithIntrinsicBounds(null,
+                ContextCompat.getDrawable(this, isGolden ? R.drawable.ic_jinpaijiaolian : R.drawable.ic_jiaolianrenzheng), null, null);
+        mTvBadgeLevel.setText(isGolden ? "金牌教练" : "教练认证");
+    }
+
+    @Override
+    public void setPayBadge(boolean isCashPledge) {
+        mTvBadgePay.setCompoundDrawablesWithIntrinsicBounds(null,
+                ContextCompat.getDrawable(this, isCashPledge ? R.drawable.ic_xianxiangpeifu : R.drawable.ic_mianfeishixue), null, null);
+        mTvBadgePay.setText(isCashPledge ? "先行赔付" : "免费试学");
     }
 
     @Override

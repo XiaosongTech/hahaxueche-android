@@ -72,23 +72,6 @@ public class NotLoginVoucherActivity extends HHBaseActivity implements NotLoginV
     }
 
     @Override
-    public void openWebView(String url) {
-        this.openWebView(url, "", false);
-    }
-
-    @Override
-    public void openWebView(String url, String title, boolean isShowShare) {
-        Intent intent = new Intent(getContext(), BaseWebViewActivity.class);
-        Bundle bundle = new Bundle();
-        HHLog.v("webview url -> " + url);
-        bundle.putString("url", url);
-        bundle.putString("title", title);
-        bundle.putBoolean("isShowShare", isShowShare);
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
-
-    @Override
     protected void onDestroy() {
         mPresenter.detachView();
         super.onDestroy();

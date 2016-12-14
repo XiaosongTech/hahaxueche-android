@@ -45,13 +45,6 @@ public interface MyPageView extends HHBaseView {
      */
     void setContractBadge(boolean hasBadge);
 
-    /**
-     * 打开webview
-     *
-     * @param url
-     */
-    void openWebView(String url);
-
     void alertToFindCoach();
 
     void navigateToUploadIdCard();

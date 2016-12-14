@@ -39,12 +39,9 @@ public interface CoachDetailView extends HHBaseView {
 
     void addPrice(int pos, boolean isVIP, int price);
 
-    /**
-     * 打开webview
-     *
-     * @param url
-     */
-    void openWebView(String url);
-
     void alertToLogin(String alertMessage);
+
+    void setCoachBadge(boolean isGolden);
+
+    void setPayBadge(boolean isCashPledge);
 }

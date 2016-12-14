@@ -25,13 +25,6 @@ public interface StartLoginView extends HHBaseView {
     void navigateToHomepage();
 
     /**
-     * 打开webview
-     *
-     * @param url
-     */
-    void openWebView(String url);
-
-    /**
      * banner init
      *
      * @param bannerArrayList

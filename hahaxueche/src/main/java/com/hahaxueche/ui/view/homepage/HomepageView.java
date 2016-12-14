@@ -12,13 +12,6 @@ import java.util.ArrayList;
  */
 public interface HomepageView extends HHBaseView {
     /**
-     * 打开webview
-     *
-     * @param url
-     */
-    void openWebView(String url);
-
-    /**
      * 显示信息
      *
      * @param message
