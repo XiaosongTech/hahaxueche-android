@@ -1,9 +1,13 @@
 package com.hahaxueche.ui.activity.findCoach;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -151,10 +155,10 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     /*****************
      * end
      ******************/
-
     private static final int REQUEST_CODE_PURCHASE_COACH = 1;
     private static final int REQUEST_CODE_PAY_SUCCESS = 2;
     private static final int REQUEST_CODE_UPLOAD_ID_CARD = 3;
+    private static final int PERMISSIONS_REQUEST_SEND_SMS = 603;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -384,6 +388,12 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                                 case 4:
                                     shareToQZone();
                                     break;
+                                case 5:
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, PERMISSIONS_REQUEST_SEND_SMS);
+                                    } else {
+                                        shareToSms();
+                                    }
                                 default:
                                     break;
                             }
@@ -1028,5 +1038,23 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         intent.putExtra("coach", mPresenter.getCoach());
         setResult(RESULT_OK, intent);
         super.finish();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_SEND_SMS) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                shareToSms();
+            } else {
+                showMessage("请允许发送短信权限，不然无法分享到短信");
+            }
+        }
+    }
+
+    private void shareToSms() {
+        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"));
+        intent.putExtra("sms_body", mTitle + mDescription + mUrl);
+        startActivity(intent);
     }
 }

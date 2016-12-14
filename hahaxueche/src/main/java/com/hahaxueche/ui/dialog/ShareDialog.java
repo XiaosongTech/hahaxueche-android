@@ -26,6 +26,7 @@ public class ShareDialog extends Dialog {
     private TextView tvShareFriendCircle;
     private TextView tvShareCancel;
     private TextView tvShareQzone;
+    private TextView tvShareSms;
 
     public interface OnShareListener {
         void onShare(int shareType);
@@ -93,6 +94,14 @@ public class ShareDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 mOnShareListener.onShare(4);
+                dismiss();
+            }
+        });
+        tvShareSms = ButterKnife.findById(view, R.id.tv_share_sms);
+        tvShareSms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnShareListener.onShare(5);
                 dismiss();
             }
         });

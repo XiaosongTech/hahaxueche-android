@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="快去报名～不通过立即现金赔付！"
+            android:text="快去报名~报名后即可申请理赔！"
             android:textColor="@color/app_theme_color" />
 
         <TextView

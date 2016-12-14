@@ -46,19 +46,7 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
 
         if (user != null && user.isLogin()) {
             getQrCodeUrl(user);
-            mReferFriendsView.setWithdrawMoney(Utils.getMoney(user.student.bonus_balance));
-        } else {
-            mReferFriendsView.setQrCodeImage(mDefaultQrCodeUrl);
         }
-        int cityId = 0;
-        if (user != null && user.student != null) {
-            cityId = user.student.city_id;
-        }
-        String eventDetailTips = mReferFriendsView.getContext().getResources().getString(R.string.eventDetailsTips);
-        City myCity = application.getConstants().getCity(cityId);
-        mReferFriendsView.setReferRules(String.format(eventDetailTips, Utils.getMoney(myCity.referee_bonus)
-                , Utils.getMoney(myCity.referee_bonus), Utils.getMoney(myCity.referer_bonus)));
-        mReferFriendsView.setMyCityReferImage(myCity.referral_banner);
     }
 
     public void detachView() {
@@ -68,46 +56,6 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
         mQrCodeUrl = null;
     }
 
-    public void refreshBonus() {
-        final User user = application.getSharedPrefUtil().getUser();
-        if (user == null || !user.isLogin()) return;
-        final HHApiService apiService = application.getApiService();
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("cell_phone", user.cell_phone);
-        subscription = apiService.isValidToken(user.session.access_token, map)
-                .flatMap(new Func1<BaseValid, Observable<Student>>() {
-                    @Override
-                    public Observable<Student> call(BaseValid baseValid) {
-                        if (baseValid.valid) {
-                            return apiService.getStudent(user.student.id, user.session.access_token);
-                        } else {
-                            return application.getSessionObservable();
-                        }
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(application.defaultSubscribeScheduler())
-                .subscribe(new Subscriber<Student>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        if (ErrorUtil.isInvalidSession(e)) {
-                            mReferFriendsView.forceOffline();
-                        }
-                        HHLog.e(e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(Student student) {
-                        application.getSharedPrefUtil().updateStudent(student);
-                        mReferFriendsView.setWithdrawMoney(Utils.getMoney(student.bonus_balance));
-                    }
-                });
-    }
-
     private void getQrCodeUrl(User user) {
         subscription = redirectUrl(user)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -115,7 +63,6 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
                 .subscribe(new Subscriber<String>() {
                     @Override
                     public void onCompleted() {
-                        mReferFriendsView.setQrCodeImage(mQrCodeUrl);
                         pageStartCount();
                     }
 
@@ -163,8 +110,10 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
             MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_share_pic_tapped", map);
+            mReferFriendsView.showShareDialog(user.student.id);
         } else {
             MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_share_pic_tapped");
+            mReferFriendsView.alertToLogin();
         }
 
     }
@@ -192,27 +141,9 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
     }
 
     public void clickWithdraw() {
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_cash_tapped", map);
-            mReferFriendsView.navigateToWithdraw();
+        if (isLogin()) {
+            mReferFriendsView.navigateToMyRefer();
         } else {
-            MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_cash_tapped");
-            mReferFriendsView.alertToLogin();
-        }
-    }
-
-    public void clickReferrerList() {
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_check_balance_tapped", map);
-            mReferFriendsView.navigateToReferList();
-        } else {
-            MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_check_balance_tapped");
             mReferFriendsView.alertToLogin();
         }
     }

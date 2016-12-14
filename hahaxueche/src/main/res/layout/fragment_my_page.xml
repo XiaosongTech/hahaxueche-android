@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:autofit="http://schemas.android.com/apk/res-auto"
     android:id="@+id/lly_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -49,23 +50,28 @@
                     android:layout_height="wrap_content"
                     android:background="@color/app_theme_color">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginBottom="23dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="23dp"
-                        android:text="我想为哈哈代言,免费赚取代言费"
-                        android:textColor="@color/haha_white"
-                        android:textSize="16sp" />
-
                     <ImageView
+                        android:id="@+id/iv_xiaoha"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentRight="true"
                         android:src="@drawable/pic_xiaoha" />
+
+                    <me.grantland.widget.AutofitTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginBottom="23dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="3dp"
+                        android:layout_marginTop="23dp"
+                        android:layout_toLeftOf="@id/iv_xiaoha"
+                        android:lines="1"
+                        android:text="邀请好友平分¥400！邀请越多，奖励越多！"
+                        android:textColor="@color/haha_white"
+                        android:textSize="16sp"
+                        autofit:minTextSize="8sp" />
                 </RelativeLayout>
 
                 <include layout="@layout/my_page_coach_info" />

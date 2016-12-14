@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sv_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/haha_white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:background="@color/app_theme_color">
+
+        <TextView
+            android:id="@+id/tv_withdraw_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="20dp"
+            android:text="可提现"
+            android:textColor="@color/haha_white"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_withdraw_money"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_withdraw_label"
+            android:layout_below="@id/tv_withdraw_label"
+            android:layout_marginTop="10dp"
+            android:text="￥0"
+            android:textColor="@color/haha_white"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/tv_withdraw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/rect_bg_trans_bd_white_sm"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:text="提现"
+            android:textColor="@color/haha_white"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <com.hahaxueche.ui.widget.pullToRefreshView.XListView
+        android:id="@+id/xlv_referrer_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@color/haha_gray_divider"
+        android:dividerHeight="@dimen/divider_width"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
+        android:visibility="gone">
+
+    </com.hahaxueche.ui.widget.pullToRefreshView.XListView>
+
+    <TextView
+        android:id="@+id/tv_empty"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.2"
+        android:padding="20dp"
+        android:text="您还木有推荐的好友，快去分享哈哈学车大礼包给好友，赢取无上限现金奖励！"
+        android:textColor="@color/haha_gray"
+        android:textSize="14sp"
+        android:visibility="visible" />
+
+</LinearLayout>

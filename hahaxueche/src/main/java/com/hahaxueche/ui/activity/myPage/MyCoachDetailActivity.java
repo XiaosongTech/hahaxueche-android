@@ -73,7 +73,7 @@ import butterknife.OnClick;
  * Created by wangshirui on 2016/10/26.
  */
 
-public class MyCoachDetailActivity extends HHBaseActivity implements MyCoachDetailView,IWeiboHandler.Response {
+public class MyCoachDetailActivity extends HHBaseActivity implements MyCoachDetailView, IWeiboHandler.Response {
     private MyCoachDetailPresenter mPresenter;
     @BindView(R.id.sv_main)
     ScrollView mSvMain;
@@ -120,6 +120,7 @@ public class MyCoachDetailActivity extends HHBaseActivity implements MyCoachDeta
      ******************/
 
     private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
+    private static final int PERMISSIONS_REQUEST_SEND_SMS = 603;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,6 +179,12 @@ public class MyCoachDetailActivity extends HHBaseActivity implements MyCoachDeta
                                 case 4:
                                     shareToQZone();
                                     break;
+                                case 5:
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, PERMISSIONS_REQUEST_SEND_SMS);
+                                    } else {
+                                        shareToSms();
+                                    }
                                 default:
                                     break;
                             }
@@ -188,6 +195,7 @@ public class MyCoachDetailActivity extends HHBaseActivity implements MyCoachDeta
             }
         });
     }
+
     /**
      * 获取分享API
      */
@@ -243,7 +251,7 @@ public class MyCoachDetailActivity extends HHBaseActivity implements MyCoachDeta
         request.transaction = String.valueOf(System.currentTimeMillis());
         request.message = weiboMessage;
         // 3. 发送请求消息到微博，唤起微博分享界面
-        mWeiboShareAPI.sendRequest(this,request);
+        mWeiboShareAPI.sendRequest(this, request);
     }
 
     private void shareToWeixin() {
@@ -606,6 +614,19 @@ public class MyCoachDetailActivity extends HHBaseActivity implements MyCoachDeta
             } else {
                 showMessage("请允许拨打电话权限，不然无法直接拨号联系教练");
             }
+        } else if (requestCode == PERMISSIONS_REQUEST_SEND_SMS) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                shareToSms();
+            } else {
+                showMessage("请允许发送短信权限，不然无法分享到短信");
+            }
         }
+    }
+
+    private void shareToSms() {
+        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"));
+        intent.putExtra("sms_body", mTitle + mDescription + mUrl);
+        startActivity(intent);
     }
 }
