@@ -240,10 +240,6 @@ public class MyContractPresenter implements Presenter<MyContractView> {
     }
 
     public String getShareText() {
-        User user = application.getSharedPrefUtil().getUser();
-        if (user == null || !user.isLogin()) return "";
-        String shareText = mMyContractView.getContext().getResources().getString(R.string.sign_share_dialog_text);
-        City myCity = application.getConstants().getCity(user.student.city_id);
-        return String.format(shareText, Utils.getMoney(myCity.referer_bonus), Utils.getMoney(myCity.referee_bonus));
+        return mMyContractView.getContext().getResources().getString(R.string.sign_share_dialog_text);
     }
 }
