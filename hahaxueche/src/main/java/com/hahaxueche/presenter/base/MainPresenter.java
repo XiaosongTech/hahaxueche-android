@@ -151,4 +151,26 @@ public class MainPresenter implements Presenter<MainView> {
         return maxVoucher;
 
     }
+
+    public void clickPopShareCount() {
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mBaseView.getContext(), "home_page_voucher_popup_share_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mBaseView.getContext(), "home_page_voucher_popup_share_tapped");
+        }
+    }
+
+    public void clickShareSuccessCount(String shareChannel) {
+        HashMap<String, String> map = new HashMap();
+        map.put("share_channel", shareChannel);
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+
+        }
+        MobclickAgent.onEvent(mBaseView.getContext(), "home_page_voucher_popup_share_succeed", map);
+    }
 }

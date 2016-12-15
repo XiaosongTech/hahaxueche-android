@@ -241,6 +241,7 @@ public class MainActivity extends HHBaseActivity implements MainView, IWeiboHand
                 new MainShareDialog.OnButtonClickListener() {
                     @Override
                     public void shareToFriends() {
+                        mPresenter.clickPopShareCount();
                         if (TextUtils.isEmpty(mUrl)) return;
                         if (shareDialog == null) {
                             shareDialog = new ShareReferDialog(getContext(), mUrl, new ShareDialog.OnShareListener() {
@@ -405,6 +406,7 @@ public class MainActivity extends HHBaseActivity implements MainView, IWeiboHand
                 }
                 switch (baseResp.errCode) {
                     case BaseResp.ErrCode.ERR_OK:
+                        mPresenter.clickShareSuccessCount("wechat_friend");
                         showMessage("分享成功");
                         break;
                     case BaseResp.ErrCode.ERR_USER_CANCEL:
@@ -446,6 +448,7 @@ public class MainActivity extends HHBaseActivity implements MainView, IWeiboHand
                 }
                 switch (baseResp.errCode) {
                     case BaseResp.ErrCode.ERR_OK:
+                        mPresenter.clickShareSuccessCount("wechat_friend_zone");
                         showMessage("分享成功");
                         break;
                     case BaseResp.ErrCode.ERR_USER_CANCEL:
@@ -481,6 +484,7 @@ public class MainActivity extends HHBaseActivity implements MainView, IWeiboHand
             if (shareDialog != null) {
                 shareDialog.dismiss();
             }
+            mPresenter.clickShareSuccessCount("QQ_friend");
             showMessage("分享成功");
         }
 
@@ -510,6 +514,7 @@ public class MainActivity extends HHBaseActivity implements MainView, IWeiboHand
             if (shareDialog != null) {
                 shareDialog.dismiss();
             }
+            mPresenter.clickShareSuccessCount("qzone");
             showMessage("分享成功");
         }
 
@@ -542,6 +547,7 @@ public class MainActivity extends HHBaseActivity implements MainView, IWeiboHand
             }
             switch (baseResp.errCode) {
                 case WBConstants.ErrorCode.ERR_OK:
+                    mPresenter.clickShareSuccessCount("weibo");
                     showMessage("分享成功");
                     break;
                 case WBConstants.ErrorCode.ERR_CANCEL:

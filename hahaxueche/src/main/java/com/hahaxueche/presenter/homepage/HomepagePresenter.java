@@ -256,8 +256,23 @@ public class HomepagePresenter implements Presenter<HomepageView> {
 
     public void bannerClick(int i) {
         try {
+            User user = application.getSharedPrefUtil().getUser();
+            HashMap<String, String> map = new HashMap();
             if (!TextUtils.isEmpty(constants.new_home_page_banners.get(i).target_url)) {
+                map.put("URL", constants.new_home_page_banners.get(i).target_url);
+                if (user != null && user.isLogin()) {
+                    map.put("student_id", user.student.id);
+                    MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_banner_tapped", map);
+                }
+                MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_banner_tapped", map);
                 mHomepageView.openWebView(constants.new_home_page_banners.get(i).target_url);
+            } else {
+                if (user != null && user.isLogin()) {
+                    map.put("student_id", user.student.id);
+                    MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_banner_tapped", map);
+                } else {
+                    MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_banner_tapped");
+                }
             }
         } catch (Exception e) {
             HHLog.e(e.getMessage());
