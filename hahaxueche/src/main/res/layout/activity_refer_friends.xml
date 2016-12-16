@@ -11,11 +11,28 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <ImageView
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/pic_shareforaward" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:src="@drawable/pic_shareforaward" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:lineSpacingMultiplier="1.2"
+                android:paddingBottom="3dp"
+                android:text="哈哈学车百万大补贴\n活动时间：2016.12.10-2017.1.10"
+                android:textColor="@color/haha_brown"
+                android:textSize="12sp" />
+        </RelativeLayout>
 
         <ImageView
             android:layout_width="wrap_content"

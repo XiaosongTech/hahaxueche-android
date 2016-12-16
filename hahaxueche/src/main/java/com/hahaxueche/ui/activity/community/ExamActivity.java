@@ -441,7 +441,7 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
         } else {
             if (!question.isCorrect()) {
                 mExamLib.addWrongQuestion(question);
-                if (mExamLib.isShowContinueDialog()) {//错题超过及格线,提示提交
+                if (mExamLib.isShowContinueDialog() && mExamMode != null && mExamMode.equals(ExamLib.TEST_MODE_MOCK_EXAM)) {//错题超过及格线,提示提交
                     BaseConfirmSimpleDialog baseConfirmSimpleDialog = new BaseConfirmSimpleDialog(ExamActivity.this, "交卷提示",
                             mExamLib.getContinueDialogHints(), "确认交卷", "继续做题", new BaseConfirmSimpleDialog.onClickListener() {
                         @Override

@@ -108,7 +108,6 @@ public class CommunityFragment extends HHBaseFragment implements CommunityView {
                 }
             }
         } else if (requestCode == REQUEST_CODE_EXAM_LIBRARY) {
-            HHLog.v("111111");
             if (resultCode == RESULT_OK && null != data) {
                 int tab = data.getIntExtra("showTab", 1);
                 mActivity.selectTab(tab);

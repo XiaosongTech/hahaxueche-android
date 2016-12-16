@@ -191,7 +191,6 @@ public class ExamFragment extends HHBaseFragment {
 
     private void loadDatas() {
         if (mQuestion == null) return;
-        HHLog.v("mQuestion" + mQuestion.toString());
         mTvQuestionType.setText(mQuestion.getQuestionType());
         mTvQuestion.setText(mQuestion.question);
         //加载media

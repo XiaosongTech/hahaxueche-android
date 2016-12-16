@@ -123,9 +123,7 @@ public class SharedPrefUtil {
 
     public void addQuestionCollect(String examType, String id) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        ArrayList<String> collectList = mGson.fromJson(prefs.getString(examType +
-                "collectList", ""), new TypeToken<List<Question>>() {
-        }.getType());
+        ArrayList<String> collectList = mGson.fromJson(prefs.getString(examType + "collectList", ""), ArrayList.class);
         if (collectList != null) {
             if (!collectList.contains(id)) {
                 collectList.add(id);
@@ -139,9 +137,7 @@ public class SharedPrefUtil {
 
     public void removeQuestionCollect(String examType, String id) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        ArrayList<String> collectList = mGson.fromJson(prefs.getString(examType +
-                "collectList", ""), new TypeToken<List<Question>>() {
-        }.getType());
+        ArrayList<String> collectList = mGson.fromJson(prefs.getString(examType + "collectList", ""),ArrayList.class);
         if (collectList != null && collectList.contains(id)) {
             collectList.remove(id);
         }
@@ -151,8 +147,7 @@ public class SharedPrefUtil {
     public boolean isQuestionCollect(String examType, String id) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         ArrayList<String> collectList = mGson.fromJson(prefs.getString(examType +
-                "collectList", ""), new TypeToken<List<Question>>() {
-        }.getType());
+                "collectList", ""),ArrayList.class);
         return (collectList != null && collectList.contains(id));
     }
 
