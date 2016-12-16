@@ -29,7 +29,7 @@
                 android:gravity="center"
                 android:lineSpacingMultiplier="1.2"
                 android:paddingBottom="3dp"
-                android:text="哈哈学车百万大补贴\n活动时间：2016.12.10-2017.1.10"
+                android:text="哈哈学车百万大补贴\n活动时间：2016.12.15 - 2017.1.15"
                 android:textColor="@color/haha_brown"
                 android:textSize="12sp" />
         </RelativeLayout>
