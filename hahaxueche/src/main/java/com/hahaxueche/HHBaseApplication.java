@@ -187,7 +187,7 @@ public class HHBaseApplication extends Application {
                     public void onNext(ArrayList<Question> questions) {
                         questions4 = questions;
                         SharedPrefUtil spUtil = new SharedPrefUtil(getApplicationContext());
-                        spUtil.setQuestions1(questions4);
+                        spUtil.setQuestions4(questions4);
                     }
                 });
     }
