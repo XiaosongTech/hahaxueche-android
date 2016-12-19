@@ -1,11 +1,15 @@
 package com.hahaxueche.presenter.myPage;
 
+import android.text.TextUtils;
+
 import com.hahaxueche.BuildConfig;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.City;
+import com.hahaxueche.model.base.ShortenUrl;
+import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
@@ -13,9 +17,13 @@ import com.hahaxueche.ui.view.myPage.ReferFriendsView;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
+import com.hahaxueche.util.WebViewUrl;
 import com.umeng.analytics.MobclickAgent;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import okhttp3.OkHttpClient;
@@ -42,7 +50,38 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
         application = HHBaseApplication.get(mReferFriendsView.getContext());
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
-            mReferFriendsView.initShareData(user.student.user_identity_id);
+            //原url地址
+            String url = WebViewUrl.WEB_URL_DALIBAO + "&referrer_id=" + user.student.user_identity_id;
+            String longUrl = null;
+            HHApiService apiService = application.getApiService();
+            try {
+                longUrl = " https://api.t.sina.com.cn/short_url/shorten.json?source=4186780524&url_long=" +
+                        URLEncoder.encode(url, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            if (TextUtils.isEmpty(longUrl)) return;
+            subscription = apiService.shortenUrl(longUrl)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(application.defaultSubscribeScheduler())
+                    .subscribe(new Subscriber<ArrayList<ShortenUrl>>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            HHLog.e(e.getMessage());
+                        }
+
+                        @Override
+                        public void onNext(ArrayList<ShortenUrl> shortenUrls) {
+                            if (shortenUrls != null && shortenUrls.size() > 0) {
+                                mReferFriendsView.initShareData(shortenUrls.get(0).url_short);
+                            }
+                        }
+                    });
         }
     }
 
@@ -124,5 +163,9 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
     public boolean isLogin() {
         User user = application.getSharedPrefUtil().getUser();
         return user != null && user.isLogin();
+    }
+
+    public void fetchShortenUrl() {
+
     }
 }

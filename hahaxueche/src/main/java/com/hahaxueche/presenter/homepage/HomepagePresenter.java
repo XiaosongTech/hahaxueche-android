@@ -340,11 +340,10 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
             MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_refer_friends_tapped", map);
-            mHomepageView.navigateToReferFriends();
         } else {
             MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_refer_friends_tapped");
-            mHomepageView.alertToRegister();
         }
+        mHomepageView.navigateToReferFriends();
     }
 
     public String getShareText() {

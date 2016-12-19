@@ -13,5 +13,5 @@ public interface ReferFriendsView extends HHBaseView {
 
     void showShareDialog();
 
-    void initShareData(String userIdentityId);
+    void initShareData(String shareUrl);
 }

@@ -3,19 +3,28 @@ package com.hahaxueche.presenter.base;
 import android.text.TextUtils;
 
 import com.hahaxueche.HHBaseApplication;
+import com.hahaxueche.api.HHApiService;
+import com.hahaxueche.model.base.ShortenUrl;
 import com.hahaxueche.model.payment.Voucher;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.base.HHBaseView;
 import com.hahaxueche.ui.view.base.MainView;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.WebViewUrl;
 import com.umeng.analytics.MobclickAgent;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by wangshirui on 2016/11/1.
@@ -24,6 +33,7 @@ import java.util.HashMap;
 public class MainPresenter implements Presenter<MainView> {
     private MainView mBaseView;
     private HHBaseApplication application;
+    private Subscription subscription;
 
     public void attachView(MainView view) {
         this.mBaseView = view;
@@ -33,6 +43,7 @@ public class MainPresenter implements Presenter<MainView> {
 
     public void detachView() {
         this.mBaseView = null;
+        if (subscription != null) subscription.unsubscribe();
         this.application = null;
     }
 
@@ -122,7 +133,38 @@ public class MainPresenter implements Presenter<MainView> {
         if (!user.student.hasPurchasedService() && user.student.vouchers != null && user.student.vouchers.size() > 0) {
             Voucher maxVoucher = getMaxVoucher(user.student.vouchers);
             if (maxVoucher != null) {
-                mBaseView.initShareData();
+                //原url地址
+                String url = WebViewUrl.WEB_URL_DALIBAO;
+                String longUrl = null;
+                HHApiService apiService = application.getApiService();
+                try {
+                    longUrl = " https://api.t.sina.com.cn/short_url/shorten.json?source=4186780524&url_long=" +
+                            URLEncoder.encode(url, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                if (TextUtils.isEmpty(longUrl)) return;
+                subscription = apiService.shortenUrl(longUrl)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(application.defaultSubscribeScheduler())
+                        .subscribe(new Subscriber<ArrayList<ShortenUrl>>() {
+                            @Override
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                HHLog.e(e.getMessage());
+                            }
+
+                            @Override
+                            public void onNext(ArrayList<ShortenUrl> shortenUrls) {
+                                if (shortenUrls != null && shortenUrls.size() > 0) {
+                                    mBaseView.initShareData(shortenUrls.get(0).url_short);
+                                }
+                            }
+                        });
                 mBaseView.showVoucherDialog(user.student.id, maxVoucher);
             }
         }

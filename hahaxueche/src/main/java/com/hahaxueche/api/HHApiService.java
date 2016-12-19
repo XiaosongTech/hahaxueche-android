@@ -6,6 +6,7 @@ import com.hahaxueche.model.base.BaseModel;
 import com.hahaxueche.model.base.BaseSuccess;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.Constants;
+import com.hahaxueche.model.base.ShortenUrl;
 import com.hahaxueche.model.community.Article;
 import com.hahaxueche.model.course.ScheduleEvent;
 import com.hahaxueche.model.examLib.Question;
@@ -259,6 +260,9 @@ public interface HHApiService {
 
     @GET("exam_questions")
     Observable<ArrayList<Question>> getQuestions(@Query("course") int course);
+
+    @GET
+    Observable<ArrayList<ShortenUrl>> shortenUrl(@Url String url);
 
     class Factory {
         public static HHApiService create() {

@@ -118,7 +118,7 @@ public class BaseWebViewActivity extends HHBaseActivity {
                 BaseWebViewActivity.this.finish();
             }
         });
-        mTvTitle.setText("哈哈学车");
+        mTvTitle.setText("引爆学车季！团购优惠抢起来 - 哈哈学车");
     }
 
     @Override
