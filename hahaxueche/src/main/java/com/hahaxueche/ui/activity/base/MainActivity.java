@@ -173,8 +173,8 @@ public class MainActivity extends HHBaseActivity implements MainView, IWeiboHand
 
     @Override
     public void initShareData() {
-        mTitle = "新人大礼包";
-        mDescription = "HI，知道你想学车，再送你200元代金券一张，怕你考不过，再送你一张保过卡，比心❤️️";
+        mTitle = "送你￥200元学车券，怕你考不过，再送你一张保过卡。比心 ❤";
+        mDescription = "Hi~朋友，知道你最近想学车，我把我学车的地方告诉你了，要一把考过哟！️️";
         mImageUrl = "https://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
         mUrl = WebViewUrl.WEB_URL_DALIBAO;
         HHLog.v("mUrl -> " + mUrl);
@@ -575,7 +575,7 @@ public class MainActivity extends HHBaseActivity implements MainView, IWeiboHand
 
     private void shareToSms() {
         Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"));
-        intent.putExtra("sms_body", mTitle + mDescription + mUrl);
+        intent.putExtra("sms_body", "［哈哈学车］" + mDescription + mUrl);
         startActivity(intent);
     }
 }
