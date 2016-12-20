@@ -27,6 +27,9 @@ import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFOptions;
 import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
 import com.sina.weibo.sdk.api.share.WeiboShareSDK;
+import com.taobao.hotfix.HotFixManager;
+import com.taobao.hotfix.PatchLoadStatusListener;
+import com.taobao.hotfix.util.PatchStatusCode;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.tencent.tauth.Tencent;
@@ -57,6 +60,8 @@ public class HHBaseApplication extends Application {
     private ArrayList<Question> questions1;
     private ArrayList<Question> questions4;
     private Subscription subscription;
+    public static String appVersion;
+    public static String appId;
 
     public static HHBaseApplication get(Context context) {
         return (HHBaseApplication) context.getApplicationContext();
@@ -135,6 +140,8 @@ public class HHBaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        initApp();
+        initHotfix();
         initCloudChannel(this);//aliyun push
         Fresco.initialize(this);
         spUtil = new SharedPrefUtil(this);
@@ -266,5 +273,43 @@ public class HHBaseApplication extends Application {
         MiPushRegister.register(applicationContext, BuildConfig.MI_PUSH_APP_ID, BuildConfig.MI_PUSH_APP_KEY);
         // 注册方法会自动判断是否支持华为系统推送，如不支持会跳过注册。
         HuaWeiRegister.register(applicationContext);
+    }
+
+    private void initApp() {
+        this.appId = "36969-1"; //替换掉自己应用的appId
+        try {
+            this.appVersion = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName;
+        } catch (Exception e) {
+            this.appVersion = "1.0.0";
+        }
+    }
+
+    /**
+     * 建议在Application.onCreate方法中执行initialize和queryNewHotPatch操作, 尽可能早的执行
+     * 本demo只是为了测试的方便, 所以把这两个操作放在了Activity中
+     */
+    private void initHotfix() {
+        //此处不再需要调用queryNewHotPatch方法, initialize方法内部会调用queryNewHotPatch方法.
+        HotFixManager.getInstance().setContext(this)
+                .setAppVersion(appVersion)
+                .setAppId(appId)
+                .setSupportHotpatch(true)
+                .setEnableDebug(true)
+                .setPatchLoadStatusStub(new PatchLoadStatusListener() {
+                    @Override
+                    public void onload(final int mode, final int code, final String info, final int handlePatchVersion) {
+                        // 补丁加载回调通知
+                        if (code == PatchStatusCode.CODE_SUCCESS_LOAD) {
+                            HHLog.v("patch load success");
+                        } else if (code == PatchStatusCode.CODE_ERROR_NEEDRESTART) {
+                            // TODO: 10/24/16 表明新补丁生效需要重启. 业务方可自行实现逻辑, 提示用户或者强制重启, 建议: 用户可以监听进入后台事件, 然后应用自杀
+                        } else if (code == PatchStatusCode.CODE_ERROR_INNERENGINEFAIL) {
+                            // 内部引擎加载异常, 推荐此时清空本地补丁, 但是不清空本地版本号, 防止失败补丁重复加载
+                            HotFixManager.getInstance().cleanPatches(false);
+                        } else {
+                            //其它错误信息, 查看PatchStatusCode类说明
+                        }
+                    }
+                }).initialize();
     }
 }

@@ -62,6 +62,13 @@
         <meta-data
             android:name="com.alibaba.app.appsecret"
             android:value="996121506d96c60827a917c2ca26ab14" /> <!-- aliyun push appSecret -->
+        <meta-data
+            android:name="com.taobao.android.hotfix.APPSECRET"
+            android:value="79c7199994bc41940643bc75b8ca0ad0" />
+        <meta-data
+            android:name="com.taobao.android.hotfix.RSASECRET"
+            android:value="@string/baichuan_rsa"
+            />
 
         <activity
             android:name=".ui.activity.base.WelcomeActivity"
