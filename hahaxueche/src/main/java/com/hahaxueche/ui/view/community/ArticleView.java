@@ -37,7 +37,7 @@ public interface ArticleView extends HHBaseView {
 
     void showMessage(String message);
 
-    void initShareData(Article article);
+    void initShareData(Article article, String shortenUrl);
 
     void alertToLogin(String alertMessage);
 }

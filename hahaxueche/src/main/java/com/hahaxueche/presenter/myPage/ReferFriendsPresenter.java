@@ -4,19 +4,12 @@ import android.text.TextUtils;
 
 import com.hahaxueche.BuildConfig;
 import com.hahaxueche.HHBaseApplication;
-import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
-import com.hahaxueche.model.base.BaseValid;
-import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.base.ShortenUrl;
-import com.hahaxueche.model.user.coach.Coach;
-import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.ReferFriendsView;
-import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
-import com.hahaxueche.util.Utils;
 import com.hahaxueche.util.WebViewUrl;
 import com.umeng.analytics.MobclickAgent;
 
@@ -33,7 +26,6 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 
 /**
  * Created by wangshirui on 16/9/21.
@@ -163,9 +155,5 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
     public boolean isLogin() {
         User user = application.getSharedPrefUtil().getUser();
         return user != null && user.isLogin();
-    }
-
-    public void fetchShortenUrl() {
-
     }
 }

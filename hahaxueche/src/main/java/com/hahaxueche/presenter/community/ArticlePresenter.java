@@ -1,9 +1,12 @@
 package com.hahaxueche.presenter.community;
 
+import android.text.TextUtils;
+
 import com.hahaxueche.BuildConfig;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseValid;
+import com.hahaxueche.model.base.ShortenUrl;
 import com.hahaxueche.model.community.Article;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
@@ -13,6 +16,9 @@ import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
 import com.umeng.analytics.MobclickAgent;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import rx.Observable;
@@ -97,9 +103,43 @@ public class ArticlePresenter implements Presenter<ArticleView> {
         String articleUrl = BuildConfig.MOBILE_URL + "/articles/" + mArticle.id;
         HHLog.v(articleUrl);
         mArticleView.setWebViewUrl(articleUrl);
-        mArticleView.initShareData(mArticle);
+        shortenUrl(mArticle);
         pageStartCount();
         loadCount();
+    }
+
+    public void shortenUrl(final Article article) {
+        String url = BuildConfig.MOBILE_URL + "/articles/" + article.id + "?view=raw";
+        String longUrl = null;
+        HHApiService apiService = application.getApiService();
+        try {
+            longUrl = " https://api.t.sina.com.cn/short_url/shorten.json?source=4186780524&url_long=" +
+                    URLEncoder.encode(url, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        if (TextUtils.isEmpty(longUrl)) return;
+        subscription = apiService.shortenUrl(longUrl)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<ArrayList<ShortenUrl>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<ShortenUrl> shortenUrls) {
+                        if (shortenUrls != null && shortenUrls.size() > 0) {
+                            mArticleView.initShareData(article, shortenUrls.get(0).url_short);
+                        }
+                    }
+                });
     }
 
     public void setArticle(final String articleId) {

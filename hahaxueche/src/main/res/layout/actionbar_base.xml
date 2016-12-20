@@ -26,6 +26,6 @@
         android:lines="1"
         android:textColor="@color/haha_white"
         android:textSize="20sp"
-        autofit:minTextSize="8sp" />
+        autofit:minTextSize="12sp" />
 
 </RelativeLayout>

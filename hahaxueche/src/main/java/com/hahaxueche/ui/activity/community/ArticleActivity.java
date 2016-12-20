@@ -81,6 +81,7 @@ import butterknife.OnClick;
 public class ArticleActivity extends HHBaseActivity implements ArticleView, IWeiboHandler.Response {
     ImageView mIvBack;
     ImageView mIvShare;
+    TextView mTvTitle;
     @BindView(R.id.tv_publish_comment)
     TextView mTvPublishComment;
     @BindView(R.id.webview_content)
@@ -134,6 +135,7 @@ public class ArticleActivity extends HHBaseActivity implements ArticleView, IWei
 
             @Override
             public void onPageFinished(WebView view, String url) {
+                mTvTitle.setText(view.getTitle());
                 super.onPageFinished(view, url);
                 view.clearCache(true);
                 dismissProgressDialog();
@@ -171,11 +173,11 @@ public class ArticleActivity extends HHBaseActivity implements ArticleView, IWei
     }
 
     @Override
-    public void initShareData(Article article) {
+    public void initShareData(Article article, String shortenUrl) {
         mTitle = article.title;
         mDescription = article.intro;
         mImageUrl = "https://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
-        mUrl = BuildConfig.MOBILE_URL + "/articles/" + article.id + "?view=raw";
+        mUrl = shortenUrl;
         HHLog.v("mUrl -> " + mUrl);
     }
 
@@ -210,6 +212,7 @@ public class ArticleActivity extends HHBaseActivity implements ArticleView, IWei
         actionBar.setCustomView(R.layout.actionbar_base_share);
         mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
         mIvShare = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_share);
+        mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
