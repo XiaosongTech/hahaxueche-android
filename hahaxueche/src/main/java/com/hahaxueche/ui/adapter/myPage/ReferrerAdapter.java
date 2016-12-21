@@ -62,7 +62,7 @@ public class ReferrerAdapter extends BaseAdapter {
         Referrer referrer = mReferrerList.get(position);
         holder.tvRefereeName.setText(referrer.name);
         holder.tvRefereePhone.setText(referrer.phone);
-        holder.tvReferAmount.setText(Utils.getMoney(10000));
+        holder.tvReferAmount.setText(Utils.getMoney(referrer.amount));
         if (TextUtils.isEmpty(referrer.purchased_at)) {
             holder.tvReferState.setText("未购买教练");
             holder.tvReferAmount.setTextColor(ContextCompat.getColor(mContext, R.color.haha_gray_text));
