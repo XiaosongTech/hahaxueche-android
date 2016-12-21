@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
+import android.text.TextUtils;
 import android.view.View;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
@@ -21,8 +22,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
+import com.hahaxueche.model.base.PushObject;
 import com.hahaxueche.presenter.base.BaseWebViewPresenter;
 import com.hahaxueche.presenter.findCoach.CoachDetailPresenter;
 import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
@@ -252,7 +255,19 @@ public class BaseWebViewActivity extends HHBaseActivity implements BaseWebViewVi
 
     private void loadDatas() {
         Intent intent = getIntent();
-        url = intent.getStringExtra("url");
+        if (!TextUtils.isEmpty(intent.getStringExtra("url"))) {
+            url = intent.getStringExtra("url");
+        } else if (!TextUtils.isEmpty(intent.getStringExtra("extraMap"))) {
+            try {
+                PushObject pushObject = new Gson().fromJson(intent.getStringExtra("extraMap"), PushObject.class);
+                if (!TextUtils.isEmpty(pushObject.url)) {
+                    url = pushObject.url;
+                }
+            } catch (Exception e) {
+                HHLog.e(e.getMessage());
+                e.printStackTrace();
+            }
+        }
     }
 
     private void returnToFindCoach() {

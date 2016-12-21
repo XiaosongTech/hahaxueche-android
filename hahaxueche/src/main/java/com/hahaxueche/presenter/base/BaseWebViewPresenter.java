@@ -38,6 +38,7 @@ public class BaseWebViewPresenter implements Presenter<BaseWebViewView> {
     }
 
     public void shortenUrl(String url) {
+        if (TextUtils.isEmpty(url)) return;
         String longUrl = null;
         HHApiService apiService = application.getApiService();
         try {

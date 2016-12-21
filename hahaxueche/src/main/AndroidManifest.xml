@@ -334,7 +334,7 @@
         </service>
 
         <!-- aliyun push 消息接收监听器-->
-        <receiver android:name=".receiver.aliyun.HHPushReceiver">
+        <receiver android:name="com.alibaba.sdk.android.push.MessageReceiver">
             <intent-filter>
                 <action android:name="com.alibaba.push2.action.NOTIFICATION_OPENED"/>
             </intent-filter>
