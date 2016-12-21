@@ -319,7 +319,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         } else {
             MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_course_one_tapped");
         }
-        mHomepageView.navigateToExamLibrary();
+        mHomepageView.navigateToPassEnsurance();
     }
 
     public void clickPlatformGuard() {
