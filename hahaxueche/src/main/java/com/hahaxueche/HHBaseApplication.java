@@ -262,6 +262,7 @@ public class HHBaseApplication extends Application {
             }
         });
         HHLog.v("pushService.getDeviceId -> " + pushService.getDeviceId());
+        getSharedPrefUtil().setDeviceId(pushService.getDeviceId());
         // 注册方法会自动判断是否支持小米系统推送，如不支持会跳过注册。
         MiPushRegister.register(applicationContext, BuildConfig.MI_PUSH_APP_ID, BuildConfig.MI_PUSH_APP_KEY);
         // 注册方法会自动判断是否支持华为系统推送，如不支持会跳过注册。

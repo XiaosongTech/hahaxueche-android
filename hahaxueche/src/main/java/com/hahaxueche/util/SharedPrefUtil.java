@@ -137,7 +137,7 @@ public class SharedPrefUtil {
 
     public void removeQuestionCollect(String examType, String id) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        ArrayList<String> collectList = mGson.fromJson(prefs.getString(examType + "collectList", ""),ArrayList.class);
+        ArrayList<String> collectList = mGson.fromJson(prefs.getString(examType + "collectList", ""), ArrayList.class);
         if (collectList != null && collectList.contains(id)) {
             collectList.remove(id);
         }
@@ -147,7 +147,7 @@ public class SharedPrefUtil {
     public boolean isQuestionCollect(String examType, String id) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         ArrayList<String> collectList = mGson.fromJson(prefs.getString(examType +
-                "collectList", ""),ArrayList.class);
+                "collectList", ""), ArrayList.class);
         return (collectList != null && collectList.contains(id));
     }
 
@@ -193,5 +193,15 @@ public class SharedPrefUtil {
     public void setQuestions4(ArrayList<Question> questions4) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         prefs.edit().putString("questions4Serialize", mGson.toJson(questions4)).apply();
+    }
+
+    public String getDeviceId() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        return prefs.getString("deviceId", "");
+    }
+
+    public void setDeviceId(String deviceId) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        prefs.edit().putString("deviceId", deviceId);
     }
 }
