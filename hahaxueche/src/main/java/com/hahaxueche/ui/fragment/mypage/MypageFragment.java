@@ -33,6 +33,7 @@ import com.hahaxueche.ui.activity.myPage.MyContractActivity;
 import com.hahaxueche.ui.activity.myPage.MyVoucherActivity;
 import com.hahaxueche.ui.activity.myPage.NoCourseActivity;
 import com.hahaxueche.ui.activity.myPage.NotLoginVoucherActivity;
+import com.hahaxueche.ui.activity.myPage.PassEnsuranceActivity;
 import com.hahaxueche.ui.activity.myPage.PaymentStageActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.activity.myPage.SoftwareInfoActivity;
@@ -93,6 +94,10 @@ public class MypageFragment extends HHBaseFragment implements MyPageView, SwipeR
     TextView mTvLogout;
     @BindView(R.id.tv_to_login)
     TextView mTvToLogin;
+    @BindView(R.id.view_badge_pass_ensurance)
+    View mViewBadgePassEnsurance;
+    @BindView(R.id.iv_more_pass_ensurance)
+    ImageView mIvMorePassEnsurance;
 
     private MyPagePresenter mPresenter;
     private MainActivity mActivity;
@@ -205,7 +210,8 @@ public class MypageFragment extends HHBaseFragment implements MyPageView, SwipeR
             R.id.rly_my_voucher,
             R.id.rly_my_contract,
             R.id.tv_login,
-            R.id.tv_to_login})
+            R.id.tv_to_login,
+            R.id.rly_pass_ensurance})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rly_online_service:
@@ -330,6 +336,9 @@ public class MypageFragment extends HHBaseFragment implements MyPageView, SwipeR
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 break;
+            case R.id.rly_pass_ensurance:
+                mPresenter.clickPassEnsurance();
+                break;
             default:
                 break;
         }
@@ -445,6 +454,22 @@ public class MypageFragment extends HHBaseFragment implements MyPageView, SwipeR
     @Override
     public void navigateToNotLoginVoucher() {
         startActivity(new Intent(getContext(), NotLoginVoucherActivity.class));
+    }
+
+    @Override
+    public void navigateToPassEnsurance() {
+        startActivity(new Intent(getContext(), PassEnsuranceActivity.class));
+    }
+
+    @Override
+    public void setPassEnsuranceBadge(boolean hasBadge) {
+        if (hasBadge) {
+            mViewBadgePassEnsurance.setVisibility(View.VISIBLE);
+            mIvMorePassEnsurance.setVisibility(View.GONE);
+        } else {
+            mViewBadgePassEnsurance.setVisibility(View.GONE);
+            mIvMorePassEnsurance.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

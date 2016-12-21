@@ -56,4 +56,8 @@ public interface MyPageView extends HHBaseView {
     void disableRefresh();
 
     void navigateToNotLoginVoucher();
+
+    void navigateToPassEnsurance();
+
+    void setPassEnsuranceBadge(boolean hasBadge);
 }

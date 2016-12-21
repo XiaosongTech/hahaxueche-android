@@ -54,6 +54,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
             mMyPageView.loadStudentInfo(mStudent);
             showVoucherBadge(mStudent);
             setContractBadge();
+            setPassEnsuranceBadge();
             fetchAdviser();
         } else {
             mMyPageView.showNotLogin();
@@ -465,6 +466,15 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         }
     }
 
+    private void setPassEnsuranceBadge() {
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin() && user.student.hasPurchasedService()) {
+            mMyPageView.setPassEnsuranceBadge(false);
+        } else {
+            mMyPageView.setPassEnsuranceBadge(true);
+        }
+    }
+
     public boolean isLogin() {
         User user = application.getSharedPrefUtil().getUser();
         return user != null && user.isLogin();
@@ -477,5 +487,9 @@ public class MyPagePresenter implements Presenter<MyPageView> {
             cityId = user.student.city_id;
         }
         mMyPageView.openWebView(WebViewUrl.WEB_URL_FIND_ADVISER + "?city_id=" + cityId);
+    }
+
+    public void clickPassEnsurance() {
+        mMyPageView.navigateToPassEnsurance();
     }
 }

@@ -99,8 +99,15 @@ public class MainPresenter implements Presenter<MainView> {
 
     public void setMyPageBadge() {
         User user = application.getSharedPrefUtil().getUser();
-        if (user == null || !user.isLogin()) return;
-        if (user.student.hasPurchasedService() && (!user.student.isUploadedIdInfo() || !user.student.isSigned())) {
+        if (user == null || !user.isLogin()) {//未登录没有红点
+            mBaseView.setMyPageBadge(false);
+            return;
+        }
+        if (!user.student.hasPurchasedService()) {//未购买教练，保过卡的红点
+            mBaseView.setMyPageBadge(true);
+            return;
+        }
+        if (!user.student.isUploadedIdInfo() || !user.student.isSigned()) {//购买了，没有上传协议的
             mBaseView.setMyPageBadge(true);
         } else {
             mBaseView.setMyPageBadge(false);

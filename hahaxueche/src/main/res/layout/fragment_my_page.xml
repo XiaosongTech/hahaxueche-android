@@ -78,6 +78,8 @@
 
                 <include layout="@layout/my_page_voucher" />
 
+                <include layout="@layout/my_page_pass_ensurance" />
+
                 <include layout="@layout/my_page_customer_service" />
 
                 <include layout="@layout/my_page_contract" />

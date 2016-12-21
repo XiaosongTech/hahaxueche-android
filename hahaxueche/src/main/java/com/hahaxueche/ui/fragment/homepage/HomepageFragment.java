@@ -34,6 +34,7 @@ import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.community.ExamLibraryActivity;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
+import com.hahaxueche.ui.activity.myPage.PassEnsuranceActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.dialog.BaseAlertDialog;
 import com.hahaxueche.ui.dialog.login.CityChoseDialog;
@@ -160,6 +161,11 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     @Override
     public void navigateToExamLibrary() {
         startActivityForResult(new Intent(getContext(), ExamLibraryActivity.class), REQUEST_CODE_EXAM_LIBRARY);
+    }
+
+    @Override
+    public void navigateToPassEnsurance() {
+        startActivity(new Intent(getContext(), PassEnsuranceActivity.class));
     }
 
     @OnClick({R.id.tv_procedure,

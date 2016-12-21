@@ -299,6 +299,10 @@
             android:name=".ui.activity.myPage.MyReferActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.myPage.PassEnsuranceActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
 
         <service
             android:name="cmb.pb.cmbsafe.CmbService"
