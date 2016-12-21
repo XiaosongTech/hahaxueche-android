@@ -8,4 +8,5 @@ public class Referrer {
     public String name;
     public String phone;
     public String purchased_at;
+    public int amount;
 }
