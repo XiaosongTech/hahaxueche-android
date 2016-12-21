@@ -7,4 +7,5 @@ import android.content.Context;
  */
 public class HahaCache {
     public static Context context;
+    public static String deviceId;
 }

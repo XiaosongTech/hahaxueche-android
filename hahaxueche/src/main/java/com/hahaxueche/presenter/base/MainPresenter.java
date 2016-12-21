@@ -2,17 +2,17 @@ package com.hahaxueche.presenter.base;
 
 import android.text.TextUtils;
 
-import com.google.gson.Gson;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.ShortenUrl;
 import com.hahaxueche.model.payment.Voucher;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.user.student.BookAddress;
 import com.hahaxueche.model.user.student.Contact;
 import com.hahaxueche.presenter.Presenter;
-import com.hahaxueche.ui.view.base.HHBaseView;
 import com.hahaxueche.ui.view.base.MainView;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.HahaCache;
 import com.hahaxueche.util.WebViewUrl;
 import com.umeng.analytics.MobclickAgent;
 
@@ -227,8 +227,36 @@ public class MainPresenter implements Presenter<MainView> {
 
     public void uploadContacts(ArrayList<Contact> contacts) {
         if (contacts == null || contacts.size() < 1) return;
+        BookAddress bookAddress = new BookAddress();
+        bookAddress.device_id = HahaCache.deviceId;
         User user = application.getSharedPrefUtil().getUser();
-        if (user == null || !user.isLogin()) return;//未登录用户不上传通讯录
-        HHLog.v(new Gson().toJson(contacts));
+        if (user != null && user.isLogin()) {
+            bookAddress.phone = user.cell_phone;
+        }
+        bookAddress.address_book = contacts;
+        HHApiService apiService = application.getApiService();
+        subscription = apiService.uploadContacts(bookAddress)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(String ret) {
+
+                    }
+                });
     }
 }

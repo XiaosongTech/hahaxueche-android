@@ -21,14 +21,15 @@ import com.hahaxueche.model.responseList.ReferrerResponseList;
 import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.responseList.ScheduleEventResponseList;
 import com.hahaxueche.model.user.IdCardUrl;
-import com.hahaxueche.model.user.student.ExamResult;
-import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.Follow;
 import com.hahaxueche.model.user.coach.Partner;
 import com.hahaxueche.model.user.coach.Review;
 import com.hahaxueche.model.user.employee.Adviser;
+import com.hahaxueche.model.user.student.BookAddress;
+import com.hahaxueche.model.user.student.ExamResult;
+import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.util.HHLog;
 
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
@@ -263,6 +265,9 @@ public interface HHApiService {
 
     @GET
     Observable<ArrayList<ShortenUrl>> shortenUrl(@Url String url);
+
+    @POST("address_books")
+    Observable<String> uploadContacts(@Body BookAddress bookAddress);
 
     class Factory {
         public static HHApiService create() {

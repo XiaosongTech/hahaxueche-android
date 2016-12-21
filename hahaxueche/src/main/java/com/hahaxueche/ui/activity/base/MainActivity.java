@@ -40,7 +40,6 @@ import com.hahaxueche.ui.view.base.MainView;
 import com.hahaxueche.ui.widget.FragmentTabHost;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
-import com.hahaxueche.util.WebViewUrl;
 import com.sina.weibo.sdk.api.ImageObject;
 import com.sina.weibo.sdk.api.TextObject;
 import com.sina.weibo.sdk.api.WebpageObject;
@@ -599,9 +598,9 @@ public class MainActivity extends HHBaseActivity implements MainView, IWeiboHand
             if (cursor != null) {
                 while (cursor.moveToNext()) {
                     Contact contact = new Contact();
-                    contact.name = cursor.getString(cursor.getColumnIndex(
+                    contact.name=cursor.getString(cursor.getColumnIndex(
                             ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                    contact.number = cursor.getString(cursor.getColumnIndex(
+                    contact.number=cursor.getString(cursor.getColumnIndex(
                             ContactsContract.CommonDataKinds.Phone.NUMBER)).replace(" ", "").replace("-", "");
                     contacts.add(contact);
                 }

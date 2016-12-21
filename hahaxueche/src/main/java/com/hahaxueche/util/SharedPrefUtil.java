@@ -194,14 +194,4 @@ public class SharedPrefUtil {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         prefs.edit().putString("questions4Serialize", mGson.toJson(questions4)).apply();
     }
-
-    public String getDeviceId() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return prefs.getString("deviceId", "");
-    }
-
-    public void setDeviceId(String deviceId) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        prefs.edit().putString("deviceId", deviceId);
-    }
 }
