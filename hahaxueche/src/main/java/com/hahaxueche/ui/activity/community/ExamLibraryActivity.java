@@ -421,7 +421,7 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
         WXWebpageObject webpage = new WXWebpageObject();
         webpage.webpageUrl = mUrl;
         WXMediaMessage msg = new WXMediaMessage(webpage);
-        msg.title = mTitle;
+        msg.title = mDescription;
         msg.description = mDescription;
         Bitmap thumb = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
         msg.thumbData = Utils.bmpToByteArray(thumb, true);

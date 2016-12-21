@@ -3,11 +3,13 @@ package com.hahaxueche.ui.activity.base;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.payment.Voucher;
+import com.hahaxueche.model.user.student.Contact;
 import com.hahaxueche.presenter.base.MainPresenter;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.PartnerDetailActivity;
@@ -94,6 +97,7 @@ public class MainActivity extends HHBaseActivity implements MainView, IWeiboHand
      * end
      ******************/
     private static final int PERMISSIONS_REQUEST_SEND_SMS = 603;
+    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 604;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,6 +159,11 @@ public class MainActivity extends HHBaseActivity implements MainView, IWeiboHand
                 startIntent.putExtra("partnerId", shareObject.getString("objectId", ""));
                 startActivity(startIntent);
             }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+        } else {
+            readContacts();
         }
         controlMyPageBadge();
         mPresenter.controlSignDialog();
@@ -570,6 +579,41 @@ public class MainActivity extends HHBaseActivity implements MainView, IWeiboHand
             } else {
                 showMessage("请允许发送短信权限，不然无法分享到短信");
             }
+        } else if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                readContacts();
+            }
+        }
+    }
+
+    /**
+     * 读取通讯录
+     */
+    private void readContacts() {
+        Cursor cursor = null;
+        ArrayList<Contact> contacts = new ArrayList<>();
+        try {
+            cursor = getContentResolver()
+                    .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
+                    Contact contact = new Contact();
+                    contact.name = cursor.getString(cursor.getColumnIndex(
+                            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                    contact.number = cursor.getString(cursor.getColumnIndex(
+                            ContactsContract.CommonDataKinds.Phone.NUMBER)).replace(" ", "").replace("-", "");
+                    contacts.add(contact);
+                }
+            }
+        } catch (Exception e) {
+            HHLog.e(e.getMessage());
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            mPresenter.uploadContacts(contacts);
         }
     }
 

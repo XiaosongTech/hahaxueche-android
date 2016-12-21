@@ -2,11 +2,13 @@ package com.hahaxueche.presenter.base;
 
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.ShortenUrl;
 import com.hahaxueche.model.payment.Voucher;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.user.student.Contact;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.base.HHBaseView;
 import com.hahaxueche.ui.view.base.MainView;
@@ -214,5 +216,12 @@ public class MainPresenter implements Presenter<MainView> {
 
         }
         MobclickAgent.onEvent(mBaseView.getContext(), "home_page_voucher_popup_share_succeed", map);
+    }
+
+    public void uploadContacts(ArrayList<Contact> contacts) {
+        if (contacts == null || contacts.size() < 1) return;
+        User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin()) return;//未登录用户不上传通讯录
+        HHLog.v(new Gson().toJson(contacts));
     }
 }
