@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 
 import java.io.File;
@@ -31,7 +32,7 @@ public class UpdateManager {
     private Context mContext;
 
     //返回的安装包url
-    private String apkUrl = "https://haha-production.oss-cn-hangzhou.aliyuncs.com/hahaxueche.apk";
+    private String apkUrl;
 
     //提示语
     private String updateMsg = "有最新的软件包哦，亲快下载吧~";
@@ -75,6 +76,7 @@ public class UpdateManager {
 
     public UpdateManager(Context context) {
         this.mContext = context;
+        apkUrl = HHBaseApplication.get(context).getConstants().apk_download_url;
     }
 
     //外部接口让主Activity调用

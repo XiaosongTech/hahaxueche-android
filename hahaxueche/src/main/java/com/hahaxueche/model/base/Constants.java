@@ -22,6 +22,7 @@ public class Constants {
     public ArrayList<Bank> banks;
     public Statistics statistics;
     public ArrayList<ArticleCategory> article_categories;
+    public String apk_download_url;
 
     public City getCity(int cityId) {
         City myCity = cities.get(0);
