@@ -32,6 +32,7 @@ import com.hahaxueche.ui.view.community.ExamLibraryView;
 import com.hahaxueche.util.ExamLib;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
+import com.hahaxueche.util.WebViewUrl;
 import com.sina.weibo.sdk.api.ImageObject;
 import com.sina.weibo.sdk.api.TextObject;
 import com.sina.weibo.sdk.api.WebpageObject;
@@ -176,7 +177,7 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
     @OnClick({R.id.tv_share_scores,
             R.id.tv_to_exam,
             R.id.iv_pass,
-            R.id.tv_login,
+            R.id.tv_get_pass_ensurance,
             R.id.tv_purchase})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -220,11 +221,8 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
                                 "并分享至第三方平台即可发起理赔，当科目一考试未通过可凭借成绩单获得全额赔付120元。");
                 dialog.show();
                 break;
-            case R.id.tv_login:
-                ActivityCollector.finishAll();
-                intent = new Intent(getContext(), StartLoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+            case R.id.tv_get_pass_ensurance:
+                openWebView(WebViewUrl.WEB_URL_BAOGUOKA);
                 break;
             case R.id.tv_purchase:
                 intent = new Intent();

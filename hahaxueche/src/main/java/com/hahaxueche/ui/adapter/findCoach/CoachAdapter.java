@@ -101,39 +101,42 @@ public class CoachAdapter extends BaseAdapter {
             score = 5;
         }
         holder.svCoachScore.setScore(score, false);
-        holder.tvCoachLocation.setText(application.getConstants().getSectionName(coach.coach_group.field_id));
-        final Field myField = application.getConstants().getField(coach.coach_group.field_id);
-        if (application.getMyLocation() != null && myField != null) {
-            String kmString = DistanceUtil.getDistanceKm(application.getMyLocation().lng, application.getMyLocation().lat, myField.lng, myField.lat);
-            String infoText = "距您" + kmString + "km";
-            SpannableStringBuilder style = new SpannableStringBuilder(infoText);
-            style.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.app_theme_color)), 2, 2 + kmString.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-            holder.tvDistance.setText(style);
-        }
-        holder.rlyCoachLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MapDialog mapDialog = new MapDialog(mContext, R.style.map_dialog, myField, v, new MapDialog.MapDialogDismissListener() {
-                    @Override
-                    public boolean dialogDismiss() {
-                        RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                                RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        p.setMargins(0, Utils.instence(mContext).dip2px(6), 0, 0);
-                        p.addRule(RelativeLayout.ALIGN_LEFT, R.id.rly_third_line);
-                        p.addRule(RelativeLayout.BELOW, R.id.rly_third_line);
-                        holder.rlyActualPrice.setLayoutParams(p);
-                        return true;
-                    }
-                });
-                RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT);
-                p.setMargins(0, Utils.instence(mContext).dip2px(200), 0, 0);
-                p.addRule(RelativeLayout.ALIGN_LEFT, R.id.rly_third_line);
-                p.addRule(RelativeLayout.BELOW, R.id.rly_third_line);
-                holder.rlyActualPrice.setLayoutParams(p);
-                mapDialog.show();
+        if (coach.coach_group != null) {
+            holder.tvCoachLocation.setText(application.getConstants().getSectionName(coach.coach_group.field_id));
+
+            final Field myField = application.getConstants().getField(coach.coach_group.field_id);
+            if (application.getMyLocation() != null && myField != null) {
+                String kmString = DistanceUtil.getDistanceKm(application.getMyLocation().lng, application.getMyLocation().lat, myField.lng, myField.lat);
+                String infoText = "距您" + kmString + "km";
+                SpannableStringBuilder style = new SpannableStringBuilder(infoText);
+                style.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.app_theme_color)), 2, 2 + kmString.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+                holder.tvDistance.setText(style);
             }
-        });
+            holder.rlyCoachLocation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MapDialog mapDialog = new MapDialog(mContext, R.style.map_dialog, myField, v, new MapDialog.MapDialogDismissListener() {
+                        @Override
+                        public boolean dialogDismiss() {
+                            RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+                            p.setMargins(0, Utils.instence(mContext).dip2px(6), 0, 0);
+                            p.addRule(RelativeLayout.ALIGN_LEFT, R.id.rly_third_line);
+                            p.addRule(RelativeLayout.BELOW, R.id.rly_third_line);
+                            holder.rlyActualPrice.setLayoutParams(p);
+                            return true;
+                        }
+                    });
+                    RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                            RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    p.setMargins(0, Utils.instence(mContext).dip2px(200), 0, 0);
+                    p.addRule(RelativeLayout.ALIGN_LEFT, R.id.rly_third_line);
+                    p.addRule(RelativeLayout.BELOW, R.id.rly_third_line);
+                    holder.rlyActualPrice.setLayoutParams(p);
+                    mapDialog.show();
+                }
+            });
+        }
         holder.tvApplaudCount.setText(String.valueOf(coach.like_count));
         if (!TextUtils.isEmpty(coach.driving_school)) {
             holder.llyTrainSchool.setVisibility(View.VISIBLE);
