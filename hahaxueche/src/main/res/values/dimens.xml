@@ -12,4 +12,5 @@
     <dimen name="width320dp">320dp</dimen>
     <dimen name="text_size_14sp">14sp</dimen>
     <dimen name="margin_18dp">18dp</dimen>
+    <dimen name="width_115dp">100dp</dimen>
 </resources>
