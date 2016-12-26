@@ -1015,6 +1015,14 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     }
 
     @Override
+    public void navigationToPlatformAssurance(boolean isGolden, boolean isCashPledge) {
+        Intent intent = new Intent(getContext(), PlatformAssuranceActivity.class);
+        intent.putExtra("isGolden", isGolden);
+        intent.putExtra("isCashPledge", isCashPledge);
+        startActivity(intent);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_PURCHASE_COACH) {
             if (resultCode == Activity.RESULT_OK) {

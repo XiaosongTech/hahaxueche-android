@@ -535,6 +535,6 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
     }
 
     public void clickPlatformAssurance() {
-        mCoachDetailView.openWebView(WebViewUrl.WEB_URL_PLATFORM_GUARD);
+        mCoachDetailView.navigationToPlatformAssurance(mCoach.skill_level.equals("1"), mCoach.has_cash_pledge == 1);
     }
 }

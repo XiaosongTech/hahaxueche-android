@@ -34,8 +34,8 @@
     <!--小米通道相关权限 -->
     <permission
         android:name="com.hahaxueche.permission.MIPUSH_RECEIVE"
-        android:protectionLevel="signatureOrSystem"/>
-    <uses-permission android:name="com.hahaxueche.permission.MIPUSH_RECEIVE"/>
+        android:protectionLevel="signatureOrSystem" />
+    <uses-permission android:name="com.hahaxueche.permission.MIPUSH_RECEIVE" />
 
     <application
         android:name=".HHBaseApplication"
@@ -303,6 +303,10 @@
             android:name=".ui.activity.myPage.PassEnsuranceActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.findCoach.PlatformAssuranceActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
 
         <service
             android:name="cmb.pb.cmbsafe.CmbService"
@@ -310,10 +314,12 @@
         <service android:name="com.amap.api.location.APSService"></service>
 
         <!-- aliyun push 通道保持服务 -->
-        <service android:name="com.alibaba.sdk.android.push.ChannelService"
-            android:exported="true" android:process=":channel">
+        <service
+            android:name="com.alibaba.sdk.android.push.ChannelService"
+            android:exported="true"
+            android:process=":channel">
             <intent-filter>
-                <action android:name="com.taobao.accs.intent.action.SERVICE"/>
+                <action android:name="com.taobao.accs.intent.action.SERVICE" />
             </intent-filter>
             <intent-filter>
                 <action android:name="org.agoo.android.intent.action.PING_V4" />
@@ -321,7 +327,8 @@
             </intent-filter>
         </service>
         <!-- aliyun push 消息接收服务 -->
-        <service android:name="com.alibaba.sdk.android.push.MsgService"
+        <service
+            android:name="com.alibaba.sdk.android.push.MsgService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.taobao.accs.intent.action.RECEIVE" />
@@ -331,19 +338,21 @@
             </intent-filter>
         </service>
         <!-- aliyun push 消息接收增强服务（可提高通知/消息达到率）-->
-        <service android:name="com.alibaba.sdk.android.push.channel.TaobaoRecvService" android:exported="true">
+        <service
+            android:name="com.alibaba.sdk.android.push.channel.TaobaoRecvService"
+            android:exported="true">
             <intent-filter>
-                <action android:name="org.android.agoo.client.MessageReceiverService"/>
+                <action android:name="org.android.agoo.client.MessageReceiverService" />
             </intent-filter>
         </service>
 
         <!-- aliyun push 消息接收监听器-->
         <receiver android:name="com.alibaba.sdk.android.push.MessageReceiver">
             <intent-filter>
-                <action android:name="com.alibaba.push2.action.NOTIFICATION_OPENED"/>
+                <action android:name="com.alibaba.push2.action.NOTIFICATION_OPENED" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.alibaba.push2.action.NOTIFICATION_REMOVED"/>
+                <action android:name="com.alibaba.push2.action.NOTIFICATION_REMOVED" />
             </intent-filter>
             <intent-filter>
                 <action android:name="com.taobao.accs.intent.action.COMMAND" />
@@ -361,17 +370,25 @@
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
-                <data android:scheme="package"/>
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <data android:scheme="package" />
             </intent-filter>
         </receiver>
         <!-- 小米通道官方配置 -->
-        <service android:name="com.xiaomi.mipush.sdk.PushMessageHandler" android:enabled="true" android:exported="true" />
-        <service android:enabled="true" android:name="com.xiaomi.mipush.sdk.MessageHandleService" />
-        <receiver android:name="com.alibaba.sdk.android.push.MiPushBroadcastReceiver" android:exported="true" >
+        <service
+            android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name="com.xiaomi.mipush.sdk.MessageHandleService"
+            android:enabled="true" />
+
+        <receiver
+            android:name="com.alibaba.sdk.android.push.MiPushBroadcastReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
             </intent-filter>
@@ -382,7 +399,9 @@
                 <action android:name="com.xiaomi.mipush.ERROR" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver" android:exported="true" >
+        <receiver
+            android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -391,10 +410,10 @@
         <!-- 华为通道官方配置 -->
         <receiver android:name="com.alibaba.sdk.android.push.HuaWeiReceiver">
             <intent-filter>
-                <action android:name="com.huawei.android.push.intent.REGISTRATION"/>
-                <action android:name="com.huawei.android.push.intent.RECEIVE"/>
-                <action android:name="com.huawei.intent.action.PUSH"/>
-                <action android:name="com.huawei.intent.action.PUSH_STATE"/>
+                <action android:name="com.huawei.android.push.intent.REGISTRATION" />
+                <action android:name="com.huawei.android.push.intent.RECEIVE" />
+                <action android:name="com.huawei.intent.action.PUSH" />
+                <action android:name="com.huawei.intent.action.PUSH_STATE" />
             </intent-filter>
         </receiver>
 
