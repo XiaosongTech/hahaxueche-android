@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 
-import com.hahaxueche.BuildConfig;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.City;
@@ -319,7 +318,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         } else {
             MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_course_one_tapped");
         }
-        mHomepageView.navigateToPassEnsurance();
+        mHomepageView.navigateToExamLibrary();
     }
 
     public void clickPlatformGuard() {
