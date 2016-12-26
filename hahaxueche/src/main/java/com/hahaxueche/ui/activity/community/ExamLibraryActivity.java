@@ -16,14 +16,11 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.hahaxueche.BuildConfig;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.community.ExamLibraryPresenter;
-import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
-import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.adapter.community.ExamLibraryPageAdapter;
 import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
 import com.hahaxueche.ui.dialog.ShareAppDialog;
@@ -79,8 +76,6 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
     ImageView mIvPass;
     @BindView(R.id.lly_not_login)
     LinearLayout mLlyNotLogin;
-    @BindView(R.id.lly_not_purchase)
-    LinearLayout mLlyNotPurchase;
     @BindView(R.id.lly_scores)
     LinearLayout mLlyScores;
     @BindView(R.id.tv_insurance_count)
@@ -177,8 +172,7 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
     @OnClick({R.id.tv_share_scores,
             R.id.tv_to_exam,
             R.id.iv_pass,
-            R.id.tv_get_pass_ensurance,
-            R.id.tv_purchase})
+            R.id.tv_get_pass_ensurance})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_share_scores:
@@ -224,12 +218,6 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
             case R.id.tv_get_pass_ensurance:
                 openWebView(WebViewUrl.WEB_URL_BAOGUOKA);
                 break;
-            case R.id.tv_purchase:
-                intent = new Intent();
-                intent.putExtra("showTab", 1);
-                setResult(RESULT_OK, intent);
-                finish();
-                break;
             default:
                 break;
         }
@@ -268,15 +256,6 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
     public void showNotLogin() {
         mIvPass.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.protectioncard_noget));
         mLlyNotLogin.setVisibility(View.VISIBLE);
-        mLlyNotPurchase.setVisibility(View.GONE);
-        mLlyScores.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showNotPurchase() {
-        mIvPass.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.protectioncard_get));
-        mLlyNotLogin.setVisibility(View.GONE);
-        mLlyNotPurchase.setVisibility(View.VISIBLE);
         mLlyScores.setVisibility(View.GONE);
     }
 
@@ -284,7 +263,6 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
     public void showScores(int passCount) {
         mIvPass.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.protectioncard_get));
         mLlyNotLogin.setVisibility(View.GONE);
-        mLlyNotPurchase.setVisibility(View.GONE);
         mLlyScores.setVisibility(View.VISIBLE);
         mIvScore1.setImageDrawable(ContextCompat.getDrawable(this, passCount > 0 ? R.drawable.ic_hahapass1 : R.drawable.ic_nopass1));
         mIvScore2.setImageDrawable(ContextCompat.getDrawable(this, passCount > 1 ? R.drawable.ic_hahapass2 : R.drawable.ic_nopass2));

@@ -39,7 +39,6 @@ public class CommunityFragment extends HHBaseFragment implements CommunityView {
     @BindView(R.id.tv_headline)
     TextView mTvHeadline;
     private static final int REQUEST_CODE_ARTICLE = 11;
-    private static final int REQUEST_CODE_EXAM_LIBRARY = 12;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,7 +74,7 @@ public class CommunityFragment extends HHBaseFragment implements CommunityView {
         switch (view.getId()) {
             case R.id.rly_test_lib:
                 mPresenter.clickTestLibCount();
-                startActivityForResult(new Intent(getContext(), ExamLibraryActivity.class), REQUEST_CODE_EXAM_LIBRARY);
+                startActivity(new Intent(getContext(), ExamLibraryActivity.class));
                 break;
             case R.id.rly_group_buy:
                 mPresenter.clickGroupBuyCount();
@@ -106,11 +105,6 @@ public class CommunityFragment extends HHBaseFragment implements CommunityView {
                 if (article != null) {
                     mPresenter.setHeadlineArticle(article);
                 }
-            }
-        } else if (requestCode == REQUEST_CODE_EXAM_LIBRARY) {
-            if (resultCode == RESULT_OK && null != data) {
-                int tab = data.getIntExtra("showTab", 1);
-                mActivity.selectTab(tab);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

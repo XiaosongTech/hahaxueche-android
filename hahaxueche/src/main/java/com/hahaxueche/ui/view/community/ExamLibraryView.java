@@ -11,8 +11,6 @@ import com.hahaxueche.ui.view.base.HHBaseView;
 public interface ExamLibraryView extends HHBaseView {
     void showNotLogin();
 
-    void showNotPurchase();
-
     void showScores(int passCount);
 
     void setInsuranceCount(SpannableString ss);

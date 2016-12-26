@@ -76,7 +76,6 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     private CityChoseDialog mCityChoseDialog;
     private static final int PERMISSIONS_REQUEST_SDCARD = 600;
     private static final int REQUEST_CODE_WEBVIEW = 14;
-    private static final int REQUEST_CODE_EXAM_LIBRARY = 12;
 
 
     @Override
@@ -160,7 +159,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
 
     @Override
     public void navigateToExamLibrary() {
-        startActivityForResult(new Intent(getContext(), ExamLibraryActivity.class), REQUEST_CODE_EXAM_LIBRARY);
+        startActivity(new Intent(getContext(), ExamLibraryActivity.class));
     }
 
     @Override
@@ -309,11 +308,6 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_WEBVIEW) {
-            if (resultCode == RESULT_OK && null != data) {
-                int tab = data.getIntExtra("showTab", 1);
-                mActivity.selectTab(tab);
-            }
-        } else if (requestCode == REQUEST_CODE_EXAM_LIBRARY) {
             if (resultCode == RESULT_OK && null != data) {
                 int tab = data.getIntExtra("showTab", 1);
                 mActivity.selectTab(tab);

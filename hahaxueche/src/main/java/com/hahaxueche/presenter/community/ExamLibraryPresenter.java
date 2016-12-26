@@ -65,8 +65,6 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
         final User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) {
             mExamLibraryView.showNotLogin();
-        } else if (!user.student.hasPurchasedService()) {
-            mExamLibraryView.showNotPurchase();
         } else {
             final HHApiService apiService = application.getApiService();
             HashMap<String, Object> map = new HashMap<>();
