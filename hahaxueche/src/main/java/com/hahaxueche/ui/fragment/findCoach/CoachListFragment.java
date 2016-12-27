@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,6 +24,7 @@ import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.findCoach.CoachListPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
+import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachAdapter;
 import com.hahaxueche.ui.dialog.findCoach.CoachFilterDialog;
 import com.hahaxueche.ui.dialog.findCoach.CoachSortDialog;
@@ -51,6 +53,8 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     TextView mTvEmpty;
     @BindView(R.id.lly_main)
     LinearLayout mLlyMain;
+    @BindView(R.id.iv_red_bag)
+    ImageView mIvRedBag;
     private CoachAdapter mCoachAdapter;
     private ArrayList<Coach> mCoachArrayList;
     private CoachFilterDialog mFilterDialog;
@@ -128,6 +132,11 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     }
 
     @Override
+    public void showRedBag(boolean isShow) {
+        mIvRedBag.setVisibility(isShow ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
     public void onRefresh() {
         mPresenter.fetchCoaches();
     }
@@ -147,42 +156,47 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
         }
     }
 
-    @OnClick(R.id.fly_filter)
-    public void showFilterDialog() {
-        mPresenter.clickFilterCount();
-        if (mFilterDialog == null) {
-            mFilterDialog = new CoachFilterDialog(getContext(), new CoachFilterDialog.OnFilterListener() {
-                @Override
-                public void filter(String distance, String price, boolean isGoldenCoachOnly,
-                                   boolean isVipOnly, boolean C1Checked, boolean C2Checked) {
-                    mPresenter.setFilters(distance, price, isGoldenCoachOnly, isVipOnly, C1Checked, C2Checked);
-                    mPresenter.fetchCoaches();
+    @OnClick({R.id.fly_filter,
+            R.id.fly_sort,
+            R.id.iv_red_bag})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.fly_filter:
+                mPresenter.clickFilterCount();
+                if (mFilterDialog == null) {
+                    mFilterDialog = new CoachFilterDialog(getContext(),
+                            new CoachFilterDialog.OnFilterListener() {
+                                @Override
+                                public void filter(String distance, String price, boolean isGoldenCoachOnly,
+                                                   boolean isVipOnly, boolean C1Checked, boolean C2Checked) {
+                                    mPresenter.setFilters(distance, price, isGoldenCoachOnly, isVipOnly, C1Checked, C2Checked);
+                                    mPresenter.fetchCoaches();
+                                }
+                            });
                 }
-            });
-        }
-        mFilterDialog.show();
-    }
-
-//    @OnClick(R.id.iv_map)
-//    public void clickFieldFilter() {
-//        Intent intent = new Intent(getContext(), FieldFilterActivity.class);
-//        intent.putParcelableArrayListExtra("selectFields", mPresenter.getSelectFields());
-//        startActivityForResult(intent, REQUEST_CODE_FIELD_FILTER);
-//    }
-
-    @OnClick(R.id.fly_sort)
-    public void showSortDialog() {
-        if (mSortDialog == null) {
-            mSortDialog = new CoachSortDialog(getContext(), new CoachSortDialog.OnSortListener() {
-                @Override
-                public void sort(int sortBy) {
-                    mPresenter.clickSortCount(sortBy);
-                    mPresenter.setSortBy(sortBy);
-                    mPresenter.fetchCoaches();
+                mFilterDialog.show();
+                break;
+            case R.id.fly_sort:
+                if (mSortDialog == null) {
+                    mSortDialog = new CoachSortDialog(getContext(),
+                            new CoachSortDialog.OnSortListener() {
+                                @Override
+                                public void sort(int sortBy) {
+                                    mPresenter.clickSortCount(sortBy);
+                                    mPresenter.setSortBy(sortBy);
+                                    mPresenter.fetchCoaches();
+                                }
+                            });
                 }
-            });
+                mSortDialog.show();
+                break;
+            case R.id.iv_red_bag:
+                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+                break;
+            default:
+                break;
         }
-        mSortDialog.show();
+
     }
 
     @Override

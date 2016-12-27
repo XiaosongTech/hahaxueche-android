@@ -128,6 +128,7 @@ public class CoachListPresenter implements Presenter<CoachListView> {
                     public void onError(Throwable e) {
                         HHLog.e(e.getMessage());
                         mCoachListView.dismissProgressDialog();
+                        mCoachListView.showRedBag(false);
                     }
 
                     @Override
@@ -136,6 +137,9 @@ public class CoachListPresenter implements Presenter<CoachListView> {
                             mCoachListView.refreshCoachList(coachResponseList.data);
                             nextLink = coachResponseList.links.next;
                             mCoachListView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
+                            mCoachListView.showRedBag(true);
+                        }else {
+                            mCoachListView.showRedBag(false);
                         }
 
                     }
