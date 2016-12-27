@@ -444,9 +444,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         }
         if (user == null || !user.isLogin()) {
             mMyPageView.alertToLogin();
-        } else if (!user.student.hasPurchasedService()) {
-            mMyPageView.alertToFindCoach();
-        } else if (!user.student.isUploadedIdInfo()) {
+        } else if (!user.student.hasPurchasedService() || !user.student.isUploadedIdInfo()) {
             mMyPageView.navigateToUploadIdCard();
         } else if (!user.student.isSigned()) {
             mMyPageView.navigateToSignContract();
