@@ -2,6 +2,9 @@ package com.hahaxueche.presenter.base;
 
 import android.text.TextUtils;
 
+import com.alibaba.sdk.android.push.CloudPushService;
+import com.alibaba.sdk.android.push.CommonCallback;
+import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.ShortenUrl;
@@ -41,6 +44,24 @@ public class MainPresenter implements Presenter<MainView> {
         this.mBaseView = view;
         application = HHBaseApplication.get(mBaseView.getContext());
         loadVoucherShare();
+        bindAliyun();
+    }
+
+    private void bindAliyun() {
+        User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin()) return;
+        if (user.student.hasPurchasedService()) {
+            CloudPushService pushService = PushServiceFactory.getCloudPushService();
+            pushService.bindTag(1, new String[]{"purchased"}, "", new CommonCallback() {
+                @Override
+                public void onSuccess(String s) {
+                }
+
+                @Override
+                public void onFailed(String s, String s1) {
+                }
+            });
+        }
     }
 
     public void detachView() {
