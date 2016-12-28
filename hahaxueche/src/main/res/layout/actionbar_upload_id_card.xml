@@ -8,6 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
         android:padding="5dp"
         android:src="@drawable/ic_arrow_back" />
 
@@ -21,5 +22,18 @@
         android:lines="1"
         android:textColor="@color/haha_white"
         android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tv_template"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:padding="5dp"
+        android:text="协议模版"
+        android:textColor="@color/haha_white"
+        android:textSize="14sp" />
+
 
 </RelativeLayout>

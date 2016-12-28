@@ -9,7 +9,11 @@ import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationSet;
+import android.view.animation.TranslateAnimation;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,6 +27,7 @@ import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.findCoach.CoachListPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
+import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachAdapter;
 import com.hahaxueche.ui.dialog.findCoach.CoachFilterDialog;
 import com.hahaxueche.ui.dialog.findCoach.CoachSortDialog;
@@ -42,7 +47,8 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by wangshirui on 16/9/13.
  */
-public class CoachListFragment extends HHBaseFragment implements CoachListView, XListView.IXListViewListener, AdapterView.OnItemClickListener {
+public class CoachListFragment extends HHBaseFragment implements CoachListView, XListView.IXListViewListener,
+        XListView.OnXScrollListener, AdapterView.OnItemClickListener {
     private MainActivity mActivity;
     private CoachListPresenter mPresenter;
     @BindView(R.id.xlv_coaches)
@@ -51,6 +57,8 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     TextView mTvEmpty;
     @BindView(R.id.lly_main)
     LinearLayout mLlyMain;
+    @BindView(R.id.iv_red_bag)
+    ImageView mIvRedBag;
     private CoachAdapter mCoachAdapter;
     private ArrayList<Coach> mCoachArrayList;
     private CoachFilterDialog mFilterDialog;
@@ -82,6 +90,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
         mXlvCoaches.setXListViewListener(this);
         mXlvCoaches.setOnItemClickListener(this);
         mXlvCoaches.setEmptyView(mTvEmpty);
+        mXlvCoaches.setOnScrollListener(this);
         // Check the SDK version and whether the permission is already granted or not.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_LOCATION);
@@ -128,6 +137,11 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     }
 
     @Override
+    public void showRedBag(boolean isShow) {
+        mIvRedBag.setVisibility(isShow ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
     public void onRefresh() {
         mPresenter.fetchCoaches();
     }
@@ -147,42 +161,47 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
         }
     }
 
-    @OnClick(R.id.fly_filter)
-    public void showFilterDialog() {
-        mPresenter.clickFilterCount();
-        if (mFilterDialog == null) {
-            mFilterDialog = new CoachFilterDialog(getContext(), new CoachFilterDialog.OnFilterListener() {
-                @Override
-                public void filter(String distance, String price, boolean isGoldenCoachOnly,
-                                   boolean isVipOnly, boolean C1Checked, boolean C2Checked) {
-                    mPresenter.setFilters(distance, price, isGoldenCoachOnly, isVipOnly, C1Checked, C2Checked);
-                    mPresenter.fetchCoaches();
+    @OnClick({R.id.fly_filter,
+            R.id.fly_sort,
+            R.id.iv_red_bag})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.fly_filter:
+                mPresenter.clickFilterCount();
+                if (mFilterDialog == null) {
+                    mFilterDialog = new CoachFilterDialog(getContext(),
+                            new CoachFilterDialog.OnFilterListener() {
+                                @Override
+                                public void filter(String distance, String price, boolean isGoldenCoachOnly,
+                                                   boolean isVipOnly, boolean C1Checked, boolean C2Checked) {
+                                    mPresenter.setFilters(distance, price, isGoldenCoachOnly, isVipOnly, C1Checked, C2Checked);
+                                    mPresenter.fetchCoaches();
+                                }
+                            });
                 }
-            });
-        }
-        mFilterDialog.show();
-    }
-
-//    @OnClick(R.id.iv_map)
-//    public void clickFieldFilter() {
-//        Intent intent = new Intent(getContext(), FieldFilterActivity.class);
-//        intent.putParcelableArrayListExtra("selectFields", mPresenter.getSelectFields());
-//        startActivityForResult(intent, REQUEST_CODE_FIELD_FILTER);
-//    }
-
-    @OnClick(R.id.fly_sort)
-    public void showSortDialog() {
-        if (mSortDialog == null) {
-            mSortDialog = new CoachSortDialog(getContext(), new CoachSortDialog.OnSortListener() {
-                @Override
-                public void sort(int sortBy) {
-                    mPresenter.clickSortCount(sortBy);
-                    mPresenter.setSortBy(sortBy);
-                    mPresenter.fetchCoaches();
+                mFilterDialog.show();
+                break;
+            case R.id.fly_sort:
+                if (mSortDialog == null) {
+                    mSortDialog = new CoachSortDialog(getContext(),
+                            new CoachSortDialog.OnSortListener() {
+                                @Override
+                                public void sort(int sortBy) {
+                                    mPresenter.clickSortCount(sortBy);
+                                    mPresenter.setSortBy(sortBy);
+                                    mPresenter.fetchCoaches();
+                                }
+                            });
                 }
-            });
+                mSortDialog.show();
+                break;
+            case R.id.iv_red_bag:
+                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+                break;
+            default:
+                break;
         }
-        mSortDialog.show();
+
     }
 
     @Override
@@ -256,5 +275,46 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
 
     public ArrayList<Field> getSelectFields() {
         return mPresenter.getSelectFields();
+    }
+
+    @Override
+    public void onXScrolling(View view) {
+
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        switch (scrollState) {
+            case XListView.SCROLL_STATE_FLING:
+                dismissRedBag();
+                break;
+            case XListView.SCROLL_STATE_IDLE:
+                showRedBag();
+                break;
+            case XListView.SCROLL_STATE_TOUCH_SCROLL:
+                dismissRedBag();
+                break;
+            default:
+                break;
+
+        }
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+    }
+
+    private void dismissRedBag() {
+        AnimationSet animationSet = new AnimationSet(true);
+        TranslateAnimation translateAnimation = new TranslateAnimation(0, mIvRedBag.getWidth() * 4 / 5, 0, 0);
+        translateAnimation.setDuration(200);
+        animationSet.addAnimation(translateAnimation);
+        animationSet.setFillAfter(true); //让其保持动画结束时的状态。
+        mIvRedBag.startAnimation(animationSet);
+    }
+
+    private void showRedBag() {
+        mIvRedBag.clearAnimation();
     }
 }

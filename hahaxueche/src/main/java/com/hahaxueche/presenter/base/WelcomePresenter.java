@@ -44,7 +44,6 @@ public class WelcomePresenter implements Presenter<WelcomeView> {
         //获取常量信息
         HHApiService apiService = application.getApiService();
         subscription = apiService.getConstants()
-                .delay(2, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<Constants>() {

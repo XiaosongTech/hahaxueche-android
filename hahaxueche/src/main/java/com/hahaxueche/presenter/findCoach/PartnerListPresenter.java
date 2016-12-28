@@ -96,6 +96,7 @@ public class PartnerListPresenter implements Presenter<PartnerListView> {
                     public void onError(Throwable e) {
                         HHLog.e(e.getMessage());
                         mPartnerListView.dismissProgressDialog();
+                        mPartnerListView.showRedBag(false);
                     }
 
                     @Override
@@ -104,6 +105,9 @@ public class PartnerListPresenter implements Presenter<PartnerListView> {
                             mPartnerListView.refreshPartnerList(PartnerResponseList.data);
                             nextLink = PartnerResponseList.links.next;
                             mPartnerListView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
+                            mPartnerListView.showRedBag(true);
+                        }else {
+                            mPartnerListView.showRedBag(false);
                         }
 
                     }

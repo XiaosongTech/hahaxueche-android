@@ -103,15 +103,22 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
 
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setCustomView(R.layout.actionbar_base);
+        actionBar.setCustomView(R.layout.actionbar_upload_id_card);
         ImageView mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
         TextView mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
+        TextView mTvTemplate = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_template);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         mTvTitle.setText("上传身份信息");
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showLaterSubmitDialog();
+            }
+        });
+        mTvTemplate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), TemplateContractActivity.class));
             }
         });
     }

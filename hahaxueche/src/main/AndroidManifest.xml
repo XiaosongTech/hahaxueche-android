@@ -69,7 +69,8 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppStartLoadTranslucent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -146,7 +147,8 @@
         <activity
             android:name=".ui.activity.base.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppStartLoadTranslucent"></activity>
         <activity
             android:name=".ui.activity.base.BaseWebViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -305,6 +307,10 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activity.findCoach.PlatformAssuranceActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.myPage.TemplateContractActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
 

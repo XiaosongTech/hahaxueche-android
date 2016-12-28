@@ -27,4 +27,6 @@ public interface CoachListView extends HHBaseView {
     void addMoreCoachList(ArrayList<Coach> coachArrayList);
 
     void showMessage(String message);
+
+    void showRedBag(boolean isShow);
 }
