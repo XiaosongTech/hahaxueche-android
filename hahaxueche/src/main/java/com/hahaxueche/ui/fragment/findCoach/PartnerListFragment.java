@@ -6,7 +6,11 @@ import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationSet;
+import android.view.animation.TranslateAnimation;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,7 +38,8 @@ import static android.app.Activity.RESULT_OK;
  * Created by wangshirui on 2016/10/19.
  */
 
-public class PartnerListFragment extends HHBaseFragment implements PartnerListView, XListView.IXListViewListener, AdapterView.OnItemClickListener {
+public class PartnerListFragment extends HHBaseFragment implements PartnerListView, XListView.IXListViewListener,
+        XListView.OnXScrollListener, AdapterView.OnItemClickListener {
     private MainActivity mActivity;
     private PartnerListPresenter mPresenter;
     @BindView(R.id.xlv_partners)
@@ -43,6 +48,8 @@ public class PartnerListFragment extends HHBaseFragment implements PartnerListVi
     TextView mTvEmpty;
     @BindView(R.id.lly_main)
     LinearLayout mLlyMain;
+    @BindView(R.id.iv_red_bag)
+    ImageView mIvRedBag;
     private PartnerAdapter mPartnerAdapter;
     private ArrayList<Partner> mPartnerArrayList;
     private PartnerFilterDialog mFilterDialog;
@@ -67,6 +74,7 @@ public class PartnerListFragment extends HHBaseFragment implements PartnerListVi
         mXlvPartners.setXListViewListener(this);
         mXlvPartners.setOnItemClickListener(this);
         mXlvPartners.setEmptyView(mTvEmpty);
+        mXlvPartners.setOnScrollListener(this);
         mPresenter.fetchPartners();
         return view;
     }
@@ -100,6 +108,11 @@ public class PartnerListFragment extends HHBaseFragment implements PartnerListVi
     @Override
     public void showMessage(String message) {
         Snackbar.make(mLlyMain, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showRedBag(boolean isShow) {
+        mIvRedBag.setVisibility(isShow ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -170,5 +183,46 @@ public class PartnerListFragment extends HHBaseFragment implements PartnerListVi
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onXScrolling(View view) {
+
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        switch (scrollState) {
+            case XListView.SCROLL_STATE_FLING:
+                dismissRedBag();
+                break;
+            case XListView.SCROLL_STATE_IDLE:
+                showRedBag();
+                break;
+            case XListView.SCROLL_STATE_TOUCH_SCROLL:
+                dismissRedBag();
+                break;
+            default:
+                break;
+
+        }
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+    }
+
+    private void dismissRedBag() {
+        AnimationSet animationSet = new AnimationSet(true);
+        TranslateAnimation translateAnimation = new TranslateAnimation(0, mIvRedBag.getWidth() * 4 / 5, 0, 0);
+        translateAnimation.setDuration(200);
+        animationSet.addAnimation(translateAnimation);
+        animationSet.setFillAfter(true); //让其保持动画结束时的状态。
+        mIvRedBag.startAnimation(animationSet);
+    }
+
+    private void showRedBag() {
+        mIvRedBag.clearAnimation();
     }
 }

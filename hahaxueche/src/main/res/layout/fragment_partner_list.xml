@@ -1,93 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/lly_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/haha_white"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/lly_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:background="@color/haha_white"
+        android:orientation="vertical">
 
-        <FrameLayout
-            android:id="@+id/fly_filter"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <FrameLayout
+                android:id="@+id/fly_filter"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:drawablePadding="5dp"
-                android:drawableRight="@drawable/ic_screen_normal_btn"
-                android:gravity="center"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:text="筛选"
-                android:textColor="@color/haha_gray"
-                android:textSize="14sp" />
-        </FrameLayout>
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawablePadding="5dp"
+                    android:drawableRight="@drawable/ic_screen_normal_btn"
+                    android:gravity="center"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:text="筛选"
+                    android:textColor="@color/haha_gray"
+                    android:textSize="14sp" />
+            </FrameLayout>
+
+            <View
+                android:layout_width="@dimen/divider_width"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/haha_gray_divider" />
+
+            <FrameLayout
+                android:id="@+id/fly_sort"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawablePadding="5dp"
+                    android:drawableRight="@drawable/ic_sort_normal_btn"
+                    android:gravity="center"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:text="排序"
+                    android:textColor="@color/haha_gray"
+                    android:textSize="14sp" />
+            </FrameLayout>
+        </LinearLayout>
 
         <View
-            android:layout_width="@dimen/divider_width"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_width"
             android:background="@color/haha_gray_divider" />
 
-        <FrameLayout
-            android:id="@+id/fly_sort"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
+        <com.hahaxueche.ui.widget.pullToRefreshView.XListView
+            android:id="@+id/xlv_partners"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:divider="@drawable/divider_left_20dp"
+            android:dividerHeight="@dimen/divider_width"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="false"
+            app:loadMoreTxt="一大波教练接近中~~~"></com.hahaxueche.ui.widget.pullToRefreshView.XListView>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:drawablePadding="5dp"
-                android:drawableRight="@drawable/ic_sort_normal_btn"
-                android:gravity="center"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:text="排序"
-                android:textColor="@color/haha_gray"
-                android:textSize="14sp" />
-        </FrameLayout>
+        <TextView
+            android:id="@+id/tv_empty"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.2"
+            android:padding="20dp"
+            android:text="啥?!没有匹配到教练啊/(ㄒ o ㄒ)/~~点击左上角筛选按钮,并调节距离等因素来寻
+找更多教练吧"
+            android:textColor="@color/haha_gray"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_width"
-        android:background="@color/haha_gray_divider" />
-
-    <com.hahaxueche.ui.widget.pullToRefreshView.XListView
-        android:id="@+id/xlv_partners"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:divider="@drawable/divider_left_20dp"
-        android:dividerHeight="@dimen/divider_width"
-        android:footerDividersEnabled="false"
-        android:headerDividersEnabled="false"
-        app:loadMoreTxt="一大波教练接近中~~~"></com.hahaxueche.ui.widget.pullToRefreshView.XListView>
-
-    <TextView
-        android:id="@+id/tv_empty"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:lineSpacingMultiplier="1.2"
-        android:padding="20dp"
-        android:text="啥?!没有匹配到教练啊/(ㄒ o ㄒ)/~~点击左上角筛选按钮,并调节距离等因素来寻
-找更多教练吧"
-        android:textColor="@color/haha_gray"
-        android:textSize="14sp"
+    <ImageView
+        android:id="@+id/iv_red_bag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/flyingredbag"
         android:visibility="gone" />
-
-</LinearLayout>
+</RelativeLayout>

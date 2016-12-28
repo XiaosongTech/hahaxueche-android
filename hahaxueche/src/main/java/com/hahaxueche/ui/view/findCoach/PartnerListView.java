@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Created by wangshirui on 2016/10/19.
  */
 
-public interface PartnerListView extends HHBaseView{
+public interface PartnerListView extends HHBaseView {
     void setPullLoadEnable(boolean enable);
 
     /**
@@ -27,4 +27,6 @@ public interface PartnerListView extends HHBaseView{
     void addMorePartnerList(ArrayList<Partner> partnerArrayList);
 
     void showMessage(String message);
+
+    void showRedBag(boolean isShow);
 }

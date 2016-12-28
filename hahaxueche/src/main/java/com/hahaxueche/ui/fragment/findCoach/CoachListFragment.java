@@ -9,6 +9,9 @@ import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationSet;
+import android.view.animation.TranslateAnimation;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,7 +47,8 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by wangshirui on 16/9/13.
  */
-public class CoachListFragment extends HHBaseFragment implements CoachListView, XListView.IXListViewListener, AdapterView.OnItemClickListener {
+public class CoachListFragment extends HHBaseFragment implements CoachListView, XListView.IXListViewListener,
+        XListView.OnXScrollListener, AdapterView.OnItemClickListener {
     private MainActivity mActivity;
     private CoachListPresenter mPresenter;
     @BindView(R.id.xlv_coaches)
@@ -86,6 +90,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
         mXlvCoaches.setXListViewListener(this);
         mXlvCoaches.setOnItemClickListener(this);
         mXlvCoaches.setEmptyView(mTvEmpty);
+        mXlvCoaches.setOnScrollListener(this);
         // Check the SDK version and whether the permission is already granted or not.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_LOCATION);
@@ -270,5 +275,46 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
 
     public ArrayList<Field> getSelectFields() {
         return mPresenter.getSelectFields();
+    }
+
+    @Override
+    public void onXScrolling(View view) {
+
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        switch (scrollState) {
+            case XListView.SCROLL_STATE_FLING:
+                dismissRedBag();
+                break;
+            case XListView.SCROLL_STATE_IDLE:
+                showRedBag();
+                break;
+            case XListView.SCROLL_STATE_TOUCH_SCROLL:
+                dismissRedBag();
+                break;
+            default:
+                break;
+
+        }
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+    }
+
+    private void dismissRedBag() {
+        AnimationSet animationSet = new AnimationSet(true);
+        TranslateAnimation translateAnimation = new TranslateAnimation(0, mIvRedBag.getWidth() * 4 / 5, 0, 0);
+        translateAnimation.setDuration(200);
+        animationSet.addAnimation(translateAnimation);
+        animationSet.setFillAfter(true); //让其保持动画结束时的状态。
+        mIvRedBag.startAnimation(animationSet);
+    }
+
+    private void showRedBag() {
+        mIvRedBag.clearAnimation();
     }
 }
