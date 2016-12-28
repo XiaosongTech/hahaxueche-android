@@ -147,7 +147,8 @@
         <activity
             android:name=".ui.activity.base.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppStartLoadTranslucent"></activity>
         <activity
             android:name=".ui.activity.base.BaseWebViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
