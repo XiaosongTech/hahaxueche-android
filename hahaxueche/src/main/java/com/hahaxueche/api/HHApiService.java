@@ -39,6 +39,7 @@ import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -244,7 +245,7 @@ public interface HHApiService {
     Observable<IdCardUrl> uploadIdCard(@Path("id") String studentId, @Header("X-Access-Token") String accessToken, @Part MultipartBody.Part file, @QueryMap HashMap<String, Object> map);
 
     @GET("students/{id}/agreement")
-    Observable<IdCardUrl> createAgreement(@Path("id") String studentId, @Header("X-Access-Token") String accessToken);
+    Observable<Response<IdCardUrl>> createAgreement(@Path("id") String studentId, @Header("X-Access-Token") String accessToken);
 
     @POST("students/{id}/agreement")
     Observable<Student> signAgreement(@Path("id") String studentId, @Header("X-Access-Token") String accessToken);
