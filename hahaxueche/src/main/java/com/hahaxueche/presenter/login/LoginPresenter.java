@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import com.hahaxueche.BuildConfig;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseModel;
@@ -63,6 +64,9 @@ public class LoginPresenter implements Presenter<LoginView> {
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", cellPhone);
         map.put("type", SENT_AUTH_TYPE);
+        if (BuildConfig.DEBUG) {
+            map.put("back_door", 1);
+        }
         subscription = apiService.getAuthToken(map)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
