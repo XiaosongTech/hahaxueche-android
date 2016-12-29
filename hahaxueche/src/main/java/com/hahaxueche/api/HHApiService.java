@@ -270,7 +270,7 @@ public interface HHApiService {
     Observable<String> uploadContacts(@Body BookAddress bookAddress);
 
     class Factory {
-        public static HHApiService create() {
+        public static Retrofit getRetrofit() {
             HHLog.v("baseUrl -> " + baseUrl);
             OkHttpClient httpClient = new OkHttpClient();
             if (BuildConfig.DEBUG) {
@@ -279,13 +279,16 @@ public interface HHApiService {
                 logging.setLevel(HttpLoggingInterceptor.Level.BODY);
                 httpClient = new OkHttpClient.Builder().addInterceptor(logging).build();
             }
-            Retrofit retrofit = new Retrofit.Builder()
+            return new Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .client(httpClient)
                     .build();
-            return retrofit.create(HHApiService.class);
+        }
+
+        public static HHApiService create() {
+            return getRetrofit().create(HHApiService.class);
         }
 
         public static HHApiService createWithNoConverter() {
