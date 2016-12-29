@@ -80,6 +80,9 @@ public class LoginPresenter implements Presenter<LoginView> {
 
                     @Override
                     public void onError(Throwable e) {
+                        if (ErrorUtil.isHttp404(e)) {
+                            mLoginView.showMessage("手机号未注册");
+                        }
                         mLoginView.enableButtons();
                         mLoginView.dismissProgressDialog();
                         HHLog.e(e.getMessage());
@@ -153,6 +156,8 @@ public class LoginPresenter implements Presenter<LoginView> {
                             } else {
                                 mLoginView.showMessage("密码错误");
                             }
+                        } else if (ErrorUtil.isHttp404(e)) {
+                            mLoginView.showMessage("手机号未注册");
                         }
                         HHLog.e(e.getMessage());
                     }

@@ -6,6 +6,7 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.City;
+import com.hahaxueche.model.base.ErrorResponse;
 import com.hahaxueche.model.user.IdCardUrl;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
@@ -19,11 +20,17 @@ import com.qiyukf.unicorn.api.YSFUserInfo;
 import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Converter;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -57,7 +64,7 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
         subscription = apiService.createAgreement(user.student.id, user.session.access_token)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
-                .subscribe(new Subscriber<IdCardUrl>() {
+                .subscribe(new Subscriber<Response<IdCardUrl>>() {
                     @Override
                     public void onStart() {
                         super.onStart();
@@ -73,14 +80,30 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
                     public void onError(Throwable e) {
                         mUploadIdCardView.dismissProgressDialog();
                         HHLog.e(e.getMessage());
-                        if (ErrorUtil.isHttp422(e)) {
-                            mUploadIdCardView.showMessage("身份认证失败，请确认图片后信息重新上传！");
-                        }
                     }
 
                     @Override
-                    public void onNext(IdCardUrl idCardUrl) {
-                        mUploadIdCardView.navigateToUserContract(idCardUrl.agreement_url);
+                    public void onNext(Response<IdCardUrl> response) {
+                        if (response.isSuccessful()) {
+                            mUploadIdCardView.navigateToUserContract(response.body().agreement_url);
+                        } else {
+                            Retrofit retrofit = HHApiService.Factory.getRetrofit();
+                            Converter<ResponseBody, ErrorResponse> errorConverter = retrofit.responseBodyConverter(ErrorResponse.class,
+                                    new Annotation[0]);
+                            try {
+                                ErrorResponse error = errorConverter.convert(response.errorBody());
+                                if (error.code == 40026) {
+                                    mUploadIdCardView.showMessage("身份证正面识别失败，请重新拍摄并上传！");
+                                } else if (error.code == 400028) {
+                                    mUploadIdCardView.showMessage("身份证信息无效, 请确保使用真实的第二代身份证!");
+                                } else {
+                                    mUploadIdCardView.showMessage("上传失败, 请重试!");
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                mUploadIdCardView.showMessage("上传失败, 请重试!");
+                            }
+                        }
                     }
                 });
     }

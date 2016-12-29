@@ -8,6 +8,7 @@ import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseSuccess;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.City;
+import com.hahaxueche.model.base.ErrorResponse;
 import com.hahaxueche.model.user.IdCardUrl;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.student.Student;
@@ -18,8 +19,14 @@ import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
 import com.umeng.analytics.MobclickAgent;
 
+import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 
+import okhttp3.ResponseBody;
+import retrofit2.Converter;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -62,7 +69,7 @@ public class MyContractPresenter implements Presenter<MyContractView> {
             subscription = apiService.createAgreement(user.student.id, user.session.access_token)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(application.defaultSubscribeScheduler())
-                    .subscribe(new Subscriber<IdCardUrl>() {
+                    .subscribe(new Subscriber<Response<IdCardUrl>>() {
                         @Override
                         public void onStart() {
                             super.onStart();
@@ -81,8 +88,10 @@ public class MyContractPresenter implements Presenter<MyContractView> {
                         }
 
                         @Override
-                        public void onNext(IdCardUrl idCardUrl) {
-                            mMyContractView.setPdf(idCardUrl.agreement_url);
+                        public void onNext(Response<IdCardUrl> response) {
+                            if (response.isSuccessful()) {
+                                mMyContractView.setPdf(response.body().agreement_url);
+                            }
                         }
                     });
         }

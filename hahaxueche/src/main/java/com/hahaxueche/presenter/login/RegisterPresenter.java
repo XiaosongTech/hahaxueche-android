@@ -39,7 +39,7 @@ public class RegisterPresenter implements Presenter<RegisterView> {
         if (subscription != null) subscription.unsubscribe();
     }
 
-    public void getAuthCode(String cellPhone, boolean isResetPwd) {
+    public void getAuthCode(String cellPhone, final boolean isResetPwd) {
         if (TextUtils.isEmpty(cellPhone)) {
             mRegisterView.showMessage("手机号不能为空");
             return;
@@ -79,8 +79,14 @@ public class RegisterPresenter implements Presenter<RegisterView> {
 
                     @Override
                     public void onError(Throwable e) {
-                        if (ErrorUtil.isHttp422(e)) {
-                            mRegisterView.showMessage("该手机号已经注册");
+                        if (isResetPwd) {
+                            if (ErrorUtil.isHttp404(e)) {
+                                mRegisterView.showMessage("该手机号未注册");
+                            }
+                        } else {
+                            if (ErrorUtil.isHttp422(e)) {
+                                mRegisterView.showMessage("该手机号已经注册");
+                            }
                         }
                         mRegisterView.enableButtons();
                         mRegisterView.dismissProgressDialog();
