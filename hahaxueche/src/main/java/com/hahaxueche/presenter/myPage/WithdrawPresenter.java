@@ -120,7 +120,7 @@ public class WithdrawPresenter implements Presenter<WithdrawView> {
         map.put("cell_phone", user.cell_phone);
         final HashMap<String, Object> mapParam = new HashMap<>();
         mapParam.put("amount", withdrawMoney);
-        mWithdrawView.showProgressDialog("提现中，请稍后...");
+        mWithdrawView.showProgressDialog();
         subscription = apiService.isValidToken(user.session.access_token, map)
                 .flatMap(new Func1<BaseValid, Observable<BaseModel>>() {
                     @Override

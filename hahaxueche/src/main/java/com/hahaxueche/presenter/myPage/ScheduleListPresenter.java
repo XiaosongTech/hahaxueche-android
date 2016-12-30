@@ -85,7 +85,7 @@ public class ScheduleListPresenter implements Presenter<ScheduleListView> {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mScheduleListView.showProgressDialog("查找中，请稍后...");
+                        mScheduleListView.showProgressDialog();
                     }
 
                     @Override
@@ -137,7 +137,7 @@ public class ScheduleListPresenter implements Presenter<ScheduleListView> {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mScheduleListView.showProgressDialog("查找中，请稍后...");
+                        mScheduleListView.showProgressDialog();
                     }
 
                     @Override
@@ -352,7 +352,7 @@ public class ScheduleListPresenter implements Presenter<ScheduleListView> {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mScheduleListView.showProgressDialog("评价中，请稍后...");
+                        mScheduleListView.showProgressDialog();
                     }
 
                     @Override

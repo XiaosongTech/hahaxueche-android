@@ -135,7 +135,7 @@ public class LoginPresenter implements Presenter<LoginView> {
         }
         map.put("type", LOGIN_TYPE_STUDENT);
         mLoginView.disableButtons();
-        mLoginView.showProgressDialog("登录中,请稍后...");
+        mLoginView.showProgressDialog();
         final HHBaseApplication application = HHBaseApplication.get(mLoginView.getContext());
         HHApiService apiService = application.getApiService();
         subscription = apiService.login(map)

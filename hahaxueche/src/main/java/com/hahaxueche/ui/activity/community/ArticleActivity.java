@@ -145,7 +145,7 @@ public class ArticleActivity extends HHBaseActivity implements ArticleView, IWei
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                showProgressDialog("页面加载中，请稍后...");
+                showProgressDialog();
             }
         });
         WebSettings mWebSettings = webView.getSettings();

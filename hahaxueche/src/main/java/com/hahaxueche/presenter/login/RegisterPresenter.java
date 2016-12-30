@@ -132,7 +132,7 @@ public class RegisterPresenter implements Presenter<RegisterView> {
             return;
         }
         mRegisterView.disableButtons();
-        mRegisterView.showProgressDialog("密码重置中,请稍后...");
+        mRegisterView.showProgressDialog();
         HHBaseApplication application = HHBaseApplication.get(mRegisterView.getContext());
         HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();
@@ -199,7 +199,7 @@ public class RegisterPresenter implements Presenter<RegisterView> {
             return;
         }
         mRegisterView.disableButtons();
-        mRegisterView.showProgressDialog("注册中,请稍后...");
+        mRegisterView.showProgressDialog();
         final HHBaseApplication application = HHBaseApplication.get(mRegisterView.getContext());
         HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();

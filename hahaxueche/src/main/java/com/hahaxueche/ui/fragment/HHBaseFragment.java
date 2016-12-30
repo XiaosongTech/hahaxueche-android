@@ -78,7 +78,7 @@ public class HHBaseFragment extends Fragment implements HHBaseView {
 
     @Override
     public void showProgressDialog() {
-        showProgressDialog("数据加载中，请稍后……");
+        showProgressDialog("为学员保驾护航！");
     }
 
     @Override

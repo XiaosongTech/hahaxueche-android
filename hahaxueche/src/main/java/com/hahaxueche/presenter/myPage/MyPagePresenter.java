@@ -395,7 +395,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mMyPageView.showProgressDialog("更新中，请稍后...");
+                        mMyPageView.showProgressDialog();
                     }
 
                     @Override

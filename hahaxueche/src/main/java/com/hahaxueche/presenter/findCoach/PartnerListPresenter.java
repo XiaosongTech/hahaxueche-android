@@ -84,7 +84,7 @@ public class PartnerListPresenter implements Presenter<PartnerListView> {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mPartnerListView.showProgressDialog("查找中，请稍后...");
+                        mPartnerListView.showProgressDialog();
                     }
 
                     @Override

@@ -68,7 +68,7 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mUploadIdCardView.showProgressDialog("数据上传中，请稍后...");
+                        mUploadIdCardView.showProgressDialog();
                     }
 
                     @Override

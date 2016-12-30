@@ -85,7 +85,7 @@ public class AddBankPresenter implements Presenter<AddBankView> {
         }
         final User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
-            mAddBankView.showProgressDialog("信息上传中，请稍后...");
+            mAddBankView.showProgressDialog();
             final HHApiService apiService = application.getApiService();
             HashMap<String, Object> map = new HashMap<>();
             map.put("cell_phone", user.cell_phone);

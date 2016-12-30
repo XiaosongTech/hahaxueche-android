@@ -42,7 +42,7 @@ public class CompleteUserInfoPresenter implements Presenter<CompleteUserInfoView
             return;
         }
         mCompleteUserInfoView.disableButtons();
-        mCompleteUserInfoView.showProgressDialog("数据上传中,请稍后...");
+        mCompleteUserInfoView.showProgressDialog();
         final HHBaseApplication application = HHBaseApplication.get(mCompleteUserInfoView.getContext());
         HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();

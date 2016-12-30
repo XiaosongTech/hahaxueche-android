@@ -120,7 +120,7 @@ public class MyContractPresenter implements Presenter<MyContractView> {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mMyContractView.showProgressDialog("数据上传中，请稍后...");
+                        mMyContractView.showProgressDialog();
                     }
 
                     @Override
