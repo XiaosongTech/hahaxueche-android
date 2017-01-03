@@ -76,6 +76,7 @@ public class ArticleListPresenter implements Presenter<ArticleListView> {
                     public void onError(Throwable e) {
                         HHLog.e(e.getMessage());
                         mArticleListView.dismissProgressDialog();
+                        mArticleListView.showRedBag(false);
                     }
 
                     @Override
@@ -84,6 +85,9 @@ public class ArticleListPresenter implements Presenter<ArticleListView> {
                             mArticleListView.refreshNewsList(articleResponseList.data);
                             nextLink = articleResponseList.links.next;
                             mArticleListView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
+                            mArticleListView.showRedBag(true);
+                        } else {
+                            mArticleListView.showRedBag(false);
                         }
 
                     }

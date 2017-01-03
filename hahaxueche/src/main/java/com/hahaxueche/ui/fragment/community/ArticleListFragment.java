@@ -6,10 +6,15 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationSet;
+import android.view.animation.TranslateAnimation;
+import android.widget.AbsListView;
+import android.widget.ImageView;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.community.Article;
 import com.hahaxueche.presenter.community.ArticleListPresenter;
+import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.adapter.community.ArticleAdapter;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.community.ArticleListView;
@@ -19,6 +24,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -26,9 +32,12 @@ import static android.app.Activity.RESULT_OK;
  * Created by wangshirui on 2016/11/3.
  */
 
-public class ArticleListFragment extends HHBaseFragment implements ArticleListView, XListView.IXListViewListener {
+public class ArticleListFragment extends HHBaseFragment implements ArticleListView, XListView.IXListViewListener,
+        XListView.OnXScrollListener {
     @BindView(R.id.xlv_news)
     XListView mXlvNews;
+    @BindView(R.id.iv_red_bag)
+    ImageView mIvRedBag;
     private ArticleAdapter mArticleAdapter;
     private ArrayList<Article> mArticleArrayList;
     private ArticleListPresenter mPresenter;
@@ -49,6 +58,17 @@ public class ArticleListFragment extends HHBaseFragment implements ArticleListVi
         mPresenter = new ArticleListPresenter();
     }
 
+    @OnClick({R.id.iv_red_bag})
+    void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_red_bag:
+                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+                break;
+            default:
+                break;
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,6 +80,7 @@ public class ArticleListFragment extends HHBaseFragment implements ArticleListVi
         mXlvNews.setPullLoadEnable(true);
         mXlvNews.setAutoLoadEnable(true);
         mXlvNews.setXListViewListener(this);
+        mXlvNews.setOnScrollListener(this);
         mPresenter.fetchNews();
         return view;
     }
@@ -88,6 +109,11 @@ public class ArticleListFragment extends HHBaseFragment implements ArticleListVi
     public void addMoreNewsList(ArrayList<Article> articleArrayList) {
         mArticleArrayList.addAll(articleArrayList);
         mArticleAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showRedBag(boolean isShow) {
+        mIvRedBag.setVisibility(isShow ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -120,5 +146,46 @@ public class ArticleListFragment extends HHBaseFragment implements ArticleListVi
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onXScrolling(View view) {
+
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        switch (scrollState) {
+            case XListView.SCROLL_STATE_FLING:
+                dismissRedBag();
+                break;
+            case XListView.SCROLL_STATE_IDLE:
+                showRedBag();
+                break;
+            case XListView.SCROLL_STATE_TOUCH_SCROLL:
+                dismissRedBag();
+                break;
+            default:
+                break;
+
+        }
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+    }
+
+    private void dismissRedBag() {
+        AnimationSet animationSet = new AnimationSet(true);
+        TranslateAnimation translateAnimation = new TranslateAnimation(0, mIvRedBag.getWidth() * 4 / 5, 0, 0);
+        translateAnimation.setDuration(200);
+        animationSet.addAnimation(translateAnimation);
+        animationSet.setFillAfter(true); //让其保持动画结束时的状态。
+        mIvRedBag.startAnimation(animationSet);
+    }
+
+    private void showRedBag() {
+        mIvRedBag.clearAnimation();
     }
 }

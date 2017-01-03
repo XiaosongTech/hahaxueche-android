@@ -25,4 +25,6 @@ public interface ArticleListView extends HHBaseView {
      * @param articleArrayList
      */
     void addMoreNewsList(ArrayList<Article> articleArrayList);
+
+    void showRedBag(boolean isShow);
 }
