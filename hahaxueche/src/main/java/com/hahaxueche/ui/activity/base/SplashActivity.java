@@ -2,9 +2,7 @@ package com.hahaxueche.ui.activity.base;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ProgressBar;
 
-import com.hahaxueche.R;
 import com.hahaxueche.presenter.base.WelcomePresenter;
 import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
@@ -21,16 +19,13 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by wangshirui on 16/9/8.
  */
-public class WelcomeActivity extends HHBaseActivity implements WelcomeView {
+public class SplashActivity extends HHBaseActivity implements WelcomeView {
     private WelcomePresenter mPresenter;
-    @BindView(R.id.progressBar)
-    ProgressBar mProgressBar;
     private LinkedME linkedME;
 
     public void onStart() {
@@ -56,8 +51,6 @@ public class WelcomeActivity extends HHBaseActivity implements WelcomeView {
         super.onCreate(savedInstanceState);
         mPresenter = new WelcomePresenter();
         mPresenter.attachView(this);
-        setTheme(R.style.AppThemeNoTitle);
-        setContentView(R.layout.activity_welcome);
         ButterKnife.bind(this);
         MobclickAgent.setDebugMode(false);
     }
@@ -65,13 +58,13 @@ public class WelcomeActivity extends HHBaseActivity implements WelcomeView {
     @Override
     public void navigationToStartLogin() {
         startActivity(new Intent(getContext(), StartLoginActivity.class));
-        WelcomeActivity.this.finish();
+        SplashActivity.this.finish();
     }
 
     @Override
     public void navigateToCompleteInfo() {
         startActivity(new Intent(getContext(), CompleteUserInfoView.class));
-        WelcomeActivity.this.finish();
+        SplashActivity.this.finish();
     }
 
     @Override
