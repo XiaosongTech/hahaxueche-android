@@ -19,6 +19,7 @@ import com.hahaxueche.model.user.coach.Partner;
 import com.hahaxueche.presenter.findCoach.PartnerListPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.findCoach.PartnerDetailActivity;
+import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.adapter.findCoach.PartnerAdapter;
 import com.hahaxueche.ui.dialog.findCoach.PartnerFilterDialog;
 import com.hahaxueche.ui.dialog.findCoach.PartnerSortDialog;
@@ -135,34 +136,45 @@ public class PartnerListFragment extends HHBaseFragment implements PartnerListVi
         }
     }
 
-    @OnClick(R.id.fly_filter)
-    public void showFilterDialog() {
-        mPresenter.clickFilterCount();
-        if (mFilterDialog == null) {
-            mFilterDialog = new PartnerFilterDialog(getContext(), new PartnerFilterDialog.OnFilterListener() {
-                @Override
-                public void filter(String price, boolean C1Checked, boolean C2Checked) {
-                    mPresenter.setFilters(price, C1Checked, C2Checked);
-                    mPresenter.fetchPartners();
+    @OnClick({R.id.fly_filter,
+            R.id.fly_sort,
+            R.id.iv_red_bag})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.fly_filter:
+                mPresenter.clickFilterCount();
+                if (mFilterDialog == null) {
+                    mFilterDialog = new PartnerFilterDialog(getContext(), new PartnerFilterDialog.OnFilterListener() {
+                        @Override
+                        public void filter(String price, boolean C1Checked, boolean C2Checked) {
+                            mPresenter.setFilters(price, C1Checked, C2Checked);
+                            mPresenter.fetchPartners();
+                        }
+                    });
                 }
-            });
+                mFilterDialog.show();
+                break;
+            case R.id.fly_sort:
+                if (mSortDialog == null) {
+                    mSortDialog = new PartnerSortDialog(getContext(), new PartnerSortDialog.OnSortListener() {
+                        @Override
+                        public void sort(int sortBy) {
+                            mPresenter.clickSortCount(sortBy);
+                            mPresenter.setSortBy(sortBy);
+                            mPresenter.fetchPartners();
+                        }
+                    });
+                }
+                mSortDialog.show();
+                break;
+            case R.id.iv_red_bag:
+                mPresenter.clickRedBag();
+                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+                break;
+            default:
+                break;
         }
-        mFilterDialog.show();
-    }
 
-    @OnClick(R.id.fly_sort)
-    public void showSortDialog() {
-        if (mSortDialog == null) {
-            mSortDialog = new PartnerSortDialog(getContext(), new PartnerSortDialog.OnSortListener() {
-                @Override
-                public void sort(int sortBy) {
-                    mPresenter.clickSortCount(sortBy);
-                    mPresenter.setSortBy(sortBy);
-                    mPresenter.fetchPartners();
-                }
-            });
-        }
-        mSortDialog.show();
     }
 
     @Override

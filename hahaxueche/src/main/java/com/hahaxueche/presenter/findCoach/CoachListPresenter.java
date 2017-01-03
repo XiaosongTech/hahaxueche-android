@@ -219,4 +219,16 @@ public class CoachListPresenter implements Presenter<CoachListView> {
         map.put("coach_id", coachId);
         MobclickAgent.onEvent(mCoachListView.getContext(), "find_coach_page_coach_tapped", map);
     }
+
+    public void clickRedBag() {
+        //筛选点击
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mCoachListView.getContext(), "find_coach_flying_envelop_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mCoachListView.getContext(), "find_coach_flying_envelop_tapped");
+        }
+    }
 }

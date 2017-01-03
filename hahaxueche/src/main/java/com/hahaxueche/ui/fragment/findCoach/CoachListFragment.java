@@ -196,6 +196,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                 mSortDialog.show();
                 break;
             case R.id.iv_red_bag:
+                mPresenter.clickRedBag();
                 startActivity(new Intent(getContext(), ReferFriendsActivity.class));
                 break;
             default:

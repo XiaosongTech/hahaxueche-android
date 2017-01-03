@@ -106,7 +106,7 @@ public class PartnerListPresenter implements Presenter<PartnerListView> {
                             nextLink = PartnerResponseList.links.next;
                             mPartnerListView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
                             mPartnerListView.showRedBag(true);
-                        }else {
+                        } else {
                             mPartnerListView.showRedBag(false);
                         }
 
@@ -148,7 +148,7 @@ public class PartnerListPresenter implements Presenter<PartnerListView> {
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
             MobclickAgent.onEvent(mPartnerListView.getContext(), "find_coach_page_filter_personal_coach_tapped", map);
-        }else {
+        } else {
             MobclickAgent.onEvent(mPartnerListView.getContext(), "find_coach_page_filter_personal_coach_tapped");
         }
 
@@ -174,5 +174,17 @@ public class PartnerListPresenter implements Presenter<PartnerListView> {
         }
         map.put("partner_id", partnerId);
         MobclickAgent.onEvent(mPartnerListView.getContext(), "find_coach_page_personal_coach_tapped", map);
+    }
+
+    public void clickRedBag() {
+        //筛选点击
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mPartnerListView.getContext(), "find_coach_flying_envelop_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mPartnerListView.getContext(), "find_coach_flying_envelop_tapped");
+        }
     }
 }
