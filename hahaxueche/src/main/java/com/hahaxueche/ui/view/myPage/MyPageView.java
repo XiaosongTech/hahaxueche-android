@@ -15,10 +15,6 @@ public interface MyPageView extends HHBaseView {
 
     void finishToStartLogin();
 
-    void startRefresh();
-
-    void stopRefresh();
-
     void showMessage(String message);
 
     void toMyCoach(String coachId);
@@ -52,8 +48,6 @@ public interface MyPageView extends HHBaseView {
     void navigateToSignContract();
 
     void navigateToMyContract();
-
-    void disableRefresh();
 
     void navigateToNotLoginVoucher();
 

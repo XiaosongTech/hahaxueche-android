@@ -58,7 +58,6 @@ public class MyPagePresenter implements Presenter<MyPageView> {
             fetchAdviser();
         } else {
             mMyPageView.showNotLogin();
-            mMyPageView.disableRefresh();
         }
     }
 
@@ -103,7 +102,6 @@ public class MyPagePresenter implements Presenter<MyPageView> {
     public void fetchStudent() {
         final User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
-            mMyPageView.startRefresh();
             final HHApiService apiService = application.getApiService();
             HashMap<String, Object> map = new HashMap<>();
             map.put("cell_phone", user.cell_phone);
@@ -123,12 +121,10 @@ public class MyPagePresenter implements Presenter<MyPageView> {
                     .subscribe(new Subscriber<Student>() {
                         @Override
                         public void onCompleted() {
-                            mMyPageView.stopRefresh();
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            mMyPageView.stopRefresh();
                             if (ErrorUtil.isInvalidSession(e)) {
                                 mMyPageView.forceOffline();
                             }

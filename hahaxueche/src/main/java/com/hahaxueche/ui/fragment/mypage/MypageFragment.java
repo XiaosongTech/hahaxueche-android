@@ -7,14 +7,13 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -61,9 +60,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by wangshirui on 16/9/13.
  */
-public class MypageFragment extends HHBaseFragment implements MyPageView, SwipeRefreshLayout.OnRefreshListener {
-    @BindView(R.id.srl_my_page)
-    SwipeRefreshLayout mSrlMyPage;
+public class MypageFragment extends HHBaseFragment implements MyPageView {
     @BindView(R.id.iv_my_avatar)
     SimpleDraweeView mIvMyAvatar;
     @BindView(R.id.tv_student_name)
@@ -78,8 +75,6 @@ public class MypageFragment extends HHBaseFragment implements MyPageView, SwipeR
     TextView mTvPaymentStage;
     @BindView(R.id.tv_student_phase)
     TextView mTvStudentPhase;
-    @BindView(R.id.lly_main)
-    LinearLayout mLlyMain;
     @BindView(R.id.iv_payment_stage)
     ImageView mIvPaymentArrow;
     @BindView(R.id.view_badge)
@@ -98,6 +93,8 @@ public class MypageFragment extends HHBaseFragment implements MyPageView, SwipeR
     View mViewBadgePassEnsurance;
     @BindView(R.id.iv_more_pass_ensurance)
     ImageView mIvMorePassEnsurance;
+    @BindView(R.id.crl_main)
+    CoordinatorLayout mCrlMain;
 
     private MyPagePresenter mPresenter;
     private MainActivity mActivity;
@@ -127,8 +124,6 @@ public class MypageFragment extends HHBaseFragment implements MyPageView, SwipeR
         View view = inflater.inflate(R.layout.fragment_my_page, container, false);
         ButterKnife.bind(this, view);
         mPresenter.attachView(this);
-        mSrlMyPage.setOnRefreshListener(this);
-        mSrlMyPage.setColorSchemeResources(R.color.app_theme_color);
         return view;
     }
 
@@ -174,24 +169,9 @@ public class MypageFragment extends HHBaseFragment implements MyPageView, SwipeR
     }
 
     @Override
-    public void startRefresh() {
-        mSrlMyPage.setRefreshing(true);
-    }
-
-    @Override
-    public void stopRefresh() {
-        mSrlMyPage.setRefreshing(false);
-    }
-
-    @Override
     public void onDestroy() {
         mPresenter.detachView();
         super.onDestroy();
-    }
-
-    @Override
-    public void onRefresh() {
-        mPresenter.fetchStudent();
     }
 
     @OnClick({R.id.rly_online_service,
@@ -357,7 +337,7 @@ public class MypageFragment extends HHBaseFragment implements MyPageView, SwipeR
 
     @Override
     public void showMessage(String message) {
-        Snackbar.make(mLlyMain, message, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mCrlMain, message, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -444,11 +424,6 @@ public class MypageFragment extends HHBaseFragment implements MyPageView, SwipeR
     @Override
     public void navigateToMyContract() {
         startActivityForResult(new Intent(getContext(), MyContractActivity.class), REQUEST_CODE_MY_CONTRACT);
-    }
-
-    @Override
-    public void disableRefresh() {
-        mSrlMyPage.setEnabled(false);
     }
 
     @Override
