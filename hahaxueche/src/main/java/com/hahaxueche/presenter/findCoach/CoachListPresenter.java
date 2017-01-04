@@ -11,6 +11,7 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.CoachListView;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.WebViewUrl;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -138,7 +139,7 @@ public class CoachListPresenter implements Presenter<CoachListView> {
                             nextLink = coachResponseList.links.next;
                             mCoachListView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
                             mCoachListView.showRedBag(true);
-                        }else {
+                        } else {
                             mCoachListView.showRedBag(false);
                         }
 
@@ -229,5 +230,6 @@ public class CoachListPresenter implements Presenter<CoachListView> {
         } else {
             MobclickAgent.onEvent(mCoachListView.getContext(), "find_coach_flying_envelop_tapped");
         }
+        mCoachListView.openWebView(WebViewUrl.WEB_URL_DALIBAO);
     }
 }

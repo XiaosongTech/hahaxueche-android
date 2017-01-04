@@ -19,7 +19,6 @@ import com.hahaxueche.model.user.coach.Partner;
 import com.hahaxueche.presenter.findCoach.PartnerListPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.findCoach.PartnerDetailActivity;
-import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.adapter.findCoach.PartnerAdapter;
 import com.hahaxueche.ui.dialog.findCoach.PartnerFilterDialog;
 import com.hahaxueche.ui.dialog.findCoach.PartnerSortDialog;
@@ -169,7 +168,6 @@ public class PartnerListFragment extends HHBaseFragment implements PartnerListVi
                 break;
             case R.id.iv_red_bag:
                 mPresenter.clickRedBag();
-                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
                 break;
             default:
                 break;

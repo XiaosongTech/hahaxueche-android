@@ -11,6 +11,7 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.community.ArticleListView;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.WebViewUrl;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -159,5 +160,6 @@ public class ArticleListPresenter implements Presenter<ArticleListView> {
         } else {
             MobclickAgent.onEvent(mArticleListView.getContext(), "club_page_flying_envelop_tapped");
         }
+        mArticleListView.openWebView(WebViewUrl.WEB_URL_DALIBAO);
     }
 }

@@ -27,7 +27,6 @@ import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.findCoach.CoachListPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
-import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachAdapter;
 import com.hahaxueche.ui.dialog.findCoach.CoachFilterDialog;
 import com.hahaxueche.ui.dialog.findCoach.CoachSortDialog;
@@ -197,7 +196,6 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                 break;
             case R.id.iv_red_bag:
                 mPresenter.clickRedBag();
-                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
                 break;
             default:
                 break;

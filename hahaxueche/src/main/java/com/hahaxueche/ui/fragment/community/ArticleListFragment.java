@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import com.hahaxueche.R;
 import com.hahaxueche.model.community.Article;
 import com.hahaxueche.presenter.community.ArticleListPresenter;
-import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.adapter.community.ArticleAdapter;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.community.ArticleListView;
@@ -63,7 +62,6 @@ public class ArticleListFragment extends HHBaseFragment implements ArticleListVi
         switch (view.getId()) {
             case R.id.iv_red_bag:
                 mPresenter.clickRedBag();
-                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
                 break;
             default:
                 break;
