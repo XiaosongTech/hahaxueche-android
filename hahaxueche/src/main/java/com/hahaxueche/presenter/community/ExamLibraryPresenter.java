@@ -3,8 +3,6 @@ package com.hahaxueche.presenter.community;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Base64;
 
@@ -23,7 +21,6 @@ import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -148,5 +145,9 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
         //4.base64 safe url encoding
         String encodedResult = new String(Base64.encode(result.getBytes(), Base64.URL_SAFE | Base64.NO_WRAP));
         return WEB_URL_GROUP_BUY + "?promo_code=406808&result=" + encodedResult;
+    }
+
+    public String getQrCodeUrl() {
+        return "https://oi44wxzbw.qnssl.com/refer_template5.png?watermark/3/image/aHR0cHM6Ly9zdGFnaW5nLWFwaS5oYWhheHVlY2hlLm5ldC9zaGFyZS9zdHVkZW50cy9mMDNjNmNjNy1jZjg4LTRlMjItYTJlMi0yZjkyMWNiNmE4Y2YvcXJjb2RlP3Y9Mw==/dissolve/100/gravity/SouthWest/dx/120/dy/80";
     }
 }

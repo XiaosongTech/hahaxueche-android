@@ -1,21 +1,38 @@
 package com.hahaxueche.ui.activity.community;
 
+import android.Manifest;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.facebook.common.executors.CallerThreadExecutor;
+import com.facebook.common.references.CloseableReference;
+import com.facebook.datasource.DataSource;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.ImagePipeline;
+import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
+import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.request.ImageRequest;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.user.User;
@@ -28,7 +45,6 @@ import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.view.community.ExamLibraryView;
 import com.hahaxueche.util.ExamLib;
 import com.hahaxueche.util.HHLog;
-import com.hahaxueche.util.Utils;
 import com.hahaxueche.util.WebViewUrl;
 import com.sina.weibo.sdk.api.ImageObject;
 import com.sina.weibo.sdk.api.TextObject;
@@ -42,18 +58,16 @@ import com.sina.weibo.sdk.constant.WBConstants;
 import com.sina.weibo.sdk.utils.Utility;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzoneShare;
-import com.tencent.mm.sdk.modelbase.BaseReq;
-import com.tencent.mm.sdk.modelbase.BaseResp;
-import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
-import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
-import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.sdk.openapi.IWXAPI;
-import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 import com.umeng.analytics.MobclickAgent;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -114,10 +128,13 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
     private String mUrl;
     private ShareQQListener shareQQListener;
     private ShareQZoneListener shareQZoneListener;
-
     /*****************
      * end
      ******************/
+    private static final int PERMISSIONS_REQUEST_SHARE_QQ = 601;
+    private static final int PERMISSIONS_REQUEST_SHARE_WX = 602;
+    private static final int PERMISSIONS_REQUEST_SHARE_CIRCLE_FRIEND = 603;
+    private static final int PERMISSIONS_REQUEST_SEND_SMS = 604;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,19 +193,33 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_share_scores:
+                if (TextUtils.isEmpty(mPresenter.getQrCodeUrl())) {
+                    return;
+                }
                 if (shareDialog == null) {
                     shareDialog = new ShareDialog(getContext(), new ShareDialog.OnShareListener() {
                         @Override
                         public void onShare(int shareType) {
                             switch (shareType) {
                                 case 0:
-                                    shareToWeixin();
-                                    break;
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_SHARE_WX);
+                                    } else {
+                                        shareToWeixin();
+                                    }
                                 case 1:
-                                    shareToFriendCircle();
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_SHARE_CIRCLE_FRIEND);
+                                    } else {
+                                        shareToFriendCircle();
+                                    }
                                     break;
                                 case 2:
-                                    shareToQQ();
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_SHARE_QQ);
+                                    } else {
+                                        shareToQQ();
+                                    }
                                     break;
                                 case 3:
                                     shareToWeibo();
@@ -196,6 +227,12 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
                                 case 4:
                                     shareToQZone();
                                     break;
+                                case 5:
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, PERMISSIONS_REQUEST_SEND_SMS);
+                                    } else {
+                                        shareToSms();
+                                    }
                                 default:
                                     break;
                             }
@@ -249,6 +286,8 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
         } else if (requestCode == 2) {
             mPresenter.fetchScores();
         }
+        Tencent.onActivityResultData(requestCode, resultCode, data, shareQQListener);
+        Tencent.onActivityResultData(requestCode, resultCode, data, shareQZoneListener);
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -295,29 +334,68 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
     }
 
     private void shareToQQ() {
-        shareQQListener = new ShareQQListener();
-        final Bundle params = new Bundle();
-        params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
-        params.putString(QQShare.SHARE_TO_QQ_TITLE, mTitle);
-        params.putString(QQShare.SHARE_TO_QQ_APP_NAME, "哈哈学车");
-        params.putString(QQShare.SHARE_TO_QQ_SUMMARY, mDescription);
-        params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, mImageUrl);
-        params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, mUrl);
-        mTencent.shareToQQ(this, params, shareQQListener);
+        ImageRequest imageRequest = ImageRequest.fromUri(mPresenter.getQrCodeUrl());
+        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+        DataSource<CloseableReference<CloseableImage>> dataSource =
+                imagePipeline.fetchImageFromBitmapCache(imageRequest, null);
+        dataSource.subscribe(new BaseBitmapDataSubscriber() {
+            @Override
+            public void onNewResultImpl(@Nullable Bitmap bitmap) {
+                if (bitmap != null) {
+                    // 首先保存图片
+                    File appDir = new File(Environment.getExternalStorageDirectory(), "hahaxueche");
+                    if (!appDir.exists()) {
+                        appDir.mkdir();
+                    }
+                    String fileName = "qrcode.jpg";
+                    File file = new File(appDir, fileName);
+                    try {
+                        FileOutputStream fos = new FileOutputStream(file);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                        fos.flush();
+                        fos.close();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    // 其次把文件插入到系统图库
+                    try {
+                        MediaStore.Images.Media.insertImage(getContentResolver(), file.getAbsolutePath(), fileName, null);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    // 最后通知图库更新
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg"))));
+                    shareQQListener = new ShareQQListener();
+                    final Bundle params = new Bundle();
+                    params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_IMAGE);
+                    params.putString(QQShare.SHARE_TO_QQ_APP_NAME, "哈哈学车");
+                    params.putString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL, Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg");
+                    mTencent.shareToQQ(ExamLibraryActivity.this, params, shareQQListener);
+                }
+            }
+
+            @Override
+            public void onFailureImpl(DataSource dataSource) {
+
+            }
+        }, CallerThreadExecutor.getInstance());
     }
 
     private void shareToQZone() {
         shareQZoneListener = new ShareQZoneListener();
         final Bundle params = new Bundle();
         params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_APP);
-        params.putString(QzoneShare.SHARE_TO_QQ_TITLE, mTitle);
+        params.putString(QzoneShare.SHARE_TO_QQ_TITLE, "哈哈学车");
         params.putString(QzoneShare.SHARE_TO_QQ_APP_NAME, "哈哈学车");
-        params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, mDescription);
-        params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, mUrl);
+        params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, "");
+        params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, mPresenter.getQrCodeUrl());
         ArrayList<String> imgUrlList = new ArrayList<>();
-        imgUrlList.add(mImageUrl);
+        imgUrlList.add(mPresenter.getQrCodeUrl());
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, imgUrlList);
-        mTencent.shareToQzone(this, params, shareQZoneListener);
+        mTencent.shareToQzone(ExamLibraryActivity.this, params, shareQZoneListener);
     }
 
     private void shareToWeibo() {
@@ -352,86 +430,129 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
     }
 
     private void shareToWeixin() {
-        WXWebpageObject webpage = new WXWebpageObject();
-        webpage.webpageUrl = mUrl;
-        WXMediaMessage msg = new WXMediaMessage(webpage);
-        msg.title = mTitle;
-        msg.description = mDescription;
-        Bitmap thumb = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-        msg.thumbData = Utils.bmpToByteArray(thumb, true);
-        SendMessageToWX.Req req = new SendMessageToWX.Req();
-        req.transaction = buildTransaction("webpage");
-        req.message = msg;
-        //SendMessageToWX.Req.WXSceneTimeline
-        req.scene = SendMessageToWX.Req.WXSceneSession;
-        wxApi.handleIntent(getIntent(), new IWXAPIEventHandler() {
+        ImageRequest imageRequest = ImageRequest.fromUri(mPresenter.getQrCodeUrl());
+        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+        DataSource<CloseableReference<CloseableImage>> dataSource =
+                imagePipeline.fetchImageFromBitmapCache(imageRequest, null);
+        dataSource.subscribe(new BaseBitmapDataSubscriber() {
             @Override
-            public void onReq(BaseReq baseReq) {
+            public void onNewResultImpl(@Nullable Bitmap bitmap) {
+                if (bitmap != null) {
+                    // 首先保存图片
+                    File appDir = new File(Environment.getExternalStorageDirectory(), "hahaxueche");
+                    if (!appDir.exists()) {
+                        appDir.mkdir();
+                    }
+                    String fileName = "qrcode.jpg";
+                    File file = new File(appDir, fileName);
+                    try {
+                        FileOutputStream fos = new FileOutputStream(file);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                        fos.flush();
+                        fos.close();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
+                    // 其次把文件插入到系统图库
+                    try {
+                        MediaStore.Images.Media.insertImage(getContentResolver(),
+                                file.getAbsolutePath(), fileName, null);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    // 最后通知图库更新
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg"))));
+
+                    //微信官方api的分享图片方法,图片模式与转发的不一样,二维码无法识别,尼玛!!
+                    Uri uriToImage = Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg"));
+                    Intent shareIntent = new Intent();
+                    //发送图片到朋友圈
+                    //ComponentName comp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI");
+                    //发送图片给好友。
+                    ComponentName comp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareImgUI");
+                    shareIntent.setComponent(comp);
+                    shareIntent.setAction(Intent.ACTION_SEND);
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, uriToImage);
+                    shareIntent.setType("image/jpeg");
+                    startActivity(Intent.createChooser(shareIntent, "分享图片"));
+                }
             }
 
             @Override
-            public void onResp(BaseResp baseResp) {
-                if (shareDialog != null) {
-                    shareDialog.dismiss();
-                }
-                switch (baseResp.errCode) {
-                    case BaseResp.ErrCode.ERR_OK:
-                        showMessage("分享成功");
-                        break;
-                    case BaseResp.ErrCode.ERR_USER_CANCEL:
-                        showMessage("取消分享");
-                        break;
-                    case BaseResp.ErrCode.ERR_AUTH_DENIED:
-                        showMessage("分享失败");
-                        break;
-                    default:
-                        break;
-                }
+            public void onFailureImpl(DataSource dataSource) {
+
             }
-        });
-        wxApi.sendReq(req);
+        }, CallerThreadExecutor.getInstance());
     }
 
     private void shareToFriendCircle() {
-        WXWebpageObject webpage = new WXWebpageObject();
-        webpage.webpageUrl = mUrl;
-        WXMediaMessage msg = new WXMediaMessage(webpage);
-        msg.title = mDescription;
-        msg.description = mDescription;
-        Bitmap thumb = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-        msg.thumbData = Utils.bmpToByteArray(thumb, true);
-        SendMessageToWX.Req req = new SendMessageToWX.Req();
-        req.transaction = buildTransaction("webpage");
-        req.message = msg;
-        req.scene = SendMessageToWX.Req.WXSceneTimeline;
-        wxApi.handleIntent(getIntent(), new IWXAPIEventHandler() {
+        ImageRequest imageRequest = ImageRequest.fromUri(mPresenter.getQrCodeUrl());
+        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+        DataSource<CloseableReference<CloseableImage>> dataSource =
+                imagePipeline.fetchImageFromBitmapCache(imageRequest, null);
+        dataSource.subscribe(new BaseBitmapDataSubscriber() {
             @Override
-            public void onReq(BaseReq baseReq) {
+            public void onNewResultImpl(@Nullable Bitmap bitmap) {
+                if (bitmap != null) {
+                    // 首先保存图片
+                    File appDir = new File(Environment.getExternalStorageDirectory(), "hahaxueche");
+                    if (!appDir.exists()) {
+                        appDir.mkdir();
+                    }
+                    String fileName = "qrcode.jpg";
+                    File file = new File(appDir, fileName);
+                    try {
+                        FileOutputStream fos = new FileOutputStream(file);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                        fos.flush();
+                        fos.close();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
+                    // 其次把文件插入到系统图库
+                    try {
+                        MediaStore.Images.Media.insertImage(getContentResolver(),
+                                file.getAbsolutePath(), fileName, null);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    // 最后通知图库更新
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg"))));
+
+                    Uri uriToImage = Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg"));
+                    Intent shareIntent = new Intent();
+                    //发送图片到朋友圈
+                    ComponentName comp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI");
+                    //发送图片给好友。
+                    //ComponentName comp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareImgUI");
+                    shareIntent.setComponent(comp);
+                    shareIntent.setAction(Intent.ACTION_SEND);
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, uriToImage);
+                    shareIntent.setType("image/jpeg");
+                    startActivity(Intent.createChooser(shareIntent, "分享图片"));
+                }
             }
 
             @Override
-            public void onResp(BaseResp baseResp) {
-                if (shareDialog != null) {
-                    shareDialog.dismiss();
-                }
-                switch (baseResp.errCode) {
-                    case BaseResp.ErrCode.ERR_OK:
-                        showMessage("分享成功");
-                        break;
-                    case BaseResp.ErrCode.ERR_USER_CANCEL:
-                        showMessage("取消分享");
-                        break;
-                    case BaseResp.ErrCode.ERR_AUTH_DENIED:
-                        showMessage("分享失败");
-                        break;
-                    default:
-                        break;
-                }
+            public void onFailureImpl(DataSource dataSource) {
+
             }
-        });
-        wxApi.sendReq(req);
+        }, CallerThreadExecutor.getInstance());
+    }
+
+    private void shareToSms() {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        //intent.setClassName("com.android.mms", "com.android.mms.ui.ComposeMessageActivity");
+        intent.putExtra("sms_body", "哈哈学车");
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(mPresenter.getQrCodeUrl()));
+        intent.setType("image/png");
+        startActivity(intent);
     }
 
     private String buildTransaction(final String type) {
@@ -525,5 +646,39 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
                     break;
             }
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_SHARE_QQ) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                shareToQQ();
+            } else {
+                showMessage("请允许写入sdcard权限，不然从本地将图片分享到QQ");
+            }
+        } else if (requestCode == PERMISSIONS_REQUEST_SHARE_WX) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                shareToWeixin();
+            } else {
+                showMessage("请允许写入sdcard权限，不然从本地将图片分享到微信");
+            }
+        } else if (requestCode == PERMISSIONS_REQUEST_SHARE_CIRCLE_FRIEND) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                shareToFriendCircle();
+            } else {
+                showMessage("请允许写入sdcard权限，不然从本地将图片分享到朋友圈");
+            }
+        } else if (requestCode == PERMISSIONS_REQUEST_SEND_SMS) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                shareToSms();
+            } else {
+                showMessage("请允许发送短信权限，不然无法分享到短信");
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }
