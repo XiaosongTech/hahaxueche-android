@@ -21,10 +21,14 @@ import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -40,11 +44,13 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
     private Subscription subscription;
     private HHBaseApplication application;
     private static final String WEB_URL_GROUP_BUY = BuildConfig.MOBILE_URL + "/share/baoguoka";
+    private String mQrCodeUrl;
 
     public void attachView(ExamLibraryView view) {
         this.mExamLibraryView = view;
         application = HHBaseApplication.get(mExamLibraryView.getContext());
         fetchScores();
+        getUrl();
         String text = Utils.getCount(application.getConstants().statistics.student_count) + "人已获得保过卡";
         SpannableString ss = new SpannableString(text);
         ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mExamLibraryView.getContext(), R.color.app_theme_color)), 0, text.indexOf("人"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -147,7 +153,52 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
         return WEB_URL_GROUP_BUY + "?promo_code=406808&result=" + encodedResult;
     }
 
+    private Observable<String> redirectUrl(final User user) {
+        return Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(Subscriber<? super String> subscriber) {
+                OkHttpClient client = new OkHttpClient();
+                String url = BuildConfig.SERVER_URL + "/share/students/" + user.student.id + "/exam_result";
+                HHLog.v("url -> " + url);
+                Request request = new Request.Builder().url(url).build();
+                try {
+                    Response response = client.newCall(request).execute();
+                    subscriber.onNext(response.request().url().toString());
+                    subscriber.onCompleted();
+                } catch (IOException e) {
+                    subscriber.onError(e);
+                }
+            }
+        });
+    }
+
+    private void getUrl() {
+        final User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin()) return;
+        redirectUrl(user)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        mQrCodeUrl = s;
+                        HHLog.v("QrCodeUrl -> " + mQrCodeUrl);
+                    }
+                });
+
+    }
+
+
     public String getQrCodeUrl() {
-        return "https://oi44wxzbw.qnssl.com/refer_template5.png?watermark/3/image/aHR0cHM6Ly9zdGFnaW5nLWFwaS5oYWhheHVlY2hlLm5ldC9zaGFyZS9zdHVkZW50cy9mMDNjNmNjNy1jZjg4LTRlMjItYTJlMi0yZjkyMWNiNmE4Y2YvcXJjb2RlP3Y9Mw==/dissolve/100/gravity/SouthWest/dx/120/dy/80";
+        return mQrCodeUrl;
     }
 }

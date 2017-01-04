@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,6 +32,7 @@ import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.user.User;
@@ -47,15 +47,12 @@ import com.hahaxueche.util.ExamLib;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.WebViewUrl;
 import com.sina.weibo.sdk.api.ImageObject;
-import com.sina.weibo.sdk.api.TextObject;
-import com.sina.weibo.sdk.api.WebpageObject;
-import com.sina.weibo.sdk.api.WeiboMultiMessage;
+import com.sina.weibo.sdk.api.WeiboMessage;
 import com.sina.weibo.sdk.api.share.BaseResponse;
 import com.sina.weibo.sdk.api.share.IWeiboHandler;
 import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
-import com.sina.weibo.sdk.api.share.SendMultiMessageToWeiboRequest;
+import com.sina.weibo.sdk.api.share.SendMessageToWeiboRequest;
 import com.sina.weibo.sdk.constant.WBConstants;
-import com.sina.weibo.sdk.utils.Utility;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzoneShare;
 import com.tencent.mm.sdk.openapi.IWXAPI;
@@ -135,6 +132,7 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
     private static final int PERMISSIONS_REQUEST_SHARE_WX = 602;
     private static final int PERMISSIONS_REQUEST_SHARE_CIRCLE_FRIEND = 603;
     private static final int PERMISSIONS_REQUEST_SEND_SMS = 604;
+    private static final int THUMB_SIZE = 150;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,6 +205,7 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
                                     } else {
                                         shareToWeixin();
                                     }
+                                    break;
                                 case 1:
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                         requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_SHARE_CIRCLE_FRIEND);
@@ -228,8 +227,10 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
                                     shareToQZone();
                                     break;
                                 case 5:
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-                                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, PERMISSIONS_REQUEST_SEND_SMS);
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                                            (checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED ||
+                                                    checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+                                        requestPermissions(new String[]{Manifest.permission.SEND_SMS, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_SEND_SMS);
                                     } else {
                                         shareToSms();
                                     }
@@ -334,10 +335,12 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
     }
 
     private void shareToQQ() {
-        ImageRequest imageRequest = ImageRequest.fromUri(mPresenter.getQrCodeUrl());
+        ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(Uri.parse(mPresenter.getQrCodeUrl()))
+                .setProgressiveRenderingEnabled(true)
+                .build();
         ImagePipeline imagePipeline = Fresco.getImagePipeline();
         DataSource<CloseableReference<CloseableImage>> dataSource =
-                imagePipeline.fetchImageFromBitmapCache(imageRequest, null);
+                imagePipeline.fetchDecodedImage(imageRequest, getContext());
         dataSource.subscribe(new BaseBitmapDataSubscriber() {
             @Override
             public void onNewResultImpl(@Nullable Bitmap bitmap) {
@@ -374,12 +377,13 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
                     params.putString(QQShare.SHARE_TO_QQ_APP_NAME, "哈哈学车");
                     params.putString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL, Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg");
                     mTencent.shareToQQ(ExamLibraryActivity.this, params, shareQQListener);
+                } else {
+                    HHLog.v("444");
                 }
             }
 
             @Override
             public void onFailureImpl(DataSource dataSource) {
-
             }
         }, CallerThreadExecutor.getInstance());
     }
@@ -399,41 +403,46 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
     }
 
     private void shareToWeibo() {
-        // 1. 初始化微博的分享消息
-        WeiboMultiMessage weiboMessage = new WeiboMultiMessage();
-        ImageObject imageObject = new ImageObject();
-        Bitmap thumbBmp = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.share_qrcode), 400, 150, true);
-        // 设置 Bitmap 类型的图片到视频对象里
-        // 设置缩略图。 注意：最终压缩过的缩略图大小不得超过 32kb。
-        imageObject.setImageObject(thumbBmp);
-        TextObject textObject = new TextObject();
-        textObject.text = mTitle;
-        WebpageObject mediaObject = new WebpageObject();
-        mediaObject.identify = Utility.generateGUID();
-        mediaObject.title = "链接";
-        mediaObject.description = mDescription;
-        mediaObject.setThumbImage(thumbBmp);
-        mediaObject.actionUrl = mUrl;
-
-        weiboMessage.imageObject = imageObject;
-        weiboMessage.textObject = textObject;
-        weiboMessage.mediaObject = mediaObject;
-
-        // 2. 初始化从第三方到微博的消息请求
-        SendMultiMessageToWeiboRequest request = new SendMultiMessageToWeiboRequest();
-        // 用transaction唯一标识一个请求*/
-        request.transaction = String.valueOf(System.currentTimeMillis());
-        request.multiMessage = weiboMessage;
-
-        // 3. 发送请求消息到微博，唤起微博分享界面
-        mWeiboShareAPI.sendRequest(this, request);
-    }
-
-    private void shareToWeixin() {
         ImageRequest imageRequest = ImageRequest.fromUri(mPresenter.getQrCodeUrl());
         ImagePipeline imagePipeline = Fresco.getImagePipeline();
         DataSource<CloseableReference<CloseableImage>> dataSource =
                 imagePipeline.fetchImageFromBitmapCache(imageRequest, null);
+        dataSource.subscribe(new BaseBitmapDataSubscriber() {
+            @Override
+            public void onNewResultImpl(@Nullable Bitmap bitmap) {
+                if (bitmap != null) {
+                    // 1. 初始化微博的分享消息
+                    WeiboMessage weiboMessage = new WeiboMessage();
+
+                    ImageObject imageObject = new ImageObject();
+                    //设置缩略图。 注意：最终压缩过的缩略图大小不得超过 32kb。
+                    Bitmap thumbBmp = Bitmap.createScaledBitmap(bitmap, THUMB_SIZE, THUMB_SIZE, true);
+                    imageObject.setImageObject(thumbBmp);
+                    weiboMessage.mediaObject = imageObject;
+                    // 2. 初始化从第三方到微博的消息请求
+                    SendMessageToWeiboRequest request = new SendMessageToWeiboRequest();
+                    // 用transaction唯一标识一个请求
+                    request.transaction = String.valueOf(System.currentTimeMillis());
+                    request.message = weiboMessage;
+                    // 3. 发送请求消息到微博，唤起微博分享界面
+                    mWeiboShareAPI.sendRequest(ExamLibraryActivity.this, request);
+                }
+            }
+
+            @Override
+            public void onFailureImpl(DataSource dataSource) {
+
+            }
+        }, CallerThreadExecutor.getInstance());
+    }
+
+    private void shareToWeixin() {
+        ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(Uri.parse(mPresenter.getQrCodeUrl()))
+                .setProgressiveRenderingEnabled(true)
+                .build();
+        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+        DataSource<CloseableReference<CloseableImage>> dataSource =
+                imagePipeline.fetchDecodedImage(imageRequest, null);
         dataSource.subscribe(new BaseBitmapDataSubscriber() {
             @Override
             public void onNewResultImpl(@Nullable Bitmap bitmap) {
@@ -489,10 +498,12 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
     }
 
     private void shareToFriendCircle() {
-        ImageRequest imageRequest = ImageRequest.fromUri(mPresenter.getQrCodeUrl());
+        ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(Uri.parse(mPresenter.getQrCodeUrl()))
+                .setProgressiveRenderingEnabled(true)
+                .build();
         ImagePipeline imagePipeline = Fresco.getImagePipeline();
         DataSource<CloseableReference<CloseableImage>> dataSource =
-                imagePipeline.fetchImageFromBitmapCache(imageRequest, null);
+                imagePipeline.fetchDecodedImage(imageRequest, null);
         dataSource.subscribe(new BaseBitmapDataSubscriber() {
             @Override
             public void onNewResultImpl(@Nullable Bitmap bitmap) {
@@ -547,12 +558,56 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
     }
 
     private void shareToSms() {
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        //intent.setClassName("com.android.mms", "com.android.mms.ui.ComposeMessageActivity");
-        intent.putExtra("sms_body", "哈哈学车");
-        intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(mPresenter.getQrCodeUrl()));
-        intent.setType("image/png");
-        startActivity(intent);
+        ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(Uri.parse(mPresenter.getQrCodeUrl()))
+                .setProgressiveRenderingEnabled(true)
+                .build();
+        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+        DataSource<CloseableReference<CloseableImage>> dataSource =
+                imagePipeline.fetchDecodedImage(imageRequest, null);
+        dataSource.subscribe(new BaseBitmapDataSubscriber() {
+            @Override
+            public void onNewResultImpl(@Nullable Bitmap bitmap) {
+                if (bitmap != null) {
+                    // 首先保存图片
+                    File appDir = new File(Environment.getExternalStorageDirectory(), "hahaxueche");
+                    if (!appDir.exists()) {
+                        appDir.mkdir();
+                    }
+                    String fileName = "qrcode.jpg";
+                    File file = new File(appDir, fileName);
+                    try {
+                        FileOutputStream fos = new FileOutputStream(file);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                        fos.flush();
+                        fos.close();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    // 其次把文件插入到系统图库
+                    try {
+                        MediaStore.Images.Media.insertImage(getContentResolver(),
+                                file.getAbsolutePath(), fileName, null);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    // 最后通知图库更新
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg"))));
+                    Uri uriToImage = Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg"));
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.putExtra(Intent.EXTRA_STREAM, uriToImage);
+                    intent.setType("image/jpg");
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onFailureImpl(DataSource dataSource) {
+
+            }
+        }, CallerThreadExecutor.getInstance());
     }
 
     private String buildTransaction(final String type) {
@@ -672,7 +727,8 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
                 showMessage("请允许写入sdcard权限，不然从本地将图片分享到朋友圈");
             }
         } else if (requestCode == PERMISSIONS_REQUEST_SEND_SMS) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 shareToSms();
             } else {
