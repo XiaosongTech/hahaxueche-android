@@ -62,6 +62,7 @@ public class ArticleListFragment extends HHBaseFragment implements ArticleListVi
     void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_red_bag:
+                mPresenter.clickRedBag();
                 startActivity(new Intent(getContext(), ReferFriendsActivity.class));
                 break;
             default:

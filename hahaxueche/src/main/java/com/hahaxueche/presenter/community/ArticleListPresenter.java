@@ -11,8 +11,10 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.community.ArticleListView;
 import com.hahaxueche.util.HHLog;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -146,5 +148,16 @@ public class ArticleListPresenter implements Presenter<ArticleListView> {
             }
         }
         return ret;
+    }
+
+    public void clickRedBag() {
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mArticleListView.getContext(), "club_page_flying_envelop_tapped", map);
+        } else {
+            MobclickAgent.onEvent(mArticleListView.getContext(), "club_page_flying_envelop_tapped");
+        }
     }
 }

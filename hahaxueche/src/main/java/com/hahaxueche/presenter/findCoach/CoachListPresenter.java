@@ -221,7 +221,6 @@ public class CoachListPresenter implements Presenter<CoachListView> {
     }
 
     public void clickRedBag() {
-        //筛选点击
         HashMap<String, String> map = new HashMap();
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
