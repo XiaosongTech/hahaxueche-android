@@ -5,7 +5,7 @@ import android.os.Bundle;
 /**
  * Created by wangshirui on 16/9/18.
  */
-public interface WelcomeView extends HHBaseView {
+public interface SplashView extends HHBaseView {
     /**
      * 跳转到准备登录页面
      */

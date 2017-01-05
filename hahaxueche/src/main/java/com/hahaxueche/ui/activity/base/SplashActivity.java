@@ -3,10 +3,10 @@ package com.hahaxueche.ui.activity.base;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.hahaxueche.presenter.base.WelcomePresenter;
+import com.hahaxueche.presenter.base.SplashPresenter;
 import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
-import com.hahaxueche.ui.view.base.WelcomeView;
+import com.hahaxueche.ui.view.base.SplashView;
 import com.hahaxueche.ui.view.login.CompleteUserInfoView;
 import com.hahaxueche.util.HHLog;
 import com.microquation.linkedme.android.LinkedME;
@@ -24,8 +24,8 @@ import butterknife.ButterKnife;
 /**
  * Created by wangshirui on 16/9/8.
  */
-public class SplashActivity extends HHBaseActivity implements WelcomeView {
-    private WelcomePresenter mPresenter;
+public class SplashActivity extends HHBaseActivity implements SplashView {
+    private SplashPresenter mPresenter;
     private LinkedME linkedME;
 
     public void onStart() {
@@ -49,7 +49,7 @@ public class SplashActivity extends HHBaseActivity implements WelcomeView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter = new WelcomePresenter();
+        mPresenter = new SplashPresenter();
         mPresenter.attachView(this);
         ButterKnife.bind(this);
         MobclickAgent.setDebugMode(false);

@@ -8,10 +8,8 @@ import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
-import com.hahaxueche.ui.view.base.WelcomeView;
+import com.hahaxueche.ui.view.base.SplashView;
 import com.hahaxueche.util.HHLog;
-
-import java.util.concurrent.TimeUnit;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -20,19 +18,19 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by wangshirui on 16/9/18.
  */
-public class WelcomePresenter implements Presenter<WelcomeView> {
-    private WelcomeView mWelcomeView;
+public class SplashPresenter implements Presenter<SplashView> {
+    private SplashView mSplashView;
     private Subscription subscription;
     private HHBaseApplication application;
     private Bundle mShareObject = null;
 
-    public void attachView(WelcomeView view) {
-        this.mWelcomeView = view;
-        application = HHBaseApplication.get(mWelcomeView.getContext());
+    public void attachView(SplashView view) {
+        this.mSplashView = view;
+        application = HHBaseApplication.get(mSplashView.getContext());
     }
 
     public void detachView() {
-        this.mWelcomeView = null;
+        this.mSplashView = null;
         if (subscription != null) subscription.unsubscribe();
         this.application = null;
     }
@@ -55,7 +53,7 @@ public class WelcomePresenter implements Presenter<WelcomeView> {
                     @Override
                     public void onError(Throwable e) {
                         HHLog.e(e.getMessage());
-                        mWelcomeView.showError("服务器连接异常,请稍后再试~");
+                        mSplashView.showError("服务器连接异常,请稍后再试~");
                     }
 
                     @Override
@@ -81,11 +79,11 @@ public class WelcomePresenter implements Presenter<WelcomeView> {
                         @Override
                         public void onError(Throwable e) {
                             if (mShareObject != null) {
-                                HHBaseApplication application = HHBaseApplication.get(mWelcomeView.getContext());
+                                HHBaseApplication application = HHBaseApplication.get(mSplashView.getContext());
                                 application.getSharedPrefUtil().createFakeUser();
-                                mWelcomeView.navigateToHomepage(mShareObject);
+                                mSplashView.navigateToHomepage(mShareObject);
                             } else {
-                                mWelcomeView.navigationToStartLogin();
+                                mSplashView.navigationToStartLogin();
                             }
                             HHLog.e(e.getMessage());
                         }
@@ -94,19 +92,19 @@ public class WelcomePresenter implements Presenter<WelcomeView> {
                         public void onNext(Student student) {
                             application.getSharedPrefUtil().updateStudent(student);
                             if (!student.isCompleted()) {
-                                mWelcomeView.navigateToCompleteInfo();
+                                mSplashView.navigateToCompleteInfo();
                             } else {
-                                mWelcomeView.navigateToHomepage(mShareObject);
+                                mSplashView.navigateToHomepage(mShareObject);
                             }
                         }
                     });
         } else {
             if (mShareObject != null) {
-                HHBaseApplication application = HHBaseApplication.get(mWelcomeView.getContext());
+                HHBaseApplication application = HHBaseApplication.get(mSplashView.getContext());
                 application.getSharedPrefUtil().createFakeUser();
-                mWelcomeView.navigateToHomepage(mShareObject);
+                mSplashView.navigateToHomepage(mShareObject);
             } else {
-                mWelcomeView.navigationToStartLogin();
+                mSplashView.navigationToStartLogin();
             }
         }
     }
