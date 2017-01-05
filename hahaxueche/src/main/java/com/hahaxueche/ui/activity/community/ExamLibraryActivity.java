@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.text.SpannableString;
@@ -369,16 +370,23 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
+                    File imageFile = new File(Environment.getExternalStorageDirectory() +
+                            "/hahaxueche/qrcode.jpg");
+                    Uri uriToImage;
+                    if (Build.VERSION.SDK_INT >= 24) {
+                        uriToImage = FileProvider.getUriForFile(getContext(),
+                                "com.hahaxueche.provider.fileProvider", imageFile);
+                    } else {
+                        uriToImage = Uri.fromFile(imageFile);
+                    }
                     // 最后通知图库更新
-                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg"))));
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uriToImage));
                     shareQQListener = new ShareQQListener();
                     final Bundle params = new Bundle();
                     params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_IMAGE);
                     params.putString(QQShare.SHARE_TO_QQ_APP_NAME, "哈哈学车");
                     params.putString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL, Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg");
                     mTencent.shareToQQ(ExamLibraryActivity.this, params, shareQQListener);
-                } else {
-                    HHLog.v("444");
                 }
             }
 
@@ -472,11 +480,17 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
+                    File imageFile = new File(Environment.getExternalStorageDirectory() +
+                            "/hahaxueche/qrcode.jpg");
+                    Uri uriToImage;
+                    if (Build.VERSION.SDK_INT >= 24) {
+                        uriToImage = FileProvider.getUriForFile(getContext(),
+                                "com.hahaxueche.provider.fileProvider", imageFile);
+                    } else {
+                        uriToImage = Uri.fromFile(imageFile);
+                    }
                     // 最后通知图库更新
-                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg"))));
-
-                    //微信官方api的分享图片方法,图片模式与转发的不一样,二维码无法识别,尼玛!!
-                    Uri uriToImage = Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg"));
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uriToImage));
                     Intent shareIntent = new Intent();
                     //发送图片到朋友圈
                     //ComponentName comp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI");
@@ -533,10 +547,17 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
+                    File imageFile = new File(Environment.getExternalStorageDirectory() +
+                            "/hahaxueche/qrcode.jpg");
+                    Uri uriToImage;
+                    if (Build.VERSION.SDK_INT >= 24) {
+                        uriToImage = FileProvider.getUriForFile(getContext(),
+                                "com.hahaxueche.provider.fileProvider", imageFile);
+                    } else {
+                        uriToImage = Uri.fromFile(imageFile);
+                    }
                     // 最后通知图库更新
-                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg"))));
-
-                    Uri uriToImage = Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg"));
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uriToImage));
                     Intent shareIntent = new Intent();
                     //发送图片到朋友圈
                     ComponentName comp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI");
@@ -593,9 +614,17 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
+                    File imageFile = new File(Environment.getExternalStorageDirectory() +
+                            "/hahaxueche/qrcode.jpg");
+                    Uri uriToImage;
+                    if (Build.VERSION.SDK_INT >= 24) {
+                        uriToImage = FileProvider.getUriForFile(getContext(),
+                                "com.hahaxueche.provider.fileProvider", imageFile);
+                    } else {
+                        uriToImage = Uri.fromFile(imageFile);
+                    }
                     // 最后通知图库更新
-                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg"))));
-                    Uri uriToImage = Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg"));
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uriToImage));
                     Intent intent = new Intent(Intent.ACTION_SEND);
                     intent.putExtra(Intent.EXTRA_STREAM, uriToImage);
                     intent.setType("image/jpg");

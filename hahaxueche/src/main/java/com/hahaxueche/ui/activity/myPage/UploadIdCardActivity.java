@@ -2,6 +2,7 @@ package com.hahaxueche.ui.activity.myPage;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -13,11 +14,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -42,10 +45,13 @@ import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.myPage.UploadIdCardDialog;
 import com.hahaxueche.ui.view.myPage.UploadIdCardView;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.Utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -222,6 +228,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                 fileFaceA.createNewFile();
             } catch (Exception e) {
                 HHLog.e(e.getMessage());
+                e.printStackTrace();
             }
         } else {
             fileFaceB = new File(IMGPATH, IMAGE_FILE_B_NAME);
@@ -232,6 +239,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                 fileFaceB.createNewFile();
             } catch (Exception e) {
                 HHLog.e(e.getMessage());
+                e.printStackTrace();
             }
         }
     }
@@ -239,8 +247,15 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     //启动手机相机拍摄照片
     public void choseImageFromCameraCapture() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT,
-                Uri.fromFile(new File(IMGPATH, choseImageFace == 0 ? IMAGE_FILE_A_NAME : IMAGE_FILE_B_NAME)));
+        Uri imageUri;
+        File imageFile = new File(IMGPATH, choseImageFace == 0 ? IMAGE_FILE_A_NAME : IMAGE_FILE_B_NAME);
+        if (Build.VERSION.SDK_INT >= 24) {
+            imageUri = FileProvider.getUriForFile(getContext(),
+                    "com.hahaxueche.provider.fileProvider", imageFile);
+        } else {
+            imageUri = Uri.fromFile(imageFile);
+        }
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(intent, TAKE_A_PICTURE);
     }
 
@@ -391,13 +406,25 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
         if (requestCode == TAKE_A_PICTURE) {
             if (resultCode == RESULT_OK) {
                 if (choseImageFace == 0) {
-                    uriFaceA = Uri.fromFile(new File(IMGPATH, IMAGE_FILE_A_NAME));
+                    File imageFile = new File(IMGPATH, IMAGE_FILE_A_NAME);
+                    if (Build.VERSION.SDK_INT >= 24) {
+                        uriFaceA = FileProvider.getUriForFile(getContext(),
+                                "com.hahaxueche.provider.fileProvider", imageFile);
+                    } else {
+                        uriFaceA = Uri.fromFile(imageFile);
+                    }
                     compressImage(uriFaceA);
-                    mPresenter.uploadIdCard(uriFaceA.getPath(), 0);
+                    mPresenter.uploadIdCard(imageFile.getPath(), 0);
                 } else {
-                    uriFaceB = Uri.fromFile(new File(IMGPATH, IMAGE_FILE_B_NAME));
+                    File imageFile = new File(IMGPATH, IMAGE_FILE_B_NAME);
+                    if (Build.VERSION.SDK_INT >= 24) {
+                        uriFaceB = FileProvider.getUriForFile(getContext(),
+                                "com.hahaxueche.provider.fileProvider", imageFile);
+                    } else {
+                        uriFaceB = Uri.fromFile(imageFile);
+                    }
                     compressImage(uriFaceB);
-                    mPresenter.uploadIdCard(uriFaceB.getPath(), 1);
+                    mPresenter.uploadIdCard(imageFile.getPath(), 1);
                 }
             } else {
                 showMessage("取消拍照");
@@ -414,14 +441,25 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                     showMessage("选择图片出错，请重试!");
                     return;
                 }
+                File imageFile = new File(filePath);
                 if (choseImageFace == 0) {
-                    uriFaceA = Uri.fromFile(new File(filePath));
+                    if (Build.VERSION.SDK_INT >= 24) {
+                        uriFaceA = FileProvider.getUriForFile(getContext(),
+                                "com.hahaxueche.provider.fileProvider", imageFile);
+                    } else {
+                        uriFaceA = Uri.fromFile(imageFile);
+                    }
                     compressImage(uriFaceA);
-                    mPresenter.uploadIdCard(uriFaceA.getPath(), 0);
+                    mPresenter.uploadIdCard(imageFile.getPath(), 0);
                 } else {
-                    uriFaceB = Uri.fromFile(new File(filePath));
+                    if (Build.VERSION.SDK_INT >= 24) {
+                        uriFaceB = FileProvider.getUriForFile(getContext(),
+                                "com.hahaxueche.provider.fileProvider", new File(filePath));
+                    } else {
+                        uriFaceB = Uri.fromFile(new File(filePath));
+                    }
                     compressImage(uriFaceB);
-                    mPresenter.uploadIdCard(uriFaceB.getPath(), 1);
+                    mPresenter.uploadIdCard(imageFile.getPath(), 1);
                 }
             } else if (resultCode == RESULT_CANCELED) {
                 showMessage("取消相册选择");
@@ -580,23 +618,28 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     }
 
     private void compressImage(Uri uri) {
+        HHLog.v("uri -> " + uri.toString());
         // First decode with inJustDecodeBounds=true to check dimensions
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(uri.getPath(), options);
+        //BitmapFactory.decodeFile(uri.getPath(), options);
         // Calculate inSampleSize
         options.inSampleSize = calculateInSampleSize(options, 1000, 1000);
         HHLog.v("options.inSampleSize" + options.inSampleSize);
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
-        Bitmap bmpPic = BitmapFactory.decodeFile(uri.getPath(), options);
+        Bitmap bmpPic = null;
         try {
-            FileOutputStream bmpFile = new FileOutputStream(uri.getPath());
+            ParcelFileDescriptor mInputPFD = getContentResolver().openFileDescriptor(uri, "r");
+            FileDescriptor fd = mInputPFD.getFileDescriptor();
+            bmpPic = BitmapFactory.decodeFileDescriptor(fd);
+            OutputStream bmpFile = getContentResolver().openOutputStream(uri);
             bmpPic.compress(Bitmap.CompressFormat.JPEG, 100, bmpFile);
             bmpFile.flush();
             bmpFile.close();
         } catch (Exception e) {
             HHLog.e("Error on saving file: " + e.getMessage());
+            e.printStackTrace();
         } finally {
             if (bmpPic != null && !bmpPic.isRecycled()) {
                 bmpPic.recycle();
