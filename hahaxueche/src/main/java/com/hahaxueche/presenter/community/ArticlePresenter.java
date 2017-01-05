@@ -100,7 +100,7 @@ public class ArticlePresenter implements Presenter<ArticleView> {
 
     public void setArticle(Article article) {
         this.mArticle = article;
-        String articleUrl = BuildConfig.MOBILE_URL + "/articles/" + mArticle.id;
+        String articleUrl = BuildConfig.MOBILE_URL + "/articles/" + mArticle.id + "?view=raw";
         HHLog.v(articleUrl);
         mArticleView.setWebViewUrl(articleUrl);
         shortenUrl(mArticle);
@@ -109,7 +109,7 @@ public class ArticlePresenter implements Presenter<ArticleView> {
     }
 
     public void shortenUrl(final Article article) {
-        String url = BuildConfig.MOBILE_URL + "/articles/" + article.id + "?view=raw";
+        String url = BuildConfig.MOBILE_URL + "/articles/" + article.id;
         String longUrl = null;
         HHApiService apiService = application.getApiService();
         try {

@@ -23,6 +23,7 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.payment.Voucher;
 import com.hahaxueche.model.user.student.Contact;
 import com.hahaxueche.presenter.base.MainPresenter;
+import com.hahaxueche.ui.activity.community.ArticleActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.PartnerDetailActivity;
 import com.hahaxueche.ui.activity.myPage.MyContractActivity;
@@ -156,6 +157,10 @@ public class MainActivity extends HHBaseActivity implements MainView, IWeiboHand
             } else if (shareObject.getString("type", "").equals("training_partner_detail")) {
                 Intent startIntent = new Intent(getContext(), PartnerDetailActivity.class);
                 startIntent.putExtra("partnerId", shareObject.getString("objectId", ""));
+                startActivity(startIntent);
+            }else if(shareObject.getString("type", "").equals("article")){
+                Intent startIntent = new Intent(getContext(), ArticleActivity.class);
+                startIntent.putExtra("articleId", shareObject.getString("objectId", ""));
                 startActivity(startIntent);
             }
         }

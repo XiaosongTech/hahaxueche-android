@@ -130,10 +130,12 @@ public class SplashActivity extends HHBaseActivity implements SplashView {
                         shareObject.putString("type", type);
                         if (type.equals("coach_detail")) {
                             shareObject.putString("objectId", hashMap.get("coach_id"));
-                            HHLog.v("shareObject -> " + shareObject);
                             mPresenter.setShareObject(shareObject);
                         } else if (type.equals("training_partner_detail")) {
                             shareObject.putString("objectId", hashMap.get("training_partner_id"));
+                            mPresenter.setShareObject(shareObject);
+                        } else if (type.equals("article")) {
+                            shareObject.putString("objectId", hashMap.get("id"));
                             mPresenter.setShareObject(shareObject);
                         }
                     }
