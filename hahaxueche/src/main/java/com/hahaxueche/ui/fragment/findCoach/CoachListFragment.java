@@ -285,7 +285,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     public void onScrollStateChanged(AbsListView view, int scrollState) {
         switch (scrollState) {
             case XListView.SCROLL_STATE_FLING:
-                dismissRedBag();
+                //dismissRedBag();
                 break;
             case XListView.SCROLL_STATE_IDLE:
                 showRedBag();

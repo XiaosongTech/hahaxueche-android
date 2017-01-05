@@ -274,7 +274,7 @@ public class FragmentTabHost extends TabHost implements
         mAttached = true;
         ft = doTabChanged(currentTab, ft);
         if (ft != null) {
-            ft.commit();
+            ft.commitAllowingStateLoss();
             mFragmentManager.executePendingTransactions();
         }
     }

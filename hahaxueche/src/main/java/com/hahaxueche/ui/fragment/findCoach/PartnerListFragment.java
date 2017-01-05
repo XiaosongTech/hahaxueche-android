@@ -204,7 +204,7 @@ public class PartnerListFragment extends HHBaseFragment implements PartnerListVi
     public void onScrollStateChanged(AbsListView view, int scrollState) {
         switch (scrollState) {
             case XListView.SCROLL_STATE_FLING:
-                dismissRedBag();
+                //dismissRedBag();
                 break;
             case XListView.SCROLL_STATE_IDLE:
                 showRedBag();
