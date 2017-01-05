@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -472,8 +473,6 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
         if (requestCode == PhotoUtil.SELECT_A_PICTURE) {
             if (resultCode == RESULT_OK && null != data) {
                 //4.4以下的;
-                Bitmap bitmap = mPhotoUtil.decodeUriAsBitmap(Uri.fromFile(new File(PhotoUtil.IMGPATH,
-                        PhotoUtil.TMP_IMAGE_FILE_NAME)));
             } else if (resultCode == RESULT_CANCELED) {
                 showMessage("取消头像设置");
             }
@@ -485,16 +484,21 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
             }
         } else if (requestCode == PhotoUtil.SET_ALBUM_PICTURE_KITKAT) {
             if (resultCode == RESULT_OK && null != data) {
-                //Bitmap bitmap = mPhotoUtil.decodeUriAsBitmap(Uri.fromFile(new File(PhotoUtil.IMGPATH,
-                //        PhotoUtil.TMP_IMAGE_FILE_NAME)));
                 mPresenter.uploadAvatar();
             } else if (resultCode == RESULT_CANCELED) {
                 showMessage("取消头像设置");
             }
         } else if (requestCode == PhotoUtil.TAKE_A_PICTURE) {
             if (resultCode == RESULT_OK) {
-                mPhotoUtil.cameraCropImageUri(Uri.fromFile(new File(PhotoUtil.IMGPATH, PhotoUtil.IMAGE_FILE_NAME)),
-                        Utils.instence(getContext()).dip2px(AvatarDialog.output_X),
+                File imageFile = new File(PhotoUtil.IMGPATH, PhotoUtil.IMAGE_FILE_NAME);
+                Uri imageUri;
+                if (Build.VERSION.SDK_INT >= 24) {
+                    imageUri = FileProvider.getUriForFile(getContext(),
+                            "com.hahaxueche.provider.fileProvider", imageFile);
+                } else {
+                    imageUri = Uri.fromFile(imageFile);
+                }
+                mPhotoUtil.cameraCropImageUri(imageUri, Utils.instence(getContext()).dip2px(AvatarDialog.output_X),
                         Utils.instence(getContext()).dip2px(AvatarDialog.output_Y));
             } else {
                 showMessage("取消头像设置");
@@ -540,7 +544,15 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
 
     private void cropImageUriAfterKikat(Intent data) {
         mAlbumPicturePath = mPhotoUtil.getPath(getContext(), data.getData());
-        mPhotoUtil.cropImageUriAfterKikat(Uri.fromFile(new File(mAlbumPicturePath)),
+        File imageFile = new File(mAlbumPicturePath);
+        Uri imageUri;
+        if (Build.VERSION.SDK_INT >= 24) {
+            imageUri = FileProvider.getUriForFile(getContext(),
+                    "com.hahaxueche.provider.fileProvider", imageFile);
+        } else {
+            imageUri = Uri.fromFile(imageFile);
+        }
+        mPhotoUtil.cropImageUriAfterKikat(imageUri,
                 Utils.instence(getContext()).dip2px(AvatarDialog.output_X),
                 Utils.instence(getContext()).dip2px(AvatarDialog.output_Y));
     }

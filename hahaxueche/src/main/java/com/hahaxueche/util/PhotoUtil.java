@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 
 import com.hahaxueche.ui.fragment.myPage.MypageFragment;
 
@@ -31,9 +32,8 @@ public class PhotoUtil {
 
     //保存图片本地路径
     public static final String ACCOUNT_DIR = Environment.getExternalStorageDirectory().getPath()
-            + "/account/";
-    public static final String ACCOUNT_MAINTRANCE_ICON_CACHE = "icon_cache/";
-    public static final String IMGPATH = ACCOUNT_DIR + ACCOUNT_MAINTRANCE_ICON_CACHE;
+            + "/hahaxueche/";
+    public static final String IMGPATH = ACCOUNT_DIR;
 
     /* 头像文件 */
     public static final String IMAGE_FILE_NAME = "faceImage.jpeg";
@@ -105,8 +105,15 @@ public class PhotoUtil {
     // 启动手机相机拍摄照片作为头像
     public void choseHeadImageFromCameraCapture() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT,
-                Uri.fromFile(new File(IMGPATH, IMAGE_FILE_NAME)));
+        File imageFile = new File(IMGPATH, IMAGE_FILE_NAME);
+        Uri uriToImage;
+        if (Build.VERSION.SDK_INT >= 24) {
+            uriToImage = FileProvider.getUriForFile(mMypageFragment.getContext(),
+                    "com.hahaxueche.provider.fileProvider", imageFile);
+        } else {
+            uriToImage = Uri.fromFile(imageFile);
+        }
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uriToImage);
         mMypageFragment.startActivityForResult(intent, TAKE_A_PICTURE);
     }
 
@@ -125,8 +132,16 @@ public class PhotoUtil {
         intent.putExtra("outputY", height * 2);
         intent.putExtra("scale", true);
         intent.putExtra("return-data", false);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT,
-                Uri.fromFile(new File(IMGPATH, IMAGE_FILE_NAME)));
+        File imageFile = new File(IMGPATH, IMAGE_FILE_NAME);
+        Uri imageUri;
+        if (Build.VERSION.SDK_INT >= 24) {
+            imageUri = FileProvider.getUriForFile(mMypageFragment.getContext(),
+                    "com.hahaxueche.provider.fileProvider", imageFile);
+            HHLog.v(uritempFile.toString());
+        } else {
+            imageUri = Uri.fromFile(imageFile);
+        }
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         intent.putExtra("noFaceDetection", true); // no face detection
         mMypageFragment.startActivityForResult(intent, SELECT_A_PICTURE);
@@ -163,11 +178,15 @@ public class PhotoUtil {
         intent.putExtra("outputX", width * 2);
         intent.putExtra("outputY", height * 2);
 //        intent.putExtra("return-data", true);
-
-        uritempFile = Uri.fromFile(new File(IMGPATH, IMAGE_FILE_NAME));
+        File imageFile = new File(IMGPATH, IMAGE_FILE_NAME);
+        if (Build.VERSION.SDK_INT >= 24) {
+            uritempFile = FileProvider.getUriForFile(mMypageFragment.getContext(),
+                    "com.hahaxueche.provider.fileProvider", imageFile);
+        } else {
+            uritempFile = Uri.fromFile(imageFile);
+        }
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uritempFile);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-
         mMypageFragment.startActivityForResult(intent, SET_PICTURE);
     }
 
@@ -188,8 +207,15 @@ public class PhotoUtil {
         intent.putExtra("outputY", height * 2);
         intent.putExtra("scale", true);
         intent.putExtra("return-data", false);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT,
-                Uri.fromFile(new File(IMGPATH, IMAGE_FILE_NAME)));
+        File imageFile = new File(IMGPATH, IMAGE_FILE_NAME);
+        Uri uriToImage;
+        if (Build.VERSION.SDK_INT >= 24) {
+            uriToImage = FileProvider.getUriForFile(mMypageFragment.getContext(),
+                    "com.hahaxueche.provider.fileProvider", imageFile);
+        } else {
+            uriToImage = Uri.fromFile(imageFile);
+        }
+        intent.putExtra(MediaStore.EXTRA_OUTPUT,uriToImage);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         intent.putExtra("noFaceDetection", true);
         mMypageFragment.startActivityForResult(intent, SET_ALBUM_PICTURE_KITKAT);
