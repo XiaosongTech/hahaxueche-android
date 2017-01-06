@@ -85,6 +85,7 @@ public class SharedPrefUtil {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         LinkedList<String> searchHistoryList = getSearchHistory();
         if (searchHistoryList != null) {
+            if (searchHistoryList.contains(coachName)) return;
             if (searchHistoryList.size() >= 4) {
                 searchHistoryList.removeFirst();
             }
