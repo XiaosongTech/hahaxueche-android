@@ -4,9 +4,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Base64;
 
-import com.google.gson.Gson;
 import com.hahaxueche.BuildConfig;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
@@ -14,7 +12,6 @@ import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.student.ExamResult;
-import com.hahaxueche.model.user.student.MExamResult;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.community.ExamLibraryView;
 import com.hahaxueche.util.ErrorUtil;
@@ -104,7 +101,6 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
                         public void onNext(ArrayList<ExamResult> examResults) {
                             if (examResults != null) {
                                 mExamLibraryView.showScores(examResults.size());
-                                mExamLibraryView.initShareData(getShareDescription(), getShareUrl(examResults));
                             }
                         }
                     });
@@ -130,27 +126,6 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
         codeList.add("MIMK-039");
         Collections.shuffle(codeList);//打乱顺序
         return "科一保过卡免费送！考不过现金赔！【" + codeList.get(0) + "】哈哈老司机要开车了，捂脸~~内有惊喜";
-    }
-
-    private String getShareUrl(ArrayList<ExamResult> examResults) {
-        if (examResults == null || examResults.size() < 1) return "";
-        //1.选一个最好的成绩
-        ExamResult bestResult = examResults.get(0);
-        for (ExamResult examResult : examResults) {
-            if (examResult.score > bestResult.score) {
-                bestResult = examResult;
-            }
-        }
-        //2.转化成m端需要端model格式
-        MExamResult mExamResult = new MExamResult();
-        mExamResult.date = Utils.getDateDotFromUTC(bestResult.created_at);
-        mExamResult.score = bestResult.score;
-        //3.转成json
-        Gson gson = new Gson();
-        String result = gson.toJson(mExamResult);
-        //4.base64 safe url encoding
-        String encodedResult = new String(Base64.encode(result.getBytes(), Base64.URL_SAFE | Base64.NO_WRAP));
-        return WEB_URL_GROUP_BUY + "?promo_code=406808&result=" + encodedResult;
     }
 
     private Observable<String> redirectUrl(final User user) {

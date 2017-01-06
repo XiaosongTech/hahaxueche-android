@@ -30,6 +30,8 @@ import com.taobao.hotfix.util.PatchStatusCode;
 
 import java.util.ArrayList;
 
+import me.shaohui.shareutil.ShareConfig;
+import me.shaohui.shareutil.ShareManager;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscriber;
@@ -133,10 +135,13 @@ public class HHBaseApplication extends Application {
         super.onCreate();
         initApp();
         initHotfix();
-        initCloudChannel(this);//aliyun push
+        //aliyun push
+        initCloudChannel(this);
+        //fresco
         Fresco.initialize(this);
         spUtil = new SharedPrefUtil(this);
         HahaCache.context = getApplicationContext();
+        //七鱼客服
         Unicorn.init(this, "2f328da38ac77ce6d796c2977248f7e2", options(), new FrescoImageLoader());
         try {
             if (BuildConfig.DEBUG) {
@@ -148,6 +153,12 @@ public class HHBaseApplication extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        //shareUtil
+        ShareConfig config = ShareConfig.instance()
+                .qqId("1104872131")
+                .wxId("wxdf5f23aa517b1a96")
+                .weiboId("4186780524");
+        ShareManager.init(config);
         subscription = getApiService().getQuestions(0)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(defaultSubscribeScheduler())

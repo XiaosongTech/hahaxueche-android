@@ -57,6 +57,9 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import me.shaohui.shareutil.ShareUtil;
+import me.shaohui.shareutil.share.ShareListener;
+import me.shaohui.shareutil.share.SharePlatform;
 
 /**
  * Created by wangshirui on 2016/10/18.
@@ -101,19 +104,10 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
      * 分享
      ******************/
     private ShareDialog shareDialog;
-    private HHBaseApplication myApplication;
-    private String mTitle;
-    private String mDescription;
-    private String mImageUrl;
-    private String mUrl;
     /*****************
      * end
      ******************/
-    private static final int PERMISSIONS_REQUEST_SHARE_QQ = 601;
-    private static final int PERMISSIONS_REQUEST_SHARE_WX = 602;
-    private static final int PERMISSIONS_REQUEST_SHARE_CIRCLE_FRIEND = 603;
     private static final int PERMISSIONS_REQUEST_SEND_SMS = 604;
-    private static final int THUMB_SIZE = 150;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,25 +171,13 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
                         public void onShare(int shareType) {
                             switch (shareType) {
                                 case 0:
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_SHARE_WX);
-                                    } else {
-                                        shareToWeixin();
-                                    }
+                                    shareToWeixin();
                                     break;
                                 case 1:
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_SHARE_CIRCLE_FRIEND);
-                                    } else {
-                                        shareToFriendCircle();
-                                    }
+                                    shareToFriendCircle();
                                     break;
                                 case 2:
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_SHARE_QQ);
-                                    } else {
-                                        shareToQQ();
-                                    }
+                                    shareToQQ();
                                     break;
                                 case 3:
                                     shareToWeibo();
@@ -236,15 +218,6 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
             default:
                 break;
         }
-    }
-
-    @Override
-    public void initShareData(String desc, String shareUrl) {
-        mTitle = "科一不过包陪";
-        mDescription = desc;
-        mImageUrl = "https://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
-        mUrl = shareUrl;
-        HHLog.v("mUrl -> " + mUrl);
     }
 
     @Override
@@ -300,18 +273,118 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
     }
 
     private void shareToQQ() {
+        ShareUtil.shareImage(this, SharePlatform.QQ, mPresenter.getQrCodeUrl(), new ShareListener() {
+            @Override
+            public void shareSuccess() {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
+                showMessage("分享成功");
+            }
+
+            @Override
+            public void shareFailure(Exception e) {
+                showMessage("分享失败");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void shareCancel() {
+                showMessage("取消分享");
+            }
+        });
     }
 
     private void shareToQZone() {
+        ShareUtil.shareImage(this, SharePlatform.QZONE, mPresenter.getQrCodeUrl(), new ShareListener() {
+            @Override
+            public void shareSuccess() {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
+                showMessage("分享成功");
+            }
+
+            @Override
+            public void shareFailure(Exception e) {
+                showMessage("分享失败");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void shareCancel() {
+                showMessage("取消分享");
+            }
+        });
     }
 
     private void shareToWeibo() {
+        ShareUtil.shareImage(this, SharePlatform.WEIBO, mPresenter.getQrCodeUrl(), new ShareListener() {
+            @Override
+            public void shareSuccess() {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
+                showMessage("分享成功");
+            }
+
+            @Override
+            public void shareFailure(Exception e) {
+                showMessage("分享失败");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void shareCancel() {
+                showMessage("取消分享");
+            }
+        });
     }
 
     private void shareToWeixin() {
+        ShareUtil.shareImage(this, SharePlatform.WX, mPresenter.getQrCodeUrl(), new ShareListener() {
+            @Override
+            public void shareSuccess() {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
+                showMessage("分享成功");
+            }
+
+            @Override
+            public void shareFailure(Exception e) {
+                showMessage("分享失败");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void shareCancel() {
+                showMessage("取消分享");
+            }
+        });
     }
 
     private void shareToFriendCircle() {
+        ShareUtil.shareImage(this, SharePlatform.WX_TIMELINE, mPresenter.getQrCodeUrl(), new ShareListener() {
+            @Override
+            public void shareSuccess() {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
+                showMessage("分享成功");
+            }
+
+            @Override
+            public void shareFailure(Exception e) {
+                showMessage("分享失败");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void shareCancel() {
+                showMessage("取消分享");
+            }
+        });
     }
 
     private void shareToSms() {
@@ -375,34 +448,9 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
         }, CallerThreadExecutor.getInstance());
     }
 
-    private String buildTransaction(final String type) {
-        return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_SHARE_QQ) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
-                shareToQQ();
-            } else {
-                showMessage("请允许写入sdcard权限，不然从本地将图片分享到QQ");
-            }
-        } else if (requestCode == PERMISSIONS_REQUEST_SHARE_WX) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
-                shareToWeixin();
-            } else {
-                showMessage("请允许写入sdcard权限，不然从本地将图片分享到微信");
-            }
-        } else if (requestCode == PERMISSIONS_REQUEST_SHARE_CIRCLE_FRIEND) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
-                shareToFriendCircle();
-            } else {
-                showMessage("请允许写入sdcard权限，不然从本地将图片分享到朋友圈");
-            }
-        } else if (requestCode == PERMISSIONS_REQUEST_SEND_SMS) {
+        if (requestCode == PERMISSIONS_REQUEST_SEND_SMS) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED
                     && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted

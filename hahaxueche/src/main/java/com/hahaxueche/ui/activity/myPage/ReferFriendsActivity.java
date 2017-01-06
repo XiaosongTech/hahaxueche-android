@@ -32,16 +32,22 @@ import com.hahaxueche.ui.dialog.myPage.ReferDetailDialog;
 import com.hahaxueche.ui.dialog.myPage.ShareReferDialog;
 import com.hahaxueche.ui.view.myPage.ReferFriendsView;
 import com.hahaxueche.util.HHLog;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import me.shaohui.shareutil.ShareUtil;
+import me.shaohui.shareutil.share.ShareListener;
+import me.shaohui.shareutil.share.SharePlatform;
 
 /**
  * Created by wangshirui on 16/9/21.
  */
 
-public class ReferFriendsActivity extends HHBaseActivity implements ReferFriendsView{
+public class ReferFriendsActivity extends HHBaseActivity implements ReferFriendsView {
     @BindView(R.id.sv_main)
     ScrollView mSvMain;
     @BindView(R.id.tv_refer_double)
@@ -144,18 +150,123 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
     }
 
     private void shareToQQ() {
+        ShareUtil.shareMedia(this, SharePlatform.QQ, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+            @Override
+            public void shareSuccess() {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
+                mPresenter.clickShareSuccessCount("QQ_friend");
+                showMessage("分享成功");
+            }
+
+            @Override
+            public void shareFailure(Exception e) {
+                showMessage("分享失败");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void shareCancel() {
+                showMessage("取消分享");
+            }
+        });
     }
 
     private void shareToQZone() {
+        ShareUtil.shareMedia(this, SharePlatform.QZONE, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+            @Override
+            public void shareSuccess() {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
+                mPresenter.clickShareSuccessCount("qzone");
+                showMessage("分享成功");
+            }
+
+            @Override
+            public void shareFailure(Exception e) {
+                showMessage("分享失败");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void shareCancel() {
+                showMessage("取消分享");
+            }
+        });
     }
 
     private void shareToWeibo() {
+        ShareUtil.shareMedia(this, SharePlatform.WEIBO, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+            @Override
+            public void shareSuccess() {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
+                mPresenter.clickShareSuccessCount("weibo");
+                showMessage("分享成功");
+            }
+
+            @Override
+            public void shareFailure(Exception e) {
+                showMessage("分享失败");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void shareCancel() {
+                showMessage("取消分享");
+            }
+        });
     }
 
     private void shareToWeixin() {
+        ShareUtil.shareMedia(this, SharePlatform.WX, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+            @Override
+            public void shareSuccess() {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
+                mPresenter.clickShareSuccessCount("wechat_friend");
+                showMessage("分享成功");
+            }
+
+            @Override
+            public void shareFailure(Exception e) {
+                showMessage("分享失败");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void shareCancel() {
+                showMessage("取消分享");
+            }
+        });
     }
 
     private void shareToFriendCircle() {
+        ShareUtil.shareMedia(this, SharePlatform.WX_TIMELINE, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+            @Override
+            public void shareSuccess() {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
+                mPresenter.clickShareSuccessCount("wechat_friend_zone");
+                showMessage("分享成功");
+            }
+
+            @Override
+            public void shareFailure(Exception e) {
+                showMessage("分享失败");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void shareCancel() {
+                showMessage("取消分享");
+            }
+        });
     }
 
     @Override

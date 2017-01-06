@@ -42,6 +42,9 @@ import com.hahaxueche.util.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import me.shaohui.shareutil.ShareUtil;
+import me.shaohui.shareutil.share.ShareListener;
+import me.shaohui.shareutil.share.SharePlatform;
 
 /**
  * Created by wangshirui on 2016/10/20.
@@ -324,22 +327,123 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
     }
 
     private void shareToQQ() {
+        ShareUtil.shareMedia(this, SharePlatform.QQ, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+            @Override
+            public void shareSuccess() {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
+                mPresenter.clickShareSuccessCount("QQ_friend");
+                showMessage("分享成功");
+            }
+
+            @Override
+            public void shareFailure(Exception e) {
+                showMessage("分享失败");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void shareCancel() {
+                showMessage("取消分享");
+            }
+        });
     }
 
     private void shareToQZone() {
+        ShareUtil.shareMedia(this, SharePlatform.QZONE, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+            @Override
+            public void shareSuccess() {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
+                mPresenter.clickShareSuccessCount("qzone");
+                showMessage("分享成功");
+            }
+
+            @Override
+            public void shareFailure(Exception e) {
+                showMessage("分享失败");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void shareCancel() {
+                showMessage("取消分享");
+            }
+        });
     }
 
     private void shareToWeibo() {
+        ShareUtil.shareMedia(this, SharePlatform.WEIBO, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+            @Override
+            public void shareSuccess() {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
+                mPresenter.clickShareSuccessCount("weibo");
+                showMessage("分享成功");
+            }
+
+            @Override
+            public void shareFailure(Exception e) {
+                showMessage("分享失败");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void shareCancel() {
+                showMessage("取消分享");
+            }
+        });
     }
 
     private void shareToWeixin() {
+        ShareUtil.shareMedia(this, SharePlatform.WX, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+            @Override
+            public void shareSuccess() {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
+                mPresenter.clickShareSuccessCount("wechat_friend");
+                showMessage("分享成功");
+            }
+
+            @Override
+            public void shareFailure(Exception e) {
+                showMessage("分享失败");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void shareCancel() {
+                showMessage("取消分享");
+            }
+        });
     }
 
     private void shareToFriendCircle() {
-    }
+        ShareUtil.shareMedia(this, SharePlatform.WX_TIMELINE, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+            @Override
+            public void shareSuccess() {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
+                mPresenter.clickShareSuccessCount("wechat_friend_zone");
+                showMessage("分享成功");
+            }
 
-    private String buildTransaction(final String type) {
-        return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
+            @Override
+            public void shareFailure(Exception e) {
+                showMessage("分享失败");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void shareCancel() {
+                showMessage("取消分享");
+            }
+        });
     }
 
     @Override
