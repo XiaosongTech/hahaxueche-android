@@ -1,7 +1,6 @@
 package com.hahaxueche.ui.activity.community;
 
 import android.Manifest;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -47,26 +46,12 @@ import com.hahaxueche.ui.view.community.ExamLibraryView;
 import com.hahaxueche.util.ExamLib;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.WebViewUrl;
-import com.sina.weibo.sdk.api.ImageObject;
-import com.sina.weibo.sdk.api.WeiboMessage;
-import com.sina.weibo.sdk.api.share.BaseResponse;
-import com.sina.weibo.sdk.api.share.IWeiboHandler;
-import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
-import com.sina.weibo.sdk.api.share.SendMessageToWeiboRequest;
-import com.sina.weibo.sdk.constant.WBConstants;
-import com.tencent.connect.share.QQShare;
-import com.tencent.connect.share.QzoneShare;
-import com.tencent.mm.sdk.openapi.IWXAPI;
-import com.tencent.tauth.IUiListener;
-import com.tencent.tauth.Tencent;
-import com.tencent.tauth.UiError;
 import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -77,7 +62,7 @@ import butterknife.OnClick;
  * Created by wangshirui on 2016/10/18.
  */
 
-public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryView, IWeiboHandler.Response {
+public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryView {
     ImageView mIvBack;
     TextView mTvTitle;
     @BindView(R.id.viewPager)
@@ -116,16 +101,11 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
      * 分享
      ******************/
     private ShareDialog shareDialog;
-    private IWXAPI wxApi; //微信api
-    private Tencent mTencent;//QQ
-    private IWeiboShareAPI mWeiboShareAPI;//新浪微博
     private HHBaseApplication myApplication;
     private String mTitle;
     private String mDescription;
     private String mImageUrl;
     private String mUrl;
-    private ShareQQListener shareQQListener;
-    private ShareQZoneListener shareQZoneListener;
     /*****************
      * end
      ******************/
@@ -156,10 +136,6 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
             MobclickAgent.onEvent(getContext(), "online_test_page_viewed", map);
         } else {
             MobclickAgent.onEvent(getContext(), "online_test_page_viewed");
-        }
-        regShareApi();
-        if (savedInstanceState != null) {
-            mWeiboShareAPI.handleWeiboResponse(getIntent(), this);
         }
     }
 
@@ -288,8 +264,6 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
         } else if (requestCode == 2) {
             mPresenter.fetchScores();
         }
-        Tencent.onActivityResultData(requestCode, resultCode, data, shareQQListener);
-        Tencent.onActivityResultData(requestCode, resultCode, data, shareQZoneListener);
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -325,257 +299,19 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
         mTvInsuranceCount.setText(ss);
     }
 
-    /**
-     * 获取分享API
-     */
-    private void regShareApi() {
-        myApplication = HHBaseApplication.get(getContext());
-        wxApi = myApplication.getIWXAPI();
-        mTencent = myApplication.getTencentAPI();
-        mWeiboShareAPI = myApplication.getWeiboAPI();
-    }
-
     private void shareToQQ() {
-        ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(Uri.parse(mPresenter.getQrCodeUrl()))
-                .setProgressiveRenderingEnabled(true)
-                .build();
-        ImagePipeline imagePipeline = Fresco.getImagePipeline();
-        DataSource<CloseableReference<CloseableImage>> dataSource =
-                imagePipeline.fetchDecodedImage(imageRequest, getContext());
-        dataSource.subscribe(new BaseBitmapDataSubscriber() {
-            @Override
-            public void onNewResultImpl(@Nullable Bitmap bitmap) {
-                if (bitmap != null) {
-                    // 首先保存图片
-                    File appDir = new File(Environment.getExternalStorageDirectory(), "hahaxueche");
-                    if (!appDir.exists()) {
-                        appDir.mkdir();
-                    }
-                    String fileName = "qrcode.jpg";
-                    File file = new File(appDir, fileName);
-                    try {
-                        FileOutputStream fos = new FileOutputStream(file);
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                        fos.flush();
-                        fos.close();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    // 其次把文件插入到系统图库
-                    try {
-                        MediaStore.Images.Media.insertImage(getContentResolver(), file.getAbsolutePath(), fileName, null);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    File imageFile = new File(Environment.getExternalStorageDirectory() +
-                            "/hahaxueche/qrcode.jpg");
-                    Uri uriToImage;
-                    if (Build.VERSION.SDK_INT >= 24) {
-                        uriToImage = FileProvider.getUriForFile(getContext(),
-                                "com.hahaxueche.provider.fileProvider", imageFile);
-                    } else {
-                        uriToImage = Uri.fromFile(imageFile);
-                    }
-                    // 最后通知图库更新
-                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uriToImage));
-                    shareQQListener = new ShareQQListener();
-                    final Bundle params = new Bundle();
-                    params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_IMAGE);
-                    params.putString(QQShare.SHARE_TO_QQ_APP_NAME, "哈哈学车");
-                    params.putString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL, Environment.getExternalStorageDirectory() + "/hahaxueche/qrcode.jpg");
-                    mTencent.shareToQQ(ExamLibraryActivity.this, params, shareQQListener);
-                }
-            }
-
-            @Override
-            public void onFailureImpl(DataSource dataSource) {
-            }
-        }, CallerThreadExecutor.getInstance());
     }
 
     private void shareToQZone() {
-        shareQZoneListener = new ShareQZoneListener();
-        final Bundle params = new Bundle();
-        params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_APP);
-        params.putString(QzoneShare.SHARE_TO_QQ_TITLE, "哈哈学车");
-        params.putString(QzoneShare.SHARE_TO_QQ_APP_NAME, "哈哈学车");
-        params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, "");
-        params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, mPresenter.getQrCodeUrl());
-        ArrayList<String> imgUrlList = new ArrayList<>();
-        imgUrlList.add(mPresenter.getQrCodeUrl());
-        params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, imgUrlList);
-        mTencent.shareToQzone(ExamLibraryActivity.this, params, shareQZoneListener);
     }
 
     private void shareToWeibo() {
-        ImageRequest imageRequest = ImageRequest.fromUri(mPresenter.getQrCodeUrl());
-        ImagePipeline imagePipeline = Fresco.getImagePipeline();
-        DataSource<CloseableReference<CloseableImage>> dataSource =
-                imagePipeline.fetchImageFromBitmapCache(imageRequest, null);
-        dataSource.subscribe(new BaseBitmapDataSubscriber() {
-            @Override
-            public void onNewResultImpl(@Nullable Bitmap bitmap) {
-                if (bitmap != null) {
-                    // 1. 初始化微博的分享消息
-                    WeiboMessage weiboMessage = new WeiboMessage();
-
-                    ImageObject imageObject = new ImageObject();
-                    //设置缩略图。 注意：最终压缩过的缩略图大小不得超过 32kb。
-                    Bitmap thumbBmp = Bitmap.createScaledBitmap(bitmap, THUMB_SIZE, THUMB_SIZE, true);
-                    imageObject.setImageObject(thumbBmp);
-                    weiboMessage.mediaObject = imageObject;
-                    // 2. 初始化从第三方到微博的消息请求
-                    SendMessageToWeiboRequest request = new SendMessageToWeiboRequest();
-                    // 用transaction唯一标识一个请求
-                    request.transaction = String.valueOf(System.currentTimeMillis());
-                    request.message = weiboMessage;
-                    // 3. 发送请求消息到微博，唤起微博分享界面
-                    mWeiboShareAPI.sendRequest(ExamLibraryActivity.this, request);
-                }
-            }
-
-            @Override
-            public void onFailureImpl(DataSource dataSource) {
-
-            }
-        }, CallerThreadExecutor.getInstance());
     }
 
     private void shareToWeixin() {
-        ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(Uri.parse(mPresenter.getQrCodeUrl()))
-                .setProgressiveRenderingEnabled(true)
-                .build();
-        ImagePipeline imagePipeline = Fresco.getImagePipeline();
-        DataSource<CloseableReference<CloseableImage>> dataSource =
-                imagePipeline.fetchDecodedImage(imageRequest, null);
-        dataSource.subscribe(new BaseBitmapDataSubscriber() {
-            @Override
-            public void onNewResultImpl(@Nullable Bitmap bitmap) {
-                if (bitmap != null) {
-                    // 首先保存图片
-                    File appDir = new File(Environment.getExternalStorageDirectory(), "hahaxueche");
-                    if (!appDir.exists()) {
-                        appDir.mkdir();
-                    }
-                    String fileName = "qrcode.jpg";
-                    File file = new File(appDir, fileName);
-                    try {
-                        FileOutputStream fos = new FileOutputStream(file);
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                        fos.flush();
-                        fos.close();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    // 其次把文件插入到系统图库
-                    try {
-                        MediaStore.Images.Media.insertImage(getContentResolver(),
-                                file.getAbsolutePath(), fileName, null);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    File imageFile = new File(Environment.getExternalStorageDirectory() +
-                            "/hahaxueche/qrcode.jpg");
-                    Uri uriToImage;
-                    if (Build.VERSION.SDK_INT >= 24) {
-                        uriToImage = FileProvider.getUriForFile(getContext(),
-                                "com.hahaxueche.provider.fileProvider", imageFile);
-                    } else {
-                        uriToImage = Uri.fromFile(imageFile);
-                    }
-                    // 最后通知图库更新
-                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uriToImage));
-                    Intent shareIntent = new Intent();
-                    //发送图片到朋友圈
-                    //ComponentName comp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI");
-                    //发送图片给好友。
-                    ComponentName comp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareImgUI");
-                    shareIntent.setComponent(comp);
-                    shareIntent.setAction(Intent.ACTION_SEND);
-                    shareIntent.putExtra(Intent.EXTRA_STREAM, uriToImage);
-                    shareIntent.setType("image/jpeg");
-                    startActivity(Intent.createChooser(shareIntent, "分享图片"));
-                }
-            }
-
-            @Override
-            public void onFailureImpl(DataSource dataSource) {
-
-            }
-        }, CallerThreadExecutor.getInstance());
     }
 
     private void shareToFriendCircle() {
-        ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(Uri.parse(mPresenter.getQrCodeUrl()))
-                .setProgressiveRenderingEnabled(true)
-                .build();
-        ImagePipeline imagePipeline = Fresco.getImagePipeline();
-        DataSource<CloseableReference<CloseableImage>> dataSource =
-                imagePipeline.fetchDecodedImage(imageRequest, null);
-        dataSource.subscribe(new BaseBitmapDataSubscriber() {
-            @Override
-            public void onNewResultImpl(@Nullable Bitmap bitmap) {
-                if (bitmap != null) {
-                    // 首先保存图片
-                    File appDir = new File(Environment.getExternalStorageDirectory(), "hahaxueche");
-                    if (!appDir.exists()) {
-                        appDir.mkdir();
-                    }
-                    String fileName = "qrcode.jpg";
-                    File file = new File(appDir, fileName);
-                    try {
-                        FileOutputStream fos = new FileOutputStream(file);
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                        fos.flush();
-                        fos.close();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    // 其次把文件插入到系统图库
-                    try {
-                        MediaStore.Images.Media.insertImage(getContentResolver(),
-                                file.getAbsolutePath(), fileName, null);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    File imageFile = new File(Environment.getExternalStorageDirectory() +
-                            "/hahaxueche/qrcode.jpg");
-                    Uri uriToImage;
-                    if (Build.VERSION.SDK_INT >= 24) {
-                        uriToImage = FileProvider.getUriForFile(getContext(),
-                                "com.hahaxueche.provider.fileProvider", imageFile);
-                    } else {
-                        uriToImage = Uri.fromFile(imageFile);
-                    }
-                    // 最后通知图库更新
-                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uriToImage));
-                    Intent shareIntent = new Intent();
-                    //发送图片到朋友圈
-                    ComponentName comp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI");
-                    //发送图片给好友。
-                    //ComponentName comp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareImgUI");
-                    shareIntent.setComponent(comp);
-                    shareIntent.setAction(Intent.ACTION_SEND);
-                    shareIntent.putExtra(Intent.EXTRA_STREAM, uriToImage);
-                    shareIntent.setType("image/jpeg");
-                    startActivity(Intent.createChooser(shareIntent, "分享图片"));
-                }
-            }
-
-            @Override
-            public void onFailureImpl(DataSource dataSource) {
-
-            }
-        }, CallerThreadExecutor.getInstance());
     }
 
     private void shareToSms() {
@@ -641,95 +377,6 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
 
     private String buildTransaction(final String type) {
         return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
-    }
-
-    private class ShareQQListener implements IUiListener {
-
-        @Override
-        public void onCancel() {
-            if (shareDialog != null) {
-                shareDialog.dismiss();
-            }
-            showMessage("取消分享");
-        }
-
-        @Override
-        public void onComplete(Object arg0) {
-            if (shareDialog != null) {
-                shareDialog.dismiss();
-            }
-            showMessage("分享成功");
-        }
-
-        @Override
-        public void onError(UiError arg0) {
-            if (shareDialog != null) {
-                shareDialog.dismiss();
-            }
-            showMessage("分享失败");
-            HHLog.e("分享失败，原因：" + arg0.errorMessage);
-        }
-
-    }
-
-    private class ShareQZoneListener implements IUiListener {
-
-        @Override
-        public void onCancel() {
-            if (shareDialog != null) {
-                shareDialog.dismiss();
-            }
-            showMessage("取消分享");
-        }
-
-        @Override
-        public void onComplete(Object arg0) {
-            if (shareDialog != null) {
-                shareDialog.dismiss();
-            }
-            showMessage("分享成功");
-        }
-
-        @Override
-        public void onError(UiError arg0) {
-            if (shareDialog != null) {
-                shareDialog.dismiss();
-            }
-            showMessage("分享失败");
-            HHLog.e("分享失败，原因：" + arg0.errorMessage);
-        }
-
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-
-        // 从当前应用唤起微博并进行分享后，返回到当前应用时，需要在此处调用该函数
-        // 来接收微博客户端返回的数据；执行成功，返回 true，并调用
-        // {@link IWeiboHandler.Response#onResponse}；失败返回 false，不调用上述回调
-        mWeiboShareAPI.handleWeiboResponse(intent, this);
-    }
-
-    @Override
-    public void onResponse(BaseResponse baseResp) {
-        if (baseResp != null) {
-            if (shareDialog != null) {
-                shareDialog.dismiss();
-            }
-            switch (baseResp.errCode) {
-                case WBConstants.ErrorCode.ERR_OK:
-                    showMessage("分享成功");
-                    break;
-                case WBConstants.ErrorCode.ERR_CANCEL:
-                    showMessage("取消分享");
-                    break;
-                case WBConstants.ErrorCode.ERR_FAIL:
-                    showMessage("分享失败");
-                    HHLog.e("分享失败，原因：" + baseResp.errMsg);
-                    break;
-            }
-        }
     }
 
     @Override

@@ -19,20 +19,14 @@ import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.HahaCache;
 import com.hahaxueche.util.SharedPrefUtil;
-import com.hahaxueche.util.share.ShareConstants;
 import com.microquation.linkedme.android.LinkedME;
 import com.qiyukf.unicorn.api.SavePowerConfig;
 import com.qiyukf.unicorn.api.StatusBarNotificationConfig;
 import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFOptions;
-import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
-import com.sina.weibo.sdk.api.share.WeiboShareSDK;
 import com.taobao.hotfix.HotFixManager;
 import com.taobao.hotfix.PatchLoadStatusListener;
 import com.taobao.hotfix.util.PatchStatusCode;
-import com.tencent.mm.sdk.openapi.IWXAPI;
-import com.tencent.mm.sdk.openapi.WXAPIFactory;
-import com.tencent.tauth.Tencent;
 
 import java.util.ArrayList;
 
@@ -54,9 +48,6 @@ public class HHBaseApplication extends Application {
     private SharedPrefUtil spUtil;
     private Observable sessionObservable;
     private Location myLocation;
-    private IWXAPI wxApi;
-    private Tencent mTencent;
-    private IWeiboShareAPI mWeiboShareAPI;
     private ArrayList<Question> questions1;
     private ArrayList<Question> questions4;
     private Subscription subscription;
@@ -217,29 +208,6 @@ public class HHBaseApplication extends Application {
         }
         myLocation.lat = lat;
         myLocation.lng = lng;
-    }
-
-    public IWXAPI getIWXAPI() {
-        if (wxApi == null) {
-            wxApi = WXAPIFactory.createWXAPI(this, ShareConstants.APP_ID, true);
-            wxApi.registerApp(ShareConstants.APP_ID);
-        }
-        return wxApi;
-    }
-
-    public Tencent getTencentAPI() {
-        if (mTencent == null) {
-            mTencent = Tencent.createInstance(ShareConstants.APP_ID_QQ, this);
-        }
-        return mTencent;
-    }
-
-    public IWeiboShareAPI getWeiboAPI() {
-        if (mWeiboShareAPI == null) {
-            mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(this, ShareConstants.WEIBO_APP_KEY);
-            mWeiboShareAPI.registerApp();
-        }
-        return mWeiboShareAPI;
     }
 
     @Override
