@@ -56,6 +56,7 @@ android {
             buildConfigField "String", "MOBILE_URL", properties.getProperty("mobieUrl")
             buildConfigField "String", "MI_PUSH_APP_ID", properties.getProperty("miPushAppId")
             buildConfigField "String", "MI_PUSH_APP_KEY", properties.getProperty("miPushAppKey")
+            manifestPlaceholders = [umeng_app_key: "564582e767e58e049a001e48"]
 
         }
         debug {
@@ -64,6 +65,7 @@ android {
             buildConfigField "String", "MOBILE_URL", properties.getProperty("mobieUrl")
             buildConfigField "String", "MI_PUSH_APP_ID", properties.getProperty("miPushAppId")
             buildConfigField "String", "MI_PUSH_APP_KEY", properties.getProperty("miPushAppKey")
+            manifestPlaceholders = [umeng_app_key: "564a8a8067e58e74de006545"]
         }
     }
     dexOptions {
