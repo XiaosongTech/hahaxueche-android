@@ -12,11 +12,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
-import com.hahaxueche.ui.widget.scoreView.ClickScoreView;
 
 /**
  * 评论dialog
@@ -28,7 +28,7 @@ public class ReviewDialog extends Dialog implements View.OnClickListener {
     private String mPaymentStageName;
     private LinearLayout llyReviewTitle;
     private TextView tvReviewInfoTitle;
-    private ClickScoreView clvScore;
+    private RatingBar mRbScore;
     private EditText etReview;
     private TextView tvSureReview;
     private TextView tvLaterReview;
@@ -56,9 +56,7 @@ public class ReviewDialog extends Dialog implements View.OnClickListener {
         setContentView(view);
         llyReviewTitle = (LinearLayout) view.findViewById(R.id.lly_review_title);
         tvReviewInfoTitle = (TextView) view.findViewById(R.id.tv_review_info_title);
-        clvScore = (ClickScoreView) view.findViewById(R.id.clv_score);
-        //默认5星
-        clvScore.setScore(5f, false);
+        mRbScore = (RatingBar) view.findViewById(R.id.rb_score);
         etReview = (EditText) view.findViewById(R.id.et_review);
         tvSureReview = (TextView) view.findViewById(R.id.tv_sure_review);
         tvLaterReview = (TextView) view.findViewById(R.id.tv_later_review);
@@ -92,7 +90,7 @@ public class ReviewDialog extends Dialog implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_sure_review:
-                float score = clvScore.getScore();
+                float score = mRbScore.getRating();
                 if (score == 0.0f) {
                     Toast.makeText(mContext, "亲，还没有打分哦~", Toast.LENGTH_SHORT).show();
                     return;

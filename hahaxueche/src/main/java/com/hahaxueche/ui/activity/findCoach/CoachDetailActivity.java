@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import android.view.animation.ScaleAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -62,7 +65,7 @@ import me.shaohui.shareutil.share.SharePlatform;
  * Created by wangshirui on 16/10/5.
  */
 
-public class CoachDetailActivity extends HHBaseActivity implements CoachDetailView{
+public class CoachDetailActivity extends HHBaseActivity implements CoachDetailView {
     private CoachDetailPresenter mPresenter;
     @BindView(R.id.sv_main)
     ScrollView mSvMain;
@@ -92,8 +95,10 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     TextView mTvTrainLocation;
     @BindView(R.id.tv_comments_count)
     TextView mTvCommentsCount;
-    @BindView(R.id.sv_average_rating)
-    ScoreView mSvCoachScore;
+    @BindView(R.id.rb_average_rating)
+    RatingBar mRbCoachScore;
+    @BindView(R.id.tv_score)
+    TextView mTvScore;
     @BindView(R.id.lly_train_school)
     LinearLayout mLlyTrainSchool;
     @BindView(R.id.tv_train_school)
@@ -545,7 +550,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         if (averageRating > 5) {
             averageRating = 5;
         }
-        mSvCoachScore.setScore(averageRating, true);
+        mRbCoachScore.setRating(averageRating);
+        mTvScore.setText(averageRating + "分");
         if (!TextUtils.isEmpty(coach.driving_school)) {
             mLlyTrainSchool.setVisibility(View.VISIBLE);
             mTvTrainSchoolName.setText(coach.driving_school);

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
@@ -15,7 +16,6 @@ import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.adapter.findCoach.ReviewAdapter;
 import com.hahaxueche.ui.view.findCoach.ReviewListView;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
-import com.hahaxueche.ui.widget.scoreView.ScoreView;
 
 import java.util.ArrayList;
 
@@ -30,8 +30,8 @@ public class ReviewListActivity extends HHBaseActivity implements ReviewListView
     private ReviewListPresenter mPresenter;
     @BindView(R.id.tv_comments_count)
     TextView mTvCommentsCount;
-    @BindView(R.id.sv_average_rating)
-    ScoreView mSvAverageRating;
+    @BindView(R.id.rb_average_rating)
+    RatingBar mRbAverageRating;
     @BindView(R.id.xlv_reviews)
     XListView mXlvReviews;
     private ReviewAdapter mReviewAdapter;
@@ -99,7 +99,7 @@ public class ReviewListActivity extends HHBaseActivity implements ReviewListView
 
     @Override
     public void setAverageRating(float score) {
-        mSvAverageRating.setScore(score, true);
+        mRbAverageRating.setRating(score);
     }
 
     @Override

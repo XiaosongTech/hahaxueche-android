@@ -14,15 +14,15 @@
         android:text="快来给你的教练评分吧!"
         android:textColor="@color/haha_gray_dark"
         android:textSize="18sp" />
-
-    <com.hahaxueche.ui.widget.scoreView.ClickScoreView
-        android:id="@+id/csv_score"
+    <RatingBar
+        android:id="@+id/rb_score"
+        style="@style/ClickRatingStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp">
-
-    </com.hahaxueche.ui.widget.scoreView.ClickScoreView>
-
+        android:layout_marginTop="32dp"
+        android:numStars="5"
+        android:rating="5"
+        android:stepSize="1" />
 
     <View
         android:layout_width="match_parent"

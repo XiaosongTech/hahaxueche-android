@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,7 +29,6 @@ import com.hahaxueche.presenter.findCoach.PurchaseCoachPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.activity.myPage.SelectVoucherActivity;
 import com.hahaxueche.ui.view.findCoach.PurchaseCoachView;
-import com.hahaxueche.ui.widget.scoreView.ScoreView;
 import com.hahaxueche.util.DistanceUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
@@ -60,8 +60,8 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     LinearLayout mLlyTrainSchool;
     @BindView(R.id.tv_coach_teach_time)
     TextView mTvCoachTeachTime;
-    @BindView(R.id.sv_coach_score)
-    ScoreView mSvCoachScore;
+    @BindView(R.id.rb_coach_score)
+    RatingBar mRbCoachScore;
     @BindView(R.id.tv_coach_location)
     TextView mTvCoachLocation;
     @BindView(R.id.tv_distance)
@@ -192,7 +192,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
         if (averageRating > 5) {
             averageRating = 5;
         }
-        mSvCoachScore.setScore(averageRating, true);
+        mRbCoachScore.setRating(averageRating);
         mTvCoachLocation.setText(application.getConstants().getSectionName(coach.coach_group.field_id));
         final Field myField = application.getConstants().getField(coach.coach_group.field_id);
         if (application.getMyLocation() != null && myField != null) {

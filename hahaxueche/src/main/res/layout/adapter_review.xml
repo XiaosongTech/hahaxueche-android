@@ -37,14 +37,17 @@
             android:layout_toRightOf="@id/tv_name"
             android:textColor="@color/haha_gray_text"
             android:textSize="12sp" />
-
-        <com.hahaxueche.ui.widget.scoreView.ScoreView
-            android:id="@+id/tv_score"
+        <RatingBar
+            android:id="@+id/rb_score"
+            style="@style/RatingStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/tv_name"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"></com.hahaxueche.ui.widget.scoreView.ScoreView>
+            android:layout_marginRight="20dp"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:stepSize="0.5" />
 
         <TextView
             android:id="@+id/tv_comment"

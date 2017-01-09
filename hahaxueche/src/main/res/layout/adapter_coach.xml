@@ -93,11 +93,15 @@
             android:layout_marginRight="20dp"
             android:layout_marginTop="6dp">
 
-            <com.hahaxueche.ui.widget.scoreView.ScoreView
-                android:id="@+id/sv_coach_score"
+            <RatingBar
+                android:id="@+id/rb_coach_score"
+                style="@style/RatingStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"></com.hahaxueche.ui.widget.scoreView.ScoreView>
+                android:layout_centerVertical="true"
+                android:isIndicator="true"
+                android:numStars="5"
+                android:stepSize="0.5" />
 
             <TextView
                 android:id="@+id/tv_coach_points"
@@ -105,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="6dp"
-                android:layout_toRightOf="@id/sv_coach_score"
+                android:layout_toRightOf="@id/rb_coach_score"
                 android:textColor="@color/app_theme_color"
                 android:textSize="12sp" />
         </RelativeLayout>

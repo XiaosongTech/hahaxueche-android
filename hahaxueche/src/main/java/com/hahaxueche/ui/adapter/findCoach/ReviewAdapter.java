@@ -6,12 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
 import com.hahaxueche.model.user.coach.Review;
-import com.hahaxueche.ui.widget.scoreView.ScoreView;
 
 import java.util.ArrayList;
 
@@ -68,7 +68,7 @@ public class ReviewAdapter extends BaseAdapter {
         if (reviewerRating > 5) {
             reviewerRating = 5;
         }
-        holder.svScore.setScore(reviewerRating, false);
+        holder.rbScore.setRating(reviewerRating);
         holder.tvComment.setText(review.comment);
         return convertView;
     }
@@ -80,8 +80,8 @@ public class ReviewAdapter extends BaseAdapter {
         TextView tvName;
         @BindView(R.id.tv_date)
         TextView tvDate;
-        @BindView(R.id.tv_score)
-        ScoreView svScore;
+        @BindView(R.id.rb_score)
+        RatingBar rbScore;
         @BindView(R.id.tv_comment)
         TextView tvComment;
 

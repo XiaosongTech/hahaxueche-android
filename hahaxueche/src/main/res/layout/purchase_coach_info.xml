@@ -68,19 +68,23 @@
             android:textSize="14sp" />
     </RelativeLayout>
 
-    <com.hahaxueche.ui.widget.scoreView.ScoreView
-        android:id="@+id/sv_coach_score"
+    <RatingBar
+        android:id="@+id/rb_coach_score"
+        style="@style/RatingStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/rly_first_line"
         android:layout_below="@id/rly_first_line"
-        android:layout_marginTop="6dp"></com.hahaxueche.ui.widget.scoreView.ScoreView>
+        android:layout_marginTop="6dp"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:stepSize="0.5" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/sv_coach_score"
-        android:layout_below="@id/sv_coach_score"
+        android:layout_alignLeft="@id/rb_coach_score"
+        android:layout_below="@id/rb_coach_score"
         android:layout_marginTop="6dp">
 
         <TextView

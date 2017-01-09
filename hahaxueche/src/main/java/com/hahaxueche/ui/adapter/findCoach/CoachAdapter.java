@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -21,7 +22,6 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.ui.dialog.findCoach.MapDialog;
-import com.hahaxueche.ui.widget.scoreView.ScoreView;
 import com.hahaxueche.util.DistanceUtil;
 import com.hahaxueche.util.Utils;
 
@@ -74,7 +74,7 @@ public class CoachAdapter extends BaseAdapter {
             holder.ivCoachAvatar = ButterKnife.findById(view, R.id.iv_coach_avatar);
             holder.ivIsGoldenCoach = ButterKnife.findById(view, R.id.iv_is_golden_coach);
             holder.ivCashPledge = ButterKnife.findById(view, R.id.iv_is_cash_pledge);
-            holder.svCoachScore = ButterKnife.findById(view, R.id.sv_coach_score);
+            holder.rbCoachScore = ButterKnife.findById(view, R.id.rb_coach_score);
             holder.tvCoachLocation = ButterKnife.findById(view, R.id.tv_coach_location);
             holder.rlyCoachLocation = ButterKnife.findById(view, R.id.rly_third_line);
             holder.tvDistance = ButterKnife.findById(view, R.id.tv_distance);
@@ -100,7 +100,7 @@ public class CoachAdapter extends BaseAdapter {
         if (score > 5) {
             score = 5;
         }
-        holder.svCoachScore.setScore(score, false);
+        holder.rbCoachScore.setRating(score);
         if (coach.coach_group != null) {
             holder.tvCoachLocation.setText(application.getConstants().getSectionName(coach.coach_group.field_id));
 
@@ -155,7 +155,7 @@ public class CoachAdapter extends BaseAdapter {
         SimpleDraweeView ivCoachAvatar;
         ImageView ivIsGoldenCoach;
         ImageView ivCashPledge;
-        ScoreView svCoachScore;
+        RatingBar rbCoachScore;
         TextView tvCoachLocation;
         RelativeLayout rlyCoachLocation;
         TextView tvDistance;

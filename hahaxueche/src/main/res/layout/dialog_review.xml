@@ -43,19 +43,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:text="给教练打分"
             android:textColor="@color/haha_gray_dark"
             android:textSize="18sp" />
 
-        <com.hahaxueche.ui.widget.scoreView.ClickScoreView
-            android:id="@+id/clv_score"
+        <RatingBar
+            android:id="@+id/rb_score"
+            style="@style/ClickRatingStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp">
-
-        </com.hahaxueche.ui.widget.scoreView.ClickScoreView>
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:numStars="5"
+            android:rating="5"
+            android:stepSize="1" />
     </RelativeLayout>
 
     <View

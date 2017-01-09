@@ -6,11 +6,11 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
-import com.hahaxueche.ui.widget.scoreView.ClickScoreView;
 import com.hahaxueche.util.Utils;
 
 /**
@@ -18,7 +18,7 @@ import com.hahaxueche.util.Utils;
  */
 public class ScoreCoachDialog {
     private Context mContext;
-    private ClickScoreView csvScore;
+    private RatingBar mRbScore;
     private Dialog mDialog;
     private TextView tvConfirm;
     private TextView tvCancel;
@@ -39,11 +39,9 @@ public class ScoreCoachDialog {
 
     private void initView() {
         View contentView = View.inflate(mContext, R.layout.dialog_score, null);
-        csvScore = (ClickScoreView) contentView.findViewById(R.id.csv_score);
+        mRbScore = (RatingBar) contentView.findViewById(R.id.rb_score);
         tvConfirm = (TextView) contentView.findViewById(R.id.tv_dialog_score_confirm);
         tvCancel = (TextView) contentView.findViewById(R.id.tv_dialog_score_cancel);
-        //默认5星
-        csvScore.setScore(5f, false);
         mDialog.setContentView(contentView);
         mDialog.dismiss();
     }
@@ -78,7 +76,7 @@ public class ScoreCoachDialog {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.tv_dialog_score_confirm:
-                    float score = csvScore.getScore();
+                    float score = mRbScore.getRating();
                     if (score == 0.0f) {
                         Toast.makeText(mContext, "亲，还没有打分哦~", Toast.LENGTH_SHORT).show();
                         return;
