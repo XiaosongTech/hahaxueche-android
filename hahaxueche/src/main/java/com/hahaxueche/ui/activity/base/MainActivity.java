@@ -154,6 +154,35 @@ public class MainActivity extends HHBaseActivity implements MainView {
         HHLog.v("mUrl -> " + mUrl);
     }
 
+    @Override
+    public void startToShare(int shareType) {
+        switch (shareType) {
+            case 0:
+                shareToWeixin();
+                break;
+            case 1:
+                shareToFriendCircle();
+                break;
+            case 2:
+                shareToQQ();
+                break;
+            case 3:
+                shareToWeibo();
+                break;
+            case 4:
+                shareToQZone();
+                break;
+            case 5:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.SEND_SMS}, PERMISSIONS_REQUEST_SEND_SMS);
+                } else {
+                    shareToSms();
+                }
+            default:
+                break;
+        }
+    }
+
     public void controlMyPageBadge() {
         mPresenter.setMyPageBadge();
     }
@@ -217,31 +246,7 @@ public class MainActivity extends HHBaseActivity implements MainView {
                             shareDialog = new ShareReferDialog(getContext(), mUrl, new ShareDialog.OnShareListener() {
                                 @Override
                                 public void onShare(int shareType) {
-                                    switch (shareType) {
-                                        case 0:
-                                            shareToWeixin();
-                                            break;
-                                        case 1:
-                                            shareToFriendCircle();
-                                            break;
-                                        case 2:
-                                            shareToQQ();
-                                            break;
-                                        case 3:
-                                            shareToWeibo();
-                                            break;
-                                        case 4:
-                                            shareToQZone();
-                                            break;
-                                        case 5:
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-                                                requestPermissions(new String[]{Manifest.permission.SEND_SMS}, PERMISSIONS_REQUEST_SEND_SMS);
-                                            } else {
-                                                shareToSms();
-                                            }
-                                        default:
-                                            break;
-                                    }
+                                    mPresenter.convertUrlForShare(mUrl, shareType);
                                 }
                             });
                         }
@@ -300,18 +305,18 @@ public class MainActivity extends HHBaseActivity implements MainView {
                     shareDialog.dismiss();
                 }
                 mPresenter.clickShareSuccessCount("QQ_friend");
-                Toast.makeText(MainActivity.this,"分享成功",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "分享成功", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void shareFailure(Exception e) {
-                Toast.makeText(MainActivity.this,"分享失败",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "分享失败", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
 
             @Override
             public void shareCancel() {
-                Toast.makeText(MainActivity.this,"取消分享",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "取消分享", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -324,18 +329,18 @@ public class MainActivity extends HHBaseActivity implements MainView {
                     shareDialog.dismiss();
                 }
                 mPresenter.clickShareSuccessCount("qzone");
-                Toast.makeText(MainActivity.this,"分享成功",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "分享成功", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void shareFailure(Exception e) {
-                Toast.makeText(MainActivity.this,"分享失败",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "分享失败", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
 
             @Override
             public void shareCancel() {
-                Toast.makeText(MainActivity.this,"取消分享",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "取消分享", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -348,18 +353,18 @@ public class MainActivity extends HHBaseActivity implements MainView {
                     shareDialog.dismiss();
                 }
                 mPresenter.clickShareSuccessCount("weibo");
-                Toast.makeText(MainActivity.this,"分享成功",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "分享成功", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void shareFailure(Exception e) {
-                Toast.makeText(MainActivity.this,"分享失败",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "分享失败", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
 
             @Override
             public void shareCancel() {
-                Toast.makeText(MainActivity.this,"取消分享",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "取消分享", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -372,18 +377,18 @@ public class MainActivity extends HHBaseActivity implements MainView {
                     shareDialog.dismiss();
                 }
                 mPresenter.clickShareSuccessCount("wechat_friend");
-                Toast.makeText(MainActivity.this,"分享成功",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "分享成功", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void shareFailure(Exception e) {
-                Toast.makeText(MainActivity.this,"分享失败",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "分享失败", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
 
             @Override
             public void shareCancel() {
-                Toast.makeText(MainActivity.this,"取消分享",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "取消分享", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -396,18 +401,18 @@ public class MainActivity extends HHBaseActivity implements MainView {
                     shareDialog.dismiss();
                 }
                 mPresenter.clickShareSuccessCount("wechat_friend_zone");
-                Toast.makeText(MainActivity.this,"分享成功",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "分享成功", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void shareFailure(Exception e) {
-                Toast.makeText(MainActivity.this,"分享失败",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "分享失败", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
 
             @Override
             public void shareCancel() {
-                Toast.makeText(MainActivity.this,"取消分享",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "取消分享", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -419,7 +424,7 @@ public class MainActivity extends HHBaseActivity implements MainView {
                 // Permission is granted
                 shareToSms();
             } else {
-                Toast.makeText(MainActivity.this,"请允许发送短信权限，不然无法分享到短信",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "请允许发送短信权限，不然无法分享到短信", Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
