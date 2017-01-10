@@ -164,10 +164,6 @@ public class MainActivity extends HHBaseActivity implements MainView {
         }
     }
 
-    public void showMessage(String message) {
-        Snackbar.make(mLlyMain, message, Snackbar.LENGTH_SHORT).show();
-    }
-
     @Override
     public void setMyPageBadge(boolean hasBadge) {
         if (hasBadge) {
@@ -304,18 +300,18 @@ public class MainActivity extends HHBaseActivity implements MainView {
                     shareDialog.dismiss();
                 }
                 mPresenter.clickShareSuccessCount("QQ_friend");
-                showMessage("分享成功");
+                Toast.makeText(MainActivity.this,"分享成功",Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void shareFailure(Exception e) {
-                showMessage("分享失败");
+                Toast.makeText(MainActivity.this,"分享失败",Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
 
             @Override
             public void shareCancel() {
-                showMessage("取消分享");
+                Toast.makeText(MainActivity.this,"取消分享",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -328,18 +324,18 @@ public class MainActivity extends HHBaseActivity implements MainView {
                     shareDialog.dismiss();
                 }
                 mPresenter.clickShareSuccessCount("qzone");
-                showMessage("分享成功");
+                Toast.makeText(MainActivity.this,"分享成功",Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void shareFailure(Exception e) {
-                showMessage("分享失败");
+                Toast.makeText(MainActivity.this,"分享失败",Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
 
             @Override
             public void shareCancel() {
-                showMessage("取消分享");
+                Toast.makeText(MainActivity.this,"取消分享",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -352,18 +348,18 @@ public class MainActivity extends HHBaseActivity implements MainView {
                     shareDialog.dismiss();
                 }
                 mPresenter.clickShareSuccessCount("weibo");
-                showMessage("分享成功");
+                Toast.makeText(MainActivity.this,"分享成功",Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void shareFailure(Exception e) {
-                showMessage("分享失败");
+                Toast.makeText(MainActivity.this,"分享失败",Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
 
             @Override
             public void shareCancel() {
-                showMessage("取消分享");
+                Toast.makeText(MainActivity.this,"取消分享",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -376,18 +372,18 @@ public class MainActivity extends HHBaseActivity implements MainView {
                     shareDialog.dismiss();
                 }
                 mPresenter.clickShareSuccessCount("wechat_friend");
-                showMessage("分享成功");
+                Toast.makeText(MainActivity.this,"分享成功",Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void shareFailure(Exception e) {
-                showMessage("分享失败");
+                Toast.makeText(MainActivity.this,"分享失败",Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
 
             @Override
             public void shareCancel() {
-                showMessage("取消分享");
+                Toast.makeText(MainActivity.this,"取消分享",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -400,18 +396,18 @@ public class MainActivity extends HHBaseActivity implements MainView {
                     shareDialog.dismiss();
                 }
                 mPresenter.clickShareSuccessCount("wechat_friend_zone");
-                showMessage("分享成功");
+                Toast.makeText(MainActivity.this,"分享成功",Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void shareFailure(Exception e) {
-                showMessage("分享失败");
+                Toast.makeText(MainActivity.this,"分享失败",Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
 
             @Override
             public void shareCancel() {
-                showMessage("取消分享");
+                Toast.makeText(MainActivity.this,"取消分享",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -423,7 +419,7 @@ public class MainActivity extends HHBaseActivity implements MainView {
                 // Permission is granted
                 shareToSms();
             } else {
-                showMessage("请允许发送短信权限，不然无法分享到短信");
+                Toast.makeText(MainActivity.this,"请允许发送短信权限，不然无法分享到短信",Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {

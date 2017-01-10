@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
 import java.io.ByteArrayOutputStream;
@@ -223,5 +224,62 @@ public class Utils {
         Pattern p = Pattern.compile(str);
         Matcher m = p.matcher(email);
         return m.matches();
+    }
+
+    /**
+     * 获取url 指定name的value;
+     *
+     * @param url
+     * @param name
+     * @return
+     */
+    public static String getUrlValueByName(String url, String name) {
+        String result = "";
+        int index = url.indexOf("?");
+        String temp = url.substring(index + 1);
+        String[] keyValue = temp.split("&");
+        for (String str : keyValue) {
+            if (str.contains(name)) {
+                result = str.replace(name + "=", "");
+                break;
+            }
+        }
+        return result;
+    }
+
+    public static String getChannelNameByType(int shareType) {
+        switch (shareType) {
+            case 0:
+                return "微信";
+            case 1:
+                return "微信";
+            case 2:
+                return "QQ";
+            case 3:
+                return "微博";
+            case 4:
+                return "QQ";
+            case 5:
+                return "短信";
+            default:
+                return "";
+        }
+    }
+
+    public static String replaceUrlParam(String url, String key, String value) {
+        if (!TextUtils.isEmpty(url) && !TextUtils.isEmpty(key)) {
+            int index = url.indexOf(key + "=");
+            if (index != -1) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(url.substring(0, index)).append(key + "=")
+                        .append(value);
+                int idx = url.indexOf("&", index);
+                if (idx != -1) {
+                    sb.append(url.substring(idx));
+                }
+                url = sb.toString();
+            }
+        }
+        return url;
     }
 }
