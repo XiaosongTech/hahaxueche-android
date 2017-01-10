@@ -138,6 +138,35 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
         HHLog.v("mUrl -> " + mUrl);
     }
 
+    @Override
+    public void startToShare(int shareType) {
+        switch (shareType) {
+            case 0:
+                shareToWeixin();
+                break;
+            case 1:
+                shareToFriendCircle();
+                break;
+            case 2:
+                shareToQQ();
+                break;
+            case 3:
+                shareToWeibo();
+                break;
+            case 4:
+                shareToQZone();
+                break;
+            case 5:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.SEND_SMS}, PERMISSIONS_REQUEST_SEND_SMS);
+                } else {
+                    shareToSms();
+                }
+            default:
+                break;
+        }
+    }
+
     @OnClick({R.id.tv_share})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -292,31 +321,7 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
             shareDialog = new ShareReferDialog(getContext(), mUrl, new ShareDialog.OnShareListener() {
                 @Override
                 public void onShare(int shareType) {
-                    switch (shareType) {
-                        case 0:
-                            shareToWeixin();
-                            break;
-                        case 1:
-                            shareToFriendCircle();
-                            break;
-                        case 2:
-                            shareToQQ();
-                            break;
-                        case 3:
-                            shareToWeibo();
-                            break;
-                        case 4:
-                            shareToQZone();
-                            break;
-                        case 5:
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-                                requestPermissions(new String[]{Manifest.permission.SEND_SMS}, PERMISSIONS_REQUEST_SEND_SMS);
-                            } else {
-                                shareToSms();
-                            }
-                        default:
-                            break;
-                    }
+                    mPresenter.convertUrlForShare(mUrl, shareType);
                 }
             });
         }
