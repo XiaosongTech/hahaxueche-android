@@ -2,6 +2,7 @@ package com.hahaxueche.ui.adapter.myPage;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
@@ -24,7 +25,7 @@ import butterknife.ButterKnife;
  * Created by wangshirui on 2016/11/5.
  */
 
-public class LoopStudentAdapter extends BaseAdapter {
+public class LoopStudentAdapter extends RecyclerView.Adapter<LoopStudentAdapter.ViewHolder> {
     private LayoutInflater inflater;
     private Context mContext;
     private ArrayList<BannerHighlight> mStudentList;
@@ -36,30 +37,14 @@ public class LoopStudentAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
-        return mStudentList.size();
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = inflater.inflate(R.layout.adapter_loop_student_schedule, parent, false);
+        ViewHolder holder = new ViewHolder(view);
+        return holder;
     }
 
     @Override
-    public Object getItem(int position) {
-        return mStudentList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-        if (convertView != null) {
-            holder = (ViewHolder) convertView.getTag();
-        } else {
-            convertView = inflater.inflate(R.layout.adapter_loop_student_schedule, parent, false);
-            holder = new ViewHolder(convertView);
-            convertView.setTag(holder);
-        }
+    public void onBindViewHolder(ViewHolder holder, int position) {
         BannerHighlight student = mStudentList.get(position);
         String infoText = student.text;
         ArrayList<String> highlightsTextList = student.highlights;
@@ -72,10 +57,19 @@ public class LoopStudentAdapter extends BaseAdapter {
         holder.tvStudentText.setText(style);
         holder.tvStudentName.setText(student.name);
         holder.civStudentAvatar.setImageURI(student.avatar_url);
-        return convertView;
     }
 
-    static class ViewHolder {
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemCount() {
+        return mStudentList.size();
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.civ_student_avatar)
         SimpleDraweeView civStudentAvatar;
         @BindView(R.id.tv_student_name)
@@ -84,6 +78,7 @@ public class LoopStudentAdapter extends BaseAdapter {
         TextView tvStudentText;
 
         public ViewHolder(View view) {
+            super(view);
             ButterKnife.bind(this, view);
         }
     }

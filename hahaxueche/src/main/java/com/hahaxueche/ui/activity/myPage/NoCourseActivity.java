@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -17,6 +19,8 @@ import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.adapter.myPage.LoopStudentAdapter;
 import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
 import com.hahaxueche.ui.view.myPage.NoCourseView;
+import com.hahaxueche.ui.widget.recyclerView.DividerItemDecoration;
+import com.hahaxueche.util.Utils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -33,7 +37,7 @@ public class NoCourseActivity extends HHBaseActivity implements NoCourseView {
     ImageView mIvBack;
     TextView mTvTitle;
     @BindView(R.id.lv_loop_student)
-    ListView mLvLoopStudent;
+    RecyclerView mLvLoopStudent;
     private NoCoursePresenter mPresenter;
     private LoopStudentAdapter mLoopStudentAdapter;
     private ArrayList<BannerHighlight> mBannerHightList;
@@ -82,6 +86,9 @@ public class NoCourseActivity extends HHBaseActivity implements NoCourseView {
             loopIndex++;
         }
         mLoopStudentAdapter = new LoopStudentAdapter(this, mLoopBannerHightList);
+        mLvLoopStudent.setLayoutManager(new LinearLayoutManager(this));
+        mLvLoopStudent.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST,
+                Utils.instence(this).dip2px(20)));
         mLvLoopStudent.setAdapter(mLoopStudentAdapter);
         mHandler.sendEmptyMessage(1);
     }

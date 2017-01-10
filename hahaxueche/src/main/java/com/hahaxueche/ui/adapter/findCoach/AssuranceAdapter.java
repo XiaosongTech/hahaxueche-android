@@ -2,6 +2,7 @@ package com.hahaxueche.ui.adapter.findCoach;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ import butterknife.ButterKnife;
  * Created by wangshirui on 2016/12/26.
  */
 
-public class AssuranceAdapter extends BaseAdapter {
+public class AssuranceAdapter extends RecyclerView.Adapter<AssuranceAdapter.ViewHolder> {
     private LayoutInflater inflater;
     private ArrayList<AssuranceProperty> mAssuranceList;
     private Context mContext;
@@ -33,13 +34,19 @@ public class AssuranceAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
-        return mAssuranceList.size();
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = inflater.inflate(R.layout.adapter_assurance, parent, false);
+        ViewHolder holder = new ViewHolder(view);
+        return holder;
     }
 
     @Override
-    public Object getItem(int position) {
-        return mAssuranceList.get(position);
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        AssuranceProperty assuranceProperty = mAssuranceList.get(position);
+        holder.ivIcon.setImageDrawable(ContextCompat.getDrawable(mContext, assuranceProperty.icon_drawable));
+        holder.tvProperty.setText(assuranceProperty.property);
+        holder.tvDescription.setText(assuranceProperty.description);
+        holder.tvStatus.setText(assuranceProperty.status);
     }
 
     @Override
@@ -48,25 +55,11 @@ public class AssuranceAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-
-        if (convertView != null) {
-            holder = (ViewHolder) convertView.getTag();
-        } else {
-            convertView = inflater.inflate(R.layout.adapter_assurance, parent, false);
-            holder = new ViewHolder(convertView);
-            convertView.setTag(holder);
-        }
-        AssuranceProperty assuranceProperty = mAssuranceList.get(position);
-        holder.ivIcon.setImageDrawable(ContextCompat.getDrawable(mContext, assuranceProperty.icon_drawable));
-        holder.tvProperty.setText(assuranceProperty.property);
-        holder.tvDescription.setText(assuranceProperty.description);
-        holder.tvStatus.setText(assuranceProperty.status);
-        return convertView;
+    public int getItemCount() {
+        return mAssuranceList.size();
     }
 
-    static class ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.iv_icon)
         ImageView ivIcon;
         @BindView(R.id.tv_property)
@@ -77,6 +70,7 @@ public class AssuranceAdapter extends BaseAdapter {
         TextView tvStatus;
 
         public ViewHolder(View view) {
+            super(view);
             ButterKnife.bind(this, view);
         }
     }

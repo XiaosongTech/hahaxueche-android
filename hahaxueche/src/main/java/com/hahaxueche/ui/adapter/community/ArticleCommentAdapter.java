@@ -1,6 +1,7 @@
 package com.hahaxueche.ui.adapter.community;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ import butterknife.ButterKnife;
  * Created by wangshirui on 2016/11/4.
  */
 
-public class ArticleCommentAdapter extends BaseAdapter {
+public class ArticleCommentAdapter extends RecyclerView.Adapter<ArticleCommentAdapter.ViewHolder> {
     private LayoutInflater inflater;
     private ArrayList<Comment> mArticleCommentList;
 
@@ -31,13 +32,19 @@ public class ArticleCommentAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
-        return mArticleCommentList.size();
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = inflater.inflate(R.layout.adapter_article_comment, parent, false);
+        ViewHolder holder = new ViewHolder(view);
+        return holder;
     }
 
     @Override
-    public Object getItem(int position) {
-        return mArticleCommentList.get(position);
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        Comment articleComment = mArticleCommentList.get(position);
+        holder.ivAvatar.setImageURI(articleComment.student_avatar);
+        holder.tvName.setText(articleComment.student_name);
+        holder.tvComment.setText(articleComment.content);
+        holder.tvDate.setText(Utils.getDateDotFromUTC(articleComment.created_at));
     }
 
     @Override
@@ -46,24 +53,12 @@ public class ArticleCommentAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ArticleCommentAdapter.ViewHolder holder;
-        if (convertView != null) {
-            holder = (ArticleCommentAdapter.ViewHolder) convertView.getTag();
-        } else {
-            convertView = inflater.inflate(R.layout.adapter_article_comment, parent, false);
-            holder = new ArticleCommentAdapter.ViewHolder(convertView);
-            convertView.setTag(holder);
-        }
-        Comment articleComment = mArticleCommentList.get(position);
-        holder.ivAvatar.setImageURI(articleComment.student_avatar);
-        holder.tvName.setText(articleComment.student_name);
-        holder.tvComment.setText(articleComment.content);
-        holder.tvDate.setText(Utils.getDateDotFromUTC(articleComment.created_at));
-        return convertView;
+    public int getItemCount() {
+        return mArticleCommentList.size();
     }
 
-    static class ViewHolder {
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.iv_avatar)
         SimpleDraweeView ivAvatar;
         @BindView(R.id.tv_name)
@@ -74,6 +69,7 @@ public class ArticleCommentAdapter extends BaseAdapter {
         TextView tvComment;
 
         public ViewHolder(View view) {
+            super(view);
             ButterKnife.bind(this, view);
         }
     }

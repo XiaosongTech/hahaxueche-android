@@ -3,6 +3,8 @@ package com.hahaxueche.ui.activity.community;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -12,6 +14,8 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.community.Comment;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.adapter.community.ArticleCommentAdapter;
+import com.hahaxueche.ui.widget.recyclerView.DividerItemDecoration;
+import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
 
@@ -26,7 +30,7 @@ public class ArticleCommentsActivity extends HHBaseActivity {
     ImageView mIvBack;
     TextView mTvTitle;
     @BindView(R.id.lv_article_comments)
-    ListView mLvArticleComments;
+    RecyclerView mLvArticleComments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,9 @@ public class ArticleCommentsActivity extends HHBaseActivity {
         Intent intent = getIntent();
         if (intent.getParcelableArrayListExtra("comments") != null) {
             ArrayList<Comment> comments = intent.getParcelableArrayListExtra("comments");
+            mLvArticleComments.setLayoutManager(new LinearLayoutManager(this));
+            mLvArticleComments.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST,
+                    Utils.instence(this).dip2px(20)));
             ArticleCommentAdapter adapter = new ArticleCommentAdapter(this, comments);
             mLvArticleComments.setAdapter(adapter);
         }

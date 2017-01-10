@@ -2,6 +2,7 @@ package com.hahaxueche.ui.adapter.myPage;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,42 +24,32 @@ import butterknife.ButterKnife;
  * Created by wangshirui on 2016/11/12.
  */
 
-public class SelectVoucherAdapter extends BaseAdapter {
+public class SelectVoucherAdapter extends RecyclerView.Adapter<SelectVoucherAdapter.ViewHolder> {
     private LayoutInflater inflater;
     private Context mContext;
     private ArrayList<Voucher> mVoucherList;
+    private OnRecyclerViewItemClickListener mOnItemClickListener;
 
-    public SelectVoucherAdapter(Context context, ArrayList<Voucher> VoucherArrayList) {
+    public interface OnRecyclerViewItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+    public SelectVoucherAdapter(Context context, ArrayList<Voucher> VoucherArrayList, OnRecyclerViewItemClickListener listener) {
         inflater = LayoutInflater.from(context);
         mContext = context;
         mVoucherList = VoucherArrayList;
+        mOnItemClickListener = listener;
     }
 
     @Override
-    public int getCount() {
-        return mVoucherList.size();
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = inflater.inflate(R.layout.adapter_select_voucher, parent, false);
+        ViewHolder holder = new ViewHolder(view);
+        return holder;
     }
 
     @Override
-    public Object getItem(int position) {
-        return mVoucherList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-        if (convertView != null) {
-            holder = (ViewHolder) convertView.getTag();
-        } else {
-            convertView = inflater.inflate(R.layout.adapter_select_voucher, parent, false);
-            holder = new ViewHolder(convertView);
-            convertView.setTag(holder);
-        }
+    public void onBindViewHolder(ViewHolder holder, int position) {
         Voucher voucher = mVoucherList.get(position);
         holder.tvAmount.setText(Utils.getMoney(voucher.amount));
         holder.tvTitle.setText(voucher.title);
@@ -69,10 +60,19 @@ public class SelectVoucherAdapter extends BaseAdapter {
         }
         holder.ivSelect.setImageDrawable(ContextCompat.getDrawable(mContext,
                 voucher.isSelect ? R.drawable.ic_cashout_chack_btn : R.drawable.ic_cashout_unchack_btn));
-        return convertView;
     }
 
-    static class ViewHolder {
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemCount() {
+        return mVoucherList.size();
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.tv_amount)
         TextView tvAmount;
         @BindView(R.id.tv_title)
@@ -83,7 +83,16 @@ public class SelectVoucherAdapter extends BaseAdapter {
         ImageView ivSelect;
 
         public ViewHolder(View view) {
+            super(view);
             ButterKnife.bind(this, view);
+            view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (mOnItemClickListener != null) {
+                mOnItemClickListener.onItemClick(itemView, getAdapterPosition());
+            }
         }
     }
 }

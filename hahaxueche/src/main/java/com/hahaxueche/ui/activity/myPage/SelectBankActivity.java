@@ -4,15 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
@@ -21,6 +21,7 @@ import com.hahaxueche.presenter.myPage.SelectBankPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.adapter.myPage.BankAdapter;
 import com.hahaxueche.ui.view.myPage.SelectBankView;
+import com.hahaxueche.ui.widget.recyclerView.DividerItemDecoration;
 import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class SelectBankActivity extends HHBaseActivity implements SelectBankView
     ImageView mIvBack;
     TextView mTvTitle;
     @BindView(R.id.lv_open_bank)
-    ListView mLvOpenBank;
+    RecyclerView mLvOpenBank;
     BankAdapter mAdapter;
     @BindView(R.id.lly_popular_bank)
     LinearLayout mLlyPopularBank;
@@ -52,15 +53,6 @@ public class SelectBankActivity extends HHBaseActivity implements SelectBankView
         ButterKnife.bind(this);
         mPresenter.attachView(this);
         initActionBar();
-        mLvOpenBank.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                ArrayList<Bank> banks = mPresenter.getBanks();
-                if (banks != null && banks.size() > 0 && position > -1 && position < banks.size()) {
-                    selectBank(banks.get(position));
-                }
-            }
-        });
         mEtSearchOpenBank.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -102,7 +94,17 @@ public class SelectBankActivity extends HHBaseActivity implements SelectBankView
 
     @Override
     public void showBankList(ArrayList<Bank> banks) {
-        mAdapter = new BankAdapter(this, banks);
+        mAdapter = new BankAdapter(this, banks, new BankAdapter.OnRecyclerViewItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                ArrayList<Bank> banks = mPresenter.getBanks();
+                if (banks != null && banks.size() > 0 && position > -1 && position < banks.size()) {
+                    selectBank(banks.get(position));
+                }
+            }
+        });
+        mLvOpenBank.setLayoutManager(new LinearLayoutManager(this));
+        mLvOpenBank.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
         mLvOpenBank.setAdapter(mAdapter);
     }
 

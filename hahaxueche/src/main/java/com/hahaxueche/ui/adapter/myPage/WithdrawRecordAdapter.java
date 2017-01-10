@@ -1,6 +1,7 @@
 package com.hahaxueche.ui.adapter.myPage;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,7 @@ import butterknife.ButterKnife;
  * Created by wangshirui on 2016/11/1.
  */
 
-public class WithdrawRecordAdapter extends BaseAdapter {
+public class WithdrawRecordAdapter extends RecyclerView.Adapter<WithdrawRecordAdapter.ViewHolder> {
     private LayoutInflater inflater;
     private ArrayList<WithdrawRecord> mWithdrawRecordList;
 
@@ -30,13 +31,18 @@ public class WithdrawRecordAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
-        return mWithdrawRecordList.size();
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = inflater.inflate(R.layout.adapter_withdraw_record, parent, false);
+        ViewHolder holder = new ViewHolder(view);
+        return holder;
     }
 
     @Override
-    public Object getItem(int position) {
-        return mWithdrawRecordList.get(position);
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        WithdrawRecord withdrawRecord = mWithdrawRecordList.get(position);
+        holder.tvWithdrawAmount.setText(Utils.getMoney(withdrawRecord.amount));
+        holder.tvWithdrawStatus.setText(withdrawRecord.getStatusLabel());
+        holder.tvWithdrawTime.setText(withdrawRecord.withdrawed_at);
     }
 
     @Override
@@ -45,23 +51,11 @@ public class WithdrawRecordAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        WithdrawRecordAdapter.ViewHolder holder;
-        if (convertView != null) {
-            holder = (WithdrawRecordAdapter.ViewHolder) convertView.getTag();
-        } else {
-            convertView = inflater.inflate(R.layout.adapter_withdraw_record, parent, false);
-            holder = new WithdrawRecordAdapter.ViewHolder(convertView);
-            convertView.setTag(holder);
-        }
-        WithdrawRecord withdrawRecord = mWithdrawRecordList.get(position);
-        holder.tvWithdrawAmount.setText(Utils.getMoney(withdrawRecord.amount));
-        holder.tvWithdrawStatus.setText(withdrawRecord.getStatusLabel());
-        holder.tvWithdrawTime.setText(withdrawRecord.withdrawed_at);
-        return convertView;
+    public int getItemCount() {
+        return mWithdrawRecordList.size();
     }
 
-    static class ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_withdraw_status)
         TextView tvWithdrawStatus;
         @BindView(R.id.tv_withdraw_amount)
@@ -70,6 +64,7 @@ public class WithdrawRecordAdapter extends BaseAdapter {
         TextView tvWithdrawTime;
 
         public ViewHolder(View view) {
+            super(view);
             ButterKnife.bind(this, view);
         }
     }

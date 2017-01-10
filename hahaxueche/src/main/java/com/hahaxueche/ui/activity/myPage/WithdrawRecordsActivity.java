@@ -2,9 +2,10 @@ package com.hahaxueche.ui.activity.myPage;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
@@ -13,6 +14,8 @@ import com.hahaxueche.presenter.myPage.WithdrawRecordsPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.adapter.myPage.WithdrawRecordAdapter;
 import com.hahaxueche.ui.view.myPage.WithdrawRecordsView;
+import com.hahaxueche.ui.widget.recyclerView.DividerItemDecoration;
+import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
 
@@ -26,7 +29,7 @@ import butterknife.ButterKnife;
 public class WithdrawRecordsActivity extends HHBaseActivity implements WithdrawRecordsView {
     private WithdrawRecordsPresenter mPresenter;
     @BindView(R.id.lv_withdraw_records)
-    ListView mLvWithdrawRecords;
+    RecyclerView mLvWithdrawRecords;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,9 @@ public class WithdrawRecordsActivity extends HHBaseActivity implements WithdrawR
 
     @Override
     public void loadWithdrawRecords(ArrayList<WithdrawRecord> withdrawRecords) {
+        mLvWithdrawRecords.setLayoutManager(new LinearLayoutManager(this));
+        mLvWithdrawRecords.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST,
+                Utils.instence(this).dip2px(20)));
         WithdrawRecordAdapter adapter = new WithdrawRecordAdapter(this, withdrawRecords);
         mLvWithdrawRecords.setAdapter(adapter);
     }

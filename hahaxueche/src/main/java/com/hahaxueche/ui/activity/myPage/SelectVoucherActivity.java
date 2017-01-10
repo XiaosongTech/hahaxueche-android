@@ -3,6 +3,8 @@ package com.hahaxueche.ui.activity.myPage;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -13,6 +15,8 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.payment.Voucher;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.adapter.myPage.SelectVoucherAdapter;
+import com.hahaxueche.ui.widget.recyclerView.SpaceItemDecoration;
+import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
 
@@ -27,7 +31,7 @@ public class SelectVoucherActivity extends HHBaseActivity {
     ImageView mIvBack;
     TextView mTvTitle;
     @BindView(R.id.lv_vouchers)
-    ListView mLvVouchers;
+    RecyclerView mLvVouchers;
     SelectVoucherAdapter mAdapter;
     private ArrayList<Voucher> mVoucherList;
 
@@ -40,11 +44,9 @@ public class SelectVoucherActivity extends HHBaseActivity {
         Intent intent = getIntent();
         if (intent.getParcelableArrayListExtra("voucherList") != null) {
             mVoucherList = intent.getParcelableArrayListExtra("voucherList");
-            mAdapter = new SelectVoucherAdapter(getContext(), mVoucherList);
-            mLvVouchers.setAdapter(mAdapter);
-            mLvVouchers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            mAdapter = new SelectVoucherAdapter(getContext(), mVoucherList, new SelectVoucherAdapter.OnRecyclerViewItemClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                public void onItemClick(View view, int position) {
                     if (mVoucherList != null && mVoucherList.size() > 0 && position > -1 && position < mVoucherList.size()) {
                         unSelectAll();
                         mVoucherList.get(position).isSelect = true;
@@ -56,6 +58,9 @@ public class SelectVoucherActivity extends HHBaseActivity {
                     }
                 }
             });
+            mLvVouchers.setLayoutManager(new LinearLayoutManager(this));
+            mLvVouchers.addItemDecoration(new SpaceItemDecoration(Utils.instence(this).dip2px(15)));
+            mLvVouchers.setAdapter(mAdapter);
         }
     }
 
