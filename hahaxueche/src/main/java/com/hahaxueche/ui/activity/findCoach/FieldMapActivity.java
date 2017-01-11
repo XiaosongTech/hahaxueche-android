@@ -39,10 +39,6 @@ import butterknife.ButterKnife;
 
 public class FieldMapActivity extends HHBaseActivity implements FieldMapView,  AMap.OnMarkerClickListener {
     private FieldMapPresenter mPresenter;
-    private ImageView mIvBack;
-    private TextView mTvTitle;
-    private TextView mTvGuide;
-    private MarkerOptions markerOption;
     private AMap aMap;
     @BindView(R.id.map)
     MapView mapView;
@@ -71,9 +67,9 @@ public class FieldMapActivity extends HHBaseActivity implements FieldMapView,  A
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setCustomView(R.layout.actionbar_field_map);
-        mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
-        mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
-        mTvGuide = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_guide);
+        ImageView mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
+        TextView mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
+        TextView mTvGuide = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_guide);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         mTvTitle.setText("训练场地图");
         mIvBack.setOnClickListener(new View.OnClickListener() {
@@ -110,7 +106,7 @@ public class FieldMapActivity extends HHBaseActivity implements FieldMapView,  A
      */
     private void addMarkersToMap() {
         ArrayList<MarkerOptions> markerOptionlst = new ArrayList<>();
-        markerOption = new MarkerOptions();
+        MarkerOptions markerOption = new MarkerOptions();
         Field field = mPresenter.getField();
         LatLng x = new LatLng(field.lat, field.lng);
         markerOption.position(x);

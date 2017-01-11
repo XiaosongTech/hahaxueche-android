@@ -43,7 +43,6 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
     private OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
     private AMapLocationClientOption mLocationOption;
-    private MarkerOptions markerOption;
     private AMap aMap;
     @BindView(R.id.map)
     MapView mapView;
@@ -226,7 +225,7 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
     public void setFields(ArrayList<Field> fields) {
         ArrayList<MarkerOptions> markerOptionlst = new ArrayList<>();
         for (Field field : fields) {
-            markerOption = new MarkerOptions();
+            MarkerOptions markerOption = new MarkerOptions();
             LatLng x = new LatLng(field.lat, field.lng);
             markerOption.position(x);
             markerOption.title(field.name).snippet(field.street);

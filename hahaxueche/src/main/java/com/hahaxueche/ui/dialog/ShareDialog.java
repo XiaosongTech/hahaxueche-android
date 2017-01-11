@@ -19,14 +19,6 @@ import butterknife.ButterKnife;
  * Created by gibxin on 2016/2/21.
  */
 public class ShareDialog extends Dialog {
-    private Context mContext;
-    private TextView tvShareQQ;
-    private TextView tvShareWeibo;
-    private TextView tvShareWeixin;
-    private TextView tvShareFriendCircle;
-    private TextView tvShareCancel;
-    private TextView tvShareQzone;
-    private TextView tvShareSms;
 
     public interface OnShareListener {
         void onShare(int shareType);
@@ -36,7 +28,7 @@ public class ShareDialog extends Dialog {
 
     public ShareDialog(Context context, OnShareListener onShareListener) {
         super(context);
-        mContext = context;
+        Context mContext = context;
         mOnShareListener = onShareListener;
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
@@ -58,7 +50,7 @@ public class ShareDialog extends Dialog {
      * @param view
      */
     private void initView(View view) {
-        tvShareWeixin = ButterKnife.findById(view, R.id.tv_share_weixin);
+        TextView tvShareWeixin = ButterKnife.findById(view, R.id.tv_share_weixin);
         tvShareWeixin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,7 +58,7 @@ public class ShareDialog extends Dialog {
                 dismiss();
             }
         });
-        tvShareFriendCircle = ButterKnife.findById(view, R.id.tv_share_friend_circle);
+        TextView tvShareFriendCircle = ButterKnife.findById(view, R.id.tv_share_friend_circle);
         tvShareFriendCircle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,14 +66,14 @@ public class ShareDialog extends Dialog {
                 dismiss();
             }
         });
-        tvShareQQ = ButterKnife.findById(view, R.id.tv_share_qq);
+        TextView tvShareQQ = ButterKnife.findById(view, R.id.tv_share_qq);
         tvShareQQ.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mOnShareListener.onShare(2);
             }
         });
-        tvShareWeibo = ButterKnife.findById(view, R.id.tv_share_weibo);
+        TextView tvShareWeibo = ButterKnife.findById(view, R.id.tv_share_weibo);
         tvShareWeibo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,7 +81,7 @@ public class ShareDialog extends Dialog {
                 dismiss();
             }
         });
-        tvShareQzone = ButterKnife.findById(view, R.id.tv_share_qzone);
+        TextView tvShareQzone = ButterKnife.findById(view, R.id.tv_share_qzone);
         tvShareQzone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,7 +89,7 @@ public class ShareDialog extends Dialog {
                 dismiss();
             }
         });
-        tvShareSms = ButterKnife.findById(view, R.id.tv_share_sms);
+        TextView tvShareSms = ButterKnife.findById(view, R.id.tv_share_sms);
         tvShareSms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,7 +97,7 @@ public class ShareDialog extends Dialog {
                 dismiss();
             }
         });
-        tvShareCancel = ButterKnife.findById(view, R.id.tv_share_cancel);
+        TextView tvShareCancel = ButterKnife.findById(view, R.id.tv_share_cancel);
         tvShareCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -35,17 +35,7 @@ import butterknife.ButterKnife;
  */
 
 public class ShareReferDialog extends Dialog {
-    private Context mContext;
-    private TextView tvShareQQ;
-    private TextView tvShareWeibo;
-    private TextView tvShareWeixin;
-    private TextView tvShareFriendCircle;
-    private TextView tvShareQzone;
-    private TextView tvShareSms;
-    private ImageView ivClose;
     private ImageView mIvQrCode;
-    private static int QR_WIDTH = 300;
-    private static int QR_HEIGHT = 300;
     private String mUrl;
 
     public interface OnShareListener {
@@ -56,7 +46,7 @@ public class ShareReferDialog extends Dialog {
 
     public ShareReferDialog(Context context, String url, ShareDialog.OnShareListener onShareListener) {
         super(context);
-        mContext = context;
+        Context mContext = context;
         mUrl = url;
         mOnShareListener = onShareListener;
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -82,6 +72,8 @@ public class ShareReferDialog extends Dialog {
             Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();
             hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
             //图像数据转换，使用了矩阵转换
+            int QR_WIDTH = 300;
+            int QR_HEIGHT = 300;
             BitMatrix bitMatrix = new QRCodeWriter().encode(mUrl, BarcodeFormat.QR_CODE, QR_WIDTH, QR_HEIGHT, hints);
             int[] pixels = new int[QR_WIDTH * QR_HEIGHT];
             //下面这里按照二维码的算法，逐个生成二维码的图片，
@@ -112,7 +104,7 @@ public class ShareReferDialog extends Dialog {
      * @param view
      */
     private void initView(View view) {
-        tvShareWeixin = ButterKnife.findById(view, R.id.tv_share_weixin);
+        TextView tvShareWeixin = ButterKnife.findById(view, R.id.tv_share_weixin);
         tvShareWeixin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,7 +112,7 @@ public class ShareReferDialog extends Dialog {
                 dismiss();
             }
         });
-        tvShareFriendCircle = ButterKnife.findById(view, R.id.tv_share_friend_circle);
+        TextView tvShareFriendCircle = ButterKnife.findById(view, R.id.tv_share_friend_circle);
         tvShareFriendCircle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,14 +120,14 @@ public class ShareReferDialog extends Dialog {
                 dismiss();
             }
         });
-        tvShareQQ = ButterKnife.findById(view, R.id.tv_share_qq);
+        TextView tvShareQQ = ButterKnife.findById(view, R.id.tv_share_qq);
         tvShareQQ.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mOnShareListener.onShare(2);
             }
         });
-        tvShareWeibo = ButterKnife.findById(view, R.id.tv_share_weibo);
+        TextView tvShareWeibo = ButterKnife.findById(view, R.id.tv_share_weibo);
         tvShareWeibo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,7 +135,7 @@ public class ShareReferDialog extends Dialog {
                 dismiss();
             }
         });
-        tvShareQzone = ButterKnife.findById(view, R.id.tv_share_qzone);
+        TextView tvShareQzone = ButterKnife.findById(view, R.id.tv_share_qzone);
         tvShareQzone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,7 +143,7 @@ public class ShareReferDialog extends Dialog {
                 dismiss();
             }
         });
-        tvShareSms = ButterKnife.findById(view, R.id.tv_share_sms);
+        TextView tvShareSms = ButterKnife.findById(view, R.id.tv_share_sms);
         tvShareSms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -159,7 +151,7 @@ public class ShareReferDialog extends Dialog {
                 dismiss();
             }
         });
-        ivClose = ButterKnife.findById(view, R.id.iv_close);
+        ImageView ivClose = ButterKnife.findById(view, R.id.iv_close);
         ivClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

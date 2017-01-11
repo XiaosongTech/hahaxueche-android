@@ -24,12 +24,10 @@ import butterknife.ButterKnife;
 public class PartnerAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<Partner> mPartnerList;
-    private HHBaseApplication application;
 
     public PartnerAdapter(Context context, ArrayList<Partner> PartnerList) {
         mContext = context;
         mPartnerList = PartnerList;
-        application = HHBaseApplication.get(mContext);
     }
 
     @Override

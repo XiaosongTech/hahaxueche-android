@@ -17,14 +17,13 @@ public class SelectBankPresenter implements Presenter<SelectBankView> {
     private SelectBankView mSelectBankView;
     private HHBaseApplication application;
     private ArrayList<Bank> mBanks;
-    private ArrayList<Bank> mPopularBanks;
 
     public void attachView(SelectBankView view) {
         this.mSelectBankView = view;
         application = HHBaseApplication.get(mSelectBankView.getContext());
         mBanks = application.getConstants().banks;
         if (mBanks == null || mBanks.size() < 1) return;
-        mPopularBanks = new ArrayList<>();
+        ArrayList<Bank> mPopularBanks = new ArrayList<>();
         for (Bank bank : mBanks) {
             if (bank.is_popular) {
                 mPopularBanks.add(bank);

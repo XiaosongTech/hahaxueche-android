@@ -102,7 +102,6 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
     private static final int PERMISSIONS_REQUEST_SDCARD = 600;
     private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
     private PhotoUtil mPhotoUtil;
-    private String mAlbumPicturePath = null;
     private MyAdviserDialog mConsultantDialog;
     private EditUsernameDialog mEditUsernameDialog;
     private static final int REQUEST_CODE_NO_COURSE = 12;
@@ -543,7 +542,7 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
     }
 
     private void cropImageUriAfterKikat(Intent data) {
-        mAlbumPicturePath = mPhotoUtil.getPath(getContext(), data.getData());
+        String mAlbumPicturePath = mPhotoUtil.getPath(getContext(), data.getData());
         File imageFile = new File(mAlbumPicturePath);
         Uri imageUri;
         if (Build.VERSION.SDK_INT >= 24) {

@@ -4,8 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -121,7 +119,6 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     TextView mTvBadgeLevel;
     @BindView(R.id.tv_badge_pay)
     TextView mTvBadgePay;
-    private ReviewResponseList mReviewResponse;
     /*****************
      * 分享
      ******************/
@@ -627,7 +624,6 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
 
     @Override
     public void showReviews(ReviewResponseList responseList) {
-        mReviewResponse = responseList;
         int showReviewCount = responseList.data.size() > 3 ? 3 : responseList.data.size();
         for (int i = 0; i < showReviewCount; i++) {
             mLlyReviews.addView(getReviewAdapter(responseList.data.get(i), i == showReviewCount - 1), i + 2);

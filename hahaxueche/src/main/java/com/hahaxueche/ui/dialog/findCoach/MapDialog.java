@@ -41,10 +41,8 @@ public class MapDialog extends AlertDialog implements AMap.OnMarkerClickListener
     private TextView infoTextView;
     private AMap aMap;
     private MapView mapView;
-    private MarkerOptions markerOption;
     private int contentWidth, contentHeight;
     private View contentView;
-    private Display display;
     private Field mField;
     private View mView;
 
@@ -95,7 +93,7 @@ public class MapDialog extends AlertDialog implements AMap.OnMarkerClickListener
     private void initMap() {
         if (mField != null) {
             ArrayList<MarkerOptions> markerOptionlst = new ArrayList<>();
-            markerOption = new MarkerOptions();
+            MarkerOptions markerOption = new MarkerOptions();
             LatLng x = new LatLng(mField.lat, mField.lng);
             markerOption.position(x);
             markerOption.title(mField.name).snippet(mField.street);
@@ -133,7 +131,7 @@ public class MapDialog extends AlertDialog implements AMap.OnMarkerClickListener
         int x = location[0] + mView.getWidth() / 2 - contentWidth / 2;
         int y = location[1] + mView.getHeight() - stateBarH;
         WindowManager m = ((Activity) mContext).getWindowManager();
-        display = m.getDefaultDisplay(); // 获取屏幕宽、高用
+        Display display = m.getDefaultDisplay();
         Rect rect = new Rect();
         display.getRectSize(rect);
         if ((y + contentHeight) > rect.height()) {

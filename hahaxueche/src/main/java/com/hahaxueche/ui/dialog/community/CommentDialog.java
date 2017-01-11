@@ -23,8 +23,6 @@ import butterknife.ButterKnife;
 
 public class CommentDialog extends Dialog {
     private Context mContext;
-    private TextView tvCancel;
-    private TextView tvSend;
     private EditText etComment;
 
     public interface OnCommentListener {
@@ -62,7 +60,7 @@ public class CommentDialog extends Dialog {
      */
     private void initView(View view) {
         etComment = ButterKnife.findById(view, R.id.et_comment);
-        tvCancel = ButterKnife.findById(view, R.id.tv_cancel);
+        TextView tvCancel = ButterKnife.findById(view, R.id.tv_cancel);
         tvCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,7 +73,7 @@ public class CommentDialog extends Dialog {
                 dismiss();
             }
         });
-        tvSend = ButterKnife.findById(view, R.id.tv_send);
+        TextView tvSend = ButterKnife.findById(view, R.id.tv_send);
         tvSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
