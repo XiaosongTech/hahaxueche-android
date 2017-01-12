@@ -45,7 +45,7 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             //原url地址
-            String url = WebViewUrl.WEB_URL_DALIBAO + "&referrer_id=" + user.student.user_identity_id;
+            String url = WebViewUrl.WEB_URL_REFER_FRIENDS + "&referrer_id=" + user.student.user_identity_id;
             mReferFriendsView.initShareData(url);
         }
     }
