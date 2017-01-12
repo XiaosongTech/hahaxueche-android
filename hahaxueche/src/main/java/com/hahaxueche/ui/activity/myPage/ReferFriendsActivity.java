@@ -104,6 +104,10 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
         mTvReferDouble.setText(spReferDouble);
         mTvReferDouble.setHighlightColor(ContextCompat.getColor(getContext(), R.color.haha_red));
         mTvReferDouble.setMovementMethod(LinkMovementMethod.getInstance());
+        Intent intent = getIntent();
+        if (intent.getBooleanExtra("isFromLinkedMe", false)) {
+            alertToLogin();
+        }
     }
 
 

@@ -24,6 +24,7 @@ import com.hahaxueche.ui.activity.community.ArticleActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.PartnerDetailActivity;
 import com.hahaxueche.ui.activity.myPage.MyContractActivity;
+import com.hahaxueche.ui.activity.myPage.MyReferActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.activity.myPage.UploadIdCardActivity;
 import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
@@ -121,19 +122,31 @@ public class MainActivity extends HHBaseActivity implements MainView {
         mTabHost.getTabWidget().setDividerDrawable(null);
         Intent intent = getIntent();
         Bundle shareObject = intent.getBundleExtra("shareObject");
-        if (shareObject != null && !TextUtils.isEmpty(shareObject.getString("objectId", ""))) {
-            if (shareObject.getString("type", "").equals("coach_detail")) {
-                Intent startIntent = new Intent(getContext(), CoachDetailActivity.class);
-                startIntent.putExtra("coach_id", shareObject.getString("objectId", ""));
-                startActivity(startIntent);
-            } else if (shareObject.getString("type", "").equals("training_partner_detail")) {
-                Intent startIntent = new Intent(getContext(), PartnerDetailActivity.class);
-                startIntent.putExtra("partnerId", shareObject.getString("objectId", ""));
-                startActivity(startIntent);
-            } else if (shareObject.getString("type", "").equals("article")) {
-                Intent startIntent = new Intent(getContext(), ArticleActivity.class);
-                startIntent.putExtra("articleId", shareObject.getString("objectId", ""));
-                startActivity(startIntent);
+        if (shareObject != null) {
+            if (!TextUtils.isEmpty(shareObject.getString("objectId", ""))) {
+                if (shareObject.getString("type", "").equals("coach_detail")) {
+                    Intent startIntent = new Intent(getContext(), CoachDetailActivity.class);
+                    startIntent.putExtra("coach_id", shareObject.getString("objectId", ""));
+                    startActivity(startIntent);
+                } else if (shareObject.getString("type", "").equals("training_partner_detail")) {
+                    Intent startIntent = new Intent(getContext(), PartnerDetailActivity.class);
+                    startIntent.putExtra("partnerId", shareObject.getString("objectId", ""));
+                    startActivity(startIntent);
+                } else if (shareObject.getString("type", "").equals("article")) {
+                    Intent startIntent = new Intent(getContext(), ArticleActivity.class);
+                    startIntent.putExtra("articleId", shareObject.getString("objectId", ""));
+                    startActivity(startIntent);
+                }
+            } else if (shareObject.getString("type", "").equals("refer_record")) {
+                if (shareObject.getBoolean("isLogin", false)) {
+                    Intent startIntent = new Intent(getContext(), MyReferActivity.class);
+                    startActivity(startIntent);
+                } else {
+                    Intent startIntent = new Intent(getContext(), ReferFriendsActivity.class);
+                    startIntent.putExtra("isFromLinkedMe", true);
+                    startActivity(startIntent);
+                }
+
             }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {

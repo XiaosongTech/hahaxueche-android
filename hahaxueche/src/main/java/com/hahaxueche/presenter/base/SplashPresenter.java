@@ -94,6 +94,7 @@ public class SplashPresenter implements Presenter<SplashView> {
                             if (!student.isCompleted()) {
                                 mSplashView.navigateToCompleteInfo();
                             } else {
+                                mShareObject.putBoolean("isLogin", true);
                                 mSplashView.navigateToHomepage(mShareObject);
                             }
                         }
