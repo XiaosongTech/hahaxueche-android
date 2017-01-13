@@ -5,9 +5,11 @@ import android.text.TextUtils;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.ShortenUrl;
+import com.hahaxueche.model.user.identity.MarketingInfo;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.base.BaseWebViewView;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.Utils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -37,7 +39,37 @@ public class BaseWebViewPresenter implements Presenter<BaseWebViewView> {
         application = null;
     }
 
-    public void shortenUrl(String url) {
+    public void convertUrlForShare(final String url, final int shareType) {
+        if (TextUtils.isEmpty(url)) return;
+        if (shareType < 0 || shareType > 5) return;
+        HHApiService apiService = application.getApiService();
+        String promoCode = Utils.getUrlValueByName(url, "promo_code");
+        if (!TextUtils.isEmpty(promoCode)) {
+            subscription = apiService.convertPromoCode(Utils.getChannelNameByType(shareType), promoCode)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(application.defaultSubscribeScheduler())
+                    .subscribe(new Subscriber<MarketingInfo>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            shortenUrl(url, shareType);
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onNext(MarketingInfo marketingInfo) {
+                            shortenUrl(Utils.replaceUrlParam(url, "promo_code", marketingInfo.promo_code), shareType);
+                        }
+                    });
+        } else {
+            shortenUrl(url, shareType);
+        }
+    }
+
+    private void shortenUrl(String url, final int shareType) {
         if (TextUtils.isEmpty(url)) return;
         String longUrl = null;
         HHApiService apiService = application.getApiService();
@@ -54,7 +86,7 @@ public class BaseWebViewPresenter implements Presenter<BaseWebViewView> {
                 .subscribe(new Subscriber<ArrayList<ShortenUrl>>() {
                     @Override
                     public void onCompleted() {
-
+                        mView.startToShare(shareType);
                     }
 
                     @Override

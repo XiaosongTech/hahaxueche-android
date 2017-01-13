@@ -10,12 +10,14 @@ import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.ShortenUrl;
 import com.hahaxueche.model.payment.Voucher;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.user.identity.MarketingInfo;
 import com.hahaxueche.model.user.student.BookAddress;
 import com.hahaxueche.model.user.student.Contact;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.base.MainView;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.HahaCache;
+import com.hahaxueche.util.Utils;
 import com.hahaxueche.util.WebViewUrl;
 import com.umeng.analytics.MobclickAgent;
 
@@ -165,36 +167,7 @@ public class MainPresenter implements Presenter<MainView> {
             if (maxVoucher != null) {
                 //原url地址
                 String url = WebViewUrl.WEB_URL_DALIBAO;
-                String longUrl = null;
-                HHApiService apiService = application.getApiService();
-                try {
-                    longUrl = " https://api.t.sina.com.cn/short_url/shorten.json?source=4186780524&url_long=" +
-                            URLEncoder.encode(url, "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                if (TextUtils.isEmpty(longUrl)) return;
-                subscription = apiService.shortenUrl(longUrl)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(application.defaultSubscribeScheduler())
-                        .subscribe(new Subscriber<ArrayList<ShortenUrl>>() {
-                            @Override
-                            public void onCompleted() {
-
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                HHLog.e(e.getMessage());
-                            }
-
-                            @Override
-                            public void onNext(ArrayList<ShortenUrl> shortenUrls) {
-                                if (shortenUrls != null && shortenUrls.size() > 0) {
-                                    mBaseView.initShareData(shortenUrls.get(0).url_short);
-                                }
-                            }
-                        });
+                mBaseView.initShareData(url);
                 mBaseView.showVoucherDialog(user.student.id, maxVoucher);
             }
         }
@@ -277,6 +250,70 @@ public class MainPresenter implements Presenter<MainView> {
                     @Override
                     public void onNext(String ret) {
 
+                    }
+                });
+    }
+
+    public void convertUrlForShare(final String url, final int shareType) {
+        if (TextUtils.isEmpty(url)) return;
+        if (shareType < 0 || shareType > 5) return;
+        HHApiService apiService = application.getApiService();
+        String promoCode = Utils.getUrlValueByName(url, "promo_code");
+        if (!TextUtils.isEmpty(promoCode)) {
+            subscription = apiService.convertPromoCode(Utils.getChannelNameByType(shareType), promoCode)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(application.defaultSubscribeScheduler())
+                    .subscribe(new Subscriber<MarketingInfo>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            shortenUrl(url, shareType);
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onNext(MarketingInfo marketingInfo) {
+                            shortenUrl(Utils.replaceUrlParam(url, "promo_code", marketingInfo.promo_code), shareType);
+                        }
+                    });
+        } else {
+            shortenUrl(url, shareType);
+        }
+    }
+
+    private void shortenUrl(String url, final int shareType) {
+        if (TextUtils.isEmpty(url)) return;
+        String longUrl = null;
+        HHApiService apiService = application.getApiService();
+        try {
+            longUrl = " https://api.t.sina.com.cn/short_url/shorten.json?source=4186780524&url_long=" +
+                    URLEncoder.encode(url, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        if (TextUtils.isEmpty(longUrl)) return;
+        subscription = apiService.shortenUrl(longUrl)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<ArrayList<ShortenUrl>>() {
+                    @Override
+                    public void onCompleted() {
+                        mBaseView.startToShare(shareType);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<ShortenUrl> shortenUrls) {
+                        if (shortenUrls != null && shortenUrls.size() > 0) {
+                            mBaseView.initShareData(shortenUrls.get(0).url_short);
+                        }
                     }
                 });
     }

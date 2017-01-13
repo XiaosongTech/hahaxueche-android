@@ -77,7 +77,6 @@ public class BaseWebViewActivity extends HHBaseActivity implements BaseWebViewVi
         mPresenter.attachView(this);
         initActionBar();
         loadDatas();
-        mPresenter.shortenUrl(url);
         baseWebView.setWebViewClient(new WebViewClient() {
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
@@ -148,31 +147,7 @@ public class BaseWebViewActivity extends HHBaseActivity implements BaseWebViewVi
                     shareDialog = new ShareDialog(getContext(), new ShareDialog.OnShareListener() {
                         @Override
                         public void onShare(int shareType) {
-                            switch (shareType) {
-                                case 0:
-                                    shareToWeixin();
-                                    break;
-                                case 1:
-                                    shareToFriendCircle();
-                                    break;
-                                case 2:
-                                    shareToQQ();
-                                    break;
-                                case 3:
-                                    shareToWeibo();
-                                    break;
-                                case 4:
-                                    shareToQZone();
-                                    break;
-                                case 5:
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-                                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, PERMISSIONS_REQUEST_SEND_SMS);
-                                    } else {
-                                        shareToSms();
-                                    }
-                                default:
-                                    break;
-                            }
+                            mPresenter.convertUrlForShare(url, shareType);
                         }
                     });
                 }
@@ -363,6 +338,35 @@ public class BaseWebViewActivity extends HHBaseActivity implements BaseWebViewVi
     @Override
     public void showMessage(String message) {
         Snackbar.make(mLlyMain, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void startToShare(int shareType) {
+        switch (shareType) {
+            case 0:
+                shareToWeixin();
+                break;
+            case 1:
+                shareToFriendCircle();
+                break;
+            case 2:
+                shareToQQ();
+                break;
+            case 3:
+                shareToWeibo();
+                break;
+            case 4:
+                shareToQZone();
+                break;
+            case 5:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.SEND_SMS}, PERMISSIONS_REQUEST_SEND_SMS);
+                } else {
+                    shareToSms();
+                }
+            default:
+                break;
+        }
     }
 
     @Override

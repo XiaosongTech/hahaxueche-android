@@ -8,4 +8,6 @@ public interface BaseWebViewView extends HHBaseView {
     void initShareData(String shareUrl);
 
     void showMessage(String message);
+
+    void startToShare(int shareType);
 }

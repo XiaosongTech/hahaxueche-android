@@ -27,6 +27,7 @@ import com.hahaxueche.model.user.coach.Follow;
 import com.hahaxueche.model.user.coach.Partner;
 import com.hahaxueche.model.user.coach.Review;
 import com.hahaxueche.model.user.employee.Adviser;
+import com.hahaxueche.model.user.identity.MarketingInfo;
 import com.hahaxueche.model.user.student.BookAddress;
 import com.hahaxueche.model.user.student.ExamResult;
 import com.hahaxueche.model.user.student.Student;
@@ -269,6 +270,9 @@ public interface HHApiService {
 
     @POST("address_books")
     Observable<String> uploadContacts(@Body BookAddress bookAddress);
+
+    @GET("marketing_information")
+    Observable<MarketingInfo> convertPromoCode(@Query("channel_name") String channelName, @Query("promo_code") String promoCode);
 
     class Factory {
         public static Retrofit getRetrofit() {
