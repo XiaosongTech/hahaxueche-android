@@ -137,7 +137,7 @@ public class SplashActivity extends HHBaseActivity implements SplashView {
                         } else if (type.equals("article")) {
                             shareObject.putString("objectId", hashMap.get("id"));
                             mPresenter.setShareObject(shareObject);
-                        }else if(type.equals("refer_record")){
+                        } else if (type.equals("refer_record") || type.equals("test_practice") || type.equals("coach_list")) {
                             mPresenter.setShareObject(shareObject);
                         }
                     }

@@ -21,6 +21,7 @@ import com.hahaxueche.model.payment.Voucher;
 import com.hahaxueche.model.user.student.Contact;
 import com.hahaxueche.presenter.base.MainPresenter;
 import com.hahaxueche.ui.activity.community.ArticleActivity;
+import com.hahaxueche.ui.activity.community.ExamLibraryActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.PartnerDetailActivity;
 import com.hahaxueche.ui.activity.myPage.MyContractActivity;
@@ -146,7 +147,11 @@ public class MainActivity extends HHBaseActivity implements MainView {
                     startIntent.putExtra("isFromLinkedMe", true);
                     startActivity(startIntent);
                 }
-
+            } else if (shareObject.getString("type", "").equals("test_practice")) {
+                Intent startIntent = new Intent(getContext(), ExamLibraryActivity.class);
+                startActivity(startIntent);
+            } else if (shareObject.getString("type", "").equals("coach_list")) {
+                selectTab(1);
             }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
