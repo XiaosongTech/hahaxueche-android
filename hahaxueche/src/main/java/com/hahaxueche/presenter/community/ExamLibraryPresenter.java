@@ -129,17 +129,7 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
     }
 
     private Observable<String> redirectUrl(final User user, int shareType) {
-        String channelName = "APP";
-        if (shareType == 0 || shareType == 1) {
-            channelName = "微信";
-        } else if (shareType == 2 || shareType == 4) {
-            channelName = "QQ";
-        } else if (shareType == 3) {
-            channelName = "微博";
-        } else if (shareType == 5) {
-            channelName = "短信";
-        }
-        final String channelId = application.getConstants().getChannelIdByName(channelName);
+        final String channelId = application.getConstants().getChannelIdByShareType(shareType);
         return Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {

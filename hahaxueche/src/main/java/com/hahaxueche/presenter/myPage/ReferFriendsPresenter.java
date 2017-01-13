@@ -112,8 +112,9 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
         if (shareType < 0 || shareType > 5) return;
         HHApiService apiService = application.getApiService();
         String promoCode = Utils.getUrlValueByName(url, "promo_code");
+        String channelId = application.getConstants().getChannelIdByShareType(shareType);
         if (!TextUtils.isEmpty(promoCode)) {
-            subscription = apiService.convertPromoCode(Utils.getChannelNameByType(shareType), promoCode)
+            subscription = apiService.convertPromoCode(channelId, promoCode)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(application.defaultSubscribeScheduler())
                     .subscribe(new Subscriber<MarketingInfo>() {

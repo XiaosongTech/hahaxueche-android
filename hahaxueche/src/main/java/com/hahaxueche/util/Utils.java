@@ -247,25 +247,6 @@ public class Utils {
         return result;
     }
 
-    public static String getChannelNameByType(int shareType) {
-        switch (shareType) {
-            case 0:
-                return "微信";
-            case 1:
-                return "微信";
-            case 2:
-                return "QQ";
-            case 3:
-                return "微博";
-            case 4:
-                return "QQ";
-            case 5:
-                return "短信";
-            default:
-                return "";
-        }
-    }
-
     public static String replaceUrlParam(String url, String key, String value) {
         if (!TextUtils.isEmpty(url) && !TextUtils.isEmpty(key)) {
             int index = url.indexOf(key + "=");

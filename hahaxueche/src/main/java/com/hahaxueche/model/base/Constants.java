@@ -98,7 +98,17 @@ public class Constants {
         return ret;
     }
 
-    public String getChannelIdByName(String channelName) {
+    public String getChannelIdByShareType(int shareType) {
+        String channelName = "APP";
+        if (shareType == 0 || shareType == 1) {
+            channelName = "微信";
+        } else if (shareType == 2 || shareType == 4) {
+            channelName = "QQ";
+        } else if (shareType == 3) {
+            channelName = "微博";
+        } else if (shareType == 5) {
+            channelName = "短信";
+        }
         String ret = "";
         for (HashMap<String, String> map : marketing_channels) {
             if (map.containsKey(channelName)) {

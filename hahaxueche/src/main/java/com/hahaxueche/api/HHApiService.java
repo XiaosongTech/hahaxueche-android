@@ -272,7 +272,7 @@ public interface HHApiService {
     Observable<String> uploadContacts(@Body BookAddress bookAddress);
 
     @GET("marketing_information")
-    Observable<MarketingInfo> convertPromoCode(@Query("channel_name") String channelName, @Query("promo_code") String promoCode);
+    Observable<MarketingInfo> convertPromoCode(@Query("channel_id") String channelId, @Query("promo_code") String promoCode);
 
     class Factory {
         public static Retrofit getRetrofit() {
