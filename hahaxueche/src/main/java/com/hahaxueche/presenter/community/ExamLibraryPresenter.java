@@ -10,6 +10,7 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseValid;
+import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.student.ExamResult;
 import com.hahaxueche.presenter.Presenter;
@@ -47,7 +48,6 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
         this.mExamLibraryView = view;
         application = HHBaseApplication.get(mExamLibraryView.getContext());
         fetchScores();
-        getUrl();
         String text = Utils.getCount(application.getConstants().statistics.student_count) + "人已获得保过卡";
         SpannableString ss = new SpannableString(text);
         ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mExamLibraryView.getContext(), R.color.app_theme_color)), 0, text.indexOf("人"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -128,12 +128,24 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
         return "科一保过卡免费送！考不过现金赔！【" + codeList.get(0) + "】哈哈老司机要开车了，捂脸~~内有惊喜";
     }
 
-    private Observable<String> redirectUrl(final User user) {
+    private Observable<String> redirectUrl(final User user, int shareType) {
+        String channelName = "APP";
+        if (shareType == 0 || shareType == 1) {
+            channelName = "微信";
+        } else if (shareType == 2 || shareType == 4) {
+            channelName = "QQ";
+        } else if (shareType == 3) {
+            channelName = "微博";
+        } else if (shareType == 5) {
+            channelName = "短信";
+        }
+        final String channelId = application.getConstants().getChannelIdByName(channelName);
         return Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
                 OkHttpClient client = new OkHttpClient();
-                String url = BuildConfig.SERVER_URL + "/share/students/" + user.student.id + "/exam_result";
+                String url = BuildConfig.SERVER_URL + "/share/students/" + user.student.id + "/exam_result" +
+                        "?channel_id=" + channelId + "&promo_code=328170";
                 HHLog.v("url -> " + url);
                 Request request = new Request.Builder().url(url).build();
                 try {
@@ -147,33 +159,39 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
         });
     }
 
-    private void getUrl() {
+    public String getQrCodeUrl() {
+        return mQrCodeUrl;
+    }
+
+    public void generateQrCodeUrl(final int shareType) {
         final User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) return;
-        redirectUrl(user)
+        redirectUrl(user, shareType)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<String>() {
                     @Override
+                    public void onStart() {
+                        super.onStart();
+                        mExamLibraryView.showProgressDialog();
+                    }
+
+                    @Override
                     public void onCompleted() {
+                        mExamLibraryView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        mExamLibraryView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onNext(String s) {
                         mQrCodeUrl = s;
+                        mExamLibraryView.share(shareType);
                         HHLog.v("QrCodeUrl -> " + mQrCodeUrl);
                     }
                 });
-
-    }
-
-
-    public String getQrCodeUrl() {
-        return mQrCodeUrl;
     }
 }

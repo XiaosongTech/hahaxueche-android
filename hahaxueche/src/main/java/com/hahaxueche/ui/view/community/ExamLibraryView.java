@@ -16,4 +16,6 @@ public interface ExamLibraryView extends HHBaseView {
     void setInsuranceCount(SpannableString ss);
 
     void showMessage(String message);
+
+    void share(int shareType);
 }

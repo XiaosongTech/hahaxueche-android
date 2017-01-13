@@ -1,6 +1,9 @@
 package com.hahaxueche.model.base;
 
+import android.text.TextUtils;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by wangshirui on 16/9/8.
@@ -23,6 +26,7 @@ public class Constants {
     public Statistics statistics;
     public ArrayList<ArticleCategory> article_categories;
     public String apk_download_url;
+    public ArrayList<HashMap<String, String>> marketing_channels;
 
     public City getCity(int cityId) {
         City myCity = cities.get(0);
@@ -88,6 +92,17 @@ public class Constants {
         for (Course course : city.courses) {
             if (course.id == courseId) {
                 ret = course.display_name;
+                break;
+            }
+        }
+        return ret;
+    }
+
+    public String getChannelIdByName(String channelName) {
+        String ret = "";
+        for (HashMap<String, String> map : marketing_channels) {
+            if (map.containsKey(channelName)) {
+                ret = map.get(channelName);
                 break;
             }
         }

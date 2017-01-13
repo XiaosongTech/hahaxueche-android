@@ -17,7 +17,6 @@ import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,7 +43,6 @@ import com.hahaxueche.ui.dialog.ShareAppDialog;
 import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.view.community.ExamLibraryView;
 import com.hahaxueche.util.ExamLib;
-import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.WebViewUrl;
 import com.umeng.analytics.MobclickAgent;
 
@@ -162,40 +160,11 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_share_scores:
-                if (TextUtils.isEmpty(mPresenter.getQrCodeUrl())) {
-                    return;
-                }
                 if (shareDialog == null) {
                     shareDialog = new ShareDialog(getContext(), new ShareDialog.OnShareListener() {
                         @Override
                         public void onShare(int shareType) {
-                            switch (shareType) {
-                                case 0:
-                                    shareToWeixin();
-                                    break;
-                                case 1:
-                                    shareToFriendCircle();
-                                    break;
-                                case 2:
-                                    shareToQQ();
-                                    break;
-                                case 3:
-                                    shareToWeibo();
-                                    break;
-                                case 4:
-                                    shareToQZone();
-                                    break;
-                                case 5:
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                                            (checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED ||
-                                                    checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
-                                        requestPermissions(new String[]{Manifest.permission.SEND_SMS, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_SEND_SMS);
-                                    } else {
-                                        shareToSms();
-                                    }
-                                default:
-                                    break;
-                            }
+                            mPresenter.generateQrCodeUrl(shareType);
                         }
                     });
                 }
@@ -223,6 +192,37 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
     @Override
     public void showMessage(String message) {
         Snackbar.make(mSvMain, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void share(int shareType) {
+        switch (shareType) {
+            case 0:
+                shareToWeixin();
+                break;
+            case 1:
+                shareToFriendCircle();
+                break;
+            case 2:
+                shareToQQ();
+                break;
+            case 3:
+                shareToWeibo();
+                break;
+            case 4:
+                shareToQZone();
+                break;
+            case 5:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                        (checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED ||
+                                checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+                    requestPermissions(new String[]{Manifest.permission.SEND_SMS, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_SEND_SMS);
+                } else {
+                    shareToSms();
+                }
+            default:
+                break;
+        }
     }
 
     @Override
