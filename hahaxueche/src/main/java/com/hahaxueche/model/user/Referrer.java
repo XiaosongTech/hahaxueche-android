@@ -9,4 +9,5 @@ public class Referrer {
     public String phone;
     public String purchased_at;
     public int amount;
+    public String sales_status;
 }

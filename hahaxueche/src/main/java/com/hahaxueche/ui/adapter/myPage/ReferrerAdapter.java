@@ -63,11 +63,10 @@ public class ReferrerAdapter extends BaseAdapter {
         holder.tvRefereeName.setText(referrer.name);
         holder.tvRefereePhone.setText(referrer.phone);
         holder.tvReferAmount.setText(Utils.getMoney(referrer.amount));
+        holder.tvReferState.setText(referrer.sales_status);
         if (TextUtils.isEmpty(referrer.purchased_at)) {
-            holder.tvReferState.setText("未购买教练");
             holder.tvReferAmount.setTextColor(ContextCompat.getColor(mContext, R.color.haha_gray_text));
         } else {
-            holder.tvReferState.setText("已购买教练");
             holder.tvReferAmount.setTextColor(ContextCompat.getColor(mContext, R.color.app_theme_color));
         }
         return convertView;
