@@ -267,7 +267,7 @@ public class PaymentStageActivity extends HHBaseActivity implements PaymentStage
                 @Override
                 public void onClick(View v) {
                     mPresenter.clickICount();
-                    PaymentStageInfoDialog dialog = new PaymentStageInfoDialog(getContext(), paymentStage.stage_name, paymentStage.description, true);
+                    PaymentStageInfoDialog dialog = new PaymentStageInfoDialog(getContext(), paymentStage.stage_name, paymentStage.description, !TextUtils.isEmpty(paymentStage.paid_at));
                     dialog.show();
                 }
             });
