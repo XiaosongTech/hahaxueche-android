@@ -18,6 +18,7 @@ import com.hahaxueche.ui.adapter.community.ArticleAdapter;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.community.ArticleListView;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
+import com.hahaxueche.util.RequestCode;
 
 import java.util.ArrayList;
 
@@ -127,7 +128,7 @@ public class ArticleListFragment extends HHBaseFragment implements ArticleListVi
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 12) {
+        if (requestCode == RequestCode.REQUEST_CODE_ARTICLE_DETAIL) {
             if (resultCode == RESULT_OK && null != data) {
                 Article article = data.getParcelableExtra("article");
                 if (article != null) {

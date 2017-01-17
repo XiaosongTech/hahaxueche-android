@@ -43,6 +43,7 @@ import com.hahaxueche.ui.dialog.ShareAppDialog;
 import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.view.community.ExamLibraryView;
 import com.hahaxueche.util.ExamLib;
+import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.WebViewUrl;
 import com.umeng.analytics.MobclickAgent;
 
@@ -173,7 +174,7 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
             case R.id.tv_to_exam:
                 Intent intent = new Intent(this, StartExamActivity.class);
                 intent.putExtra("examType", ExamLib.EXAM_TYPE_1);
-                startActivityForResult(intent, 2);
+                startActivityForResult(intent, RequestCode.REQUEST_CODE_START_EXAM);
                 break;
             case R.id.iv_pass:
                 BaseAlertSimpleDialog dialog = new BaseAlertSimpleDialog(getContext(), "什么是保过卡？",
@@ -227,14 +228,14 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1) {
+        if (requestCode == RequestCode.REQUEST_CODE_EXAM_ACTIVITY) {
             if (resultCode == RESULT_OK && data.getBooleanExtra("isShowShare", false)) {
                 if (mShareDialog == null) {
                     mShareDialog = new ShareAppDialog(getContext(), mPresenter.getBonus());
                 }
                 mShareDialog.show();
             }
-        } else if (requestCode == 2) {
+        } else if (requestCode == RequestCode.REQUEST_CODE_START_EXAM) {
             mPresenter.fetchScores();
         }
         super.onActivityResult(requestCode, resultCode, data);

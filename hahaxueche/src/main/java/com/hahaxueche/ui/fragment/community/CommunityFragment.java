@@ -19,6 +19,7 @@ import com.hahaxueche.ui.adapter.community.ArticleListPageAdapter;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.community.CommunityView;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.RequestCode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,7 +39,6 @@ public class CommunityFragment extends HHBaseFragment implements CommunityView {
     TabLayout mTabLayout;
     @BindView(R.id.tv_headline)
     TextView mTvHeadline;
-    private static final int REQUEST_CODE_ARTICLE = 11;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,7 +84,7 @@ public class CommunityFragment extends HHBaseFragment implements CommunityView {
                 if (headline != null) {
                     Intent intent = new Intent(getContext(), ArticleActivity.class);
                     intent.putExtra("articleId", headline.id);
-                    startActivityForResult(intent, REQUEST_CODE_ARTICLE);
+                    startActivityForResult(intent, RequestCode.REQUEST_CODE_ARTICLE_DETAIL);
                 }
                 break;
             default:
@@ -99,7 +99,7 @@ public class CommunityFragment extends HHBaseFragment implements CommunityView {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_ARTICLE) {
+        if (requestCode == RequestCode.REQUEST_CODE_ARTICLE_DETAIL) {
             if (resultCode == RESULT_OK && null != data) {
                 Article article = data.getParcelableExtra("article");
                 if (article != null) {

@@ -25,6 +25,7 @@ import com.hahaxueche.ui.dialog.findCoach.PartnerSortDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.findCoach.PartnerListView;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
+import com.hahaxueche.util.RequestCode;
 
 import java.util.ArrayList;
 
@@ -54,7 +55,6 @@ public class PartnerListFragment extends HHBaseFragment implements PartnerListVi
     private ArrayList<Partner> mPartnerArrayList;
     private PartnerFilterDialog mFilterDialog;
     private PartnerSortDialog mSortDialog;
-    private static final int REQUEST_CODE_PARTNER_DETAIL = 3;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -131,7 +131,7 @@ public class PartnerListFragment extends HHBaseFragment implements PartnerListVi
             mPresenter.clickPartner(mPartnerArrayList.get(position - 1).id);
             Intent intent = new Intent(getContext(), PartnerDetailActivity.class);
             intent.putExtra("partner", mPartnerArrayList.get(position - 1));
-            startActivityForResult(intent, REQUEST_CODE_PARTNER_DETAIL);
+            startActivityForResult(intent, RequestCode.REQUEST_CODE_PARTNER_DETAIL);
         }
     }
 
@@ -177,7 +177,7 @@ public class PartnerListFragment extends HHBaseFragment implements PartnerListVi
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_PARTNER_DETAIL) {
+        if (requestCode == RequestCode.REQUEST_CODE_PARTNER_DETAIL) {
             if (resultCode == RESULT_OK && null != data) {
                 Partner retPartner = data.getParcelableExtra("partner");
                 if (retPartner != null) {

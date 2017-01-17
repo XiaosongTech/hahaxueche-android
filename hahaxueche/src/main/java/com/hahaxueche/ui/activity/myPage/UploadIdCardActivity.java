@@ -45,6 +45,7 @@ import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.myPage.UploadIdCardDialog;
 import com.hahaxueche.ui.view.myPage.UploadIdCardView;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
 
 import java.io.ByteArrayOutputStream;
@@ -77,8 +78,6 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     private String imageUrlA = null;
     private String imageUrlB = null;
 
-    public static final int TAKE_A_PICTURE = 10;
-    public static final int SELECET_A_PICTURE = 50;
     private boolean isFromPaySuccess;//是否从付款成功页面跳转来的
     @BindView(R.id.sv_main)
     ScrollView mSvMain;
@@ -256,7 +255,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
             imageUri = Uri.fromFile(imageFile);
         }
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        startActivityForResult(intent, TAKE_A_PICTURE);
+        startActivityForResult(intent, RequestCode.REQUEST_CODE_TAKE_A_PICTURE);
     }
 
     //从相册中选择
@@ -264,7 +263,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("image/*");
-        startActivityForResult(intent, SELECET_A_PICTURE);
+        startActivityForResult(intent, RequestCode.REQUEST_CODE_SELECT_A_PICTURE);
     }
 
     /**
@@ -403,7 +402,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == TAKE_A_PICTURE) {
+        if (requestCode == RequestCode.REQUEST_CODE_TAKE_A_PICTURE) {
             if (resultCode == RESULT_OK) {
                 if (choseImageFace == 0) {
                     File imageFile = new File(IMGPATH, IMAGE_FILE_A_NAME);
@@ -429,7 +428,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
             } else {
                 showMessage("取消拍照");
             }
-        } else if (requestCode == SELECET_A_PICTURE) {
+        } else if (requestCode == RequestCode.REQUEST_CODE_SELECT_A_PICTURE) {
             if (resultCode == RESULT_OK && null != data) {
                 String filePath;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

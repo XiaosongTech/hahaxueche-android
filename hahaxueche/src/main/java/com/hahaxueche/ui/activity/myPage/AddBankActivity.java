@@ -18,6 +18,7 @@ import com.hahaxueche.presenter.myPage.AddBankPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.view.myPage.AddBankView;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.RequestCode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,7 +40,6 @@ public class AddBankActivity extends HHBaseActivity implements AddBankView {
     EditText mEtAccount;
     @BindView(R.id.tv_open_bank)
     TextView mTvOpenBank;
-    private static final int REQUEST_CODE_SELECT_OPEN_BANK = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +74,7 @@ public class AddBankActivity extends HHBaseActivity implements AddBankView {
                 mPresenter.addBankCard(mEtAccountName.getText().toString(), mEtAccount.getText().toString());
                 break;
             case R.id.tv_open_bank:
-                startActivityForResult(new Intent(getContext(), SelectBankActivity.class), REQUEST_CODE_SELECT_OPEN_BANK);
+                startActivityForResult(new Intent(getContext(), SelectBankActivity.class), RequestCode.REQUEST_CODE_SELECT_OPEN_BANK);
                 break;
             default:
                 break;
@@ -114,7 +114,7 @@ public class AddBankActivity extends HHBaseActivity implements AddBankView {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_SELECT_OPEN_BANK) {
+        if (requestCode == RequestCode.REQUEST_CODE_SELECT_OPEN_BANK) {
             if (resultCode == RESULT_OK && data != null) {
                 try {
                     Bank bank = data.getParcelableExtra("bank");

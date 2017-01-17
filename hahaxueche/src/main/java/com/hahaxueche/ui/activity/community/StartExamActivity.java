@@ -20,6 +20,7 @@ import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.dialog.ShareAppDialog;
 import com.hahaxueche.ui.view.community.StartExamView;
 import com.hahaxueche.util.ExamLib;
+import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.SharedPrefUtil;
 
 import java.util.ArrayList;
@@ -80,7 +81,6 @@ public class StartExamActivity extends HHBaseActivity implements StartExamView {
     private static final String ARG_EXAM_TIME = "examTime";
     private static final String ARG_WRONG_QUESTION_LIST = "wrongQuestionList";
     private static final String ARG_STATUS = "status";
-    private static final int REQUEST_CODE_EXAM_ACTIVITY = 0;
 
     private ShareAppDialog mShareDialog;
     private StartExamPresenter mPresenter;
@@ -266,7 +266,7 @@ public class StartExamActivity extends HHBaseActivity implements StartExamView {
         Intent intent = new Intent(StartExamActivity.this, ExamActivity.class);
         intent.putExtra("examMode", ExamLib.TEST_MODE_MOCK_EXAM);
         intent.putExtra("examType", mExamType);
-        startActivityForResult(intent, REQUEST_CODE_EXAM_ACTIVITY);
+        startActivityForResult(intent, RequestCode.REQUEST_CODE_EXAM_ACTIVITY);
     }
 
     /**
@@ -284,7 +284,7 @@ public class StartExamActivity extends HHBaseActivity implements StartExamView {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_EXAM_ACTIVITY) {
+        if (requestCode == RequestCode.REQUEST_CODE_EXAM_ACTIVITY) {
             if (resultCode == RESULT_OK && null != data) {
                 Bundle bundle = data.getExtras();
                 mWrongQuestionList = (ArrayList<Question>) bundle.get("wrongQuestionList");

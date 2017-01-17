@@ -34,6 +34,7 @@ import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.findCoach.CoachListView;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.RequestCode;
 
 import java.util.ArrayList;
 
@@ -66,8 +67,6 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     public AMapLocationClient mLocationClient;
     //定位回调监听器
     public AMapLocationListener mLocationListener;
-
-    private static final int REQUEST_CODE_COACH_DETAIL = 1;
 
     private static final int PERMISSIONS_REQUEST_LOCATION = 602;
 
@@ -156,7 +155,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
             mPresenter.clickCoach(mCoachArrayList.get(position - 1).id);
             Intent intent = new Intent(getContext(), CoachDetailActivity.class);
             intent.putExtra("coach", mCoachArrayList.get(position - 1));
-            startActivityForResult(intent, REQUEST_CODE_COACH_DETAIL);
+            startActivityForResult(intent, RequestCode.REQUEST_CODE_COACH_DETAIL);
         }
     }
 
@@ -205,7 +204,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_COACH_DETAIL) {
+        if (requestCode == RequestCode.REQUEST_CODE_COACH_DETAIL) {
             if (resultCode == RESULT_OK && null != data) {
                 Coach retCoach = data.getParcelableExtra("coach");
                 if (retCoach != null) {

@@ -31,6 +31,7 @@ import com.hahaxueche.ui.activity.myPage.SelectVoucherActivity;
 import com.hahaxueche.ui.view.findCoach.PurchaseCoachView;
 import com.hahaxueche.util.DistanceUtil;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
 import com.pingplusplus.android.Pingpp;
 
@@ -100,7 +101,6 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     private HHBaseApplication application;
     private int[] selectIds = new int[3];
     private int selectId;
-    private static final int REQUEST_CODE_SELECT_VOUCHERS = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,7 +164,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
             case R.id.rly_voucher:
                 Intent intent = new Intent(getContext(), SelectVoucherActivity.class);
                 intent.putParcelableArrayListExtra("voucherList", mPresenter.getUnCumulativeVoucherList());
-                startActivityForResult(intent, REQUEST_CODE_SELECT_VOUCHERS);
+                startActivityForResult(intent, RequestCode.REQUEST_CODE_SELECT_VOUCHERS);
                 break;
             default:
                 break;
@@ -489,7 +489,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
                     showMessage("支付失败");
                 }
             }
-        } else if (requestCode == REQUEST_CODE_SELECT_VOUCHERS) {
+        } else if (requestCode == RequestCode.REQUEST_CODE_SELECT_VOUCHERS) {
             if (resultCode == RESULT_OK) {
                 ArrayList<Voucher> vouchers = data.getParcelableArrayListExtra("voucherList");
                 mPresenter.setUnCumulativeVoucherList(vouchers);

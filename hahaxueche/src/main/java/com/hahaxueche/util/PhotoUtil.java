@@ -39,13 +39,6 @@ public class PhotoUtil {
     public static final String IMAGE_FILE_NAME = "faceImage.jpeg";
     public static final String TMP_IMAGE_FILE_NAME = "tmp_faceImage.jpeg";
 
-    //常量定义
-    public static final int TAKE_A_PICTURE = 10;
-    public static final int SELECT_A_PICTURE = 20;
-    public static final int SET_PICTURE = 30;
-    public static final int SET_ALBUM_PICTURE_KITKAT = 40;
-    public static final int SELECET_A_PICTURE_AFTER_KIKAT = 50;
-
     private File fileone = null;
     private File filetwo = null;
 
@@ -114,7 +107,7 @@ public class PhotoUtil {
             uriToImage = Uri.fromFile(imageFile);
         }
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uriToImage);
-        mMypageFragment.startActivityForResult(intent, TAKE_A_PICTURE);
+        mMypageFragment.startActivityForResult(intent, RequestCode.REQUEST_CODE_TAKE_A_PICTURE);
     }
 
     /**
@@ -144,7 +137,7 @@ public class PhotoUtil {
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         intent.putExtra("noFaceDetection", true); // no face detection
-        mMypageFragment.startActivityForResult(intent, SELECT_A_PICTURE);
+        mMypageFragment.startActivityForResult(intent, RequestCode.REQUEST_CODE_SELECT_A_PICTURE);
     }
 
 
@@ -156,7 +149,7 @@ public class PhotoUtil {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("image/*");
-        mMypageFragment.startActivityForResult(intent, SELECET_A_PICTURE_AFTER_KIKAT);
+        mMypageFragment.startActivityForResult(intent, RequestCode.REQUEST_CODE_SELECET_A_PICTURE_AFTER_KIKAT);
     }
 
     /**
@@ -187,7 +180,7 @@ public class PhotoUtil {
         }
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uritempFile);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-        mMypageFragment.startActivityForResult(intent, SET_PICTURE);
+        mMypageFragment.startActivityForResult(intent, RequestCode.REQUEST_CODE_SET_PICTURE);
     }
 
     /**
@@ -218,7 +211,7 @@ public class PhotoUtil {
         intent.putExtra(MediaStore.EXTRA_OUTPUT,uriToImage);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         intent.putExtra("noFaceDetection", true);
-        mMypageFragment.startActivityForResult(intent, SET_ALBUM_PICTURE_KITKAT);
+        mMypageFragment.startActivityForResult(intent, RequestCode.REQUEST_CODE_SET_ALBUM_PICTURE_KITKAT);
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)

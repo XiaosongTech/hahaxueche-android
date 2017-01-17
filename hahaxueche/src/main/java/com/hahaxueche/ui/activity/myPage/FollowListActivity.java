@@ -98,7 +98,7 @@ public class FollowListActivity extends HHBaseActivity implements FollowListView
         if (mCoachArrayList != null && mCoachArrayList.size() > 0 && position > 0 && position - 1 < mCoachArrayList.size()) {
             Intent intent = new Intent(getContext(), CoachDetailActivity.class);
             intent.putExtra("coach", mCoachArrayList.get(position - 1));
-            startActivityForResult(intent, 1);
+            startActivity(intent);
         }
     }
 

@@ -20,6 +20,7 @@ import com.hahaxueche.ui.activity.findCoach.SearchCoachActivity;
 import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.findCoach.FindCoachView;
+import com.hahaxueche.util.RequestCode;
 
 import java.util.ArrayList;
 
@@ -47,7 +48,6 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
     private CoachListFragment mCoachListFragment;
     private PartnerListFragment mPartnerListFragment;
     private BaseAlertSimpleDialog mAlertDialog;
-    private static final int REQUEST_CODE_FIELD_FILTER = 2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -152,7 +152,7 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
     public void navigateToSelectFields() {
         Intent intent = new Intent(getContext(), FieldFilterActivity.class);
         intent.putParcelableArrayListExtra("selectFields", mCoachListFragment.getSelectFields());
-        startActivityForResult(intent, REQUEST_CODE_FIELD_FILTER);
+        startActivityForResult(intent, RequestCode.REQUEST_CODE_FIELD_FILTER);
     }
 
     @Override
@@ -186,7 +186,7 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_FIELD_FILTER) {
+        if (requestCode == RequestCode.REQUEST_CODE_FIELD_FILTER) {
             if (resultCode == RESULT_OK) {
                 ArrayList<Field> fields = data.getParcelableArrayListExtra("selectFields");
                 mCoachListFragment.setSelectFields(fields);

@@ -19,6 +19,7 @@ import com.hahaxueche.model.payment.BankCard;
 import com.hahaxueche.presenter.myPage.WithdrawPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.view.myPage.WithdrawView;
+import com.hahaxueche.util.RequestCode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,7 +50,6 @@ public class WithdrawActivity extends HHBaseActivity implements WithdrawView, Sw
     TextView mTvBankRemarks;
     @BindView(R.id.fly_add_bank)
     FrameLayout mFlyAddBank;
-    public static int REQUEST_CODE_ADD_BANK_CARD = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,10 +111,10 @@ public class WithdrawActivity extends HHBaseActivity implements WithdrawView, Sw
                 mPresenter.withdraw(mEtWithdrawAmount.getText().toString());
                 break;
             case R.id.fly_add_bank:
-                startActivityForResult(new Intent(getContext(), AddBankActivity.class), REQUEST_CODE_ADD_BANK_CARD);
+                startActivityForResult(new Intent(getContext(), AddBankActivity.class), RequestCode.REQUEST_CODE_ADD_BANK_CARD);
                 break;
             case R.id.rly_bank_card:
-                startActivityForResult(new Intent(getContext(), AddBankActivity.class), REQUEST_CODE_ADD_BANK_CARD);
+                startActivityForResult(new Intent(getContext(), AddBankActivity.class), RequestCode.REQUEST_CODE_ADD_BANK_CARD);
                 break;
             default:
                 break;
@@ -176,7 +176,7 @@ public class WithdrawActivity extends HHBaseActivity implements WithdrawView, Sw
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_ADD_BANK_CARD) {
+        if (requestCode == RequestCode.REQUEST_CODE_ADD_BANK_CARD) {
             if (resultCode == RESULT_OK && null != data && data.getBooleanExtra("isUpdate", false)) {
                 mPresenter.fetchStudent();
             }

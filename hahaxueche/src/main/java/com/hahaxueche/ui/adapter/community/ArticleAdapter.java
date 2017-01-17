@@ -13,6 +13,7 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.community.Article;
 import com.hahaxueche.ui.activity.community.ArticleActivity;
 import com.hahaxueche.ui.fragment.community.ArticleListFragment;
+import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
@@ -81,7 +82,7 @@ public class ArticleAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Intent intent = new Intent(mFragment.getContext(), ArticleActivity.class);
                 intent.putExtra("article", article);
-                mFragment.startActivityForResult(intent, 12);
+                mFragment.startActivityForResult(intent, RequestCode.REQUEST_CODE_ARTICLE_DETAIL);
             }
         });
         return convertView;

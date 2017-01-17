@@ -46,6 +46,7 @@ import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.myPage.MyPageView;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.PhotoUtil;
+import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
 import com.hahaxueche.util.WebViewUrl;
 
@@ -104,11 +105,6 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
     private PhotoUtil mPhotoUtil;
     private MyAdviserDialog mConsultantDialog;
     private EditUsernameDialog mEditUsernameDialog;
-    private static final int REQUEST_CODE_NO_COURSE = 12;
-    private static final int REQUEST_CODE_PAYMENT_STAGE = 13;
-    private static final int REQUEST_CODE_UPLOAD_ID_CARD = 3;
-    private static final int REQUEST_CODE_MY_CONTRACT = 4;
-    private static final int REQUEST_CODE_WEBVIEW = 14;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -349,12 +345,12 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
 
     @Override
     public void navigateToPaymentStage() {
-        startActivityForResult(new Intent(getContext(), PaymentStageActivity.class), REQUEST_CODE_PAYMENT_STAGE);
+        startActivityForResult(new Intent(getContext(), PaymentStageActivity.class), RequestCode.REQUEST_CODE_PAYMENT_STAGE);
     }
 
     @Override
     public void navigateToNoCourse() {
-        startActivityForResult(new Intent(getContext(), NoCourseActivity.class), REQUEST_CODE_NO_COURSE);
+        startActivityForResult(new Intent(getContext(), NoCourseActivity.class), RequestCode.REQUEST_CODE_NO_COURSE);
     }
 
     @Override
@@ -413,17 +409,17 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
 
     @Override
     public void navigateToUploadIdCard() {
-        startActivityForResult(new Intent(getContext(), UploadIdCardActivity.class), REQUEST_CODE_UPLOAD_ID_CARD);
+        startActivityForResult(new Intent(getContext(), UploadIdCardActivity.class), RequestCode.REQUEST_CODE_UPLOAD_ID_CARD);
     }
 
     @Override
     public void navigateToSignContract() {
-        startActivityForResult(new Intent(getContext(), MyContractActivity.class), REQUEST_CODE_MY_CONTRACT);
+        startActivityForResult(new Intent(getContext(), MyContractActivity.class), RequestCode.REQUEST_CODE_MY_CONTRACT);
     }
 
     @Override
     public void navigateToMyContract() {
-        startActivityForResult(new Intent(getContext(), MyContractActivity.class), REQUEST_CODE_MY_CONTRACT);
+        startActivityForResult(new Intent(getContext(), MyContractActivity.class), RequestCode.REQUEST_CODE_MY_CONTRACT);
     }
 
     @Override
@@ -469,25 +465,25 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PhotoUtil.SELECT_A_PICTURE) {
+        if (requestCode == RequestCode.REQUEST_CODE_SELECT_A_PICTURE) {
             if (resultCode == RESULT_OK && null != data) {
                 //4.4以下的;
             } else if (resultCode == RESULT_CANCELED) {
                 showMessage("取消头像设置");
             }
-        } else if (requestCode == PhotoUtil.SELECET_A_PICTURE_AFTER_KIKAT) {
+        } else if (requestCode == RequestCode.REQUEST_CODE_SELECET_A_PICTURE_AFTER_KIKAT) {
             if (resultCode == RESULT_OK && null != data) {
                 cropImageUriAfterKikat(data);
             } else if (resultCode == RESULT_CANCELED) {
                 showMessage("取消头像设置");
             }
-        } else if (requestCode == PhotoUtil.SET_ALBUM_PICTURE_KITKAT) {
+        } else if (requestCode == RequestCode.REQUEST_CODE_SET_ALBUM_PICTURE_KITKAT) {
             if (resultCode == RESULT_OK && null != data) {
                 mPresenter.uploadAvatar();
             } else if (resultCode == RESULT_CANCELED) {
                 showMessage("取消头像设置");
             }
-        } else if (requestCode == PhotoUtil.TAKE_A_PICTURE) {
+        } else if (requestCode == RequestCode.REQUEST_CODE_TAKE_A_PICTURE) {
             if (resultCode == RESULT_OK) {
                 File imageFile = new File(PhotoUtil.IMGPATH, PhotoUtil.IMAGE_FILE_NAME);
                 Uri imageUri;
@@ -502,7 +498,7 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
             } else {
                 showMessage("取消头像设置");
             }
-        } else if (requestCode == PhotoUtil.SET_PICTURE) {
+        } else if (requestCode == RequestCode.REQUEST_CODE_SET_PICTURE) {
             //拍照的设置头像  不考虑版本
             Bitmap bitmap = null;
             if (resultCode == RESULT_OK && null != data) {
@@ -514,24 +510,24 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
             } else {
                 showMessage("设置头像失败");
             }
-        } else if (requestCode == REQUEST_CODE_NO_COURSE) {
+        } else if (requestCode == RequestCode.REQUEST_CODE_NO_COURSE) {
             if (resultCode == RESULT_OK && null != data) {
                 int tab = data.getIntExtra("showTab", 1);
                 mActivity.selectTab(tab);
             }
-        } else if (requestCode == REQUEST_CODE_PAYMENT_STAGE) {
+        } else if (requestCode == RequestCode.REQUEST_CODE_PAYMENT_STAGE) {
             mPresenter.fetchStudent();
-        } else if (requestCode == REQUEST_CODE_UPLOAD_ID_CARD) {
+        } else if (requestCode == RequestCode.REQUEST_CODE_UPLOAD_ID_CARD) {
             if (resultCode == RESULT_OK) {
                 mActivity.controlMyPageBadge();
                 startActivity(new Intent(getContext(), ReferFriendsActivity.class));
             }
-        } else if (requestCode == REQUEST_CODE_MY_CONTRACT) {
+        } else if (requestCode == RequestCode.REQUEST_CODE_MY_CONTRACT) {
             if (resultCode == RESULT_OK) {//已签订协议
                 mActivity.controlMyPageBadge();
                 startActivity(new Intent(getContext(), ReferFriendsActivity.class));
             }
-        } else if (requestCode == REQUEST_CODE_WEBVIEW) {
+        } else if (requestCode == RequestCode.REQUEST_CODE_WEBVIEW) {
             if (resultCode == RESULT_OK && null != data) {
                 int tab = data.getIntExtra("showTab", 1);
                 mActivity.selectTab(tab);
@@ -588,6 +584,6 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
         HHLog.v("webview url -> " + url);
         bundle.putString("url", url);
         intent.putExtras(bundle);
-        startActivityForResult(intent, REQUEST_CODE_WEBVIEW);
+        startActivityForResult(intent, RequestCode.REQUEST_CODE_WEBVIEW);
     }
 }

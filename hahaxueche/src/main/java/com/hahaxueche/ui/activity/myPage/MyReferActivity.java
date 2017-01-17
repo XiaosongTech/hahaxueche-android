@@ -14,6 +14,7 @@ import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.adapter.myPage.ReferrerAdapter;
 import com.hahaxueche.ui.view.myPage.MyReferView;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
+import com.hahaxueche.util.RequestCode;
 
 import java.util.ArrayList;
 
@@ -35,7 +36,6 @@ public class MyReferActivity extends HHBaseActivity implements MyReferView, XLis
     TextView mTvWithdrawMoney;
     private ReferrerAdapter mReferrerAdapter;
     private ArrayList<Referrer> mReferrerArrayList;
-    private static final int REQUEST_CODE_WITHDRAW = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +108,7 @@ public class MyReferActivity extends HHBaseActivity implements MyReferView, XLis
     @Override
     public void navigateToWithdraw() {
         Intent intent = new Intent(getContext(), WithdrawActivity.class);
-        startActivityForResult(intent, REQUEST_CODE_WITHDRAW);
+        startActivityForResult(intent, RequestCode.REQUEST_CODE_WITHDRAW);
     }
 
     @Override
@@ -128,7 +128,7 @@ public class MyReferActivity extends HHBaseActivity implements MyReferView, XLis
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_WITHDRAW) {
+        if (requestCode == RequestCode.REQUEST_CODE_WITHDRAW) {
             if (resultCode == RESULT_OK && data != null && data.getBooleanExtra("isUpdate", false)) {
                 mPresenter.refreshBonus();
                 mPresenter.fetchReferrers();

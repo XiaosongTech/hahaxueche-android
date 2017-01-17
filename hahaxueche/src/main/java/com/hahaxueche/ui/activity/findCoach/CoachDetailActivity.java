@@ -48,6 +48,7 @@ import com.hahaxueche.ui.view.findCoach.CoachDetailView;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
@@ -131,9 +132,6 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     /*****************
      * end
      ******************/
-    private static final int REQUEST_CODE_PURCHASE_COACH = 1;
-    private static final int REQUEST_CODE_PAY_SUCCESS = 2;
-    private static final int REQUEST_CODE_UPLOAD_ID_CARD = 3;
     private static final int PERMISSIONS_REQUEST_SEND_SMS = 603;
 
     @Override
@@ -678,7 +676,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         if (coach == null) return;
         Intent intent = new Intent(getContext(), PurchaseCoachActivity.class);
         intent.putExtra("coach", coach);
-        startActivityForResult(intent, REQUEST_CODE_PURCHASE_COACH);
+        startActivityForResult(intent, RequestCode.REQUEST_CODE_PURCHASE_COACH);
     }
 
     private RelativeLayout getPeerCoachAdapter(final Coach coach) {
@@ -867,15 +865,15 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_PURCHASE_COACH) {
+        if (requestCode == RequestCode.REQUEST_CODE_PURCHASE_COACH) {
             if (resultCode == Activity.RESULT_OK) {
-                startActivityForResult(new Intent(getContext(), PaySuccessActivity.class), REQUEST_CODE_PAY_SUCCESS);
+                startActivityForResult(new Intent(getContext(), PaySuccessActivity.class), RequestCode.REQUEST_CODE_PAY_SUCCESS);
             }
-        } else if (requestCode == REQUEST_CODE_PAY_SUCCESS) {
+        } else if (requestCode == RequestCode.REQUEST_CODE_PAY_SUCCESS) {
             Intent intent = new Intent(getContext(), UploadIdCardActivity.class);
             intent.putExtra("isFromPaySuccess", true);
-            startActivityForResult(intent, REQUEST_CODE_UPLOAD_ID_CARD);
-        } else if (requestCode == REQUEST_CODE_UPLOAD_ID_CARD) {
+            startActivityForResult(intent, RequestCode.REQUEST_CODE_UPLOAD_ID_CARD);
+        } else if (requestCode == RequestCode.REQUEST_CODE_UPLOAD_ID_CARD) {
             startActivity(new Intent(getContext(), ReferFriendsActivity.class));
         }
         super.onActivityResult(requestCode, resultCode, data);

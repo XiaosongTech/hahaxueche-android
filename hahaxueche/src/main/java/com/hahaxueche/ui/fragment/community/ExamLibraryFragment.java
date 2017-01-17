@@ -14,6 +14,7 @@ import com.hahaxueche.ui.activity.community.ExamActivity;
 import com.hahaxueche.ui.activity.community.StartExamActivity;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.util.ExamLib;
+import com.hahaxueche.util.RequestCode;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
@@ -109,12 +110,12 @@ public class ExamLibraryFragment extends HHBaseFragment {
         Intent intent = new Intent(getActivity(), ExamActivity.class);
         intent.putExtra("examMode", examMode);
         intent.putExtra("examType", mExamType);
-        getActivity().startActivityForResult(intent, 1);
+        getActivity().startActivityForResult(intent, RequestCode.REQUEST_CODE_EXAM_ACTIVITY);
     }
 
     private void navigateToStartExam() {
         Intent intent = new Intent(getActivity(), StartExamActivity.class);
         intent.putExtra("examType", mExamType);
-        getActivity().startActivityForResult(intent, 2);
+        getActivity().startActivityForResult(intent, RequestCode.REQUEST_CODE_START_EXAM);
     }
 }

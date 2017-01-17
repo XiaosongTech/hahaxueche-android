@@ -41,6 +41,7 @@ import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.homepage.HomepageView;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
@@ -74,8 +75,6 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
 
     private CityChoseDialog mCityChoseDialog;
     private static final int PERMISSIONS_REQUEST_SDCARD = 600;
-    private static final int REQUEST_CODE_WEBVIEW = 14;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -296,12 +295,12 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         HHLog.v("webview url -> " + url);
         bundle.putString("url", url);
         intent.putExtras(bundle);
-        startActivityForResult(intent, REQUEST_CODE_WEBVIEW);
+        startActivityForResult(intent, RequestCode.REQUEST_CODE_WEBVIEW);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_WEBVIEW) {
+        if (requestCode == RequestCode.REQUEST_CODE_WEBVIEW) {
             if (resultCode == RESULT_OK && null != data) {
                 int tab = data.getIntExtra("showTab", 1);
                 mActivity.selectTab(tab);

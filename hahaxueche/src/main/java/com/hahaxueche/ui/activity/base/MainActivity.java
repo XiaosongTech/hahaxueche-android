@@ -39,6 +39,7 @@ import com.hahaxueche.ui.fragment.myPage.MypageFragment;
 import com.hahaxueche.ui.view.base.MainView;
 import com.hahaxueche.ui.widget.FragmentTabHost;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.RequestCode;
 
 import java.util.ArrayList;
 
@@ -55,8 +56,6 @@ public class MainActivity extends HHBaseActivity implements MainView {
     private FragmentTabHost mTabHost = null;
     private View indicator = null;
     private View mViewBadgeMyPage;
-    private static final int REQUEST_CODE_UPLOAD_ID_CARD = 3;
-    private static final int REQUEST_CODE_MY_CONTRACT = 4;
     @BindView(R.id.lly_main)
     LinearLayout mLlyMain;
     /*****************
@@ -239,17 +238,17 @@ public class MainActivity extends HHBaseActivity implements MainView {
 
     @Override
     public void navigateToUploadIdCard() {
-        startActivityForResult(new Intent(getContext(), UploadIdCardActivity.class), REQUEST_CODE_UPLOAD_ID_CARD);
+        startActivityForResult(new Intent(getContext(), UploadIdCardActivity.class), RequestCode.REQUEST_CODE_UPLOAD_ID_CARD);
     }
 
     @Override
     public void navigateToSignContract() {
-        startActivityForResult(new Intent(getContext(), MyContractActivity.class), REQUEST_CODE_MY_CONTRACT);
+        startActivityForResult(new Intent(getContext(), MyContractActivity.class), RequestCode.REQUEST_CODE_MY_CONTRACT);
     }
 
     @Override
     public void navigateToMyContract() {
-        startActivityForResult(new Intent(getContext(), MyContractActivity.class), REQUEST_CODE_MY_CONTRACT);
+        startActivityForResult(new Intent(getContext(), MyContractActivity.class), RequestCode.REQUEST_CODE_MY_CONTRACT);
     }
 
     @Override
@@ -301,12 +300,12 @@ public class MainActivity extends HHBaseActivity implements MainView {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_UPLOAD_ID_CARD) {
+        if (requestCode == RequestCode.REQUEST_CODE_UPLOAD_ID_CARD) {
             if (resultCode == RESULT_OK) {
                 controlMyPageBadge();
                 startActivity(new Intent(getContext(), ReferFriendsActivity.class));
             }
-        } else if (requestCode == REQUEST_CODE_MY_CONTRACT) {
+        } else if (requestCode == RequestCode.REQUEST_CODE_MY_CONTRACT) {
             if (resultCode == RESULT_OK) {//已签订协议
                 controlMyPageBadge();
                 startActivity(new Intent(getContext(), ReferFriendsActivity.class));
