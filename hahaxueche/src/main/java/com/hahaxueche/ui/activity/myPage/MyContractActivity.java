@@ -27,6 +27,7 @@ import com.hahaxueche.ui.dialog.myPage.MyContractDialog;
 import com.hahaxueche.ui.view.myPage.MyContractView;
 import com.hahaxueche.util.DownloadContractManager;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.RequestCode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,7 +47,6 @@ public class MyContractActivity extends HHBaseActivity implements MyContractView
     @BindView(R.id.cb_sign)
     CheckBox mCbSign;
     private ImageView mIvSettings;
-    private static final int PERMISSIONS_REQUEST_SDCARD = 600;
     private String pdfUrl;
     private Uri pdfUri;
 
@@ -110,7 +110,8 @@ public class MyContractActivity extends HHBaseActivity implements MyContractView
                 (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                         || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                         || checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, PERMISSIONS_REQUEST_SDCARD);
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, RequestCode.PERMISSIONS_REQUEST_SDCARD);
         } else {
             downloadPdf();
         }
@@ -167,7 +168,7 @@ public class MyContractActivity extends HHBaseActivity implements MyContractView
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_SDCARD) {
+        if (requestCode == RequestCode.PERMISSIONS_REQUEST_SDCARD) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 downloadPdf();

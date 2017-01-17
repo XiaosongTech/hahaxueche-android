@@ -41,6 +41,7 @@ import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.dialog.community.CommentDialog;
 import com.hahaxueche.ui.view.community.ArticleView;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
 
 import butterknife.BindView;
@@ -87,7 +88,6 @@ public class ArticleActivity extends HHBaseActivity implements ArticleView {
      * end
      ******************/
     private ArticlePresenter mPresenter;
-    private static final int PERMISSIONS_REQUEST_SEND_SMS = 603;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -216,7 +216,7 @@ public class ArticleActivity extends HHBaseActivity implements ArticleView {
                                     break;
                                 case 5:
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-                                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, PERMISSIONS_REQUEST_SEND_SMS);
+                                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, RequestCode.PERMISSIONS_REQUEST_SEND_SMS);
                                     } else {
                                         shareToSms();
                                     }
@@ -576,7 +576,7 @@ public class ArticleActivity extends HHBaseActivity implements ArticleView {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_SEND_SMS) {
+        if (requestCode == RequestCode.PERMISSIONS_REQUEST_SEND_SMS) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 shareToSms();

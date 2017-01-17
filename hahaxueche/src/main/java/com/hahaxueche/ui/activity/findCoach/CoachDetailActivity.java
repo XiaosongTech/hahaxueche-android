@@ -129,10 +129,10 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     private String mDescription;
     private String mImageUrl;
     private String mUrl;
+
     /*****************
      * end
      ******************/
-    private static final int PERMISSIONS_REQUEST_SEND_SMS = 603;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -350,7 +350,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                                     break;
                                 case 5:
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-                                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, PERMISSIONS_REQUEST_SEND_SMS);
+                                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, RequestCode.PERMISSIONS_REQUEST_SEND_SMS);
                                     } else {
                                         shareToSms();
                                     }
@@ -889,7 +889,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_SEND_SMS) {
+        if (requestCode == RequestCode.PERMISSIONS_REQUEST_SEND_SMS) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 shareToSms();

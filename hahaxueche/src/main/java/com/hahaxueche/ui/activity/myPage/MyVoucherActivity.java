@@ -33,6 +33,7 @@ import com.hahaxueche.model.payment.Voucher;
 import com.hahaxueche.presenter.myPage.MyVoucherPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.view.myPage.MyVoucherView;
+import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
@@ -65,8 +66,6 @@ public class MyVoucherActivity extends HHBaseActivity implements MyVoucherView, 
     TextView mTvCatchVoucher;
     @BindView(R.id.et_voucher_code)
     EditText mEtVoucherCode;
-    private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,7 +212,7 @@ public class MyVoucherActivity extends HHBaseActivity implements MyVoucherView, 
             @Override
             public void onClick(View widget) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE);
                     //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
                 } else {
                     // Android version is lesser than 6.0 or the permission is already granted.
@@ -290,7 +289,7 @@ public class MyVoucherActivity extends HHBaseActivity implements MyVoucherView, 
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_CELL_PHONE) {
+        if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 contactService();

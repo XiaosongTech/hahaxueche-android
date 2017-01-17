@@ -29,6 +29,7 @@ import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.findCoach.PaySuccessPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.view.findCoach.PaySuccessView;
+import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
 
 import butterknife.BindView;
@@ -53,7 +54,6 @@ public class PaySuccessActivity extends HHBaseActivity implements PaySuccessView
     TextView mTvCustomerService;
     @BindView(R.id.frl_main)
     FrameLayout mFrlMain;
-    private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +108,7 @@ public class PaySuccessActivity extends HHBaseActivity implements PaySuccessView
             @Override
             public void onClick(View widget) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE);
                     //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
                 } else {
                     // Android version is lesser than 6.0 or the permission is already granted.
@@ -165,7 +165,7 @@ public class PaySuccessActivity extends HHBaseActivity implements PaySuccessView
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_CELL_PHONE) {
+        if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 contactService();

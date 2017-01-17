@@ -56,7 +56,6 @@ import static android.app.Activity.RESULT_OK;
  * Created by wangshirui on 16/9/13.
  */
 public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPageChangeListener, OnItemClickListener, HomepageView {
-    private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
     private MainActivity mActivity;
     private HomepagePresenter mPresenter;
 
@@ -74,7 +73,6 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     SimpleDraweeView mIvFreeTry;
 
     private CityChoseDialog mCityChoseDialog;
-    private static final int PERMISSIONS_REQUEST_SDCARD = 600;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,7 +102,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                 (mActivity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                         || mActivity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                         || mActivity.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, PERMISSIONS_REQUEST_SDCARD);
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, RequestCode.PERMISSIONS_REQUEST_SDCARD);
             //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
         } else {
             // Android version is lesser than 6.0 or the permission is already granted.
@@ -180,7 +178,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             case R.id.tv_tel_ask:
                 mPresenter.phoneSupportCount();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE);
                     //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
                 } else {
                     // Android version is lesser than 6.0 or the permission is already granted.
@@ -235,14 +233,14 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_CELL_PHONE) {
+        if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 contactService();
             } else {
                 showMessage("请允许拨打电话权限，不然无法直接拨号联系客服");
             }
-        } else if (requestCode == PERMISSIONS_REQUEST_SDCARD) {
+        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_SDCARD) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 mPresenter.doVersionCheck();

@@ -15,6 +15,7 @@ import com.hahaxueche.R;
 import com.hahaxueche.presenter.myPage.SoftwareInfoPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.view.myPage.SoftwareInfoView;
+import com.hahaxueche.util.RequestCode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,7 +33,6 @@ public class SoftwareInfoActivity extends HHBaseActivity implements SoftwareInfo
     ImageView mIvBack;
     TextView mTvTitle;
     private SoftwareInfoPresenter mPresenter;
-    private static final int PERMISSIONS_REQUEST_SDCARD = 600;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +76,8 @@ public class SoftwareInfoActivity extends HHBaseActivity implements SoftwareInfo
                 (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                         || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                         || checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, PERMISSIONS_REQUEST_SDCARD);
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, RequestCode.PERMISSIONS_REQUEST_SDCARD);
             //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
         } else {
             // Android version is lesser than 6.0 or the permission is already granted.
@@ -86,7 +87,7 @@ public class SoftwareInfoActivity extends HHBaseActivity implements SoftwareInfo
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_SDCARD) {
+        if (requestCode == RequestCode.PERMISSIONS_REQUEST_SDCARD) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 mPresenter.doVersionCheck();

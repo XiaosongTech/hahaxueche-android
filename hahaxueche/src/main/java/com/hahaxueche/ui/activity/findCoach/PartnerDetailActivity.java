@@ -37,6 +37,7 @@ import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.view.findCoach.PartnerDetailView;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
 
 import butterknife.BindView;
@@ -50,7 +51,7 @@ import me.shaohui.shareutil.share.SharePlatform;
  * Created by wangshirui on 2016/10/20.
  */
 
-public class PartnerDetailActivity extends HHBaseActivity implements PartnerDetailView{
+public class PartnerDetailActivity extends HHBaseActivity implements PartnerDetailView {
     private PartnerDetailPresenter mPresenter;
     @BindView(R.id.sv_main)
     ScrollView mSvMain;
@@ -77,12 +78,10 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
     private String mDescription;
     private String mImageUrl;
     private String mUrl;
+
     /*****************
      * end
      ******************/
-
-    private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
-    private static final int PERMISSIONS_REQUEST_SEND_SMS = 603;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +139,7 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
                                     break;
                                 case 5:
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-                                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, PERMISSIONS_REQUEST_SEND_SMS);
+                                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, RequestCode.PERMISSIONS_REQUEST_SEND_SMS);
                                     } else {
                                         shareToSms();
                                     }
@@ -521,7 +520,7 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
             case R.id.tv_contact:
                 mPresenter.clickContactCount();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE);
                     //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
                 } else {
                     callMyCoach(mPresenter.getPartner().phone);
@@ -554,14 +553,14 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_CELL_PHONE) {
+        if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 callMyCoach(mPresenter.getPartner().phone);
             } else {
                 showMessage("请允许拨打电话权限，不然无法直接拨号联系教练");
             }
-        } else if (requestCode == PERMISSIONS_REQUEST_SEND_SMS) {
+        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_SEND_SMS) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 shareToSms();

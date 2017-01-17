@@ -68,8 +68,6 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     //定位回调监听器
     public AMapLocationListener mLocationListener;
 
-    private static final int PERMISSIONS_REQUEST_LOCATION = 602;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,7 +89,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
         mXlvCoaches.setOnScrollListener(this);
         // Check the SDK version and whether the permission is already granted or not.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_LOCATION);
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, RequestCode.PERMISSIONS_REQUEST_LOCATION);
             //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
         } else {
             // Android version is lesser than 6.0 or the permission is already granted.
@@ -225,7 +223,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_LOCATION) {
+        if (requestCode == RequestCode.PERMISSIONS_REQUEST_LOCATION) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 startLocation();

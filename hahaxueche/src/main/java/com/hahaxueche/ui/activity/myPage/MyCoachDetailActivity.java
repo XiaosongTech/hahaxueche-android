@@ -37,6 +37,7 @@ import com.hahaxueche.ui.activity.findCoach.PriceActivity;
 import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.view.myPage.MyCoachDetailView;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
+import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ import me.shaohui.shareutil.share.SharePlatform;
  * Created by wangshirui on 2016/10/26.
  */
 
-public class MyCoachDetailActivity extends HHBaseActivity implements MyCoachDetailView{
+public class MyCoachDetailActivity extends HHBaseActivity implements MyCoachDetailView {
     private MyCoachDetailPresenter mPresenter;
     @BindView(R.id.sv_main)
     ScrollView mSvMain;
@@ -91,12 +92,10 @@ public class MyCoachDetailActivity extends HHBaseActivity implements MyCoachDeta
     private String mDescription;
     private String mImageUrl;
     private String mUrl;
+
     /*****************
      * end
      ******************/
-
-    private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
-    private static final int PERMISSIONS_REQUEST_SEND_SMS = 603;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,7 +152,7 @@ public class MyCoachDetailActivity extends HHBaseActivity implements MyCoachDeta
                                     break;
                                 case 5:
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-                                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, PERMISSIONS_REQUEST_SEND_SMS);
+                                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, RequestCode.PERMISSIONS_REQUEST_SEND_SMS);
                                     } else {
                                         shareToSms();
                                     }
@@ -315,7 +314,7 @@ public class MyCoachDetailActivity extends HHBaseActivity implements MyCoachDeta
                 break;
             case R.id.rly_contact:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE);
                     //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
                 } else {
                     callMyCoach(mPresenter.getCoach().cell_phone);
@@ -486,14 +485,14 @@ public class MyCoachDetailActivity extends HHBaseActivity implements MyCoachDeta
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_CELL_PHONE) {
+        if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 callMyCoach(mPresenter.getCoach().cell_phone);
             } else {
                 showMessage("请允许拨打电话权限，不然无法直接拨号联系教练");
             }
-        } else if (requestCode == PERMISSIONS_REQUEST_SEND_SMS) {
+        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_SEND_SMS) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 shareToSms();

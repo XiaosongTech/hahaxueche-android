@@ -65,7 +65,6 @@ import butterknife.OnClick;
 public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCardView {
     private UploadIdCardPresenter mPresenter;
     private int choseImageFace = 0;//0：正面；1：反面
-    private static final int PERMISSIONS_REQUEST_SDCARD = 600;
     //保存图片本地路径
     public static final String IMGPATH = Environment.getExternalStorageDirectory().getPath() + "/hahaxueche/id_card_pic/";
 
@@ -87,9 +86,6 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     SimpleDraweeView mIvIdCardFaceBack;
     @BindView(R.id.tv_customer_service)
     TextView mTvCustomerService;
-
-    private static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
-    private static final int REQUEST_CODE_MY_CONTRACT = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,7 +142,8 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                         (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                                 || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                                 || checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
-                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, PERMISSIONS_REQUEST_SDCARD);
+                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, RequestCode.PERMISSIONS_REQUEST_SDCARD);
                 } else {
                     showPhotoDialog();
                 }
@@ -157,7 +154,8 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                         (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                                 || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                                 || checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
-                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, PERMISSIONS_REQUEST_SDCARD);
+                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, RequestCode.PERMISSIONS_REQUEST_SDCARD);
                 } else {
                     showPhotoDialog();
                 }
@@ -192,7 +190,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     public void navigateToUserContract(String pdfUrl) {
         Intent intent = new Intent(getContext(), MyContractActivity.class);
         intent.putExtra("pdfUrl", pdfUrl);
-        startActivityForResult(intent, REQUEST_CODE_MY_CONTRACT);
+        startActivityForResult(intent, RequestCode.REQUEST_CODE_MY_CONTRACT);
     }
 
     @Override
@@ -313,7 +311,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
             @Override
             public void onClick(View widget) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CELL_PHONE);
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE);
                     //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
                 } else {
                     // Android version is lesser than 6.0 or the permission is already granted.
@@ -383,14 +381,14 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_SDCARD) {
+        if (requestCode == RequestCode.PERMISSIONS_REQUEST_SDCARD) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 showPhotoDialog();
             } else {
                 showMessage("请允许读写sdcard权限，不然我们无法完成图像采集操作");
             }
-        } else if (requestCode == PERMISSIONS_REQUEST_CELL_PHONE) {
+        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 contactService();
@@ -463,7 +461,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
             } else if (resultCode == RESULT_CANCELED) {
                 showMessage("取消相册选择");
             }
-        } else if (requestCode == REQUEST_CODE_MY_CONTRACT) {
+        } else if (requestCode == RequestCode.REQUEST_CODE_MY_CONTRACT) {
             if (resultCode == RESULT_OK) {
                 setResult(RESULT_OK, null);
                 finish();

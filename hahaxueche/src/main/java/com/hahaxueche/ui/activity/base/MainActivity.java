@@ -66,11 +66,10 @@ public class MainActivity extends HHBaseActivity implements MainView {
     private String mDescription;
     private String mImageUrl;
     private String mUrl;
+
     /*****************
      * end
      ******************/
-    private static final int PERMISSIONS_REQUEST_SEND_SMS = 603;
-    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 604;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,7 +153,7 @@ public class MainActivity extends HHBaseActivity implements MainView {
             }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, RequestCode.PERMISSIONS_REQUEST_READ_CONTACTS);
         } else {
             readContacts();
         }
@@ -191,7 +190,7 @@ public class MainActivity extends HHBaseActivity implements MainView {
                 break;
             case 5:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.SEND_SMS}, PERMISSIONS_REQUEST_SEND_SMS);
+                    requestPermissions(new String[]{Manifest.permission.SEND_SMS}, RequestCode.PERMISSIONS_REQUEST_SEND_SMS);
                 } else {
                     shareToSms();
                 }
@@ -436,14 +435,14 @@ public class MainActivity extends HHBaseActivity implements MainView {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_SEND_SMS) {
+        if (requestCode == RequestCode.PERMISSIONS_REQUEST_SEND_SMS) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 shareToSms();
             } else {
                 Toast.makeText(MainActivity.this, "请允许发送短信权限，不然无法分享到短信", Toast.LENGTH_SHORT).show();
             }
-        } else if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
+        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_READ_CONTACTS) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 readContacts();

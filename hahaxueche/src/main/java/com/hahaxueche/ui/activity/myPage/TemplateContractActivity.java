@@ -18,6 +18,7 @@ import com.hahaxueche.R;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.view.base.HHBaseView;
 import com.hahaxueche.util.DownloadContractManager;
+import com.hahaxueche.util.RequestCode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,7 +32,6 @@ public class TemplateContractActivity extends HHBaseActivity implements HHBaseVi
     LinearLayout mLlyMain;
     @BindView(R.id.pdf_contract)
     PDFView mPdfContract;
-    private static final int PERMISSIONS_REQUEST_SDCARD = 600;
     private String pdfUrl;
 
     @Override
@@ -64,7 +64,8 @@ public class TemplateContractActivity extends HHBaseActivity implements HHBaseVi
                 (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                         || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                         || checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, PERMISSIONS_REQUEST_SDCARD);
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, RequestCode.PERMISSIONS_REQUEST_SDCARD);
         } else {
             downloadPdf();
         }
@@ -85,7 +86,7 @@ public class TemplateContractActivity extends HHBaseActivity implements HHBaseVi
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_SDCARD) {
+        if (requestCode == RequestCode.PERMISSIONS_REQUEST_SDCARD) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 downloadPdf();
