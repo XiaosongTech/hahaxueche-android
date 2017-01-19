@@ -29,6 +29,7 @@ android {
         manifestPlaceholders = [
                 qq_id: "1104872131"
         ]
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
     // 友盟多渠道打包
     productFlavors {
@@ -131,4 +132,7 @@ dependencies {
     //robolectric
     testCompile 'junit:junit:4.12'
     testCompile "org.robolectric:robolectric:3.2.2"
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
 }
