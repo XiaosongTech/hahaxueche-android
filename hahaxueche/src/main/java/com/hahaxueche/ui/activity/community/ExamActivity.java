@@ -150,6 +150,12 @@ public class ExamActivity extends HHBaseActivity implements ExamFragment.OnColle
                 Toast.makeText(ExamActivity.this, "加载试题失败,请重试", Toast.LENGTH_SHORT).show();
             }
         }
+        //清除已回答的答案
+        if (mQuestionList != null && mQuestionList.size() > 0) {
+            for (Question question : mQuestionList) {
+                question.userAnswer = null;
+            }
+        }
     }
 
     private void initViews() {
