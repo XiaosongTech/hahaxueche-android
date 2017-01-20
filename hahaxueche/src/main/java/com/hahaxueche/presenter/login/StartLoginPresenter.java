@@ -22,7 +22,9 @@ public class StartLoginPresenter implements Presenter<StartLoginView> {
         this.mStartLoginView = view;
         HHBaseApplication application = HHBaseApplication.get(mStartLoginView.getContext());
         constants = application.getConstants();
-        mStartLoginView.initBanners(constants.new_login_banners);
+        if (constants != null) {
+            mStartLoginView.initBanners(constants.new_login_banners);
+        }
     }
 
     public void detachView() {
@@ -43,6 +45,7 @@ public class StartLoginPresenter implements Presenter<StartLoginView> {
         application.getSharedPrefUtil().createFakeUser();
         mStartLoginView.navigateToHomepage();
     }
+
     public void bannerClick(int i) {
         try {
             if (!TextUtils.isEmpty(constants.new_login_banners.get(i).target_url)) {
