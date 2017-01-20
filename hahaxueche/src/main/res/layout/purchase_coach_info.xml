@@ -80,6 +80,17 @@
         android:numStars="5"
         android:stepSize="0.5" />
 
+    <TextView
+        android:id="@+id/tv_coach_points"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/rb_coach_score"
+        android:layout_marginLeft="6dp"
+        android:layout_toRightOf="@id/rb_coach_score"
+        android:text="1.2"
+        android:textColor="@color/app_theme_color"
+        android:textSize="12sp" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
