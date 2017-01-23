@@ -128,10 +128,16 @@ public class HHBaseActivity extends AppCompatActivity implements HHBaseView {
      */
     @Override
     public void openWebView(String url) {
+        openWebView(url, url);
+    }
+
+    @Override
+    public void openWebView(String originUrl, String shareUrl) {
         Intent intent = new Intent(getContext(), BaseWebViewActivity.class);
         Bundle bundle = new Bundle();
-        HHLog.v("webview url -> " + url);
-        bundle.putString("url", url);
+        HHLog.v("webview url -> " + originUrl);
+        bundle.putString("url", originUrl);
+        bundle.putString("shareUrl", shareUrl);
         intent.putExtras(bundle);
         startActivity(intent);
     }
