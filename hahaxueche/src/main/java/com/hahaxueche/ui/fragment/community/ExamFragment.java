@@ -473,4 +473,20 @@ public class ExamFragment extends HHBaseFragment {
         imageView.setVisibility(View.VISIBLE);
         imageView.setImageDrawable(ContextCompat.getDrawable(getContext(), isRight ? R.drawable.ic_right : R.drawable.ic_wrong));
     }
+
+    @Override
+    public void onPause() {
+        if (mVideo != null) {
+            mVideo.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        if (mVideo != null) {
+            mVideo.resume();
+        }
+        super.onResume();
+    }
 }
