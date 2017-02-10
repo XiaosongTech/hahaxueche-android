@@ -32,7 +32,6 @@ android {
     }
     // 友盟多渠道打包
     productFlavors {
-        wandoujia {}
         _360 {}
         xiaomi {}
         yingyongbao {}
@@ -44,6 +43,8 @@ android {
         vivo {}
         meizu {}
         sougou {}
+        oppo {}
+        aliapp {}
     }
     productFlavors.all { flavor ->
         flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
