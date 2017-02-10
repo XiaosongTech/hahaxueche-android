@@ -63,6 +63,8 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     TextView mTvCoachTeachTime;
     @BindView(R.id.rb_coach_score)
     RatingBar mRbCoachScore;
+    @BindView(R.id.tv_coach_points)
+    TextView mTvCoachPoints;
     @BindView(R.id.tv_coach_location)
     TextView mTvCoachLocation;
     @BindView(R.id.tv_distance)
@@ -193,6 +195,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
             averageRating = 5;
         }
         mRbCoachScore.setRating(averageRating);
+        mTvCoachPoints.setText(coach.average_rating + " (" + coach.review_count + ")");
         mTvCoachLocation.setText(application.getConstants().getSectionName(coach.coach_group.field_id));
         final Field myField = application.getConstants().getField(coach.coach_group.field_id);
         if (application.getMyLocation() != null && myField != null) {

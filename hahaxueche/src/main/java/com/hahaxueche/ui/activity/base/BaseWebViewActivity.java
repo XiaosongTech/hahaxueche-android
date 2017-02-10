@@ -53,6 +53,7 @@ public class BaseWebViewActivity extends HHBaseActivity implements BaseWebViewVi
     TextView mTvTitle;
     ImageView mIvShare;
     private String url;
+    private String shareUrl;
 
     /*****************
      * 分享
@@ -148,7 +149,7 @@ public class BaseWebViewActivity extends HHBaseActivity implements BaseWebViewVi
                     shareDialog = new ShareDialog(getContext(), new ShareDialog.OnShareListener() {
                         @Override
                         public void onShare(int shareType) {
-                            mPresenter.convertUrlForShare(url, shareType);
+                            mPresenter.convertUrlForShare(shareUrl, shareType);
                         }
                     });
                 }
@@ -188,7 +189,8 @@ public class BaseWebViewActivity extends HHBaseActivity implements BaseWebViewVi
     private void loadDatas() {
         Intent intent = getIntent();
         if (!TextUtils.isEmpty(intent.getStringExtra("url"))) {
-            url = intent.getStringExtra("url");
+            url = intent.getStringExtra("url");//加载的URL
+            shareUrl = intent.getStringExtra("shareUrl");//分享的URL，可能涉及到一些参数不用分享出去的情况
         } else if (!TextUtils.isEmpty(intent.getStringExtra("extraMap"))) {
             try {
                 PushObject pushObject = new Gson().fromJson(intent.getStringExtra("extraMap"), PushObject.class);

@@ -21,4 +21,6 @@ public interface HHBaseView {
     void alertToLogin();
 
     void openWebView(String url);
+
+    void openWebView(String originUrl, String shareUrl);
 }

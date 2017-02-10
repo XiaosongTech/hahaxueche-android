@@ -194,6 +194,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
     public void freeTry() {
         //免费试学URL
         String url = WebViewUrl.WEB_URL_FREE_TRY;
+        String shareUrl = url;
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             if (user.student.city_id >= 0) {
@@ -216,7 +217,8 @@ public class HomepagePresenter implements Presenter<HomepageView> {
             MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_free_trial_tapped");
         }
         HHLog.v("free try url -> " + url);
-        mHomepageView.openWebView(url);
+        HHLog.v("free try share url -> " + shareUrl);
+        mHomepageView.openWebView(url, shareUrl);
     }
 
     private void loadStatistics() {

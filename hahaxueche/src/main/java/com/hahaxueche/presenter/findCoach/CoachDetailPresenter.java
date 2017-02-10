@@ -449,6 +449,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         if (mCoach == null) return;
         //免费试学URL
         String url = WebViewUrl.WEB_URL_FREE_TRY;
+        String shareUrl = url;
         url += "&coach_id=" + mCoach.id;
         if (mUser != null && mUser.isLogin()) {
             if (mUser.student.city_id >= 0) {
@@ -470,7 +471,8 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         map.put("coach_id", mCoach.id);
         MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_free_trial_tapped", map);
         HHLog.v("free try url -> " + url);
-        mCoachDetailView.openWebView(url);
+        HHLog.v("free try share url -> " + shareUrl);
+        mCoachDetailView.openWebView(url, shareUrl);
     }
 
     public void clickCommentsCount() {

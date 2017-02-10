@@ -81,7 +81,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         fetchCumulativeVouchers();//代金券
         fetchUnCumulativeVouchers();
         mPurchaseCoachView.loadPaymentMethod(getPaymentMethod());
-        paymentMethod = 0;
+        paymentMethod = 4;//默认支付方式：银行卡
         pageStartCount();
     }
 
@@ -167,10 +167,10 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
     private ArrayList<PaymentMethod> getPaymentMethod() {
         ArrayList<PaymentMethod> paymentMethods = new ArrayList<>();
         PaymentMethod aliPay = new PaymentMethod(0, R.drawable.ic_alipay_icon, "支付宝", "推荐有支付宝账号的用户使用");
-        PaymentMethod cardPay = new PaymentMethod(4, R.drawable.ic_cardpay_icon, "银行卡支付", "安全极速支付,无需开通网银");
+        PaymentMethod cardPay = new PaymentMethod(4, R.drawable.ic_cardpay_icon, "银行卡", "使用一网通支付，最高再减99元！");
         PaymentMethod fqlPay = new PaymentMethod(1, R.drawable.logo_fenqile, "分期乐", "推荐分期使用");
-        paymentMethods.add(aliPay);
         paymentMethods.add(cardPay);
+        paymentMethods.add(aliPay);
         paymentMethods.add(fqlPay);
         return paymentMethods;
     }
