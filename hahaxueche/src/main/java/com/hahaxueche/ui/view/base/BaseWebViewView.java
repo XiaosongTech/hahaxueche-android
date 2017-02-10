@@ -5,7 +5,7 @@ package com.hahaxueche.ui.view.base;
  */
 
 public interface BaseWebViewView extends HHBaseView {
-    void initShareData(String shareUrl);
+    void setShareUrl(String shareUrl);
 
     void showMessage(String message);
 

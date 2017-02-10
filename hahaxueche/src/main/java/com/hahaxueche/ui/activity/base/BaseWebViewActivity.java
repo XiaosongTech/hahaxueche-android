@@ -53,7 +53,7 @@ public class BaseWebViewActivity extends HHBaseActivity implements BaseWebViewVi
     TextView mTvTitle;
     ImageView mIvShare;
     private String url;
-    private String shareUrl;
+    private String mShareUrl;
 
     /*****************
      * 分享
@@ -63,7 +63,6 @@ public class BaseWebViewActivity extends HHBaseActivity implements BaseWebViewVi
     private String mTitle;
     private String mDescription;
     private String mImageUrl;
-    private String mUrl;
 
     /*****************
      * end
@@ -149,7 +148,7 @@ public class BaseWebViewActivity extends HHBaseActivity implements BaseWebViewVi
                     shareDialog = new ShareDialog(getContext(), new ShareDialog.OnShareListener() {
                         @Override
                         public void onShare(int shareType) {
-                            mPresenter.convertUrlForShare(shareUrl, shareType);
+                            mPresenter.convertUrlForShare(mShareUrl, shareType);
                         }
                     });
                 }
@@ -190,12 +189,14 @@ public class BaseWebViewActivity extends HHBaseActivity implements BaseWebViewVi
         Intent intent = getIntent();
         if (!TextUtils.isEmpty(intent.getStringExtra("url"))) {
             url = intent.getStringExtra("url");//加载的URL
-            shareUrl = intent.getStringExtra("shareUrl");//分享的URL，可能涉及到一些参数不用分享出去的情况
+            mShareUrl = TextUtils.isEmpty(intent.getStringExtra("shareUrl")) ?
+                    url : intent.getStringExtra("shareUrl");//分享的URL，可能涉及到一些参数不用分享出去的情况
         } else if (!TextUtils.isEmpty(intent.getStringExtra("extraMap"))) {
             try {
                 PushObject pushObject = new Gson().fromJson(intent.getStringExtra("extraMap"), PushObject.class);
                 if (!TextUtils.isEmpty(pushObject.url)) {
                     url = pushObject.url;
+                    mShareUrl = url;
                 }
             } catch (Exception e) {
                 HHLog.e(e.getMessage());
@@ -212,7 +213,7 @@ public class BaseWebViewActivity extends HHBaseActivity implements BaseWebViewVi
     }
 
     private void shareToQQ() {
-        ShareUtil.shareMedia(this, SharePlatform.QQ, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+        ShareUtil.shareMedia(this, SharePlatform.QQ, mTitle, mDescription, mShareUrl, mImageUrl, new ShareListener() {
             @Override
             public void shareSuccess() {
                 if (shareDialog != null) {
@@ -235,7 +236,7 @@ public class BaseWebViewActivity extends HHBaseActivity implements BaseWebViewVi
     }
 
     private void shareToQZone() {
-        ShareUtil.shareMedia(this, SharePlatform.QZONE, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+        ShareUtil.shareMedia(this, SharePlatform.QZONE, mTitle, mDescription, mShareUrl, mImageUrl, new ShareListener() {
             @Override
             public void shareSuccess() {
                 if (shareDialog != null) {
@@ -258,7 +259,7 @@ public class BaseWebViewActivity extends HHBaseActivity implements BaseWebViewVi
     }
 
     private void shareToWeibo() {
-        ShareUtil.shareMedia(this, SharePlatform.WEIBO, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+        ShareUtil.shareMedia(this, SharePlatform.WEIBO, mTitle, mDescription, mShareUrl, mImageUrl, new ShareListener() {
             @Override
             public void shareSuccess() {
                 if (shareDialog != null) {
@@ -281,7 +282,7 @@ public class BaseWebViewActivity extends HHBaseActivity implements BaseWebViewVi
     }
 
     private void shareToWeixin() {
-        ShareUtil.shareMedia(this, SharePlatform.WX, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+        ShareUtil.shareMedia(this, SharePlatform.WX, mTitle, mDescription, mShareUrl, mImageUrl, new ShareListener() {
             @Override
             public void shareSuccess() {
                 if (shareDialog != null) {
@@ -304,7 +305,7 @@ public class BaseWebViewActivity extends HHBaseActivity implements BaseWebViewVi
     }
 
     private void shareToFriendCircle() {
-        ShareUtil.shareMedia(this, SharePlatform.WX_TIMELINE, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+        ShareUtil.shareMedia(this, SharePlatform.WX_TIMELINE, mTitle, mDescription, mShareUrl, mImageUrl, new ShareListener() {
             @Override
             public void shareSuccess() {
                 if (shareDialog != null) {
@@ -333,8 +334,8 @@ public class BaseWebViewActivity extends HHBaseActivity implements BaseWebViewVi
     }
 
     @Override
-    public void initShareData(String shareUrl) {
-        mUrl = shareUrl;
+    public void setShareUrl(String shareUrl) {
+        mShareUrl = shareUrl;
         mImageUrl = "https://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
     }
 
@@ -386,7 +387,7 @@ public class BaseWebViewActivity extends HHBaseActivity implements BaseWebViewVi
 
     private void shareToSms() {
         Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"));
-        intent.putExtra("sms_body", "［哈哈学车］" + mDescription + mUrl);
+        intent.putExtra("sms_body", "［哈哈学车］" + mDescription + mShareUrl);
         startActivity(intent);
     }
 

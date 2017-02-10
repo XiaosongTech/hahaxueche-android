@@ -98,7 +98,7 @@ public class BaseWebViewPresenter implements Presenter<BaseWebViewView> {
                     @Override
                     public void onNext(ArrayList<ShortenUrl> shortenUrls) {
                         if (shortenUrls != null && shortenUrls.size() > 0) {
-                            mView.initShareData(shortenUrls.get(0).url_short);
+                            mView.setShareUrl(shortenUrls.get(0).url_short);
                         }
                     }
                 });
