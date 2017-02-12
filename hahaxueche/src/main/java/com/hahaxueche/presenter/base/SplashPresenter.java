@@ -86,6 +86,7 @@ public class SplashPresenter implements Presenter<SplashView> {
                                 mSplashView.navigationToStartLogin();
                             }
                             HHLog.e(e.getMessage());
+                            e.printStackTrace();
                         }
 
                         @Override
@@ -94,6 +95,9 @@ public class SplashPresenter implements Presenter<SplashView> {
                             if (!student.isCompleted()) {
                                 mSplashView.navigateToCompleteInfo();
                             } else {
+                                if (mShareObject == null) {
+                                    mShareObject = new Bundle();
+                                }
                                 mShareObject.putBoolean("isLogin", true);
                                 mSplashView.navigateToHomepage(mShareObject);
                             }
