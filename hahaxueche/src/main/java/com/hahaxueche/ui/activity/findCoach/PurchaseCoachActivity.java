@@ -101,7 +101,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     LinearLayout mLlyPersonVoucher;
 
     private HHBaseApplication application;
-    private int[] selectIds = new int[3];
+    private int[] selectIds = new int[4];
     private int selectId;
 
     @Override

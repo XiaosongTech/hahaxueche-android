@@ -166,11 +166,13 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
      */
     private ArrayList<PaymentMethod> getPaymentMethod() {
         ArrayList<PaymentMethod> paymentMethods = new ArrayList<>();
-        PaymentMethod aliPay = new PaymentMethod(0, R.drawable.ic_alipay_icon, "支付宝", "推荐有支付宝账号的用户使用");
+        PaymentMethod aliPay = new PaymentMethod(0, R.drawable.ic_alipay_icon, "支付宝", "推荐拥有支付宝账号的用户使用");
         PaymentMethod cardPay = new PaymentMethod(4, R.drawable.ic_cardpay_icon, "银行卡", "使用一网通支付，最高再减99元！");
+        PaymentMethod wxlPay = new PaymentMethod(5, R.drawable.ic_wx_icon, "微信支付", "推荐拥有微信账号的用户使用");
         PaymentMethod fqlPay = new PaymentMethod(1, R.drawable.logo_fenqile, "分期乐", "推荐分期使用");
         paymentMethods.add(cardPay);
         paymentMethods.add(aliPay);
+        paymentMethods.add(wxlPay);
         paymentMethods.add(fqlPay);
         return paymentMethods;
     }
