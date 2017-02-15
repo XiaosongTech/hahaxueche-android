@@ -6,7 +6,7 @@
     android:background="@color/haha_white"
     android:orientation="vertical">
 
-    <com.github.barteksc.pdfviewer.PDFView
+    <com.lidong.pdf.PDFView
         android:id="@+id/pdf_contract"
         android:layout_width="match_parent"
         android:layout_height="0dp"

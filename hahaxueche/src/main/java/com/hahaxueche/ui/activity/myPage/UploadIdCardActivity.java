@@ -2,7 +2,6 @@ package com.hahaxueche.ui.activity.myPage;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +13,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
@@ -46,13 +44,10 @@ import com.hahaxueche.ui.dialog.myPage.UploadIdCardDialog;
 import com.hahaxueche.ui.view.myPage.UploadIdCardView;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
-import com.hahaxueche.util.Utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileDescriptor;
 import java.io.FileOutputStream;
-import java.io.OutputStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -615,56 +610,35 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     }
 
     private void compressImage(Uri uri) {
-        HHLog.v("uri -> " + uri.toString());
-        // First decode with inJustDecodeBounds=true to check dimensions
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        //BitmapFactory.decodeFile(uri.getPath(), options);
-        // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, 1000, 1000);
-        HHLog.v("options.inSampleSize" + options.inSampleSize);
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-        Bitmap bmpPic = null;
+        int MAX_IMAGE_SIZE = 200 * 1024; // max final file size
+        Bitmap bmpPic = BitmapFactory.decodeFile(uri.getPath());
+        if ((bmpPic.getWidth() >= 1024) && (bmpPic.getHeight() >= 1024)) {
+            BitmapFactory.Options bmpOptions = new BitmapFactory.Options();
+            bmpOptions.inSampleSize = 1;
+            while ((bmpPic.getWidth() >= 1024) && (bmpPic.getHeight() >= 1024)) {
+                bmpOptions.inSampleSize++;
+                bmpPic = BitmapFactory.decodeFile(uri.getPath(), bmpOptions);
+            }
+            HHLog.v("Resize: " + bmpOptions.inSampleSize);
+        }
+        int compressQuality = 104; // quality decreasing by 5 every loop. (start from 99)
+        int streamLength = MAX_IMAGE_SIZE;
+        while (streamLength >= MAX_IMAGE_SIZE) {
+            ByteArrayOutputStream bmpStream = new ByteArrayOutputStream();
+            compressQuality -= 5;
+            HHLog.v("Quality: " + compressQuality);
+            bmpPic.compress(Bitmap.CompressFormat.JPEG, compressQuality, bmpStream);
+            byte[] bmpPicByteArray = bmpStream.toByteArray();
+            streamLength = bmpPicByteArray.length;
+            HHLog.v("Size: " + streamLength);
+        }
         try {
-            ParcelFileDescriptor mInputPFD = getContentResolver().openFileDescriptor(uri, "r");
-            FileDescriptor fd = mInputPFD.getFileDescriptor();
-            bmpPic = BitmapFactory.decodeFileDescriptor(fd);
-            OutputStream bmpFile = getContentResolver().openOutputStream(uri);
-            bmpPic.compress(Bitmap.CompressFormat.JPEG, 100, bmpFile);
+            FileOutputStream bmpFile = new FileOutputStream(uri.getPath());
+            bmpPic.compress(Bitmap.CompressFormat.JPEG, compressQuality, bmpFile);
             bmpFile.flush();
             bmpFile.close();
         } catch (Exception e) {
-            HHLog.e("Error on saving file: " + e.getMessage());
-            e.printStackTrace();
-        } finally {
-            if (bmpPic != null && !bmpPic.isRecycled()) {
-                bmpPic.recycle();
-                bmpPic = null;
-                System.gc();
-            }
+            HHLog.e("Error on saving file");
         }
-    }
-
-    public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        HHLog.v("calculateInSampleSize height" + height);
-        HHLog.v("calculateInSampleSize width" + width);
-        int inSampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth) {
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) >= reqHeight
-                    || (halfWidth / inSampleSize) >= reqWidth) {
-                inSampleSize *= 2;
-            }
-        }
-
-        return inSampleSize;
     }
 }

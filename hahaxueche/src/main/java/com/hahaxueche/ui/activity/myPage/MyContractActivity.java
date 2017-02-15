@@ -1,10 +1,8 @@
 package com.hahaxueche.ui.activity.myPage;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.graphics.Canvas;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
@@ -17,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.github.barteksc.pdfviewer.PDFView;
 import com.hahaxueche.R;
 import com.hahaxueche.presenter.myPage.MyContractPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
@@ -25,9 +22,11 @@ import com.hahaxueche.ui.dialog.BaseAlertDialog;
 import com.hahaxueche.ui.dialog.myPage.EnterEmailDialog;
 import com.hahaxueche.ui.dialog.myPage.MyContractDialog;
 import com.hahaxueche.ui.view.myPage.MyContractView;
-import com.hahaxueche.util.DownloadContractManager;
 import com.hahaxueche.util.HHLog;
-import com.hahaxueche.util.RequestCode;
+import com.lidong.pdf.PDFView;
+import com.lidong.pdf.listener.OnDrawListener;
+import com.lidong.pdf.listener.OnLoadCompleteListener;
+import com.lidong.pdf.listener.OnPageChangeListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,7 +35,8 @@ import butterknife.ButterKnife;
  * Created by wangshirui on 2016/11/29.
  */
 
-public class MyContractActivity extends HHBaseActivity implements MyContractView {
+public class MyContractActivity extends HHBaseActivity implements MyContractView,OnPageChangeListener,
+        OnLoadCompleteListener, OnDrawListener {
     private MyContractPresenter mPresenter;
     @BindView(R.id.lly_main)
     LinearLayout mLlyMain;
@@ -106,39 +106,16 @@ public class MyContractActivity extends HHBaseActivity implements MyContractView
     @Override
     public void setPdf(String url) {
         pdfUrl = url;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                        || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                        || checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, RequestCode.PERMISSIONS_REQUEST_SDCARD);
-        } else {
-            downloadPdf();
-        }
-    }
-
-    private void downloadPdf() {
-        if (!TextUtils.isEmpty(pdfUrl)) {
-            DownloadContractManager manager = new DownloadContractManager(getContext(), pdfUrl,
-                    new DownloadContractManager.onDownloadListener() {
-                        @Override
-                        public void finish(Uri uri) {
-                            mPdfContract.fromUri(uri)
-                                    .load();
-                            pdfUri = uri;
-                        }
-                    });
-            manager.downloadPdf();
-            mCbSign.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        mPresenter.clickAgreement();
-                        mPresenter.sign();
-                    }
+        mPdfContract.fileFromLocalStorage(this,this,this,pdfUrl,"myContract.pdf");   //设置pdf文件地址
+        mCbSign.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    mPresenter.clickAgreement();
+                    mPresenter.sign();
                 }
-            });
-        }
+            }
+        });
     }
 
     @Override
@@ -166,18 +143,6 @@ public class MyContractActivity extends HHBaseActivity implements MyContractView
         dialog.show();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == RequestCode.PERMISSIONS_REQUEST_SDCARD) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
-                downloadPdf();
-            } else {
-                showMessage("请允许读写sdcard权限，不然我们无法完pdf的加载");
-            }
-        }
-    }
-
     public void openPdf() {
         mPresenter.clickDownloadAgreement();
         try {
@@ -202,5 +167,20 @@ public class MyContractActivity extends HHBaseActivity implements MyContractView
             }
         });
         dialog.show();
+    }
+
+    @Override
+    public void onLayerDrawn(Canvas canvas, float pageWidth, float pageHeight, int displayedPage) {
+
+    }
+
+    @Override
+    public void loadComplete(int nbPages) {
+
+    }
+
+    @Override
+    public void onPageChanged(int page, int pageCount) {
+
     }
 }
