@@ -41,7 +41,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
     private Coach mCoach;
     private User mUser;
     private int license;//1 C1; 2 C2
-    private int classType;//0 普通版; 1 vip
+    private int classType;//0 超值班; 1 vip
     private int productType = -1;
     private int paymentMethod = -1;
     private Voucher mSelectVoucher;
@@ -77,7 +77,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
             mPurchaseCoachView.showLicenseC2();
         }
         selectLicenseC1();
-        selectClassNormal();//默认C1 普通班
+        selectClassNormal();//默认C1 超值班
         fetchCumulativeVouchers();//代金券
         fetchUnCumulativeVouchers();
         mPurchaseCoachView.loadPaymentMethod(getPaymentMethod());

@@ -265,7 +265,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         RelativeLayout.LayoutParams tvLabelParams = new RelativeLayout.LayoutParams(Utils.instence(this).dip2px(60), ViewGroup.LayoutParams.WRAP_CONTENT);
         tvLabelParams.setMargins(Utils.instence(this).dip2px(20), Utils.instence(this).dip2px(15), 0, Utils.instence(this).dip2px(15));
         tvPriceLabel.setLayoutParams(tvLabelParams);
-        tvPriceLabel.setText(isVIP ? "VIP班" : "普通班");
+        tvPriceLabel.setText(isVIP ? "VIP班" : "超值班");
         tvPriceLabel.setGravity(Gravity.CENTER);
         int padding = Utils.instence(this).dip2px(2);
         tvPriceLabel.setPadding(0, padding, 0, padding);
