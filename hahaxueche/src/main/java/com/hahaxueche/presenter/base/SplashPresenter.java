@@ -47,12 +47,13 @@ public class SplashPresenter implements Presenter<SplashView> {
                 .subscribe(new Subscriber<Constants>() {
                     @Override
                     public void onCompleted() {
-                        doAutoLogin();
+                        doLogin();
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         HHLog.e(e.getMessage());
+                        e.printStackTrace();
                         mSplashView.showError("服务器连接异常,请稍后再试~");
                     }
 
@@ -64,54 +65,65 @@ public class SplashPresenter implements Presenter<SplashView> {
 
     }
 
-    public void doAutoLogin() {
+    /**
+     * 登陆
+     */
+    private void doLogin() {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
-            HHApiService apiService = application.getApiService();
-            subscription = apiService.getStudent(user.student.id, user.session.access_token)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(application.defaultSubscribeScheduler())
-                    .subscribe(new Subscriber<Student>() {
-                        @Override
-                        public void onCompleted() {
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            if (mShareObject != null) {
-                                HHBaseApplication application = HHBaseApplication.get(mSplashView.getContext());
-                                application.getSharedPrefUtil().createFakeUser();
-                                mSplashView.navigateToHomepage(mShareObject);
-                            } else {
-                                mSplashView.navigationToStartLogin();
-                            }
-                            HHLog.e(e.getMessage());
-                            e.printStackTrace();
-                        }
-
-                        @Override
-                        public void onNext(Student student) {
-                            application.getSharedPrefUtil().updateStudent(student);
-                            if (!student.isCompleted()) {
-                                mSplashView.navigateToCompleteInfo();
-                            } else {
-                                if (mShareObject == null) {
-                                    mShareObject = new Bundle();
-                                }
-                                mShareObject.putBoolean("isLogin", true);
-                                mSplashView.navigateToHomepage(mShareObject);
-                            }
-                        }
-                    });
+            //已记录用户信息，自动登陆
+            doAutoLogin(user);
+        } else if (mShareObject != null) {
+            //从外部分享而来，直接进入主页
+            application.getSharedPrefUtil().createFakeUser();
+            mSplashView.navigateToHomepage(mShareObject);
         } else {
-            if (mShareObject != null) {
-                HHBaseApplication application = HHBaseApplication.get(mSplashView.getContext());
-                application.getSharedPrefUtil().createFakeUser();
-                mSplashView.navigateToHomepage(mShareObject);
-            } else {
-                mSplashView.navigationToStartLogin();
-            }
+            //跳转至登陆页
+            mSplashView.navigateToStartLogin();
         }
+    }
+
+    /**
+     * 自动登陆
+     */
+    private void doAutoLogin(User user) {
+        HHApiService apiService = application.getApiService();
+        subscription = apiService.getStudent(user.student.id, user.session.access_token)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<Student>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (mShareObject != null) {
+                            HHBaseApplication application = HHBaseApplication.get(mSplashView.getContext());
+                            application.getSharedPrefUtil().createFakeUser();
+                            mSplashView.navigateToHomepage(mShareObject);
+                        } else {
+                            mSplashView.navigateToStartLogin();
+                        }
+                        HHLog.e(e.getMessage());
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(Student student) {
+                        application.getSharedPrefUtil().updateStudent(student);
+                        if (!student.isCompleted()) {
+                            //信息不完善，需要先补充信息
+                            mSplashView.navigateToCompleteInfo();
+                        } else {
+                            if (mShareObject == null) {
+                                mShareObject = new Bundle();
+                            }
+                            mShareObject.putBoolean("isLogin", true);
+                            mSplashView.navigateToHomepage(mShareObject);
+                        }
+                    }
+                });
     }
 
     public void setShareObject(Bundle shareObject) {

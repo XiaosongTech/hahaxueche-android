@@ -56,7 +56,7 @@ public class SplashActivity extends HHBaseActivity implements SplashView {
     }
 
     @Override
-    public void navigationToStartLogin() {
+    public void navigateToStartLogin() {
         startActivity(new Intent(getContext(), StartLoginActivity.class));
         SplashActivity.this.finish();
     }
@@ -77,7 +77,6 @@ public class SplashActivity extends HHBaseActivity implements SplashView {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
-
 
     @Override
     protected void onDestroy() {
@@ -129,15 +128,19 @@ public class SplashActivity extends HHBaseActivity implements SplashView {
                         Bundle shareObject = new Bundle();
                         shareObject.putString("type", type);
                         if (type.equals("coach_detail")) {
+                            //分享教练详情页
                             shareObject.putString("objectId", hashMap.get("coach_id"));
                             mPresenter.setShareObject(shareObject);
                         } else if (type.equals("training_partner_detail")) {
+                            //分享陪练教练详情页
                             shareObject.putString("objectId", hashMap.get("training_partner_id"));
                             mPresenter.setShareObject(shareObject);
                         } else if (type.equals("article")) {
+                            //分享小哈俱乐部文章
                             shareObject.putString("objectId", hashMap.get("id"));
                             mPresenter.setShareObject(shareObject);
                         } else if (type.equals("refer_record") || type.equals("test_practice") || type.equals("coach_list")) {
+                            //分享推荐有奖，练题，教练列表
                             mPresenter.setShareObject(shareObject);
                         }
                     }

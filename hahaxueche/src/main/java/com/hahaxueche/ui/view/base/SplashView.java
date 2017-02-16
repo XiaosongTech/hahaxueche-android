@@ -9,7 +9,7 @@ public interface SplashView extends HHBaseView {
     /**
      * 跳转到准备登录页面
      */
-    void navigationToStartLogin();
+    void navigateToStartLogin();
 
     /**
      * 跳转到首页
