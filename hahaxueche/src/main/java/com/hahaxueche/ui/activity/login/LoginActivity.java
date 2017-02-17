@@ -51,17 +51,15 @@ public class LoginActivity extends HHBaseActivity implements LoginView {
     TextView mTvForgetPwd;
 
     private LoginPresenter mPresenter;
-    private int mLoginType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPresenter = new LoginPresenter();
-        mPresenter.attachView(this);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         initActionBar();
-        initAuthLogin();
+        mPresenter.attachView(this);
     }
 
     private void initActionBar() {
@@ -89,7 +87,6 @@ public class LoginActivity extends HHBaseActivity implements LoginView {
 
     @Override
     public void initAuthLogin() {
-        mLoginType = mPresenter.AUTH_LOGIN;
         mTvTitle.setText("验证码登录");
         mTvChangeType.setText("我想使用密码登录我的帐号");
         mTvForgetPwd.setVisibility(View.INVISIBLE);
@@ -101,7 +98,6 @@ public class LoginActivity extends HHBaseActivity implements LoginView {
 
     @Override
     public void initPasswordLogin() {
-        mLoginType = mPresenter.PASSWORD_LOGIN;
         mTvTitle.setText("密码登录");
         mTvChangeType.setText("我想使用验证码登录我的帐号");
         mTvForgetPwd.setVisibility(View.VISIBLE);
@@ -176,12 +172,12 @@ public class LoginActivity extends HHBaseActivity implements LoginView {
 
     @OnClick(R.id.tv_change_type)
     public void changeLoginType() {
-        mPresenter.changeLoginType(mLoginType);
+        mPresenter.changeLoginType();
     }
 
     @OnClick(R.id.tv_login)
     public void login() {
-        mPresenter.login(mEtCellPhone.getText().toString(), mEtAuthCode.getText().toString(), mEtPassword.getText().toString(), mLoginType);
+        mPresenter.login(mEtCellPhone.getText().toString(), mEtAuthCode.getText().toString(), mEtPassword.getText().toString());
     }
 
     @Override

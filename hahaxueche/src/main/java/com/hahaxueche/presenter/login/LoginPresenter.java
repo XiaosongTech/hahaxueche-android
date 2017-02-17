@@ -14,6 +14,7 @@ import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.login.LoginView;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.Utils;
 
 import java.util.HashMap;
 
@@ -27,18 +28,23 @@ import rx.android.schedulers.AndroidSchedulers;
 public class LoginPresenter implements Presenter<LoginView> {
     private LoginView mLoginView;
     private Subscription subscription;
-    private static final String SENT_AUTH_TYPE = "login";
-    private static final String LOGIN_TYPE_STUDENT = "student";
-    public static final int AUTH_LOGIN = 1;
-    public static final int PASSWORD_LOGIN = 2;
+    private HHBaseApplication application;
+    private String mLoginType;
+    private static final String LOGIN_TYPE_AUTH = "auth";
+    private static final String LOGIN_TYPE_PASSWORD = "password";
 
     public void attachView(LoginView view) {
         this.mLoginView = view;
+        application = HHBaseApplication.get(mLoginView.getContext());
+        //默认验证码登陆
+        mLoginType = LOGIN_TYPE_AUTH;
+        mLoginView.initAuthLogin();
     }
 
     public void detachView() {
         this.mLoginView = null;
         if (subscription != null) subscription.unsubscribe();
+        this.application = null;
     }
 
     public void getAuthCode(String cellPhone) {
@@ -46,24 +52,14 @@ public class LoginPresenter implements Presenter<LoginView> {
             mLoginView.showMessage("手机号不能为空");
             return;
         }
-        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-        try {
-            Phonenumber.PhoneNumber chNumberProto = phoneUtil.parse(cellPhone, "CN");
-            if (!phoneUtil.isValidNumber(chNumberProto)) {
-                mLoginView.showMessage("您的手机号码格式有误");
-                return;
-            }
-        } catch (NumberParseException e) {
+        if (!Utils.isValidPhoneNumber(cellPhone)) {
             mLoginView.showMessage("您的手机号码格式有误");
             return;
         }
-        mLoginView.disableButtons();
-        mLoginView.showProgressDialog("验证码获取中,请稍后...");
-        HHBaseApplication application = HHBaseApplication.get(mLoginView.getContext());
         HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", cellPhone);
-        map.put("type", SENT_AUTH_TYPE);
+        map.put("type", "login");
         if (BuildConfig.DEBUG) {
             map.put("back_door", 1);
         }
@@ -71,6 +67,13 @@ public class LoginPresenter implements Presenter<LoginView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<BaseModel>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        mLoginView.disableButtons();
+                        mLoginView.showProgressDialog("验证码获取中,请稍后...");
+                    }
+
                     @Override
                     public void onCompleted() {
                         mLoginView.enableButtons();
@@ -86,6 +89,7 @@ public class LoginPresenter implements Presenter<LoginView> {
                         mLoginView.enableButtons();
                         mLoginView.dismissProgressDialog();
                         HHLog.e(e.getMessage());
+                        e.printStackTrace();
                     }
 
                     @Override
@@ -94,33 +98,31 @@ public class LoginPresenter implements Presenter<LoginView> {
                 });
     }
 
-    public void changeLoginType(int loginType) {
-        if (loginType == AUTH_LOGIN) {
+    /**
+     * 切换登陆方式
+     */
+    public void changeLoginType() {
+        if (LOGIN_TYPE_AUTH.equals(mLoginType)) {
+            mLoginType = LOGIN_TYPE_PASSWORD;
             mLoginView.initPasswordLogin();
         } else {
+            mLoginType = LOGIN_TYPE_AUTH;
             mLoginView.initAuthLogin();
         }
     }
 
-    public void login(String cellPhone, String authCode, String password, final int loginType) {
+    public void login(String cellPhone, String authCode, String password) {
         if (TextUtils.isEmpty(cellPhone)) {
             mLoginView.showMessage("手机号不能为空");
             return;
         }
-        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-        try {
-            Phonenumber.PhoneNumber chNumberProto = phoneUtil.parse(cellPhone, "CN");
-            if (!phoneUtil.isValidNumber(chNumberProto)) {
-                mLoginView.showMessage("您的手机号码格式有误");
-                return;
-            }
-        } catch (NumberParseException e) {
+        if (!Utils.isValidPhoneNumber(cellPhone)) {
             mLoginView.showMessage("您的手机号码格式有误");
             return;
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", cellPhone);
-        if (loginType == AUTH_LOGIN) {
+        if (LOGIN_TYPE_AUTH.equals(mLoginType)) {
             if (TextUtils.isEmpty(authCode)) {
                 mLoginView.showMessage("短信验证码不能为空");
                 return;
@@ -133,15 +135,20 @@ public class LoginPresenter implements Presenter<LoginView> {
             }
             map.put("password", password);
         }
-        map.put("type", LOGIN_TYPE_STUDENT);
-        mLoginView.disableButtons();
-        mLoginView.showProgressDialog();
+        map.put("type", "student");
         final HHBaseApplication application = HHBaseApplication.get(mLoginView.getContext());
         HHApiService apiService = application.getApiService();
         subscription = apiService.login(map)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<User>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        mLoginView.disableButtons();
+                        mLoginView.showProgressDialog();
+                    }
+
                     @Override
                     public void onCompleted() {
                     }
@@ -151,7 +158,7 @@ public class LoginPresenter implements Presenter<LoginView> {
                         mLoginView.enableButtons();
                         mLoginView.dismissProgressDialog();
                         if (ErrorUtil.isHttp401(e)) {
-                            if (loginType == AUTH_LOGIN) {
+                            if (LOGIN_TYPE_AUTH.equals(mLoginType)) {
                                 mLoginView.showMessage("验证码错误");
                             } else {
                                 mLoginView.showMessage("密码错误");
@@ -160,18 +167,17 @@ public class LoginPresenter implements Presenter<LoginView> {
                             mLoginView.showMessage("手机号未注册");
                         }
                         HHLog.e(e.getMessage());
+                        e.printStackTrace();
                     }
 
                     @Override
                     public void onNext(User user) {
                         application.getSharedPrefUtil().setUser(user);
+                        mLoginView.enableButtons();
+                        mLoginView.dismissProgressDialog();
                         if (!user.isCompleted()) {
-                            mLoginView.enableButtons();
-                            mLoginView.dismissProgressDialog();
                             mLoginView.navigateToCompleteInfo();
                         } else {
-                            mLoginView.enableButtons();
-                            mLoginView.dismissProgressDialog();
                             mLoginView.navigateToHomepage();
                         }
                     }

@@ -15,7 +15,6 @@ import rx.Subscription;
  */
 public class StartLoginPresenter implements Presenter<StartLoginView> {
     private StartLoginView mStartLoginView;
-    private Subscription subscription;
     private Constants constants;
 
     public void attachView(StartLoginView view) {
@@ -29,7 +28,6 @@ public class StartLoginPresenter implements Presenter<StartLoginView> {
 
     public void detachView() {
         this.mStartLoginView = null;
-        if (subscription != null) subscription.unsubscribe();
     }
 
     public void navigateToLogin() {
@@ -46,13 +44,14 @@ public class StartLoginPresenter implements Presenter<StartLoginView> {
         mStartLoginView.navigateToHomepage();
     }
 
-    public void bannerClick(int i) {
+    public void clickBanner(int i) {
         try {
             if (!TextUtils.isEmpty(constants.new_login_banners.get(i).target_url)) {
                 mStartLoginView.openWebView(constants.new_login_banners.get(i).target_url);
             }
         } catch (Exception e) {
             HHLog.e(e.getMessage());
+            e.printStackTrace();
         }
     }
 }

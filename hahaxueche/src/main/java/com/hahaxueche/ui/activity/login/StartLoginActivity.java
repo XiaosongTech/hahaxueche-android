@@ -3,6 +3,7 @@ package com.hahaxueche.ui.activity.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
@@ -15,6 +16,7 @@ import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.view.login.StartLoginView;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
@@ -77,24 +79,28 @@ public class StartLoginActivity extends HHBaseActivity implements ViewPager.OnPa
         StartLoginActivity.this.finish();
     }
 
-    @OnClick(R.id.tv_start_login)
-    public void startLogin() {
-        mPresenter.navigateToLogin();
-    }
-
-    @OnClick(R.id.tv_start_register)
-    public void startRegister() {
-        mPresenter.navigateToRegister();
-    }
-
-    @OnClick(R.id.tv_tourist_login)
-    public void touristLogin() {
-        mPresenter.touristLogin();
+    @OnClick({R.id.tv_start_login,
+            R.id.tv_start_register,
+            R.id.tv_tourist_login})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv_start_login:
+                mPresenter.navigateToLogin();
+                break;
+            case R.id.tv_start_register:
+                mPresenter.navigateToRegister();
+                break;
+            case R.id.tv_tourist_login:
+                mPresenter.touristLogin();
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
     public void onItemClick(int i) {
-        mPresenter.bannerClick(i);
+        mPresenter.clickBanner(i);
     }
 
     @Override
@@ -123,7 +129,7 @@ public class StartLoginActivity extends HHBaseActivity implements ViewPager.OnPa
     public void onResume() {
         super.onResume();
         //开始自动翻页
-        mLoginBanner.startTurning(2500);
+        mLoginBanner.startTurning(Common.BANNER_TURNING_TIME);
     }
 
     @Override

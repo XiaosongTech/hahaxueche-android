@@ -9,6 +9,10 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
+
 import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -262,5 +266,19 @@ public class Utils {
             }
         }
         return url;
+    }
+
+    public static boolean isValidPhoneNumber(String phoneNumber) {
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+        try {
+            Phonenumber.PhoneNumber chNumberProto = phoneUtil.parse(phoneNumber, "CN");
+            if (!phoneUtil.isValidNumber(chNumberProto)) {
+                return false;
+            }
+        } catch (NumberParseException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }
