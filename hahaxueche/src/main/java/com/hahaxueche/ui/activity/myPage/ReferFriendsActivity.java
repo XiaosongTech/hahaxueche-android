@@ -134,7 +134,7 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
 
     @Override
     public void initShareData(String shareUrl) {
-        mTitle = "送你￥200元学车券，怕你考不过，再送你一张保过卡。比心 ❤";
+        mTitle = "送你￥200元学车券，怕你考不过，再送你挂科险。比心 ❤";
         mDescription = "Hi~朋友，知道你最近想学车，我把我学车的地方告诉你了，要一把考过哟！️️";
         mImageUrl = "https://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
         mUrl = shareUrl;
