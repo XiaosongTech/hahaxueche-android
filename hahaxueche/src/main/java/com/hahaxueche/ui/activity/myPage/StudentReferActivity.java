@@ -22,7 +22,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
-import com.hahaxueche.presenter.myPage.ReferFriendsPresenter;
+import com.hahaxueche.presenter.myPage.StudentReferPresenter;
 import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
@@ -30,12 +30,9 @@ import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.dialog.myPage.ReferDetailDialog;
 import com.hahaxueche.ui.dialog.myPage.ShareReferDialog;
-import com.hahaxueche.ui.view.myPage.ReferFriendsView;
+import com.hahaxueche.ui.view.myPage.StudentReferView;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
-import com.tencent.tauth.IUiListener;
-import com.tencent.tauth.Tencent;
-import com.tencent.tauth.UiError;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,15 +42,15 @@ import me.shaohui.shareutil.share.ShareListener;
 import me.shaohui.shareutil.share.SharePlatform;
 
 /**
- * Created by wangshirui on 16/9/21.
+ * Created by wangshirui on 2017/2/18.
  */
 
-public class ReferFriendsActivity extends HHBaseActivity implements ReferFriendsView {
+public class StudentReferActivity extends HHBaseActivity implements StudentReferView {
     @BindView(R.id.sv_main)
     ScrollView mSvMain;
-    @BindView(R.id.tv_refer_double)
-    TextView mTvReferDouble;
-    private ReferFriendsPresenter mPresenter;
+    @BindView(R.id.tv_refer_secret)
+    TextView mTvReferSecret;
+    private StudentReferPresenter mPresenter;
     /*****************
      * 分享
      ******************/
@@ -62,6 +59,7 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
     private String mDescription;
     private String mImageUrl;
     private String mUrl;
+
     /*****************
      * end
      ******************/
@@ -70,18 +68,18 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter = new ReferFriendsPresenter();
-        setContentView(R.layout.activity_refer_friends);
+        mPresenter = new StudentReferPresenter();
+        setContentView(R.layout.activity_student_refer);
         ButterKnife.bind(this);
         mPresenter.attachView(this);
         initActionBar();
-        String referDouble = mTvReferDouble.getText().toString();
+        String referDouble = mTvReferSecret.getText().toString();
         SpannableString spReferDouble = new SpannableString(referDouble);
         spReferDouble.setSpan(new ClickableSpan() {
             @Override
             public void onClick(View widget) {
                 if (mReferDetailDialog == null) {
-                    mReferDetailDialog = new ReferDetailDialog(getContext(),true,
+                    mReferDetailDialog = new ReferDetailDialog(getContext(), false,
                             new ReferDetailDialog.OnButtonClickListener() {
                                 @Override
                                 public void callCustomerService() {
@@ -105,9 +103,9 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
                 ds.clearShadowLayer();
             }
         }, referDouble.indexOf("详情"), referDouble.indexOf("详情") + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mTvReferDouble.setText(spReferDouble);
-        mTvReferDouble.setHighlightColor(ContextCompat.getColor(getContext(), R.color.haha_red));
-        mTvReferDouble.setMovementMethod(LinkMovementMethod.getInstance());
+        mTvReferSecret.setText(spReferDouble);
+        mTvReferSecret.setHighlightColor(ContextCompat.getColor(getContext(), R.color.haha_red));
+        mTvReferSecret.setMovementMethod(LinkMovementMethod.getInstance());
         Intent intent = getIntent();
         if (intent.getBooleanExtra("isFromLinkedMe", false)) {
             alertToLogin();
@@ -117,24 +115,33 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
 
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setCustomView(R.layout.actionbar_refer_friends);
+        actionBar.setCustomView(R.layout.actionbar_student_refer);
         ImageView mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
-        TextView mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
-        TextView mTvWithdraw = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_withdraw);
+        TextView mTvReferList = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_refer_list);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        mTvTitle.setText("邀请好友 平分400元");
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ReferFriendsActivity.this.finish();
+                StudentReferActivity.this.finish();
             }
         });
-        mTvWithdraw.setOnClickListener(new View.OnClickListener() {
+        mTvReferList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.clickWithdraw();
+                startActivity(new Intent(getContext(), MyReferActivity.class));
             }
         });
+    }
+
+    @OnClick({R.id.tv_share})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv_share:
+                mPresenter.clickShareCount();
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -144,6 +151,24 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
         mImageUrl = "https://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
         mUrl = shareUrl;
         HHLog.v("mUrl -> " + mUrl);
+    }
+
+    @Override
+    public void showShareDialog() {
+        if (mPresenter.isLogin()) {
+            if (TextUtils.isEmpty(mUrl)) return;
+            if (shareDialog == null) {
+                shareDialog = new ShareReferDialog(getContext(), mUrl, new ShareDialog.OnShareListener() {
+                    @Override
+                    public void onShare(int shareType) {
+                        mPresenter.convertUrlForShare(mUrl, shareType);
+                    }
+                });
+            }
+            shareDialog.show();
+        } else {
+            alertToLogin();
+        }
     }
 
     @Override
@@ -175,15 +200,24 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
         }
     }
 
-    @OnClick({R.id.tv_share})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.tv_share:
-                mPresenter.clickShareCount();
-                break;
-            default:
-                break;
-        }
+    @Override
+    public void alertToLogin() {
+        BaseConfirmSimpleDialog dialog = new BaseConfirmSimpleDialog(getContext(), "提示", "请先登录或者注册", "去登录", "知道了",
+                new BaseConfirmSimpleDialog.onClickListener() {
+                    @Override
+                    public void clickConfirm() {
+                        ActivityCollector.finishAll();
+                        Intent intent = new Intent(getContext(), StartLoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void clickCancel() {
+
+                    }
+                });
+        dialog.show();
     }
 
     private void shareToQQ() {
@@ -317,43 +351,10 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
         Snackbar.make(mSvMain, message, Snackbar.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void navigateToMyRefer() {
-        startActivity(new Intent(getContext(), MyReferActivity.class));
-    }
-
-    @Override
-    public void showShareDialog() {
-        if (TextUtils.isEmpty(mUrl)) return;
-        if (shareDialog == null) {
-            shareDialog = new ShareReferDialog(getContext(), mUrl, new ShareDialog.OnShareListener() {
-                @Override
-                public void onShare(int shareType) {
-                    mPresenter.convertUrlForShare(mUrl, shareType);
-                }
-            });
-        }
-        shareDialog.show();
-    }
-
-    @Override
-    public void alertToLogin() {
-        BaseConfirmSimpleDialog dialog = new BaseConfirmSimpleDialog(getContext(), "提示", "请先登录或者注册", "去登录", "知道了",
-                new BaseConfirmSimpleDialog.onClickListener() {
-                    @Override
-                    public void clickConfirm() {
-                        ActivityCollector.finishAll();
-                        Intent intent = new Intent(getContext(), StartLoginActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void clickCancel() {
-
-                    }
-                });
-        dialog.show();
+    private void shareToSms() {
+        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"));
+        intent.putExtra("sms_body", "［哈哈学车］" + mDescription + mUrl);
+        startActivity(intent);
     }
 
     private void createCallCustomerService() {
@@ -396,9 +397,4 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
         }
     }
 
-    private void shareToSms() {
-        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"));
-        intent.putExtra("sms_body", "［哈哈学车］" + mDescription + mUrl);
-        startActivity(intent);
-    }
 }

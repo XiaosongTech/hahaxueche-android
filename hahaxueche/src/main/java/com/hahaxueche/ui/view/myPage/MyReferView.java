@@ -24,4 +24,6 @@ public interface MyReferView extends HHBaseView {
      * @param money
      */
     void setWithdrawMoney(String money);
+
+    void showWithdraw(boolean isShow);
 }

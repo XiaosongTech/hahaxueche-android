@@ -34,6 +34,7 @@ public class Student implements Parcelable {
     public String agreement_url;
     public IdCard identity_card;
     public String user_identity_id;
+    public boolean isAgent = false;
 
     public Student() {
 

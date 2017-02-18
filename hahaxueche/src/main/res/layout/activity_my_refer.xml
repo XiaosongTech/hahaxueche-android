@@ -7,9 +7,11 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/rly_withdraw"
         android:layout_width="match_parent"
         android:layout_height="90dp"
-        android:background="@color/app_theme_color">
+        android:background="@color/app_theme_color"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/tv_withdraw_label"

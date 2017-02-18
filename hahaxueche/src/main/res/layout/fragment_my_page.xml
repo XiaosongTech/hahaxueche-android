@@ -8,78 +8,6 @@
     android:background="@color/haha_gray_background"
     android:orientation="vertical">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/app_theme_color"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp">
-
-                    <TextView
-                        android:id="@+id/tv_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:text="我的页面"
-                        android:textColor="@color/haha_white"
-                        android:textSize="20sp" />
-
-                </RelativeLayout>
-
-
-                <include layout="@layout/my_page_user_info" />
-
-                <include layout="@layout/my_page_account_info" />
-            </LinearLayout>
-
-        </android.support.design.widget.CollapsingToolbarLayout>
-
-        <RelativeLayout
-            android:id="@+id/rly_referer_friends"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/app_theme_color">
-
-            <ImageView
-                android:id="@+id/iv_xiaoha"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/pic_xiaoha" />
-
-            <me.grantland.widget.AutofitTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginBottom="23dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="3dp"
-                android:layout_marginTop="23dp"
-                android:layout_toLeftOf="@id/iv_xiaoha"
-                android:lines="1"
-                android:text="邀请好友平分¥400！邀请越多，奖励越多！"
-                android:textColor="@color/haha_white"
-                android:textSize="16sp"
-                autofit:minTextSize="8sp" />
-        </RelativeLayout>
-    </android.support.design.widget.AppBarLayout>
-
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -136,4 +64,77 @@
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/app_theme_color"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp">
+
+                    <TextView
+                        android:id="@+id/tv_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="我的页面"
+                        android:textColor="@color/haha_white"
+                        android:textSize="20sp" />
+
+                </RelativeLayout>
+
+
+                <include layout="@layout/my_page_user_info" />
+
+                <include layout="@layout/my_page_account_info" />
+            </LinearLayout>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+        <RelativeLayout
+            android:id="@+id/rly_referer_friends"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/app_theme_color">
+
+            <ImageView
+                android:id="@+id/iv_xiaoha"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/pic_xiaoha" />
+
+            <me.grantland.widget.AutofitTextView
+                android:id="@+id/tv_refer_friends"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="23dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="3dp"
+                android:layout_marginTop="23dp"
+                android:layout_toLeftOf="@id/iv_xiaoha"
+                android:lines="1"
+                android:text="你推荐我送礼！推荐越多，礼品越多！"
+                android:textColor="@color/haha_white"
+                android:textSize="16sp"
+                autofit:minTextSize="8sp" />
+        </RelativeLayout>
+    </android.support.design.widget.AppBarLayout>
 </android.support.design.widget.CoordinatorLayout>

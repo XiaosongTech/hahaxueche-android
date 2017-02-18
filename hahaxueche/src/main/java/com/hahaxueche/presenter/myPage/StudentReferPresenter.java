@@ -2,14 +2,13 @@ package com.hahaxueche.presenter.myPage;
 
 import android.text.TextUtils;
 
-import com.hahaxueche.BuildConfig;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.ShortenUrl;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.identity.MarketingInfo;
 import com.hahaxueche.presenter.Presenter;
-import com.hahaxueche.ui.view.myPage.ReferFriendsView;
+import com.hahaxueche.ui.view.myPage.StudentReferView;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
 import com.hahaxueche.util.WebViewUrl;
@@ -18,46 +17,39 @@ import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFUserInfo;
 import com.umeng.analytics.MobclickAgent;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * Created by wangshirui on 16/9/21.
+ * Created by wangshirui on 2017/2/18.
  */
 
-public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
-    private ReferFriendsView mReferFriendsView;
+public class StudentReferPresenter implements Presenter<StudentReferView> {
+    private StudentReferView mStudentReferView;
     private Subscription subscription;
     private HHBaseApplication application;
-    private String mQrCodeUrl;
 
-    public void attachView(ReferFriendsView view) {
-        this.mReferFriendsView = view;
-        application = HHBaseApplication.get(mReferFriendsView.getContext());
+    public void attachView(StudentReferView view) {
+        this.mStudentReferView = view;
+        application = HHBaseApplication.get(mStudentReferView.getContext());
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             //原url地址
             String url = WebViewUrl.WEB_URL_REFER_FRIENDS + "&referrer_id=" + user.student.user_identity_id;
-            mReferFriendsView.initShareData(url);
+            mStudentReferView.initShareData(url);
         }
     }
 
     public void detachView() {
-        this.mReferFriendsView = null;
+        this.mStudentReferView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
-        mQrCodeUrl = null;
     }
 
     public void clickShareCount() {
@@ -66,11 +58,11 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_share_pic_tapped", map);
-            mReferFriendsView.showShareDialog();
+            MobclickAgent.onEvent(mStudentReferView.getContext(), "refer_page_share_pic_tapped", map);
+            mStudentReferView.showShareDialog();
         } else {
-            MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_share_pic_tapped");
-            mReferFriendsView.alertToLogin();
+            MobclickAgent.onEvent(mStudentReferView.getContext(), "refer_page_share_pic_tapped");
+            mStudentReferView.alertToLogin();
         }
 
     }
@@ -83,31 +75,7 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
             map.put("student_id", user.student.id);
         }
         map.put("share_channel", shareChannel);
-        MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_share_pic_succeed", map);
-    }
-
-    public void pageStartCount() {
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_viewed", map);
-        } else {
-            MobclickAgent.onEvent(mReferFriendsView.getContext(), "refer_page_viewed");
-        }
-    }
-
-    public void clickWithdraw() {
-        if (isLogin()) {
-            mReferFriendsView.navigateToMyRefer();
-        } else {
-            mReferFriendsView.alertToLogin();
-        }
-    }
-
-    public boolean isLogin() {
-        User user = application.getSharedPrefUtil().getUser();
-        return user != null && user.isLogin();
+        MobclickAgent.onEvent(mStudentReferView.getContext(), "refer_page_share_pic_succeed", map);
     }
 
     public void convertUrlForShare(final String url, final int shareType) {
@@ -141,6 +109,11 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
         }
     }
 
+    public boolean isLogin() {
+        User user = application.getSharedPrefUtil().getUser();
+        return user != null && user.isLogin();
+    }
+
     private void shortenUrl(String url, final int shareType) {
         if (TextUtils.isEmpty(url)) return;
         String longUrl = null;
@@ -158,7 +131,7 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
                 .subscribe(new Subscriber<ArrayList<ShortenUrl>>() {
                     @Override
                     public void onCompleted() {
-                        mReferFriendsView.startToShare(shareType);
+                        mStudentReferView.startToShare(shareType);
                     }
 
                     @Override
@@ -169,7 +142,7 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
                     @Override
                     public void onNext(ArrayList<ShortenUrl> shortenUrls) {
                         if (shortenUrls != null && shortenUrls.size() > 0) {
-                            mReferFriendsView.initShareData(shortenUrls.get(0).url_short);
+                            mStudentReferView.initShareData(shortenUrls.get(0).url_short);
                         }
                     }
                 });
@@ -192,7 +165,7 @@ public class ReferFriendsPresenter implements Presenter<ReferFriendsView> {
             Unicorn.setUserInfo(userInfo);
         }
         // 请注意： 调用该接口前，应先检查Unicorn.isServiceAvailable(), 如果返回为false，该接口不会有任何动作
-        Unicorn.openServiceActivity(mReferFriendsView.getContext(), // 上下文
+        Unicorn.openServiceActivity(mStudentReferView.getContext(), // 上下文
                 title, // 聊天窗口的标题
                 source // 咨询的发起来源，包括发起咨询的url，title，描述信息等
         );

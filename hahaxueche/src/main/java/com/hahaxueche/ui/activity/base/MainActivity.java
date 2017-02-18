@@ -27,6 +27,7 @@ import com.hahaxueche.ui.activity.findCoach.PartnerDetailActivity;
 import com.hahaxueche.ui.activity.myPage.MyContractActivity;
 import com.hahaxueche.ui.activity.myPage.MyReferActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
+import com.hahaxueche.ui.activity.myPage.StudentReferActivity;
 import com.hahaxueche.ui.activity.myPage.UploadIdCardActivity;
 import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.MainShareDialog;
@@ -141,7 +142,7 @@ public class MainActivity extends HHBaseActivity implements MainView {
                     Intent startIntent = new Intent(getContext(), MyReferActivity.class);
                     startActivity(startIntent);
                 } else {
-                    Intent startIntent = new Intent(getContext(), ReferFriendsActivity.class);
+                    Intent startIntent = new Intent(getContext(), StudentReferActivity.class);
                     startIntent.putExtra("isFromLinkedMe", true);
                     startActivity(startIntent);
                 }

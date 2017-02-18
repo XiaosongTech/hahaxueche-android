@@ -29,15 +29,19 @@ public class ReferDetailDialog {
     private Dialog mDialog;
     private ImageView mIvClose;
     private TextView mTvReferDetail;//取消
+    private boolean mIsAgent;
     private OnButtonClickListener mOnButtonClickListener;
 
     public interface OnButtonClickListener {
         void callCustomerService();
+
+        void onlineAsk();
     }
 
-    public ReferDetailDialog(Context context, OnButtonClickListener onButtonClickListener) {
+    public ReferDetailDialog(Context context, boolean isAgent, OnButtonClickListener onButtonClickListener) {
         mDialog = new Dialog(context, R.style.my_dialog);
         mContext = context;
+        mIsAgent = isAgent;
         mOnButtonClickListener = onButtonClickListener;
         initView();
         initEvent();
@@ -48,6 +52,9 @@ public class ReferDetailDialog {
         View contentView = View.inflate(mContext, R.layout.dialog_refer_detail, null);
         mIvClose = ButterKnife.findById(contentView, R.id.iv_close);
         mTvReferDetail = ButterKnife.findById(contentView, R.id.tv_refer_detail);
+        if (mIsAgent) {
+            mTvReferDetail.setText(R.string.refer_detail_text_agent);
+        }
         mDialog.setContentView(contentView);
         mDialog.dismiss();
     }
@@ -71,9 +78,25 @@ public class ReferDetailDialog {
                 ds.clearShadowLayer();
             }
         }, referDetail.indexOf("400"), referDetail.indexOf("6006") + 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spReferDetail.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                mDialog.dismiss();
+                mOnButtonClickListener.onlineAsk();
+            }
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(ContextCompat.getColor(mContext, R.color.app_theme_color));
+                ds.setUnderlineText(false);
+                ds.clearShadowLayer();
+            }
+        }, referDetail.indexOf("在线客服"), referDetail.indexOf("在线客服") + 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         mTvReferDetail.setText(spReferDetail);
         mTvReferDetail.setHighlightColor(ContextCompat.getColor(mContext, R.color.app_theme_color));
         mTvReferDetail.setMovementMethod(LinkMovementMethod.getInstance());
+
     }
 
     public void show() {

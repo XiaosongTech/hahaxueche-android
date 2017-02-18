@@ -68,8 +68,7 @@
             android:value="79c7199994bc41940643bc75b8ca0ad0" />
         <meta-data
             android:name="com.taobao.android.hotfix.RSASECRET"
-            android:value="@string/baichuan_rsa"
-            />
+            android:value="@string/baichuan_rsa" />
 
         <activity
             android:name=".ui.activity.base.SplashActivity"
@@ -194,6 +193,7 @@
             android:name=".wxapi.WXPayEntryActivity"
             android:exported="true"
             android:targetActivity="com.pingplusplus.android.PaymentActivity" />
+
         <activity
             android:name="cmb.pb.ui.PBKeyboardActivity"
             android:theme="@style/CmbDialogStyleBottom" />
@@ -305,14 +305,19 @@
             android:name=".ui.activity.myPage.TemplateContractActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.myPage.StudentReferActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+
         <provider
-            android:authorities="com.hahaxueche.provider.fileProvider"
             android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.hahaxueche.provider.fileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/file_paths" />
         </provider>
 
         <service

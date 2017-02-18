@@ -37,6 +37,7 @@ import com.hahaxueche.ui.activity.myPage.PassEnsuranceActivity;
 import com.hahaxueche.ui.activity.myPage.PaymentStageActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.activity.myPage.SoftwareInfoActivity;
+import com.hahaxueche.ui.activity.myPage.StudentReferActivity;
 import com.hahaxueche.ui.activity.myPage.UploadIdCardActivity;
 import com.hahaxueche.ui.dialog.AvatarDialog;
 import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
@@ -55,6 +56,7 @@ import java.io.File;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import me.grantland.widget.AutofitTextView;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -97,6 +99,8 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
     ImageView mIvMorePassEnsurance;
     @BindView(R.id.crl_main)
     CoordinatorLayout mCrlMain;
+    @BindView(R.id.tv_refer_friends)
+    AutofitTextView mTvReferFriends;
 
     private MyPagePresenter mPresenter;
     private MainActivity mActivity;
@@ -238,7 +242,6 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
                 break;
             case R.id.rly_referer_friends:
                 mPresenter.clickReferCount();
-                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
                 break;
             case R.id.iv_my_avatar:
                 if (!mPresenter.isLogin()) {
@@ -440,6 +443,21 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
             mViewBadgePassEnsurance.setVisibility(View.GONE);
             mIvMorePassEnsurance.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void setReferText(String text) {
+        mTvReferFriends.setText(text);
+    }
+
+    @Override
+    public void navigateToReferFriends() {
+        startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+    }
+
+    @Override
+    public void navigateToStudentRefer() {
+        startActivity(new Intent(getContext(), StudentReferActivity.class));
     }
 
     @Override
