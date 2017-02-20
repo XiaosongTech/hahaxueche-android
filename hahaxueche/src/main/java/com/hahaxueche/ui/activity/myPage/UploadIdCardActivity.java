@@ -405,7 +405,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                     } else {
                         uriFaceA = Uri.fromFile(imageFile);
                     }
-                    compressImage(uriFaceA);
+                    compressImage(imageFile.getAbsolutePath());
                     mPresenter.uploadIdCard(imageFile.getPath(), 0);
                 } else {
                     File imageFile = new File(IMGPATH, IMAGE_FILE_B_NAME);
@@ -415,7 +415,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                     } else {
                         uriFaceB = Uri.fromFile(imageFile);
                     }
-                    compressImage(uriFaceB);
+                    compressImage(imageFile.getAbsolutePath());
                     mPresenter.uploadIdCard(imageFile.getPath(), 1);
                 }
             } else {
@@ -441,7 +441,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                     } else {
                         uriFaceA = Uri.fromFile(imageFile);
                     }
-                    compressImage(uriFaceA);
+                    compressImage(imageFile.getAbsolutePath());
                     mPresenter.uploadIdCard(imageFile.getPath(), 0);
                 } else {
                     if (Build.VERSION.SDK_INT >= 24) {
@@ -450,7 +450,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                     } else {
                         uriFaceB = Uri.fromFile(new File(filePath));
                     }
-                    compressImage(uriFaceB);
+                    compressImage(imageFile.getAbsolutePath());
                     mPresenter.uploadIdCard(imageFile.getPath(), 1);
                 }
             } else if (resultCode == RESULT_CANCELED) {
@@ -609,15 +609,15 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
         return path;
     }
 
-    private void compressImage(Uri uri) {
+    private void compressImage(String imagePath) {
         int MAX_IMAGE_SIZE = 200 * 1024; // max final file size
-        Bitmap bmpPic = BitmapFactory.decodeFile(uri.getPath());
+        Bitmap bmpPic = BitmapFactory.decodeFile(imagePath);
         if ((bmpPic.getWidth() >= 1024) && (bmpPic.getHeight() >= 1024)) {
             BitmapFactory.Options bmpOptions = new BitmapFactory.Options();
             bmpOptions.inSampleSize = 1;
             while ((bmpPic.getWidth() >= 1024) && (bmpPic.getHeight() >= 1024)) {
                 bmpOptions.inSampleSize++;
-                bmpPic = BitmapFactory.decodeFile(uri.getPath(), bmpOptions);
+                bmpPic = BitmapFactory.decodeFile(imagePath, bmpOptions);
             }
             HHLog.v("Resize: " + bmpOptions.inSampleSize);
         }
@@ -633,7 +633,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
             HHLog.v("Size: " + streamLength);
         }
         try {
-            FileOutputStream bmpFile = new FileOutputStream(uri.getPath());
+            FileOutputStream bmpFile = new FileOutputStream(imagePath);
             bmpPic.compress(Bitmap.CompressFormat.JPEG, compressQuality, bmpFile);
             bmpFile.flush();
             bmpFile.close();
