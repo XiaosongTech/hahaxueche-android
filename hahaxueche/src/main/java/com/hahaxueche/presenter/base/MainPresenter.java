@@ -324,7 +324,7 @@ public class MainPresenter implements Presenter<MainView> {
      */
     public void toReferFriends() {
         User user = application.getSharedPrefUtil().getUser();
-        if (user == null || !user.isLogin() || !user.student.isAgent) {
+        if (user == null || !user.isLogin() || !user.student.is_sales_agent) {
             //非代理
             mBaseView.navigateToStudentRefer();
         } else {

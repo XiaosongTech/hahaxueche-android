@@ -90,7 +90,7 @@ public class ShareAppDialog {
                     mDialog.dismiss();
                     Intent intent;
                     User user = new SharedPrefUtil(mContext).getUser();
-                    if (user == null || !user.isLogin() || !user.student.isAgent) {
+                    if (user == null || !user.isLogin() || !user.student.is_sales_agent) {
                         intent = new Intent(mContext, StudentReferActivity.class);
                     } else {
                         intent = new Intent(mContext, ReferFriendsActivity.class);

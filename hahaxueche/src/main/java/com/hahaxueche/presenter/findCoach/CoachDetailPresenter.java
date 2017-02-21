@@ -545,7 +545,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
      */
     public void toReferFriends() {
         User user = application.getSharedPrefUtil().getUser();
-        if (user == null || !user.isLogin() || !user.student.isAgent) {
+        if (user == null || !user.isLogin() || !user.student.is_sales_agent) {
             //非代理
             mCoachDetailView.navigateToStudentRefer();
         } else {

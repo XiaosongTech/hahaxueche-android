@@ -344,7 +344,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         } else {
             MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_refer_friends_tapped");
         }
-        if (user == null || !user.isLogin() || !user.student.isAgent) {
+        if (user == null || !user.isLogin() || !user.student.is_sales_agent) {
             //非代理
             mHomepageView.navigateToStudentRefer();
         } else {

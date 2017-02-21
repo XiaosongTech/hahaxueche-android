@@ -56,7 +56,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
             setContractBadge();
             setPassEnsuranceBadge();
             fetchAdviser();
-            if (user.student.isAgent) {
+            if (user.student.is_sales_agent) {
                 //代理文字
                 mMyPageView.setReferText("邀请好友平分¥400！邀请越多，奖励越多！");
             }
@@ -338,7 +338,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
             MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_refer_tapped", map);
-            if (user.student.isAgent) {
+            if (user.student.is_sales_agent) {
                 mMyPageView.navigateToReferFriends();
                 return;
             }

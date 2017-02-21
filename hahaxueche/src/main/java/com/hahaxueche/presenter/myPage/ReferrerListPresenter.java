@@ -143,6 +143,6 @@ public class ReferrerListPresenter implements Presenter<ReferrerListView> {
 
     public boolean isAgent() {
         User user = application.getSharedPrefUtil().getUser();
-        return user != null && user.isLogin() && user.student.isAgent;
+        return user != null && user.isLogin() && user.student.is_sales_agent;
     }
 }

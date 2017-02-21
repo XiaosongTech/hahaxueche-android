@@ -40,7 +40,7 @@ public class MyReferPresenter implements Presenter<MyReferView> {
         application = HHBaseApplication.get(mMyReferView.getContext());
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
-            if (user.student.isAgent) {
+            if (user.student.is_sales_agent) {
                 mMyReferView.showWithdraw(true);
                 mMyReferView.setWithdrawMoney(Utils.getMoney(user.student.bonus_balance));
             }
@@ -206,6 +206,6 @@ public class MyReferPresenter implements Presenter<MyReferView> {
 
     public boolean isAgent() {
         User user = application.getSharedPrefUtil().getUser();
-        return user != null && user.isLogin() && user.student.isAgent;
+        return user != null && user.isLogin() && user.student.is_sales_agent;
     }
 }
