@@ -3,14 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/iv_back"
+    <TextView
+        android:id="@+id/tv_manual"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="5dp"
         android:padding="5dp"
-        android:src="@drawable/ic_arrow_back" />
+        android:text="手动填写"
+        android:textColor="@color/haha_white"
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/tv_title"

@@ -59,7 +59,7 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
 
     public void uploadInfo() {
         HHApiService apiService = application.getApiService();
-        User user = application.getSharedPrefUtil().getUser();
+        final User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) return;
         subscription = apiService.createAgreement(user.student.id, user.session.access_token)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -85,7 +85,7 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
                     @Override
                     public void onNext(Response<IdCardUrl> response) {
                         if (response.isSuccessful()) {
-                            mUploadIdCardView.navigateToUserContract(response.body().agreement_url);
+                            mUploadIdCardView.navigateToUserContract(response.body().agreement_url, user.student.id);
                         } else {
                             Retrofit retrofit = HHApiService.Factory.getRetrofit();
                             Converter<ResponseBody, ErrorResponse> errorConverter = retrofit.responseBodyConverter(ErrorResponse.class,

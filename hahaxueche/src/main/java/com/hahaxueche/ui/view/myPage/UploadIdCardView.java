@@ -9,7 +9,7 @@ import com.hahaxueche.ui.view.base.HHBaseView;
 public interface UploadIdCardView extends HHBaseView {
     void showMessage(String message);
 
-    void navigateToUserContract(String pdfUrl);
+    void navigateToUserContract(String pdfUrl, String studentId);
 
     void setFaceImage(String imageUrl);
 

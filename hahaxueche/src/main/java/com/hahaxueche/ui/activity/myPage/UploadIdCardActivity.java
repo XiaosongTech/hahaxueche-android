@@ -40,6 +40,7 @@ import com.hahaxueche.presenter.myPage.UploadIdCardPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.dialog.BaseAlertDialog;
 import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
+import com.hahaxueche.ui.dialog.myPage.ManualUploadDialog;
 import com.hahaxueche.ui.dialog.myPage.UploadIdCardDialog;
 import com.hahaxueche.ui.view.myPage.UploadIdCardView;
 import com.hahaxueche.util.HHLog;
@@ -100,15 +101,15 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setCustomView(R.layout.actionbar_upload_id_card);
-        ImageView mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
+        TextView mTvManual = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_manual);
         TextView mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
         TextView mTvTemplate = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_template);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         mTvTitle.setText("上传身份信息");
-        mIvBack.setOnClickListener(new View.OnClickListener() {
+        mTvManual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showLaterSubmitDialog();
+                showManualUploadDialog();
             }
         });
         mTvTemplate.setOnClickListener(new View.OnClickListener() {
@@ -117,6 +118,19 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                 startActivity(new Intent(getContext(), TemplateContractActivity.class));
             }
         });
+    }
+
+    /**
+     * 手动填写
+     */
+    private void showManualUploadDialog() {
+        ManualUploadDialog dialog = new ManualUploadDialog(getContext(), new ManualUploadDialog.OnButtonClickListener() {
+            @Override
+            public void upload(String name, String idCardNumber) {
+
+            }
+        });
+        dialog.show();
     }
 
     @Override
@@ -182,9 +196,10 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     }
 
     @Override
-    public void navigateToUserContract(String pdfUrl) {
+    public void navigateToUserContract(String pdfUrl, String studentId) {
         Intent intent = new Intent(getContext(), MyContractActivity.class);
         intent.putExtra("pdfUrl", pdfUrl);
+        intent.putExtra("studentId", studentId);
         startActivityForResult(intent, RequestCode.REQUEST_CODE_MY_CONTRACT);
     }
 
