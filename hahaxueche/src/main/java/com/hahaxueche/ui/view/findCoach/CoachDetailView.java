@@ -46,4 +46,8 @@ public interface CoachDetailView extends HHBaseView {
     void setPayBadge(boolean isCashPledge);
 
     void navigationToPlatformAssurance(boolean isGolden, boolean isCashPledge);
+
+    void navigateToStudentRefer();
+
+    void navigateToReferFriends();
 }

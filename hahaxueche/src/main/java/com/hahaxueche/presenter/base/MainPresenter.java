@@ -318,4 +318,17 @@ public class MainPresenter implements Presenter<MainView> {
                     }
                 });
     }
+
+    /**
+     * 推荐有奖跳转逻辑
+     */
+    public void toReferFriends() {
+        User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin() || !user.student.isAgent) {
+            //非代理
+            mBaseView.navigateToStudentRefer();
+        } else {
+            mBaseView.navigateToReferFriends();
+        }
+    }
 }

@@ -200,6 +200,16 @@ public class MainActivity extends HHBaseActivity implements MainView {
         }
     }
 
+    @Override
+    public void navigateToStudentRefer() {
+        startActivity(new Intent(getContext(), StudentReferActivity.class));
+    }
+
+    @Override
+    public void navigateToReferFriends() {
+        startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+    }
+
     public void controlMyPageBadge() {
         mPresenter.setMyPageBadge();
     }
@@ -303,12 +313,12 @@ public class MainActivity extends HHBaseActivity implements MainView {
         if (requestCode == RequestCode.REQUEST_CODE_UPLOAD_ID_CARD) {
             if (resultCode == RESULT_OK) {
                 controlMyPageBadge();
-                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+                mPresenter.toReferFriends();
             }
         } else if (requestCode == RequestCode.REQUEST_CODE_MY_CONTRACT) {
             if (resultCode == RESULT_OK) {//已签订协议
                 controlMyPageBadge();
-                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+                mPresenter.toReferFriends();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
