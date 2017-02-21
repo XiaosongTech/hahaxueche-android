@@ -203,4 +203,9 @@ public class MyReferPresenter implements Presenter<MyReferView> {
             mMyReferView.alertToLogin();
         }
     }
+
+    public boolean isAgent() {
+        User user = application.getSharedPrefUtil().getUser();
+        return user != null && user.isLogin() && user.student.isAgent;
+    }
 }

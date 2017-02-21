@@ -26,11 +26,13 @@ public class ReferrerAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private Context mContext;
     private ArrayList<Referrer> mReferrerList;
+    private boolean mIsAgent;
 
-    public ReferrerAdapter(Context context, ArrayList<Referrer> ReferrerArrayList) {
+    public ReferrerAdapter(Context context, ArrayList<Referrer> ReferrerArrayList, boolean isAgent) {
         inflater = LayoutInflater.from(context);
         mContext = context;
         mReferrerList = ReferrerArrayList;
+        mIsAgent = isAgent;
     }
 
     @Override
@@ -62,12 +64,16 @@ public class ReferrerAdapter extends BaseAdapter {
         Referrer referrer = mReferrerList.get(position);
         holder.tvRefereeName.setText(referrer.name);
         holder.tvRefereePhone.setText(referrer.phone);
-        holder.tvReferAmount.setText(Utils.getMoney(referrer.amount));
-        holder.tvReferState.setText(referrer.sales_status);
+        if (mIsAgent) {
+            //代理才显示推荐金额
+            holder.tvReferAmount.setText(Utils.getMoney(referrer.amount));
+        }
         if (TextUtils.isEmpty(referrer.purchased_at)) {
             holder.tvReferAmount.setTextColor(ContextCompat.getColor(mContext, R.color.haha_gray_text));
+            holder.tvReferState.setText(referrer.sales_status);
         } else {
             holder.tvReferAmount.setTextColor(ContextCompat.getColor(mContext, R.color.app_theme_color));
+            holder.tvReferState.setText(referrer.sales_status + " " + referrer.purchased_at);
         }
         return convertView;
     }
