@@ -63,7 +63,7 @@ public class PassEnsuranceActivity extends HHBaseActivity implements PassEnsuran
         ImageView mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
         TextView mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        mTvTitle.setText("科目一四保过卡");
+        mTvTitle.setText("科目一四挂科险");
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

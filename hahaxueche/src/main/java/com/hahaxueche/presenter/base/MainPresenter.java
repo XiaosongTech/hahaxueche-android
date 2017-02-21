@@ -126,7 +126,7 @@ public class MainPresenter implements Presenter<MainView> {
             mBaseView.setMyPageBadge(false);
             return;
         }
-        if (!user.student.hasPurchasedService()) {//未购买教练，保过卡的红点
+        if (!user.student.hasPurchasedService()) {//未购买教练，挂科险的红点
             mBaseView.setMyPageBadge(true);
             return;
         }
