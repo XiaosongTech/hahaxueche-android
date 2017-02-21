@@ -13,7 +13,6 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.base.Location;
-import com.hahaxueche.model.examLib.Question;
 import com.hahaxueche.ui.widget.FrescoImageLoader;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
@@ -28,15 +27,12 @@ import com.taobao.hotfix.HotFixManager;
 import com.taobao.hotfix.PatchLoadStatusListener;
 import com.taobao.hotfix.util.PatchStatusCode;
 
-import java.util.ArrayList;
-
 import me.shaohui.shareutil.ShareConfig;
 import me.shaohui.shareutil.ShareManager;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscriber;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
@@ -50,8 +46,6 @@ public class HHBaseApplication extends Application {
     private SharedPrefUtil spUtil;
     private Observable sessionObservable;
     private Location myLocation;
-    private ArrayList<Question> questions1;
-    private ArrayList<Question> questions4;
     private Subscription subscription;
     public static String appVersion;
     public static String appId;
@@ -101,22 +95,6 @@ public class HHBaseApplication extends Application {
         return constants;
     }
 
-    public ArrayList<Question> getQuestions1() {
-        if (questions1 == null) {
-            SharedPrefUtil spUtil = new SharedPrefUtil(this);
-            questions1 = spUtil.getQuestions1();
-        }
-        return questions1;
-    }
-
-    public ArrayList<Question> getQuestions4() {
-        if (questions4 == null) {
-            SharedPrefUtil spUtil = new SharedPrefUtil(this);
-            questions4 = spUtil.getQuestions4();
-        }
-        return questions4;
-    }
-
     public void setConstants(Constants constants) {
         this.constants = constants;
         SharedPrefUtil spUtil = new SharedPrefUtil(this);
@@ -159,46 +137,6 @@ public class HHBaseApplication extends Application {
                 .wxId("wxdf5f23aa517b1a96")
                 .weiboId("4186780524");
         ShareManager.init(config);
-        subscription = getApiService().getQuestions(0)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(defaultSubscribeScheduler())
-                .subscribe(new Subscriber<ArrayList<Question>>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        HHLog.e(e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(ArrayList<Question> questions) {
-                        questions1 = questions;
-                        SharedPrefUtil spUtil = new SharedPrefUtil(getApplicationContext());
-                        spUtil.setQuestions1(questions1);
-                    }
-                });
-        subscription = getApiService().getQuestions(1)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(defaultSubscribeScheduler())
-                .subscribe(new Subscriber<ArrayList<Question>>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        HHLog.e(e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(ArrayList<Question> questions) {
-                        questions4 = questions;
-                        SharedPrefUtil spUtil = new SharedPrefUtil(getApplicationContext());
-                        spUtil.setQuestions4(questions4);
-                    }
-                });
     }
 
     // 如果返回值为null，则全部使用默认参数。

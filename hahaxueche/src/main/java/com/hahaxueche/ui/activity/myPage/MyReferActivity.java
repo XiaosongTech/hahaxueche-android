@@ -62,7 +62,7 @@ public class MyReferActivity extends HHBaseActivity implements MyReferView, XLis
         ImageView mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
         TextView mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        mTvTitle.setText("提现明细");
+        mTvTitle.setText("推荐明细");
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
