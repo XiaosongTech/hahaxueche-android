@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceResponse;
@@ -81,9 +82,9 @@ public class BaseWebViewActivity extends HHBaseActivity implements BaseWebViewVi
         baseWebView.setWebViewClient(new WebViewClient() {
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-                if (url.equals("hhxc://findcoach")) {
+                /*if (url.equals("hhxc://findcoach")) {
                     returnToFindCoach();
-                }
+                }*/
                 return super.shouldInterceptRequest(view, url);
             }
 
@@ -125,6 +126,7 @@ public class BaseWebViewActivity extends HHBaseActivity implements BaseWebViewVi
         mWebSettings.setAppCachePath(appCachePath);
         mWebSettings.setAllowFileAccess(true);
         mWebSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        baseWebView.addJavascriptInterface(new JsBridge(), "jsBridge");
         baseWebView.loadUrl(url);
     }
 
@@ -203,13 +205,6 @@ public class BaseWebViewActivity extends HHBaseActivity implements BaseWebViewVi
                 e.printStackTrace();
             }
         }
-    }
-
-    private void returnToFindCoach() {
-        Intent intent = new Intent();
-        intent.putExtra("showTab", 1);
-        setResult(RESULT_OK, intent);
-        BaseWebViewActivity.this.finish();
     }
 
     private void shareToQQ() {
@@ -395,5 +390,17 @@ public class BaseWebViewActivity extends HHBaseActivity implements BaseWebViewVi
         mTitle = title;
         mDescription = mTitle;
         mTvTitle.setText(mTitle);
+    }
+
+    public class JsBridge {
+        @JavascriptInterface
+        public void nativeCall(String methodName) {
+            if ("findCoach".equals(methodName)) {
+                Intent intent = new Intent();
+                intent.putExtra("showTab", 1);
+                setResult(RESULT_OK, intent);
+                BaseWebViewActivity.this.finish();
+            }
+        }
     }
 }
