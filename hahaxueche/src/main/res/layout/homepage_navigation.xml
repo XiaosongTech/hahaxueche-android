@@ -58,7 +58,7 @@
                 android:layout_gravity="center_horizontal"
                 android:drawablePadding="5dp"
                 android:drawableTop="@drawable/ic_lessonone"
-                android:text="科一保过"
+                android:text="科一挂科险"
                 android:textColor="@color/haha_gray"
                 android:textSize="12sp" />
         </FrameLayout>

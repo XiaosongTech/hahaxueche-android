@@ -30,7 +30,6 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -40,6 +39,7 @@ import com.hahaxueche.presenter.myPage.UploadIdCardPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.dialog.BaseAlertDialog;
 import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
+import com.hahaxueche.ui.dialog.myPage.ManualUploadDialog;
 import com.hahaxueche.ui.dialog.myPage.UploadIdCardDialog;
 import com.hahaxueche.ui.view.myPage.UploadIdCardView;
 import com.hahaxueche.util.HHLog;
@@ -100,15 +100,15 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setCustomView(R.layout.actionbar_upload_id_card);
-        ImageView mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
+        TextView mTvManual = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_manual);
         TextView mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
         TextView mTvTemplate = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_template);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         mTvTitle.setText("上传身份信息");
-        mIvBack.setOnClickListener(new View.OnClickListener() {
+        mTvManual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showLaterSubmitDialog();
+                showManualUploadDialog();
             }
         });
         mTvTemplate.setOnClickListener(new View.OnClickListener() {
@@ -117,6 +117,19 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                 startActivity(new Intent(getContext(), TemplateContractActivity.class));
             }
         });
+    }
+
+    /**
+     * 手动填写
+     */
+    private void showManualUploadDialog() {
+        ManualUploadDialog dialog = new ManualUploadDialog(getContext(), new ManualUploadDialog.OnButtonClickListener() {
+            @Override
+            public void upload(String name, String idCardNumber) {
+                mPresenter.manualUpload(name, idCardNumber);
+            }
+        });
+        dialog.show();
     }
 
     @Override
@@ -165,7 +178,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                     showMessage("请上传身份证反面");
                     return;
                 }
-                mPresenter.uploadInfo();
+                mPresenter.generateAgreement();
                 break;
             case R.id.tv_later_submit:
                 mPresenter.clickLaterSubmit();
@@ -182,9 +195,10 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     }
 
     @Override
-    public void navigateToUserContract(String pdfUrl) {
+    public void navigateToUserContract(String pdfUrl, String studentId) {
         Intent intent = new Intent(getContext(), MyContractActivity.class);
         intent.putExtra("pdfUrl", pdfUrl);
+        intent.putExtra("studentId", studentId);
         startActivityForResult(intent, RequestCode.REQUEST_CODE_MY_CONTRACT);
     }
 
@@ -405,7 +419,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                     } else {
                         uriFaceA = Uri.fromFile(imageFile);
                     }
-                    compressImage(uriFaceA);
+                    compressImage(imageFile.getAbsolutePath());
                     mPresenter.uploadIdCard(imageFile.getPath(), 0);
                 } else {
                     File imageFile = new File(IMGPATH, IMAGE_FILE_B_NAME);
@@ -415,7 +429,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                     } else {
                         uriFaceB = Uri.fromFile(imageFile);
                     }
-                    compressImage(uriFaceB);
+                    compressImage(imageFile.getAbsolutePath());
                     mPresenter.uploadIdCard(imageFile.getPath(), 1);
                 }
             } else {
@@ -441,7 +455,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                     } else {
                         uriFaceA = Uri.fromFile(imageFile);
                     }
-                    compressImage(uriFaceA);
+                    compressImage(imageFile.getAbsolutePath());
                     mPresenter.uploadIdCard(imageFile.getPath(), 0);
                 } else {
                     if (Build.VERSION.SDK_INT >= 24) {
@@ -450,7 +464,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                     } else {
                         uriFaceB = Uri.fromFile(new File(filePath));
                     }
-                    compressImage(uriFaceB);
+                    compressImage(imageFile.getAbsolutePath());
                     mPresenter.uploadIdCard(imageFile.getPath(), 1);
                 }
             } else if (resultCode == RESULT_CANCELED) {
@@ -609,15 +623,15 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
         return path;
     }
 
-    private void compressImage(Uri uri) {
+    private void compressImage(String imagePath) {
         int MAX_IMAGE_SIZE = 200 * 1024; // max final file size
-        Bitmap bmpPic = BitmapFactory.decodeFile(uri.getPath());
+        Bitmap bmpPic = BitmapFactory.decodeFile(imagePath);
         if ((bmpPic.getWidth() >= 1024) && (bmpPic.getHeight() >= 1024)) {
             BitmapFactory.Options bmpOptions = new BitmapFactory.Options();
             bmpOptions.inSampleSize = 1;
             while ((bmpPic.getWidth() >= 1024) && (bmpPic.getHeight() >= 1024)) {
                 bmpOptions.inSampleSize++;
-                bmpPic = BitmapFactory.decodeFile(uri.getPath(), bmpOptions);
+                bmpPic = BitmapFactory.decodeFile(imagePath, bmpOptions);
             }
             HHLog.v("Resize: " + bmpOptions.inSampleSize);
         }
@@ -633,7 +647,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
             HHLog.v("Size: " + streamLength);
         }
         try {
-            FileOutputStream bmpFile = new FileOutputStream(uri.getPath());
+            FileOutputStream bmpFile = new FileOutputStream(imagePath);
             bmpPic.compress(Bitmap.CompressFormat.JPEG, compressQuality, bmpFile);
             bmpFile.flush();
             bmpFile.close();

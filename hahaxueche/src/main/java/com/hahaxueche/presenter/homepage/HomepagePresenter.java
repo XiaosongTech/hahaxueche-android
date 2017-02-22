@@ -344,7 +344,12 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         } else {
             MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_refer_friends_tapped");
         }
-        mHomepageView.navigateToReferFriends();
+        if (user == null || !user.isLogin() || !user.student.is_sales_agent) {
+            //非代理
+            mHomepageView.navigateToStudentRefer();
+        } else {
+            mHomepageView.navigateToReferFriends();
+        }
     }
 
     public String getShareText() {

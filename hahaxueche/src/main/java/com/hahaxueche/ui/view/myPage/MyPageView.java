@@ -54,4 +54,10 @@ public interface MyPageView extends HHBaseView {
     void navigateToPassEnsurance();
 
     void setPassEnsuranceBadge(boolean hasBadge);
+
+    void setReferText(String text);
+
+    void navigateToReferFriends();
+
+    void navigateToStudentRefer();
 }

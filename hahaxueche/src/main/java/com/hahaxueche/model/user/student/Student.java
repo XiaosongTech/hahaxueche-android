@@ -34,11 +34,11 @@ public class Student implements Parcelable {
     public String agreement_url;
     public IdCard identity_card;
     public String user_identity_id;
+    public boolean is_sales_agent;
 
     public Student() {
 
     }
-
 
     protected Student(Parcel in) {
         id = in.readString();
@@ -57,6 +57,7 @@ public class Student implements Parcelable {
         agreement_url = in.readString();
         identity_card = in.readParcelable(IdCard.class.getClassLoader());
         user_identity_id = in.readString();
+        is_sales_agent = in.readByte() != 0;
     }
 
     public static final Creator<Student> CREATOR = new Creator<Student>() {
@@ -155,5 +156,6 @@ public class Student implements Parcelable {
         dest.writeString(agreement_url);
         dest.writeParcelable(identity_card, flags);
         dest.writeString(user_identity_id);
+        dest.writeByte((byte) (is_sales_agent ? 1 : 0));
     }
 }

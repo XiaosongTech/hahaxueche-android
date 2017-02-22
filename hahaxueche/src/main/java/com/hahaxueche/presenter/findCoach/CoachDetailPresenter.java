@@ -539,4 +539,17 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
     public void clickPlatformAssurance() {
         mCoachDetailView.navigationToPlatformAssurance(mCoach.skill_level.equals("1"), mCoach.has_cash_pledge == 1);
     }
+
+    /**
+     * 推荐有奖跳转逻辑
+     */
+    public void toReferFriends() {
+        User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin() || !user.student.is_sales_agent) {
+            //非代理
+            mCoachDetailView.navigateToStudentRefer();
+        } else {
+            mCoachDetailView.navigateToReferFriends();
+        }
+    }
 }

@@ -10,7 +10,10 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
+import com.hahaxueche.model.user.User;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
+import com.hahaxueche.ui.activity.myPage.StudentReferActivity;
+import com.hahaxueche.util.SharedPrefUtil;
 import com.hahaxueche.util.Utils;
 
 /**
@@ -85,7 +88,13 @@ public class ShareAppDialog {
                     break;
                 case R.id.tv_share:
                     mDialog.dismiss();
-                    Intent intent = new Intent(mContext, ReferFriendsActivity.class);
+                    Intent intent;
+                    User user = new SharedPrefUtil(mContext).getUser();
+                    if (user == null || !user.isLogin() || !user.student.is_sales_agent) {
+                        intent = new Intent(mContext, StudentReferActivity.class);
+                    } else {
+                        intent = new Intent(mContext, ReferFriendsActivity.class);
+                    }
                     mContext.startActivity(intent);
                     break;
                 default:

@@ -22,4 +22,8 @@ public interface MainView extends HHBaseView {
     void initShareData(String shareUrl);
 
     void startToShare(int shareType);
+
+    void navigateToStudentRefer();
+
+    void navigateToReferFriends();
 }

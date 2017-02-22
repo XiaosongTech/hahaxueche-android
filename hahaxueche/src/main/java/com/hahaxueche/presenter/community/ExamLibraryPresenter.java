@@ -48,7 +48,7 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
         this.mExamLibraryView = view;
         application = HHBaseApplication.get(mExamLibraryView.getContext());
         fetchScores();
-        String text = Utils.getCount(application.getConstants().statistics.student_count) + "人已获得保过卡";
+        String text = Utils.getCount(application.getConstants().statistics.student_count) + "人已获得挂科险";
         SpannableString ss = new SpannableString(text);
         ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mExamLibraryView.getContext(), R.color.app_theme_color)), 0, text.indexOf("人"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         mExamLibraryView.setInsuranceCount(ss);
@@ -125,7 +125,7 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
         codeList.add("IDBD-692");
         codeList.add("MIMK-039");
         Collections.shuffle(codeList);//打乱顺序
-        return "科一保过卡免费送！考不过现金赔！【" + codeList.get(0) + "】哈哈老司机要开车了，捂脸~~内有惊喜";
+        return "科一挂科险免费送！考不过现金赔！【" + codeList.get(0) + "】哈哈老司机要开车了，捂脸~~内有惊喜";
     }
 
     private Observable<String> redirectUrl(final User user, int shareType) {

@@ -35,7 +35,7 @@ import butterknife.ButterKnife;
  * Created by wangshirui on 2016/11/29.
  */
 
-public class MyContractActivity extends HHBaseActivity implements MyContractView,OnPageChangeListener,
+public class MyContractActivity extends HHBaseActivity implements MyContractView, OnPageChangeListener,
         OnLoadCompleteListener, OnDrawListener {
     private MyContractPresenter mPresenter;
     @BindView(R.id.lly_main)
@@ -59,8 +59,9 @@ public class MyContractActivity extends HHBaseActivity implements MyContractView
         mPresenter.attachView(this);
         initActionBar();
         Intent intent = getIntent();
-        if (intent != null && !TextUtils.isEmpty(intent.getStringExtra("pdfUrl"))) {
-            setPdf(intent.getStringExtra("pdfUrl"));
+        if (intent != null && !TextUtils.isEmpty(intent.getStringExtra("pdfUrl"))
+                && !TextUtils.isEmpty(intent.getStringExtra("studentId"))) {
+            setPdf(intent.getStringExtra("pdfUrl"), intent.getStringExtra("studentId"));
             mPresenter.signContractViewCount();
         } else {
             mPresenter.getAgreementUrl();
@@ -104,9 +105,9 @@ public class MyContractActivity extends HHBaseActivity implements MyContractView
     }
 
     @Override
-    public void setPdf(String url) {
+    public void setPdf(String url, String studentId) {
         pdfUrl = url;
-        mPdfContract.fileFromLocalStorage(this,this,this,pdfUrl,"myContract.pdf");   //设置pdf文件地址
+        mPdfContract.fileFromLocalStorage(this, this, this, pdfUrl, "contract_" + studentId + ".pdf");   //设置pdf文件地址
         mCbSign.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

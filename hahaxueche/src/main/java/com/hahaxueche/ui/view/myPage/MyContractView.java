@@ -9,7 +9,7 @@ import com.hahaxueche.ui.view.base.HHBaseView;
 public interface MyContractView extends HHBaseView {
     void showMessage(String message);
 
-    void setPdf(String url);
+    void setPdf(String url, String studentId);
 
     void setSignEnable(boolean enable);
 

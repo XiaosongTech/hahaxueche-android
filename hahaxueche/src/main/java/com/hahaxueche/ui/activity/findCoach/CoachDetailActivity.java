@@ -40,6 +40,7 @@ import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
+import com.hahaxueche.ui.activity.myPage.StudentReferActivity;
 import com.hahaxueche.ui.activity.myPage.UploadIdCardActivity;
 import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
 import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
@@ -864,6 +865,16 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     }
 
     @Override
+    public void navigateToStudentRefer() {
+        startActivity(new Intent(getContext(), StudentReferActivity.class));
+    }
+
+    @Override
+    public void navigateToReferFriends() {
+        startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RequestCode.REQUEST_CODE_PURCHASE_COACH) {
             if (resultCode == Activity.RESULT_OK) {
@@ -874,7 +885,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             intent.putExtra("isFromPaySuccess", true);
             startActivityForResult(intent, RequestCode.REQUEST_CODE_UPLOAD_ID_CARD);
         } else if (requestCode == RequestCode.REQUEST_CODE_UPLOAD_ID_CARD) {
-            startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+            mPresenter.toReferFriends();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

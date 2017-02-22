@@ -56,11 +56,11 @@ public class MyContractPresenter implements Presenter<MyContractView> {
     }
 
     public void getAgreementUrl() {
-        User user = application.getSharedPrefUtil().getUser();
+        final User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin() ||
                 !user.student.hasPurchasedService() || !user.student.isUploadedIdInfo()) return;
         if (!TextUtils.isEmpty(user.student.agreement_url)) {
-            mMyContractView.setPdf(user.student.agreement_url);
+            mMyContractView.setPdf(user.student.agreement_url, user.student.id);
             mMyContractView.setSignEnable(false);
             myContractViewCount();
         } else {
@@ -90,7 +90,7 @@ public class MyContractPresenter implements Presenter<MyContractView> {
                         @Override
                         public void onNext(Response<IdCardUrl> response) {
                             if (response.isSuccessful()) {
-                                mMyContractView.setPdf(response.body().agreement_url);
+                                mMyContractView.setPdf(response.body().agreement_url, user.student.id);
                             }
                         }
                     });

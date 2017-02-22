@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:text="我的保过卡"
+            android:text="我的挂科险"
             android:textColor="@color/app_theme_color"
             android:textSize="14sp" />
     </RelativeLayout>
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:text="科一科四保过卡"
+            android:text="科一科四挂科险"
             android:textColor="@color/haha_gray"
             android:textSize="14sp" />
 

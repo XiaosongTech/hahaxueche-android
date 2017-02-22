@@ -81,11 +81,16 @@ public class ReferFriendsActivity extends HHBaseActivity implements ReferFriends
             @Override
             public void onClick(View widget) {
                 if (mReferDetailDialog == null) {
-                    mReferDetailDialog = new ReferDetailDialog(getContext(),
+                    mReferDetailDialog = new ReferDetailDialog(getContext(),true,
                             new ReferDetailDialog.OnButtonClickListener() {
                                 @Override
                                 public void callCustomerService() {
                                     createCallCustomerService();
+                                }
+
+                                @Override
+                                public void onlineAsk() {
+                                    mPresenter.onlineAsk();
                                 }
                             });
                 }

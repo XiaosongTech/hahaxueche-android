@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
@@ -34,6 +35,8 @@ public class MyReferActivity extends HHBaseActivity implements MyReferView, XLis
     TextView mTvEmpty;
     @BindView(R.id.tv_withdraw_money)
     TextView mTvWithdrawMoney;
+    @BindView(R.id.rly_withdraw)
+    RelativeLayout mRlyWithdraw;
     private ReferrerAdapter mReferrerAdapter;
     private ArrayList<Referrer> mReferrerArrayList;
 
@@ -59,7 +62,7 @@ public class MyReferActivity extends HHBaseActivity implements MyReferView, XLis
         ImageView mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
         TextView mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        mTvTitle.setText("推荐有奖");
+        mTvTitle.setText("推荐明细");
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,7 +96,7 @@ public class MyReferActivity extends HHBaseActivity implements MyReferView, XLis
     @Override
     public void refreshReferrerList(ArrayList<Referrer> ReferrerArrayList) {
         mReferrerArrayList = ReferrerArrayList;
-        mReferrerAdapter = new ReferrerAdapter(getContext(), mReferrerArrayList);
+        mReferrerAdapter = new ReferrerAdapter(getContext(), mReferrerArrayList, mPresenter.isAgent());
         mXlvReferrers.setAdapter(mReferrerAdapter);
         mXlvReferrers.stopRefresh();
         mXlvReferrers.stopLoadMore();
@@ -114,6 +117,11 @@ public class MyReferActivity extends HHBaseActivity implements MyReferView, XLis
     @Override
     public void setWithdrawMoney(String money) {
         mTvWithdrawMoney.setText(money);
+    }
+
+    @Override
+    public void showWithdraw(boolean isShow) {
+        mRlyWithdraw.setVisibility(isShow ? View.VISIBLE : View.GONE);
     }
 
     @Override

@@ -126,7 +126,7 @@ public class MainPresenter implements Presenter<MainView> {
             mBaseView.setMyPageBadge(false);
             return;
         }
-        if (!user.student.hasPurchasedService()) {//未购买教练，保过卡的红点
+        if (!user.student.hasPurchasedService()) {//未购买教练，挂科险的红点
             mBaseView.setMyPageBadge(true);
             return;
         }
@@ -317,5 +317,18 @@ public class MainPresenter implements Presenter<MainView> {
                         }
                     }
                 });
+    }
+
+    /**
+     * 推荐有奖跳转逻辑
+     */
+    public void toReferFriends() {
+        User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin() || !user.student.is_sales_agent) {
+            //非代理
+            mBaseView.navigateToStudentRefer();
+        } else {
+            mBaseView.navigateToReferFriends();
+        }
     }
 }

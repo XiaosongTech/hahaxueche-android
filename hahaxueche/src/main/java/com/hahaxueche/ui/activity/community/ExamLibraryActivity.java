@@ -151,7 +151,7 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
                 ExamLibraryActivity.this.finish();
             }
         });
-        mTvTitle.setText("科一保过");
+        mTvTitle.setText("科一挂科险");
     }
 
     @OnClick({R.id.tv_share_scores,
@@ -177,8 +177,8 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
                 startActivityForResult(intent, RequestCode.REQUEST_CODE_START_EXAM);
                 break;
             case R.id.iv_pass:
-                BaseAlertSimpleDialog dialog = new BaseAlertSimpleDialog(getContext(), "什么是保过卡？",
-                        "在哈哈学车平台上注册登录，即可获得保过卡。\n学员在哈哈学车平台报名后，通过哈哈学车APP模拟科目一考试5次成绩均在90分以上，" +
+                BaseAlertSimpleDialog dialog = new BaseAlertSimpleDialog(getContext(), "什么是挂科险？",
+                        "在哈哈学车平台上注册登录，即可获得挂科险。\n学员在哈哈学车平台报名后，通过哈哈学车APP模拟科目一考试5次成绩均在90分以上，" +
                                 "并分享至第三方平台即可发起理赔，当科目一考试未通过可凭借成绩单获得全额赔付120元。");
                 dialog.show();
                 break;

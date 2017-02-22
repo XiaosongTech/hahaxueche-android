@@ -27,6 +27,7 @@ import com.hahaxueche.ui.activity.findCoach.PartnerDetailActivity;
 import com.hahaxueche.ui.activity.myPage.MyContractActivity;
 import com.hahaxueche.ui.activity.myPage.MyReferActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
+import com.hahaxueche.ui.activity.myPage.StudentReferActivity;
 import com.hahaxueche.ui.activity.myPage.UploadIdCardActivity;
 import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.MainShareDialog;
@@ -141,7 +142,7 @@ public class MainActivity extends HHBaseActivity implements MainView {
                     Intent startIntent = new Intent(getContext(), MyReferActivity.class);
                     startActivity(startIntent);
                 } else {
-                    Intent startIntent = new Intent(getContext(), ReferFriendsActivity.class);
+                    Intent startIntent = new Intent(getContext(), StudentReferActivity.class);
                     startIntent.putExtra("isFromLinkedMe", true);
                     startActivity(startIntent);
                 }
@@ -163,7 +164,7 @@ public class MainActivity extends HHBaseActivity implements MainView {
 
     @Override
     public void initShareData(String shareUrl) {
-        mTitle = "送你￥200元学车券，怕你考不过，再送你一张保过卡。比心 ❤";
+        mTitle = "送你￥200元学车券，怕你考不过，再送你一张挂科险。比心 ❤";
         mDescription = "Hi~朋友，知道你最近想学车，我把我学车的地方告诉你了，要一把考过哟！️️";
         mImageUrl = "https://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
         mUrl = shareUrl;
@@ -197,6 +198,16 @@ public class MainActivity extends HHBaseActivity implements MainView {
             default:
                 break;
         }
+    }
+
+    @Override
+    public void navigateToStudentRefer() {
+        startActivity(new Intent(getContext(), StudentReferActivity.class));
+    }
+
+    @Override
+    public void navigateToReferFriends() {
+        startActivity(new Intent(getContext(), ReferFriendsActivity.class));
     }
 
     public void controlMyPageBadge() {
@@ -302,12 +313,12 @@ public class MainActivity extends HHBaseActivity implements MainView {
         if (requestCode == RequestCode.REQUEST_CODE_UPLOAD_ID_CARD) {
             if (resultCode == RESULT_OK) {
                 controlMyPageBadge();
-                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+                mPresenter.toReferFriends();
             }
         } else if (requestCode == RequestCode.REQUEST_CODE_MY_CONTRACT) {
             if (resultCode == RESULT_OK) {//已签订协议
                 controlMyPageBadge();
-                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+                mPresenter.toReferFriends();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

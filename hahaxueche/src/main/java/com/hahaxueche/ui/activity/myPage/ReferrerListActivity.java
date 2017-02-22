@@ -74,7 +74,7 @@ public class ReferrerListActivity extends HHBaseActivity implements ReferrerList
     @Override
     public void refreshReferrerList(ArrayList<Referrer> ReferrerArrayList) {
         mReferrerArrayList = ReferrerArrayList;
-        mReferrerAdapter = new ReferrerAdapter(getContext(), mReferrerArrayList);
+        mReferrerAdapter = new ReferrerAdapter(getContext(), mReferrerArrayList, mPresenter.isAgent());
         mXlvReferrers.setAdapter(mReferrerAdapter);
         mXlvReferrers.stopRefresh();
         mXlvReferrers.stopLoadMore();

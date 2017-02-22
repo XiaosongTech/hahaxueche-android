@@ -5,15 +5,13 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.examLib.Question;
-import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.user.student.Student;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created by wangshirui on 16/9/10.
@@ -170,29 +168,5 @@ public class SharedPrefUtil {
     public void setConstants(Constants constants) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         prefs.edit().putString("constantsSerialize", mGson.toJson(constants)).apply();
-    }
-
-    public ArrayList<Question> getQuestions1() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return mGson.fromJson(prefs.getString("questions1Serialize", ""),
-                new TypeToken<List<Question>>() {
-                }.getType());
-    }
-
-    public void setQuestions1(ArrayList<Question> questions1) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        prefs.edit().putString("questions1Serialize", mGson.toJson(questions1)).apply();
-    }
-
-    public ArrayList<Question> getQuestions4() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return mGson.fromJson(prefs.getString("questions4Serialize", ""),
-                new TypeToken<List<Question>>() {
-                }.getType());
-    }
-
-    public void setQuestions4(ArrayList<Question> questions4) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        prefs.edit().putString("questions4Serialize", mGson.toJson(questions4)).apply();
     }
 }

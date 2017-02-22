@@ -40,7 +40,10 @@ public class MyReferPresenter implements Presenter<MyReferView> {
         application = HHBaseApplication.get(mMyReferView.getContext());
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
-            mMyReferView.setWithdrawMoney(Utils.getMoney(user.student.bonus_balance));
+            if (user.student.is_sales_agent) {
+                mMyReferView.showWithdraw(true);
+                mMyReferView.setWithdrawMoney(Utils.getMoney(user.student.bonus_balance));
+            }
         }
     }
 
@@ -199,5 +202,10 @@ public class MyReferPresenter implements Presenter<MyReferView> {
             MobclickAgent.onEvent(mMyReferView.getContext(), "refer_page_cash_tapped");
             mMyReferView.alertToLogin();
         }
+    }
+
+    public boolean isAgent() {
+        User user = application.getSharedPrefUtil().getUser();
+        return user != null && user.isLogin() && user.student.is_sales_agent;
     }
 }
