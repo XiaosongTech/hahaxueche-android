@@ -5,7 +5,8 @@ import android.text.TextUtils;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
-import com.hahaxueche.model.base.City;
+import com.hahaxueche.model.base.BaseSuccess;
+import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.ErrorResponse;
 import com.hahaxueche.model.user.IdCardUrl;
 import com.hahaxueche.model.user.User;
@@ -13,7 +14,6 @@ import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.UploadIdCardView;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
-import com.hahaxueche.util.Utils;
 import com.qiyukf.unicorn.api.ConsultSource;
 import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFUserInfo;
@@ -31,9 +31,11 @@ import okhttp3.ResponseBody;
 import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 
 /**
  * Created by wangshirui on 2016/11/25.
@@ -57,7 +59,7 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
         application = null;
     }
 
-    public void uploadInfo() {
+    public void generateAgreement() {
         HHApiService apiService = application.getApiService();
         final User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) return;
@@ -220,5 +222,57 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
             map.put("student_id", user.student.id);
         }
         MobclickAgent.onEvent(mUploadIdCardView.getContext(), "upload_id_page_confirm_tapped", map);
+    }
+
+    public void manualUpload(String name, String idCardNumber) {
+        final HHApiService apiService = application.getApiService();
+        final User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin()) return;
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("cell_phone", user.cell_phone);
+        final HashMap<String, Object> mapParam = new HashMap<>();
+        mapParam.put("name", name);
+        mapParam.put("number", idCardNumber);
+        subscription = apiService.isValidToken(user.session.access_token, map)
+                .flatMap(new Func1<BaseValid, Observable<BaseSuccess>>() {
+                    @Override
+                    public Observable<BaseSuccess> call(BaseValid baseValid) {
+                        if (baseValid.valid) {
+                            return apiService.uploadIdCard(user.student.id, mapParam, user.session.access_token);
+                        } else {
+                            return application.getSessionObservable();
+                        }
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<BaseSuccess>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        mUploadIdCardView.showProgressDialog("数据验证中，请稍后...");
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        mUploadIdCardView.dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mUploadIdCardView.dismissProgressDialog();
+                        mUploadIdCardView.showMessage("身份验证失败，请确认姓名和身份证号码后重试！");
+                        if (ErrorUtil.isInvalidSession(e)) {
+                            mUploadIdCardView.forceOffline();
+                        }
+                        HHLog.e(e.getMessage());
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(BaseSuccess baseSuccess) {
+                        generateAgreement();
+                    }
+                });
     }
 }

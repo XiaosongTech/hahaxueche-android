@@ -274,6 +274,10 @@ public interface HHApiService {
     @GET("marketing_information")
     Observable<MarketingInfo> convertPromoCode(@Query("channel_id") String channelId, @Query("promo_code") String promoCode);
 
+    @FormUrlEncoded
+    @POST("students/{id}/id_card_info")
+    Observable<BaseSuccess> uploadIdCard(@Path("id") String studentId, @FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
+
     class Factory {
         public static Retrofit getRetrofit() {
             HHLog.v("baseUrl -> " + baseUrl);

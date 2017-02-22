@@ -30,7 +30,6 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -127,7 +126,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
         ManualUploadDialog dialog = new ManualUploadDialog(getContext(), new ManualUploadDialog.OnButtonClickListener() {
             @Override
             public void upload(String name, String idCardNumber) {
-
+                mPresenter.manualUpload(name, idCardNumber);
             }
         });
         dialog.show();
@@ -179,7 +178,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                     showMessage("请上传身份证反面");
                     return;
                 }
-                mPresenter.uploadInfo();
+                mPresenter.generateAgreement();
                 break;
             case R.id.tv_later_submit:
                 mPresenter.clickLaterSubmit();
