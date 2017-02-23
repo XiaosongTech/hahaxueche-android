@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:background="@color/app_theme_color"
         android:padding="20dp"
-        android:text="请输入您的真实姓名和电话号码"
+        android:text="请输入您的真实姓名和身份证号码"
         android:textColor="@color/haha_white"
         android:textSize="20sp" />
 

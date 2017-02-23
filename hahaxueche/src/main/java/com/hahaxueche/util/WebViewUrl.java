@@ -10,7 +10,7 @@ public class WebViewUrl {
     public static final String WEB_URL_ABOUT_HAHA = "https://staging.hahaxueche.net/#/student";
     public static final String WEB_URL_ABOUT_COACH = "https://staging.hahaxueche.net/#/coach";
     public static final String WEB_URL_MY_STRENGTHS = "https://activity.hahaxueche.com/share/features";
-    public static final String WEB_URL_PROCEDURE = "https://activity.hahaxueche.com/share/steps";
+    public static final String WEB_URL_PROCEDURE = BuildConfig.MOBILE_URL + "/xue-che-liu-cheng";
     public static final String URL_APP_STORE = "http://a.app.qq.com/o/simple.jsp?pkgname=com.hahaxueche";
     public static final String WEB_URL_BEST_COACHES = BuildConfig.MOBILE_URL + "/share/best-coaches";
     public static final String WEB_URL_FIND_ADVISER = BuildConfig.MOBILE_URL + "/share/zhaoguwen";
