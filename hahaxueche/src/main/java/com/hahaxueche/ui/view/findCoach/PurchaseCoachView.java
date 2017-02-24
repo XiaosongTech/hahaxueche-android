@@ -55,4 +55,8 @@ public interface PurchaseCoachView extends HHBaseView {
     void showCumulativeVoucher(boolean isShow);
 
     void addCumulativeVoucher(String title, String price);
+
+    void selectInsurance();
+
+    void unSelectInsurance();
 }
