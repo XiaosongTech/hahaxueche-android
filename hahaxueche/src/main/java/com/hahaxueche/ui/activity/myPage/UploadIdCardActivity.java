@@ -37,8 +37,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
 import com.hahaxueche.presenter.myPage.UploadIdCardPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
-import com.hahaxueche.ui.dialog.BaseAlertDialog;
 import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
+import com.hahaxueche.ui.dialog.ShareAppDialog;
 import com.hahaxueche.ui.dialog.myPage.ManualUploadDialog;
 import com.hahaxueche.ui.dialog.myPage.UploadIdCardDialog;
 import com.hahaxueche.ui.view.myPage.UploadIdCardView;
@@ -302,15 +302,15 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
         if (isFromPaySuccess) {
             shareText = "恭喜您！报名成功，" + shareText;
         }
-        BaseAlertDialog dialog = new BaseAlertDialog(getContext(), "推荐好友", shareText, "分享得现金",
-                new BaseAlertDialog.onButtonClickListener() {
+        ShareAppDialog shareDialog = new ShareAppDialog(getContext(), shareText, false,
+                new ShareAppDialog.onShareClickListener() {
                     @Override
-                    public void sure() {
+                    public void share() {
                         setResult(RESULT_OK, null);
                         finish();
                     }
                 });
-        dialog.show();
+        shareDialog.show();
     }
 
     public void changeCustomerService() {

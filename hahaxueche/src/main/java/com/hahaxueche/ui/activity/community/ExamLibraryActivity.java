@@ -231,7 +231,8 @@ public class ExamLibraryActivity extends HHBaseActivity implements ExamLibraryVi
         if (requestCode == RequestCode.REQUEST_CODE_EXAM_ACTIVITY) {
             if (resultCode == RESULT_OK && data.getBooleanExtra("isShowShare", false)) {
                 if (mShareDialog == null) {
-                    mShareDialog = new ShareAppDialog(getContext(), mPresenter.getBonus());
+                    String shareText = getResources().getString(R.string.upload_share_dialog_text);
+                    mShareDialog = new ShareAppDialog(getContext(), shareText, true, null);
                 }
                 mShareDialog.show();
             }
