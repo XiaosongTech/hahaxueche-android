@@ -4,6 +4,7 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.MyInsuranceView;
+import com.hahaxueche.util.Common;
 import com.qiyukf.unicorn.api.ConsultSource;
 import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFUserInfo;
@@ -75,5 +76,27 @@ public class MyInsurancePresenter implements Presenter<MyInsuranceView> {
                 title, // 聊天窗口的标题
                 source // 咨询的发起来源，包括发起咨询的url，title，描述信息等
         );
+    }
+
+    public void clickPurchase(int purchaseType) {
+        User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin()) {
+            //提示登陆
+            mMyInsuranceView.alertToLogin();
+            return;
+        }
+        switch (purchaseType) {
+            case Common.PURCHASE_INSURANCE_TYPE_120:
+                //TODO find coach
+                break;
+            case Common.PURCHASE_INSURANCE_TYPE_130:
+                mMyInsuranceView.finishToPurchaseInsurance(Common.PURCHASE_INSURANCE_TYPE_130);
+                break;
+            case Common.PURCHASE_INSURANCE_TYPE_150:
+                mMyInsuranceView.finishToPurchaseInsurance(Common.PURCHASE_INSURANCE_TYPE_150);
+                break;
+            default:
+                break;
+        }
     }
 }

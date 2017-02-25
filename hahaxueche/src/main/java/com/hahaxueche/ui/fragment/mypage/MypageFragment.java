@@ -37,6 +37,7 @@ import com.hahaxueche.ui.activity.myPage.NoCourseActivity;
 import com.hahaxueche.ui.activity.myPage.NotLoginVoucherActivity;
 import com.hahaxueche.ui.activity.myPage.PassEnsuranceActivity;
 import com.hahaxueche.ui.activity.myPage.PaymentStageActivity;
+import com.hahaxueche.ui.activity.myPage.PurchaseInsuranceActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.activity.myPage.SoftwareInfoActivity;
 import com.hahaxueche.ui.activity.myPage.StudentReferActivity;
@@ -47,6 +48,7 @@ import com.hahaxueche.ui.dialog.community.MyAdviserDialog;
 import com.hahaxueche.ui.dialog.myPage.EditUsernameDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.myPage.MyPageView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.PhotoUtil;
 import com.hahaxueche.util.RequestCode;
@@ -468,7 +470,7 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
 
     @Override
     public void navigateToMyInsurance() {
-        startActivity(new Intent(getContext(), MyInsuranceActivity.class));
+        startActivityForResult(new Intent(getContext(), MyInsuranceActivity.class), RequestCode.REQUEST_CODE_MY_INSURANCE);
     }
 
     @Override
@@ -559,6 +561,12 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
             if (resultCode == RESULT_OK && null != data) {
                 int tab = data.getIntExtra("showTab", 1);
                 mActivity.selectTab(tab);
+            }
+        } else if (requestCode == RequestCode.REQUEST_CODE_MY_INSURANCE) {
+            if (resultCode == RESULT_OK && null != data) {
+                Intent intent = new Intent(getContext(), PurchaseInsuranceActivity.class);
+                intent.putExtra("insuranceType", data.getIntExtra("insuranceType", Common.PURCHASE_INSURANCE_TYPE_150));
+                startActivity(intent);
             }
         }
         mPresenter.setContractBadge();

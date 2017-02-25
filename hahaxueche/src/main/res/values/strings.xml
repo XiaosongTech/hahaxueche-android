@@ -31,4 +31,6 @@
     <string name="insurance_remarks">赔付宝是一款由中国平安承保量身为哈哈学车定制的一份学车保险。提供了一站式驾考报名、选购保险、保险理赔申诉的平台，全面保障你的学车利益。</string>
     <string name="insurance_method">1.点击下载二维码。\n2.打开微信扫描二维码关注哈哈学车公众号。\n3.进入公众号点击右下角\&#34;哈哈学车\&#34;选择子菜单\&#34;我要理赔\&#34;。</string>
     <string name="insurance_customer_service">如有问题请联系400-001-6006或联系在线客服。</string>
+    <string name="insurance_notice_130">注：确认你已在哈哈学车平台报名，且还未参加科目一考试。</string>
+    <string name="insurance_notice_150">注：确认你已在非哈哈学车平台或驾校报名，且还未参加科目一考试。</string>
 </resources>

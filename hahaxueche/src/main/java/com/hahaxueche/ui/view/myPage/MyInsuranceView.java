@@ -20,4 +20,6 @@ public interface MyInsuranceView extends HHBaseView {
     void set150PayEnable(boolean enable);
 
     void showMessage(String message);
+
+    void finishToPurchaseInsurance(int insuranceType);
 }

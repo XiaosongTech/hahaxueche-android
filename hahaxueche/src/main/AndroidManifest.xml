@@ -313,6 +313,10 @@
             android:name=".ui.activity.myPage.MyInsuranceActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.myPage.PurchaseInsuranceActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

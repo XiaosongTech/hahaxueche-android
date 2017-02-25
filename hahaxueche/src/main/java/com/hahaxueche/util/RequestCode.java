@@ -28,10 +28,11 @@ public class RequestCode {
     public static final int REQUEST_CODE_SET_PICTURE = 119;
     public static final int REQUEST_CODE_SET_ALBUM_PICTURE_KITKAT = 120;
     public static final int REQUEST_CODE_SELECET_A_PICTURE_AFTER_KIKAT = 121;
+    public static final int REQUEST_CODE_MY_INSURANCE = 122;
     //permission request
     public static final int PERMISSIONS_REQUEST_SEND_SMS = 600;
-    public static final int PERMISSIONS_REQUEST_READ_CONTACTS = 604;
-    public static final int PERMISSIONS_REQUEST_CELL_PHONE = 601;
-    public static final int PERMISSIONS_REQUEST_SDCARD = 600;
-    public static final int PERMISSIONS_REQUEST_LOCATION = 602;
+    public static final int PERMISSIONS_REQUEST_READ_CONTACTS = 601;
+    public static final int PERMISSIONS_REQUEST_CELL_PHONE = 602;
+    public static final int PERMISSIONS_REQUEST_SDCARD = 603;
+    public static final int PERMISSIONS_REQUEST_LOCATION = 604;
 }

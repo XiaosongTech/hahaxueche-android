@@ -27,10 +27,12 @@ import com.hahaxueche.R;
 import com.hahaxueche.presenter.myPage.MyInsurancePresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.view.myPage.MyInsuranceView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.RequestCode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by wangshirui on 2017/2/25.
@@ -82,6 +84,25 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
             }
         });
         mTvRight = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_right);
+    }
+
+    @OnClick({R.id.iv_120_pay,
+            R.id.iv_130_pay,
+            R.id.iv_150_pay})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_120_pay:
+                mPresenter.clickPurchase(Common.PURCHASE_INSURANCE_TYPE_120);
+                break;
+            case R.id.iv_130_pay:
+                mPresenter.clickPurchase(Common.PURCHASE_INSURANCE_TYPE_130);
+                break;
+            case R.id.iv_150_pay:
+                mPresenter.clickPurchase(Common.PURCHASE_INSURANCE_TYPE_150);
+                break;
+            default:
+                break;
+        }
     }
 
 
@@ -141,6 +162,14 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
     @Override
     public void showMessage(String message) {
         Snackbar.make(mSvMain, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void finishToPurchaseInsurance(int insuranceType) {
+        Intent intent = new Intent();
+        intent.putExtra("insuranceType", insuranceType);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     public void changeCustomerService() {
