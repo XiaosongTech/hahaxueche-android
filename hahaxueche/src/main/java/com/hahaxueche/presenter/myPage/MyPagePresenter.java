@@ -497,4 +497,8 @@ public class MyPagePresenter implements Presenter<MyPageView> {
     public void clickPassEnsurance() {
         mMyPageView.navigateToPassEnsurance();
     }
+
+    public void clickMyInsurance() {
+        mMyPageView.navigateToMyInsurance();
+    }
 }

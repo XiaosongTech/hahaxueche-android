@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -30,6 +31,7 @@ import com.hahaxueche.ui.activity.myPage.FAQActivity;
 import com.hahaxueche.ui.activity.myPage.FollowListActivity;
 import com.hahaxueche.ui.activity.myPage.MyCoachDetailActivity;
 import com.hahaxueche.ui.activity.myPage.MyContractActivity;
+import com.hahaxueche.ui.activity.myPage.MyInsuranceActivity;
 import com.hahaxueche.ui.activity.myPage.MyVoucherActivity;
 import com.hahaxueche.ui.activity.myPage.NoCourseActivity;
 import com.hahaxueche.ui.activity.myPage.NotLoginVoucherActivity;
@@ -189,7 +191,8 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
             R.id.rly_my_contract,
             R.id.tv_login,
             R.id.tv_to_login,
-            R.id.rly_pass_ensurance})
+            R.id.rly_pass_ensurance,
+            R.id.rly_my_insurance})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rly_online_service:
@@ -316,6 +319,9 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
                 break;
             case R.id.rly_pass_ensurance:
                 mPresenter.clickPassEnsurance();
+                break;
+            case R.id.rly_my_insurance:
+                mPresenter.clickMyInsurance();
                 break;
             default:
                 break;
@@ -458,6 +464,11 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
     @Override
     public void navigateToStudentRefer() {
         startActivity(new Intent(getContext(), StudentReferActivity.class));
+    }
+
+    @Override
+    public void navigateToMyInsurance() {
+        startActivity(new Intent(getContext(), MyInsuranceActivity.class));
     }
 
     @Override

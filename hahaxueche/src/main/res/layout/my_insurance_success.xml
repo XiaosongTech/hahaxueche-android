@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/haha_white"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:text="您已投保成功。"
+        android:textColor="@color/app_theme_color" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_width"
+        android:background="@color/haha_gray_divider" />
+
+    <TextView
+        android:id="@+id/tv_insurance_abstract"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:lineSpacingMultiplier="1.2"
+        android:text="投保人：123\n投保时间：2012年12月13日\n有效期至：领取到机动车驾驶证当日24时（投保日起一年内）"
+        android:textColor="@color/haha_gray_dark" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/pic_pingan" />
+
+</LinearLayout>

@@ -35,6 +35,9 @@ public class Student implements Parcelable {
     public IdCard identity_card;
     public String user_identity_id;
     public boolean is_sales_agent;
+    public boolean is_insurance_purchase = false;
+    public boolean is_insurance_upload = false;
+    public boolean is_insurance_success = false;
 
     public Student() {
 
