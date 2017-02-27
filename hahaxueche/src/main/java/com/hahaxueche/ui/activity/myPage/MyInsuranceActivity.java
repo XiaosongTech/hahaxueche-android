@@ -3,12 +3,18 @@ package com.hahaxueche.ui.activity.myPage;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -28,7 +34,13 @@ import com.hahaxueche.presenter.myPage.MyInsurancePresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.view.myPage.MyInsuranceView;
 import com.hahaxueche.util.Common;
+import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -88,7 +100,8 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
 
     @OnClick({R.id.iv_120_pay,
             R.id.iv_130_pay,
-            R.id.iv_150_pay})
+            R.id.iv_150_pay,
+            R.id.tv_insurance_qrcode})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_120_pay:
@@ -100,9 +113,63 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
             case R.id.iv_150_pay:
                 mPresenter.clickPurchase(Common.PURCHASE_INSURANCE_TYPE_150);
                 break;
+            case R.id.tv_insurance_qrcode:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                        checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RequestCode.PERMISSIONS_REQUEST_SDCARD);
+                } else {
+                    saveQrcodeImage();
+                }
+                break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 把哈哈学车公众号二维码保存到本地
+     */
+    private void saveQrcodeImage() {
+        Drawable drawable = ContextCompat.getDrawable(this, R.drawable.hhxc_qrcode);
+        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+        // 首先保存图片
+        File appDir = new File(Environment.getExternalStorageDirectory(), "hahaxueche");
+        if (!appDir.exists()) {
+            appDir.mkdir();
+        }
+        String fileName = "hhxc_qrcode.png";
+        File file = new File(appDir, fileName);
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+            bitmap.recycle();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 其次把文件插入到系统图库
+        try {
+            MediaStore.Images.Media.insertImage(getContentResolver(),
+                    file.getAbsolutePath(), fileName, null);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        File imageFile = new File(Environment.getExternalStorageDirectory() +
+                "/hahaxueche/hhxc_qrcode.png");
+        Uri uriToImage;
+        if (Build.VERSION.SDK_INT >= 24) {
+            uriToImage = FileProvider.getUriForFile(getContext(),
+                    "com.hahaxueche.provider.fileProvider", imageFile);
+        } else {
+            uriToImage = Uri.fromFile(imageFile);
+        }
+        // 最后通知图库更新
+        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uriToImage));
+        showMessage("已保存至系统相册！");
     }
 
 
@@ -233,10 +300,15 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
                 contactService();
             } else {
                 showMessage("请允许拨打电话权限，不然无法直接拨号联系客服");
+            }
+        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_SDCARD) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                saveQrcodeImage();
+            } else {
+                showMessage("请允许操作sdcard权限，不然无法将二维码图片保存至系统相册");
             }
         }
     }

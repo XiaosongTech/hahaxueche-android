@@ -20,6 +20,7 @@
         android:background="@color/haha_gray_divider" />
 
     <ImageView
+        android:id="@+id/tv_insurance_qrcode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
