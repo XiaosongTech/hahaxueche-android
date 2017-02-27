@@ -59,28 +59,23 @@ import butterknife.OnClick;
 
 public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCardView {
     private UploadIdCardPresenter mPresenter;
-    private int choseImageFace = 0;//0：正面；1：反面
     //保存图片本地路径
     public static final String IMGPATH = Environment.getExternalStorageDirectory().getPath() + "/hahaxueche/id_card_pic/";
 
     public static final String IMAGE_FILE_A_NAME = "faceAImage.jpeg";
-    public static final String IMAGE_FILE_B_NAME = "faceBImage.jpeg";
     private File fileFaceA = null;
-    private File fileFaceB = null;
     private Uri uriFaceA = null;
-    private Uri uriFaceB = null;
     private String imageUrlA = null;
-    private String imageUrlB = null;
 
     private boolean isFromPaySuccess;//是否从付款成功页面跳转来的
     @BindView(R.id.sv_main)
     ScrollView mSvMain;
     @BindView(R.id.iv_id_card_face)
     SimpleDraweeView mIvIdCardFace;
-    @BindView(R.id.iv_id_card_face_back)
-    SimpleDraweeView mIvIdCardFaceBack;
     @BindView(R.id.tv_customer_service)
     TextView mTvCustomerService;
+    @BindView(R.id.tv_upload_hints)
+    TextView mTvUploadHints;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,25 +134,11 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     }
 
     @OnClick({R.id.rly_id_card_face,
-            R.id.rly_id_card_face_back,
             R.id.tv_submit,
             R.id.tv_later_submit})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rly_id_card_face:
-                choseImageFace = 0;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                        (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                                || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                                || checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
-                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, RequestCode.PERMISSIONS_REQUEST_SDCARD);
-                } else {
-                    showPhotoDialog();
-                }
-                break;
-            case R.id.rly_id_card_face_back:
-                choseImageFace = 1;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                         (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                                 || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
@@ -172,10 +153,6 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                 mPresenter.clickUploadInfo();
                 if (TextUtils.isEmpty(imageUrlA)) {
                     showMessage("请上传身份证正面");
-                    return;
-                }
-                if (TextUtils.isEmpty(imageUrlB)) {
-                    showMessage("请上传身份证反面");
                     return;
                 }
                 mPresenter.generateAgreement();
@@ -210,10 +187,10 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     }
 
     @Override
-    public void setFaceBackImage(String imageUrl) {
-        mIvIdCardFaceBack.setImageURI(imageUrl);
-        imageUrlB = imageUrl;
+    public void setUploadHints(String text) {
+        mTvUploadHints.setText(text);
     }
+
 
     private void showPhotoDialog() {
         UploadIdCardDialog dialog = new UploadIdCardDialog(this);
@@ -225,28 +202,15 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
         if (!imagepath.exists()) {
             imagepath.mkdir();
         }
-        if (choseImageFace == 0) {//正面
-            fileFaceA = new File(IMGPATH, IMAGE_FILE_A_NAME);
-            try {
-                if (fileFaceA.exists()) {
-                    fileFaceA.delete();
-                }
-                fileFaceA.createNewFile();
-            } catch (Exception e) {
-                HHLog.e(e.getMessage());
-                e.printStackTrace();
+        fileFaceA = new File(IMGPATH, IMAGE_FILE_A_NAME);
+        try {
+            if (fileFaceA.exists()) {
+                fileFaceA.delete();
             }
-        } else {
-            fileFaceB = new File(IMGPATH, IMAGE_FILE_B_NAME);
-            try {
-                if (fileFaceB.exists()) {
-                    fileFaceB.delete();
-                }
-                fileFaceB.createNewFile();
-            } catch (Exception e) {
-                HHLog.e(e.getMessage());
-                e.printStackTrace();
-            }
+            fileFaceA.createNewFile();
+        } catch (Exception e) {
+            HHLog.e(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -254,7 +218,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     public void choseImageFromCameraCapture() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         Uri imageUri;
-        File imageFile = new File(IMGPATH, choseImageFace == 0 ? IMAGE_FILE_A_NAME : IMAGE_FILE_B_NAME);
+        File imageFile = new File(IMGPATH, IMAGE_FILE_A_NAME);
         if (Build.VERSION.SDK_INT >= 24) {
             imageUri = FileProvider.getUriForFile(getContext(),
                     "com.hahaxueche.provider.fileProvider", imageFile);
@@ -411,27 +375,15 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RequestCode.REQUEST_CODE_TAKE_A_PICTURE) {
             if (resultCode == RESULT_OK) {
-                if (choseImageFace == 0) {
-                    File imageFile = new File(IMGPATH, IMAGE_FILE_A_NAME);
-                    if (Build.VERSION.SDK_INT >= 24) {
-                        uriFaceA = FileProvider.getUriForFile(getContext(),
-                                "com.hahaxueche.provider.fileProvider", imageFile);
-                    } else {
-                        uriFaceA = Uri.fromFile(imageFile);
-                    }
-                    compressImage(imageFile.getAbsolutePath());
-                    mPresenter.uploadIdCard(imageFile.getPath(), 0);
+                File imageFile = new File(IMGPATH, IMAGE_FILE_A_NAME);
+                if (Build.VERSION.SDK_INT >= 24) {
+                    uriFaceA = FileProvider.getUriForFile(getContext(),
+                            "com.hahaxueche.provider.fileProvider", imageFile);
                 } else {
-                    File imageFile = new File(IMGPATH, IMAGE_FILE_B_NAME);
-                    if (Build.VERSION.SDK_INT >= 24) {
-                        uriFaceB = FileProvider.getUriForFile(getContext(),
-                                "com.hahaxueche.provider.fileProvider", imageFile);
-                    } else {
-                        uriFaceB = Uri.fromFile(imageFile);
-                    }
-                    compressImage(imageFile.getAbsolutePath());
-                    mPresenter.uploadIdCard(imageFile.getPath(), 1);
+                    uriFaceA = Uri.fromFile(imageFile);
                 }
+                compressImage(imageFile.getAbsolutePath());
+                mPresenter.uploadIdCard(imageFile.getPath());
             } else {
                 showMessage("取消拍照");
             }
@@ -448,25 +400,14 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                     return;
                 }
                 File imageFile = new File(filePath);
-                if (choseImageFace == 0) {
-                    if (Build.VERSION.SDK_INT >= 24) {
-                        uriFaceA = FileProvider.getUriForFile(getContext(),
-                                "com.hahaxueche.provider.fileProvider", imageFile);
-                    } else {
-                        uriFaceA = Uri.fromFile(imageFile);
-                    }
-                    compressImage(imageFile.getAbsolutePath());
-                    mPresenter.uploadIdCard(imageFile.getPath(), 0);
+                if (Build.VERSION.SDK_INT >= 24) {
+                    uriFaceA = FileProvider.getUriForFile(getContext(),
+                            "com.hahaxueche.provider.fileProvider", imageFile);
                 } else {
-                    if (Build.VERSION.SDK_INT >= 24) {
-                        uriFaceB = FileProvider.getUriForFile(getContext(),
-                                "com.hahaxueche.provider.fileProvider", new File(filePath));
-                    } else {
-                        uriFaceB = Uri.fromFile(new File(filePath));
-                    }
-                    compressImage(imageFile.getAbsolutePath());
-                    mPresenter.uploadIdCard(imageFile.getPath(), 1);
+                    uriFaceA = Uri.fromFile(imageFile);
                 }
+                compressImage(imageFile.getAbsolutePath());
+                mPresenter.uploadIdCard(imageFile.getPath());
             } else if (resultCode == RESULT_CANCELED) {
                 showMessage("取消相册选择");
             }

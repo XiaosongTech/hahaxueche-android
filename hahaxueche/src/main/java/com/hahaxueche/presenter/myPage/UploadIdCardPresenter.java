@@ -46,11 +46,19 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
     private UploadIdCardView mUploadIdCardView;
     private Subscription subscription;
     private HHBaseApplication application;
+    private boolean isInsurance;
 
     public void attachView(UploadIdCardView view) {
         this.mUploadIdCardView = view;
         application = HHBaseApplication.get(mUploadIdCardView.getContext());
         pageStartCount();
+        if (isInsurance) {
+            mUploadIdCardView.setUploadHints(mUploadIdCardView.getContext().getResources()
+                    .getString(R.string.upload_id_card_hints_insurance));
+        } else {
+            mUploadIdCardView.setUploadHints(mUploadIdCardView.getContext().getResources()
+                    .getString(R.string.upload_id_card_hints));
+        }
     }
 
     public void detachView() {
@@ -114,7 +122,7 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
         return mUploadIdCardView.getContext().getResources().getString(R.string.upload_share_dialog_text);
     }
 
-    public void uploadIdCard(String filePath, final int side) {
+    public void uploadIdCard(String filePath) {
         HHApiService apiService = application.getApiService();
         User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) return;
@@ -124,7 +132,7 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
         File file = new File(filePath);
         String fileName = filePath.split("/")[filePath.split("/").length - 1];
         HashMap<String, Object> map = new HashMap<>();
-        map.put("side", side);
+        map.put("side", 0);
         MultipartBody.Part body = MultipartBody.Part.createFormData("file", fileName, RequestBody.create(MULTIPART_FORM_DATA, file));
         subscription = apiService.uploadIdCard(user.student.id, user.session.access_token, body, map)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -149,11 +157,8 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
 
                     @Override
                     public void onNext(IdCardUrl idCardUrl) {
-                        if (side == 0) {
-                            mUploadIdCardView.setFaceImage(idCardUrl.url);
-                        } else {
-                            mUploadIdCardView.setFaceBackImage(idCardUrl.url);
-                        }
+                        mUploadIdCardView.setFaceImage(idCardUrl.url);
+
                     }
                 });
 

@@ -23,6 +23,10 @@ public class PaySuccessPresenter implements Presenter<PaySuccessView> {
     private PaySuccessView mPaySuccessView;
     private Subscription subscription;
     private HHBaseApplication application;
+    //购买赔付宝跳转来的
+    private boolean isFromPurchaseInsurance;
+    //购买教练并且购买了赔付宝
+    private boolean isPurchasedInsurance;
 
     @Override
     public void attachView(PaySuccessView view) {
@@ -51,6 +55,16 @@ public class PaySuccessPresenter implements Presenter<PaySuccessView> {
                         mPaySuccessView.loadPayInfo(coach, user.student.purchased_services.get(0));
                     }
                 });
+        if (isPurchasedInsurance) {
+            mPaySuccessView.setSignText("上传投保信息");
+        } else {
+            mPaySuccessView.setSignText("签订专属协议");
+        }
+        if (isFromPurchaseInsurance) {
+            mPaySuccessView.showCoachPayView();
+        } else {
+            mPaySuccessView.showInsurancePayView();
+        }
     }
 
     @Override
