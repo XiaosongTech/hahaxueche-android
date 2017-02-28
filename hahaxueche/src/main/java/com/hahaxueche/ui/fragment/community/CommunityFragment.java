@@ -18,7 +18,6 @@ import com.hahaxueche.ui.activity.community.ExamLibraryActivity;
 import com.hahaxueche.ui.adapter.community.ArticleListPageAdapter;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.community.CommunityView;
-import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
 
 import butterknife.BindView;

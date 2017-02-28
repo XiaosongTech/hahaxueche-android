@@ -10,11 +10,10 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseValid;
-import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.student.ExamResult;
 import com.hahaxueche.presenter.Presenter;
-import com.hahaxueche.ui.view.community.ExamLibraryView;
+import com.hahaxueche.ui.view.community.PassAssuranceView;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
@@ -37,26 +36,26 @@ import rx.functions.Func1;
  * Created by wangshirui on 2016/12/1.
  */
 
-public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
-    private ExamLibraryView mExamLibraryView;
+public class PassAssurancePresenter implements Presenter<PassAssuranceView> {
+    private PassAssuranceView mPassAssuranceView;
     private Subscription subscription;
     private HHBaseApplication application;
     private static final String WEB_URL_GROUP_BUY = BuildConfig.MOBILE_URL + "/share/baoguoka";
     private String mQrCodeUrl;
 
-    public void attachView(ExamLibraryView view) {
-        this.mExamLibraryView = view;
-        application = HHBaseApplication.get(mExamLibraryView.getContext());
+    public void attachView(PassAssuranceView view) {
+        this.mPassAssuranceView = view;
+        application = HHBaseApplication.get(mPassAssuranceView.getContext());
         fetchScores();
         String text = Utils.getCount(application.getConstants().statistics.student_count) + "人已获得挂科险";
         SpannableString ss = new SpannableString(text);
-        ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mExamLibraryView.getContext(), R.color.app_theme_color)), 0, text.indexOf("人"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mExamLibraryView.setInsuranceCount(ss);
+        ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mPassAssuranceView.getContext(), R.color.app_theme_color)), 0, text.indexOf("人"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mPassAssuranceView.setInsuranceCount(ss);
 
     }
 
     public void detachView() {
-        this.mExamLibraryView = null;
+        this.mPassAssuranceView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
     }
@@ -64,7 +63,7 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
     public void fetchScores() {
         final User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) {
-            mExamLibraryView.showNotLogin();
+            mPassAssuranceView.showNotLogin();
         } else {
             final HHApiService apiService = application.getApiService();
             HashMap<String, Object> map = new HashMap<>();
@@ -92,7 +91,7 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
                         @Override
                         public void onError(Throwable e) {
                             if (ErrorUtil.isInvalidSession(e)) {
-                                mExamLibraryView.forceOffline();
+                                mPassAssuranceView.forceOffline();
                             }
                             HHLog.e(e.getMessage());
                         }
@@ -100,7 +99,7 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
                         @Override
                         public void onNext(ArrayList<ExamResult> examResults) {
                             if (examResults != null) {
-                                mExamLibraryView.showScores(examResults.size());
+                                mPassAssuranceView.showScores(examResults.size());
                             }
                         }
                     });
@@ -163,23 +162,23 @@ public class ExamLibraryPresenter implements Presenter<ExamLibraryView> {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mExamLibraryView.showProgressDialog();
+                        mPassAssuranceView.showProgressDialog();
                     }
 
                     @Override
                     public void onCompleted() {
-                        mExamLibraryView.dismissProgressDialog();
+                        mPassAssuranceView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mExamLibraryView.dismissProgressDialog();
+                        mPassAssuranceView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onNext(String s) {
                         mQrCodeUrl = s;
-                        mExamLibraryView.share(shareType);
+                        mPassAssuranceView.share(shareType);
                         HHLog.v("QrCodeUrl -> " + mQrCodeUrl);
                     }
                 });

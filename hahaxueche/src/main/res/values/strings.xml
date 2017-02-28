@@ -34,4 +34,5 @@
     <string name="insurance_notice_130">注：确认你已在哈哈学车平台报名，且还未参加科目一考试。</string>
     <string name="insurance_notice_150">注：确认你已在非哈哈学车平台或驾校报名，且还未参加科目一考试。</string>
     <string name="upload_id_card_hints_insurance">请上传身份信息，我们将会用于您的赔付宝投保事宜。赔付宝将在您的学车途中保障您的利益，若不上传您的真实信息，赔付宝将无法生效，无法保障您的合法权益！</string>
+    <string name="what_is_peifubao">赔付宝是一款由中国平安承保量身为哈哈学车定制的一份学车保险。提供了一站式驾考报名、选购保险、保险理赔申诉的平台，全面保障你的学车利益，赔付宝在购买后的次日生效，保期最长为一年。</string>
 </resources>

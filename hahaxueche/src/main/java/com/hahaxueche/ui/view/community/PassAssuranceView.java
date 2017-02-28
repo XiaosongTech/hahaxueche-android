@@ -8,7 +8,7 @@ import com.hahaxueche.ui.view.base.HHBaseView;
  * Created by wangshirui on 2016/12/1.
  */
 
-public interface ExamLibraryView extends HHBaseView {
+public interface PassAssuranceView extends HHBaseView {
     void showNotLogin();
 
     void showScores(int passCount);
