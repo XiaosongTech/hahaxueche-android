@@ -14,4 +14,8 @@ public interface UploadIdCardView extends HHBaseView {
     void setFaceImage(String imageUrl);
 
     void setUploadHints(String text);
+
+    void showShareDialog();
+
+    void confirmToSubmit(String name, String num);
 }

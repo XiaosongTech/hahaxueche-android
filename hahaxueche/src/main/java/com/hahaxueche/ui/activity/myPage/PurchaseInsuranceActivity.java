@@ -1,7 +1,9 @@
 package com.hahaxueche.ui.activity.myPage;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.view.View;
@@ -17,12 +19,16 @@ import com.hahaxueche.presenter.myPage.PurchaseInsurancePresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.view.myPage.PurchaseInsuranceView;
 import com.hahaxueche.util.Common;
+import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
+import com.pingplusplus.android.Pingpp;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by wangshirui on 2017/2/25.
@@ -36,6 +42,8 @@ public class PurchaseInsuranceActivity extends HHBaseActivity implements Purchas
     TextView mTvNotice;
     @BindView(R.id.lly_purchase)
     LinearLayout mLlyPurchase;
+    @BindView(R.id.lly_main)
+    LinearLayout mLlyMain;
     private int[] selectIds = new int[4];
     private int selectId;
 
@@ -48,7 +56,7 @@ public class PurchaseInsuranceActivity extends HHBaseActivity implements Purchas
         mPresenter.attachView(this);
         initActionBar();
         Intent intent = getIntent();
-        mPresenter.setInsuranceType(intent.getIntExtra("insuranceType", Common.PURCHASE_INSURANCE_TYPE_150));
+        mPresenter.setInsuranceType(intent.getIntExtra("insuranceType", Common.PURCHASE_INSURANCE_TYPE_169));
     }
 
     private void initActionBar() {
@@ -72,6 +80,17 @@ public class PurchaseInsuranceActivity extends HHBaseActivity implements Purchas
         super.onDestroy();
     }
 
+    @OnClick({R.id.tv_sure_pay})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv_sure_pay:
+                mPresenter.createCharge();
+                break;
+            default:
+                break;
+        }
+    }
+
     @Override
     public void setPayAmount(String text) {
         mTvAmount.setText(text);
@@ -88,6 +107,23 @@ public class PurchaseInsuranceActivity extends HHBaseActivity implements Purchas
         for (PaymentMethod paymentMethod : paymentMethods) {
             mLlyPurchase.addView(getPaymentAdapter(paymentMethod, paymentMethods.indexOf(paymentMethod)), 1 + paymentMethods.indexOf(paymentMethod));
         }
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Snackbar.make(mLlyMain, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void paySuccess() {
+        setResult(RESULT_OK, null);
+        finish();
+    }
+
+    @Override
+    public void callPingpp(String result) {
+        HHLog.v(result);
+        Pingpp.createPayment(this, result);
     }
 
     private RelativeLayout getPaymentAdapter(final PaymentMethod paymentMethod, int i) {
@@ -170,5 +206,33 @@ public class PurchaseInsuranceActivity extends HHBaseActivity implements Purchas
                 ivSelect.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_cashout_unchack_btn));
             }
         }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //支付页面返回处理
+        if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
+            if (resultCode == Activity.RESULT_OK) {
+                String result = data.getExtras().getString("pay_result");
+                /* 处理返回值
+                 * "success" - 支付成功
+                 * "fail"    - 支付失败
+                 * "cancel"  - 取消支付
+                 * "invalid" - 支付插件未安装（一般是微信客户端未安装的情况）
+                 */
+                String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
+                String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
+
+                if (result.equals("success")) {
+                    mPresenter.getStudentUtilHasInsurance();
+                } else if (result.equals("cancel")) {
+                    showMessage("取消支付");
+                } else if (result.equals("invalid")) {
+                    showMessage("支付插件未安装");
+                } else {
+                    showMessage("支付失败");
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

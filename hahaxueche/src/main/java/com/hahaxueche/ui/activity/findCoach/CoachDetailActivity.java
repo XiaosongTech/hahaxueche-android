@@ -883,6 +883,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         } else if (requestCode == RequestCode.REQUEST_CODE_PAY_SUCCESS) {
             Intent intent = new Intent(getContext(), UploadIdCardActivity.class);
             intent.putExtra("isFromPaySuccess", true);
+            intent.putExtra("isInsurance", mPresenter.isUserPurchasedInsurance());
             startActivityForResult(intent, RequestCode.REQUEST_CODE_UPLOAD_ID_CARD);
         } else if (requestCode == RequestCode.REQUEST_CODE_UPLOAD_ID_CARD) {
             mPresenter.toReferFriends();

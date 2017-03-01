@@ -205,6 +205,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         mapParam.put("coach_id", mCoach.id);
         mapParam.put("method", paymentMethod);
         mapParam.put("product_type", productType);
+        mapParam.put("need_insurance", mIsSelectInsurance);
         if (mSelectVoucher != null) {
             mapParam.put("voucher_id", mSelectVoucher.id);
         }

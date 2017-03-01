@@ -278,6 +278,14 @@ public interface HHApiService {
     @POST("students/{id}/id_card_info")
     Observable<BaseSuccess> uploadIdCard(@Path("id") String studentId, @FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
 
+    @FormUrlEncoded
+    @POST("students/{id}/insurance_services")
+    Observable<ResponseBody> createInsuranceCharge(@Path("id") String studentId, @FieldMap HashMap<String, Object> map,
+                                                   @Header("X-Access-Token") String accessToken);
+
+    @POST("students/{id}/insurance_services/hmb")
+    Observable<Response<BaseSuccess>> claimInsurance(@Path("id") String studentId, @Header("X-Access-Token") String accessToken);
+
     class Factory {
         public static Retrofit getRetrofit() {
             HHLog.v("baseUrl -> " + baseUrl);

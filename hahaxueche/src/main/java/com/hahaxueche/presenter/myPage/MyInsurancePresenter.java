@@ -27,21 +27,21 @@ public class MyInsurancePresenter implements Presenter<MyInsuranceView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) {
             mMyInsuranceView.setViewNoPurchase();
-            mMyInsuranceView.set120PayEnable(true);
-            mMyInsuranceView.set130PayEnable(true);
-            mMyInsuranceView.set150PayEnable(true);
-        } else if (!user.student.is_insurance_purchase) {
+            mMyInsuranceView.set149WeiPayEnable(true);
+            mMyInsuranceView.set149YiPayEnable(true);
+            mMyInsuranceView.set169PayEnable(true);
+        } else if (!user.student.isPurchasedInsurance()) {
             mMyInsuranceView.setViewNoPurchase();
             if (user.student.hasPurchasedService()) {
-                mMyInsuranceView.set120PayEnable(false);
-                mMyInsuranceView.set130PayEnable(true);
-                mMyInsuranceView.set150PayEnable(false);
+                mMyInsuranceView.set149WeiPayEnable(false);
+                mMyInsuranceView.set149YiPayEnable(true);
+                mMyInsuranceView.set169PayEnable(false);
             } else {
-                mMyInsuranceView.set120PayEnable(true);
-                mMyInsuranceView.set130PayEnable(false);
-                mMyInsuranceView.set150PayEnable(true);
+                mMyInsuranceView.set149WeiPayEnable(true);
+                mMyInsuranceView.set149YiPayEnable(false);
+                mMyInsuranceView.set169PayEnable(true);
             }
-        } else if (!user.student.is_insurance_upload) {
+        } else if (!user.student.isUploadedInsurance()) {
             mMyInsuranceView.setViewNoUploadInfo();
         } else {
             mMyInsuranceView.setViewSuccess();
@@ -86,17 +86,32 @@ public class MyInsurancePresenter implements Presenter<MyInsuranceView> {
             return;
         }
         switch (purchaseType) {
-            case Common.PURCHASE_INSURANCE_TYPE_120:
+            case Common.PURCHASE_INSURANCE_TYPE_149_WEI:
                 //TODO find coach
                 break;
-            case Common.PURCHASE_INSURANCE_TYPE_130:
-                mMyInsuranceView.finishToPurchaseInsurance(Common.PURCHASE_INSURANCE_TYPE_130);
+            case Common.PURCHASE_INSURANCE_TYPE_149_YI:
+                mMyInsuranceView.finishToPurchaseInsurance(Common.PURCHASE_INSURANCE_TYPE_149_YI);
                 break;
-            case Common.PURCHASE_INSURANCE_TYPE_150:
-                mMyInsuranceView.finishToPurchaseInsurance(Common.PURCHASE_INSURANCE_TYPE_150);
+            case Common.PURCHASE_INSURANCE_TYPE_169:
+                mMyInsuranceView.finishToPurchaseInsurance(Common.PURCHASE_INSURANCE_TYPE_169);
                 break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * 右上角按钮点击
+     */
+    public void clickRightButton() {
+        User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin() || !user.student.isPurchasedInsurance()) {
+            return;
+        }
+        if (!user.student.isUploadedInsurance()) {
+            mMyInsuranceView.finishToUploadInfo();
+        } else {
+            //TODO 保单信息
         }
     }
 }

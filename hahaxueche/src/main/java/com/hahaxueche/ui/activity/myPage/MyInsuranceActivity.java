@@ -34,7 +34,6 @@ import com.hahaxueche.presenter.myPage.MyInsurancePresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.view.myPage.MyInsuranceView;
 import com.hahaxueche.util.Common;
-import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
 
 import java.io.File;
@@ -61,11 +60,11 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
     LinearLayout mLlyNoUploadInfo;
     @BindView(R.id.lly_success)
     LinearLayout mLlySuccess;
-    @BindView(R.id.iv_120_pay)
+    @BindView(R.id.iv_149_wei_pay)
     ImageView mIv120Pay;
-    @BindView(R.id.iv_130_pay)
+    @BindView(R.id.iv_149_yi_pay)
     ImageView mIv130Pay;
-    @BindView(R.id.iv_150_pay)
+    @BindView(R.id.iv_169_pay)
     ImageView mIv150Pay;
     @BindView(R.id.tv_customer_service)
     TextView mTvCustomerService;
@@ -96,22 +95,28 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
             }
         });
         mTvRight = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_right);
+        mTvRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.clickRightButton();
+            }
+        });
     }
 
-    @OnClick({R.id.iv_120_pay,
-            R.id.iv_130_pay,
-            R.id.iv_150_pay,
+    @OnClick({R.id.iv_149_wei_pay,
+            R.id.iv_149_yi_pay,
+            R.id.iv_169_pay,
             R.id.tv_insurance_qrcode})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.iv_120_pay:
-                mPresenter.clickPurchase(Common.PURCHASE_INSURANCE_TYPE_120);
+            case R.id.iv_149_wei_pay:
+                mPresenter.clickPurchase(Common.PURCHASE_INSURANCE_TYPE_149_WEI);
                 break;
-            case R.id.iv_130_pay:
-                mPresenter.clickPurchase(Common.PURCHASE_INSURANCE_TYPE_130);
+            case R.id.iv_149_yi_pay:
+                mPresenter.clickPurchase(Common.PURCHASE_INSURANCE_TYPE_149_YI);
                 break;
-            case R.id.iv_150_pay:
-                mPresenter.clickPurchase(Common.PURCHASE_INSURANCE_TYPE_150);
+            case R.id.iv_169_pay:
+                mPresenter.clickPurchase(Common.PURCHASE_INSURANCE_TYPE_169);
                 break;
             case R.id.tv_insurance_qrcode:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
@@ -206,23 +211,23 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
     }
 
     @Override
-    public void set120PayEnable(boolean enable) {
+    public void set149WeiPayEnable(boolean enable) {
         mIv120Pay.setImageDrawable(ContextCompat.getDrawable(this,
-                enable ? R.drawable.botton_120peifubaby : R.drawable.botton_cant120));
+                enable ? R.drawable.botton_149peifubaby_wei : R.drawable.botton_cant149_wei));
         mIv120Pay.setClickable(enable);
     }
 
     @Override
-    public void set130PayEnable(boolean enable) {
+    public void set149YiPayEnable(boolean enable) {
         mIv130Pay.setImageDrawable(ContextCompat.getDrawable(this,
-                enable ? R.drawable.botton_130peifubaby : R.drawable.botton_cant130));
+                enable ? R.drawable.botton_149peifubaby_yi : R.drawable.botton_cant149_yi));
         mIv130Pay.setClickable(enable);
     }
 
     @Override
-    public void set150PayEnable(boolean enable) {
+    public void set169PayEnable(boolean enable) {
         mIv150Pay.setImageDrawable(ContextCompat.getDrawable(this,
-                enable ? R.drawable.botton_150peifubaby : R.drawable.botton_cant150));
+                enable ? R.drawable.botton_169peifubaby : R.drawable.botton_cant169));
         mIv150Pay.setClickable(enable);
     }
 
@@ -235,6 +240,14 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
     public void finishToPurchaseInsurance(int insuranceType) {
         Intent intent = new Intent();
         intent.putExtra("insuranceType", insuranceType);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    @Override
+    public void finishToUploadInfo() {
+        Intent intent = new Intent();
+        intent.putExtra("toUploadInfo", true);
         setResult(RESULT_OK, intent);
         finish();
     }

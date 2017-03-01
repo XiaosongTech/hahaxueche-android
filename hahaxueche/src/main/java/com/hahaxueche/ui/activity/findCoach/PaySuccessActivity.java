@@ -61,6 +61,10 @@ public class PaySuccessActivity extends HHBaseActivity implements PaySuccessView
     LinearLayout mLlyCoach;
     @BindView(R.id.tv_sign)
     TextView mTvSign;
+    @BindView(R.id.tv_insurance_amount)
+    TextView mTvInsuranceAmount;
+    @BindView(R.id.tv_insurance_pay_time)
+    TextView mTvInsurancePayTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,6 +189,16 @@ public class PaySuccessActivity extends HHBaseActivity implements PaySuccessView
     @Override
     public void setSignText(String text) {
         mTvSign.setText(text);
+    }
+
+    @Override
+    public void setInsuranceAmount(int amount) {
+        mTvInsuranceAmount.setText(Utils.getMoney(amount));
+    }
+
+    @Override
+    public void setInsurancePaidAt(String paidAt) {
+        mTvInsurancePayTime.setText(paidAt);
     }
 
     @Override

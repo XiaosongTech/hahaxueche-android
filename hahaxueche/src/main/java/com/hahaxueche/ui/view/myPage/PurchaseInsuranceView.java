@@ -15,4 +15,10 @@ public interface PurchaseInsuranceView extends HHBaseView {
     void setNotice(String text);
 
     void loadPaymentMethod(ArrayList<PaymentMethod> paymentMethods);
+
+    void showMessage(String message);
+
+    void paySuccess();
+
+    void callPingpp(String result);
 }

@@ -13,13 +13,15 @@ public interface MyInsuranceView extends HHBaseView {
 
     void setViewSuccess();
 
-    void set120PayEnable(boolean enable);
+    void set149WeiPayEnable(boolean enable);
 
-    void set130PayEnable(boolean enable);
+    void set149YiPayEnable(boolean enable);
 
-    void set150PayEnable(boolean enable);
+    void set169PayEnable(boolean enable);
 
     void showMessage(String message);
 
     void finishToPurchaseInsurance(int insuranceType);
+
+    void finishToUploadInfo();
 }

@@ -46,18 +46,23 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
     private UploadIdCardView mUploadIdCardView;
     private Subscription subscription;
     private HHBaseApplication application;
-    private boolean isInsurance;
+    private boolean mIsInsurance;
 
     public void attachView(UploadIdCardView view) {
         this.mUploadIdCardView = view;
         application = HHBaseApplication.get(mUploadIdCardView.getContext());
         pageStartCount();
-        if (isInsurance) {
+        if (mIsInsurance) {
             mUploadIdCardView.setUploadHints(mUploadIdCardView.getContext().getResources()
                     .getString(R.string.upload_id_card_hints_insurance));
         } else {
             mUploadIdCardView.setUploadHints(mUploadIdCardView.getContext().getResources()
                     .getString(R.string.upload_id_card_hints));
+        }
+        User user = application.getSharedPrefUtil().getUser();
+        if (user.student.isUploadedIdInfo()) {
+            //如果已经上传过用户信息，直接提示提交
+            mUploadIdCardView.confirmToSubmit(user.student.identity_card.name, user.student.identity_card.num);
         }
     }
 
@@ -67,6 +72,13 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
         application = null;
     }
 
+    public void setIsInsurance(boolean isInsurance) {
+        mIsInsurance = isInsurance;
+    }
+
+    /**
+     * 生成协议
+     */
     public void generateAgreement() {
         HHApiService apiService = application.getApiService();
         final User user = application.getSharedPrefUtil().getUser();
@@ -118,8 +130,73 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
                 });
     }
 
+    /**
+     * 投保
+     */
+    public void claimInsurance() {
+        HHApiService apiService = application.getApiService();
+        final User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin()) return;
+        subscription = apiService.claimInsurance(user.student.id, user.session.access_token)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<Response<BaseSuccess>>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        mUploadIdCardView.showProgressDialog();
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        mUploadIdCardView.dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mUploadIdCardView.dismissProgressDialog();
+                        HHLog.e(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(Response<BaseSuccess> response) {
+                        if (response.isSuccessful()) {
+                            mUploadIdCardView.showShareDialog();
+                        } else {
+                            Retrofit retrofit = HHApiService.Factory.getRetrofit();
+                            Converter<ResponseBody, ErrorResponse> errorConverter = retrofit.responseBodyConverter(ErrorResponse.class,
+                                    new Annotation[0]);
+                            try {
+                                ErrorResponse error = errorConverter.convert(response.errorBody());
+                                if (error.code == 40034) {
+                                    mUploadIdCardView.showMessage("未上传身份信息，请上传身份信息后重试！");
+                                } else if (error.code == 40036) {
+                                    mUploadIdCardView.showMessage("该用户已投保!");
+                                } else {
+                                    mUploadIdCardView.showMessage("投保失败, 请重试!");
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                mUploadIdCardView.showMessage("投保失败, 请重试!");
+                            }
+                        }
+                    }
+                });
+    }
+
     public String getShareText() {
         return mUploadIdCardView.getContext().getResources().getString(R.string.upload_share_dialog_text);
+    }
+
+    /**
+     * 直接确认上传
+     */
+    public void clickSureToSubmit() {
+        if (mIsInsurance) {
+            claimInsurance();
+        } else {
+            generateAgreement();
+        }
     }
 
     public void uploadIdCard(String filePath) {
@@ -276,7 +353,11 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
 
                     @Override
                     public void onNext(BaseSuccess baseSuccess) {
-                        generateAgreement();
+                        if (mIsInsurance) {
+                            claimInsurance();
+                        } else {
+                            generateAgreement();
+                        }
                     }
                 });
     }

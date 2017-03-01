@@ -23,10 +23,6 @@ public class PaySuccessPresenter implements Presenter<PaySuccessView> {
     private PaySuccessView mPaySuccessView;
     private Subscription subscription;
     private HHBaseApplication application;
-    //购买赔付宝跳转来的
-    private boolean isFromPurchaseInsurance;
-    //购买教练并且购买了赔付宝
-    private boolean isPurchasedInsurance;
 
     @Override
     public void attachView(PaySuccessView view) {
@@ -35,35 +31,47 @@ public class PaySuccessPresenter implements Presenter<PaySuccessView> {
         HHBaseApplication application = HHBaseApplication.get(mPaySuccessView.getContext());
         final User user = application.getSharedPrefUtil().getUser();
         if (user == null || user.student == null || !user.student.hasPurchasedService()) return;
-        HHApiService apiService = application.getApiService();
-        subscription = apiService.getCoach(user.student.current_coach_id, user.student.id)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(application.defaultSubscribeScheduler())
-                .subscribe(new Subscriber<Coach>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        HHLog.e(e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(Coach coach) {
-                        mPaySuccessView.loadPayInfo(coach, user.student.purchased_services.get(0));
-                    }
-                });
-        if (isPurchasedInsurance) {
-            mPaySuccessView.setSignText("上传投保信息");
-        } else {
-            mPaySuccessView.setSignText("签订专属协议");
-        }
-        if (isFromPurchaseInsurance) {
-            mPaySuccessView.showCoachPayView();
-        } else {
+        if (user.student.isPurchasedInsurance()) {
             mPaySuccessView.showInsurancePayView();
+            mPaySuccessView.setSignText("上传投保信息");
+            mPaySuccessView.setInsuranceAmount(user.student.insurance_order.total_amount);
+            mPaySuccessView.setInsurancePaidAt(user.student.insurance_order.paid_at);
+        } else {
+            mPaySuccessView.showCoachPayView();
+            mPaySuccessView.setSignText("签订专属协议");
+            HHApiService apiService = application.getApiService();
+            subscription = apiService.getCoach(user.student.current_coach_id, user.student.id)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(application.defaultSubscribeScheduler())
+                    .subscribe(new Subscriber<Coach>() {
+                        @Override
+                        public void onStart() {
+                            super.onStart();
+                            mPaySuccessView.showProgressDialog();
+                        }
+
+                        @Override
+                        public void onCompleted() {
+                            mPaySuccessView.dismissProgressDialog();
+                            if (user.student.isPurchasedInsurance()) {
+                                mPaySuccessView.setSignText("上传投保信息");
+                            } else {
+                                mPaySuccessView.setSignText("签订专属协议");
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            mPaySuccessView.dismissProgressDialog();
+                            HHLog.e(e.getMessage());
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onNext(Coach coach) {
+                            mPaySuccessView.loadPayInfo(coach, user.student.purchased_services.get(0));
+                        }
+                    });
         }
     }
 

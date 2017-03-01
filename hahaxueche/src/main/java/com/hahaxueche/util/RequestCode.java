@@ -29,6 +29,7 @@ public class RequestCode {
     public static final int REQUEST_CODE_SET_ALBUM_PICTURE_KITKAT = 120;
     public static final int REQUEST_CODE_SELECET_A_PICTURE_AFTER_KIKAT = 121;
     public static final int REQUEST_CODE_MY_INSURANCE = 122;
+    public static final int REQUEST_CODE_PURCHASE_INSURANCE = 123;
     //permission request
     public static final int PERMISSIONS_REQUEST_SEND_SMS = 600;
     public static final int PERMISSIONS_REQUEST_READ_CONTACTS = 601;

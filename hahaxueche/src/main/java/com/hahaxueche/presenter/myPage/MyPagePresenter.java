@@ -501,4 +501,17 @@ public class MyPagePresenter implements Presenter<MyPageView> {
     public void clickMyInsurance() {
         mMyPageView.navigateToMyInsurance();
     }
+
+    /**
+     * 推荐有奖跳转逻辑
+     */
+    public void toReferFriends() {
+        User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin() || !user.student.is_sales_agent) {
+            //非代理
+            mMyPageView.navigateToStudentRefer();
+        } else {
+            mMyPageView.navigateToReferFriends();
+        }
+    }
 }

@@ -33,11 +33,11 @@
             android:layout_weight="1">
 
             <ImageView
-                android:id="@+id/iv_120_pay"
+                android:id="@+id/iv_149_wei_pay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/botton_120peifubaby" />
+                android:src="@drawable/botton_149peifubaby_wei" />
         </FrameLayout>
 
         <FrameLayout
@@ -46,11 +46,11 @@
             android:layout_weight="1">
 
             <ImageView
-                android:id="@+id/iv_130_pay"
+                android:id="@+id/iv_149_yi_pay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/botton_130peifubaby" />
+                android:src="@drawable/botton_149peifubaby_yi" />
         </FrameLayout>
 
         <FrameLayout
@@ -59,11 +59,11 @@
             android:layout_weight="1">
 
             <ImageView
-                android:id="@+id/iv_150_pay"
+                android:id="@+id/iv_169_pay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/botton_150peifubaby" />
+                android:src="@drawable/botton_169peifubaby" />
         </FrameLayout>
     </LinearLayout>
 </LinearLayout>

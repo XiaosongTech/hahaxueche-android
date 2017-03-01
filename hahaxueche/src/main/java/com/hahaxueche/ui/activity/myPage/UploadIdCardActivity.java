@@ -37,6 +37,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
 import com.hahaxueche.presenter.myPage.UploadIdCardPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
+import com.hahaxueche.ui.dialog.BaseAlertDialog;
+import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
 import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.ShareAppDialog;
 import com.hahaxueche.ui.dialog.myPage.ManualUploadDialog;
@@ -68,6 +70,8 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     private String imageUrlA = null;
 
     private boolean isFromPaySuccess;//是否从付款成功页面跳转来的
+    //是否用户赔付宝页面
+    private boolean isInsurance;
     @BindView(R.id.sv_main)
     ScrollView mSvMain;
     @BindView(R.id.iv_id_card_face)
@@ -80,13 +84,15 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = getIntent();
-        if (intent != null) {
-            isFromPaySuccess = intent.getBooleanExtra("isFromPaySuccess", false);
-        }
         mPresenter = new UploadIdCardPresenter();
         setContentView(R.layout.activity_upload_id_card);
         ButterKnife.bind(this);
+        Intent intent = getIntent();
+        if (intent != null) {
+            isFromPaySuccess = intent.getBooleanExtra("isFromPaySuccess", false);
+            isInsurance = intent.getBooleanExtra("isInsurance", false);
+            mPresenter.setIsInsurance(isInsurance);
+        }
         mPresenter.attachView(this);
         initActionBar();
         changeCustomerService();
@@ -98,6 +104,9 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
         TextView mTvManual = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_manual);
         TextView mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
         TextView mTvTemplate = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_template);
+        if (isInsurance) {
+            mTvTemplate.setVisibility(View.GONE);
+        }
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         mTvTitle.setText("上传身份信息");
         mTvManual.setOnClickListener(new View.OnClickListener() {
@@ -155,7 +164,11 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                     showMessage("请上传身份证正面");
                     return;
                 }
-                mPresenter.generateAgreement();
+                if (isInsurance) {
+                    mPresenter.claimInsurance();
+                } else {
+                    mPresenter.generateAgreement();
+                }
                 break;
             case R.id.tv_later_submit:
                 mPresenter.clickLaterSubmit();
@@ -261,7 +274,8 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     /**
      * 分享得现金提示
      */
-    private void showShareDialog() {
+    @Override
+    public void showShareDialog() {
         String shareText = mPresenter.getShareText();
         if (isFromPaySuccess) {
             shareText = "恭喜您！报名成功，" + shareText;
@@ -276,6 +290,19 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                 });
         shareDialog.show();
     }
+
+    @Override
+    public void confirmToSubmit(String name, String num) {
+        BaseAlertDialog dialog = new BaseAlertDialog(getContext(), "提示", "您已上传过身份信息，请确认\n姓名：" + name + "\n身份证号：" + num,
+                "确认", new BaseAlertDialog.onButtonClickListener() {
+            @Override
+            public void sure() {
+                mPresenter.clickSureToSubmit();
+            }
+        });
+        dialog.show();
+    }
+
 
     public void changeCustomerService() {
         String customerService = mTvCustomerService.getText().toString();

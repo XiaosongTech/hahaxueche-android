@@ -18,4 +18,8 @@ public interface PaySuccessView extends HHBaseView {
     void showInsurancePayView();
 
     void setSignText(String text);
+
+    void setInsuranceAmount(int amount);
+
+    void setInsurancePaidAt(String paidAt);
 }

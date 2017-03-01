@@ -1,6 +1,7 @@
 package com.hahaxueche.ui.fragment.myPage;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -15,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -25,6 +25,7 @@ import com.hahaxueche.presenter.myPage.MyPagePresenter;
 import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.base.MainActivity;
+import com.hahaxueche.ui.activity.findCoach.PaySuccessActivity;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.activity.myPage.CourseActivity;
 import com.hahaxueche.ui.activity.myPage.FAQActivity;
@@ -564,10 +565,28 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
             }
         } else if (requestCode == RequestCode.REQUEST_CODE_MY_INSURANCE) {
             if (resultCode == RESULT_OK && null != data) {
-                Intent intent = new Intent(getContext(), PurchaseInsuranceActivity.class);
-                intent.putExtra("insuranceType", data.getIntExtra("insuranceType", Common.PURCHASE_INSURANCE_TYPE_150));
-                startActivity(intent);
+                if (data.getBooleanExtra("toUploadInfo", false)) {
+                    Intent intent = new Intent(getContext(), UploadIdCardActivity.class);
+                    intent.putExtra("isFromPaySuccess", false);
+                    intent.putExtra("isInsurance", true);
+                    startActivityForResult(intent, RequestCode.REQUEST_CODE_UPLOAD_ID_CARD);
+                } else {
+                    Intent intent = new Intent(getContext(), PurchaseInsuranceActivity.class);
+                    intent.putExtra("insuranceType", data.getIntExtra("insuranceType", Common.PURCHASE_INSURANCE_TYPE_169));
+                    startActivityForResult(intent, RequestCode.REQUEST_CODE_PURCHASE_INSURANCE);
+                }
             }
+        } else if (requestCode == RequestCode.REQUEST_CODE_PURCHASE_INSURANCE) {
+            if (resultCode == Activity.RESULT_OK) {
+                startActivityForResult(new Intent(getContext(), PaySuccessActivity.class), RequestCode.REQUEST_CODE_PAY_SUCCESS);
+            }
+        } else if (requestCode == RequestCode.REQUEST_CODE_PAY_SUCCESS) {
+            Intent intent = new Intent(getContext(), UploadIdCardActivity.class);
+            intent.putExtra("isFromPaySuccess", false);
+            intent.putExtra("isInsurance", true);
+            startActivityForResult(intent, RequestCode.REQUEST_CODE_UPLOAD_ID_CARD);
+        } else if (requestCode == RequestCode.REQUEST_CODE_UPLOAD_ID_CARD) {
+            mPresenter.toReferFriends();
         }
         mPresenter.setContractBadge();
         super.onActivityResult(requestCode, resultCode, data);

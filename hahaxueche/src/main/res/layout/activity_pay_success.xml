@@ -141,36 +141,13 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin40dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="20dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="投保人"
-                        android:textColor="@color/haha_gray_text"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/tv_insurance_username"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:textColor="@color/haha_gray_dark"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin40dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -194,7 +171,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin40dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
                     android:orientation="horizontal">
 
                     <TextView
