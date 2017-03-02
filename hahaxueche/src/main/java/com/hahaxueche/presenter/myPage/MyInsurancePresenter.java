@@ -87,7 +87,7 @@ public class MyInsurancePresenter implements Presenter<MyInsuranceView> {
         }
         switch (purchaseType) {
             case Common.PURCHASE_INSURANCE_TYPE_149_WEI:
-                //TODO find coach
+                mMyInsuranceView.finishToFindCoach();
                 break;
             case Common.PURCHASE_INSURANCE_TYPE_149_YI:
                 mMyInsuranceView.finishToPurchaseInsurance(Common.PURCHASE_INSURANCE_TYPE_149_YI);

@@ -252,6 +252,14 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
         finish();
     }
 
+    @Override
+    public void finishToFindCoach() {
+        Intent intent = new Intent();
+        intent.putExtra("toFindCoach", true);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
     public void changeCustomerService() {
         String customerService = mTvCustomerService.getText().toString();
         SpannableString spCustomerServiceStr = new SpannableString(customerService);

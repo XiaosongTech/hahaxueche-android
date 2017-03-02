@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.hahaxueche.R;
 import com.hahaxueche.presenter.community.PayInsurancePresenter;
+import com.hahaxueche.ui.activity.community.ExamLibraryActivity;
 import com.hahaxueche.ui.activity.findCoach.PaySuccessActivity;
 import com.hahaxueche.ui.activity.myPage.MyInsuranceActivity;
 import com.hahaxueche.ui.activity.myPage.PurchaseInsuranceActivity;
@@ -32,6 +33,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class PayInsuranceFragment extends HHBaseFragment implements PayInsuranceView {
     private PayInsurancePresenter mPresenter;
+    private ExamLibraryActivity mActivity;
 
     public static PayInsuranceFragment newInstance() {
         PayInsuranceFragment fragment = new PayInsuranceFragment();
@@ -42,6 +44,7 @@ public class PayInsuranceFragment extends HHBaseFragment implements PayInsurance
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPresenter = new PayInsurancePresenter();
+        mActivity = (ExamLibraryActivity) getActivity();
     }
 
     @Nullable
@@ -79,6 +82,8 @@ public class PayInsuranceFragment extends HHBaseFragment implements PayInsurance
                     intent.putExtra("isFromPaySuccess", false);
                     intent.putExtra("isInsurance", true);
                     startActivityForResult(intent, RequestCode.REQUEST_CODE_UPLOAD_ID_CARD);
+                } else if (data.getBooleanExtra("toFindCoach", false)) {
+                    mActivity.finishToFindCoach();
                 } else {
                     Intent intent = new Intent(getContext(), PurchaseInsuranceActivity.class);
                     intent.putExtra("insuranceType", data.getIntExtra("insuranceType", Common.PURCHASE_INSURANCE_TYPE_169));

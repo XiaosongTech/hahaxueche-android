@@ -73,7 +73,7 @@ public class CommunityFragment extends HHBaseFragment implements CommunityView {
         switch (view.getId()) {
             case R.id.rly_test_lib:
                 mPresenter.clickTestLibCount();
-                startActivity(new Intent(getContext(), ExamLibraryActivity.class));
+                startActivityForResult(new Intent(getContext(), ExamLibraryActivity.class), RequestCode.REQUEST_CODE_EXAM_LIBRARY);
                 break;
             case R.id.rly_group_buy:
                 mPresenter.clickGroupBuyCount();
@@ -103,6 +103,12 @@ public class CommunityFragment extends HHBaseFragment implements CommunityView {
                 Article article = data.getParcelableExtra("article");
                 if (article != null) {
                     mPresenter.setHeadlineArticle(article);
+                }
+            }
+        } else if (requestCode == RequestCode.REQUEST_CODE_EXAM_LIBRARY) {
+            if (resultCode == RESULT_OK && null != data) {
+                if (data.getBooleanExtra("toFindCoach", false)) {
+                    mActivity.selectTab(1);
                 }
             }
         }

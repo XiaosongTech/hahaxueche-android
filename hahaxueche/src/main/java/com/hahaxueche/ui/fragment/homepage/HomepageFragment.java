@@ -34,13 +34,17 @@ import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.community.ExamLibraryActivity;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
+import com.hahaxueche.ui.activity.myPage.MyInsuranceActivity;
+import com.hahaxueche.ui.activity.myPage.PurchaseInsuranceActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.activity.myPage.StudentReferActivity;
+import com.hahaxueche.ui.activity.myPage.UploadIdCardActivity;
 import com.hahaxueche.ui.dialog.BaseAlertDialog;
 import com.hahaxueche.ui.dialog.login.CityChoseDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.homepage.HomepageView;
 import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
@@ -156,12 +160,17 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
 
     @Override
     public void navigateToExamLibrary() {
-        startActivity(new Intent(getContext(), ExamLibraryActivity.class));
+        startActivityForResult(new Intent(getContext(), ExamLibraryActivity.class), RequestCode.REQUEST_CODE_EXAM_LIBRARY);
     }
 
     @Override
     public void navigateToStudentRefer() {
         startActivity(new Intent(getContext(), StudentReferActivity.class));
+    }
+
+    @Override
+    public void navigateToMyInsurance() {
+        startActivityForResult(new Intent(getContext(), MyInsuranceActivity.class), RequestCode.REQUEST_CODE_MY_INSURANCE);
     }
 
     @OnClick({R.id.tv_procedure,
@@ -173,7 +182,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             R.id.cv_driving_school,
             R.id.tv_group_buy,
             R.id.tv_test_lib,
-            R.id.tv_ensure_pass,
+            R.id.tv_insurance,
             R.id.tv_platform_guard,
             R.id.tv_refer_friends})
     public void onClick(View view) {
@@ -212,8 +221,8 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             case R.id.tv_test_lib:
                 mPresenter.clickTestLib();
                 break;
-            case R.id.tv_ensure_pass:
-                mPresenter.clickEnsurePass();
+            case R.id.tv_insurance:
+                mPresenter.clickInsurance();
                 break;
             case R.id.tv_platform_guard:
                 mPresenter.clickPlatformGuard();
@@ -308,6 +317,27 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             if (resultCode == RESULT_OK && null != data) {
                 int tab = data.getIntExtra("showTab", 1);
                 mActivity.selectTab(tab);
+            }
+        } else if (requestCode == RequestCode.REQUEST_CODE_EXAM_LIBRARY) {
+            if (resultCode == RESULT_OK && null != data) {
+                if (data.getBooleanExtra("toFindCoach", false)) {
+                    mActivity.selectTab(1);
+                }
+            }
+        } else if (requestCode == RequestCode.REQUEST_CODE_MY_INSURANCE) {
+            if (resultCode == RESULT_OK && null != data) {
+                if (data.getBooleanExtra("toUploadInfo", false)) {
+                    Intent intent = new Intent(getContext(), UploadIdCardActivity.class);
+                    intent.putExtra("isFromPaySuccess", false);
+                    intent.putExtra("isInsurance", true);
+                    startActivityForResult(intent, RequestCode.REQUEST_CODE_UPLOAD_ID_CARD);
+                } else if (data.getBooleanExtra("toFindCoach", false)) {
+                    mActivity.selectTab(1);
+                } else {
+                    Intent intent = new Intent(getContext(), PurchaseInsuranceActivity.class);
+                    intent.putExtra("insuranceType", data.getIntExtra("insuranceType", Common.PURCHASE_INSURANCE_TYPE_169));
+                    startActivityForResult(intent, RequestCode.REQUEST_CODE_PURCHASE_INSURANCE);
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

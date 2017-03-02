@@ -58,4 +58,6 @@ public interface HomepageView extends HHBaseView {
     void navigateToExamLibrary();
 
     void navigateToStudentRefer();
+
+    void navigateToMyInsurance();
 }

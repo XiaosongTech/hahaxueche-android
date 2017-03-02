@@ -24,4 +24,6 @@ public interface MyInsuranceView extends HHBaseView {
     void finishToPurchaseInsurance(int insuranceType);
 
     void finishToUploadInfo();
+
+    void finishToFindCoach();
 }

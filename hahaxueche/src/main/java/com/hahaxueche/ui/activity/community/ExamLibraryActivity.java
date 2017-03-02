@@ -1,5 +1,6 @@
 package com.hahaxueche.ui.activity.community;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -86,5 +87,12 @@ public class ExamLibraryActivity extends HHBaseActivity {
 
     public void showMessage(String message) {
         Snackbar.make(mSvMain, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    public void finishToFindCoach() {
+        Intent intent = new Intent();
+        intent.putExtra("toFindCoach", true);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }

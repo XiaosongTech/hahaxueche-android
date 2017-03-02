@@ -570,6 +570,8 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
                     intent.putExtra("isFromPaySuccess", false);
                     intent.putExtra("isInsurance", true);
                     startActivityForResult(intent, RequestCode.REQUEST_CODE_UPLOAD_ID_CARD);
+                } else if (data.getBooleanExtra("toFindCoach", false)) {
+                    mActivity.selectTab(1);
                 } else {
                     Intent intent = new Intent(getContext(), PurchaseInsuranceActivity.class);
                     intent.putExtra("insuranceType", data.getIntExtra("insuranceType", Common.PURCHASE_INSURANCE_TYPE_169));

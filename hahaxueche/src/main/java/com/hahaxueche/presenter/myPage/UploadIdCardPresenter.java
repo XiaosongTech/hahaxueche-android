@@ -114,10 +114,8 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
                                     new Annotation[0]);
                             try {
                                 ErrorResponse error = errorConverter.convert(response.errorBody());
-                                if (error.code == 40026) {
-                                    mUploadIdCardView.showMessage("身份证正面识别失败，请重新拍摄并上传！");
-                                } else if (error.code == 400028) {
-                                    mUploadIdCardView.showMessage("身份证信息无效, 请确保使用真实的第二代身份证!");
+                                if (error.code == 40034) {
+                                    mUploadIdCardView.showMessage("未上传身份信息，请上传身份信息后重试！");
                                 } else {
                                     mUploadIdCardView.showMessage("上传失败, 请重试!");
                                 }
@@ -214,7 +212,7 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
         subscription = apiService.uploadIdCard(user.student.id, user.session.access_token, body, map)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
-                .subscribe(new Subscriber<IdCardUrl>() {
+                .subscribe(new Subscriber<Response<IdCardUrl>>() {
                     @Override
                     public void onStart() {
                         super.onStart();
@@ -233,8 +231,28 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
                     }
 
                     @Override
-                    public void onNext(IdCardUrl idCardUrl) {
-                        mUploadIdCardView.setFaceImage(idCardUrl.url);
+                    public void onNext(Response<IdCardUrl> response) {
+                        if (response.isSuccessful()) {
+                            mUploadIdCardView.setFaceImage(response.body().url);
+                        } else {
+                            Retrofit retrofit = HHApiService.Factory.getRetrofit();
+                            Converter<ResponseBody, ErrorResponse> errorConverter = retrofit.responseBodyConverter(ErrorResponse.class,
+                                    new Annotation[0]);
+                            try {
+                                ErrorResponse error = errorConverter.convert(response.errorBody());
+                                if (error.code == 40026) {
+                                    mUploadIdCardView.showMessage("身份证识别失败，请重新拍摄上传或者点击左上角的手动填写！");
+                                } else if (error.code == 40028) {
+                                    mUploadIdCardView.showMessage("身份证信息无效，请确认上传或填写正确后重试!");
+                                } else {
+                                    mUploadIdCardView.showMessage("上传失败, 请重试!");
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                mUploadIdCardView.showMessage("上传失败, 请重试!");
+                            }
+                        }
+
 
                     }
                 });

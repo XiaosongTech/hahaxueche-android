@@ -311,7 +311,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         mHomepageView.navigateToExamLibrary();
     }
 
-    public void clickEnsurePass() {
+    public void clickInsurance() {
         User user = application.getSharedPrefUtil().getUser();
         HashMap<String, String> map = new HashMap();
         if (user != null && user.isLogin()) {
@@ -320,7 +320,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         } else {
             MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_course_one_tapped");
         }
-        mHomepageView.navigateToExamLibrary();
+        mHomepageView.navigateToMyInsurance();
     }
 
     public void clickPlatformGuard() {
