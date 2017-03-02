@@ -10,6 +10,7 @@ import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.ErrorResponse;
 import com.hahaxueche.model.user.IdCardUrl;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.UploadIdCardView;
 import com.hahaxueche.util.ErrorUtil;
@@ -138,7 +139,7 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
         subscription = apiService.claimInsurance(user.student.id, user.session.access_token)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
-                .subscribe(new Subscriber<Response<BaseSuccess>>() {
+                .subscribe(new Subscriber<Response<Student>>() {
                     @Override
                     public void onStart() {
                         super.onStart();
@@ -157,8 +158,9 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
                     }
 
                     @Override
-                    public void onNext(Response<BaseSuccess> response) {
+                    public void onNext(Response<Student> response) {
                         if (response.isSuccessful()) {
+                            application.getSharedPrefUtil().updateStudent(response.body());
                             mUploadIdCardView.showShareDialog();
                         } else {
                             Retrofit retrofit = HHApiService.Factory.getRetrofit();
@@ -240,8 +242,11 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
                                     new Annotation[0]);
                             try {
                                 ErrorResponse error = errorConverter.convert(response.errorBody());
-                                if (error.code == 40026) {
+                                if (error.code == 40022) {
+                                    mUploadIdCardView.showMessage("已上传过身份信息，请直接提交！");
+                                } else if (error.code == 40026 || error.code == 40029) {
                                     mUploadIdCardView.showMessage("身份证识别失败，请重新拍摄上传或者点击左上角的手动填写！");
+
                                 } else if (error.code == 40028) {
                                     mUploadIdCardView.showMessage("身份证信息无效，请确认上传或填写正确后重试!");
                                 } else {

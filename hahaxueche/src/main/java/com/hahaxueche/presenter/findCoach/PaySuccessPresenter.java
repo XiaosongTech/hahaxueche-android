@@ -23,6 +23,7 @@ public class PaySuccessPresenter implements Presenter<PaySuccessView> {
     private PaySuccessView mPaySuccessView;
     private Subscription subscription;
     private HHBaseApplication application;
+    public boolean isShowPurchaseCoach;
 
     @Override
     public void attachView(PaySuccessView view) {
@@ -30,13 +31,8 @@ public class PaySuccessPresenter implements Presenter<PaySuccessView> {
         application = HHBaseApplication.get(view.getContext());
         HHBaseApplication application = HHBaseApplication.get(mPaySuccessView.getContext());
         final User user = application.getSharedPrefUtil().getUser();
-        if (user == null || user.student == null || !user.student.hasPurchasedService()) return;
-        if (user.student.isPurchasedInsurance()) {
-            mPaySuccessView.showInsurancePayView();
-            mPaySuccessView.setSignText("上传投保信息");
-            mPaySuccessView.setInsuranceAmount(user.student.insurance_order.total_amount);
-            mPaySuccessView.setInsurancePaidAt(user.student.insurance_order.paid_at);
-        } else {
+        if (user == null || user.student == null) return;
+        if (isShowPurchaseCoach) {
             mPaySuccessView.showCoachPayView();
             mPaySuccessView.setSignText("签订专属协议");
             HHApiService apiService = application.getApiService();
@@ -53,11 +49,6 @@ public class PaySuccessPresenter implements Presenter<PaySuccessView> {
                         @Override
                         public void onCompleted() {
                             mPaySuccessView.dismissProgressDialog();
-                            if (user.student.isPurchasedInsurance()) {
-                                mPaySuccessView.setSignText("上传投保信息");
-                            } else {
-                                mPaySuccessView.setSignText("签订专属协议");
-                            }
                         }
 
                         @Override
@@ -72,6 +63,11 @@ public class PaySuccessPresenter implements Presenter<PaySuccessView> {
                             mPaySuccessView.loadPayInfo(coach, user.student.purchased_services.get(0));
                         }
                     });
+        } else {
+            mPaySuccessView.showInsurancePayView();
+            mPaySuccessView.setSignText("上传投保信息");
+            mPaySuccessView.setInsuranceAmount(user.student.insurance_order.total_amount);
+            mPaySuccessView.setInsurancePaidAt(user.student.insurance_order.paid_at);
         }
     }
 

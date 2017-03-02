@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -19,6 +20,7 @@ import com.hahaxueche.R;
 import com.hahaxueche.presenter.myPage.MyContractPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.dialog.BaseAlertDialog;
+import com.hahaxueche.ui.dialog.ShareAppDialog;
 import com.hahaxueche.ui.dialog.myPage.EnterEmailDialog;
 import com.hahaxueche.ui.dialog.myPage.MyContractDialog;
 import com.hahaxueche.ui.view.myPage.MyContractView;
@@ -49,6 +51,8 @@ public class MyContractActivity extends HHBaseActivity implements MyContractView
     private ImageView mIvSettings;
     private String pdfUrl;
     private Uri pdfUri;
+    //是否已显示过分享弹窗
+    private boolean isShownShare = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,15 +137,16 @@ public class MyContractActivity extends HHBaseActivity implements MyContractView
     @Override
     public void showShare() {
         String shareText = mPresenter.getShareText();
-        BaseAlertDialog dialog = new BaseAlertDialog(getContext(), "推荐好友", shareText, "分享得现金",
-                new BaseAlertDialog.onButtonClickListener() {
+        ShareAppDialog shareDialog = new ShareAppDialog(getContext(), shareText, false,
+                new ShareAppDialog.onShareClickListener() {
                     @Override
-                    public void sure() {
+                    public void share() {
                         setResult(RESULT_OK, null);
                         finish();
                     }
                 });
-        dialog.show();
+        shareDialog.show();
+        isShownShare = true;
     }
 
     public void openPdf() {
@@ -182,6 +187,16 @@ public class MyContractActivity extends HHBaseActivity implements MyContractView
 
     @Override
     public void onPageChanged(int page, int pageCount) {
+
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (isShownShare) {
+            return keyCode == KeyEvent.KEYCODE_BACK || super.onKeyDown(keyCode, event);
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
 
     }
 }

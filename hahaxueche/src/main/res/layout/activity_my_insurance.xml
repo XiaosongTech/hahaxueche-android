@@ -23,7 +23,7 @@
         <include
             android:id="@+id/lly_success"
             layout="@layout/my_insurance_success"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <include layout="@layout/my_insurance_claim_scope" />
 

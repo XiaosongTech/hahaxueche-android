@@ -551,12 +551,12 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
         } else if (requestCode == RequestCode.REQUEST_CODE_UPLOAD_ID_CARD) {
             if (resultCode == RESULT_OK) {
                 mActivity.controlMyPageBadge();
-                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+                mPresenter.toReferFriends();
             }
         } else if (requestCode == RequestCode.REQUEST_CODE_MY_CONTRACT) {
             if (resultCode == RESULT_OK) {//已签订协议
                 mActivity.controlMyPageBadge();
-                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+                mPresenter.toReferFriends();
             }
         } else if (requestCode == RequestCode.REQUEST_CODE_WEBVIEW) {
             if (resultCode == RESULT_OK && null != data) {
@@ -587,8 +587,6 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
             intent.putExtra("isFromPaySuccess", false);
             intent.putExtra("isInsurance", true);
             startActivityForResult(intent, RequestCode.REQUEST_CODE_UPLOAD_ID_CARD);
-        } else if (requestCode == RequestCode.REQUEST_CODE_UPLOAD_ID_CARD) {
-            mPresenter.toReferFriends();
         }
         mPresenter.setContractBadge();
         super.onActivityResult(requestCode, resultCode, data);

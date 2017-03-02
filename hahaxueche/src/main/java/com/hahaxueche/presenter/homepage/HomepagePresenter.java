@@ -362,4 +362,17 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         City myCity = application.getConstants().getCity(cityId);
         return String.format(shareText, Utils.getMoney(myCity.referer_bonus), Utils.getMoney(myCity.referee_bonus));
     }
+
+    /**
+     * 推荐有奖跳转逻辑
+     */
+    public void toReferFriends() {
+        User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin() || !user.student.is_sales_agent) {
+            //非代理
+            mHomepageView.navigateToStudentRefer();
+        } else {
+            mHomepageView.navigateToReferFriends();
+        }
+    }
 }

@@ -48,7 +48,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
     private ArrayList<Voucher> mUnCumulativeVoucherList;
     private ArrayList<Voucher> mCumulativeVoucherList;
     //默认选择赔付宝
-    private boolean mIsSelectInsurance = true;
+    public boolean mIsSelectInsurance = true;
 
     @Override
     public void attachView(PurchaseCoachView view) {
@@ -84,6 +84,13 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         fetchUnCumulativeVouchers();
         mPurchaseCoachView.loadPaymentMethod(getPaymentMethod());
         paymentMethod = 0;//默认支付方式：支付宝
+        //如果已购买过赔付宝，则强制不用购买
+        if (mUser.student.isPurchasedInsurance()) {
+            mIsSelectInsurance = false;
+            mPurchaseCoachView.unSelectInsurance();
+            mPurchaseCoachView.disableInsurance();
+            calculateAmount();
+        }
         pageStartCount();
     }
 
@@ -151,7 +158,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         }
         //赔付宝金额计算
         if (mIsSelectInsurance) {
-            totalAmount += 12000;
+            totalAmount += 14900;
         }
         if (voucherAmount > 0) {
             mPurchaseCoachView.setTotalAmountWithVoucher("总价:" + Utils.getMoney(totalAmount) + " 立减:" + Utils.getMoney(voucherAmount),

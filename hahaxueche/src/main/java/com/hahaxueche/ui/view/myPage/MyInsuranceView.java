@@ -26,4 +26,8 @@ public interface MyInsuranceView extends HHBaseView {
     void finishToUploadInfo();
 
     void finishToFindCoach();
+
+    void setAbstract(String text);
+
+    void navigateToInsuranceInfo();
 }

@@ -70,6 +70,8 @@ public class PaySuccessActivity extends HHBaseActivity implements PaySuccessView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPresenter = new PaySuccessPresenter();
+        Intent intent = getIntent();
+        mPresenter.isShowPurchaseCoach = intent != null && intent.getBooleanExtra("isOnlyPurchaseCoach", false);
         setContentView(R.layout.activity_pay_success);
         ButterKnife.bind(this);
         mPresenter.attachView(this);
@@ -95,7 +97,9 @@ public class PaySuccessActivity extends HHBaseActivity implements PaySuccessView
 
     @OnClick(R.id.tv_sign)
     public void sign() {
-        setResult(RESULT_OK, null);
+        Intent intent = new Intent();
+        intent.putExtra("isShowPurchaseCoach", mPresenter.isShowPurchaseCoach);
+        setResult(RESULT_OK, intent);
         finish();
     }
 

@@ -284,7 +284,7 @@ public interface HHApiService {
                                                    @Header("X-Access-Token") String accessToken);
 
     @POST("students/{id}/insurance_services/hmb")
-    Observable<Response<BaseSuccess>> claimInsurance(@Path("id") String studentId, @Header("X-Access-Token") String accessToken);
+    Observable<Response<Student>> claimInsurance(@Path("id") String studentId, @Header("X-Access-Token") String accessToken);
 
     class Factory {
         public static Retrofit getRetrofit() {

@@ -102,6 +102,8 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     LinearLayout mLlyPersonVoucher;
     @BindView(R.id.tv_insurance_amount)
     TextView mTvInsuranceAmount;
+    @BindView(R.id.rly_insurance)
+    RelativeLayout mRlyInsurance;
     private SelectInsuranceDialog mInsuranceDialog;
 
     private HHBaseApplication application;
@@ -403,7 +405,9 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
 
     @Override
     public void paySuccess() {
-        setResult(RESULT_OK, null);
+        Intent intent = new Intent();
+        intent.putExtra("isOnlyPurchaseCoach", !mPresenter.mIsSelectInsurance);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
@@ -494,6 +498,12 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     public void unSelectInsurance() {
         mTvInsuranceAmount.setText("未选择");
         mTvInsuranceAmount.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
+    }
+
+    @Override
+    public void disableInsurance() {
+        mRlyInsurance.setVisibility(View.GONE);
+        mRlyInsurance.setClickable(false);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

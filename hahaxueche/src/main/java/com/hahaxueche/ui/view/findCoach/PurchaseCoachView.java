@@ -59,4 +59,6 @@ public interface PurchaseCoachView extends HHBaseView {
     void selectInsurance();
 
     void unSelectInsurance();
+
+    void disableInsurance();
 }

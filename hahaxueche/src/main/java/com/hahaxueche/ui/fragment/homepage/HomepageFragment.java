@@ -1,6 +1,7 @@
 package com.hahaxueche.ui.fragment.homepage;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -33,6 +34,7 @@ import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.community.ExamLibraryActivity;
+import com.hahaxueche.ui.activity.findCoach.PaySuccessActivity;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.activity.myPage.MyInsuranceActivity;
 import com.hahaxueche.ui.activity.myPage.PurchaseInsuranceActivity;
@@ -339,6 +341,17 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                     startActivityForResult(intent, RequestCode.REQUEST_CODE_PURCHASE_INSURANCE);
                 }
             }
+        } else if (requestCode == RequestCode.REQUEST_CODE_PURCHASE_INSURANCE) {
+            if (resultCode == Activity.RESULT_OK) {
+                startActivityForResult(new Intent(getContext(), PaySuccessActivity.class), RequestCode.REQUEST_CODE_PAY_SUCCESS);
+            }
+        } else if (requestCode == RequestCode.REQUEST_CODE_PAY_SUCCESS) {
+            Intent intent = new Intent(getContext(), UploadIdCardActivity.class);
+            intent.putExtra("isFromPaySuccess", false);
+            intent.putExtra("isInsurance", true);
+            startActivityForResult(intent, RequestCode.REQUEST_CODE_UPLOAD_ID_CARD);
+        } else if (requestCode == RequestCode.REQUEST_CODE_UPLOAD_ID_CARD) {
+            mPresenter.toReferFriends();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

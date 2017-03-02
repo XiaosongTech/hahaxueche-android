@@ -1,6 +1,7 @@
 package com.hahaxueche.presenter.myPage;
 
 import com.hahaxueche.HHBaseApplication;
+import com.hahaxueche.R;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.MyInsuranceView;
@@ -45,6 +46,9 @@ public class MyInsurancePresenter implements Presenter<MyInsuranceView> {
             mMyInsuranceView.setViewNoUploadInfo();
         } else {
             mMyInsuranceView.setViewSuccess();
+            String insuranceAbstract = mMyInsuranceView.getContext().getResources()
+                    .getString(R.string.insurance_abstract, user.student.identity_card.name, user.student.insurance_order.paid_at);
+            mMyInsuranceView.setAbstract(insuranceAbstract);
         }
     }
 
@@ -111,7 +115,7 @@ public class MyInsurancePresenter implements Presenter<MyInsuranceView> {
         if (!user.student.isUploadedInsurance()) {
             mMyInsuranceView.finishToUploadInfo();
         } else {
-            //TODO 保单信息
+            mMyInsuranceView.navigateToInsuranceInfo();
         }
     }
 }

@@ -23,7 +23,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:lineSpacingMultiplier="1.2"
-        android:text="投保人：123\n投保时间：2012年12月13日\n有效期至：领取到机动车驾驶证当日24时（投保日起一年内）"
         android:textColor="@color/haha_gray_dark" />
 
     <ImageView

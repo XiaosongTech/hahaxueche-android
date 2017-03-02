@@ -68,6 +68,8 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
     ImageView mIv150Pay;
     @BindView(R.id.tv_customer_service)
     TextView mTvCustomerService;
+    @BindView(R.id.tv_insurance_abstract)
+    TextView mTvInsuranceAbstract;
 
 
     @Override
@@ -220,7 +222,7 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
     @Override
     public void set149YiPayEnable(boolean enable) {
         mIv130Pay.setImageDrawable(ContextCompat.getDrawable(this,
-                enable ? R.drawable.botton_149peifubaby_yi : R.drawable.botton_cant149_yi));
+                enable ? R.drawable.botton_149peifubaby_yi : R.drawable.botton_cant130_yi));
         mIv130Pay.setClickable(enable);
     }
 
@@ -258,6 +260,16 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
         intent.putExtra("toFindCoach", true);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    public void setAbstract(String text) {
+        mTvInsuranceAbstract.setText(text);
+    }
+
+    @Override
+    public void navigateToInsuranceInfo() {
+        startActivity(new Intent(getContext(), InsuranceInfoActivity.class));
     }
 
     public void changeCustomerService() {

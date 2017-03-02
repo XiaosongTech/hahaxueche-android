@@ -80,6 +80,8 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     TextView mTvCustomerService;
     @BindView(R.id.tv_upload_hints)
     TextView mTvUploadHints;
+    //是否已显示过分享弹窗
+    private boolean isShownShare = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -289,6 +291,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                     }
                 });
         shareDialog.show();
+        isShownShare = true;
     }
 
     @Override
@@ -361,7 +364,11 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            showLaterSubmitDialog();
+            if (isShownShare) {
+                showShareDialog();
+            } else {
+                showLaterSubmitDialog();
+            }
             return true;
         } else {
             return super.onKeyDown(keyCode, event);
