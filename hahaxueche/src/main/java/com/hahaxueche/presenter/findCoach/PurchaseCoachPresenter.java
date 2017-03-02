@@ -91,6 +91,13 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
             mPurchaseCoachView.disableInsurance();
             calculateAmount();
         }
+        if (mCoach.coach_group.group_type == 1) {
+            //车友无忧班
+            mIsSelectInsurance = true;
+            mPurchaseCoachView.selectInsurance();
+            mPurchaseCoachView.setInsuranceUnSelectable();
+            calculateAmount();
+        }
         pageStartCount();
     }
 

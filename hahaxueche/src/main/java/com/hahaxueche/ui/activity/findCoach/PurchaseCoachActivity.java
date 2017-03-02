@@ -104,6 +104,8 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     TextView mTvInsuranceAmount;
     @BindView(R.id.rly_insurance)
     RelativeLayout mRlyInsurance;
+    @BindView(R.id.iv_more_insurance)
+    ImageView mIvMoreInsurance;
     private SelectInsuranceDialog mInsuranceDialog;
 
     private HHBaseApplication application;
@@ -490,7 +492,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
 
     @Override
     public void selectInsurance() {
-        mTvInsuranceAmount.setText(Utils.getMoney(12000));
+        mTvInsuranceAmount.setText(Utils.getMoney(14900));
         mTvInsuranceAmount.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
     }
 
@@ -504,6 +506,12 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     public void disableInsurance() {
         mRlyInsurance.setVisibility(View.GONE);
         mRlyInsurance.setClickable(false);
+    }
+
+    @Override
+    public void setInsuranceUnSelectable() {
+        mRlyInsurance.setClickable(false);
+        mIvMoreInsurance.setVisibility(View.INVISIBLE);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

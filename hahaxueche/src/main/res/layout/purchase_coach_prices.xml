@@ -131,6 +131,7 @@
             android:textColor="@color/haha_gray" />
 
         <ImageView
+            android:id="@+id/iv_more_insurance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
