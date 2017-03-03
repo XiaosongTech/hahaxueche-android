@@ -889,15 +889,18 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             if (resultCode == Activity.RESULT_OK) {
                 Intent intent = new Intent(getContext(), PaySuccessActivity.class);
                 if (data != null && data.getBooleanExtra("isOnlyPurchaseCoach", false)) {
-                    intent.putExtra("isOnlyPurchaseCoach", true);
+                    intent.putExtra("isPurchasedInsurance", false);
+                } else {
+                    intent.putExtra("isPurchasedInsurance", true);
                 }
+                intent.putExtra("isFromPurchaseInsurance", false);
                 startActivityForResult(intent, RequestCode.REQUEST_CODE_PAY_SUCCESS);
             }
         } else if (requestCode == RequestCode.REQUEST_CODE_PAY_SUCCESS) {
-            boolean isShowPurchaseCoach = data != null && data.getBooleanExtra("isShowPurchaseCoach", false);
+            boolean isPurchasedInsurance = data != null && data.getBooleanExtra("isPurchasedInsurance", false);
             Intent intent = new Intent(getContext(), UploadIdCardActivity.class);
             intent.putExtra("isFromPaySuccess", true);
-            intent.putExtra("isInsurance", !isShowPurchaseCoach);
+            intent.putExtra("isInsurance", isPurchasedInsurance);
             startActivityForResult(intent, RequestCode.REQUEST_CODE_UPLOAD_ID_CARD);
         } else if (requestCode == RequestCode.REQUEST_CODE_UPLOAD_ID_CARD) {
             mPresenter.toReferFriends();

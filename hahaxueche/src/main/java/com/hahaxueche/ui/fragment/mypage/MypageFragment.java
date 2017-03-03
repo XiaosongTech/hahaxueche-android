@@ -580,7 +580,10 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
             }
         } else if (requestCode == RequestCode.REQUEST_CODE_PURCHASE_INSURANCE) {
             if (resultCode == Activity.RESULT_OK) {
-                startActivityForResult(new Intent(getContext(), PaySuccessActivity.class), RequestCode.REQUEST_CODE_PAY_SUCCESS);
+                Intent intent = new Intent(getContext(), PaySuccessActivity.class);
+                intent.putExtra("isPurchasedInsurance", true);
+                intent.putExtra("isFromPurchaseInsurance", true);
+                startActivityForResult(intent, RequestCode.REQUEST_CODE_PAY_SUCCESS);
             }
         } else if (requestCode == RequestCode.REQUEST_CODE_PAY_SUCCESS) {
             Intent intent = new Intent(getContext(), UploadIdCardActivity.class);

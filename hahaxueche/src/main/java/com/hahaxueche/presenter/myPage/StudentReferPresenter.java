@@ -131,7 +131,6 @@ public class StudentReferPresenter implements Presenter<StudentReferView> {
                 .subscribe(new Subscriber<ArrayList<ShortenUrl>>() {
                     @Override
                     public void onCompleted() {
-                        mStudentReferView.startToShare(shareType);
                     }
 
                     @Override
@@ -142,7 +141,7 @@ public class StudentReferPresenter implements Presenter<StudentReferView> {
                     @Override
                     public void onNext(ArrayList<ShortenUrl> shortenUrls) {
                         if (shortenUrls != null && shortenUrls.size() > 0) {
-                            mStudentReferView.initShareData(shortenUrls.get(0).url_short);
+                            mStudentReferView.startToShare(shareType, shortenUrls.get(0).url_short);
                         }
                     }
                 });

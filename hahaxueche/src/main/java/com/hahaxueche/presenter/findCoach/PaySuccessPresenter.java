@@ -23,7 +23,10 @@ public class PaySuccessPresenter implements Presenter<PaySuccessView> {
     private PaySuccessView mPaySuccessView;
     private Subscription subscription;
     private HHBaseApplication application;
-    public boolean isShowPurchaseCoach;
+    //是否来源于购买保险页面
+    public boolean isFromPurchaseInsurance;
+    //是否购买保险
+    public boolean isPurchasedInsurance;
 
     @Override
     public void attachView(PaySuccessView view) {
@@ -32,9 +35,12 @@ public class PaySuccessPresenter implements Presenter<PaySuccessView> {
         HHBaseApplication application = HHBaseApplication.get(mPaySuccessView.getContext());
         final User user = application.getSharedPrefUtil().getUser();
         if (user == null || user.student == null) return;
-        if (isShowPurchaseCoach) {
+        if (isFromPurchaseInsurance) {
+            mPaySuccessView.showInsurancePayView();
+            mPaySuccessView.setInsuranceAmount(user.student.insurance_order.total_amount);
+            mPaySuccessView.setInsurancePaidAt(user.student.insurance_order.paid_at);
+        } else {
             mPaySuccessView.showCoachPayView();
-            mPaySuccessView.setSignText("签订专属协议");
             HHApiService apiService = application.getApiService();
             subscription = apiService.getCoach(user.student.current_coach_id, user.student.id)
                     .observeOn(AndroidSchedulers.mainThread())
@@ -63,11 +69,11 @@ public class PaySuccessPresenter implements Presenter<PaySuccessView> {
                             mPaySuccessView.loadPayInfo(coach, user.student.purchased_services.get(0));
                         }
                     });
-        } else {
-            mPaySuccessView.showInsurancePayView();
+        }
+        if (isPurchasedInsurance) {
             mPaySuccessView.setSignText("上传投保信息");
-            mPaySuccessView.setInsuranceAmount(user.student.insurance_order.total_amount);
-            mPaySuccessView.setInsurancePaidAt(user.student.insurance_order.paid_at);
+        } else {
+            mPaySuccessView.setSignText("签订专属协议");
         }
     }
 
