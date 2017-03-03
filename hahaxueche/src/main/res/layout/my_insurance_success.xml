@@ -25,13 +25,29 @@
         android:lineSpacingMultiplier="1.2"
         android:textColor="@color/haha_gray_dark" />
 
-    <TextView
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:layout_marginBottom="15dp"
-        android:layout_marginRight="15dp"
-        android:text="平安财险承保"
-        android:textColor="@color/app_theme_color" />
-    
+        android:layout_marginRight="15dp">
+
+        <TextView
+            android:id="@+id/tv_pingan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="平安财险"
+            android:textColor="@color/haha_orange" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_pingan"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/tv_pingan"
+            android:text="承保"
+            android:textColor="@color/haha_gray_dark" />
+    </RelativeLayout>
+
+
 </LinearLayout>

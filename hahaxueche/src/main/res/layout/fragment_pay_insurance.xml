@@ -124,7 +124,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="5dp"
-        android:text="购￥120赔付宝"
+        android:text="购￥149赔付宝"
         android:textColor="@color/haha_white"
         android:textSize="@dimen/text_size_18sp" />
 </LinearLayout>

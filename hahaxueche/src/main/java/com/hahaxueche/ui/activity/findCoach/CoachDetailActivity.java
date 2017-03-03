@@ -121,6 +121,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     TextView mTvBadgeLevel;
     @BindView(R.id.tv_badge_pay)
     TextView mTvBadgePay;
+    @BindView(R.id.tv_more_insurance)
+    TextView mTvMoreInsurance;
     /*****************
      * 分享
      ******************/
@@ -155,6 +157,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             }
             mPresenter.setCoach(coach_id);
         }
+        mTvMoreInsurance.setText("?");
     }
 
     @Override
@@ -575,7 +578,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             R.id.tv_pay,
             R.id.rly_training_field,
             R.id.tv_free_try,
-            R.id.lly_platform_assurance
+            R.id.lly_platform_assurance,
+            R.id.tv_more_insurance
     })
     public void onClick(View view) {
         switch (view.getId()) {
@@ -615,6 +619,11 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 break;
             case R.id.lly_platform_assurance:
                 mPresenter.clickPlatformAssurance();
+                break;
+            case R.id.tv_more_insurance:
+                BaseAlertSimpleDialog dialog = new BaseAlertSimpleDialog(getContext(), "什么是赔付宝？",
+                        "赔付宝是一款由平安财险承保量身为哈哈学车定制的一份学车保险。提供了一站式驾考报名、选购保险、保险理赔申诉的平台，全面保障你的学车利益，赔付宝在购买后的次日生效，保期最长为一年。");
+                dialog.show();
                 break;
             default:
                 break;
