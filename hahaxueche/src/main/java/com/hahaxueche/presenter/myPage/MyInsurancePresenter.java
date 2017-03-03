@@ -6,6 +6,7 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.MyInsuranceView;
 import com.hahaxueche.util.Common;
+import com.hahaxueche.util.Utils;
 import com.qiyukf.unicorn.api.ConsultSource;
 import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFUserInfo;
@@ -47,7 +48,8 @@ public class MyInsurancePresenter implements Presenter<MyInsuranceView> {
         } else {
             mMyInsuranceView.setViewSuccess();
             String insuranceAbstract = mMyInsuranceView.getContext().getResources()
-                    .getString(R.string.insurance_abstract, user.student.identity_card.name, user.student.insurance_order.paid_at);
+                    .getString(R.string.insurance_abstract, user.student.identity_card.name,
+                            Utils.getDateHanziFromUTC(user.student.insurance_order.policy_start_time));
             mMyInsuranceView.setAbstract(insuranceAbstract);
         }
     }

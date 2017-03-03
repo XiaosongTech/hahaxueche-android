@@ -165,6 +165,20 @@ public class Utils {
         return localTimeStr;
     }
 
+    public static String getDateHanziFromUTC(String UTCTime) {
+        String localTimeStr = "";
+        DateFormat UTCformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+        try {
+            Date UTCDate = UTCformat.parse(UTCTime);
+            //format.setTimeZone(TimeZone.getTimeZone("GMT-8")) ;
+            localTimeStr = format.format(UTCDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return localTimeStr;
+    }
+
     public static String getMonthDayFromUTC(String UTCTime) {
         String localTimeStr = "";
         DateFormat UTCformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

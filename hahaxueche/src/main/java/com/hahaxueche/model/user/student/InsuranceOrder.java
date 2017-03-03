@@ -11,11 +11,13 @@ public class InsuranceOrder implements Parcelable {
     public String policy_no;
     public int total_amount;
     public String paid_at;
+    public String policy_start_time;
 
     protected InsuranceOrder(Parcel in) {
         policy_no = in.readString();
         total_amount = in.readInt();
         paid_at = in.readString();
+        policy_start_time = in.readString();
     }
 
     public static final Creator<InsuranceOrder> CREATOR = new Creator<InsuranceOrder>() {
@@ -40,5 +42,6 @@ public class InsuranceOrder implements Parcelable {
         dest.writeString(policy_no);
         dest.writeInt(total_amount);
         dest.writeString(paid_at);
+        dest.writeString(policy_start_time);
     }
 }
