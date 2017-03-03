@@ -300,7 +300,8 @@ public class StartExamActivity extends HHBaseActivity implements StartExamView {
 
     private void showShare() {
         if (mShareDialog == null) {
-            mShareDialog = new ShareAppDialog(getContext(), mPresenter.getBonus());
+            String shareText = getResources().getString(R.string.upload_share_dialog_text);
+            mShareDialog = new ShareAppDialog(getContext(), shareText, true, null);
         }
         mShareDialog.show();
     }

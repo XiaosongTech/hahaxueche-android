@@ -243,7 +243,7 @@ public interface HHApiService {
 
     @Multipart
     @POST("students/{id}/id_card")
-    Observable<IdCardUrl> uploadIdCard(@Path("id") String studentId, @Header("X-Access-Token") String accessToken, @Part MultipartBody.Part file, @QueryMap HashMap<String, Object> map);
+    Observable<Response<IdCardUrl>> uploadIdCard(@Path("id") String studentId, @Header("X-Access-Token") String accessToken, @Part MultipartBody.Part file, @QueryMap HashMap<String, Object> map);
 
     @GET("students/{id}/agreement")
     Observable<Response<IdCardUrl>> createAgreement(@Path("id") String studentId, @Header("X-Access-Token") String accessToken);
@@ -277,6 +277,14 @@ public interface HHApiService {
     @FormUrlEncoded
     @POST("students/{id}/id_card_info")
     Observable<BaseSuccess> uploadIdCard(@Path("id") String studentId, @FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
+
+    @FormUrlEncoded
+    @POST("students/{id}/insurance_services")
+    Observable<ResponseBody> createInsuranceCharge(@Path("id") String studentId, @FieldMap HashMap<String, Object> map,
+                                                   @Header("X-Access-Token") String accessToken);
+
+    @POST("students/{id}/insurance_services/hmb")
+    Observable<Response<Student>> claimInsurance(@Path("id") String studentId, @Header("X-Access-Token") String accessToken);
 
     class Factory {
         public static Retrofit getRetrofit() {

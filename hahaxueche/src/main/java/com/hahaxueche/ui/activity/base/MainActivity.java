@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -148,7 +147,7 @@ public class MainActivity extends HHBaseActivity implements MainView {
                 }
             } else if (shareObject.getString("type", "").equals("test_practice")) {
                 Intent startIntent = new Intent(getContext(), ExamLibraryActivity.class);
-                startActivity(startIntent);
+                startActivityForResult(startIntent, RequestCode.REQUEST_CODE_EXAM_LIBRARY);
             } else if (shareObject.getString("type", "").equals("coach_list")) {
                 selectTab(1);
             }
@@ -319,6 +318,12 @@ public class MainActivity extends HHBaseActivity implements MainView {
             if (resultCode == RESULT_OK) {//已签订协议
                 controlMyPageBadge();
                 mPresenter.toReferFriends();
+            }
+        } else if (requestCode == RequestCode.REQUEST_CODE_EXAM_LIBRARY) {
+            if (resultCode == RESULT_OK && null != data) {
+                if (data.getBooleanExtra("toFindCoach", false)) {
+                    selectTab(1);
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

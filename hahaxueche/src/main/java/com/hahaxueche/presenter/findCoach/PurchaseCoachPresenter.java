@@ -47,6 +47,8 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
     private Voucher mSelectVoucher;
     private ArrayList<Voucher> mUnCumulativeVoucherList;
     private ArrayList<Voucher> mCumulativeVoucherList;
+    //默认选择赔付宝
+    public boolean mIsSelectInsurance = true;
 
     @Override
     public void attachView(PurchaseCoachView view) {
@@ -82,6 +84,20 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         fetchUnCumulativeVouchers();
         mPurchaseCoachView.loadPaymentMethod(getPaymentMethod());
         paymentMethod = 0;//默认支付方式：支付宝
+        //如果已购买过赔付宝，则强制不用购买
+        if (mUser.student.isPurchasedInsurance()) {
+            mIsSelectInsurance = false;
+            mPurchaseCoachView.unSelectInsurance();
+            mPurchaseCoachView.disableInsurance();
+            calculateAmount();
+        }
+        if (mCoach.coach_group.group_type == 1) {
+            //车友无忧班
+            mIsSelectInsurance = true;
+            mPurchaseCoachView.selectInsurance();
+            mPurchaseCoachView.setInsuranceUnSelectable();
+            calculateAmount();
+        }
         pageStartCount();
     }
 
@@ -95,7 +111,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
             selectClassNormal();
             mPurchaseCoachView.hideClassVIP();
         }
-        setProductType();
+        calculateAmount();
     }
 
     public void selectLicenseC2() {
@@ -108,24 +124,24 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
             selectClassNormal();
             mPurchaseCoachView.hideClassVIP();
         }
-        setProductType();
+        calculateAmount();
     }
 
     public void selectClassNormal() {
         classType = 0;
         mPurchaseCoachView.unSelectClass();
         mPurchaseCoachView.selectClassNormal();
-        setProductType();
+        calculateAmount();
     }
 
     public void selectClassVip() {
         classType = 1;
         mPurchaseCoachView.unSelectClass();
         mPurchaseCoachView.selectClassVip();
-        setProductType();
+        calculateAmount();
     }
 
-    private void setProductType() {
+    private void calculateAmount() {
         int voucherAmount = mSelectVoucher != null ? mSelectVoucher.amount : 0;
         int totalAmount = 0;
         //可叠加代金券的优惠金额
@@ -146,6 +162,10 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         } else if (license == 2 && classType == 1) {
             productType = 3;
             totalAmount = mCoach.coach_group.c2_vip_price;
+        }
+        //赔付宝金额计算
+        if (mIsSelectInsurance) {
+            totalAmount += 14900;
         }
         if (voucherAmount > 0) {
             mPurchaseCoachView.setTotalAmountWithVoucher("总价:" + Utils.getMoney(totalAmount) + " 立减:" + Utils.getMoney(voucherAmount),
@@ -199,6 +219,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         mapParam.put("coach_id", mCoach.id);
         mapParam.put("method", paymentMethod);
         mapParam.put("product_type", productType);
+        mapParam.put("need_insurance", mIsSelectInsurance);
         if (mSelectVoucher != null) {
             mapParam.put("voucher_id", mSelectVoucher.id);
         }
@@ -421,7 +442,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
     public void setSelectVoucher(Voucher voucher) {
         this.mSelectVoucher = voucher;
         mPurchaseCoachView.setVoucher(mSelectVoucher);
-        setProductType();
+        calculateAmount();
     }
 
     public void pageStartCount() {
@@ -467,6 +488,21 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         for (Voucher voucher : mCumulativeVoucherList) {
             mPurchaseCoachView.addCumulativeVoucher(voucher.title, "-" + Utils.getMoney(voucher.amount));
         }
-        setProductType();
+        calculateAmount();
+    }
+
+    /**
+     * 选择赔付保
+     *
+     * @param isSelect
+     */
+    public void selectInsurance(boolean isSelect) {
+        mIsSelectInsurance = isSelect;
+        if (mIsSelectInsurance) {
+            mPurchaseCoachView.selectInsurance();
+        } else {
+            mPurchaseCoachView.unSelectInsurance();
+        }
+        calculateAmount();
     }
 }

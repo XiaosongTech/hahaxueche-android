@@ -311,7 +311,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         mHomepageView.navigateToExamLibrary();
     }
 
-    public void clickEnsurePass() {
+    public void clickInsurance() {
         User user = application.getSharedPrefUtil().getUser();
         HashMap<String, String> map = new HashMap();
         if (user != null && user.isLogin()) {
@@ -320,7 +320,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         } else {
             MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_course_one_tapped");
         }
-        mHomepageView.navigateToExamLibrary();
+        mHomepageView.navigateToMyInsurance();
     }
 
     public void clickPlatformGuard() {
@@ -361,5 +361,18 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         String shareText = mHomepageView.getContext().getResources().getString(R.string.homepage_share_dialog_text);
         City myCity = application.getConstants().getCity(cityId);
         return String.format(shareText, Utils.getMoney(myCity.referer_bonus), Utils.getMoney(myCity.referee_bonus));
+    }
+
+    /**
+     * 推荐有奖跳转逻辑
+     */
+    public void toReferFriends() {
+        User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin() || !user.student.is_sales_agent) {
+            //非代理
+            mHomepageView.navigateToStudentRefer();
+        } else {
+            mHomepageView.navigateToReferFriends();
+        }
     }
 }

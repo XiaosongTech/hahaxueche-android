@@ -28,7 +28,22 @@
             android:layout_width="match_parent"
             android:layout_height="180dp" />
 
-        <include layout="@layout/layout_pass_ensurance" />
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabLayout_insurance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/haha_white"
+            app:tabIndicatorColor="@color/app_theme_color"
+            app:tabMode="scrollable"
+            app:tabSelectedTextColor="@color/app_theme_color"
+            app:tabTextAppearance="@style/MyTabLayoutTextAppearance"
+            app:tabTextColor="@color/haha_gray_text" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager_insurance"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginBottom="20dp" />
 
     </LinearLayout>
 </ScrollView>

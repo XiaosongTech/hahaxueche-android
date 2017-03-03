@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
@@ -23,15 +24,23 @@ import com.hahaxueche.util.Utils;
 public class ShareAppDialog {
     private Context mContext;
     private Dialog mDialog;
-    private TextView mTvRefuse;
+    private ImageView mIvCancel;
     private TextView mTvShare;
     private TextView mTvShareTxt;
-    private int mBonus;
+    private String mShareText;
+    private boolean mIsCancelable;
+    private onShareClickListener mOnShareListener;
 
-    public ShareAppDialog(Context context, int bonus) {
+    public interface onShareClickListener {
+        void share();
+    }
+
+    public ShareAppDialog(Context context, String shareText, boolean isCancelable, onShareClickListener listener) {
         mDialog = new Dialog(context, R.style.my_dialog);
         mContext = context;
-        mBonus = bonus;
+        mShareText = shareText;
+        mIsCancelable = isCancelable;
+        mOnShareListener = listener;
         initView();
         initEvent();
         loadDatas();
@@ -40,7 +49,7 @@ public class ShareAppDialog {
 
     private void initView() {
         View contentView = View.inflate(mContext, R.layout.dialog_share_app, null);
-        mTvRefuse = (TextView) contentView.findViewById(R.id.tv_refuse);
+        mIvCancel = (ImageView) contentView.findViewById(R.id.iv_cancel);
         mTvShare = (TextView) contentView.findViewById(R.id.tv_share);
         mTvShareTxt = (TextView) contentView.findViewById(R.id.tv_share_txt);
         mDialog.setContentView(contentView);
@@ -48,24 +57,20 @@ public class ShareAppDialog {
     }
 
     private void initEvent() {
-        mTvRefuse.setOnClickListener(mClickListener);
+        mIvCancel.setOnClickListener(mClickListener);
         mTvShare.setOnClickListener(mClickListener);
     }
 
     private void loadDatas() {
-        String shareTxt = mContext.getResources().getString(R.string.referDialogStr);
-        mTvShareTxt.setText(String.format(shareTxt, Utils.getMoney(mBonus)));
+        mTvShareTxt.setText(mShareText);
+        mIvCancel.setVisibility(mIsCancelable ? View.VISIBLE : View.INVISIBLE);
     }
 
     public void show() {
         mDialog.show();
-//        if (contentView != null)
-//            contentView.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.in_downup));
     }
 
     public void dismiss() {
-//        if (contentView != null)
-//            contentView.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.out_updown));
         if (mDialog.isShowing())
             mDialog.dismiss();
     }
@@ -83,19 +88,23 @@ public class ShareAppDialog {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.tv_refuse:
+                case R.id.iv_cancel:
                     mDialog.dismiss();
                     break;
                 case R.id.tv_share:
                     mDialog.dismiss();
-                    Intent intent;
-                    User user = new SharedPrefUtil(mContext).getUser();
-                    if (user == null || !user.isLogin() || !user.student.is_sales_agent) {
-                        intent = new Intent(mContext, StudentReferActivity.class);
+                    if (mOnShareListener != null) {
+                        mOnShareListener.share();
                     } else {
-                        intent = new Intent(mContext, ReferFriendsActivity.class);
+                        Intent intent;
+                        User user = new SharedPrefUtil(mContext).getUser();
+                        if (user == null || !user.isLogin() || !user.student.is_sales_agent) {
+                            intent = new Intent(mContext, StudentReferActivity.class);
+                        } else {
+                            intent = new Intent(mContext, ReferFriendsActivity.class);
+                        }
+                        mContext.startActivity(intent);
                     }
-                    mContext.startActivity(intent);
                     break;
                 default:
                     break;

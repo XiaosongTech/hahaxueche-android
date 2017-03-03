@@ -8,4 +8,8 @@
     <dimen name="text_size_14sp">14sp</dimen>
     <dimen name="margin_18dp">18dp</dimen>
     <dimen name="margin_115dp">100dp</dimen>
+    <dimen name="text_size_16sp">16sp</dimen>
+    <dimen name="text_size_18sp">18sp</dimen>
+    <dimen name="text_size_20sp">20sp</dimen>
+    <dimen name="text_size_12sp">12sp</dimen>
 </resources>

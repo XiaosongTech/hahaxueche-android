@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="15dp"
+    android:background="@color/haha_white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingBottom="14dp"
+    android:paddingTop="14dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="赔付宝是什么？"
+        android:textColor="@color/haha_gray_dark"
+        android:textSize="@dimen/text_size_18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="15dp"
+        android:lineSpacingMultiplier="1.2"
+        android:text="@string/what_is_peifubao"
+        android:textColor="@color/haha_gray"
+        android:textSize="@dimen/text_size_12sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="15dp">
+
+        <TextView
+            android:id="@+id/tv_highest_amount_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="单科补考费用\n最高赔付"
+            android:textColor="@color/haha_gray_dark"
+            android:textSize="@dimen/text_size_14sp" />
+
+        <TextView
+            android:id="@+id/tv_highest_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_highest_amount_label"
+            android:layout_below="@id/tv_highest_amount_label"
+            android:layout_marginTop="5dp"
+            android:text="500元"
+            android:textColor="@color/app_theme_color"
+            android:textSize="@dimen/text_size_16sp" />
+
+        <TextView
+            android:id="@+id/tv_highest_count_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/tv_highest_amount_label"
+            android:layout_centerHorizontal="true"
+            android:text="挂科5次赔付"
+            android:textColor="@color/haha_gray_dark"
+            android:textSize="@dimen/text_size_14sp" />
+
+        <TextView
+            android:id="@+id/tv_highest_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_highest_amount"
+            android:layout_centerHorizontal="true"
+            android:text="5000元"
+            android:textColor="@color/app_theme_color"
+            android:textSize="@dimen/text_size_16sp" />
+
+        <TextView
+            android:id="@+id/tv_accident_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/tv_highest_count_label"
+            android:gravity="right"
+            android:text="意外事故、残疾\n最高赔付"
+            android:textColor="@color/haha_gray_dark"
+            android:textSize="@dimen/text_size_14sp" />
+
+        <TextView
+            android:id="@+id/tv_accident"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_highest_amount"
+            android:layout_alignRight="@id/tv_accident_label"
+            android:text="10000元"
+            android:textColor="@color/app_theme_color"
+            android:textSize="@dimen/text_size_16sp" />
+
+        <View
+            android:layout_width="@dimen/divider_width"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_highest_amount"
+            android:layout_alignTop="@id/tv_highest_amount_label"
+            android:layout_marginRight="15dp"
+            android:layout_toLeftOf="@id/tv_highest_count_label"
+            android:background="@color/haha_gray_divider" />
+
+        <View
+            android:layout_width="@dimen/divider_width"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_highest_amount"
+            android:layout_alignTop="@id/tv_highest_amount_label"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/tv_highest_count_label"
+            android:background="@color/haha_gray_divider" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_purchase_insurance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/rect_bg_appcolor_sm"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp"
+        android:text="购￥149赔付宝"
+        android:textColor="@color/haha_white"
+        android:textSize="@dimen/text_size_18sp" />
+</LinearLayout>

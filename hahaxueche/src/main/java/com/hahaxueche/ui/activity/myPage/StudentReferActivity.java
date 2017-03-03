@@ -59,6 +59,7 @@ public class StudentReferActivity extends HHBaseActivity implements StudentRefer
     private String mDescription;
     private String mImageUrl;
     private String mUrl;
+    private String mShareSmsUrl;
 
     /*****************
      * end
@@ -172,28 +173,29 @@ public class StudentReferActivity extends HHBaseActivity implements StudentRefer
     }
 
     @Override
-    public void startToShare(int shareType) {
+    public void startToShare(int shareType, String shareUrl) {
         switch (shareType) {
             case 0:
-                shareToWeixin();
+                shareToWeixin(shareUrl);
                 break;
             case 1:
-                shareToFriendCircle();
+                shareToFriendCircle(shareUrl);
                 break;
             case 2:
-                shareToQQ();
+                shareToQQ(shareUrl);
                 break;
             case 3:
-                shareToWeibo();
+                shareToWeibo(shareUrl);
                 break;
             case 4:
-                shareToQZone();
+                shareToQZone(shareUrl);
                 break;
             case 5:
+                mShareSmsUrl = shareUrl;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.SEND_SMS}, RequestCode.PERMISSIONS_REQUEST_SEND_SMS);
                 } else {
-                    shareToSms();
+                    shareToSms(shareUrl);
                 }
             default:
                 break;
@@ -220,8 +222,8 @@ public class StudentReferActivity extends HHBaseActivity implements StudentRefer
         dialog.show();
     }
 
-    private void shareToQQ() {
-        ShareUtil.shareMedia(this, SharePlatform.QQ, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+    private void shareToQQ(String shareUrl) {
+        ShareUtil.shareMedia(this, SharePlatform.QQ, mTitle, mDescription, shareUrl, mImageUrl, new ShareListener() {
             @Override
             public void shareSuccess() {
                 if (shareDialog != null) {
@@ -244,8 +246,8 @@ public class StudentReferActivity extends HHBaseActivity implements StudentRefer
         });
     }
 
-    private void shareToQZone() {
-        ShareUtil.shareMedia(this, SharePlatform.QZONE, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+    private void shareToQZone(String shareUrl) {
+        ShareUtil.shareMedia(this, SharePlatform.QZONE, mTitle, mDescription, shareUrl, mImageUrl, new ShareListener() {
             @Override
             public void shareSuccess() {
                 if (shareDialog != null) {
@@ -268,8 +270,8 @@ public class StudentReferActivity extends HHBaseActivity implements StudentRefer
         });
     }
 
-    private void shareToWeibo() {
-        ShareUtil.shareMedia(this, SharePlatform.WEIBO, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+    private void shareToWeibo(String shareUrl) {
+        ShareUtil.shareMedia(this, SharePlatform.WEIBO, mTitle, mDescription, shareUrl, mImageUrl, new ShareListener() {
             @Override
             public void shareSuccess() {
                 if (shareDialog != null) {
@@ -292,8 +294,8 @@ public class StudentReferActivity extends HHBaseActivity implements StudentRefer
         });
     }
 
-    private void shareToWeixin() {
-        ShareUtil.shareMedia(this, SharePlatform.WX, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+    private void shareToWeixin(String shareUrl) {
+        ShareUtil.shareMedia(this, SharePlatform.WX, mTitle, mDescription, shareUrl, mImageUrl, new ShareListener() {
             @Override
             public void shareSuccess() {
                 if (shareDialog != null) {
@@ -316,8 +318,8 @@ public class StudentReferActivity extends HHBaseActivity implements StudentRefer
         });
     }
 
-    private void shareToFriendCircle() {
-        ShareUtil.shareMedia(this, SharePlatform.WX_TIMELINE, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+    private void shareToFriendCircle(String shareUrl) {
+        ShareUtil.shareMedia(this, SharePlatform.WX_TIMELINE, mTitle, mDescription, shareUrl, mImageUrl, new ShareListener() {
             @Override
             public void shareSuccess() {
                 if (shareDialog != null) {
@@ -351,9 +353,9 @@ public class StudentReferActivity extends HHBaseActivity implements StudentRefer
         Snackbar.make(mSvMain, message, Snackbar.LENGTH_SHORT).show();
     }
 
-    private void shareToSms() {
+    private void shareToSms(String shareUrl) {
         Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"));
-        intent.putExtra("sms_body", "［哈哈学车］" + mDescription + mUrl);
+        intent.putExtra("sms_body", "［哈哈学车］" + mDescription + shareUrl);
         startActivity(intent);
     }
 
@@ -390,7 +392,7 @@ public class StudentReferActivity extends HHBaseActivity implements StudentRefer
         } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_SEND_SMS) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
-                shareToSms();
+                shareToSms(mShareSmsUrl);
             } else {
                 showMessage("请允许发送短信权限，不然无法分享到短信");
             }

@@ -12,4 +12,14 @@ public interface PaySuccessView extends HHBaseView {
     void loadPayInfo(Coach coach, PurchasedService ps);
 
     void showMessage(String message);
+
+    void showCoachPayView();
+
+    void showInsurancePayView();
+
+    void setSignText(String text);
+
+    void setInsuranceAmount(int amount);
+
+    void setInsurancePaidAt(String paidAt);
 }

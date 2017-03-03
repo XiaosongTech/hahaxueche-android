@@ -1,6 +1,7 @@
 package com.hahaxueche.ui.fragment.myPage;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -24,17 +25,20 @@ import com.hahaxueche.presenter.myPage.MyPagePresenter;
 import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.base.MainActivity;
+import com.hahaxueche.ui.activity.findCoach.PaySuccessActivity;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.activity.myPage.CourseActivity;
 import com.hahaxueche.ui.activity.myPage.FAQActivity;
 import com.hahaxueche.ui.activity.myPage.FollowListActivity;
 import com.hahaxueche.ui.activity.myPage.MyCoachDetailActivity;
 import com.hahaxueche.ui.activity.myPage.MyContractActivity;
+import com.hahaxueche.ui.activity.myPage.MyInsuranceActivity;
 import com.hahaxueche.ui.activity.myPage.MyVoucherActivity;
 import com.hahaxueche.ui.activity.myPage.NoCourseActivity;
 import com.hahaxueche.ui.activity.myPage.NotLoginVoucherActivity;
 import com.hahaxueche.ui.activity.myPage.PassEnsuranceActivity;
 import com.hahaxueche.ui.activity.myPage.PaymentStageActivity;
+import com.hahaxueche.ui.activity.myPage.PurchaseInsuranceActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.activity.myPage.SoftwareInfoActivity;
 import com.hahaxueche.ui.activity.myPage.StudentReferActivity;
@@ -45,6 +49,7 @@ import com.hahaxueche.ui.dialog.community.MyAdviserDialog;
 import com.hahaxueche.ui.dialog.myPage.EditUsernameDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.myPage.MyPageView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.PhotoUtil;
 import com.hahaxueche.util.RequestCode;
@@ -189,7 +194,8 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
             R.id.rly_my_contract,
             R.id.tv_login,
             R.id.tv_to_login,
-            R.id.rly_pass_ensurance})
+            R.id.rly_pass_ensurance,
+            R.id.rly_my_insurance})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rly_online_service:
@@ -316,6 +322,9 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
                 break;
             case R.id.rly_pass_ensurance:
                 mPresenter.clickPassEnsurance();
+                break;
+            case R.id.rly_my_insurance:
+                mPresenter.clickMyInsurance();
                 break;
             default:
                 break;
@@ -461,6 +470,11 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
     }
 
     @Override
+    public void navigateToMyInsurance() {
+        startActivityForResult(new Intent(getContext(), MyInsuranceActivity.class), RequestCode.REQUEST_CODE_MY_INSURANCE);
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -537,18 +551,45 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
         } else if (requestCode == RequestCode.REQUEST_CODE_UPLOAD_ID_CARD) {
             if (resultCode == RESULT_OK) {
                 mActivity.controlMyPageBadge();
-                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+                mPresenter.toReferFriends();
             }
         } else if (requestCode == RequestCode.REQUEST_CODE_MY_CONTRACT) {
             if (resultCode == RESULT_OK) {//已签订协议
                 mActivity.controlMyPageBadge();
-                startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+                mPresenter.toReferFriends();
             }
         } else if (requestCode == RequestCode.REQUEST_CODE_WEBVIEW) {
             if (resultCode == RESULT_OK && null != data) {
                 int tab = data.getIntExtra("showTab", 1);
                 mActivity.selectTab(tab);
             }
+        } else if (requestCode == RequestCode.REQUEST_CODE_MY_INSURANCE) {
+            if (resultCode == RESULT_OK && null != data) {
+                if (data.getBooleanExtra("toUploadInfo", false)) {
+                    Intent intent = new Intent(getContext(), UploadIdCardActivity.class);
+                    intent.putExtra("isFromPaySuccess", false);
+                    intent.putExtra("isInsurance", true);
+                    startActivityForResult(intent, RequestCode.REQUEST_CODE_UPLOAD_ID_CARD);
+                } else if (data.getBooleanExtra("toFindCoach", false)) {
+                    mActivity.selectTab(1);
+                } else {
+                    Intent intent = new Intent(getContext(), PurchaseInsuranceActivity.class);
+                    intent.putExtra("insuranceType", data.getIntExtra("insuranceType", Common.PURCHASE_INSURANCE_TYPE_169));
+                    startActivityForResult(intent, RequestCode.REQUEST_CODE_PURCHASE_INSURANCE);
+                }
+            }
+        } else if (requestCode == RequestCode.REQUEST_CODE_PURCHASE_INSURANCE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Intent intent = new Intent(getContext(), PaySuccessActivity.class);
+                intent.putExtra("isPurchasedInsurance", true);
+                intent.putExtra("isFromPurchaseInsurance", true);
+                startActivityForResult(intent, RequestCode.REQUEST_CODE_PAY_SUCCESS);
+            }
+        } else if (requestCode == RequestCode.REQUEST_CODE_PAY_SUCCESS) {
+            Intent intent = new Intent(getContext(), UploadIdCardActivity.class);
+            intent.putExtra("isFromPaySuccess", false);
+            intent.putExtra("isInsurance", true);
+            startActivityForResult(intent, RequestCode.REQUEST_CODE_UPLOAD_ID_CARD);
         }
         mPresenter.setContractBadge();
         super.onActivityResult(requestCode, resultCode, data);

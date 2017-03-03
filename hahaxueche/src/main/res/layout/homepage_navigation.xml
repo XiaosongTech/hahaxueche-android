@@ -52,13 +52,13 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/tv_ensure_pass"
+                android:id="@+id/tv_insurance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:drawablePadding="5dp"
-                android:drawableTop="@drawable/ic_lessonone"
-                android:text="科一挂科险"
+                android:drawableTop="@drawable/ic_peifubaby"
+                android:text="赔付宝"
                 android:textColor="@color/haha_gray"
                 android:textSize="12sp" />
         </FrameLayout>

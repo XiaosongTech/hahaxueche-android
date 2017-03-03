@@ -35,6 +35,7 @@ public class Student implements Parcelable {
     public IdCard identity_card;
     public String user_identity_id;
     public boolean is_sales_agent;
+    public InsuranceOrder insurance_order;
 
     public Student() {
 
@@ -58,6 +59,7 @@ public class Student implements Parcelable {
         identity_card = in.readParcelable(IdCard.class.getClassLoader());
         user_identity_id = in.readString();
         is_sales_agent = in.readByte() != 0;
+        insurance_order = in.readParcelable(InsuranceOrder.class.getClassLoader());
     }
 
     public static final Creator<Student> CREATOR = new Creator<Student>() {
@@ -133,6 +135,24 @@ public class Student implements Parcelable {
         return identity_card != null && !TextUtils.isEmpty(identity_card.num);
     }
 
+    /**
+     * 是否已购买保险
+     *
+     * @return
+     */
+    public boolean isPurchasedInsurance() {
+        return insurance_order != null && !TextUtils.isEmpty(insurance_order.paid_at);
+    }
+
+    /**
+     * 是否已投保成功
+     *
+     * @return
+     */
+    public boolean isUploadedInsurance() {
+        return insurance_order != null && !TextUtils.isEmpty(insurance_order.policy_no);
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -157,5 +177,6 @@ public class Student implements Parcelable {
         dest.writeParcelable(identity_card, flags);
         dest.writeString(user_identity_id);
         dest.writeByte((byte) (is_sales_agent ? 1 : 0));
+        dest.writeParcelable(insurance_order, flags);
     }
 }

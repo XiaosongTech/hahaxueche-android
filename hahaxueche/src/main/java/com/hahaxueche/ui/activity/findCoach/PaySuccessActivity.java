@@ -21,6 +21,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
@@ -54,11 +55,24 @@ public class PaySuccessActivity extends HHBaseActivity implements PaySuccessView
     TextView mTvCustomerService;
     @BindView(R.id.frl_main)
     FrameLayout mFrlMain;
+    @BindView(R.id.lly_insurance_pay)
+    LinearLayout mLlyInsurance;
+    @BindView(R.id.lly_coach_pay)
+    LinearLayout mLlyCoach;
+    @BindView(R.id.tv_sign)
+    TextView mTvSign;
+    @BindView(R.id.tv_insurance_amount)
+    TextView mTvInsuranceAmount;
+    @BindView(R.id.tv_insurance_pay_time)
+    TextView mTvInsurancePayTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPresenter = new PaySuccessPresenter();
+        Intent intent = getIntent();
+        mPresenter.isFromPurchaseInsurance = intent != null && intent.getBooleanExtra("isFromPurchaseInsurance", false);
+        mPresenter.isPurchasedInsurance = intent != null && intent.getBooleanExtra("isPurchasedInsurance", false);
         setContentView(R.layout.activity_pay_success);
         ButterKnife.bind(this);
         mPresenter.attachView(this);
@@ -84,7 +98,9 @@ public class PaySuccessActivity extends HHBaseActivity implements PaySuccessView
 
     @OnClick(R.id.tv_sign)
     public void sign() {
-        setResult(RESULT_OK, null);
+        Intent intent = new Intent();
+        intent.putExtra("isPurchasedInsurance", mPresenter.isPurchasedInsurance);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
@@ -161,6 +177,33 @@ public class PaySuccessActivity extends HHBaseActivity implements PaySuccessView
     @Override
     public void showMessage(String message) {
         Snackbar.make(mFrlMain, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showCoachPayView() {
+        mLlyCoach.setVisibility(View.VISIBLE);
+        mLlyInsurance.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showInsurancePayView() {
+        mLlyCoach.setVisibility(View.GONE);
+        mLlyInsurance.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setSignText(String text) {
+        mTvSign.setText(text);
+    }
+
+    @Override
+    public void setInsuranceAmount(int amount) {
+        mTvInsuranceAmount.setText(Utils.getMoney(amount));
+    }
+
+    @Override
+    public void setInsurancePaidAt(String paidAt) {
+        mTvInsurancePayTime.setText(paidAt);
     }
 
     @Override

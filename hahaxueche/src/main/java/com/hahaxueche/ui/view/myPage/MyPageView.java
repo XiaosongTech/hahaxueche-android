@@ -60,4 +60,6 @@ public interface MyPageView extends HHBaseView {
     void navigateToReferFriends();
 
     void navigateToStudentRefer();
+
+    void navigateToMyInsurance();
 }

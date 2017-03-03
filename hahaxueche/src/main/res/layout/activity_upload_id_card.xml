@@ -12,6 +12,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tv_upload_hints"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -21,8 +22,7 @@
             android:lineSpacingMultiplier="1.2"
             android:padding="10dp"
             android:text="@string/upload_id_card_hints"
-            android:textColor="@color/haha_white"
-            android:visibility="gone" />
+            android:textColor="@color/haha_white" />
 
         <LinearLayout
             android:id="@+id/rly_id_card_face"
@@ -51,36 +51,8 @@
                 android:layout_height="142dp"
                 android:layout_toRightOf="@id/tv_id_card_face"
                 android:layout_weight="1"
-                fresco:placeholderImage="@drawable/idcard_a" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/rly_id_card_face_back"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/haha_white">
-
-            <TextView
-                android:id="@+id/tv_id_card_face_back"
-                android:layout_width="85dp"
-                android:layout_height="142dp"
-                android:background="@color/haha_gray_background"
-                android:gravity="center"
-                android:lineSpacingMultiplier="1.2"
-                android:text="点击上传\n身份证\n反面"
-                android:textColor="@color/haha_gray_text"
-                android:textSize="14sp" />
-
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/iv_id_card_face_back"
-                android:layout_width="0dp"
-                android:layout_height="142dp"
-                android:layout_toRightOf="@id/tv_id_card_face_back"
-                android:layout_weight="1"
-                fresco:placeholderImage="@drawable/idcard_b" />
+                fresco:placeholderImage="@drawable/idcard_a"
+                fresco:placeholderImageScaleType="fitCenter" />
         </LinearLayout>
 
         <TextView

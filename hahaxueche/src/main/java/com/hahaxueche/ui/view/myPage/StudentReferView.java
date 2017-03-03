@@ -9,7 +9,7 @@ import com.hahaxueche.ui.view.base.HHBaseView;
 public interface StudentReferView extends HHBaseView {
     void showShareDialog();
 
-    void startToShare(int shareType);
+    void startToShare(int shareType, String shareUrl);
 
     void showMessage(String message);
 

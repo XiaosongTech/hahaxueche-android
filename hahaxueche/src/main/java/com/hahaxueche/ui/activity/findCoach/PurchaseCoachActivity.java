@@ -28,6 +28,7 @@ import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.findCoach.PurchaseCoachPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.activity.myPage.SelectVoucherActivity;
+import com.hahaxueche.ui.dialog.findCoach.SelectInsuranceDialog;
 import com.hahaxueche.ui.view.findCoach.PurchaseCoachView;
 import com.hahaxueche.util.DistanceUtil;
 import com.hahaxueche.util.HHLog;
@@ -99,6 +100,13 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     TextView mTvTotalAmountLabel;
     @BindView(R.id.lly_person_voucher)
     LinearLayout mLlyPersonVoucher;
+    @BindView(R.id.tv_insurance_amount)
+    TextView mTvInsuranceAmount;
+    @BindView(R.id.rly_insurance)
+    RelativeLayout mRlyInsurance;
+    @BindView(R.id.iv_more_insurance)
+    ImageView mIvMoreInsurance;
+    private SelectInsuranceDialog mInsuranceDialog;
 
     private HHBaseApplication application;
     private int[] selectIds = new int[4];
@@ -145,7 +153,8 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
             R.id.tv_C2,
             R.id.tv_normal,
             R.id.tv_vip,
-            R.id.rly_voucher})
+            R.id.rly_voucher,
+            R.id.rly_insurance})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_sure_pay:
@@ -167,6 +176,17 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
                 Intent intent = new Intent(getContext(), SelectVoucherActivity.class);
                 intent.putParcelableArrayListExtra("voucherList", mPresenter.getUnCumulativeVoucherList());
                 startActivityForResult(intent, RequestCode.REQUEST_CODE_SELECT_VOUCHERS);
+                break;
+            case R.id.rly_insurance:
+                if (mInsuranceDialog == null) {
+                    mInsuranceDialog = new SelectInsuranceDialog(getContext(), new SelectInsuranceDialog.OnSelectListener() {
+                        @Override
+                        public void select(boolean isSelect) {
+                            mPresenter.selectInsurance(isSelect);
+                        }
+                    });
+                }
+                mInsuranceDialog.show();
                 break;
             default:
                 break;
@@ -387,7 +407,9 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
 
     @Override
     public void paySuccess() {
-        setResult(RESULT_OK, null);
+        Intent intent = new Intent();
+        intent.putExtra("isOnlyPurchaseCoach", !mPresenter.mIsSelectInsurance);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
@@ -466,6 +488,30 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
         rlyVoucher.addView(tvPrice);
 
         mLlyPersonVoucher.addView(rlyVoucher);
+    }
+
+    @Override
+    public void selectInsurance() {
+        mTvInsuranceAmount.setText(Utils.getMoney(14900));
+        mTvInsuranceAmount.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
+    }
+
+    @Override
+    public void unSelectInsurance() {
+        mTvInsuranceAmount.setText("未选择");
+        mTvInsuranceAmount.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
+    }
+
+    @Override
+    public void disableInsurance() {
+        mRlyInsurance.setVisibility(View.GONE);
+        mRlyInsurance.setClickable(false);
+    }
+
+    @Override
+    public void setInsuranceUnSelectable() {
+        mRlyInsurance.setClickable(false);
+        mIvMoreInsurance.setVisibility(View.INVISIBLE);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

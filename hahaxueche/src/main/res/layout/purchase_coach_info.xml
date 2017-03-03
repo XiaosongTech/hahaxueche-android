@@ -5,22 +5,43 @@
     android:layout_height="wrap_content"
     android:background="@color/haha_white">
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/iv_coach_avatar"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_margin="20dp"
-        fresco:placeholderImage="@drawable/ic_coach_ava"
-        fresco:roundAsCircle="true"
-        fresco:roundingBorderColor="@color/haha_white"
-        fresco:roundingBorderWidth="3dp"></com.facebook.drawee.view.SimpleDraweeView>
+    <RelativeLayout
+        android:id="@+id/lly_avatar"
+        android:layout_width="@dimen/width_115dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/iv_coach_avatar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerHorizontal="true"
+            fresco:placeholderImage="@drawable/ic_coach_ava"
+            fresco:roundAsCircle="true" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_coach_avatar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp">
+
+            <include
+                android:id="@+id/lly_train_school"
+                layout="@layout/layout_train_school"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </FrameLayout>
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rly_first_line"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/iv_coach_avatar"
-        android:layout_toRightOf="@id/iv_coach_avatar">
+        android:layout_alignTop="@id/lly_avatar"
+        android:layout_toRightOf="@id/lly_avatar">
 
         <TextView
             android:id="@+id/tv_coach_name"
@@ -47,15 +68,6 @@
             android:layout_marginLeft="6dp"
             android:layout_toRightOf="@id/iv_is_golden_coach"
             android:src="@drawable/ic_bao" />
-
-        <include
-            android:id="@+id/lly_train_school"
-            layout="@layout/layout_train_school"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="6dp"
-            android:layout_toRightOf="@id/iv_is_cash_pledge" />
 
         <TextView
             android:id="@+id/tv_coach_teach_time"
