@@ -51,6 +51,7 @@ import com.hahaxueche.ui.widget.scoreView.ScoreView;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
+import com.hahaxueche.util.WebViewUrl;
 
 import java.util.ArrayList;
 
@@ -621,9 +622,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 mPresenter.clickPlatformAssurance();
                 break;
             case R.id.tv_more_insurance:
-                BaseAlertSimpleDialog dialog = new BaseAlertSimpleDialog(getContext(), "什么是赔付宝？",
-                        "赔付宝是一款由平安财险承保量身为哈哈学车定制的一份学车保险。提供了一站式驾考报名、选购保险、保险理赔申诉的平台，全面保障你的学车利益，赔付宝在购买后的次日生效，保期最长为一年。");
-                dialog.show();
+                openWebView(WebViewUrl.WEB_URL_PEIFUBAO);
                 break;
             default:
                 break;
