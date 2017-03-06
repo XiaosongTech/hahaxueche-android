@@ -139,8 +139,9 @@ public class SplashActivity extends HHBaseActivity implements SplashView {
                             //分享小哈俱乐部文章
                             shareObject.putString("objectId", hashMap.get("id"));
                             mPresenter.setShareObject(shareObject);
-                        } else if (type.equals("refer_record") || type.equals("test_practice") || type.equals("coach_list")) {
-                            //分享推荐有奖，练题，教练列表
+                        } else if (type.equals("refer_record") || type.equals("test_practice")
+                                || type.equals("coach_list") || type.equals("peifubao")) {
+                            //分享推荐有奖，练题，教练列表，赔付宝
                             mPresenter.setShareObject(shareObject);
                         }
                     }

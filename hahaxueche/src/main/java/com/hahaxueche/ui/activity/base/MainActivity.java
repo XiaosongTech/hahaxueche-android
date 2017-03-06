@@ -1,6 +1,7 @@
 package com.hahaxueche.ui.activity.base;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -23,8 +24,11 @@ import com.hahaxueche.ui.activity.community.ArticleActivity;
 import com.hahaxueche.ui.activity.community.ExamLibraryActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.PartnerDetailActivity;
+import com.hahaxueche.ui.activity.findCoach.PaySuccessActivity;
 import com.hahaxueche.ui.activity.myPage.MyContractActivity;
+import com.hahaxueche.ui.activity.myPage.MyInsuranceActivity;
 import com.hahaxueche.ui.activity.myPage.MyReferActivity;
+import com.hahaxueche.ui.activity.myPage.PurchaseInsuranceActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.activity.myPage.StudentReferActivity;
 import com.hahaxueche.ui.activity.myPage.UploadIdCardActivity;
@@ -38,6 +42,7 @@ import com.hahaxueche.ui.fragment.homepage.HomepageFragment;
 import com.hahaxueche.ui.fragment.myPage.MypageFragment;
 import com.hahaxueche.ui.view.base.MainView;
 import com.hahaxueche.ui.widget.FragmentTabHost;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
 
@@ -150,6 +155,8 @@ public class MainActivity extends HHBaseActivity implements MainView {
                 startActivityForResult(startIntent, RequestCode.REQUEST_CODE_EXAM_LIBRARY);
             } else if (shareObject.getString("type", "").equals("coach_list")) {
                 selectTab(1);
+            } else if (shareObject.getString("type", "").equals("peifubao")) {
+                startActivityForResult(new Intent(getContext(), MyInsuranceActivity.class), RequestCode.REQUEST_CODE_MY_INSURANCE);
             }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
@@ -325,6 +332,33 @@ public class MainActivity extends HHBaseActivity implements MainView {
                     selectTab(1);
                 }
             }
+        } else if (requestCode == RequestCode.REQUEST_CODE_MY_INSURANCE) {
+            if (resultCode == RESULT_OK && null != data) {
+                if (data.getBooleanExtra("toUploadInfo", false)) {
+                    Intent intent = new Intent(getContext(), UploadIdCardActivity.class);
+                    intent.putExtra("isFromPaySuccess", false);
+                    intent.putExtra("isInsurance", true);
+                    startActivityForResult(intent, RequestCode.REQUEST_CODE_UPLOAD_ID_CARD);
+                } else if (data.getBooleanExtra("toFindCoach", false)) {
+                    selectTab(1);
+                } else {
+                    Intent intent = new Intent(getContext(), PurchaseInsuranceActivity.class);
+                    intent.putExtra("insuranceType", data.getIntExtra("insuranceType", Common.PURCHASE_INSURANCE_TYPE_249));
+                    startActivityForResult(intent, RequestCode.REQUEST_CODE_PURCHASE_INSURANCE);
+                }
+            }
+        } else if (requestCode == RequestCode.REQUEST_CODE_PURCHASE_INSURANCE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Intent intent = new Intent(getContext(), PaySuccessActivity.class);
+                intent.putExtra("isPurchasedInsurance", true);
+                intent.putExtra("isFromPurchaseInsurance", true);
+                startActivityForResult(intent, RequestCode.REQUEST_CODE_PAY_SUCCESS);
+            }
+        } else if (requestCode == RequestCode.REQUEST_CODE_PAY_SUCCESS) {
+            Intent intent = new Intent(getContext(), UploadIdCardActivity.class);
+            intent.putExtra("isFromPaySuccess", false);
+            intent.putExtra("isInsurance", true);
+            startActivityForResult(intent, RequestCode.REQUEST_CODE_UPLOAD_ID_CARD);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
