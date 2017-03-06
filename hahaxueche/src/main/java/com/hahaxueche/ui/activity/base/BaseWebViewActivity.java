@@ -395,9 +395,15 @@ public class BaseWebViewActivity extends HHBaseActivity implements BaseWebViewVi
     public class JsBridge {
         @JavascriptInterface
         public void nativeCall(String methodName) {
+            HHLog.v("native call methodName -> " + methodName);
             if ("findCoach".equals(methodName)) {
                 Intent intent = new Intent();
                 intent.putExtra("showTab", 1);
+                setResult(RESULT_OK, intent);
+                BaseWebViewActivity.this.finish();
+            } else if ("peifubao".equals(methodName)) {
+                Intent intent = new Intent();
+                intent.putExtra("peifubao", true);
                 setResult(RESULT_OK, intent);
                 BaseWebViewActivity.this.finish();
             }

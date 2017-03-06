@@ -317,8 +317,12 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RequestCode.REQUEST_CODE_WEBVIEW) {
             if (resultCode == RESULT_OK && null != data) {
-                int tab = data.getIntExtra("showTab", 1);
-                mActivity.selectTab(tab);
+                if (data.getBooleanExtra("peifubao", false)) {
+                    navigateToMyInsurance();
+                } else {
+                    int tab = data.getIntExtra("showTab", 1);
+                    mActivity.selectTab(tab);
+                }
             }
         } else if (requestCode == RequestCode.REQUEST_CODE_EXAM_LIBRARY) {
             if (resultCode == RESULT_OK && null != data) {

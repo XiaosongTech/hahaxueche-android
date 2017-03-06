@@ -560,8 +560,12 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
             }
         } else if (requestCode == RequestCode.REQUEST_CODE_WEBVIEW) {
             if (resultCode == RESULT_OK && null != data) {
-                int tab = data.getIntExtra("showTab", 1);
-                mActivity.selectTab(tab);
+                if (data.getBooleanExtra("peifubao", false)) {
+                    navigateToMyInsurance();
+                } else {
+                    int tab = data.getIntExtra("showTab", 1);
+                    mActivity.selectTab(tab);
+                }
             }
         } else if (requestCode == RequestCode.REQUEST_CODE_MY_INSURANCE) {
             if (resultCode == RESULT_OK && null != data) {
