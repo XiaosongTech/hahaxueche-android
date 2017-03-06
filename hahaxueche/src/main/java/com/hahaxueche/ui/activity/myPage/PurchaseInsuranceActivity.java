@@ -1,11 +1,13 @@
 package com.hahaxueche.ui.activity.myPage;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -20,7 +22,6 @@ import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.view.myPage.PurchaseInsuranceView;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
-import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
 import com.pingplusplus.android.Pingpp;
 
@@ -84,7 +85,22 @@ public class PurchaseInsuranceActivity extends HHBaseActivity implements Purchas
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_sure_pay:
-                mPresenter.createCharge();
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("赔付宝购买提示");
+                builder.setMessage("请确认您还未参加考科目一考试，购买后，必须在预约第一次科目一考试的前一个工作日24点前，完成身份信息上传，否则无法获得理赔。");
+                builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mPresenter.createCharge();
+                    }
+                });
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.create().show();
                 break;
             default:
                 break;
