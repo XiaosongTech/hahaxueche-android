@@ -7,6 +7,7 @@ import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.MyInsuranceView;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.Utils;
+import com.hahaxueche.util.WebViewUrl;
 import com.qiyukf.unicorn.api.ConsultSource;
 import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFUserInfo;
@@ -112,9 +113,8 @@ public class MyInsurancePresenter implements Presenter<MyInsuranceView> {
     public void clickRightButton() {
         User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin() || !user.student.isPurchasedInsurance()) {
-            return;
-        }
-        if (!user.student.isUploadedInsurance()) {
+            mMyInsuranceView.openWebView(WebViewUrl.WEB_URL_PEIFUBAO);
+        } else if (!user.student.isUploadedInsurance()) {
             mMyInsuranceView.finishToUploadInfo();
         } else {
             mMyInsuranceView.navigateToInsuranceInfo();

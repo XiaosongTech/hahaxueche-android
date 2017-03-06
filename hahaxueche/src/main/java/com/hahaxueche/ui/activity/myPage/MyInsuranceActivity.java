@@ -191,7 +191,7 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
         mLlyNoPurchase.setVisibility(View.VISIBLE);
         mLlyNoUploadInfo.setVisibility(View.GONE);
         mLlySuccess.setVisibility(View.GONE);
-        mTvRight.setVisibility(View.GONE);
+        mTvRight.setText("了解详情");
     }
 
     @Override
@@ -199,7 +199,6 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
         mLlyNoPurchase.setVisibility(View.GONE);
         mLlyNoUploadInfo.setVisibility(View.VISIBLE);
         mLlySuccess.setVisibility(View.GONE);
-        mTvRight.setVisibility(View.VISIBLE);
         mTvRight.setText("上传投保信息");
     }
 
@@ -208,7 +207,6 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
         mLlyNoPurchase.setVisibility(View.GONE);
         mLlyNoUploadInfo.setVisibility(View.GONE);
         mLlySuccess.setVisibility(View.VISIBLE);
-        mTvRight.setVisibility(View.VISIBLE);
         mTvRight.setText("保险信息");
     }
 
