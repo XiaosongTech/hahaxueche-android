@@ -55,7 +55,7 @@ public class PurchaseInsurancePresenter implements Presenter<PurchaseInsuranceVi
 
     public void setInsuranceType(int insuranceType) {
         mInsuranceType = insuranceType;
-        int amount = mInsuranceType == Common.PURCHASE_INSURANCE_TYPE_169 ? 16900 : 14900;
+        int amount = mInsuranceType == Common.PURCHASE_INSURANCE_TYPE_249 ? 24900 : 14900;
         mPurchaseInsuranceView.setPayAmount("总价：" + Utils.getMoney(amount));
         mPurchaseInsuranceView.setNotice("注: 请确认您还未参加科目一考试");
     }

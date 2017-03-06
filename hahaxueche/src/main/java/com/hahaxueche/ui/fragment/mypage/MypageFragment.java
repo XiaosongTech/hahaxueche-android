@@ -574,7 +574,7 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
                     mActivity.selectTab(1);
                 } else {
                     Intent intent = new Intent(getContext(), PurchaseInsuranceActivity.class);
-                    intent.putExtra("insuranceType", data.getIntExtra("insuranceType", Common.PURCHASE_INSURANCE_TYPE_169));
+                    intent.putExtra("insuranceType", data.getIntExtra("insuranceType", Common.PURCHASE_INSURANCE_TYPE_249));
                     startActivityForResult(intent, RequestCode.REQUEST_CODE_PURCHASE_INSURANCE);
                 }
             }

@@ -12,5 +12,5 @@ public class Common {
     //149元的赔付宝，已在哈哈学车报名，未购买赔付宝的
     public static final int PURCHASE_INSURANCE_TYPE_149_YI = 1;
     //169元的赔付宝，在其他平台学车的
-    public static final int PURCHASE_INSURANCE_TYPE_169 = 2;
+    public static final int PURCHASE_INSURANCE_TYPE_249 = 2;
 }

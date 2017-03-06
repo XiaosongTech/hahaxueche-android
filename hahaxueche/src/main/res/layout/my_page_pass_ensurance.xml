@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:text="我的挂科险"
+            android:text="我的保障"
             android:textColor="@color/app_theme_color"
             android:textSize="14sp" />
     </RelativeLayout>

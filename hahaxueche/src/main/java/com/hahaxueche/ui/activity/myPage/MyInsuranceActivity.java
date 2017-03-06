@@ -64,8 +64,8 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
     ImageView mIv120Pay;
     @BindView(R.id.iv_149_yi_pay)
     ImageView mIv130Pay;
-    @BindView(R.id.iv_169_pay)
-    ImageView mIv150Pay;
+    @BindView(R.id.iv_249_pay)
+    ImageView mIv249Pay;
     @BindView(R.id.tv_customer_service)
     TextView mTvCustomerService;
     @BindView(R.id.tv_insurance_abstract)
@@ -107,7 +107,7 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
 
     @OnClick({R.id.iv_149_wei_pay,
             R.id.iv_149_yi_pay,
-            R.id.iv_169_pay,
+            R.id.iv_249_pay,
             R.id.tv_insurance_qrcode})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -117,8 +117,8 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
             case R.id.iv_149_yi_pay:
                 mPresenter.clickPurchase(Common.PURCHASE_INSURANCE_TYPE_149_YI);
                 break;
-            case R.id.iv_169_pay:
-                mPresenter.clickPurchase(Common.PURCHASE_INSURANCE_TYPE_169);
+            case R.id.iv_249_pay:
+                mPresenter.clickPurchase(Common.PURCHASE_INSURANCE_TYPE_249);
                 break;
             case R.id.tv_insurance_qrcode:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
@@ -226,9 +226,9 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
 
     @Override
     public void set169PayEnable(boolean enable) {
-        mIv150Pay.setImageDrawable(ContextCompat.getDrawable(this,
-                enable ? R.drawable.botton_169peifubaby : R.drawable.botton_cant169));
-        mIv150Pay.setClickable(enable);
+        mIv249Pay.setImageDrawable(ContextCompat.getDrawable(this,
+                enable ? R.drawable.botton_249peifubaby : R.drawable.botton_cant249));
+        mIv249Pay.setClickable(enable);
     }
 
     @Override

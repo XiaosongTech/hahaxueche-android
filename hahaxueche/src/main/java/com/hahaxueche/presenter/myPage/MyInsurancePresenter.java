@@ -99,8 +99,8 @@ public class MyInsurancePresenter implements Presenter<MyInsuranceView> {
             case Common.PURCHASE_INSURANCE_TYPE_149_YI:
                 mMyInsuranceView.finishToPurchaseInsurance(Common.PURCHASE_INSURANCE_TYPE_149_YI);
                 break;
-            case Common.PURCHASE_INSURANCE_TYPE_169:
-                mMyInsuranceView.finishToPurchaseInsurance(Common.PURCHASE_INSURANCE_TYPE_169);
+            case Common.PURCHASE_INSURANCE_TYPE_249:
+                mMyInsuranceView.finishToPurchaseInsurance(Common.PURCHASE_INSURANCE_TYPE_249);
                 break;
             default:
                 break;

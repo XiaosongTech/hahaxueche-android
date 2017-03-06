@@ -59,11 +59,11 @@
             android:layout_weight="1">
 
             <ImageView
-                android:id="@+id/iv_169_pay"
+                android:id="@+id/iv_249_pay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/botton_169peifubaby" />
+                android:src="@drawable/botton_249peifubaby" />
         </FrameLayout>
     </LinearLayout>
 </LinearLayout>
