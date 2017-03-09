@@ -446,7 +446,6 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     @OnClick({R.id.fly_more_comments,
             R.id.iv_follow,
             R.id.tv_applaud_count,
-            R.id.tv_pay,
             R.id.rly_training_field,
             R.id.tv_free_try,
             R.id.lly_platform_assurance,
@@ -465,10 +464,6 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 break;
             case R.id.tv_applaud_count:
                 mPresenter.applaud();
-                break;
-            case R.id.tv_pay:
-                mPresenter.clickPurchaseCount();
-                mPresenter.purchaseCoach();
                 break;
             case R.id.rly_training_field:
                 mPresenter.clickTrainFieldCount();
@@ -545,10 +540,11 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
 
 
     @Override
-    public void navigateToPurchaseCoach(Coach coach) {
+    public void navigateToPurchaseCoach(Coach coach, ClassType classType) {
         if (coach == null) return;
         Intent intent = new Intent(getContext(), PurchaseCoachActivity.class);
         intent.putExtra("coach", coach);
+        intent.putExtra("classType", classType);
         startActivityForResult(intent, RequestCode.REQUEST_CODE_PURCHASE_COACH);
     }
 
@@ -868,6 +864,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         tvPrice.setTextSize(16);
         rlyClassType.addView(tvPrice);
 
+        //点击整行查看班别介绍
         rlyClassType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -876,6 +873,13 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 intent.putExtra("coach", mPresenter.getCoach());
                 intent.putExtra("classType", classType);
                 startActivityForResult(intent, RequestCode.REQUEST_CODE_CLASS_TYPE_INTRO);
+            }
+        });
+        //点击购买
+        tvPurchase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.purchaseCoach(classType);
             }
         });
 

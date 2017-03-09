@@ -14,17 +14,17 @@ public class Common {
     //169元的赔付宝，在其他平台学车的
     public static final int PURCHASE_INSURANCE_TYPE_249 = 2;
     //C1超值班
-    public static final int CLASS_TYPE_NORMAL_C1 = 1;
+    public static final int CLASS_TYPE_NORMAL_C1 = 0;
     //C1VIP班
-    public static final int CLASS_TYPE_VIP_C1 = 2;
+    public static final int CLASS_TYPE_VIP_C1 = 1;
     //C1无忧班
-    public static final int CLASS_TYPE_WUYOU_C1 = 3;
+    public static final int CLASS_TYPE_WUYOU_C1 = 4;
     //C2超值班
-    public static final int CLASS_TYPE_NORMAL_C2 = 4;
+    public static final int CLASS_TYPE_NORMAL_C2 = 2;
     //C2VIP班
-    public static final int CLASS_TYPE_VIP_C2 = 5;
+    public static final int CLASS_TYPE_VIP_C2 = 3;
     //C2无忧班班
-    public static final int CLASS_TYPE_WUYOU_C2 = 6;
+    public static final int CLASS_TYPE_WUYOU_C2 = 5;
     //超值班
     public static final String CLASS_TYPE_NORMAL_NAME = "超值班";
     //VIP班
@@ -43,6 +43,8 @@ public class Common {
     public static final int LICENSE_TYPE_C1 = 1;
     //C2
     public static final int LICENSE_TYPE_C2 = 2;
+    //车友无忧班
+    public static final int GROUP_TYPE_CHEYOU_WUYOU = 1;
 
 
 }

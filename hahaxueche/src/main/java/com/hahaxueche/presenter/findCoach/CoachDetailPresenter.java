@@ -104,6 +104,14 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
                     mCoach.coach_group.c2_price + Common.INSURANCE_PRICE_TOGETHER, true,
                     Common.CLASS_TYPE_WUYOU_DESC, Common.LICENSE_TYPE_C2));
         }
+        //车友无忧班是特殊教练，只有无忧班
+        if (mCoach.coach_group.group_type == Common.GROUP_TYPE_CHEYOU_WUYOU) {
+            mClassTypeList = new ArrayList<>();
+            mClassTypeList.add(new ClassType(Common.CLASS_TYPE_WUYOU_NAME, Common.CLASS_TYPE_WUYOU_C1,
+                    mCoach.coach_group.training_cost + Common.INSURANCE_PRICE_TOGETHER, true,
+                    Common.CLASS_TYPE_WUYOU_DESC, Common.LICENSE_TYPE_C1));
+            mCoachDetailView.setLicenseTab(true, false);
+        }
         //默认选择C1
         selectLicenseType(Common.LICENSE_TYPE_C1);
         mCoachDetailView.setCoachBadge(coach.skill_level.equals("1"));
@@ -458,7 +466,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         }
     }
 
-    public void purchaseCoach() {
+    public void purchaseCoach(ClassType classType) {
         if (mUser == null || !mUser.isLogin()) {
             mCoachDetailView.alertToLogin("注册登录后,才可以购买教练哦～\n注册获得更多学车咨询!～");
             return;
@@ -466,19 +474,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
             mCoachDetailView.showMessage("该学员已经购买过教练");
             return;
         }
-        mCoachDetailView.navigateToPurchaseCoach(mCoach);
-    }
-
-    public void clickPrice() {
-        if (mCoach == null) return;
-        //筛选点击
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-        }
-        map.put("coach_id", mCoach.id);
-        MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_price_detail_tapped", map);
+        mCoachDetailView.navigateToPurchaseCoach(mCoach, classType);
     }
 
     public void freeTry() {
@@ -552,16 +548,6 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_field_tapped", map);
     }
 
-    public void clickPurchaseCount() {
-        //立即购买点击
-        HashMap<String, String> map = new HashMap();
-        if (mUser != null && mUser.isLogin()) {
-            map.put("student_id", mUser.student.id);
-        }
-        map.put("coach_id", mCoach.id);
-        MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_purchase_tapped", map);
-    }
-
     public void pageStartCount() {
         //教练详情展现
         HashMap<String, String> map = new HashMap();
@@ -587,10 +573,5 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         } else {
             mCoachDetailView.navigateToReferFriends();
         }
-    }
-
-    public boolean isUserPurchasedInsurance() {
-        User user = application.getSharedPrefUtil().getUser();
-        return user != null && user.isLogin() && user.student.isPurchasedInsurance();
     }
 }

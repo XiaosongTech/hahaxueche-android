@@ -109,14 +109,6 @@ public class PaySuccessActivity extends HHBaseActivity implements PaySuccessView
         return keyCode == KeyEvent.KEYCODE_BACK || super.onKeyDown(keyCode, event);
     }
 
-    @Override
-    public void loadPayInfo(Coach coach, PurchasedService ps) {
-        mTvCoachName.setText(coach.name);
-        mTvPayTime.setText(Utils.getDateFromUTC(ps.paid_at));
-        mTvPayAmount.setText(Utils.getMoney(ps.actual_amount));
-        mTvOrderCode.setText(ps.order_no);
-    }
-
     public void changeCustomerService() {
         String customerService = mTvCustomerService.getText().toString();
         SpannableString spCustomerServiceStr = new SpannableString(customerService);
@@ -204,6 +196,26 @@ public class PaySuccessActivity extends HHBaseActivity implements PaySuccessView
     @Override
     public void setInsurancePaidAt(String paidAt) {
         mTvInsurancePayTime.setText(paidAt);
+    }
+
+    @Override
+    public void setPayCoachName(String name) {
+        mTvCoachName.setText(name);
+    }
+
+    @Override
+    public void setPayTime(String time) {
+        mTvPayTime.setText(time);
+    }
+
+    @Override
+    public void setPayAmount(String amount) {
+        mTvPayAmount.setText(amount);
+    }
+
+    @Override
+    public void setPayOrderNo(String orderNo) {
+        mTvOrderCode.setText(orderNo);
     }
 
     @Override

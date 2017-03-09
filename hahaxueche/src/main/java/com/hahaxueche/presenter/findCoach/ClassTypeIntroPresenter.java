@@ -36,13 +36,13 @@ public class ClassTypeIntroPresenter implements Presenter<ClassTypeIntroView> {
     }
 
     public void setFeeDetail(int totalAmount, ClassType classType, Coach coach) {
-        if (classType.type == 1 || classType.type == 4) {
+        if (classType.type == Common.CLASS_TYPE_NORMAL_C1 || classType.type == Common.CLASS_TYPE_NORMAL_C2) {
             //超值班
             mClassTypeIntroView.setServiceContentNormal();
-        } else if (classType.type == 2 || classType.type == 5) {
+        } else if (classType.type == Common.CLASS_TYPE_VIP_C1 || classType.type == Common.CLASS_TYPE_VIP_C2) {
             //VIP班
             mClassTypeIntroView.setServiceContentVIP();
-        } else if (classType.type == 3 || classType.type == 6) {
+        } else if (classType.type == Common.CLASS_TYPE_WUYOU_C1 || classType.type == Common.CLASS_TYPE_WUYOU_C2) {
             //无忧班
             mClassTypeIntroView.setServiceContentWuyou();
         }

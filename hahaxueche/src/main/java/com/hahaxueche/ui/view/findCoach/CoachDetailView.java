@@ -30,7 +30,7 @@ public interface CoachDetailView extends HHBaseView {
 
     void startApplaudAnimation();
 
-    void navigateToPurchaseCoach(Coach coach);
+    void navigateToPurchaseCoach(Coach coach, ClassType classType);
 
     void initShareData(Coach coach);
 
