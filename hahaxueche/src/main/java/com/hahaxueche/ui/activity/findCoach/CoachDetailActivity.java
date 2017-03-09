@@ -791,7 +791,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     }
 
     @Override
-    public void addClassType(ClassType classType) {
+    public void addClassType(final ClassType classType) {
         int length20 = Utils.instence(this).dip2px(20);
         int length10 = Utils.instence(this).dip2px(10);
         int length2 = Utils.instence(this).dip2px(2);
@@ -867,6 +867,17 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         tvPrice.setTextColor(ContextCompat.getColor(this, R.color.haha_orange));
         tvPrice.setTextSize(16);
         rlyClassType.addView(tvPrice);
+
+        rlyClassType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ClassTypeIntroActivity.class);
+                intent.putExtra("totalAmount", classType.price);
+                intent.putExtra("coach", mPresenter.getCoach());
+                intent.putExtra("classType", classType);
+                startActivityForResult(intent, RequestCode.REQUEST_CODE_CLASS_TYPE_INTRO);
+            }
+        });
 
         mLlyClassType.addView(rlyClassType);
     }

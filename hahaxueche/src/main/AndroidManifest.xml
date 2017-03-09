@@ -321,6 +321,10 @@
             android:name=".ui.activity.myPage.InsuranceInfoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.findCoach.ClassTypeIntroActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
 
 
         <provider
