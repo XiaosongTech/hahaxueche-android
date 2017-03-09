@@ -1,6 +1,7 @@
 package com.hahaxueche.ui.view.findCoach;
 
 import com.hahaxueche.model.responseList.ReviewResponseList;
+import com.hahaxueche.model.user.coach.ClassType;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.ui.view.base.HHBaseView;
 
@@ -33,12 +34,6 @@ public interface CoachDetailView extends HHBaseView {
 
     void initShareData(Coach coach);
 
-    void addC1Label(int pos);
-
-    void addC2Label(int pos);
-
-    void addPrice(int pos, boolean isVIP, int price);
-
     void alertToLogin(String alertMessage);
 
     void setCoachBadge(boolean isGolden);
@@ -50,4 +45,14 @@ public interface CoachDetailView extends HHBaseView {
     void navigateToStudentRefer();
 
     void navigateToReferFriends();
+
+    void setLicenseTab(boolean isShowTitleC1, boolean isShowTitleC2);
+
+    void addClassType(ClassType classType);
+
+    void clearClassType();
+
+    void showC1Tab(boolean isLight);
+
+    void showC2Tab(boolean isLight);
 }

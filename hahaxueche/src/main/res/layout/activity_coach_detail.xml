@@ -69,7 +69,7 @@
             android:gravity="center"
             android:paddingBottom="14dp"
             android:paddingTop="14dp"
-            android:text="确认并付款"
+            android:text="预付100得300"
             android:textColor="@color/haha_white"
             android:textSize="18sp" />
     </LinearLayout>

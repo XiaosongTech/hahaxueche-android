@@ -33,6 +33,7 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.responseList.ReviewResponseList;
+import com.hahaxueche.model.user.coach.ClassType;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.Review;
 import com.hahaxueche.presenter.findCoach.CoachDetailPresenter;
@@ -48,6 +49,7 @@ import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.view.findCoach.CoachDetailView;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
@@ -116,14 +118,28 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     ImageView mIvFollow;
     @BindView(R.id.tv_applaud_count)
     TextView mTvApplaud;
-    @BindView(R.id.lly_prices)
-    LinearLayout mLlyPrices;
     @BindView(R.id.tv_badge_level)
     TextView mTvBadgeLevel;
     @BindView(R.id.tv_badge_pay)
     TextView mTvBadgePay;
     @BindView(R.id.tv_more_insurance)
     TextView mTvMoreInsurance;
+    @BindView(R.id.tv_C1_label)
+    TextView mTvC1Label;
+    @BindView(R.id.tv_C2_label)
+    TextView mTvC2Label;
+    @BindView(R.id.tv_what_is_C1)
+    TextView mTvWhatIsC1;
+    @BindView(R.id.tv_what_is_C2)
+    TextView mTvWhatIsC2;
+    @BindView(R.id.rly_C1)
+    RelativeLayout mRlyC1;
+    @BindView(R.id.vw_license_divider)
+    View mVwLicenseDivider;
+    @BindView(R.id.frl_C2)
+    FrameLayout mFrlC2;
+    @BindView(R.id.lly_class_type)
+    LinearLayout mLlyClassType;
     /*****************
      * 分享
      ******************/
@@ -168,151 +184,6 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         mImageUrl = "https://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
         mUrl = BuildConfig.SERVER_URL + "/share/coaches/" + coach.id;
         HHLog.v("mUrl -> " + mUrl);
-    }
-
-    @Override
-    public void addC1Label(int pos) {
-        RelativeLayout rly = new RelativeLayout(this);
-        rly.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        View dividerView = new View(this);
-        RelativeLayout.LayoutParams viewParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.divider_width));
-        dividerView.setLayoutParams(viewParams);
-        dividerView.setBackgroundResource(R.color.haha_gray_divider);
-        rly.addView(dividerView);
-
-        TextView tvC1Label = new TextView(this);
-        RelativeLayout.LayoutParams labelParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        labelParams.setMargins(Utils.instence(this).dip2px(20), Utils.instence(this).dip2px(15), 0, 0);
-        tvC1Label.setLayoutParams(labelParams);
-        tvC1Label.setText("C1手动档");
-        tvC1Label.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
-        int tvLabelId = Utils.generateViewId();
-        tvC1Label.setId(tvLabelId);
-        rly.addView(tvC1Label);
-
-        TextView tvMore = new TextView(this);
-        RelativeLayout.LayoutParams tvMoreParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        tvMoreParams.setMargins(Utils.instence(this).dip2px(5), Utils.instence(this).dip2px(15), 0, 0);
-        tvMoreParams.addRule(RelativeLayout.RIGHT_OF, tvLabelId);
-        tvMore.setLayoutParams(tvMoreParams);
-        tvMore.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
-        tvMore.setBackgroundResource(R.drawable.rect_bg_gray_bd_gray_ssm);
-        tvMore.setText("?");
-        int padding = Utils.instence(this).dip2px(4);
-        tvMore.setPadding(padding, 0, padding, 0);
-        tvMore.setGravity(Gravity.CENTER);
-        tvMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BaseAlertSimpleDialog dialog = new BaseAlertSimpleDialog(getContext(), "什么是C1手动档？",
-                        "C1为手动挡小型车驾照，取得了C1类驾驶证的人可以驾驶C2类车");
-                dialog.show();
-            }
-        });
-        rly.addView(tvMore);
-
-        mLlyPrices.addView(rly, pos);
-    }
-
-    @Override
-    public void addC2Label(int pos) {
-        RelativeLayout rly = new RelativeLayout(this);
-        rly.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        View dividerView = new View(this);
-        RelativeLayout.LayoutParams viewParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.divider_width));
-        dividerView.setLayoutParams(viewParams);
-        dividerView.setBackgroundResource(R.color.haha_gray_divider);
-        rly.addView(dividerView);
-
-        TextView tvC2Label = new TextView(this);
-        RelativeLayout.LayoutParams labelParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        labelParams.setMargins(Utils.instence(this).dip2px(20), Utils.instence(this).dip2px(15), 0, 0);
-        tvC2Label.setLayoutParams(labelParams);
-        tvC2Label.setText("C2自动档");
-        tvC2Label.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
-        int tvLabelId = Utils.generateViewId();
-        tvC2Label.setId(tvLabelId);
-        rly.addView(tvC2Label);
-
-        TextView tvMore = new TextView(this);
-        RelativeLayout.LayoutParams tvMoreParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        tvMoreParams.setMargins(Utils.instence(this).dip2px(5), Utils.instence(this).dip2px(15), 0, 0);
-        tvMoreParams.addRule(RelativeLayout.RIGHT_OF, tvLabelId);
-        tvMore.setLayoutParams(tvMoreParams);
-        tvMore.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
-        tvMore.setBackgroundResource(R.drawable.rect_bg_gray_bd_gray_ssm);
-        tvMore.setText("?");
-        int padding = Utils.instence(this).dip2px(4);
-        tvMore.setPadding(padding, 0, padding, 0);
-        tvMore.setGravity(Gravity.CENTER);
-        tvMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BaseAlertSimpleDialog dialog = new BaseAlertSimpleDialog(getContext(), "什么是C2自动档？",
-                        "C2为自动挡小型车驾照，取得了C2类驾驶证的人不可以驾驶C1类车。" +
-                                "C2驾照培训费要稍贵于C1照。费用的差别主要是由于C2自动挡教练车数量比较少，使用过程中维修费用比较高所致。");
-                dialog.show();
-            }
-        });
-        rly.addView(tvMore);
-
-        mLlyPrices.addView(rly, pos);
-    }
-
-    @Override
-    public void addPrice(int pos, boolean isVIP, int price) {
-        RelativeLayout rly = new RelativeLayout(this);
-        rly.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        TextView tvPriceLabel = new TextView(this);
-        RelativeLayout.LayoutParams tvLabelParams = new RelativeLayout.LayoutParams(Utils.instence(this).dip2px(60), ViewGroup.LayoutParams.WRAP_CONTENT);
-        tvLabelParams.setMargins(Utils.instence(this).dip2px(20), Utils.instence(this).dip2px(15), 0, Utils.instence(this).dip2px(15));
-        tvPriceLabel.setLayoutParams(tvLabelParams);
-        tvPriceLabel.setText(isVIP ? "VIP班" : "超值班");
-        tvPriceLabel.setGravity(Gravity.CENTER);
-        int padding = Utils.instence(this).dip2px(2);
-        tvPriceLabel.setPadding(0, padding, 0, padding);
-        tvPriceLabel.setBackgroundResource(isVIP ? R.drawable.rect_bg_trans_bd_yellow_ssm : R.drawable.rect_bg_trans_bd_appcolor_ssm);
-        tvPriceLabel.setTextColor(ContextCompat.getColor(this, isVIP ? R.color.haha_yellow : R.color.app_theme_color));
-        int tvLabelId = Utils.generateViewId();
-        tvPriceLabel.setId(tvLabelId);
-        rly.addView(tvPriceLabel);
-
-        TextView tvRemarks = new TextView(this);
-        RelativeLayout.LayoutParams tvRemarksParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        tvRemarksParams.setMargins(Utils.instence(this).dip2px(10), 0, 0, 0);
-        tvRemarksParams.addRule(RelativeLayout.RIGHT_OF, tvLabelId);
-        tvRemarksParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-        tvRemarks.setLayoutParams(tvRemarksParams);
-        tvRemarks.setText(isVIP ? "一人一车，极速拿证" : "四人一车，性价比高");
-        tvRemarks.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
-        tvRemarks.setTextSize(16);
-        rly.addView(tvRemarks);
-
-        TextView tvPrice = new TextView(this);
-        RelativeLayout.LayoutParams tvPriceParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        tvPriceParams.setMargins(0, 0, Utils.instence(this).dip2px(20), 0);
-        tvPriceParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-        tvPriceParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-        tvPrice.setLayoutParams(tvPriceParams);
-        tvPrice.setText(Utils.getMoney(price));
-        tvPrice.setTextColor(ContextCompat.getColor(this, isVIP ? R.color.haha_yellow : R.color.app_theme_color));
-        tvPrice.setTextSize(16);
-        rly.addView(tvPrice);
-
-        if (!isVIP) {
-            View dividerView = new View(this);
-            RelativeLayout.LayoutParams viewParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.divider_width));
-            viewParams.addRule(RelativeLayout.BELOW, tvLabelId);
-            viewParams.setMargins(Utils.instence(this).dip2px(20), 0, 0, 0);
-            dividerView.setLayoutParams(viewParams);
-            dividerView.setBackgroundResource(R.color.haha_gray_divider);
-            rly.addView(dividerView);
-        }
-
-        mLlyPrices.addView(rly, pos);
     }
 
     private void initActionBar() {
@@ -573,7 +444,6 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     }
 
     @OnClick({R.id.fly_more_comments,
-            R.id.rly_price,
             R.id.iv_follow,
             R.id.tv_applaud_count,
             R.id.tv_pay,
@@ -590,12 +460,6 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             case R.id.fly_more_comments:
                 mPresenter.clickCommentsCount();
                 Intent intent = new Intent(getContext(), ReviewListActivity.class);
-                intent.putExtra("coach", mPresenter.getCoach());
-                startActivity(intent);
-                break;
-            case R.id.rly_price:
-                mPresenter.clickPrice();
-                intent = new Intent(getContext(), PriceActivity.class);
                 intent.putExtra("coach", mPresenter.getCoach());
                 startActivity(intent);
                 break;
@@ -880,6 +744,146 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     @Override
     public void navigateToReferFriends() {
         startActivity(new Intent(getContext(), ReferFriendsActivity.class));
+    }
+
+    @Override
+    public void setLicenseTab(boolean isShowTitleC1, boolean isShowTitleC2) {
+        if (isShowTitleC1 && isShowTitleC2) {
+            mTvC1Label.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mPresenter.selectLicenseType(Common.LICENSE_TYPE_C1);
+                }
+            });
+            mTvC2Label.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mPresenter.selectLicenseType(Common.LICENSE_TYPE_C2);
+                }
+            });
+        } else {
+            mVwLicenseDivider.setVisibility(View.GONE);
+            mFrlC2.setVisibility(View.GONE);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
+            mRlyC1.setLayoutParams(layoutParams);
+        }
+        mTvWhatIsC1.setText("?");
+        mTvWhatIsC2.setText("?");
+        mTvWhatIsC1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BaseAlertSimpleDialog dialog = new BaseAlertSimpleDialog(getContext(), "什么是C1手动档？",
+                        "C1为手动挡小型车驾照，取得了C1类驾驶证的人可以驾驶C2类车");
+                dialog.show();
+            }
+        });
+        mTvWhatIsC2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BaseAlertSimpleDialog dialog = new BaseAlertSimpleDialog(getContext(), "什么是C2自动档？",
+                        "C2为自动挡小型车驾照，取得了C2类驾驶证的人不可以驾驶C1类车。" +
+                                "C2驾照培训费要稍贵于C1照。费用的差别主要是由于C2自动挡教练车数量比较少，使用过程中维修费用比较高所致。");
+                dialog.show();
+            }
+        });
+    }
+
+    @Override
+    public void addClassType(ClassType classType) {
+        int length20 = Utils.instence(this).dip2px(20);
+        int length10 = Utils.instence(this).dip2px(10);
+        int length2 = Utils.instence(this).dip2px(2);
+        int length4 = Utils.instence(this).dip2px(4);
+
+        View vwDivider = new View(this);
+        LinearLayout.LayoutParams viewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                getResources().getDimensionPixelSize(R.dimen.divider_width));
+        viewParams.setMargins(length20, 0, 0, 0);
+        vwDivider.setLayoutParams(viewParams);
+        vwDivider.setBackgroundResource(R.color.haha_gray_divider);
+        mLlyClassType.addView(vwDivider);
+
+        RelativeLayout rlyClassType = new RelativeLayout(this);
+        rlyClassType.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        rlyClassType.setPadding(length20, length20, length20, length20);
+
+        TextView tvClassTypeName = new TextView(this);
+        tvClassTypeName.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        tvClassTypeName.setBackgroundResource(R.drawable.rect_bg_trans_bd_appcolor_ssm);
+        tvClassTypeName.setPadding(length4, length2, length4, length2);
+        tvClassTypeName.setText(classType.name);
+        tvClassTypeName.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
+        tvClassTypeName.setTextSize(12);
+        int tvClassTypeNameId = Utils.generateViewId();
+        tvClassTypeName.setId(tvClassTypeNameId);
+        rlyClassType.addView(tvClassTypeName);
+
+        ImageView ivArrow = new ImageView(this);
+        RelativeLayout.LayoutParams ivArrowParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        ivArrowParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+        ivArrow.setLayoutParams(ivArrowParams);
+        ivArrow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_coachmsg_more_arrow));
+        rlyClassType.addView(ivArrow);
+
+        TextView tvClassTypeDesc = new TextView(this);
+        RelativeLayout.LayoutParams tvClassTypeDescParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvClassTypeDescParams.addRule(RelativeLayout.BELOW, tvClassTypeNameId);
+        tvClassTypeDescParams.setMargins(0, length10, 0, 0);
+        tvClassTypeDesc.setLayoutParams(tvClassTypeDescParams);
+        tvClassTypeDesc.setText(classType.desc);
+        tvClassTypeDesc.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
+        int tvClassTypeDescId = Utils.generateViewId();
+        tvClassTypeDesc.setId(tvClassTypeDescId);
+        rlyClassType.addView(tvClassTypeDesc);
+
+        TextView tvPurchase = new TextView(this);
+        RelativeLayout.LayoutParams tvPurchaseParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvPurchaseParams.addRule(RelativeLayout.ALIGN_BOTTOM, tvClassTypeDescId);
+        tvPurchaseParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+        tvPurchase.setLayoutParams(tvPurchaseParams);
+        tvPurchase.setBackgroundResource(R.drawable.rect_bg_orange_ssm);
+        tvPurchase.setPadding(length10, length2, length10, length2);
+        tvPurchase.setText("报名");
+        tvPurchase.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
+        int tvPurchaseId = Utils.generateViewId();
+        tvPurchase.setId(tvPurchaseId);
+        rlyClassType.addView(tvPurchase);
+
+        TextView tvPrice = new TextView(this);
+        RelativeLayout.LayoutParams tvPriceParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvPriceParams.addRule(RelativeLayout.ALIGN_BOTTOM, tvClassTypeDescId);
+        tvPriceParams.addRule(RelativeLayout.LEFT_OF, tvPurchaseId);
+        tvPriceParams.setMargins(0, 0, length10, 0);
+        tvPrice.setLayoutParams(tvPriceParams);
+        tvPrice.setText(Utils.getMoney(classType.price));
+        tvPrice.setTextColor(ContextCompat.getColor(this, R.color.haha_orange));
+        tvPrice.setTextSize(16);
+        rlyClassType.addView(tvPrice);
+
+        mLlyClassType.addView(rlyClassType);
+    }
+
+    @Override
+    public void clearClassType() {
+        mLlyClassType.removeAllViews();
+    }
+
+    @Override
+    public void showC1Tab(boolean isLight) {
+        mTvC1Label.setTextColor(ContextCompat.getColor(this, isLight ? R.color.app_theme_color : R.color.haha_gray_text));
+    }
+
+    @Override
+    public void showC2Tab(boolean isLight) {
+        mTvC2Label.setTextColor(ContextCompat.getColor(this, isLight ? R.color.app_theme_color : R.color.haha_gray_text));
     }
 
     @Override
