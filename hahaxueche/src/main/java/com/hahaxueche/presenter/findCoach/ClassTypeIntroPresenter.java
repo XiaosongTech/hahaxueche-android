@@ -21,6 +21,7 @@ import com.qiyukf.unicorn.api.YSFUserInfo;
 public class ClassTypeIntroPresenter implements Presenter<ClassTypeIntroView> {
     private ClassTypeIntroView mClassTypeIntroView;
     private HHBaseApplication application;
+    public ClassType mClassType;
 
 
     @Override
@@ -35,7 +36,8 @@ public class ClassTypeIntroPresenter implements Presenter<ClassTypeIntroView> {
         application = null;
     }
 
-    public void setFeeDetail(int totalAmount, ClassType classType, Coach coach) {
+    public void setFeeDetail(int totalAmount, ClassType classType, Coach coach, boolean isShowPurchase) {
+        mClassType = classType;
         if (classType.type == Common.CLASS_TYPE_NORMAL_C1 || classType.type == Common.CLASS_TYPE_NORMAL_C2) {
             //超值班
             mClassTypeIntroView.setServiceContentNormal();
@@ -61,6 +63,9 @@ public class ClassTypeIntroPresenter implements Presenter<ClassTypeIntroView> {
         int trainingCost = totalAmount - totalFixedFee - (classType.isForceInsurance ? Common.INSURANCE_PRICE_TOGETHER : 0);
         mClassTypeIntroView.setTrainingCost(Utils.getMoney(trainingCost));
         mClassTypeIntroView.setTotalAmount(Utils.getMoney(totalAmount));
+        if (!isShowPurchase) {
+            mClassTypeIntroView.hidePurchase();
+        }
     }
 
     /**

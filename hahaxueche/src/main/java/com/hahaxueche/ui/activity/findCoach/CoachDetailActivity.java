@@ -922,6 +922,12 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             startActivityForResult(intent, RequestCode.REQUEST_CODE_UPLOAD_ID_CARD);
         } else if (requestCode == RequestCode.REQUEST_CODE_UPLOAD_ID_CARD) {
             mPresenter.toReferFriends();
+        } else if (requestCode == RequestCode.REQUEST_CODE_CLASS_TYPE_INTRO) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    mPresenter.purchaseCoach((ClassType) data.getParcelableExtra("classType"));
+                }
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

@@ -83,6 +83,8 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
     ImageView mIvDash5;
     @BindView(R.id.iv_dash6)
     ImageView mIvDash6;
+    @BindView(R.id.tv_pay)
+    TextView mTvPay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +97,8 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
         if (intent.getParcelableExtra("coach") != null) {
             mPresenter.setFeeDetail(intent.getIntExtra("totalAmount", 0),
                     (ClassType) intent.getParcelableExtra("classType"),
-                    (Coach) intent.getParcelableExtra("coach"));
+                    (Coach) intent.getParcelableExtra("coach"),
+                    intent.getBooleanExtra("isShowPurchase", true));
         }
         initActionBar();
         initCustomerService();
@@ -178,7 +181,9 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_pay:
-                setResult(RESULT_OK);
+                Intent intent = new Intent();
+                intent.putExtra("classType", mPresenter.mClassType);
+                setResult(RESULT_OK, intent);
                 ClassTypeIntroActivity.this.finish();
                 break;
             default:
@@ -334,5 +339,10 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
     @Override
     public void setInsuranceCost(String cost) {
         mTvInsuranceCost.setText(cost);
+    }
+
+    @Override
+    public void hidePurchase() {
+        mTvPay.setVisibility(View.GONE);
     }
 }

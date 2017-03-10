@@ -31,9 +31,9 @@ import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.myPage.MyCoachDetailPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
+import com.hahaxueche.ui.activity.findCoach.ClassTypeIntroActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.FieldMapActivity;
-import com.hahaxueche.ui.activity.findCoach.PriceActivity;
 import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.view.myPage.MyCoachDetailView;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
@@ -308,8 +308,11 @@ public class MyCoachDetailActivity extends HHBaseActivity implements MyCoachDeta
                 mPresenter.applaud();
                 break;
             case R.id.rly_fee_detail:
-                Intent intent = new Intent(getContext(), PriceActivity.class);
+                Intent intent = new Intent(getContext(), ClassTypeIntroActivity.class);
+                intent.putExtra("totalAmount", mPresenter.getClassTypeByPs().price);
                 intent.putExtra("coach", mPresenter.getCoach());
+                intent.putExtra("classType", mPresenter.getClassTypeByPs());
+                intent.putExtra("isShowPurchase", false);
                 startActivity(intent);
                 break;
             case R.id.rly_contact:
