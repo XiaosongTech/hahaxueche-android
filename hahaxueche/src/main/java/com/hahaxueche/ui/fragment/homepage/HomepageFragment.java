@@ -341,7 +341,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                     mActivity.selectTab(1);
                 } else {
                     Intent intent = new Intent(getContext(), PurchaseInsuranceActivity.class);
-                    intent.putExtra("insuranceType", data.getIntExtra("insuranceType", Common.PURCHASE_INSURANCE_TYPE_249));
+                    intent.putExtra("insuranceType", data.getIntExtra("insuranceType", Common.PURCHASE_INSURANCE_TYPE_WITHOUT_COACH));
                     startActivityForResult(intent, RequestCode.REQUEST_CODE_PURCHASE_INSURANCE);
                 }
             }

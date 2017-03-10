@@ -7,12 +7,12 @@ package com.hahaxueche.util;
 public class Common {
     //轮播图切换时间
     public static final int BANNER_TURNING_TIME = 2500;
-    //149元的赔付宝，未报名学车
-    public static final int PURCHASE_INSURANCE_TYPE_149_WEI = 0;
-    //149元的赔付宝，已在哈哈学车报名，未购买赔付宝的
-    public static final int PURCHASE_INSURANCE_TYPE_149_YI = 1;
-    //169元的赔付宝，在其他平台学车的
-    public static final int PURCHASE_INSURANCE_TYPE_249 = 2;
+    //未报名学车，和教练一起买的类型
+    public static final int PURCHASE_INSURANCE_TYPE_WITH_NEW_COACH = 0;
+    //已在哈哈平台买教练，再买赔付宝的类型
+    public static final int PURCHASE_INSURANCE_TYPE_WITH_PAID_COACH = 1;
+    //在其他驾校报名，在哈哈买赔付宝的类型
+    public static final int PURCHASE_INSURANCE_TYPE_WITHOUT_COACH = 2;
     //C1超值班
     public static final int CLASS_TYPE_NORMAL_C1 = 0;
     //C1VIP班
@@ -37,8 +37,6 @@ public class Common {
     public static final String CLASS_TYPE_VIP_DESC = "一人一车，极速拿证";
     //无忧班描述
     public static final String CLASS_TYPE_WUYOU_DESC = "包补考费，不过包赔";
-    //和教练一起购买无忧班价格
-    public static final int INSURANCE_PRICE_TOGETHER = 20000;
     //C1
     public static final int LICENSE_TYPE_C1 = 1;
     //C2

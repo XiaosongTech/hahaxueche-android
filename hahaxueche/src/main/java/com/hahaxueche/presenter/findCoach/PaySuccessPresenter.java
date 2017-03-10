@@ -35,7 +35,7 @@ public class PaySuccessPresenter implements Presenter<PaySuccessView> {
     public void attachView(PaySuccessView view) {
         this.mPaySuccessView = view;
         application = HHBaseApplication.get(view.getContext());
-        HHBaseApplication application = HHBaseApplication.get(mPaySuccessView.getContext());
+        final HHBaseApplication application = HHBaseApplication.get(mPaySuccessView.getContext());
         final User user = application.getSharedPrefUtil().getUser();
         if (user == null || user.student == null) return;
         if (isFromPurchaseInsurance) {
@@ -72,9 +72,10 @@ public class PaySuccessPresenter implements Presenter<PaySuccessView> {
                             mPaySuccessView.setPayCoachName(coach.name);
                             PurchasedService ps = user.student.purchased_services.get(0);
                             mPaySuccessView.setPayTime(Utils.getDateFromUTC(ps.paid_at));
+                            int insuranceWithNewCoachPrice = application.getConstants().insurance_prices.pay_with_new_coach_price;
                             int payAmount = ps.actual_amount +
                                     ((ps.product_type == Common.CLASS_TYPE_WUYOU_C1 || ps.product_type == Common.CLASS_TYPE_WUYOU_C2) ?
-                                            Common.INSURANCE_PRICE_TOGETHER : 0);
+                                            insuranceWithNewCoachPrice : 0);
                             mPaySuccessView.setPayAmount(Utils.getMoney(payAmount));
                             mPaySuccessView.setPayOrderNo(ps.order_no);
                         }

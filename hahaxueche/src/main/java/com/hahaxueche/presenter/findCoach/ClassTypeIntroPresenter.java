@@ -48,9 +48,10 @@ public class ClassTypeIntroPresenter implements Presenter<ClassTypeIntroView> {
             //无忧班
             mClassTypeIntroView.setServiceContentWuyou();
         }
+        int insuranceWithNewCoachPrice = application.getConstants().insurance_prices.pay_with_new_coach_price;
         if (classType.isForceInsurance) {
             //有赔付宝金额的
-            mClassTypeIntroView.setInsuranceCost(Utils.getMoney(Common.INSURANCE_PRICE_TOGETHER));
+            mClassTypeIntroView.setInsuranceCost(Utils.getMoney(insuranceWithNewCoachPrice));
         }
         Constants constants = application.getConstants();
         City city = constants.getCity(coach.city_id);
@@ -60,7 +61,7 @@ public class ClassTypeIntroPresenter implements Presenter<ClassTypeIntroView> {
         }
         //培训费计算
         int totalFixedFee = city.getTotalFixedFee();
-        int trainingCost = totalAmount - totalFixedFee - (classType.isForceInsurance ? Common.INSURANCE_PRICE_TOGETHER : 0);
+        int trainingCost = totalAmount - totalFixedFee - (classType.isForceInsurance ? insuranceWithNewCoachPrice : 0);
         mClassTypeIntroView.setTrainingCost(Utils.getMoney(trainingCost));
         mClassTypeIntroView.setTotalAmount(Utils.getMoney(totalAmount));
         if (!isShowPurchase) {

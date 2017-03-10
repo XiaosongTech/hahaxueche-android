@@ -77,6 +77,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         } else {
             mCoachDetailView.setLicenseTab(true, false);
         }
+        int insuranceWithNewCoachPrice = application.getConstants().insurance_prices.pay_with_new_coach_price;
         mClassTypeList = new ArrayList<>();
         if (mCoach.coach_group.training_cost != 0) {
             mClassTypeList.add(new ClassType(Common.CLASS_TYPE_NORMAL_NAME, Common.CLASS_TYPE_NORMAL_C1,
@@ -88,7 +89,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         }
         if (mCoach.coach_group.training_cost != 0) {
             mClassTypeList.add(new ClassType(Common.CLASS_TYPE_WUYOU_NAME, Common.CLASS_TYPE_WUYOU_C1,
-                    mCoach.coach_group.training_cost + Common.INSURANCE_PRICE_TOGETHER, true,
+                    mCoach.coach_group.training_cost + insuranceWithNewCoachPrice, true,
                     Common.CLASS_TYPE_WUYOU_DESC, Common.LICENSE_TYPE_C1));
         }
         if (mCoach.coach_group.c2_price != 0) {
@@ -101,14 +102,14 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         }
         if (mCoach.coach_group.c2_price != 0) {
             mClassTypeList.add(new ClassType(Common.CLASS_TYPE_WUYOU_NAME, Common.CLASS_TYPE_WUYOU_C2,
-                    mCoach.coach_group.c2_price + Common.INSURANCE_PRICE_TOGETHER, true,
+                    mCoach.coach_group.c2_price + insuranceWithNewCoachPrice, true,
                     Common.CLASS_TYPE_WUYOU_DESC, Common.LICENSE_TYPE_C2));
         }
         //车友无忧班是特殊教练，只有无忧班
         if (mCoach.coach_group.group_type == Common.GROUP_TYPE_CHEYOU_WUYOU) {
             mClassTypeList = new ArrayList<>();
             mClassTypeList.add(new ClassType(Common.CLASS_TYPE_WUYOU_NAME, Common.CLASS_TYPE_WUYOU_C1,
-                    mCoach.coach_group.training_cost + Common.INSURANCE_PRICE_TOGETHER, true,
+                    mCoach.coach_group.training_cost + insuranceWithNewCoachPrice, true,
                     Common.CLASS_TYPE_WUYOU_DESC, Common.LICENSE_TYPE_C1));
             mCoachDetailView.setLicenseTab(true, false);
         }

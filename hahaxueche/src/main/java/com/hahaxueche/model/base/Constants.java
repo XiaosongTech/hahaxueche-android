@@ -1,6 +1,6 @@
 package com.hahaxueche.model.base;
 
-import android.text.TextUtils;
+import com.hahaxueche.model.payment.InsurancePrices;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +27,7 @@ public class Constants {
     public ArrayList<ArticleCategory> article_categories;
     public String apk_download_url;
     public ArrayList<HashMap<String, String>> marketing_channels;
+    public InsurancePrices insurance_prices;
 
     public City getCity(int cityId) {
         City myCity = cities.get(0);

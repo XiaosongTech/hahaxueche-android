@@ -60,12 +60,24 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
     LinearLayout mLlyNoUploadInfo;
     @BindView(R.id.lly_success)
     LinearLayout mLlySuccess;
-    @BindView(R.id.iv_149_wei_pay)
-    ImageView mIv120Pay;
-    @BindView(R.id.iv_149_yi_pay)
-    ImageView mIv130Pay;
-    @BindView(R.id.iv_249_pay)
-    ImageView mIv249Pay;
+    @BindView(R.id.tv_with_new_coach_name)
+    TextView mTvWithNewCoachName;
+    @BindView(R.id.tv_with_new_coach_price)
+    TextView mTvWithNewCoachPrice;
+    @BindView(R.id.tv_with_paid_coach_name)
+    TextView mTvWithPaidCoachName;
+    @BindView(R.id.tv_with_paid_coach_price)
+    TextView mTvWithPaidCoachPrice;
+    @BindView(R.id.tv_without_coach_name)
+    TextView mTvWithoutCoachName;
+    @BindView(R.id.tv_without_coach_price)
+    TextView mTvWithoutCoachPrice;
+    @BindView(R.id.lly_with_new_coach)
+    LinearLayout mLlyWithNewCoach;
+    @BindView(R.id.lly_with_paid_coach)
+    LinearLayout mLlyWithPaidCoach;
+    @BindView(R.id.lly_without_coach)
+    LinearLayout mLlyWithoutCoach;
     @BindView(R.id.tv_customer_service)
     TextView mTvCustomerService;
     @BindView(R.id.tv_insurance_abstract)
@@ -105,20 +117,20 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
         });
     }
 
-    @OnClick({R.id.iv_149_wei_pay,
-            R.id.iv_149_yi_pay,
-            R.id.iv_249_pay,
+    @OnClick({R.id.lly_with_new_coach,
+            R.id.lly_with_paid_coach,
+            R.id.lly_without_coach,
             R.id.tv_insurance_qrcode})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.iv_149_wei_pay:
-                mPresenter.clickPurchase(Common.PURCHASE_INSURANCE_TYPE_149_WEI);
+            case R.id.lly_with_new_coach:
+                mPresenter.purchaseWithNewCoach();
                 break;
-            case R.id.iv_149_yi_pay:
-                mPresenter.clickPurchase(Common.PURCHASE_INSURANCE_TYPE_149_YI);
+            case R.id.lly_with_paid_coach:
+                mPresenter.purchaseWithPaidCoach();
                 break;
-            case R.id.iv_249_pay:
-                mPresenter.clickPurchase(Common.PURCHASE_INSURANCE_TYPE_249);
+            case R.id.lly_without_coach:
+                mPresenter.purchaseWithoutCoach();
                 break;
             case R.id.tv_insurance_qrcode:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
@@ -211,24 +223,39 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
     }
 
     @Override
-    public void set149WeiPayEnable(boolean enable) {
-        mIv120Pay.setImageDrawable(ContextCompat.getDrawable(this,
-                enable ? R.drawable.botton_149peifubaby_wei : R.drawable.botton_cant149_wei));
-        mIv120Pay.setClickable(enable);
+    public void setWithNewCoachPayEnable(boolean enable) {
+        if (enable) {
+            mTvWithNewCoachName.setBackgroundResource(R.drawable.button_insurance_top_half);
+            mTvWithNewCoachPrice.setBackgroundResource(R.drawable.button_insurance_bottom_half);
+        } else {
+            mTvWithNewCoachName.setBackgroundResource(R.drawable.button_insurance_cant_top);
+            mTvWithNewCoachPrice.setBackgroundResource(R.drawable.button_insurance_cant_bottom);
+        }
+        mLlyWithNewCoach.setClickable(enable);
     }
 
     @Override
-    public void set149YiPayEnable(boolean enable) {
-        mIv130Pay.setImageDrawable(ContextCompat.getDrawable(this,
-                enable ? R.drawable.botton_149peifubaby_yi : R.drawable.botton_cant130_yi));
-        mIv130Pay.setClickable(enable);
+    public void setWithPaidCoachPayEnable(boolean enable) {
+        if (enable) {
+            mTvWithPaidCoachName.setBackgroundResource(R.drawable.button_insurance_top_half);
+            mTvWithPaidCoachPrice.setBackgroundResource(R.drawable.button_insurance_bottom_half);
+        } else {
+            mTvWithPaidCoachName.setBackgroundResource(R.drawable.button_insurance_cant_top);
+            mTvWithPaidCoachPrice.setBackgroundResource(R.drawable.button_insurance_cant_bottom);
+        }
+        mLlyWithPaidCoach.setClickable(enable);
     }
 
     @Override
-    public void set169PayEnable(boolean enable) {
-        mIv249Pay.setImageDrawable(ContextCompat.getDrawable(this,
-                enable ? R.drawable.botton_249peifubaby : R.drawable.botton_cant249));
-        mIv249Pay.setClickable(enable);
+    public void setWithoutCoachPayEnable(boolean enable) {
+        if (enable) {
+            mTvWithoutCoachName.setBackgroundResource(R.drawable.button_insurance_top_half);
+            mTvWithoutCoachPrice.setBackgroundResource(R.drawable.button_insurance_bottom_half);
+        } else {
+            mTvWithoutCoachName.setBackgroundResource(R.drawable.button_insurance_cant_top);
+            mTvWithoutCoachPrice.setBackgroundResource(R.drawable.button_insurance_cant_bottom);
+        }
+        mLlyWithoutCoach.setClickable(enable);
     }
 
     @Override
@@ -237,9 +264,17 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
     }
 
     @Override
-    public void finishToPurchaseInsurance(int insuranceType) {
+    public void finishToPurchaseInsuranceWithPaidCoach() {
         Intent intent = new Intent();
-        intent.putExtra("insuranceType", insuranceType);
+        intent.putExtra("insuranceType", Common.PURCHASE_INSURANCE_TYPE_WITH_PAID_COACH);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    @Override
+    public void finishToPurchaseInsuranceWithoutCoach() {
+        Intent intent = new Intent();
+        intent.putExtra("insuranceType", Common.PURCHASE_INSURANCE_TYPE_WITHOUT_COACH);
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -268,6 +303,21 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
     @Override
     public void navigateToInsuranceInfo() {
         startActivity(new Intent(getContext(), InsuranceInfoActivity.class));
+    }
+
+    @Override
+    public void setWithNewCoachPrice(String s) {
+        mTvWithNewCoachPrice.setText(s);
+    }
+
+    @Override
+    public void setWithPaidCoachPrice(String s) {
+        mTvWithPaidCoachPrice.setText(s);
+    }
+
+    @Override
+    public void setWithoutCoachPrice(String s) {
+        mTvWithoutCoachPrice.setText(s);
     }
 
     public void changeCustomerService() {

@@ -391,6 +391,7 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
 
     public ClassType getClassTypeByPs() {
         PurchasedService ps = mUser.student.purchased_services.get(0);
+        int insuranceWithNewCoachPrice = application.getConstants().insurance_prices.pay_with_new_coach_price;
         if (ps.product_type == Common.CLASS_TYPE_NORMAL_C1) {
             return new ClassType(Common.CLASS_TYPE_NORMAL_NAME, Common.CLASS_TYPE_NORMAL_C1,
                     mCoach.coach_group.training_cost, false, Common.CLASS_TYPE_NORMAL_DESC, Common.LICENSE_TYPE_C1);
@@ -399,7 +400,7 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
                     mCoach.coach_group.vip_price, false, Common.CLASS_TYPE_VIP_DESC, Common.LICENSE_TYPE_C1);
         } else if (ps.product_type == Common.CLASS_TYPE_WUYOU_C1) {
             return new ClassType(Common.CLASS_TYPE_WUYOU_NAME, Common.CLASS_TYPE_WUYOU_C1,
-                    mCoach.coach_group.training_cost + Common.INSURANCE_PRICE_TOGETHER, true,
+                    mCoach.coach_group.training_cost + insuranceWithNewCoachPrice, true,
                     Common.CLASS_TYPE_WUYOU_DESC, Common.LICENSE_TYPE_C1);
         } else if (ps.product_type == Common.CLASS_TYPE_NORMAL_C2) {
             new ClassType(Common.CLASS_TYPE_NORMAL_NAME, Common.CLASS_TYPE_NORMAL_C2,
@@ -409,7 +410,7 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
                     mCoach.coach_group.c2_vip_price, false, Common.CLASS_TYPE_VIP_DESC, Common.LICENSE_TYPE_C2);
         }
         return new ClassType(Common.CLASS_TYPE_WUYOU_NAME, Common.CLASS_TYPE_WUYOU_C2,
-                mCoach.coach_group.c2_price + Common.INSURANCE_PRICE_TOGETHER, true,
+                mCoach.coach_group.c2_price + insuranceWithNewCoachPrice, true,
                 Common.CLASS_TYPE_WUYOU_DESC, Common.LICENSE_TYPE_C2);
     }
 }

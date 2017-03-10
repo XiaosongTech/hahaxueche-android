@@ -57,7 +57,7 @@ public class PurchaseInsuranceActivity extends HHBaseActivity implements Purchas
         mPresenter.attachView(this);
         initActionBar();
         Intent intent = getIntent();
-        mPresenter.setInsuranceType(intent.getIntExtra("insuranceType", Common.PURCHASE_INSURANCE_TYPE_249));
+        mPresenter.setInsuranceType(intent.getIntExtra("insuranceType", Common.PURCHASE_INSURANCE_TYPE_WITHOUT_COACH));
     }
 
     private void initActionBar() {
