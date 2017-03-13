@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public interface ClassTypeIntroView extends HHBaseView {
     void setFixedFees(ArrayList<FixedCostItem> fixedFees);
 
-    void setOtherFees(ArrayList<OtherFee> otherFees, boolean isForceInsurance);
+    void setOtherFees(ArrayList<OtherFee> otherFees, boolean isForceInsurance, int coachGroupType);
 
     void setServiceContentNormal();
 
@@ -28,4 +28,6 @@ public interface ClassTypeIntroView extends HHBaseView {
     void setInsuranceCost(String cost);
 
     void hidePurchase();
+
+    void showMoniInFeeDetail();
 }

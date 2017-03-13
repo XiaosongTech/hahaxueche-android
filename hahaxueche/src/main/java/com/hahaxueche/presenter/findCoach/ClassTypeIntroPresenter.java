@@ -22,6 +22,7 @@ public class ClassTypeIntroPresenter implements Presenter<ClassTypeIntroView> {
     private ClassTypeIntroView mClassTypeIntroView;
     private HHBaseApplication application;
     public ClassType mClassType;
+    public Coach mCoach;
 
 
     @Override
@@ -38,6 +39,7 @@ public class ClassTypeIntroPresenter implements Presenter<ClassTypeIntroView> {
 
     public void setFeeDetail(int totalAmount, ClassType classType, Coach coach, boolean isShowPurchase) {
         mClassType = classType;
+        mCoach = coach;
         if (classType.type == Common.CLASS_TYPE_NORMAL_C1 || classType.type == Common.CLASS_TYPE_NORMAL_C2) {
             //超值班
             mClassTypeIntroView.setServiceContentNormal();
@@ -53,11 +55,14 @@ public class ClassTypeIntroPresenter implements Presenter<ClassTypeIntroView> {
             //有赔付宝金额的
             mClassTypeIntroView.setInsuranceCost(Utils.getMoney(insuranceWithNewCoachPrice));
         }
+        if (mCoach.coach_group.group_type == Common.GROUP_TYPE_CHEYOU_WUYOU) {
+            mClassTypeIntroView.showMoniInFeeDetail();
+        }
         Constants constants = application.getConstants();
         City city = constants.getCity(coach.city_id);
         mClassTypeIntroView.setFixedFees(city.fixed_cost_itemizer);
         if (city.other_fee != null) {
-            mClassTypeIntroView.setOtherFees(city.other_fee, classType.isForceInsurance);
+            mClassTypeIntroView.setOtherFees(city.other_fee, classType.isForceInsurance, mCoach.coach_group.group_type);
         }
         //培训费计算
         int totalFixedFee = city.getTotalFixedFee();

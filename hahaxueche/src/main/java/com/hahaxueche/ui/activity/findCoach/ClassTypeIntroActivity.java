@@ -33,6 +33,7 @@ import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.findCoach.ClassTypeIntroPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.view.findCoach.ClassTypeIntroView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
@@ -83,6 +84,10 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
     ImageView mIvDash5;
     @BindView(R.id.iv_dash6)
     ImageView mIvDash6;
+    @BindView(R.id.iv_dash7)
+    ImageView mIvDash7;
+    @BindView(R.id.lly_moni)
+    LinearLayout mLlyMoni;
     @BindView(R.id.tv_pay)
     TextView mTvPay;
 
@@ -108,6 +113,7 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
         mIvDash4.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mIvDash5.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mIvDash6.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        mIvDash7.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 
     private void initActionBar() {
@@ -261,11 +267,13 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
     }
 
     @Override
-    public void setOtherFees(ArrayList<OtherFee> otherFees, boolean isForceInsurance) {
+    public void setOtherFees(ArrayList<OtherFee> otherFees, boolean isForceInsurance, int coachGroupType) {
         if (otherFees == null || otherFees.size() < 1) return;
         int insertLine = 0;
         for (OtherFee otherFee : otherFees) {
             if (isForceInsurance && otherFee.name.contains("补考费"))
+                continue;
+            if (coachGroupType == Common.GROUP_TYPE_CHEYOU_WUYOU && otherFee.name.contains("模拟费"))
                 continue;
             FrameLayout frTitle = new FrameLayout(this);
             LinearLayout.LayoutParams frTitleParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -344,5 +352,10 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
     @Override
     public void hidePurchase() {
         mTvPay.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showMoniInFeeDetail() {
+        mLlyMoni.setVisibility(View.VISIBLE);
     }
 }
