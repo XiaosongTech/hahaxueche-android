@@ -6,7 +6,6 @@ import com.hahaxueche.model.payment.InsurancePrices;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.MyInsuranceView;
-import com.hahaxueche.util.Common;
 import com.hahaxueche.util.Utils;
 import com.hahaxueche.util.WebViewUrl;
 import com.qiyukf.unicorn.api.ConsultSource;
@@ -31,17 +30,14 @@ public class MyInsurancePresenter implements Presenter<MyInsuranceView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) {
             mMyInsuranceView.setViewNoPurchase();
-            mMyInsuranceView.setWithNewCoachPayEnable(true);
             mMyInsuranceView.setWithPaidCoachPayEnable(true);
             mMyInsuranceView.setWithoutCoachPayEnable(true);
         } else if (!user.student.isPurchasedInsurance()) {
             mMyInsuranceView.setViewNoPurchase();
             if (user.student.hasPurchasedService()) {
-                mMyInsuranceView.setWithNewCoachPayEnable(false);
                 mMyInsuranceView.setWithPaidCoachPayEnable(true);
                 mMyInsuranceView.setWithoutCoachPayEnable(false);
             } else {
-                mMyInsuranceView.setWithNewCoachPayEnable(true);
                 mMyInsuranceView.setWithPaidCoachPayEnable(false);
                 mMyInsuranceView.setWithoutCoachPayEnable(true);
             }
@@ -55,7 +51,6 @@ public class MyInsurancePresenter implements Presenter<MyInsuranceView> {
             mMyInsuranceView.setAbstract(insuranceAbstract);
         }
         InsurancePrices ip = application.getConstants().insurance_prices;
-        mMyInsuranceView.setWithNewCoachPrice("限时价 " + Utils.getMoney(ip.pay_with_new_coach_price));
         mMyInsuranceView.setWithPaidCoachPrice("限时价 " + Utils.getMoney(ip.pay_with_paid_coach_price));
         mMyInsuranceView.setWithoutCoachPrice("限时价 " + Utils.getMoney(ip.pay_without_coach_price));
     }
@@ -88,16 +83,6 @@ public class MyInsurancePresenter implements Presenter<MyInsuranceView> {
                 title, // 聊天窗口的标题
                 source // 咨询的发起来源，包括发起咨询的url，title，描述信息等
         );
-    }
-
-    public void purchaseWithNewCoach() {
-        User user = application.getSharedPrefUtil().getUser();
-        if (user == null || !user.isLogin()) {
-            //提示登陆
-            mMyInsuranceView.alertToLogin();
-            return;
-        }
-        mMyInsuranceView.finishToFindCoach();
     }
 
     public void purchaseWithPaidCoach() {

@@ -32,14 +32,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
-            <include layout="@layout/button_insurance_with_new_coach" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
             <include layout="@layout/button_insurance_with_paid_coach" />
         </FrameLayout>
 

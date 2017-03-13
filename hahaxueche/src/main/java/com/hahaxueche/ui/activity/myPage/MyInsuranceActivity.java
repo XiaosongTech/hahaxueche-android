@@ -60,10 +60,6 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
     LinearLayout mLlyNoUploadInfo;
     @BindView(R.id.lly_success)
     LinearLayout mLlySuccess;
-    @BindView(R.id.tv_with_new_coach_name)
-    TextView mTvWithNewCoachName;
-    @BindView(R.id.tv_with_new_coach_price)
-    TextView mTvWithNewCoachPrice;
     @BindView(R.id.tv_with_paid_coach_name)
     TextView mTvWithPaidCoachName;
     @BindView(R.id.tv_with_paid_coach_price)
@@ -72,8 +68,6 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
     TextView mTvWithoutCoachName;
     @BindView(R.id.tv_without_coach_price)
     TextView mTvWithoutCoachPrice;
-    @BindView(R.id.lly_with_new_coach)
-    LinearLayout mLlyWithNewCoach;
     @BindView(R.id.lly_with_paid_coach)
     LinearLayout mLlyWithPaidCoach;
     @BindView(R.id.lly_without_coach)
@@ -117,15 +111,11 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
         });
     }
 
-    @OnClick({R.id.lly_with_new_coach,
-            R.id.lly_with_paid_coach,
+    @OnClick({R.id.lly_with_paid_coach,
             R.id.lly_without_coach,
             R.id.tv_insurance_qrcode})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.lly_with_new_coach:
-                mPresenter.purchaseWithNewCoach();
-                break;
             case R.id.lly_with_paid_coach:
                 mPresenter.purchaseWithPaidCoach();
                 break;
@@ -223,18 +213,6 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
     }
 
     @Override
-    public void setWithNewCoachPayEnable(boolean enable) {
-        if (enable) {
-            mTvWithNewCoachName.setBackgroundResource(R.drawable.button_insurance_top_half);
-            mTvWithNewCoachPrice.setBackgroundResource(R.drawable.button_insurance_bottom_half);
-        } else {
-            mTvWithNewCoachName.setBackgroundResource(R.drawable.button_insurance_cant_top);
-            mTvWithNewCoachPrice.setBackgroundResource(R.drawable.button_insurance_cant_bottom);
-        }
-        mLlyWithNewCoach.setClickable(enable);
-    }
-
-    @Override
     public void setWithPaidCoachPayEnable(boolean enable) {
         if (enable) {
             mTvWithPaidCoachName.setBackgroundResource(R.drawable.button_insurance_top_half);
@@ -288,14 +266,6 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
     }
 
     @Override
-    public void finishToFindCoach() {
-        Intent intent = new Intent();
-        intent.putExtra("toFindCoach", true);
-        setResult(RESULT_OK, intent);
-        finish();
-    }
-
-    @Override
     public void setAbstract(String text) {
         mTvInsuranceAbstract.setText(text);
     }
@@ -303,11 +273,6 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
     @Override
     public void navigateToInsuranceInfo() {
         startActivity(new Intent(getContext(), InsuranceInfoActivity.class));
-    }
-
-    @Override
-    public void setWithNewCoachPrice(String s) {
-        mTvWithNewCoachPrice.setText(s);
     }
 
     @Override

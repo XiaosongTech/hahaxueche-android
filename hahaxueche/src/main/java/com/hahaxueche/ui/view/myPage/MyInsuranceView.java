@@ -13,8 +13,6 @@ public interface MyInsuranceView extends HHBaseView {
 
     void setViewSuccess();
 
-    void setWithNewCoachPayEnable(boolean enable);
-
     void setWithPaidCoachPayEnable(boolean enable);
 
     void setWithoutCoachPayEnable(boolean enable);
@@ -27,13 +25,9 @@ public interface MyInsuranceView extends HHBaseView {
 
     void finishToUploadInfo();
 
-    void finishToFindCoach();
-
     void setAbstract(String text);
 
     void navigateToInsuranceInfo();
-
-    void setWithNewCoachPrice(String s);
 
     void setWithPaidCoachPrice(String s);
 
