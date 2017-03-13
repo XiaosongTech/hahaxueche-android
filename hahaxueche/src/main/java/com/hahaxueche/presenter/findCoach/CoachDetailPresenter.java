@@ -14,16 +14,20 @@ import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.user.coach.ClassType;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.Follow;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.CoachDetailView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.WebViewUrl;
 import com.umeng.analytics.MobclickAgent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -45,6 +49,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
     private User mUser;
     private boolean isFollow;
     private boolean isApplaud;
+    private List<ClassType> mClassTypeList;
 
     @Override
     public void attachView(CoachDetailView view) {
@@ -67,25 +72,49 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         if (mCoach == null) return;
         setCoachLabel();
         this.mCoachDetailView.showCoachDetail(mCoach);
-        int pos = 1;
-        if (mCoach.coach_group.training_cost != 0 || mCoach.coach_group.vip_price != 0) {
-            mCoachDetailView.addC1Label(pos++);
-            if (mCoach.coach_group.training_cost != 0) {
-                mCoachDetailView.addPrice(pos++, false, mCoach.coach_group.training_cost);
-            }
-            if (mCoach.coach_group.vip_price != 0) {
-                mCoachDetailView.addPrice(pos++, true, mCoach.coach_group.vip_price);
-            }
-        }
         if (mCoach.coach_group.c2_price != 0 || mCoach.coach_group.c2_vip_price != 0) {
-            mCoachDetailView.addC2Label(pos++);
-            if (mCoach.coach_group.c2_price != 0) {
-                mCoachDetailView.addPrice(pos++, false, mCoach.coach_group.c2_price);
-            }
-            if (mCoach.coach_group.c2_vip_price != 0) {
-                mCoachDetailView.addPrice(pos++, true, mCoach.coach_group.c2_vip_price);
-            }
+            mCoachDetailView.setLicenseTab(true, true);
+        } else {
+            mCoachDetailView.setLicenseTab(true, false);
         }
+        int insuranceWithNewCoachPrice = application.getConstants().insurance_prices.pay_with_new_coach_price;
+        mClassTypeList = new ArrayList<>();
+        if (mCoach.coach_group.training_cost != 0) {
+            mClassTypeList.add(new ClassType(Common.CLASS_TYPE_NORMAL_NAME, Common.CLASS_TYPE_NORMAL_C1,
+                    mCoach.coach_group.training_cost, false, Common.CLASS_TYPE_NORMAL_DESC, Common.LICENSE_TYPE_C1));
+        }
+        if (mCoach.coach_group.vip_price != 0) {
+            mClassTypeList.add(new ClassType(Common.CLASS_TYPE_VIP_NAME, Common.CLASS_TYPE_VIP_C1,
+                    mCoach.coach_group.vip_price, false, Common.CLASS_TYPE_VIP_DESC, Common.LICENSE_TYPE_C1));
+        }
+        if (mCoach.coach_group.training_cost != 0) {
+            mClassTypeList.add(new ClassType(Common.CLASS_TYPE_WUYOU_NAME, Common.CLASS_TYPE_WUYOU_C1,
+                    mCoach.coach_group.training_cost + insuranceWithNewCoachPrice, true,
+                    Common.CLASS_TYPE_WUYOU_DESC, Common.LICENSE_TYPE_C1));
+        }
+        if (mCoach.coach_group.c2_price != 0) {
+            mClassTypeList.add(new ClassType(Common.CLASS_TYPE_NORMAL_NAME, Common.CLASS_TYPE_NORMAL_C2,
+                    mCoach.coach_group.c2_price, false, Common.CLASS_TYPE_NORMAL_DESC, Common.LICENSE_TYPE_C2));
+        }
+        if (mCoach.coach_group.c2_vip_price != 0) {
+            mClassTypeList.add(new ClassType(Common.CLASS_TYPE_VIP_NAME, Common.CLASS_TYPE_VIP_C2,
+                    mCoach.coach_group.c2_vip_price, false, Common.CLASS_TYPE_VIP_DESC, Common.LICENSE_TYPE_C2));
+        }
+        if (mCoach.coach_group.c2_price != 0) {
+            mClassTypeList.add(new ClassType(Common.CLASS_TYPE_WUYOU_NAME, Common.CLASS_TYPE_WUYOU_C2,
+                    mCoach.coach_group.c2_price + insuranceWithNewCoachPrice, true,
+                    Common.CLASS_TYPE_WUYOU_DESC, Common.LICENSE_TYPE_C2));
+        }
+        //车友无忧班是特殊教练，只有无忧班
+        if (mCoach.coach_group.group_type == Common.GROUP_TYPE_CHEYOU_WUYOU) {
+            mClassTypeList = new ArrayList<>();
+            mClassTypeList.add(new ClassType(Common.CLASS_TYPE_WUYOU_NAME, Common.CLASS_TYPE_WUYOU_C1,
+                    mCoach.coach_group.training_cost + insuranceWithNewCoachPrice, true,
+                    Common.CLASS_TYPE_WUYOU_DESC, Common.LICENSE_TYPE_C1));
+            mCoachDetailView.setLicenseTab(true, false);
+        }
+        //默认选择C1
+        selectLicenseType(Common.LICENSE_TYPE_C1);
         mCoachDetailView.setCoachBadge(coach.skill_level.equals("1"));
         mCoachDetailView.setPayBadge(coach.has_cash_pledge == 1);
         this.mCoachDetailView.initShareData(mCoach);
@@ -93,6 +122,22 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         loadFollow();
         loadApplaud();
         pageStartCount();
+    }
+
+    public void selectLicenseType(int licenseType) {
+        mCoachDetailView.clearClassType();
+        for (ClassType classType : mClassTypeList) {
+            if (classType.licenseType == licenseType) {
+                mCoachDetailView.addClassType(classType);
+            }
+        }
+        if (licenseType == Common.LICENSE_TYPE_C1) {
+            mCoachDetailView.showC1Tab(true);
+            mCoachDetailView.showC2Tab(false);
+        } else {
+            mCoachDetailView.showC1Tab(false);
+            mCoachDetailView.showC2Tab(true);
+        }
     }
 
     public Coach getCoach() {
@@ -422,7 +467,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         }
     }
 
-    public void purchaseCoach() {
+    public void purchaseCoach(ClassType classType) {
         if (mUser == null || !mUser.isLogin()) {
             mCoachDetailView.alertToLogin("注册登录后,才可以购买教练哦～\n注册获得更多学车咨询!～");
             return;
@@ -430,19 +475,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
             mCoachDetailView.showMessage("该学员已经购买过教练");
             return;
         }
-        mCoachDetailView.navigateToPurchaseCoach(mCoach);
-    }
-
-    public void clickPrice() {
-        if (mCoach == null) return;
-        //筛选点击
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-        }
-        map.put("coach_id", mCoach.id);
-        MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_price_detail_tapped", map);
+        mCoachDetailView.navigateToPurchaseCoach(mCoach, classType);
     }
 
     public void freeTry() {
@@ -516,16 +549,6 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_field_tapped", map);
     }
 
-    public void clickPurchaseCount() {
-        //立即购买点击
-        HashMap<String, String> map = new HashMap();
-        if (mUser != null && mUser.isLogin()) {
-            map.put("student_id", mUser.student.id);
-        }
-        map.put("coach_id", mCoach.id);
-        MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_purchase_tapped", map);
-    }
-
     public void pageStartCount() {
         //教练详情展现
         HashMap<String, String> map = new HashMap();
@@ -551,10 +574,5 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         } else {
             mCoachDetailView.navigateToReferFriends();
         }
-    }
-
-    public boolean isUserPurchasedInsurance() {
-        User user = application.getSharedPrefUtil().getUser();
-        return user != null && user.isLogin() && user.student.isPurchasedInsurance();
     }
 }

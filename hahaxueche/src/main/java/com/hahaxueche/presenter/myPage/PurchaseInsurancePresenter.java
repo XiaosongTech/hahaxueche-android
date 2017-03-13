@@ -4,6 +4,7 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseValid;
+import com.hahaxueche.model.payment.InsurancePrices;
 import com.hahaxueche.model.payment.PaymentMethod;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.student.Student;
@@ -55,7 +56,9 @@ public class PurchaseInsurancePresenter implements Presenter<PurchaseInsuranceVi
 
     public void setInsuranceType(int insuranceType) {
         mInsuranceType = insuranceType;
-        int amount = mInsuranceType == Common.PURCHASE_INSURANCE_TYPE_249 ? 24900 : 14900;
+        InsurancePrices ip = application.getConstants().insurance_prices;
+        int amount = mInsuranceType == Common.PURCHASE_INSURANCE_TYPE_WITHOUT_COACH ?
+                ip.pay_without_coach_price : ip.pay_with_paid_coach_price;
         mPurchaseInsuranceView.setPayAmount("总价：" + Utils.getMoney(amount));
         mPurchaseInsuranceView.setNotice("注: 请确认您还未参加科目一考试");
     }

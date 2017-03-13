@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lly_without_coach"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_without_coach_name"
+        android:layout_width="100dp"
+        android:layout_height="55dp"
+        android:background="@drawable/button_insurance_top_half"
+        android:gravity="center"
+        android:text="合作驾校报名\n未考科一"
+        android:textColor="@color/haha_gray_dark" />
+
+    <TextView
+        android:id="@+id/tv_without_coach_price"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:background="@drawable/button_insurance_bottom_half"
+        android:gravity="center"
+        android:text="限时价 ¥299"
+        android:textColor="@color/haha_white" />
+</LinearLayout>

@@ -14,27 +14,11 @@ import java.util.ArrayList;
 public interface PurchaseCoachView extends HHBaseView {
     void loadCoachInfo(Coach coach);
 
+    void setClassTypeName(String name);
+
+    void setClassTypePrice(String price);
+
     void loadPaymentMethod(ArrayList<PaymentMethod> paymentMethods);
-
-    void showLicenseC1();
-
-    void showLicenseC2();
-
-    void showClassVIP();
-
-    void hideClassVIP();
-
-    void selectLicenseC1();
-
-    void selectLicenseC2();
-
-    void unSelectLicense();
-
-    void selectClassNormal();
-
-    void selectClassVip();
-
-    void unSelectClass();
 
     void setTotalAmountText(String text);
 
@@ -55,12 +39,4 @@ public interface PurchaseCoachView extends HHBaseView {
     void showCumulativeVoucher(boolean isShow);
 
     void addCumulativeVoucher(String title, String price);
-
-    void selectInsurance();
-
-    void unSelectInsurance();
-
-    void disableInsurance();
-
-    void setInsuranceUnSelectable();
 }

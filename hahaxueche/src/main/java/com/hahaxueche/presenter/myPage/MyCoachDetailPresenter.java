@@ -9,11 +9,14 @@ import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.base.Field;
+import com.hahaxueche.model.payment.PurchasedService;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.user.coach.ClassType;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.Follow;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.MyCoachDetailView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 import com.umeng.analytics.MobclickAgent;
@@ -384,5 +387,30 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
         }
         map.put("coach_id", mCoach.id);
         MobclickAgent.onEvent(mMyCoachDetailView.getContext(), "my_coach_page_viewed", map);
+    }
+
+    public ClassType getClassTypeByPs() {
+        PurchasedService ps = mUser.student.purchased_services.get(0);
+        int insuranceWithNewCoachPrice = application.getConstants().insurance_prices.pay_with_new_coach_price;
+        if (ps.product_type == Common.CLASS_TYPE_NORMAL_C1) {
+            return new ClassType(Common.CLASS_TYPE_NORMAL_NAME, Common.CLASS_TYPE_NORMAL_C1,
+                    mCoach.coach_group.training_cost, false, Common.CLASS_TYPE_NORMAL_DESC, Common.LICENSE_TYPE_C1);
+        } else if (ps.product_type == Common.CLASS_TYPE_VIP_C1) {
+            return new ClassType(Common.CLASS_TYPE_VIP_NAME, Common.CLASS_TYPE_VIP_C1,
+                    mCoach.coach_group.vip_price, false, Common.CLASS_TYPE_VIP_DESC, Common.LICENSE_TYPE_C1);
+        } else if (ps.product_type == Common.CLASS_TYPE_WUYOU_C1) {
+            return new ClassType(Common.CLASS_TYPE_WUYOU_NAME, Common.CLASS_TYPE_WUYOU_C1,
+                    mCoach.coach_group.training_cost + insuranceWithNewCoachPrice, true,
+                    Common.CLASS_TYPE_WUYOU_DESC, Common.LICENSE_TYPE_C1);
+        } else if (ps.product_type == Common.CLASS_TYPE_NORMAL_C2) {
+            new ClassType(Common.CLASS_TYPE_NORMAL_NAME, Common.CLASS_TYPE_NORMAL_C2,
+                    mCoach.coach_group.c2_price, false, Common.CLASS_TYPE_NORMAL_DESC, Common.LICENSE_TYPE_C2);
+        } else if (ps.product_type == Common.CLASS_TYPE_VIP_C2) {
+            return new ClassType(Common.CLASS_TYPE_VIP_NAME, Common.CLASS_TYPE_VIP_C2,
+                    mCoach.coach_group.c2_vip_price, false, Common.CLASS_TYPE_VIP_DESC, Common.LICENSE_TYPE_C2);
+        }
+        return new ClassType(Common.CLASS_TYPE_WUYOU_NAME, Common.CLASS_TYPE_WUYOU_C2,
+                mCoach.coach_group.c2_price + insuranceWithNewCoachPrice, true,
+                Common.CLASS_TYPE_WUYOU_DESC, Common.LICENSE_TYPE_C2);
     }
 }

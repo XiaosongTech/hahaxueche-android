@@ -36,6 +36,7 @@ public class Student implements Parcelable {
     public String user_identity_id;
     public boolean is_sales_agent;
     public InsuranceOrder insurance_order;
+    public int prepaid_amount;
 
     public Student() {
 
@@ -60,6 +61,7 @@ public class Student implements Parcelable {
         user_identity_id = in.readString();
         is_sales_agent = in.readByte() != 0;
         insurance_order = in.readParcelable(InsuranceOrder.class.getClassLoader());
+        prepaid_amount = in.readInt();
     }
 
     public static final Creator<Student> CREATOR = new Creator<Student>() {
@@ -178,5 +180,6 @@ public class Student implements Parcelable {
         dest.writeString(user_identity_id);
         dest.writeByte((byte) (is_sales_agent ? 1 : 0));
         dest.writeParcelable(insurance_order, flags);
+        dest.writeInt(prepaid_amount);
     }
 }

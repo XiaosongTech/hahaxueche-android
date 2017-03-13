@@ -9,8 +9,6 @@ import com.hahaxueche.ui.view.base.HHBaseView;
  */
 
 public interface PaySuccessView extends HHBaseView {
-    void loadPayInfo(Coach coach, PurchasedService ps);
-
     void showMessage(String message);
 
     void showCoachPayView();
@@ -22,4 +20,12 @@ public interface PaySuccessView extends HHBaseView {
     void setInsuranceAmount(int amount);
 
     void setInsurancePaidAt(String paidAt);
+
+    void setPayCoachName(String name);
+
+    void setPayTime(String time);
+
+    void setPayAmount(String amount);
+
+    void setPayOrderNo(String orderNo);
 }

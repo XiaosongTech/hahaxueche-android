@@ -2,6 +2,7 @@ package com.hahaxueche.presenter.myPage;
 
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
+import com.hahaxueche.model.payment.InsurancePrices;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.MyInsuranceView;
@@ -30,19 +31,19 @@ public class MyInsurancePresenter implements Presenter<MyInsuranceView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) {
             mMyInsuranceView.setViewNoPurchase();
-            mMyInsuranceView.set149WeiPayEnable(true);
-            mMyInsuranceView.set149YiPayEnable(true);
-            mMyInsuranceView.set169PayEnable(true);
+            mMyInsuranceView.setWithNewCoachPayEnable(true);
+            mMyInsuranceView.setWithPaidCoachPayEnable(true);
+            mMyInsuranceView.setWithoutCoachPayEnable(true);
         } else if (!user.student.isPurchasedInsurance()) {
             mMyInsuranceView.setViewNoPurchase();
             if (user.student.hasPurchasedService()) {
-                mMyInsuranceView.set149WeiPayEnable(false);
-                mMyInsuranceView.set149YiPayEnable(true);
-                mMyInsuranceView.set169PayEnable(false);
+                mMyInsuranceView.setWithNewCoachPayEnable(false);
+                mMyInsuranceView.setWithPaidCoachPayEnable(true);
+                mMyInsuranceView.setWithoutCoachPayEnable(false);
             } else {
-                mMyInsuranceView.set149WeiPayEnable(true);
-                mMyInsuranceView.set149YiPayEnable(false);
-                mMyInsuranceView.set169PayEnable(true);
+                mMyInsuranceView.setWithNewCoachPayEnable(true);
+                mMyInsuranceView.setWithPaidCoachPayEnable(false);
+                mMyInsuranceView.setWithoutCoachPayEnable(true);
             }
         } else if (!user.student.isUploadedInsurance()) {
             mMyInsuranceView.setViewNoUploadInfo();
@@ -53,6 +54,10 @@ public class MyInsurancePresenter implements Presenter<MyInsuranceView> {
                             Utils.getDateHanziFromUTC(user.student.insurance_order.policy_start_time));
             mMyInsuranceView.setAbstract(insuranceAbstract);
         }
+        InsurancePrices ip = application.getConstants().insurance_prices;
+        mMyInsuranceView.setWithNewCoachPrice("限时价 " + Utils.getMoney(ip.pay_with_new_coach_price));
+        mMyInsuranceView.setWithPaidCoachPrice("限时价 " + Utils.getMoney(ip.pay_with_paid_coach_price));
+        mMyInsuranceView.setWithoutCoachPrice("限时价 " + Utils.getMoney(ip.pay_without_coach_price));
     }
 
     @Override
@@ -85,27 +90,36 @@ public class MyInsurancePresenter implements Presenter<MyInsuranceView> {
         );
     }
 
-    public void clickPurchase(int purchaseType) {
+    public void purchaseWithNewCoach() {
         User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) {
             //提示登陆
             mMyInsuranceView.alertToLogin();
             return;
         }
-        switch (purchaseType) {
-            case Common.PURCHASE_INSURANCE_TYPE_149_WEI:
-                mMyInsuranceView.finishToFindCoach();
-                break;
-            case Common.PURCHASE_INSURANCE_TYPE_149_YI:
-                mMyInsuranceView.finishToPurchaseInsurance(Common.PURCHASE_INSURANCE_TYPE_149_YI);
-                break;
-            case Common.PURCHASE_INSURANCE_TYPE_249:
-                mMyInsuranceView.finishToPurchaseInsurance(Common.PURCHASE_INSURANCE_TYPE_249);
-                break;
-            default:
-                break;
-        }
+        mMyInsuranceView.finishToFindCoach();
     }
+
+    public void purchaseWithPaidCoach() {
+        User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin()) {
+            //提示登陆
+            mMyInsuranceView.alertToLogin();
+            return;
+        }
+        mMyInsuranceView.finishToPurchaseInsuranceWithPaidCoach();
+    }
+
+    public void purchaseWithoutCoach() {
+        User user = application.getSharedPrefUtil().getUser();
+        if (user == null || !user.isLogin()) {
+            //提示登陆
+            mMyInsuranceView.alertToLogin();
+            return;
+        }
+        mMyInsuranceView.finishToPurchaseInsuranceWithoutCoach();
+    }
+
 
     /**
      * 右上角按钮点击

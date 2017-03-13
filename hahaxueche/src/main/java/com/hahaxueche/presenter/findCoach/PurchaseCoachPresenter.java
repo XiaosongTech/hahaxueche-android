@@ -6,11 +6,13 @@ import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.payment.PaymentMethod;
 import com.hahaxueche.model.payment.Voucher;
+import com.hahaxueche.model.user.coach.ClassType;
 import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.PurchaseCoachView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
@@ -40,15 +42,11 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
     private HHBaseApplication application;
     private Coach mCoach;
     private User mUser;
-    private int license;//1 C1; 2 C2
-    private int classType;//0 超值班; 1 vip
-    private int productType = -1;
+    public ClassType mClassType;
     private int paymentMethod = -1;
     private Voucher mSelectVoucher;
     private ArrayList<Voucher> mUnCumulativeVoucherList;
     private ArrayList<Voucher> mCumulativeVoucherList;
-    //默认选择赔付宝
-    public boolean mIsSelectInsurance = true;
 
     @Override
     public void attachView(PurchaseCoachView view) {
@@ -68,105 +66,24 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         mUnCumulativeVoucherList = null;
     }
 
-    public void setCoach(Coach coach) {
+    public void setPurchaseExtras(Coach coach, ClassType classType) {
         this.mCoach = coach;
-        if (mCoach == null) return;
+        this.mClassType = classType;
+        if (mCoach == null || mClassType == null) return;
         mPurchaseCoachView.loadCoachInfo(mCoach);
-        if (mCoach.coach_group.training_cost != 0) {
-            mPurchaseCoachView.showLicenseC1();
-        }
-        if (mCoach.coach_group.c2_price != 0) {
-            mPurchaseCoachView.showLicenseC2();
-        }
-        selectLicenseC1();
-        selectClassNormal();//默认C1 超值班
+        mPurchaseCoachView.setClassTypeName((classType.licenseType == Common.LICENSE_TYPE_C1 ? "C1" : "C2") + classType.name);
+        mPurchaseCoachView.setClassTypePrice(Utils.getMoney(classType.price));
+        calculateAmount();
         fetchCumulativeVouchers();//代金券
         fetchUnCumulativeVouchers();
         mPurchaseCoachView.loadPaymentMethod(getPaymentMethod());
         paymentMethod = 0;//默认支付方式：支付宝
-        //如果已购买过赔付宝，则强制不用购买
-        if (mUser.student.isPurchasedInsurance()) {
-            mIsSelectInsurance = false;
-            mPurchaseCoachView.unSelectInsurance();
-            mPurchaseCoachView.disableInsurance();
-            calculateAmount();
-        }
-        if (mCoach.coach_group.group_type == 1) {
-            //车友无忧班
-            mIsSelectInsurance = true;
-            mPurchaseCoachView.selectInsurance();
-            mPurchaseCoachView.setInsuranceUnSelectable();
-            calculateAmount();
-        }
         pageStartCount();
-    }
-
-    public void selectLicenseC1() {
-        license = 1;
-        mPurchaseCoachView.unSelectLicense();
-        mPurchaseCoachView.selectLicenseC1();
-        if (mCoach.coach_group.vip_price != 0) {
-            mPurchaseCoachView.showClassVIP();
-        } else {
-            selectClassNormal();
-            mPurchaseCoachView.hideClassVIP();
-        }
-        calculateAmount();
-    }
-
-    public void selectLicenseC2() {
-        license = 2;
-        mPurchaseCoachView.unSelectLicense();
-        mPurchaseCoachView.selectLicenseC2();
-        if (mCoach.coach_group.c2_vip_price != 0) {
-            mPurchaseCoachView.showClassVIP();
-        } else {
-            selectClassNormal();
-            mPurchaseCoachView.hideClassVIP();
-        }
-        calculateAmount();
-    }
-
-    public void selectClassNormal() {
-        classType = 0;
-        mPurchaseCoachView.unSelectClass();
-        mPurchaseCoachView.selectClassNormal();
-        calculateAmount();
-    }
-
-    public void selectClassVip() {
-        classType = 1;
-        mPurchaseCoachView.unSelectClass();
-        mPurchaseCoachView.selectClassVip();
-        calculateAmount();
     }
 
     private void calculateAmount() {
         int voucherAmount = mSelectVoucher != null ? mSelectVoucher.amount : 0;
-        int totalAmount = 0;
-        //可叠加代金券的优惠金额
-        if (mCumulativeVoucherList != null && mCumulativeVoucherList.size() > 0) {
-            for (Voucher voucher : mCumulativeVoucherList) {
-                voucherAmount += voucher.amount;
-            }
-        }
-        if (license == 1 && classType == 0) {
-            productType = 0;
-            totalAmount = mCoach.coach_group.training_cost;
-        } else if (license == 1 && classType == 1) {
-            productType = 1;
-            totalAmount = mCoach.coach_group.vip_price;
-        } else if (license == 2 && classType == 0) {
-            productType = 2;
-            totalAmount = mCoach.coach_group.c2_price;
-        } else if (license == 2 && classType == 1) {
-            productType = 3;
-            totalAmount = mCoach.coach_group.c2_vip_price;
-        }
-        //赔付宝金额计算
-        if (mIsSelectInsurance) {
-            totalAmount += 14900;
-        }
+        int totalAmount = mClassType.price;
         if (voucherAmount > 0) {
             mPurchaseCoachView.setTotalAmountWithVoucher("总价:" + Utils.getMoney(totalAmount) + " 立减:" + Utils.getMoney(voucherAmount),
                     Utils.getMoney(totalAmount - voucherAmount));
@@ -203,10 +120,6 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
             mPurchaseCoachView.showMessage("该学员已经购买过教练");
             return;
         }
-        if (productType < 0) {
-            mPurchaseCoachView.showMessage("请选择课程类型");
-            return;
-        }
         if (paymentMethod < 0) {
             mPurchaseCoachView.showMessage("请选择支付方式");
             return;
@@ -218,8 +131,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         final HashMap<String, Object> mapParam = new HashMap<>();
         mapParam.put("coach_id", mCoach.id);
         mapParam.put("method", paymentMethod);
-        mapParam.put("product_type", productType);
-        mapParam.put("need_insurance", mIsSelectInsurance);
+        mapParam.put("product_type", mClassType.type);
         if (mSelectVoucher != null) {
             mapParam.put("voucher_id", mSelectVoucher.id);
         }
@@ -487,21 +399,6 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         mPurchaseCoachView.showCumulativeVoucher(true);
         for (Voucher voucher : mCumulativeVoucherList) {
             mPurchaseCoachView.addCumulativeVoucher(voucher.title, "-" + Utils.getMoney(voucher.amount));
-        }
-        calculateAmount();
-    }
-
-    /**
-     * 选择赔付保
-     *
-     * @param isSelect
-     */
-    public void selectInsurance(boolean isSelect) {
-        mIsSelectInsurance = isSelect;
-        if (mIsSelectInsurance) {
-            mPurchaseCoachView.selectInsurance();
-        } else {
-            mPurchaseCoachView.unSelectInsurance();
         }
         calculateAmount();
     }

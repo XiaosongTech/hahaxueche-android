@@ -286,6 +286,11 @@ public interface HHApiService {
     @POST("students/{id}/insurance_services/hmb")
     Observable<Response<Student>> claimInsurance(@Path("id") String studentId, @Header("X-Access-Token") String accessToken);
 
+    @FormUrlEncoded
+    @POST("groupons")
+    Observable<ResponseBody> getPrepayCharge(@FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
+
+
     class Factory {
         public static Retrofit getRetrofit() {
             HHLog.v("baseUrl -> " + baseUrl);

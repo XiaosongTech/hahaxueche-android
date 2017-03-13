@@ -32,12 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
-            <ImageView
-                android:id="@+id/iv_149_wei_pay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/botton_149peifubaby_wei" />
+            <include layout="@layout/button_insurance_with_new_coach" />
         </FrameLayout>
 
         <FrameLayout
@@ -45,12 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
-            <ImageView
-                android:id="@+id/iv_149_yi_pay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/botton_149peifubaby_yi" />
+            <include layout="@layout/button_insurance_with_paid_coach" />
         </FrameLayout>
 
         <FrameLayout
@@ -58,12 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
-            <ImageView
-                android:id="@+id/iv_249_pay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/botton_249peifubaby" />
+            <include layout="@layout/button_insurance_without_coach" />
         </FrameLayout>
     </LinearLayout>
 </LinearLayout>

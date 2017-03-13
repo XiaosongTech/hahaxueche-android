@@ -26,6 +26,7 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.payment.PaymentMethod;
 import com.hahaxueche.model.payment.Voucher;
+import com.hahaxueche.model.user.coach.ClassType;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.findCoach.PurchaseCoachPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
@@ -78,14 +79,6 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     LinearLayout mLlyPurchase;
     @BindView(R.id.lly_main)
     LinearLayout mLlyMain;
-    @BindView(R.id.tv_C1)
-    TextView mTvC1;
-    @BindView(R.id.tv_C2)
-    TextView mTvC2;
-    @BindView(R.id.tv_normal)
-    TextView mTvNormal;
-    @BindView(R.id.tv_vip)
-    TextView mTvVip;
     @BindView(R.id.tv_total_amount)
     TextView mTvTotalAmount;
     @BindView(R.id.rly_voucher)
@@ -102,12 +95,10 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     TextView mTvTotalAmountLabel;
     @BindView(R.id.lly_person_voucher)
     LinearLayout mLlyPersonVoucher;
-    @BindView(R.id.tv_insurance_amount)
-    TextView mTvInsuranceAmount;
-    @BindView(R.id.rly_insurance)
-    RelativeLayout mRlyInsurance;
-    @BindView(R.id.iv_more_insurance)
-    ImageView mIvMoreInsurance;
+    @BindView(R.id.tv_class_type_name)
+    TextView mTvClassTypeName;
+    @BindView(R.id.tv_class_type_price)
+    TextView mTvClassTypePrice;
     private SelectInsuranceDialog mInsuranceDialog;
 
     private HHBaseApplication application;
@@ -125,7 +116,8 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
         initActionBar();
         Intent intent = getIntent();
         if (intent.getParcelableExtra("coach") != null) {
-            mPresenter.setCoach((Coach) intent.getParcelableExtra("coach"));
+            mPresenter.setPurchaseExtras((Coach) intent.getParcelableExtra("coach"),
+                    (ClassType) intent.getParcelableExtra("classType"));
         }
     }
 
@@ -151,16 +143,11 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     }
 
     @OnClick({R.id.tv_sure_pay,
-            R.id.tv_C1,
-            R.id.tv_C2,
-            R.id.tv_normal,
-            R.id.tv_vip,
-            R.id.rly_voucher,
-            R.id.rly_insurance})
+            R.id.rly_voucher})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_sure_pay:
-                if (mPresenter.mIsSelectInsurance) {
+                if (mPresenter.mClassType.isForceInsurance) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("赔付宝购买提示");
                     builder.setMessage("请确认您还未参加考科目一考试，购买后，必须在预约第一次科目一考试的前一个工作日24点前，完成身份信息上传，否则无法获得理赔。");
@@ -181,33 +168,10 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
                     mPresenter.createCharge();
                 }
                 break;
-            case R.id.tv_C1:
-                mPresenter.selectLicenseC1();
-                break;
-            case R.id.tv_C2:
-                mPresenter.selectLicenseC2();
-                break;
-            case R.id.tv_normal:
-                mPresenter.selectClassNormal();
-                break;
-            case R.id.tv_vip:
-                mPresenter.selectClassVip();
-                break;
             case R.id.rly_voucher:
                 Intent intent = new Intent(getContext(), SelectVoucherActivity.class);
                 intent.putParcelableArrayListExtra("voucherList", mPresenter.getUnCumulativeVoucherList());
                 startActivityForResult(intent, RequestCode.REQUEST_CODE_SELECT_VOUCHERS);
-                break;
-            case R.id.rly_insurance:
-                if (mInsuranceDialog == null) {
-                    mInsuranceDialog = new SelectInsuranceDialog(getContext(), new SelectInsuranceDialog.OnSelectListener() {
-                        @Override
-                        public void select(boolean isSelect) {
-                            mPresenter.selectInsurance(isSelect);
-                        }
-                    });
-                }
-                mInsuranceDialog.show();
                 break;
             default:
                 break;
@@ -250,71 +214,21 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     }
 
     @Override
+    public void setClassTypeName(String name) {
+        mTvClassTypeName.setText(name);
+    }
+
+    @Override
+    public void setClassTypePrice(String price) {
+        mTvClassTypePrice.setText(price);
+    }
+
+    @Override
     public void loadPaymentMethod(ArrayList<PaymentMethod> paymentMethods) {
         if (paymentMethods == null || paymentMethods.size() < 1) return;
         for (PaymentMethod paymentMethod : paymentMethods) {
             mLlyPurchase.addView(getPaymentAdapter(paymentMethod, paymentMethods.indexOf(paymentMethod)), 1 + paymentMethods.indexOf(paymentMethod));
         }
-    }
-
-    @Override
-    public void showLicenseC1() {
-        mTvC1.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void showLicenseC2() {
-        mTvC2.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void showClassVIP() {
-        mTvVip.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideClassVIP() {
-        mTvVip.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void selectLicenseC1() {
-        mTvC1.setBackgroundResource(R.drawable.rect_bg_appcolor_sm);
-        mTvC1.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
-    }
-
-    @Override
-    public void selectLicenseC2() {
-        mTvC2.setBackgroundResource(R.drawable.rect_bg_appcolor_sm);
-        mTvC2.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
-    }
-
-    @Override
-    public void unSelectLicense() {
-        mTvC1.setBackgroundResource(R.drawable.rect_bg_gray_sm);
-        mTvC1.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
-        mTvC2.setBackgroundResource(R.drawable.rect_bg_gray_sm);
-        mTvC2.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
-    }
-
-    @Override
-    public void selectClassNormal() {
-        mTvNormal.setBackgroundResource(R.drawable.rect_bg_appcolor_sm);
-        mTvNormal.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
-    }
-
-    @Override
-    public void selectClassVip() {
-        mTvVip.setBackgroundResource(R.drawable.rect_bg_appcolor_sm);
-        mTvVip.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
-    }
-
-    @Override
-    public void unSelectClass() {
-        mTvNormal.setBackgroundResource(R.drawable.rect_bg_gray_sm);
-        mTvNormal.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
-        mTvVip.setBackgroundResource(R.drawable.rect_bg_gray_sm);
-        mTvVip.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
     }
 
     private RelativeLayout getPaymentAdapter(final PaymentMethod paymentMethod, int i) {
@@ -429,7 +343,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     @Override
     public void paySuccess() {
         Intent intent = new Intent();
-        intent.putExtra("isOnlyPurchaseCoach", !mPresenter.mIsSelectInsurance);
+        intent.putExtra("isOnlyPurchaseCoach", !mPresenter.mClassType.isForceInsurance);
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -509,30 +423,6 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
         rlyVoucher.addView(tvPrice);
 
         mLlyPersonVoucher.addView(rlyVoucher);
-    }
-
-    @Override
-    public void selectInsurance() {
-        mTvInsuranceAmount.setText(Utils.getMoney(14900));
-        mTvInsuranceAmount.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
-    }
-
-    @Override
-    public void unSelectInsurance() {
-        mTvInsuranceAmount.setText("未选择");
-        mTvInsuranceAmount.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
-    }
-
-    @Override
-    public void disableInsurance() {
-        mRlyInsurance.setVisibility(View.GONE);
-        mRlyInsurance.setClickable(false);
-    }
-
-    @Override
-    public void setInsuranceUnSelectable() {
-        mRlyInsurance.setClickable(false);
-        mIvMoreInsurance.setVisibility(View.INVISIBLE);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -31,6 +31,9 @@ public class RequestCode {
     public static final int REQUEST_CODE_MY_INSURANCE = 122;
     public static final int REQUEST_CODE_PURCHASE_INSURANCE = 123;
     public static final int REQUEST_CODE_EXAM_LIBRARY = 124;
+    public static final int REQUEST_CODE_CLASS_TYPE_INTRO = 125;
+    public static final int REQUEST_CODE_PURCHASE_PREPAID = 126;
+    public static final int REQUEST_CODE_PREPAY_SUCCESS = 127;
     //permission request
     public static final int PERMISSIONS_REQUEST_SEND_SMS = 600;
     public static final int PERMISSIONS_REQUEST_READ_CONTACTS = 601;

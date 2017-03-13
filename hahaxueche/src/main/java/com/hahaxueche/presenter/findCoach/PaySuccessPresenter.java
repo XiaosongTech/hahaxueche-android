@@ -2,11 +2,14 @@ package com.hahaxueche.presenter.findCoach;
 
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
+import com.hahaxueche.model.payment.PurchasedService;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.PaySuccessView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.Utils;
 import com.qiyukf.unicorn.api.ConsultSource;
 import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFUserInfo;
@@ -32,7 +35,6 @@ public class PaySuccessPresenter implements Presenter<PaySuccessView> {
     public void attachView(PaySuccessView view) {
         this.mPaySuccessView = view;
         application = HHBaseApplication.get(view.getContext());
-        HHBaseApplication application = HHBaseApplication.get(mPaySuccessView.getContext());
         final User user = application.getSharedPrefUtil().getUser();
         if (user == null || user.student == null) return;
         if (isFromPurchaseInsurance) {
@@ -66,7 +68,15 @@ public class PaySuccessPresenter implements Presenter<PaySuccessView> {
 
                         @Override
                         public void onNext(Coach coach) {
-                            mPaySuccessView.loadPayInfo(coach, user.student.purchased_services.get(0));
+                            mPaySuccessView.setPayCoachName(coach.name);
+                            PurchasedService ps = user.student.purchased_services.get(0);
+                            mPaySuccessView.setPayTime(Utils.getDateFromUTC(ps.paid_at));
+                            int insuranceWithNewCoachPrice = application.getConstants().insurance_prices.pay_with_new_coach_price;
+                            int payAmount = ps.actual_amount +
+                                    ((ps.product_type == Common.CLASS_TYPE_WUYOU_C1 || ps.product_type == Common.CLASS_TYPE_WUYOU_C2) ?
+                                            insuranceWithNewCoachPrice : 0);
+                            mPaySuccessView.setPayAmount(Utils.getMoney(payAmount));
+                            mPaySuccessView.setPayOrderNo(ps.order_no);
                         }
                     });
         }

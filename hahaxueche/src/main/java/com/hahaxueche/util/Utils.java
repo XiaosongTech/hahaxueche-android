@@ -137,6 +137,11 @@ public class Utils {
         return ret;
     }
 
+    public static String getLocalDate() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        return format.format(new java.util.Date());
+    }
+
     public static String getDateFromUTC(String UTCTime) {
         String localTimeStr = "";
         DateFormat UTCformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
