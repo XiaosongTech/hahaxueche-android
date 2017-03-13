@@ -575,4 +575,9 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
             mCoachDetailView.navigateToReferFriends();
         }
     }
+
+    public boolean isPurchasedService() {
+        User user = application.getSharedPrefUtil().getUser();
+        return user != null && user.isLogin() && user.student.hasPurchasedService();
+    }
 }

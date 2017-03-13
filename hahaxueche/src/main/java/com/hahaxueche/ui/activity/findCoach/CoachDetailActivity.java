@@ -123,8 +123,6 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     TextView mTvBadgeLevel;
     @BindView(R.id.tv_badge_pay)
     TextView mTvBadgePay;
-    @BindView(R.id.tv_more_insurance)
-    TextView mTvMoreInsurance;
     @BindView(R.id.tv_C1_label)
     TextView mTvC1Label;
     @BindView(R.id.tv_C2_label)
@@ -175,7 +173,6 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             }
             mPresenter.setCoach(coach_id);
         }
-        mTvMoreInsurance.setText("?");
     }
 
     @Override
@@ -450,7 +447,6 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             R.id.rly_training_field,
             R.id.tv_free_try,
             R.id.lly_platform_assurance,
-            R.id.tv_more_insurance,
             R.id.tv_prepay
     })
     public void onClick(View view) {
@@ -481,9 +477,6 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 break;
             case R.id.lly_platform_assurance:
                 mPresenter.clickPlatformAssurance();
-                break;
-            case R.id.tv_more_insurance:
-                openWebView(WebViewUrl.WEB_URL_PEIFUBAO);
                 break;
             case R.id.tv_prepay:
                 startActivityForResult(new Intent(getContext(), PurchasePrepaidActivity.class),
@@ -828,8 +821,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         RelativeLayout.LayoutParams ivArrowParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         ivArrowParams.addRule(RelativeLayout.RIGHT_OF, tvClassTypeNameId);
-        ivArrowParams.addRule(RelativeLayout.ALIGN_BOTTOM, tvClassTypeNameId);
-        ivArrowParams.setMargins(length10, 0, 0, 0);
+        ivArrowParams.addRule(RelativeLayout.ALIGN_TOP, tvClassTypeNameId);
+        ivArrowParams.setMargins(length10, length4, 0, 0);
         ivArrow.setLayoutParams(ivArrowParams);
         ivArrow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_coachmsg_more_arrow));
         rlyClassType.addView(ivArrow);
@@ -880,6 +873,9 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 intent.putExtra("totalAmount", classType.price);
                 intent.putExtra("coach", mPresenter.getCoach());
                 intent.putExtra("classType", classType);
+                if (mPresenter.isPurchasedService()) {
+                    intent.putExtra("isShowPurchase", false);
+                }
                 startActivityForResult(intent, RequestCode.REQUEST_CODE_CLASS_TYPE_INTRO);
             }
         });
