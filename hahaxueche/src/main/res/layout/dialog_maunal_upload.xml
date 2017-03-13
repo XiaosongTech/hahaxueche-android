@@ -51,7 +51,7 @@
             android:background="@drawable/rect_bg_trans_bd_gray_corner"
             android:gravity="center_vertical"
             android:hint="身份证号码"
-            android:inputType="number"
+            android:inputType="text"
             android:maxLines="1"
             android:padding="10dp"
             android:textColor="@color/haha_gray"
