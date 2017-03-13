@@ -35,7 +35,6 @@ public class PaySuccessPresenter implements Presenter<PaySuccessView> {
     public void attachView(PaySuccessView view) {
         this.mPaySuccessView = view;
         application = HHBaseApplication.get(view.getContext());
-        final HHBaseApplication application = HHBaseApplication.get(mPaySuccessView.getContext());
         final User user = application.getSharedPrefUtil().getUser();
         if (user == null || user.student == null) return;
         if (isFromPurchaseInsurance) {

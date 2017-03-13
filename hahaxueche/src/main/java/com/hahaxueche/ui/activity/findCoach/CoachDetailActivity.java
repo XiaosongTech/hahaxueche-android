@@ -40,6 +40,7 @@ import com.hahaxueche.presenter.findCoach.CoachDetailPresenter;
 import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
+import com.hahaxueche.ui.activity.myPage.MyVoucherActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.activity.myPage.StudentReferActivity;
 import com.hahaxueche.ui.activity.myPage.UploadIdCardActivity;
@@ -449,7 +450,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             R.id.rly_training_field,
             R.id.tv_free_try,
             R.id.lly_platform_assurance,
-            R.id.tv_more_insurance
+            R.id.tv_more_insurance,
+            R.id.tv_prepay
     })
     public void onClick(View view) {
         switch (view.getId()) {
@@ -482,6 +484,10 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 break;
             case R.id.tv_more_insurance:
                 openWebView(WebViewUrl.WEB_URL_PEIFUBAO);
+                break;
+            case R.id.tv_prepay:
+                startActivityForResult(new Intent(getContext(), PurchasePrepaidActivity.class),
+                        RequestCode.REQUEST_CODE_PURCHASE_PREPAID);
                 break;
             default:
                 break;
@@ -928,6 +934,13 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                     mPresenter.purchaseCoach((ClassType) data.getParcelableExtra("classType"));
                 }
             }
+        } else if (requestCode == RequestCode.REQUEST_CODE_PURCHASE_PREPAID) {
+            if (resultCode == Activity.RESULT_OK) {
+                startActivityForResult(new Intent(getContext(), PrepaySuccessActivity.class),
+                        RequestCode.REQUEST_CODE_PREPAY_SUCCESS);
+            }
+        } else if (requestCode == RequestCode.REQUEST_CODE_PREPAY_SUCCESS) {
+            startActivity(new Intent(getContext(), MyVoucherActivity.class));
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
