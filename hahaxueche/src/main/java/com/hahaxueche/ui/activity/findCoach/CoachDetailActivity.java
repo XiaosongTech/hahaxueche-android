@@ -827,7 +827,9 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         ImageView ivArrow = new ImageView(this);
         RelativeLayout.LayoutParams ivArrowParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        ivArrowParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+        ivArrowParams.addRule(RelativeLayout.RIGHT_OF, tvClassTypeNameId);
+        ivArrowParams.addRule(RelativeLayout.ALIGN_BOTTOM, tvClassTypeNameId);
+        ivArrowParams.setMargins(length10, 0, 0, 0);
         ivArrow.setLayoutParams(ivArrowParams);
         ivArrow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_coachmsg_more_arrow));
         rlyClassType.addView(ivArrow);

@@ -50,8 +50,8 @@ import butterknife.OnClick;
 
 public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeIntroView {
     private ClassTypeIntroPresenter mPresenter;
-    @BindView(R.id.frl_main)
-    FrameLayout mFrlMain;
+    @BindView(R.id.lly_main)
+    LinearLayout mLlyMain;
     @BindView(R.id.tv_customer_service)
     TextView mTvCustomerService;
     @BindView(R.id.lly_fixed_fees)
@@ -68,8 +68,6 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
     TextView mTvTrainingCost;
     @BindView(R.id.lly_insurance)
     LinearLayout mLlyInsurance;
-    @BindView(R.id.tv_insurance_cost)
-    TextView mTvInsuranceCost;
     @BindView(R.id.tv_total_amount)
     TextView mTvTotalAmount;
     @BindView(R.id.iv_dash1)
@@ -84,8 +82,6 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
     ImageView mIvDash5;
     @BindView(R.id.iv_dash6)
     ImageView mIvDash6;
-    @BindView(R.id.iv_dash7)
-    ImageView mIvDash7;
     @BindView(R.id.lly_moni)
     LinearLayout mLlyMoni;
     @BindView(R.id.tv_pay)
@@ -113,7 +109,6 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
         mIvDash4.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mIvDash5.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mIvDash6.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        mIvDash7.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 
     private void initActionBar() {
@@ -198,7 +193,7 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
     }
 
     public void showMessage(String message) {
-        Snackbar.make(mFrlMain, message, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mLlyMain, message, Snackbar.LENGTH_SHORT).show();
     }
 
     /**
@@ -342,11 +337,6 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
     @Override
     public void setTotalAmount(String cost) {
         mTvTotalAmount.setText(cost);
-    }
-
-    @Override
-    public void setInsuranceCost(String cost) {
-        mTvInsuranceCost.setText(cost);
     }
 
     @Override

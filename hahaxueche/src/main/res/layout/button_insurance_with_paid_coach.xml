@@ -11,7 +11,7 @@
         android:layout_height="55dp"
         android:background="@drawable/button_insurance_top_half"
         android:gravity="center"
-        android:text="已在哈哈报名\n未考科一"
+        android:text="已在哈哈线上\n报名"
         android:textColor="@color/haha_gray_dark" />
 
     <TextView
@@ -20,6 +20,5 @@
         android:layout_height="30dp"
         android:background="@drawable/button_insurance_bottom_half"
         android:gravity="center"
-        android:text="限时价 ¥249"
         android:textColor="@color/haha_white" />
 </LinearLayout>

@@ -51,10 +51,6 @@ public class ClassTypeIntroPresenter implements Presenter<ClassTypeIntroView> {
             mClassTypeIntroView.setServiceContentWuyou();
         }
         int insuranceWithNewCoachPrice = application.getConstants().insurance_prices.pay_with_new_coach_price;
-        if (classType.isForceInsurance) {
-            //有赔付宝金额的
-            mClassTypeIntroView.setInsuranceCost(Utils.getMoney(insuranceWithNewCoachPrice));
-        }
         if (mCoach.coach_group.group_type == Common.GROUP_TYPE_CHEYOU_WUYOU) {
             mClassTypeIntroView.showMoniInFeeDetail();
         }

@@ -20,6 +20,5 @@
         android:layout_height="30dp"
         android:background="@drawable/button_insurance_bottom_half"
         android:gravity="center"
-        android:text="限时价 ¥299"
         android:textColor="@color/haha_white" />
 </LinearLayout>

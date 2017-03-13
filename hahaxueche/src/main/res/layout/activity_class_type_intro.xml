@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/frl_main"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lly_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/haha_white">
+    android:background="@color/haha_white"
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -368,22 +370,6 @@
                         android:textColor="@color/haha_gray_dark"
                         android:textSize="16sp" />
 
-                    <ImageView
-                        android:id="@+id/iv_dash2"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/divider_dash_line" />
-
-                    <TextView
-                        android:id="@+id/tv_insurance_cost"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/app_theme_color"
-                        android:textSize="16sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -399,7 +385,7 @@
                         android:textColor="@color/haha_gray" />
 
                     <ImageView
-                        android:id="@+id/iv_dash3"
+                        android:id="@+id/iv_dash2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -429,7 +415,7 @@
                         android:textColor="@color/haha_gray" />
 
                     <ImageView
-                        android:id="@+id/iv_dash4"
+                        android:id="@+id/iv_dash3"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -459,7 +445,7 @@
                         android:textColor="@color/haha_gray" />
 
                     <ImageView
-                        android:id="@+id/iv_dash5"
+                        android:id="@+id/iv_dash4"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -493,7 +479,7 @@
                     android:textSize="16sp" />
 
                 <ImageView
-                    android:id="@+id/iv_dash6"
+                    android:id="@+id/iv_dash5"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -524,7 +510,7 @@
                     android:textSize="16sp" />
 
                 <ImageView
-                    android:id="@+id/iv_dash7"
+                    android:id="@+id/iv_dash6"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -565,21 +551,20 @@
                     android:text="对订单有任何疑问，可致电400-001-6006 或 点击联系：在线客服"
                     android:textColor="@color/haha_gray" />
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/tv_pay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/rect_bg_orange_ssm"
-                android:paddingBottom="5dp"
-                android:paddingLeft="40dp"
-                android:paddingRight="40dp"
-                android:paddingTop="5dp"
-                android:text="立即购买"
-                android:textColor="@color/haha_white"
-                android:textSize="18sp" />
         </LinearLayout>
     </ScrollView>
-</FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_pay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rect_bg_orange_ssm"
+        android:gravity="center"
+        android:paddingBottom="12dp"
+        android:paddingTop="12dp"
+        android:text="立即购买"
+        android:textColor="@color/haha_white"
+        android:textSize="18sp" />
+</LinearLayout>
