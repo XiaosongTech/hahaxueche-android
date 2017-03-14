@@ -149,8 +149,8 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
             case R.id.tv_sure_pay:
                 if (mPresenter.mClassType.isForceInsurance) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("赔付宝购买提示");
-                    builder.setMessage("请确认您还未参加考科目一考试，购买后，必须在预约第一次科目一考试的前一个工作日24点前，完成身份信息上传，否则无法获得理赔。");
+                    builder.setTitle("无忧班购买提示");
+                    builder.setMessage("为了让您学车无忧，完成后续理赔等各项事宜，请购买无忧班后必须在预约第一次科目一考试的前一个工作日24点前，完成身份信息上传，否则无法获得理赔。");
                     builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
