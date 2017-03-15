@@ -11,6 +11,7 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.CoachListView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.WebViewUrl;
 import com.umeng.analytics.MobclickAgent;
@@ -27,8 +28,6 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 
 public class CoachListPresenter extends HHBasePresenter implements Presenter<CoachListView> {
-    private static final int PAGE = 1;
-    private static final int PER_PAGE = 10;
     private CoachListView mView;
     private Subscription subscription;
     private HHBaseApplication application;
@@ -109,9 +108,12 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
             locations.add(String.valueOf(application.getMyLocation().lng));
         }
         HHApiService apiService = application.getApiService();
-        subscription = apiService.getCoaches(PAGE, PER_PAGE, TextUtils.isEmpty(goldenCoachOnly) ? null : goldenCoachOnly,
-                TextUtils.isEmpty(licenseType) ? null : licenseType, TextUtils.isEmpty(filterPrice) ? null : filterPrice, cityId,
-                fieldIds, TextUtils.isEmpty(filterDistance) ? null : filterDistance, locations, sortBy, vipOnly, studentId)
+        subscription = apiService.getCoaches(Common.START_PAGE, Common.PER_PAGE,
+                TextUtils.isEmpty(goldenCoachOnly) ? null : goldenCoachOnly,
+                TextUtils.isEmpty(licenseType) ? null : licenseType,
+                TextUtils.isEmpty(filterPrice) ? null : filterPrice, cityId,
+                fieldIds, TextUtils.isEmpty(filterDistance) ? null : filterDistance,
+                locations, sortBy, vipOnly, studentId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<CoachResponseList>() {

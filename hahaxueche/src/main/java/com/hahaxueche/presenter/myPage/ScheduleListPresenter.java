@@ -13,6 +13,7 @@ import com.hahaxueche.model.user.coach.Review;
 import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.ScheduleListView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 
@@ -35,8 +36,6 @@ import rx.functions.Func1;
  */
 
 public class ScheduleListPresenter extends HHBasePresenter implements Presenter<ScheduleListView> {
-    private static final int PAGE = 1;
-    private static final int PER_PAGE = 10;
     private ScheduleListView mView;
     private Subscription subscription;
     private HHBaseApplication application;
@@ -73,7 +72,8 @@ public class ScheduleListPresenter extends HHBasePresenter implements Presenter<
                     @Override
                     public Observable<ScheduleEventResponseList> call(BaseValid baseValid) {
                         if (baseValid.valid) {
-                            return apiService.getSchedules(user.student.id, PAGE, PER_PAGE, booked, user.session.access_token);
+                            return apiService.getSchedules(user.student.id, Common.START_PAGE, Common.PER_PAGE,
+                                    booked, user.session.access_token);
                         } else {
                             return application.getSessionObservable();
                         }

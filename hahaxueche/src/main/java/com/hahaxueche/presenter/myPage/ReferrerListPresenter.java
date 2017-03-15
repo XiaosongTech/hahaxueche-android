@@ -10,6 +10,7 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.ReferrerListView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 
@@ -26,8 +27,6 @@ import rx.functions.Func1;
  */
 
 public class ReferrerListPresenter extends HHBasePresenter implements Presenter<ReferrerListView> {
-    private static final int PAGE = 1;
-    private static final int PER_PAGE = 10;
     private ReferrerListView mView;
     private Subscription subscription;
     private HHBaseApplication application;
@@ -56,7 +55,8 @@ public class ReferrerListPresenter extends HHBasePresenter implements Presenter<
                         @Override
                         public Observable<ReferrerResponseList> call(BaseValid baseValid) {
                             if (baseValid.valid) {
-                                return apiService.getReferrers(user.student.id, PAGE, PER_PAGE, user.session.access_token);
+                                return apiService.getReferrers(user.student.id, Common.START_PAGE, Common.PER_PAGE,
+                                        user.session.access_token);
                             } else {
                                 return application.getSessionObservable();
                             }

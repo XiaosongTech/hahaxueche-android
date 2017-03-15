@@ -40,8 +40,6 @@ import rx.functions.Func1;
  */
 
 public class CoachDetailPresenter extends HHBasePresenter implements Presenter<CoachDetailView> {
-    private static final int PAGE = 1;
-    private static final int PER_PAGE = 10;
     private CoachDetailView mView;
     private Subscription subscription;
     private HHBaseApplication application;
@@ -198,7 +196,7 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
 
     private void loadReviews() {
         HHApiService apiService = application.getApiService();
-        subscription = apiService.getReviews(mCoach.user_id, PAGE, PER_PAGE)
+        subscription = apiService.getReviews(mCoach.user_id, Common.START_PAGE, Common.PER_PAGE)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<ReviewResponseList>() {

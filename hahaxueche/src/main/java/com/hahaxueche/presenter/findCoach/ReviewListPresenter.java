@@ -9,6 +9,7 @@ import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.ReviewListView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 
 import rx.Subscriber;
@@ -20,8 +21,6 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 
 public class ReviewListPresenter extends HHBasePresenter implements Presenter<ReviewListView> {
-    private static final int PAGE = 1;
-    private static final int PER_PAGE = 10;
     private ReviewListView mView;
     private Subscription subscription;
     private HHBaseApplication application;
@@ -42,7 +41,7 @@ public class ReviewListPresenter extends HHBasePresenter implements Presenter<Re
     public void fetchReviews() {
         if (mCoach == null) return;
         HHApiService apiService = application.getApiService();
-        subscription = apiService.getReviews(mCoach.user_id, PAGE, PER_PAGE)
+        subscription = apiService.getReviews(mCoach.user_id, Common.START_PAGE, Common.PER_PAGE)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<ReviewResponseList>() {

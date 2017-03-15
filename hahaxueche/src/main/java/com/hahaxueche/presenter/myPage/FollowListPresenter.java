@@ -10,6 +10,7 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.FollowListView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 
 import java.util.HashMap;
@@ -25,8 +26,6 @@ import rx.functions.Func1;
  */
 
 public class FollowListPresenter extends HHBasePresenter implements Presenter<FollowListView> {
-    private static final int PAGE = 1;
-    private static final int PER_PAGE = 10;
     private FollowListView mView;
     private Subscription subscription;
     private HHBaseApplication application;
@@ -56,7 +55,8 @@ public class FollowListPresenter extends HHBasePresenter implements Presenter<Fo
                     @Override
                     public Observable<CoachResponseList> call(BaseValid baseValid) {
                         if (baseValid.valid) {
-                            return apiService.getFollowList(PAGE, PER_PAGE, mUser.session.access_token);
+                            return apiService.getFollowList(Common.START_PAGE, Common.PER_PAGE,
+                                    mUser.session.access_token);
                         } else {
                             return application.getSessionObservable();
                         }
@@ -97,7 +97,8 @@ public class FollowListPresenter extends HHBasePresenter implements Presenter<Fo
                     @Override
                     public Observable<CoachResponseList> call(BaseValid baseValid) {
                         if (baseValid.valid) {
-                            return apiService.getFollowList(PAGE, PER_PAGE, mUser.session.access_token);
+                            return apiService.getFollowList(Common.START_PAGE, Common.PER_PAGE,
+                                    mUser.session.access_token);
                         } else {
                             return application.getSessionObservable();
                         }

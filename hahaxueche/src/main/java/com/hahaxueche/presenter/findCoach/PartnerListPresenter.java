@@ -9,6 +9,7 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.PartnerListView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.WebViewUrl;
 import com.umeng.analytics.MobclickAgent;
@@ -24,8 +25,6 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 
 public class PartnerListPresenter extends HHBasePresenter implements Presenter<PartnerListView> {
-    private static final int PAGE = 1;
-    private static final int PER_PAGE = 10;
     private PartnerListView mView;
     private Subscription subscription;
     private HHBaseApplication application;
@@ -78,7 +77,8 @@ public class PartnerListPresenter extends HHBasePresenter implements Presenter<P
             studentId = user.student.id;
         }
         HHApiService apiService = application.getApiService();
-        subscription = apiService.getPartners(PAGE, PER_PAGE, TextUtils.isEmpty(licenseType) ? null : licenseType,
+        subscription = apiService.getPartners(Common.START_PAGE, Common.PER_PAGE,
+                TextUtils.isEmpty(licenseType) ? null : licenseType,
                 TextUtils.isEmpty(filterPrice) ? null : filterPrice, cityId, sortBy, studentId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())

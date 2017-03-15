@@ -11,6 +11,7 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.community.ArticleListView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.WebViewUrl;
 import com.umeng.analytics.MobclickAgent;
@@ -27,8 +28,6 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 
 public class ArticleListPresenter extends HHBasePresenter implements Presenter<ArticleListView> {
-    private static final int PAGE = 1;
-    private static final int PER_PAGE = 10;
     private String nextLink;
     private ArticleListView mView;
     private Subscription subscription;
@@ -61,7 +60,7 @@ public class ArticleListPresenter extends HHBasePresenter implements Presenter<A
             }
         }
         HHApiService apiService = application.getApiService();
-        subscription = apiService.getArticles(PAGE, PER_PAGE, isPopular, category, studentId)
+        subscription = apiService.getArticles(Common.START_PAGE, Common.PER_PAGE, isPopular, category, studentId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<ArticleResponseList>() {
