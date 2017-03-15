@@ -1,11 +1,9 @@
 package com.hahaxueche.presenter.myPage;
 
 import com.hahaxueche.HHBaseApplication;
-import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.payment.InsurancePrices;
-import com.hahaxueche.model.payment.PaymentMethod;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.presenter.HHBasePresenter;
@@ -18,7 +16,6 @@ import com.hahaxueche.util.Utils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -62,24 +59,6 @@ public class PurchaseInsurancePresenter extends HHBasePresenter implements Prese
                 ip.pay_without_coach_price : ip.pay_with_paid_coach_price;
         mView.setPayAmount("总价：" + Utils.getMoney(amount));
         mView.setNotice("注: 请确认您还未参加科目一考试");
-    }
-
-    /**
-     * 支付方式，目前支持支付宝，银行卡，分期乐
-     *
-     * @return
-     */
-    private ArrayList<PaymentMethod> getPaymentMethod() {
-        ArrayList<PaymentMethod> paymentMethods = new ArrayList<>();
-        PaymentMethod aliPay = new PaymentMethod(0, R.drawable.ic_alipay_icon, "支付宝", "推荐拥有支付宝账号的用户使用");
-        PaymentMethod wxlPay = new PaymentMethod(5, R.drawable.ic_wx_icon, "微信支付", "推荐拥有微信账号的用户使用");
-        PaymentMethod cardPay = new PaymentMethod(4, R.drawable.ic_cardpay_icon, "银行卡", "一网通支付，支持所有主流借记卡/信用卡");
-        PaymentMethod fqlPay = new PaymentMethod(1, R.drawable.logo_fenqile, "分期乐", "推荐分期使用");
-        paymentMethods.add(aliPay);
-        paymentMethods.add(wxlPay);
-        paymentMethods.add(cardPay);
-        paymentMethods.add(fqlPay);
-        return paymentMethods;
     }
 
     public void setPaymentMethod(int paymentMethod) {

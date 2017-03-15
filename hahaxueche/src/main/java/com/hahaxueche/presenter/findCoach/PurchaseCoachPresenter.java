@@ -1,15 +1,13 @@
 package com.hahaxueche.presenter.findCoach;
 
 import com.hahaxueche.HHBaseApplication;
-import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseValid;
-import com.hahaxueche.model.payment.PaymentMethod;
 import com.hahaxueche.model.payment.Voucher;
-import com.hahaxueche.model.user.coach.ClassType;
-import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.user.coach.ClassType;
 import com.hahaxueche.model.user.coach.Coach;
+import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.PurchaseCoachView;
@@ -95,24 +93,6 @@ public class PurchaseCoachPresenter extends HHBasePresenter implements Presenter
 
     public void setPaymentMethod(int paymentMethod) {
         this.paymentMethod = paymentMethod;
-    }
-
-    /**
-     * 支付方式，目前支持支付宝，银行卡，分期乐
-     *
-     * @return
-     */
-    private ArrayList<PaymentMethod> getPaymentMethod() {
-        ArrayList<PaymentMethod> paymentMethods = new ArrayList<>();
-        PaymentMethod aliPay = new PaymentMethod(0, R.drawable.ic_alipay_icon, "支付宝", "推荐拥有支付宝账号的用户使用");
-        PaymentMethod wxlPay = new PaymentMethod(5, R.drawable.ic_wx_icon, "微信支付", "推荐拥有微信账号的用户使用");
-        PaymentMethod cardPay = new PaymentMethod(4, R.drawable.ic_cardpay_icon, "银行卡", "一网通支付，支持所有主流借记卡/信用卡");
-        PaymentMethod fqlPay = new PaymentMethod(1, R.drawable.logo_fenqile, "分期乐", "推荐分期使用");
-        paymentMethods.add(aliPay);
-        paymentMethods.add(wxlPay);
-        paymentMethods.add(cardPay);
-        paymentMethods.add(fqlPay);
-        return paymentMethods;
     }
 
     public void createCharge() {
