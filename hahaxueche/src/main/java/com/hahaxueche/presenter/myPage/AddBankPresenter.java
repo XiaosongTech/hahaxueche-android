@@ -8,6 +8,7 @@ import com.hahaxueche.model.base.Bank;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.payment.BankCard;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.AddBankView;
 import com.hahaxueche.util.ErrorUtil;
@@ -25,19 +26,19 @@ import rx.functions.Func1;
  * Created by wangshirui on 2016/11/2.
  */
 
-public class AddBankPresenter implements Presenter<AddBankView> {
-    private AddBankView mAddBankView;
+public class AddBankPresenter extends HHBasePresenter implements Presenter<AddBankView> {
+    private AddBankView mView;
     private Subscription subscription;
     private HHBaseApplication application;
     private BankCard mBankCard;
     private Bank mOpenAccountBank;
 
     public void attachView(AddBankView view) {
-        this.mAddBankView = view;
-        application = HHBaseApplication.get(mAddBankView.getContext());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
         User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) {
-            mAddBankView.alertToLogin();
+            mView.alertToLogin();
         }
         if (user.student.bank_card != null) {
             setBankCard(user.student.bank_card);
@@ -45,7 +46,7 @@ public class AddBankPresenter implements Presenter<AddBankView> {
     }
 
     public void detachView() {
-        this.mAddBankView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
         mBankCard = null;
@@ -57,8 +58,8 @@ public class AddBankPresenter implements Presenter<AddBankView> {
         mOpenAccountBank = new Bank();
         mOpenAccountBank.code = mBankCard.open_bank_code;
         mOpenAccountBank.name = mBankCard.bank_name;
-        mAddBankView.loadAccount(mBankCard);
-        mAddBankView.loadOpenBank(mOpenAccountBank);
+        mView.loadAccount(mBankCard);
+        mView.loadOpenBank(mOpenAccountBank);
     }
 
     public BankCard getBankCard() {
@@ -67,25 +68,25 @@ public class AddBankPresenter implements Presenter<AddBankView> {
 
     public void setOpenAccountBank(Bank bank) {
         this.mOpenAccountBank = bank;
-        mAddBankView.loadOpenBank(mOpenAccountBank);
+        mView.loadOpenBank(mOpenAccountBank);
     }
 
     public void addBankCard(String accountName, String accountNumber) {
         if (TextUtils.isEmpty(accountName)) {
-            mAddBankView.showMessage("持卡人姓名不能为空");
+            mView.showMessage("持卡人姓名不能为空");
             return;
         }
         if (TextUtils.isEmpty(accountNumber)) {
-            mAddBankView.showMessage("银行卡号不能为空");
+            mView.showMessage("银行卡号不能为空");
             return;
         }
         if (mOpenAccountBank == null || TextUtils.isEmpty(mOpenAccountBank.code)) {
-            mAddBankView.showMessage("开户行不能为空");
+            mView.showMessage("开户行不能为空");
             return;
         }
         final User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
-            mAddBankView.showProgressDialog();
+            mView.showProgressDialog();
             final HHApiService apiService = application.getApiService();
             HashMap<String, Object> map = new HashMap<>();
             map.put("cell_phone", user.cell_phone);
@@ -111,15 +112,15 @@ public class AddBankPresenter implements Presenter<AddBankView> {
                     .subscribe(new Subscriber<BankCard>() {
                         @Override
                         public void onCompleted() {
-                            mAddBankView.dismissProgressDialog();
-                            mAddBankView.back(true);
+                            mView.dismissProgressDialog();
+                            mView.back(true);
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            mAddBankView.dismissProgressDialog();
+                            mView.dismissProgressDialog();
                             if (ErrorUtil.isInvalidSession(e)) {
-                                mAddBankView.forceOffline();
+                                mView.forceOffline();
                             }
                             HHLog.e(e.getMessage());
                         }
@@ -130,7 +131,7 @@ public class AddBankPresenter implements Presenter<AddBankView> {
                         }
                     });
         } else {
-            mAddBankView.alertToLogin();
+            mView.alertToLogin();
         }
     }
 }

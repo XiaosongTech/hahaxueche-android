@@ -8,8 +8,10 @@ import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.ArticleCategory;
 import com.hahaxueche.model.responseList.ArticleResponseList;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.community.ArticleListView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.WebViewUrl;
 import com.umeng.analytics.MobclickAgent;
@@ -25,22 +27,20 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by wangshirui on 2016/11/3.
  */
 
-public class ArticleListPresenter implements Presenter<ArticleListView> {
-    private static final int PAGE = 1;
-    private static final int PER_PAGE = 10;
+public class ArticleListPresenter extends HHBasePresenter implements Presenter<ArticleListView> {
     private String nextLink;
-    private ArticleListView mArticleListView;
+    private ArticleListView mView;
     private Subscription subscription;
     private HHBaseApplication application;
     private Bundle mQueryBundle;
 
     public void attachView(ArticleListView view) {
-        this.mArticleListView = view;
-        application = HHBaseApplication.get(mArticleListView.getContext());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
     }
 
     public void detachView() {
-        this.mArticleListView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
     }
@@ -60,37 +60,37 @@ public class ArticleListPresenter implements Presenter<ArticleListView> {
             }
         }
         HHApiService apiService = application.getApiService();
-        subscription = apiService.getArticles(PAGE, PER_PAGE, isPopular, category, studentId)
+        subscription = apiService.getArticles(Common.START_PAGE, Common.PER_PAGE, isPopular, category, studentId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<ArticleResponseList>() {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mArticleListView.showProgressDialog();
+                        mView.showProgressDialog();
                     }
 
                     @Override
                     public void onCompleted() {
-                        mArticleListView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         HHLog.e(e.getMessage());
-                        mArticleListView.dismissProgressDialog();
-                        mArticleListView.showRedBag(false);
+                        mView.dismissProgressDialog();
+                        mView.showRedBag(false);
                     }
 
                     @Override
                     public void onNext(ArticleResponseList articleResponseList) {
                         if (articleResponseList.data != null) {
-                            mArticleListView.refreshNewsList(articleResponseList.data);
+                            mView.refreshNewsList(articleResponseList.data);
                             nextLink = articleResponseList.links.next;
-                            mArticleListView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
-                            mArticleListView.showRedBag(true);
+                            mView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
+                            mView.showRedBag(true);
                         } else {
-                            mArticleListView.showRedBag(false);
+                            mView.showRedBag(false);
                         }
 
                     }
@@ -107,26 +107,26 @@ public class ArticleListPresenter implements Presenter<ArticleListView> {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mArticleListView.showProgressDialog();
+                        mView.showProgressDialog();
                     }
 
                     @Override
                     public void onCompleted() {
-                        mArticleListView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         HHLog.e(e.getMessage());
-                        mArticleListView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onNext(ArticleResponseList articleResponseList) {
                         if (articleResponseList.data != null) {
-                            mArticleListView.addMoreNewsList(articleResponseList.data);
+                            mView.addMoreNewsList(articleResponseList.data);
                             nextLink = articleResponseList.links.next;
-                            mArticleListView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
+                            mView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
                         }
 
                     }
@@ -156,10 +156,10 @@ public class ArticleListPresenter implements Presenter<ArticleListView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mArticleListView.getContext(), "club_page_flying_envelop_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "club_page_flying_envelop_tapped", map);
         } else {
-            MobclickAgent.onEvent(mArticleListView.getContext(), "club_page_flying_envelop_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "club_page_flying_envelop_tapped");
         }
-        mArticleListView.openWebView(WebViewUrl.WEB_URL_DALIBAO);
+        mView.openWebView(WebViewUrl.WEB_URL_DALIBAO);
     }
 }

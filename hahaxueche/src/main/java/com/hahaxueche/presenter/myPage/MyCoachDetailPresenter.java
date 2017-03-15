@@ -14,6 +14,7 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.ClassType;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.Follow;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.MyCoachDetailView;
 import com.hahaxueche.util.Common;
@@ -33,8 +34,8 @@ import rx.functions.Func1;
  * Created by wangshirui on 2016/10/26.
  */
 
-public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
-    private MyCoachDetailView mMyCoachDetailView;
+public class MyCoachDetailPresenter extends HHBasePresenter implements Presenter<MyCoachDetailView> {
+    private MyCoachDetailView mView;
     private Subscription subscription;
     private HHBaseApplication application;
     private Coach mCoach;
@@ -44,14 +45,14 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
 
     @Override
     public void attachView(MyCoachDetailView view) {
-        this.mMyCoachDetailView = view;
-        application = HHBaseApplication.get(mMyCoachDetailView.getContext());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
         mUser = application.getSharedPrefUtil().getUser();
     }
 
     @Override
     public void detachView() {
-        this.mMyCoachDetailView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
         mCoach = null;
@@ -84,7 +85,7 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
         this.mCoach = coach;
         if (mCoach == null) return;
         setCoachLabel();
-        this.mMyCoachDetailView.showCoachDetail(mCoach);
+        this.mView.showCoachDetail(mCoach);
         loadFollow();
         loadApplaud();
         pageStartCount();
@@ -135,7 +136,7 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
         final HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", mUser.cell_phone);
-        mMyCoachDetailView.enableFollow(false);
+        mView.enableFollow(false);
         subscription = apiService.isValidToken(mUser.session.access_token, map)
                 .flatMap(new Func1<BaseValid, Observable<BaseBoolean>>() {
                     @Override
@@ -152,16 +153,16 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
                 .subscribe(new Subscriber<BaseBoolean>() {
                     @Override
                     public void onCompleted() {
-                        mMyCoachDetailView.enableFollow(true);
+                        mView.enableFollow(true);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mMyCoachDetailView.enableFollow(true);
+                        mView.enableFollow(true);
                         isFollow = false;
-                        mMyCoachDetailView.showFollow(isFollow);
+                        mView.showFollow(isFollow);
                         if (ErrorUtil.isInvalidSession(e)) {
-                            mMyCoachDetailView.forceOffline();
+                            mView.forceOffline();
                         }
                         HHLog.e(e.getMessage());
                     }
@@ -169,7 +170,7 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
                     @Override
                     public void onNext(BaseBoolean baseBoolean) {
                         isFollow = baseBoolean.result;
-                        mMyCoachDetailView.showFollow(isFollow);
+                        mView.showFollow(isFollow);
 
                     }
                 });
@@ -177,13 +178,13 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
 
     public void follow() {
         if (mUser == null || !mUser.isLogin()) {
-            mMyCoachDetailView.alertToLogin();
+            mView.alertToLogin();
             return;
         }
         final HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", mUser.cell_phone);
-        mMyCoachDetailView.enableFollow(false);
+        mView.enableFollow(false);
         if (isFollow) {//当前关注状态，取消关注
             subscription = apiService.isValidToken(mUser.session.access_token, map)
                     .flatMap(new Func1<BaseValid, Observable<BaseModel>>() {
@@ -201,16 +202,16 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
                     .subscribe(new Subscriber<BaseModel>() {
                         @Override
                         public void onCompleted() {
-                            mMyCoachDetailView.enableFollow(true);
+                            mView.enableFollow(true);
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            mMyCoachDetailView.enableFollow(true);
+                            mView.enableFollow(true);
                             isFollow = false;
-                            mMyCoachDetailView.showFollow(isFollow);
+                            mView.showFollow(isFollow);
                             if (ErrorUtil.isInvalidSession(e)) {
-                                mMyCoachDetailView.forceOffline();
+                                mView.forceOffline();
                             }
                             HHLog.e(e.getMessage());
                         }
@@ -218,7 +219,7 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
                         @Override
                         public void onNext(BaseModel baseModel) {
                             isFollow = false;
-                            mMyCoachDetailView.showFollow(isFollow);
+                            mView.showFollow(isFollow);
                         }
                     });
         } else {//关注
@@ -238,16 +239,16 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
                     .subscribe(new Subscriber<Follow>() {
                         @Override
                         public void onCompleted() {
-                            mMyCoachDetailView.enableFollow(true);
+                            mView.enableFollow(true);
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            mMyCoachDetailView.enableFollow(true);
+                            mView.enableFollow(true);
                             isFollow = false;
-                            mMyCoachDetailView.showFollow(isFollow);
+                            mView.showFollow(isFollow);
                             if (ErrorUtil.isInvalidSession(e)) {
-                                mMyCoachDetailView.forceOffline();
+                                mView.forceOffline();
                             }
                             HHLog.e(e.getMessage());
                         }
@@ -255,7 +256,7 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
                         @Override
                         public void onNext(Follow follow) {
                             isFollow = true;
-                            mMyCoachDetailView.showFollow(isFollow);
+                            mView.showFollow(isFollow);
                         }
                     });
         }
@@ -263,20 +264,20 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
 
     private void loadApplaud() {
         isApplaud = (mCoach.liked == 1);
-        mMyCoachDetailView.showApplaud(isApplaud);
-        mMyCoachDetailView.setApplaudCount(mCoach.like_count);
+        mView.showApplaud(isApplaud);
+        mView.setApplaudCount(mCoach.like_count);
     }
 
     public void applaud() {
         if (mUser == null || !mUser.isLogin()) {
-            mMyCoachDetailView.alertToLogin();
+            mView.alertToLogin();
             return;
         }
         final HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", mUser.cell_phone);
         final HashMap<String, Object> mapParam = new HashMap<>();
-        mMyCoachDetailView.enableApplaud(false);
+        mView.enableApplaud(false);
         if (isApplaud) {
             mapParam.put("like", 0);
             subscription = apiService.isValidToken(mUser.session.access_token, map)
@@ -296,14 +297,14 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
                         @Override
                         public void onCompleted() {
                             loadApplaud();
-                            mMyCoachDetailView.enableApplaud(true);
+                            mView.enableApplaud(true);
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            mMyCoachDetailView.enableApplaud(true);
+                            mView.enableApplaud(true);
                             if (ErrorUtil.isInvalidSession(e)) {
-                                mMyCoachDetailView.forceOffline();
+                                mView.forceOffline();
                             }
                             HHLog.e(e.getMessage());
                         }
@@ -332,20 +333,20 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
                         @Override
                         public void onStart() {
                             super.onStart();
-                            mMyCoachDetailView.startApplaudAnimation();
+                            mView.startApplaudAnimation();
                         }
 
                         @Override
                         public void onCompleted() {
                             loadApplaud();
-                            mMyCoachDetailView.enableApplaud(true);
+                            mView.enableApplaud(true);
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            mMyCoachDetailView.enableApplaud(true);
+                            mView.enableApplaud(true);
                             if (ErrorUtil.isInvalidSession(e)) {
-                                mMyCoachDetailView.forceOffline();
+                                mView.forceOffline();
                             }
                             HHLog.e(e.getMessage());
                         }
@@ -365,7 +366,7 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
             map.put("student_id", mUser.student.id);
         }
         map.put("coach_id", mCoach.id);
-        MobclickAgent.onEvent(mMyCoachDetailView.getContext(), "my_coach_page_share_coach_tapped", map);
+        MobclickAgent.onEvent(mView.getContext(), "my_coach_page_share_coach_tapped", map);
     }
 
     public void clickShareSuccessCount(String shareChannel) {
@@ -376,7 +377,7 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
         }
         map.put("coach_id", mCoach.id);
         map.put("share_channel", shareChannel);
-        MobclickAgent.onEvent(mMyCoachDetailView.getContext(), "my_coach_page_share_coach_succeed", map);
+        MobclickAgent.onEvent(mView.getContext(), "my_coach_page_share_coach_succeed", map);
     }
 
     public void pageStartCount() {
@@ -386,7 +387,7 @@ public class MyCoachDetailPresenter implements Presenter<MyCoachDetailView> {
             map.put("student_id", mUser.student.id);
         }
         map.put("coach_id", mCoach.id);
-        MobclickAgent.onEvent(mMyCoachDetailView.getContext(), "my_coach_page_viewed", map);
+        MobclickAgent.onEvent(mView.getContext(), "my_coach_page_viewed", map);
     }
 
     public ClassType getClassTypeByPs() {

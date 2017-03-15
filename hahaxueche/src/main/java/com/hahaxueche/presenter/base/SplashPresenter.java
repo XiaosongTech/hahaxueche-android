@@ -7,6 +7,7 @@ import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.base.SplashView;
 import com.hahaxueche.util.HHLog;
@@ -18,19 +19,19 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by wangshirui on 16/9/18.
  */
-public class SplashPresenter implements Presenter<SplashView> {
-    private SplashView mSplashView;
+public class SplashPresenter extends HHBasePresenter implements Presenter<SplashView> {
+    private SplashView mView;
     private Subscription subscription;
     private HHBaseApplication application;
     private Bundle mShareObject = null;
 
     public void attachView(SplashView view) {
-        this.mSplashView = view;
-        application = HHBaseApplication.get(mSplashView.getContext());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
     }
 
     public void detachView() {
-        this.mSplashView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         this.application = null;
     }
@@ -54,7 +55,7 @@ public class SplashPresenter implements Presenter<SplashView> {
                     public void onError(Throwable e) {
                         HHLog.e(e.getMessage());
                         e.printStackTrace();
-                        mSplashView.showError("服务器连接异常,请稍后再试~");
+                        mView.showError("服务器连接异常,请稍后再试~");
                     }
 
                     @Override
@@ -76,10 +77,10 @@ public class SplashPresenter implements Presenter<SplashView> {
         } else if (mShareObject != null) {
             //从外部分享而来，直接进入主页
             application.getSharedPrefUtil().createFakeUser();
-            mSplashView.navigateToHomepage(mShareObject);
+            mView.navigateToHomepage(mShareObject);
         } else {
             //跳转至登陆页
-            mSplashView.navigateToStartLogin();
+            mView.navigateToStartLogin();
         }
     }
 
@@ -99,11 +100,11 @@ public class SplashPresenter implements Presenter<SplashView> {
                     @Override
                     public void onError(Throwable e) {
                         if (mShareObject != null) {
-                            HHBaseApplication application = HHBaseApplication.get(mSplashView.getContext());
+                            HHBaseApplication application = HHBaseApplication.get(mView.getContext());
                             application.getSharedPrefUtil().createFakeUser();
-                            mSplashView.navigateToHomepage(mShareObject);
+                            mView.navigateToHomepage(mShareObject);
                         } else {
-                            mSplashView.navigateToStartLogin();
+                            mView.navigateToStartLogin();
                         }
                         HHLog.e(e.getMessage());
                         e.printStackTrace();
@@ -114,13 +115,13 @@ public class SplashPresenter implements Presenter<SplashView> {
                         application.getSharedPrefUtil().updateStudent(student);
                         if (!student.isCompleted()) {
                             //信息不完善，需要先补充信息
-                            mSplashView.navigateToCompleteInfo();
+                            mView.navigateToCompleteInfo();
                         } else {
                             if (mShareObject == null) {
                                 mShareObject = new Bundle();
                             }
                             mShareObject.putBoolean("isLogin", true);
-                            mSplashView.navigateToHomepage(mShareObject);
+                            mView.navigateToHomepage(mShareObject);
                         }
                     }
                 });

@@ -11,6 +11,7 @@ import com.hahaxueche.model.base.ErrorResponse;
 import com.hahaxueche.model.user.IdCardUrl;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.student.Student;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.UploadIdCardView;
 import com.hahaxueche.util.ErrorUtil;
@@ -42,33 +43,33 @@ import rx.functions.Func1;
  * Created by wangshirui on 2016/11/25.
  */
 
-public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
+public class UploadIdCardPresenter extends HHBasePresenter implements Presenter<UploadIdCardView> {
     private static final MediaType MULTIPART_FORM_DATA = MediaType.parse("multipart/form-data; boundary=__X_PAW_BOUNDARY__");
-    private UploadIdCardView mUploadIdCardView;
+    private UploadIdCardView mView;
     private Subscription subscription;
     private HHBaseApplication application;
     private boolean mIsInsurance;
 
     public void attachView(UploadIdCardView view) {
-        this.mUploadIdCardView = view;
-        application = HHBaseApplication.get(mUploadIdCardView.getContext());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
         pageStartCount();
         if (mIsInsurance) {
-            mUploadIdCardView.setUploadHints(mUploadIdCardView.getContext().getResources()
+            mView.setUploadHints(mView.getContext().getResources()
                     .getString(R.string.upload_id_card_hints_insurance));
         } else {
-            mUploadIdCardView.setUploadHints(mUploadIdCardView.getContext().getResources()
+            mView.setUploadHints(mView.getContext().getResources()
                     .getString(R.string.upload_id_card_hints));
         }
         User user = application.getSharedPrefUtil().getUser();
         if (user.student.isUploadedIdInfo()) {
             //如果已经上传过用户信息，直接提示提交
-            mUploadIdCardView.confirmToSubmit(user.student.identity_card.name, user.student.identity_card.num);
+            mView.confirmToSubmit(user.student.identity_card.name, user.student.identity_card.num);
         }
     }
 
     public void detachView() {
-        this.mUploadIdCardView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
     }
@@ -91,24 +92,24 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mUploadIdCardView.showProgressDialog();
+                        mView.showProgressDialog();
                     }
 
                     @Override
                     public void onCompleted() {
-                        mUploadIdCardView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mUploadIdCardView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                         HHLog.e(e.getMessage());
                     }
 
                     @Override
                     public void onNext(Response<IdCardUrl> response) {
                         if (response.isSuccessful()) {
-                            mUploadIdCardView.navigateToUserContract(response.body().agreement_url, user.student.id);
+                            mView.navigateToUserContract(response.body().agreement_url, user.student.id);
                         } else {
                             Retrofit retrofit = HHApiService.Factory.getRetrofit();
                             Converter<ResponseBody, ErrorResponse> errorConverter = retrofit.responseBodyConverter(ErrorResponse.class,
@@ -116,13 +117,13 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
                             try {
                                 ErrorResponse error = errorConverter.convert(response.errorBody());
                                 if (error.code == 40034) {
-                                    mUploadIdCardView.showMessage("未上传身份信息，请上传身份信息后重试！");
+                                    mView.showMessage("未上传身份信息，请上传身份信息后重试！");
                                 } else {
-                                    mUploadIdCardView.showMessage("上传失败, 请重试!");
+                                    mView.showMessage("上传失败, 请重试!");
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();
-                                mUploadIdCardView.showMessage("上传失败, 请重试!");
+                                mView.showMessage("上传失败, 请重试!");
                             }
                         }
                     }
@@ -143,17 +144,17 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mUploadIdCardView.showProgressDialog();
+                        mView.showProgressDialog();
                     }
 
                     @Override
                     public void onCompleted() {
-                        mUploadIdCardView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mUploadIdCardView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                         HHLog.e(e.getMessage());
                     }
 
@@ -161,7 +162,7 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
                     public void onNext(Response<Student> response) {
                         if (response.isSuccessful()) {
                             application.getSharedPrefUtil().updateStudent(response.body());
-                            mUploadIdCardView.showShareDialog();
+                            mView.showShareDialog();
                         } else {
                             Retrofit retrofit = HHApiService.Factory.getRetrofit();
                             Converter<ResponseBody, ErrorResponse> errorConverter = retrofit.responseBodyConverter(ErrorResponse.class,
@@ -169,15 +170,15 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
                             try {
                                 ErrorResponse error = errorConverter.convert(response.errorBody());
                                 if (error.code == 40034) {
-                                    mUploadIdCardView.showMessage("未上传身份信息，请上传身份信息后重试！");
+                                    mView.showMessage("未上传身份信息，请上传身份信息后重试！");
                                 } else if (error.code == 40036) {
-                                    mUploadIdCardView.showMessage("该用户已投保!");
+                                    mView.showMessage("该用户已投保!");
                                 } else {
-                                    mUploadIdCardView.showMessage("投保失败, 请重试!");
+                                    mView.showMessage("投保失败, 请重试!");
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();
-                                mUploadIdCardView.showMessage("投保失败, 请重试!");
+                                mView.showMessage("投保失败, 请重试!");
                             }
                         }
                     }
@@ -185,7 +186,7 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
     }
 
     public String getShareText() {
-        return mUploadIdCardView.getContext().getResources().getString(R.string.upload_share_dialog_text);
+        return mView.getContext().getResources().getString(R.string.upload_share_dialog_text);
     }
 
     /**
@@ -218,24 +219,24 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mUploadIdCardView.showProgressDialog("图片上传中，请稍后...");
+                        mView.showProgressDialog("图片上传中，请稍后...");
                     }
 
                     @Override
                     public void onCompleted() {
-                        mUploadIdCardView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mUploadIdCardView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                         HHLog.e(e.getMessage());
                     }
 
                     @Override
                     public void onNext(Response<IdCardUrl> response) {
                         if (response.isSuccessful()) {
-                            mUploadIdCardView.setFaceImage(response.body().url);
+                            mView.setFaceImage(response.body().url);
                         } else {
                             Retrofit retrofit = HHApiService.Factory.getRetrofit();
                             Converter<ResponseBody, ErrorResponse> errorConverter = retrofit.responseBodyConverter(ErrorResponse.class,
@@ -243,18 +244,18 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
                             try {
                                 ErrorResponse error = errorConverter.convert(response.errorBody());
                                 if (error.code == 40022) {
-                                    mUploadIdCardView.showMessage("已上传过身份信息，请直接提交！");
+                                    mView.showMessage("已上传过身份信息，请直接提交！");
                                 } else if (error.code == 40026 || error.code == 40029) {
-                                    mUploadIdCardView.showMessage("身份证识别失败，请重新拍摄上传或者点击左上角的手动填写！");
+                                    mView.showMessage("身份证识别失败，请重新拍摄上传或者点击左上角的手动填写！");
 
                                 } else if (error.code == 40028) {
-                                    mUploadIdCardView.showMessage("身份证信息无效，请确认上传或填写正确后重试!");
+                                    mView.showMessage("身份证信息无效，请确认上传或填写正确后重试!");
                                 } else {
-                                    mUploadIdCardView.showMessage("上传失败, 请重试!");
+                                    mView.showMessage("上传失败, 请重试!");
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();
-                                mUploadIdCardView.showMessage("上传失败, 请重试!");
+                                mView.showMessage("上传失败, 请重试!");
                             }
                         }
 
@@ -266,22 +267,7 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
 
     public void onlineAsk() {
         User user = application.getSharedPrefUtil().getUser();
-        String title = "聊天窗口的标题";
-        // 设置访客来源，标识访客是从哪个页面发起咨询的，用于客服了解用户是从什么页面进入三个参数分别为来源页面的url，来源页面标题，来源页面额外信息（可自由定义）
-        // 设置来源后，在客服会话界面的"用户资料"栏的页面项，可以看到这里设置的值。
-        ConsultSource source = new ConsultSource("", "android", "");
-        //登录用户添加用户信息
-        if (user != null && user.isLogin()) {
-            YSFUserInfo userInfo = new YSFUserInfo();
-            userInfo.userId = user.id;
-            userInfo.data = "[{\"key\":\"real_name\", \"value\":\"" + user.student.name + "\"},{\"key\":\"mobile_phone\", \"value\":\"" + user.student.cell_phone + "\"}]";
-            Unicorn.setUserInfo(userInfo);
-        }
-        // 请注意： 调用该接口前，应先检查Unicorn.isServiceAvailable(), 如果返回为false，该接口不会有任何动作
-        Unicorn.openServiceActivity(mUploadIdCardView.getContext(), // 上下文
-                title, // 聊天窗口的标题
-                source // 咨询的发起来源，包括发起咨询的url，title，描述信息等
-        );
+        super.onlineAsk(user, mView.getContext());
     }
 
     public void pageStartCount() {
@@ -290,7 +276,7 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
         }
-        MobclickAgent.onEvent(mUploadIdCardView.getContext(), "upload_id_page_viewed", map);
+        MobclickAgent.onEvent(mView.getContext(), "upload_id_page_viewed", map);
     }
 
     public void clickLaterSubmit() {
@@ -299,7 +285,7 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
         }
-        MobclickAgent.onEvent(mUploadIdCardView.getContext(), "upload_id_page_cancel_tapped", map);
+        MobclickAgent.onEvent(mView.getContext(), "upload_id_page_cancel_tapped", map);
     }
 
     public void clickCancelPop() {
@@ -308,7 +294,7 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
         }
-        MobclickAgent.onEvent(mUploadIdCardView.getContext(), "upload_id_page_popup_cancel_tapped", map);
+        MobclickAgent.onEvent(mView.getContext(), "upload_id_page_popup_cancel_tapped", map);
     }
 
     public void clickConfirmPop() {
@@ -317,7 +303,7 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
         }
-        MobclickAgent.onEvent(mUploadIdCardView.getContext(), "upload_id_page_popup_confirm_tapped", map);
+        MobclickAgent.onEvent(mView.getContext(), "upload_id_page_popup_confirm_tapped", map);
     }
 
     public void clickUploadInfo() {
@@ -326,7 +312,7 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
         }
-        MobclickAgent.onEvent(mUploadIdCardView.getContext(), "upload_id_page_confirm_tapped", map);
+        MobclickAgent.onEvent(mView.getContext(), "upload_id_page_confirm_tapped", map);
     }
 
     public void manualUpload(String name, String idCardNumber) {
@@ -355,20 +341,20 @@ public class UploadIdCardPresenter implements Presenter<UploadIdCardView> {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mUploadIdCardView.showProgressDialog("数据验证中，请稍后...");
+                        mView.showProgressDialog("数据验证中，请稍后...");
                     }
 
                     @Override
                     public void onCompleted() {
-                        mUploadIdCardView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mUploadIdCardView.dismissProgressDialog();
-                        mUploadIdCardView.showMessage("身份验证失败，请确认姓名和身份证号码后重试！");
+                        mView.dismissProgressDialog();
+                        mView.showMessage("身份验证失败，请确认姓名和身份证号码后重试！");
                         if (ErrorUtil.isInvalidSession(e)) {
-                            mUploadIdCardView.forceOffline();
+                            mView.forceOffline();
                         }
                         HHLog.e(e.getMessage());
                         e.printStackTrace();

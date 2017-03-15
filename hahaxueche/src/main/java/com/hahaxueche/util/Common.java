@@ -43,6 +43,10 @@ public class Common {
     public static final int LICENSE_TYPE_C2 = 2;
     //车友无忧班
     public static final int GROUP_TYPE_CHEYOU_WUYOU = 1;
+    //分页-启始页
+    public static final int START_PAGE = 1;
+    //分页-每页显示数量
+    public static final int PER_PAGE = 10;
 
 
 }

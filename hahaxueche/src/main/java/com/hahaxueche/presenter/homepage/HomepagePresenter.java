@@ -16,6 +16,7 @@ import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.base.Statistics;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.homepage.HomepageView;
 import com.hahaxueche.util.HHLog;
@@ -34,36 +35,36 @@ import rx.Subscription;
 /**
  * Created by wangshirui on 16/9/17.
  */
-public class HomepagePresenter implements Presenter<HomepageView> {
-    private HomepageView mHomepageView;
+public class HomepagePresenter extends HHBasePresenter implements Presenter<HomepageView> {
+    private HomepageView mView;
     private Subscription subscription;
 
     private HHBaseApplication application;
     private Constants constants;
 
     public void attachView(HomepageView view) {
-        this.mHomepageView = view;
-        application = HHBaseApplication.get(mHomepageView.getContext());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
         constants = application.getConstants();
         if (constants != null) {
-            mHomepageView.initBanners(constants.new_home_page_banners);
+            mView.initBanners(constants.new_home_page_banners);
             loadStatistics();
             loadCityChoseDialog();
         }
     }
 
     public void detachView() {
-        this.mHomepageView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
     }
 
     public void openAboutHaha() {
-        mHomepageView.openWebView(WebViewUrl.WEB_URL_ABOUT_HAHA);
+        mView.openWebView(WebViewUrl.WEB_URL_ABOUT_HAHA);
     }
 
     public void openAboutCoach() {
-        mHomepageView.openWebView(WebViewUrl.WEB_URL_ABOUT_COACH);
+        mView.openWebView(WebViewUrl.WEB_URL_ABOUT_COACH);
     }
 
     public void openMyStrengths() {
@@ -72,11 +73,11 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_strength_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "homepage_strength_tapped", map);
         } else {
-            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_strength_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "homepage_strength_tapped");
         }
-        mHomepageView.openWebView(WebViewUrl.WEB_URL_MY_STRENGTHS);
+        mView.openWebView(WebViewUrl.WEB_URL_MY_STRENGTHS);
     }
 
     public void openBestCoaches() {
@@ -85,11 +86,11 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_coach_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "homepage_coach_tapped", map);
         } else {
-            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_coach_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "homepage_coach_tapped");
         }
-        mHomepageView.openWebView(WebViewUrl.WEB_URL_BEST_COACHES);
+        mView.openWebView(WebViewUrl.WEB_URL_BEST_COACHES);
     }
 
     public void openProcedure() {
@@ -98,11 +99,11 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_process_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "homepage_process_tapped", map);
         } else {
-            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_process_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "homepage_process_tapped");
         }
-        mHomepageView.openWebView(WebViewUrl.WEB_URL_PROCEDURE);
+        mView.openWebView(WebViewUrl.WEB_URL_PROCEDURE);
     }
 
     public void openFindAdviser() {
@@ -115,11 +116,11 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         HashMap<String, String> map = new HashMap();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_advisor_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "homepage_advisor_tapped", map);
         } else {
-            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_advisor_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "homepage_advisor_tapped");
         }
-        mHomepageView.openWebView(WebViewUrl.WEB_URL_FIND_ADVISER + "?city_id=" + cityId);
+        mView.openWebView(WebViewUrl.WEB_URL_FIND_ADVISER + "?city_id=" + cityId);
     }
 
     public void openFindDrivingSchool() {
@@ -128,11 +129,11 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_driving_school_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "homepage_driving_school_tapped", map);
         } else {
-            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_driving_school_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "homepage_driving_school_tapped");
         }
-        mHomepageView.openWebView(WebViewUrl.WEB_URL_FIND_DRIVING_SCHOOL);
+        mView.openWebView(WebViewUrl.WEB_URL_FIND_DRIVING_SCHOOL);
     }
 
     public void openGroupBuy() {
@@ -141,42 +142,19 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_group_purchase_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "homepage_group_purchase_tapped", map);
         } else {
-            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_group_purchase_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "homepage_group_purchase_tapped");
         }
-        mHomepageView.openWebView(WebViewUrl.WEB_URL_GROUP_BUY);
+        mView.openWebView(WebViewUrl.WEB_URL_GROUP_BUY);
     }
 
     /**
      * 在线咨询
      */
     public void onlineAsk() {
-        String title = "聊天窗口的标题";
-        // 设置访客来源，标识访客是从哪个页面发起咨询的，用于客服了解用户是从什么页面进入三个参数分别为来源页面的url，来源页面标题，来源页面额外信息（可自由定义）
-        // 设置来源后，在客服会话界面的"用户资料"栏的页面项，可以看到这里设置的值。
-        ConsultSource source = new ConsultSource("", "android", "");
-        //登录用户添加用户信息
         User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            YSFUserInfo userInfo = new YSFUserInfo();
-            userInfo.userId = user.id;
-            userInfo.data = "[{\"key\":\"real_name\", \"value\":\"" + user.student.name + "\"},{\"key\":\"mobile_phone\", \"value\":\"" + user.student.cell_phone + "\"}]";
-            Unicorn.setUserInfo(userInfo);
-        }
-        // 请注意： 调用该接口前，应先检查Unicorn.isServiceAvailable(), 如果返回为false，该接口不会有任何动作
-        Unicorn.openServiceActivity(mHomepageView.getContext(), // 上下文
-                title, // 聊天窗口的标题
-                source // 咨询的发起来源，包括发起咨询的url，title，描述信息等
-        );
-        //在线客服点击
-        HashMap<String, String> map = new HashMap();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_online_support_tapped", map);
-        } else {
-            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_online_support_tapped");
-        }
+        super.onlineAsk(user,mView.getContext());
     }
 
     public void phoneSupportCount() {
@@ -185,9 +163,9 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_phone_support_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "homepage_phone_support_tapped", map);
         } else {
-            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_phone_support_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "homepage_phone_support_tapped");
         }
     }
 
@@ -212,34 +190,34 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         HashMap<String, String> map = new HashMap();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_free_trial_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "homepage_free_trial_tapped", map);
         } else {
-            MobclickAgent.onEvent(mHomepageView.getContext(), "homepage_free_trial_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "homepage_free_trial_tapped");
         }
         HHLog.v("free try url -> " + url);
         HHLog.v("free try share url -> " + shareUrl);
-        mHomepageView.openWebView(url, shareUrl);
+        mView.openWebView(url, shareUrl);
     }
 
     private void loadStatistics() {
         Statistics statistics = application.getConstants().statistics;
         String text = "已入驻" + Utils.getCount(statistics.driving_school_count) + "所";
         SpannableString ss = new SpannableString(text);
-        ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mHomepageView.getContext(), R.color.haha_orange_text)), text.indexOf("驻") + 1, text.indexOf("所"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ss.setSpan(new AbsoluteSizeSpan(Utils.instence(mHomepageView.getContext()).sp2px(14)), text.indexOf("驻") + 1, text.indexOf("所"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mHomepageView.setDrivingSchoolCountDisplay(ss);
+        ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mView.getContext(), R.color.haha_orange_text)), text.indexOf("驻") + 1, text.indexOf("所"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(new AbsoluteSizeSpan(Utils.instence(mView.getContext()).sp2px(14)), text.indexOf("驻") + 1, text.indexOf("所"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mView.setDrivingSchoolCountDisplay(ss);
 
         text = "已签约" + Utils.getCount(statistics.coach_count) + "名";
         ss = new SpannableString(text);
-        ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mHomepageView.getContext(), R.color.haha_blue_text)), text.indexOf("约") + 1, text.indexOf("名"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ss.setSpan(new AbsoluteSizeSpan(Utils.instence(mHomepageView.getContext()).sp2px(14)), text.indexOf("约") + 1, text.indexOf("名"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mHomepageView.setCoachCountDisplay(ss);
+        ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mView.getContext(), R.color.haha_blue_text)), text.indexOf("约") + 1, text.indexOf("名"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(new AbsoluteSizeSpan(Utils.instence(mView.getContext()).sp2px(14)), text.indexOf("约") + 1, text.indexOf("名"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mView.setCoachCountDisplay(ss);
 
         text = "已帮助学员" + Utils.getCount(statistics.paid_student_count) + "名";
         ss = new SpannableString(text);
-        ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mHomepageView.getContext(), R.color.haha_red_text)), text.indexOf("员") + 1, text.indexOf("名"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ss.setSpan(new AbsoluteSizeSpan(Utils.instence(mHomepageView.getContext()).sp2px(14)), text.indexOf("员") + 1, text.indexOf("名"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mHomepageView.setPaidStudentCountDisplay(ss);
+        ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mView.getContext(), R.color.haha_red_text)), text.indexOf("员") + 1, text.indexOf("名"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(new AbsoluteSizeSpan(Utils.instence(mView.getContext()).sp2px(14)), text.indexOf("员") + 1, text.indexOf("名"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mView.setPaidStudentCountDisplay(ss);
 
     }
 
@@ -247,7 +225,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user.student.city_id < 0) {
             selectCity(0);//先默认为武汉
-            mHomepageView.showCityChoseDialog();
+            mView.showCityChoseDialog();
         }
     }
 
@@ -263,16 +241,16 @@ public class HomepagePresenter implements Presenter<HomepageView> {
                 map.put("URL", constants.new_home_page_banners.get(i).target_url);
                 if (user != null && user.isLogin()) {
                     map.put("student_id", user.student.id);
-                    MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_banner_tapped", map);
+                    MobclickAgent.onEvent(mView.getContext(), "home_page_banner_tapped", map);
                 }
-                MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_banner_tapped", map);
-                mHomepageView.openWebView(constants.new_home_page_banners.get(i).target_url);
+                MobclickAgent.onEvent(mView.getContext(), "home_page_banner_tapped", map);
+                mView.openWebView(constants.new_home_page_banners.get(i).target_url);
             } else {
                 if (user != null && user.isLogin()) {
                     map.put("student_id", user.student.id);
-                    MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_banner_tapped", map);
+                    MobclickAgent.onEvent(mView.getContext(), "home_page_banner_tapped", map);
                 } else {
-                    MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_banner_tapped");
+                    MobclickAgent.onEvent(mView.getContext(), "home_page_banner_tapped");
                 }
             }
         } catch (Exception e) {
@@ -284,14 +262,14 @@ public class HomepagePresenter implements Presenter<HomepageView> {
      * 版本检测
      */
     public void doVersionCheck() {
-        PackageManager pm = mHomepageView.getContext().getPackageManager();
+        PackageManager pm = mView.getContext().getPackageManager();
         try {
-            PackageInfo pi = pm.getPackageInfo(mHomepageView.getContext().getPackageName(), 0);
+            PackageInfo pi = pm.getPackageInfo(mView.getContext().getPackageName(), 0);
             int versioncode = pi.versionCode;
             Constants constants = application.getConstants();
             if (constants.version_code > versioncode) {
                 //有版本更新时
-                UpdateManager updateManager = new UpdateManager(mHomepageView.getContext());
+                UpdateManager updateManager = new UpdateManager(mView.getContext());
                 updateManager.checkUpdateInfo();
             }
         } catch (PackageManager.NameNotFoundException e) {
@@ -304,11 +282,11 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         HashMap<String, String> map = new HashMap();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_online_test_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "home_page_online_test_tapped", map);
         } else {
-            MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_online_test_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "home_page_online_test_tapped");
         }
-        mHomepageView.navigateToExamLibrary();
+        mView.navigateToExamLibrary();
     }
 
     public void clickInsurance() {
@@ -316,11 +294,11 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         HashMap<String, String> map = new HashMap();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_course_one_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "home_page_course_one_tapped", map);
         } else {
-            MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_course_one_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "home_page_course_one_tapped");
         }
-        mHomepageView.navigateToMyInsurance();
+        mView.navigateToMyInsurance();
     }
 
     public void clickPlatformGuard() {
@@ -328,11 +306,11 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         HashMap<String, String> map = new HashMap();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_platform_guard_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "home_page_platform_guard_tapped", map);
         } else {
-            MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_platform_guard_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "home_page_platform_guard_tapped");
         }
-        mHomepageView.openWebView(WebViewUrl.WEB_URL_PLATFORM_GUARD);
+        mView.openWebView(WebViewUrl.WEB_URL_PLATFORM_GUARD);
     }
 
     public void clickReferFriends() {
@@ -340,15 +318,15 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         HashMap<String, String> map = new HashMap();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_refer_friends_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "home_page_refer_friends_tapped", map);
         } else {
-            MobclickAgent.onEvent(mHomepageView.getContext(), "home_page_refer_friends_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "home_page_refer_friends_tapped");
         }
         if (user == null || !user.isLogin() || !user.student.is_sales_agent) {
             //非代理
-            mHomepageView.navigateToStudentRefer();
+            mView.navigateToStudentRefer();
         } else {
-            mHomepageView.navigateToReferFriends();
+            mView.navigateToReferFriends();
         }
     }
 
@@ -358,7 +336,7 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         if (user != null && user.student != null) {
             cityId = user.student.city_id;
         }
-        String shareText = mHomepageView.getContext().getResources().getString(R.string.homepage_share_dialog_text);
+        String shareText = mView.getContext().getResources().getString(R.string.homepage_share_dialog_text);
         City myCity = application.getConstants().getCity(cityId);
         return String.format(shareText, Utils.getMoney(myCity.referer_bonus), Utils.getMoney(myCity.referee_bonus));
     }
@@ -370,9 +348,9 @@ public class HomepagePresenter implements Presenter<HomepageView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin() || !user.student.is_sales_agent) {
             //非代理
-            mHomepageView.navigateToStudentRefer();
+            mView.navigateToStudentRefer();
         } else {
-            mHomepageView.navigateToReferFriends();
+            mView.navigateToReferFriends();
         }
     }
 }

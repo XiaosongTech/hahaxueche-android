@@ -5,6 +5,7 @@ import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.ArticleCategory;
 import com.hahaxueche.model.community.Article;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.community.CommunityView;
 import com.hahaxueche.util.HHLog;
@@ -22,20 +23,20 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by wangshirui on 16/9/22.
  */
 
-public class CommunityPresenter implements Presenter<CommunityView> {
-    private CommunityView mCommunityView;
+public class CommunityPresenter extends HHBasePresenter implements Presenter<CommunityView> {
+    private CommunityView mView;
     private Subscription subscription;
     private HHBaseApplication application;
     private Article mHeadlineArticle;
 
     public void attachView(CommunityView view) {
-        this.mCommunityView = view;
-        application = HHBaseApplication.get(mCommunityView.getContext());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
         getHeadline();
     }
 
     public void detachView() {
-        this.mCommunityView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
         mHeadlineArticle = null;
@@ -51,11 +52,11 @@ public class CommunityPresenter implements Presenter<CommunityView> {
         if (user != null && user.isLogin()) {
             HashMap<String, String> map = new HashMap();
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mCommunityView.getContext(), "club_page_group_purchase_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "club_page_group_purchase_tapped", map);
         } else {
-            MobclickAgent.onEvent(mCommunityView.getContext(), "club_page_group_purchase_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "club_page_group_purchase_tapped");
         }
-        mCommunityView.openWebView(WebViewUrl.WEB_URL_GROUP_BUY);
+        mView.openWebView(WebViewUrl.WEB_URL_GROUP_BUY);
     }
 
     public void clickTestLibCount() {
@@ -64,9 +65,9 @@ public class CommunityPresenter implements Presenter<CommunityView> {
         if (user != null && user.isLogin()) {
             HashMap<String, String> map = new HashMap();
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mCommunityView.getContext(), "club_page_online_test_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "club_page_online_test_tapped", map);
         } else {
-            MobclickAgent.onEvent(mCommunityView.getContext(), "club_page_online_test_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "club_page_online_test_tapped");
         }
 
     }
@@ -95,7 +96,7 @@ public class CommunityPresenter implements Presenter<CommunityView> {
                     @Override
                     public void onNext(Article article) {
                         mHeadlineArticle = article;
-                        mCommunityView.setHeadline(mHeadlineArticle);
+                        mView.setHeadline(mHeadlineArticle);
                     }
                 });
     }

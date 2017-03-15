@@ -1,12 +1,11 @@
 package com.hahaxueche.presenter.findCoach;
 
 import com.hahaxueche.HHBaseApplication;
-import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseValid;
-import com.hahaxueche.model.payment.PaymentMethod;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.student.Student;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.PurchasePrepaidView;
 import com.hahaxueche.util.HHLog;
@@ -14,7 +13,6 @@ import com.hahaxueche.util.HHLog;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -29,8 +27,8 @@ import rx.functions.Func1;
  * Created by wangshirui on 2017/3/13.
  */
 
-public class PurchasePrepaidPresenter implements Presenter<PurchasePrepaidView> {
-    private PurchasePrepaidView mPurchasePrepaidView;
+public class PurchasePrepaidPresenter extends HHBasePresenter implements Presenter<PurchasePrepaidView> {
+    private PurchasePrepaidView mView;
     private Subscription subscription;
     private HHBaseApplication application;
     private int mInsuranceType;
@@ -38,35 +36,17 @@ public class PurchasePrepaidPresenter implements Presenter<PurchasePrepaidView> 
 
     @Override
     public void attachView(PurchasePrepaidView view) {
-        this.mPurchasePrepaidView = view;
-        application = HHBaseApplication.get(mPurchasePrepaidView.getContext());
-        mPurchasePrepaidView.loadPaymentMethod(getPaymentMethod());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
+        mView.loadPaymentMethod(getPaymentMethod());
         mPaymentMethod = 0;//默认支付方式：支付宝
     }
 
     @Override
     public void detachView() {
-        this.mPurchasePrepaidView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
-    }
-
-    /**
-     * 支付方式，目前支持支付宝，银行卡，分期乐
-     *
-     * @return
-     */
-    private ArrayList<PaymentMethod> getPaymentMethod() {
-        ArrayList<PaymentMethod> paymentMethods = new ArrayList<>();
-        PaymentMethod aliPay = new PaymentMethod(0, R.drawable.ic_alipay_icon, "支付宝", "推荐拥有支付宝账号的用户使用");
-        PaymentMethod wxlPay = new PaymentMethod(5, R.drawable.ic_wx_icon, "微信支付", "推荐拥有微信账号的用户使用");
-        PaymentMethod cardPay = new PaymentMethod(4, R.drawable.ic_cardpay_icon, "银行卡", "一网通支付，支持所有主流借记卡/信用卡");
-        PaymentMethod fqlPay = new PaymentMethod(1, R.drawable.logo_fenqile, "分期乐", "推荐分期使用");
-        paymentMethods.add(aliPay);
-        paymentMethods.add(wxlPay);
-        paymentMethods.add(cardPay);
-        paymentMethods.add(fqlPay);
-        return paymentMethods;
     }
 
     public void setPaymentMethod(int paymentMethod) {
@@ -76,15 +56,15 @@ public class PurchasePrepaidPresenter implements Presenter<PurchasePrepaidView> 
     public void createCharge() {
         final User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) {
-            mPurchasePrepaidView.alertToLogin();
+            mView.alertToLogin();
             return;
         }
         if (user.student.hasPurchasedService()) {
-            mPurchasePrepaidView.showMessage("该学员已经购买过教练");
+            mView.showMessage("该学员已经购买过教练");
             return;
         }
         if (mPaymentMethod < 0) {
-            mPurchasePrepaidView.showMessage("请选择支付方式");
+            mView.showMessage("请选择支付方式");
             return;
         }
         HHApiService apiService = application.getApiService();
@@ -112,17 +92,17 @@ public class PurchasePrepaidPresenter implements Presenter<PurchasePrepaidView> 
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mPurchasePrepaidView.showProgressDialog("订单生成中，请稍后...");
+                        mView.showProgressDialog("订单生成中，请稍后...");
                     }
 
                     @Override
                     public void onCompleted() {
-                        mPurchasePrepaidView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mPurchasePrepaidView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                         HHLog.e(e.getMessage());
                     }
 
@@ -141,7 +121,7 @@ public class PurchasePrepaidPresenter implements Presenter<PurchasePrepaidView> 
                             e.printStackTrace();
                         }
                         String result = sb.toString();
-                        mPurchasePrepaidView.callPingpp(result);
+                        mView.callPingpp(result);
                     }
                 });
     }
@@ -149,7 +129,7 @@ public class PurchasePrepaidPresenter implements Presenter<PurchasePrepaidView> 
     public void getStudentUtilPrepaid() {
         final User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) {
-            mPurchasePrepaidView.alertToLogin();
+            mView.alertToLogin();
             return;
         }
         final HHApiService apiService = application.getApiService();
@@ -173,7 +153,7 @@ public class PurchasePrepaidPresenter implements Presenter<PurchasePrepaidView> 
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mPurchasePrepaidView.showProgressDialog();
+                        mView.showProgressDialog();
                     }
 
                     @Override
@@ -184,7 +164,7 @@ public class PurchasePrepaidPresenter implements Presenter<PurchasePrepaidView> 
                     @Override
                     public void onError(Throwable e) {
                         HHLog.e(e.getMessage());
-                        mPurchasePrepaidView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                     }
 
                     @Override
@@ -192,9 +172,9 @@ public class PurchasePrepaidPresenter implements Presenter<PurchasePrepaidView> 
                         if (student.prepaid_amount <= 0) {
                             getStudentUtilPrepaid();
                         } else {
-                            mPurchasePrepaidView.dismissProgressDialog();
+                            mView.dismissProgressDialog();
                             application.getSharedPrefUtil().updateStudent(student);
-                            mPurchasePrepaidView.paySuccess();
+                            mView.paySuccess();
                         }
                     }
                 });

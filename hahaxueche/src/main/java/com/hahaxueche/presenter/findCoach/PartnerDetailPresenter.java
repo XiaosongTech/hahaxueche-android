@@ -6,6 +6,7 @@ import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Partner;
 import com.hahaxueche.model.user.coach.PartnerPrice;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.PartnerDetailView;
 import com.hahaxueche.util.ErrorUtil;
@@ -24,8 +25,8 @@ import rx.functions.Func1;
  * Created by wangshirui on 2016/10/20.
  */
 
-public class PartnerDetailPresenter implements Presenter<PartnerDetailView> {
-    private PartnerDetailView mPartnerDetailView;
+public class PartnerDetailPresenter extends HHBasePresenter implements Presenter<PartnerDetailView> {
+    private PartnerDetailView mView;
     private Subscription subscription;
     private HHBaseApplication application;
     private Partner mPartner;
@@ -34,14 +35,14 @@ public class PartnerDetailPresenter implements Presenter<PartnerDetailView> {
 
     @Override
     public void attachView(PartnerDetailView view) {
-        this.mPartnerDetailView = view;
-        application = HHBaseApplication.get(mPartnerDetailView.getContext());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
         mUser = application.getSharedPrefUtil().getUser();
     }
 
     @Override
     public void detachView() {
-        this.mPartnerDetailView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
         mPartner = null;
@@ -51,22 +52,22 @@ public class PartnerDetailPresenter implements Presenter<PartnerDetailView> {
     public void setPartner(Partner Partner) {
         this.mPartner = Partner;
         if (mPartner == null) return;
-        this.mPartnerDetailView.showPartnerDetail(mPartner);
+        this.mView.showPartnerDetail(mPartner);
         int pos = 1;
         boolean addC1Label = false;
         boolean addC2Label = false;
         for (PartnerPrice price : mPartner.prices) {
             if (price.license_type == 1 && !addC1Label) {
-                mPartnerDetailView.addC1Label(pos++);
+                mView.addC1Label(pos++);
                 addC1Label = true;
             }
             if (price.license_type == 2 && !addC2Label) {
-                mPartnerDetailView.addC2Label(pos++);
+                mView.addC2Label(pos++);
                 addC2Label = true;
             }
-            mPartnerDetailView.addPrice(pos++, price.price, price.duration, price.description);
+            mView.addPrice(pos++, price.price, price.duration, price.description);
         }
-        this.mPartnerDetailView.initShareData(mPartner);
+        this.mView.initShareData(mPartner);
         loadApplaud();
         pageStartCount();
     }
@@ -100,13 +101,13 @@ public class PartnerDetailPresenter implements Presenter<PartnerDetailView> {
 
     private void loadApplaud() {
         isApplaud = (mPartner.liked == 1);
-        mPartnerDetailView.showApplaud(isApplaud);
-        mPartnerDetailView.setApplaudCount(mPartner.like_count);
+        mView.showApplaud(isApplaud);
+        mView.setApplaudCount(mPartner.like_count);
     }
 
     public void applaud() {
         if (mUser == null || !mUser.isLogin()) {
-            mPartnerDetailView.alertToLogin("注册登录后,才可以点赞教练哦～\n注册获得更多学车咨询!～");
+            mView.alertToLogin("注册登录后,才可以点赞教练哦～\n注册获得更多学车咨询!～");
             return;
         }
         //like unlike 点击
@@ -116,12 +117,12 @@ public class PartnerDetailPresenter implements Presenter<PartnerDetailView> {
         }
         countMap.put("partner_id", mPartner.id);
         countMap.put("like", isApplaud ? "0" : "1");
-        MobclickAgent.onEvent(mPartnerDetailView.getContext(), "personal_coach_detail_page_like_unlike_tapped", countMap);
+        MobclickAgent.onEvent(mView.getContext(), "personal_coach_detail_page_like_unlike_tapped", countMap);
         final HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", mUser.cell_phone);
         final HashMap<String, Object> mapParam = new HashMap<>();
-        mPartnerDetailView.enableApplaud(false);
+        mView.enableApplaud(false);
         if (isApplaud) {
             mapParam.put("like", 0);
             subscription = apiService.isValidToken(mUser.session.access_token, map)
@@ -141,14 +142,14 @@ public class PartnerDetailPresenter implements Presenter<PartnerDetailView> {
                         @Override
                         public void onCompleted() {
                             loadApplaud();
-                            mPartnerDetailView.enableApplaud(true);
+                            mView.enableApplaud(true);
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            mPartnerDetailView.enableApplaud(true);
+                            mView.enableApplaud(true);
                             if (ErrorUtil.isInvalidSession(e)) {
-                                mPartnerDetailView.forceOffline();
+                                mView.forceOffline();
                             }
                             HHLog.e(e.getMessage());
                         }
@@ -177,20 +178,20 @@ public class PartnerDetailPresenter implements Presenter<PartnerDetailView> {
                         @Override
                         public void onStart() {
                             super.onStart();
-                            mPartnerDetailView.startApplaudAnimation();
+                            mView.startApplaudAnimation();
                         }
 
                         @Override
                         public void onCompleted() {
                             loadApplaud();
-                            mPartnerDetailView.enableApplaud(true);
+                            mView.enableApplaud(true);
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            mPartnerDetailView.enableApplaud(true);
+                            mView.enableApplaud(true);
                             if (ErrorUtil.isInvalidSession(e)) {
-                                mPartnerDetailView.forceOffline();
+                                mView.forceOffline();
                             }
                             HHLog.e(e.getMessage());
                         }
@@ -210,7 +211,7 @@ public class PartnerDetailPresenter implements Presenter<PartnerDetailView> {
             map.put("student_id", mUser.student.id);
         }
         map.put("partner_id", mPartner.id);
-        MobclickAgent.onEvent(mPartnerDetailView.getContext(), "personal_coach_detail_page_call_coach_tapped", map);
+        MobclickAgent.onEvent(mView.getContext(), "personal_coach_detail_page_call_coach_tapped", map);
     }
 
     public void clickShareCount() {
@@ -220,7 +221,7 @@ public class PartnerDetailPresenter implements Presenter<PartnerDetailView> {
             map.put("student_id", mUser.student.id);
         }
         map.put("partner_id", mPartner.id);
-        MobclickAgent.onEvent(mPartnerDetailView.getContext(), "personal_coach_detail_page_share_coach_tapped", map);
+        MobclickAgent.onEvent(mView.getContext(), "personal_coach_detail_page_share_coach_tapped", map);
     }
 
     public void clickShareSuccessCount(String shareChannel) {
@@ -231,7 +232,7 @@ public class PartnerDetailPresenter implements Presenter<PartnerDetailView> {
         }
         map.put("partner_id", mPartner.id);
         map.put("share_channel", shareChannel);
-        MobclickAgent.onEvent(mPartnerDetailView.getContext(), "personal_coach_detail_page_share_coach_succeed", map);
+        MobclickAgent.onEvent(mView.getContext(), "personal_coach_detail_page_share_coach_succeed", map);
     }
 
     public void pageStartCount() {
@@ -241,6 +242,6 @@ public class PartnerDetailPresenter implements Presenter<PartnerDetailView> {
             map.put("student_id", mUser.student.id);
         }
         map.put("partner_id", mPartner.id);
-        MobclickAgent.onEvent(mPartnerDetailView.getContext(), "personal_coach_detail_page_viewed", map);
+        MobclickAgent.onEvent(mView.getContext(), "personal_coach_detail_page_viewed", map);
     }
 }

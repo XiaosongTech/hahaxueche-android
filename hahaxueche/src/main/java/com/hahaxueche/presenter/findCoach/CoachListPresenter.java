@@ -8,8 +8,10 @@ import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.responseList.CoachResponseList;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.CoachListView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.WebViewUrl;
 import com.umeng.analytics.MobclickAgent;
@@ -25,10 +27,8 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by wangshirui on 16/10/1.
  */
 
-public class CoachListPresenter implements Presenter<CoachListView> {
-    private static final int PAGE = 1;
-    private static final int PER_PAGE = 10;
-    private CoachListView mCoachListView;
+public class CoachListPresenter extends HHBasePresenter implements Presenter<CoachListView> {
+    private CoachListView mView;
     private Subscription subscription;
     private HHBaseApplication application;
     private String nextLink;
@@ -42,13 +42,13 @@ public class CoachListPresenter implements Presenter<CoachListView> {
     private ArrayList<Field> selectFields;
 
     public void attachView(CoachListView view) {
-        this.mCoachListView = view;
-        application = HHBaseApplication.get(mCoachListView.getContext());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
         initFilters();
     }
 
     public void detachView() {
-        this.mCoachListView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
     }
@@ -77,7 +77,7 @@ public class CoachListPresenter implements Presenter<CoachListView> {
     }
 
     private void initFilters() {
-        HHBaseApplication application = HHBaseApplication.get(mCoachListView.getContext());
+        HHBaseApplication application = HHBaseApplication.get(mView.getContext());
         User user = application.getSharedPrefUtil().getUser();
         if (user != null) {
             cityId = user.student.city_id;
@@ -108,39 +108,42 @@ public class CoachListPresenter implements Presenter<CoachListView> {
             locations.add(String.valueOf(application.getMyLocation().lng));
         }
         HHApiService apiService = application.getApiService();
-        subscription = apiService.getCoaches(PAGE, PER_PAGE, TextUtils.isEmpty(goldenCoachOnly) ? null : goldenCoachOnly,
-                TextUtils.isEmpty(licenseType) ? null : licenseType, TextUtils.isEmpty(filterPrice) ? null : filterPrice, cityId,
-                fieldIds, TextUtils.isEmpty(filterDistance) ? null : filterDistance, locations, sortBy, vipOnly, studentId)
+        subscription = apiService.getCoaches(Common.START_PAGE, Common.PER_PAGE,
+                TextUtils.isEmpty(goldenCoachOnly) ? null : goldenCoachOnly,
+                TextUtils.isEmpty(licenseType) ? null : licenseType,
+                TextUtils.isEmpty(filterPrice) ? null : filterPrice, cityId,
+                fieldIds, TextUtils.isEmpty(filterDistance) ? null : filterDistance,
+                locations, sortBy, vipOnly, studentId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<CoachResponseList>() {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mCoachListView.showProgressDialog("查找中，请稍后...");
+                        mView.showProgressDialog("查找中，请稍后...");
                     }
 
                     @Override
                     public void onCompleted() {
-                        mCoachListView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         HHLog.e(e.getMessage());
-                        mCoachListView.dismissProgressDialog();
-                        mCoachListView.showRedBag(false);
+                        mView.dismissProgressDialog();
+                        mView.showRedBag(false);
                     }
 
                     @Override
                     public void onNext(CoachResponseList coachResponseList) {
                         if (coachResponseList.data != null) {
-                            mCoachListView.refreshCoachList(coachResponseList.data);
+                            mView.refreshCoachList(coachResponseList.data);
                             nextLink = coachResponseList.links.next;
-                            mCoachListView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
-                            mCoachListView.showRedBag(true);
+                            mView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
+                            mView.showRedBag(true);
                         } else {
-                            mCoachListView.showRedBag(false);
+                            mView.showRedBag(false);
                         }
 
                     }
@@ -166,9 +169,9 @@ public class CoachListPresenter implements Presenter<CoachListView> {
                     @Override
                     public void onNext(CoachResponseList coachResponseList) {
                         if (coachResponseList.data != null) {
-                            mCoachListView.addMoreCoachList(coachResponseList.data);
+                            mView.addMoreCoachList(coachResponseList.data);
                             nextLink = coachResponseList.links.next;
-                            mCoachListView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
+                            mView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
                         }
                     }
                 });
@@ -192,9 +195,9 @@ public class CoachListPresenter implements Presenter<CoachListView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mCoachListView.getContext(), "find_coach_page_filter_tapped_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "find_coach_page_filter_tapped_tapped", map);
         } else {
-            MobclickAgent.onEvent(mCoachListView.getContext(), "find_coach_page_filter_tapped_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "find_coach_page_filter_tapped_tapped");
         }
 
     }
@@ -207,7 +210,7 @@ public class CoachListPresenter implements Presenter<CoachListView> {
             map.put("student_id", user.student.id);
         }
         map.put("sort_type", String.valueOf(sortBy));
-        MobclickAgent.onEvent(mCoachListView.getContext(), "find_coach_page_sort_tapped", map);
+        MobclickAgent.onEvent(mView.getContext(), "find_coach_page_sort_tapped", map);
     }
 
     public void clickCoach(String coachId) {
@@ -218,7 +221,7 @@ public class CoachListPresenter implements Presenter<CoachListView> {
             map.put("student_id", user.student.id);
         }
         map.put("coach_id", coachId);
-        MobclickAgent.onEvent(mCoachListView.getContext(), "find_coach_page_coach_tapped", map);
+        MobclickAgent.onEvent(mView.getContext(), "find_coach_page_coach_tapped", map);
     }
 
     public void clickRedBag() {
@@ -226,10 +229,10 @@ public class CoachListPresenter implements Presenter<CoachListView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mCoachListView.getContext(), "find_coach_flying_envelop_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "find_coach_flying_envelop_tapped", map);
         } else {
-            MobclickAgent.onEvent(mCoachListView.getContext(), "find_coach_flying_envelop_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "find_coach_flying_envelop_tapped");
         }
-        mCoachListView.openWebView(WebViewUrl.WEB_URL_DALIBAO);
+        mView.openWebView(WebViewUrl.WEB_URL_DALIBAO);
     }
 }

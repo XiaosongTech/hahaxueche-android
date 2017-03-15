@@ -7,8 +7,10 @@ import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.responseList.ReferrerResponseList;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.ReferrerListView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 
@@ -24,21 +26,19 @@ import rx.functions.Func1;
  * Created by wangshirui on 2016/11/2.
  */
 
-public class ReferrerListPresenter implements Presenter<ReferrerListView> {
-    private static final int PAGE = 1;
-    private static final int PER_PAGE = 10;
-    private ReferrerListView mReferrerListView;
+public class ReferrerListPresenter extends HHBasePresenter implements Presenter<ReferrerListView> {
+    private ReferrerListView mView;
     private Subscription subscription;
     private HHBaseApplication application;
     private String nextLink;
 
     public void attachView(ReferrerListView view) {
-        this.mReferrerListView = view;
-        application = HHBaseApplication.get(mReferrerListView.getContext());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
     }
 
     public void detachView() {
-        this.mReferrerListView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
     }
@@ -46,7 +46,7 @@ public class ReferrerListPresenter implements Presenter<ReferrerListView> {
     public void fetchReferrers() {
         final User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
-            mReferrerListView.showProgressDialog();
+            mView.showProgressDialog();
             final HHApiService apiService = application.getApiService();
             HashMap<String, Object> map = new HashMap<>();
             map.put("cell_phone", user.cell_phone);
@@ -55,7 +55,8 @@ public class ReferrerListPresenter implements Presenter<ReferrerListView> {
                         @Override
                         public Observable<ReferrerResponseList> call(BaseValid baseValid) {
                             if (baseValid.valid) {
-                                return apiService.getReferrers(user.student.id, PAGE, PER_PAGE, user.session.access_token);
+                                return apiService.getReferrers(user.student.id, Common.START_PAGE, Common.PER_PAGE,
+                                        user.session.access_token);
                             } else {
                                 return application.getSessionObservable();
                             }
@@ -66,14 +67,14 @@ public class ReferrerListPresenter implements Presenter<ReferrerListView> {
                     .subscribe(new Subscriber<ReferrerResponseList>() {
                         @Override
                         public void onCompleted() {
-                            mReferrerListView.dismissProgressDialog();
+                            mView.dismissProgressDialog();
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            mReferrerListView.dismissProgressDialog();
+                            mView.dismissProgressDialog();
                             if (ErrorUtil.isInvalidSession(e)) {
-                                mReferrerListView.forceOffline();
+                                mView.forceOffline();
                             }
                             HHLog.e(e.getMessage());
                         }
@@ -81,21 +82,21 @@ public class ReferrerListPresenter implements Presenter<ReferrerListView> {
                         @Override
                         public void onNext(ReferrerResponseList referrerResponseList) {
                             if (referrerResponseList.data != null) {
-                                mReferrerListView.refreshReferrerList(referrerResponseList.data);
+                                mView.refreshReferrerList(referrerResponseList.data);
                                 nextLink = referrerResponseList.links.next;
-                                mReferrerListView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
+                                mView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
                             }
                         }
                     });
         } else {
-            mReferrerListView.alertToLogin();
+            mView.alertToLogin();
         }
     }
 
     public void addMoreReferrers() {
         final User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
-            mReferrerListView.showProgressDialog();
+            mView.showProgressDialog();
             final HHApiService apiService = application.getApiService();
             HashMap<String, Object> map = new HashMap<>();
             map.put("cell_phone", user.cell_phone);
@@ -115,14 +116,14 @@ public class ReferrerListPresenter implements Presenter<ReferrerListView> {
                     .subscribe(new Subscriber<ReferrerResponseList>() {
                         @Override
                         public void onCompleted() {
-                            mReferrerListView.dismissProgressDialog();
+                            mView.dismissProgressDialog();
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            mReferrerListView.dismissProgressDialog();
+                            mView.dismissProgressDialog();
                             if (ErrorUtil.isInvalidSession(e)) {
-                                mReferrerListView.forceOffline();
+                                mView.forceOffline();
                             }
                             HHLog.e(e.getMessage());
                         }
@@ -130,14 +131,14 @@ public class ReferrerListPresenter implements Presenter<ReferrerListView> {
                         @Override
                         public void onNext(ReferrerResponseList referrerResponseList) {
                             if (referrerResponseList.data != null) {
-                                mReferrerListView.addMoreReferrerList(referrerResponseList.data);
+                                mView.addMoreReferrerList(referrerResponseList.data);
                                 nextLink = referrerResponseList.links.next;
-                                mReferrerListView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
+                                mView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
                             }
                         }
                     });
         } else {
-            mReferrerListView.alertToLogin();
+            mView.alertToLogin();
         }
     }
 

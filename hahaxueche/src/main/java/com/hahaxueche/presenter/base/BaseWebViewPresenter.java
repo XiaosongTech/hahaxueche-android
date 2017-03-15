@@ -6,6 +6,7 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.ShortenUrl;
 import com.hahaxueche.model.user.identity.MarketingInfo;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.base.BaseWebViewView;
 import com.hahaxueche.util.HHLog;
@@ -23,7 +24,7 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by wangshirui on 2016/12/20.
  */
 
-public class BaseWebViewPresenter implements Presenter<BaseWebViewView> {
+public class BaseWebViewPresenter extends HHBasePresenter implements Presenter<BaseWebViewView> {
     private BaseWebViewView mView;
     private Subscription subscription;
     private HHBaseApplication application;
@@ -72,14 +73,8 @@ public class BaseWebViewPresenter implements Presenter<BaseWebViewView> {
 
     private void shortenUrl(String url, final int shareType) {
         if (TextUtils.isEmpty(url)) return;
-        String longUrl = null;
         HHApiService apiService = application.getApiService();
-        try {
-            longUrl = " https://api.t.sina.com.cn/short_url/shorten.json?source=4186780524&url_long=" +
-                    URLEncoder.encode(url, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        String longUrl = getShortenUrlAddress(url);
         if (TextUtils.isEmpty(longUrl)) return;
         subscription = apiService.shortenUrl(longUrl)
                 .observeOn(AndroidSchedulers.mainThread())

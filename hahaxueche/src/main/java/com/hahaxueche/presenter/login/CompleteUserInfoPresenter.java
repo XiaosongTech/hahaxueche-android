@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.user.student.Student;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.login.CompleteUserInfoView;
 import com.hahaxueche.util.ErrorUtil;
@@ -19,31 +20,31 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by wangshirui on 16/9/10.
  */
-public class CompleteUserInfoPresenter implements Presenter<CompleteUserInfoView> {
-    private CompleteUserInfoView mCompleteUserInfoView;
+public class CompleteUserInfoPresenter extends HHBasePresenter implements Presenter<CompleteUserInfoView> {
+    private CompleteUserInfoView mView;
     private Subscription subscription;
 
     public void attachView(CompleteUserInfoView view) {
-        this.mCompleteUserInfoView = view;
+        this.mView = view;
     }
 
     public void detachView() {
-        this.mCompleteUserInfoView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
     }
 
     public void completeUserInfo(String username, int cityId, String promoCode) {
         if (TextUtils.isEmpty(username)) {
-            mCompleteUserInfoView.showMessage("用户名不能为空");
+            mView.showMessage("用户名不能为空");
             return;
         }
         if (cityId < 0) {
-            mCompleteUserInfoView.showMessage("请选择所在城市");
+            mView.showMessage("请选择所在城市");
             return;
         }
-        mCompleteUserInfoView.disableButtons();
-        mCompleteUserInfoView.showProgressDialog();
-        final HHBaseApplication application = HHBaseApplication.get(mCompleteUserInfoView.getContext());
+        mView.disableButtons();
+        mView.showProgressDialog();
+        final HHBaseApplication application = HHBaseApplication.get(mView.getContext());
         HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();
         map.put("name", username);
@@ -57,18 +58,18 @@ public class CompleteUserInfoPresenter implements Presenter<CompleteUserInfoView
                 .subscribe(new Subscriber<Student>() {
                     @Override
                     public void onCompleted() {
-                        mCompleteUserInfoView.enableButtons();
-                        mCompleteUserInfoView.dismissProgressDialog();
-                        mCompleteUserInfoView.navigateToHomepage();
+                        mView.enableButtons();
+                        mView.dismissProgressDialog();
+                        mView.navigateToHomepage();
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         if (ErrorUtil.isHttp422(e)) {
-                            mCompleteUserInfoView.showMessage("您的优惠码有误");
+                            mView.showMessage("您的优惠码有误");
                         }
-                        mCompleteUserInfoView.enableButtons();
-                        mCompleteUserInfoView.dismissProgressDialog();
+                        mView.enableButtons();
+                        mView.dismissProgressDialog();
                         HHLog.e(e.getMessage());
                     }
 

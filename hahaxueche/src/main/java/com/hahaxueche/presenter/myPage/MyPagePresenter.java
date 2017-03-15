@@ -10,6 +10,7 @@ import com.hahaxueche.model.payment.Voucher;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.employee.Adviser;
 import com.hahaxueche.model.user.student.Student;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.MyPageView;
 import com.hahaxueche.util.ErrorUtil;
@@ -36,37 +37,37 @@ import rx.functions.Func1;
 /**
  * Created by wangshirui on 16/9/19.
  */
-public class MyPagePresenter implements Presenter<MyPageView> {
+public class MyPagePresenter extends HHBasePresenter implements Presenter<MyPageView> {
     private static final MediaType MULTIPART_FORM_DATA = MediaType.parse("multipart/form-data; boundary=__X_PAW_BOUNDARY__");
-    private MyPageView mMyPageView;
+    private MyPageView mView;
     private Subscription subscription;
     private HHBaseApplication application;
     private Student mStudent;
     private Adviser mAdviser;
 
     public void attachView(MyPageView view) {
-        this.mMyPageView = view;
-        application = HHBaseApplication.get(mMyPageView.getContext());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
         User user = application.getSharedPrefUtil().getUser();
         if (user.isLogin()) {
-            mMyPageView.showLogin();
+            mView.showLogin();
             mStudent = user.student;
-            mMyPageView.loadStudentInfo(mStudent);
+            mView.loadStudentInfo(mStudent);
             showVoucherBadge(mStudent);
             setContractBadge();
             setPassEnsuranceBadge();
             fetchAdviser();
             if (user.student.is_sales_agent) {
                 //代理文字
-                mMyPageView.setReferText("邀请好友平分¥400！邀请越多，奖励越多！");
+                mView.setReferText("邀请好友平分¥400！邀请越多，奖励越多！");
             }
         } else {
-            mMyPageView.showNotLogin();
+            mView.showNotLogin();
         }
     }
 
     public void detachView() {
-        this.mMyPageView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
         mStudent = null;
@@ -76,31 +77,8 @@ public class MyPagePresenter implements Presenter<MyPageView> {
      * 在线咨询
      */
     public void onlineAsk() {
-        //在线客服点击
-        HashMap<String, String> map = new HashMap();
         User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_online_support_tapped", map);
-        } else {
-            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_online_support_tapped");
-        }
-        String title = "聊天窗口的标题";
-        // 设置访客来源，标识访客是从哪个页面发起咨询的，用于客服了解用户是从什么页面进入三个参数分别为来源页面的url，来源页面标题，来源页面额外信息（可自由定义）
-        // 设置来源后，在客服会话界面的"用户资料"栏的页面项，可以看到这里设置的值。
-        ConsultSource source = new ConsultSource("", "android", "");
-        //登录用户添加用户信息
-        if (user != null && user.isLogin()) {
-            YSFUserInfo userInfo = new YSFUserInfo();
-            userInfo.userId = user.id;
-            userInfo.data = "[{\"key\":\"real_name\", \"value\":\"" + user.student.name + "\"},{\"key\":\"mobile_phone\", \"value\":\"" + user.student.cell_phone + "\"}]";
-            Unicorn.setUserInfo(userInfo);
-        }
-        // 请注意： 调用该接口前，应先检查Unicorn.isServiceAvailable(), 如果返回为false，该接口不会有任何动作
-        Unicorn.openServiceActivity(mMyPageView.getContext(), // 上下文
-                title, // 聊天窗口的标题
-                source // 咨询的发起来源，包括发起咨询的url，title，描述信息等
-        );
+        super.onlineAsk(user, mView.getContext());
     }
 
     public void fetchStudent() {
@@ -130,7 +108,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
                         @Override
                         public void onError(Throwable e) {
                             if (ErrorUtil.isInvalidSession(e)) {
-                                mMyPageView.forceOffline();
+                                mView.forceOffline();
                             }
                             HHLog.e(e.getMessage());
                         }
@@ -139,7 +117,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
                         public void onNext(Student student) {
                             mStudent = student;
                             application.getSharedPrefUtil().updateStudent(student);
-                            mMyPageView.loadStudentInfo(student);
+                            mView.loadStudentInfo(student);
                             showVoucherBadge(student);
                         }
                     });
@@ -158,7 +136,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
                     @Override
                     public void onCompleted() {
                         application.getSharedPrefUtil().setUser(null);//清空用户
-                        mMyPageView.finishToStartLogin();
+                        mView.finishToStartLogin();
                     }
 
                     @Override
@@ -190,7 +168,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
                 .subscribe(new Subscriber<Student>() {
                     @Override
                     public void onCompleted() {
-                        mMyPageView.showMessage("头像修改成功");
+                        mView.showMessage("头像修改成功");
                     }
 
                     @Override
@@ -202,7 +180,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
                     public void onNext(Student student) {
                         application.getSharedPrefUtil().updateStudent(student);
                         mStudent = student;
-                        mMyPageView.loadStudentInfo(student);
+                        mView.loadStudentInfo(student);
                         showVoucherBadge(student);
                     }
                 });
@@ -242,16 +220,16 @@ public class MyPagePresenter implements Presenter<MyPageView> {
             //我的教练点击
             HashMap<String, String> map = new HashMap();
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_my_coach_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "my_page_my_coach_tapped", map);
         } else {
-            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_my_coach_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "my_page_my_coach_tapped");
         }
         if (user == null || !user.isLogin()) {
-            mMyPageView.alertToLogin();
+            mView.alertToLogin();
         } else if (!user.student.hasPurchasedService()) {
-            mMyPageView.showMessage("您还没有购买教练");
+            mView.showMessage("您还没有购买教练");
         } else {
-            mMyPageView.toMyCoach(user.student.current_coach_id);
+            mView.toMyCoach(user.student.current_coach_id);
         }
     }
 
@@ -261,13 +239,13 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_pay_coach_status_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "my_page_pay_coach_status_tapped", map);
             if (user.student.hasPurchasedService()) {
-                mMyPageView.navigateToPaymentStage();
+                mView.navigateToPaymentStage();
             }
         } else {
-            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_pay_coach_status_tapped");
-            mMyPageView.alertToLogin();
+            MobclickAgent.onEvent(mView.getContext(), "my_page_pay_coach_status_tapped");
+            mView.alertToLogin();
         }
     }
 
@@ -277,9 +255,9 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_my_followed_coach_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "my_page_my_followed_coach_tapped", map);
         } else {
-            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_my_followed_coach_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "my_page_my_followed_coach_tapped");
         }
     }
 
@@ -289,9 +267,9 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_my_advisor_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "my_page_my_advisor_tapped", map);
         } else {
-            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_my_advisor_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "my_page_my_advisor_tapped");
         }
     }
 
@@ -301,9 +279,9 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_FAQ_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "my_page_FAQ_tapped", map);
         } else {
-            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_FAQ_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "my_page_FAQ_tapped");
         }
     }
 
@@ -313,9 +291,9 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_rate_us_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "my_page_rate_us_tapped", map);
         } else {
-            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_rate_us_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "my_page_rate_us_tapped");
         }
     }
 
@@ -325,9 +303,9 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_version_check_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "my_page_version_check_tapped", map);
         } else {
-            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_version_check_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "my_page_version_check_tapped");
         }
     }
 
@@ -337,15 +315,15 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_refer_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "my_page_refer_tapped", map);
             if (user.student.is_sales_agent) {
-                mMyPageView.navigateToReferFriends();
+                mView.navigateToReferFriends();
                 return;
             }
         } else {
-            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_refer_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "my_page_refer_tapped");
         }
-        mMyPageView.navigateToStudentRefer();
+        mView.navigateToStudentRefer();
     }
 
     public void clickMyCourse() {
@@ -353,24 +331,24 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_my_course_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "my_page_my_course_tapped", map);
             if (user.student.hasPurchasedService()) {
-                mMyPageView.navigateToMyCourse();
+                mView.navigateToMyCourse();
             } else {
-                mMyPageView.navigateToNoCourse();
+                mView.navigateToNoCourse();
             }
         } else {
-            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_my_course_tapped");
-            mMyPageView.alertToLogin();
+            MobclickAgent.onEvent(mView.getContext(), "my_page_my_course_tapped");
+            mView.alertToLogin();
         }
     }
 
     public void clickMyVoucher() {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
-            mMyPageView.navigateToMyVoucher();
+            mView.navigateToMyVoucher();
         } else {
-            mMyPageView.navigateToNotLoginVoucher();
+            mView.navigateToNotLoginVoucher();
         }
     }
 
@@ -400,19 +378,19 @@ public class MyPagePresenter implements Presenter<MyPageView> {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mMyPageView.showProgressDialog();
+                        mView.showProgressDialog();
                     }
 
                     @Override
                     public void onCompleted() {
-                        mMyPageView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mMyPageView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                         if (ErrorUtil.isInvalidSession(e)) {
-                            mMyPageView.forceOffline();
+                            mView.forceOffline();
                         }
                         HHLog.e(e.getMessage());
                     }
@@ -420,7 +398,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
                     @Override
                     public void onNext(Student student) {
                         application.getSharedPrefUtil().updateStudent(student);
-                        mMyPageView.editUsername(student.name);
+                        mView.editUsername(student.name);
                     }
                 });
 
@@ -435,7 +413,7 @@ public class MyPagePresenter implements Presenter<MyPageView> {
                 break;
             }
         }
-        mMyPageView.setVoucherBadge(hasUnUsedVoucher);
+        mView.setVoucherBadge(hasUnUsedVoucher);
     }
 
     public void clickMyContract() {
@@ -443,20 +421,20 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         HashMap<String, String> map = new HashMap();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_contract_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "my_page_contract_tapped", map);
         } else {
-            MobclickAgent.onEvent(mMyPageView.getContext(), "my_page_contract_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "my_page_contract_tapped");
         }
         if (user == null || !user.isLogin()) {
-            mMyPageView.alertToLogin();
+            mView.alertToLogin();
         } else if (!user.student.hasPurchasedService()) {
-            mMyPageView.alertToFindCoach();
+            mView.alertToFindCoach();
         } else if (!user.student.isUploadedIdInfo()) {
-            mMyPageView.navigateToUploadIdCard();
+            mView.navigateToUploadIdCard();
         } else if (!user.student.isSigned()) {
-            mMyPageView.navigateToSignContract();
+            mView.navigateToSignContract();
         } else {
-            mMyPageView.navigateToMyContract();
+            mView.navigateToMyContract();
         }
     }
 
@@ -465,18 +443,18 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         if (user == null || !user.isLogin()) return;
         if (user.student.hasPurchasedService() && (!user.student.isUploadedIdInfo() || !user.student.isSigned())) {
             //已购买但是未签订协议或者上传资料
-            mMyPageView.setContractBadge(true);
+            mView.setContractBadge(true);
         } else {
-            mMyPageView.setContractBadge(false);
+            mView.setContractBadge(false);
         }
     }
 
     private void setPassEnsuranceBadge() {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin() && user.student.hasPurchasedService()) {
-            mMyPageView.setPassEnsuranceBadge(false);
+            mView.setPassEnsuranceBadge(false);
         } else {
-            mMyPageView.setPassEnsuranceBadge(true);
+            mView.setPassEnsuranceBadge(true);
         }
     }
 
@@ -491,15 +469,15 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         if (user != null && user.student != null) {
             cityId = user.student.city_id;
         }
-        mMyPageView.openWebView(WebViewUrl.WEB_URL_FIND_ADVISER + "?city_id=" + cityId);
+        mView.openWebView(WebViewUrl.WEB_URL_FIND_ADVISER + "?city_id=" + cityId);
     }
 
     public void clickPassEnsurance() {
-        mMyPageView.navigateToPassEnsurance();
+        mView.navigateToPassEnsurance();
     }
 
     public void clickMyInsurance() {
-        mMyPageView.navigateToMyInsurance();
+        mView.navigateToMyInsurance();
     }
 
     /**
@@ -509,9 +487,9 @@ public class MyPagePresenter implements Presenter<MyPageView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin() || !user.student.is_sales_agent) {
             //非代理
-            mMyPageView.navigateToStudentRefer();
+            mView.navigateToStudentRefer();
         } else {
-            mMyPageView.navigateToReferFriends();
+            mView.navigateToReferFriends();
         }
     }
 }

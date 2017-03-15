@@ -9,6 +9,7 @@ import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.ShortenUrl;
 import com.hahaxueche.model.community.Article;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.community.ArticleView;
 import com.hahaxueche.util.ErrorUtil;
@@ -16,8 +17,6 @@ import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
 import com.umeng.analytics.MobclickAgent;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -31,20 +30,20 @@ import rx.functions.Func1;
  * Created by wangshirui on 16/9/25.
  */
 
-public class ArticlePresenter implements Presenter<ArticleView> {
-    private ArticleView mArticleView;
+public class ArticlePresenter extends HHBasePresenter implements Presenter<ArticleView> {
+    private ArticleView mView;
     private Subscription subscription;
     private HHBaseApplication application;
     private Article mArticle;
     private boolean isApplaud;
 
     public void attachView(ArticleView view) {
-        this.mArticleView = view;
-        application = HHBaseApplication.get(mArticleView.getContext());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
     }
 
     public void detachView() {
-        this.mArticleView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
     }
@@ -78,7 +77,7 @@ public class ArticlePresenter implements Presenter<ArticleView> {
                     @Override
                     public void onError(Throwable e) {
                         if (ErrorUtil.isInvalidSession(e)) {
-                            mArticleView.forceOffline();
+                            mView.forceOffline();
                         }
                         HHLog.e(e.getMessage());
                     }
@@ -91,18 +90,18 @@ public class ArticlePresenter implements Presenter<ArticleView> {
     }
 
     public void saveDraft(String draft) {
-        mArticleView.setDraft("[草稿]" + draft);
+        mView.setDraft("[草稿]" + draft);
     }
 
     public void clearDraft() {
-        mArticleView.setDraft("发表伟大言论...");
+        mView.setDraft("发表伟大言论...");
     }
 
     public void setArticle(Article article) {
         this.mArticle = article;
         String articleUrl = BuildConfig.MOBILE_URL + "/articles/" + mArticle.id + "?view=raw";
         HHLog.v(articleUrl);
-        mArticleView.setWebViewUrl(articleUrl);
+        mView.setWebViewUrl(articleUrl);
         shortenUrl(mArticle);
         pageStartCount();
         loadCount();
@@ -110,14 +109,8 @@ public class ArticlePresenter implements Presenter<ArticleView> {
 
     public void shortenUrl(final Article article) {
         String url = BuildConfig.MOBILE_URL + "/articles/" + article.id;
-        String longUrl = null;
         HHApiService apiService = application.getApiService();
-        try {
-            longUrl = " https://api.t.sina.com.cn/short_url/shorten.json?source=4186780524&url_long=" +
-                    URLEncoder.encode(url, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        String longUrl = getShortenUrlAddress(url);
         if (TextUtils.isEmpty(longUrl)) return;
         subscription = apiService.shortenUrl(longUrl)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -136,7 +129,7 @@ public class ArticlePresenter implements Presenter<ArticleView> {
                     @Override
                     public void onNext(ArrayList<ShortenUrl> shortenUrls) {
                         if (shortenUrls != null && shortenUrls.size() > 0) {
-                            mArticleView.initShareData(article, shortenUrls.get(0).url_short);
+                            mView.initShareData(article, shortenUrls.get(0).url_short);
                         }
                     }
                 });
@@ -174,22 +167,22 @@ public class ArticlePresenter implements Presenter<ArticleView> {
         if (mArticle.comments != null) {
             commentCount = mArticle.comments.size();
         }
-        mArticleView.setCommentCount(Utils.getCount(commentCount));
-        mArticleView.setViewCount(Utils.getCount(mArticle.view_count));
+        mView.setCommentCount(Utils.getCount(commentCount));
+        mView.setViewCount(Utils.getCount(mArticle.view_count));
         loadApplaud();
     }
 
     public void loadComments() {
-        mArticleView.removeCommentViews();
+        mView.removeCommentViews();
         if (mArticle.comments != null && mArticle.comments.size() > 0) {
-            mArticleView.addCommentTitle();
+            mView.addCommentTitle();
             boolean loadMoreComments = mArticle.comments.size() > 3;
             int showCommentCount = loadMoreComments ? 3 : mArticle.comments.size();
             for (int i = 0; i < showCommentCount; i++) {
-                mArticleView.addComment(mArticle.comments.get(i), i == showCommentCount - 1);
+                mView.addComment(mArticle.comments.get(i), i == showCommentCount - 1);
             }
             if (loadMoreComments) {//显示更多评论按钮
-                mArticleView.addMoreCommentButton();
+                mView.addMoreCommentButton();
             }
         }
     }
@@ -202,19 +195,19 @@ public class ArticlePresenter implements Presenter<ArticleView> {
             map.put("student_id", user.student.id);
         }
         map.put("article_id", mArticle.id);
-        MobclickAgent.onEvent(mArticleView.getContext(), "article_detail_page_comment_tapped", map);
+        MobclickAgent.onEvent(mView.getContext(), "article_detail_page_comment_tapped", map);
         if (user != null && user.isLogin()) {
-            mArticleView.showCommentDialog();
+            mView.showCommentDialog();
         } else {
-            mArticleView.alertToLogin("注册登录后,才可以评价文章哦～\n注册获得更多学车咨询!～");
+            mView.alertToLogin("注册登录后,才可以评价文章哦～\n注册获得更多学车咨询!～");
         }
     }
 
     private void loadApplaud() {
         isApplaud = (mArticle.liked == 1);
         HHLog.v("isApplaud -> " + isApplaud);
-        mArticleView.showApplaud(isApplaud);
-        mArticleView.setApplaudCount(Utils.getCount(mArticle.like_count));
+        mView.showApplaud(isApplaud);
+        mView.setApplaudCount(Utils.getCount(mArticle.like_count));
     }
 
     public void applaud() {
@@ -226,15 +219,15 @@ public class ArticlePresenter implements Presenter<ArticleView> {
         }
         countMap.put("article_id", mArticle.id);
         countMap.put("like", isApplaud ? "0" : "1");
-        MobclickAgent.onEvent(mArticleView.getContext(), "article_detail_page_like_unlike_tapped", countMap);
+        MobclickAgent.onEvent(mView.getContext(), "article_detail_page_like_unlike_tapped", countMap);
         if (user == null || !user.isLogin()) {
-            mArticleView.alertToLogin("注册登录后,才可以点赞文章哦～\n注册获得更多学车咨询!～");
+            mView.alertToLogin("注册登录后,才可以点赞文章哦～\n注册获得更多学车咨询!～");
             return;
         }
         final HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", user.cell_phone);
-        mArticleView.enableApplaud(false);
+        mView.enableApplaud(false);
         if (isApplaud) {
             subscription = apiService.isValidToken(user.session.access_token, map)
                     .flatMap(new Func1<BaseValid, Observable<Article>>() {
@@ -253,14 +246,14 @@ public class ArticlePresenter implements Presenter<ArticleView> {
                         @Override
                         public void onCompleted() {
                             loadApplaud();
-                            mArticleView.enableApplaud(true);
+                            mView.enableApplaud(true);
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            mArticleView.enableApplaud(true);
+                            mView.enableApplaud(true);
                             if (ErrorUtil.isInvalidSession(e)) {
-                                mArticleView.forceOffline();
+                                mView.forceOffline();
                             }
                             HHLog.e(e.getMessage());
                         }
@@ -288,20 +281,20 @@ public class ArticlePresenter implements Presenter<ArticleView> {
                         @Override
                         public void onStart() {
                             super.onStart();
-                            mArticleView.startApplaudAnimation();
+                            mView.startApplaudAnimation();
                         }
 
                         @Override
                         public void onCompleted() {
                             loadApplaud();
-                            mArticleView.enableApplaud(true);
+                            mView.enableApplaud(true);
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            mArticleView.enableApplaud(true);
+                            mView.enableApplaud(true);
                             if (ErrorUtil.isInvalidSession(e)) {
-                                mArticleView.forceOffline();
+                                mView.forceOffline();
                             }
                             HHLog.e(e.getMessage());
                         }
@@ -322,7 +315,7 @@ public class ArticlePresenter implements Presenter<ArticleView> {
             map.put("student_id", user.student.id);
         }
         map.put("article_id", mArticle.id);
-        MobclickAgent.onEvent(mArticleView.getContext(), "article_detail_page_share_article_tapped", map);
+        MobclickAgent.onEvent(mView.getContext(), "article_detail_page_share_article_tapped", map);
     }
 
     public void clickShareSuccessCount(String shareChannel) {
@@ -334,7 +327,7 @@ public class ArticlePresenter implements Presenter<ArticleView> {
         }
         map.put("article_id", mArticle.id);
         map.put("share_channel", shareChannel);
-        MobclickAgent.onEvent(mArticleView.getContext(), "article_detail_page_share_article_succeed", map);
+        MobclickAgent.onEvent(mView.getContext(), "article_detail_page_share_article_succeed", map);
     }
 
     public void pageStartCount() {
@@ -344,7 +337,7 @@ public class ArticlePresenter implements Presenter<ArticleView> {
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
         }
-        MobclickAgent.onEvent(mArticleView.getContext(), "article_detail_page_viewed", map);
+        MobclickAgent.onEvent(mView.getContext(), "article_detail_page_viewed", map);
     }
 
     public void clickCommentCount() {
@@ -354,6 +347,6 @@ public class ArticlePresenter implements Presenter<ArticleView> {
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
         }
-        MobclickAgent.onEvent(mArticleView.getContext(), "article_detail_page_view_comment_tapped", map);
+        MobclickAgent.onEvent(mView.getContext(), "article_detail_page_view_comment_tapped", map);
     }
 }
