@@ -2,7 +2,6 @@ package com.hahaxueche.presenter.findCoach;
 
 import android.text.TextUtils;
 
-import com.hahaxueche.BuildConfig;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseBoolean;
@@ -17,6 +16,7 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.ClassType;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.Follow;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.CoachDetailView;
 import com.hahaxueche.util.Common;
@@ -39,10 +39,10 @@ import rx.functions.Func1;
  * Created by wangshirui on 16/10/5.
  */
 
-public class CoachDetailPresenter implements Presenter<CoachDetailView> {
+public class CoachDetailPresenter extends HHBasePresenter implements Presenter<CoachDetailView> {
     private static final int PAGE = 1;
     private static final int PER_PAGE = 10;
-    private CoachDetailView mCoachDetailView;
+    private CoachDetailView mView;
     private Subscription subscription;
     private HHBaseApplication application;
     private Coach mCoach;
@@ -53,14 +53,14 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
 
     @Override
     public void attachView(CoachDetailView view) {
-        this.mCoachDetailView = view;
-        application = HHBaseApplication.get(mCoachDetailView.getContext());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
         mUser = application.getSharedPrefUtil().getUser();
     }
 
     @Override
     public void detachView() {
-        this.mCoachDetailView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
         mCoach = null;
@@ -71,11 +71,11 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         this.mCoach = coach;
         if (mCoach == null) return;
         setCoachLabel();
-        this.mCoachDetailView.showCoachDetail(mCoach);
+        this.mView.showCoachDetail(mCoach);
         if (mCoach.coach_group.c2_price != 0 || mCoach.coach_group.c2_vip_price != 0) {
-            mCoachDetailView.setLicenseTab(true, true);
+            mView.setLicenseTab(true, true);
         } else {
-            mCoachDetailView.setLicenseTab(true, false);
+            mView.setLicenseTab(true, false);
         }
         int insuranceWithNewCoachPrice = application.getConstants().insurance_prices.pay_with_new_coach_price;
         mClassTypeList = new ArrayList<>();
@@ -111,13 +111,13 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
             mClassTypeList.add(new ClassType(Common.CLASS_TYPE_WUYOU_NAME, Common.CLASS_TYPE_WUYOU_C1,
                     mCoach.coach_group.training_cost + insuranceWithNewCoachPrice, true,
                     Common.CLASS_TYPE_WUYOU_DESC, Common.LICENSE_TYPE_C1));
-            mCoachDetailView.setLicenseTab(true, false);
+            mView.setLicenseTab(true, false);
         }
         //默认选择C1
         selectLicenseType(Common.LICENSE_TYPE_C1);
-        mCoachDetailView.setCoachBadge(coach.skill_level.equals("1"));
-        mCoachDetailView.setPayBadge(coach.has_cash_pledge == 1);
-        this.mCoachDetailView.initShareData(mCoach);
+        mView.setCoachBadge(coach.skill_level.equals("1"));
+        mView.setPayBadge(coach.has_cash_pledge == 1);
+        this.mView.initShareData(mCoach);
         loadReviews();
         loadFollow();
         loadApplaud();
@@ -125,18 +125,18 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
     }
 
     public void selectLicenseType(int licenseType) {
-        mCoachDetailView.clearClassType();
+        mView.clearClassType();
         for (ClassType classType : mClassTypeList) {
             if (classType.licenseType == licenseType) {
-                mCoachDetailView.addClassType(classType);
+                mView.addClassType(classType);
             }
         }
         if (licenseType == Common.LICENSE_TYPE_C1) {
-            mCoachDetailView.showC1Tab(true);
-            mCoachDetailView.showC2Tab(false);
+            mView.showC1Tab(true);
+            mView.showC2Tab(false);
         } else {
-            mCoachDetailView.showC1Tab(false);
-            mCoachDetailView.showC2Tab(true);
+            mView.showC1Tab(false);
+            mView.showC2Tab(true);
         }
     }
 
@@ -215,9 +215,9 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
                     @Override
                     public void onNext(ReviewResponseList reviewResponseList) {
                         if (reviewResponseList != null && reviewResponseList.data != null && reviewResponseList.data.size() > 0) {
-                            mCoachDetailView.showReviews(reviewResponseList);
+                            mView.showReviews(reviewResponseList);
                         } else {
-                            mCoachDetailView.showNoReview(mCoach.name);
+                            mView.showNoReview(mCoach.name);
                         }
                     }
                 });
@@ -228,7 +228,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         final HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", mUser.cell_phone);
-        mCoachDetailView.enableFollow(false);
+        mView.enableFollow(false);
         subscription = apiService.isValidToken(mUser.session.access_token, map)
                 .flatMap(new Func1<BaseValid, Observable<BaseBoolean>>() {
                     @Override
@@ -245,16 +245,16 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
                 .subscribe(new Subscriber<BaseBoolean>() {
                     @Override
                     public void onCompleted() {
-                        mCoachDetailView.enableFollow(true);
+                        mView.enableFollow(true);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mCoachDetailView.enableFollow(true);
+                        mView.enableFollow(true);
                         isFollow = false;
-                        mCoachDetailView.showFollow(isFollow);
+                        mView.showFollow(isFollow);
                         if (ErrorUtil.isInvalidSession(e)) {
-                            mCoachDetailView.forceOffline();
+                            mView.forceOffline();
                         }
                         HHLog.e(e.getMessage());
                     }
@@ -262,7 +262,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
                     @Override
                     public void onNext(BaseBoolean baseBoolean) {
                         isFollow = baseBoolean.result;
-                        mCoachDetailView.showFollow(isFollow);
+                        mView.showFollow(isFollow);
 
                     }
                 });
@@ -270,7 +270,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
 
     public void follow() {
         if (mUser == null || !mUser.isLogin()) {
-            mCoachDetailView.alertToLogin("注册登录后,才可以关注教练哦～\n注册获得更多学车咨询!～");
+            mView.alertToLogin("注册登录后,才可以关注教练哦～\n注册获得更多学车咨询!～");
             return;
         }
         //follow unfollow 点击
@@ -280,11 +280,11 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         }
         countMap.put("coach_id", mCoach.id);
         countMap.put("follow", isFollow ? "0" : "1");
-        MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_follow_unfollow_tapped", countMap);
+        MobclickAgent.onEvent(mView.getContext(), "coach_detail_page_follow_unfollow_tapped", countMap);
         final HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", mUser.cell_phone);
-        mCoachDetailView.enableFollow(false);
+        mView.enableFollow(false);
         if (isFollow) {//当前关注状态，取消关注
             subscription = apiService.isValidToken(mUser.session.access_token, map)
                     .flatMap(new Func1<BaseValid, Observable<BaseModel>>() {
@@ -302,16 +302,16 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
                     .subscribe(new Subscriber<BaseModel>() {
                         @Override
                         public void onCompleted() {
-                            mCoachDetailView.enableFollow(true);
+                            mView.enableFollow(true);
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            mCoachDetailView.enableFollow(true);
+                            mView.enableFollow(true);
                             isFollow = false;
-                            mCoachDetailView.showFollow(isFollow);
+                            mView.showFollow(isFollow);
                             if (ErrorUtil.isInvalidSession(e)) {
-                                mCoachDetailView.forceOffline();
+                                mView.forceOffline();
                             }
                             HHLog.e(e.getMessage());
                         }
@@ -319,7 +319,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
                         @Override
                         public void onNext(BaseModel baseModel) {
                             isFollow = false;
-                            mCoachDetailView.showFollow(isFollow);
+                            mView.showFollow(isFollow);
                         }
                     });
         } else {//关注
@@ -339,16 +339,16 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
                     .subscribe(new Subscriber<Follow>() {
                         @Override
                         public void onCompleted() {
-                            mCoachDetailView.enableFollow(true);
+                            mView.enableFollow(true);
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            mCoachDetailView.enableFollow(true);
+                            mView.enableFollow(true);
                             isFollow = false;
-                            mCoachDetailView.showFollow(isFollow);
+                            mView.showFollow(isFollow);
                             if (ErrorUtil.isInvalidSession(e)) {
-                                mCoachDetailView.forceOffline();
+                                mView.forceOffline();
                             }
                             HHLog.e(e.getMessage());
                         }
@@ -356,7 +356,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
                         @Override
                         public void onNext(Follow follow) {
                             isFollow = true;
-                            mCoachDetailView.showFollow(isFollow);
+                            mView.showFollow(isFollow);
                         }
                     });
         }
@@ -364,8 +364,8 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
 
     private void loadApplaud() {
         isApplaud = (mCoach.liked == 1);
-        mCoachDetailView.showApplaud(isApplaud);
-        mCoachDetailView.setApplaudCount(mCoach.like_count);
+        mView.showApplaud(isApplaud);
+        mView.setApplaudCount(mCoach.like_count);
     }
 
     public void applaud() {
@@ -376,16 +376,16 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         }
         countMap.put("coach_id", mCoach.id);
         countMap.put("like", isApplaud ? "0" : "1");
-        MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_like_unlike_tapped", countMap);
+        MobclickAgent.onEvent(mView.getContext(), "coach_detail_page_like_unlike_tapped", countMap);
         if (mUser == null || !mUser.isLogin()) {
-            mCoachDetailView.alertToLogin("注册登录后,才可以点赞教练哦～\n注册获得更多学车咨询!～");
+            mView.alertToLogin("注册登录后,才可以点赞教练哦～\n注册获得更多学车咨询!～");
             return;
         }
         final HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", mUser.cell_phone);
         final HashMap<String, Object> mapParam = new HashMap<>();
-        mCoachDetailView.enableApplaud(false);
+        mView.enableApplaud(false);
         if (isApplaud) {
             mapParam.put("like", 0);
             subscription = apiService.isValidToken(mUser.session.access_token, map)
@@ -405,14 +405,14 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
                         @Override
                         public void onCompleted() {
                             loadApplaud();
-                            mCoachDetailView.enableApplaud(true);
+                            mView.enableApplaud(true);
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            mCoachDetailView.enableApplaud(true);
+                            mView.enableApplaud(true);
                             if (ErrorUtil.isInvalidSession(e)) {
-                                mCoachDetailView.forceOffline();
+                                mView.forceOffline();
                             }
                             HHLog.e(e.getMessage());
                         }
@@ -441,20 +441,20 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
                         @Override
                         public void onStart() {
                             super.onStart();
-                            mCoachDetailView.startApplaudAnimation();
+                            mView.startApplaudAnimation();
                         }
 
                         @Override
                         public void onCompleted() {
                             loadApplaud();
-                            mCoachDetailView.enableApplaud(true);
+                            mView.enableApplaud(true);
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            mCoachDetailView.enableApplaud(true);
+                            mView.enableApplaud(true);
                             if (ErrorUtil.isInvalidSession(e)) {
-                                mCoachDetailView.forceOffline();
+                                mView.forceOffline();
                             }
                             HHLog.e(e.getMessage());
                         }
@@ -469,13 +469,13 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
 
     public void purchaseCoach(ClassType classType) {
         if (mUser == null || !mUser.isLogin()) {
-            mCoachDetailView.alertToLogin("注册登录后,才可以购买教练哦～\n注册获得更多学车咨询!～");
+            mView.alertToLogin("注册登录后,才可以购买教练哦～\n注册获得更多学车咨询!～");
             return;
         } else if (mUser.student.hasPurchasedService()) {
-            mCoachDetailView.showMessage("该学员已经购买过教练");
+            mView.showMessage("该学员已经购买过教练");
             return;
         }
-        mCoachDetailView.navigateToPurchaseCoach(mCoach, classType);
+        mView.navigateToPurchaseCoach(mCoach, classType);
     }
 
     public void freeTry() {
@@ -502,10 +502,10 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
             map.put("student_id", mUser.student.id);
         }
         map.put("coach_id", mCoach.id);
-        MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_free_trial_tapped", map);
+        MobclickAgent.onEvent(mView.getContext(), "coach_detail_page_free_trial_tapped", map);
         HHLog.v("free try url -> " + url);
         HHLog.v("free try share url -> " + shareUrl);
-        mCoachDetailView.openWebView(url, shareUrl);
+        mView.openWebView(url, shareUrl);
     }
 
     public void clickCommentsCount() {
@@ -515,7 +515,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
             map.put("student_id", mUser.student.id);
         }
         map.put("coach_id", mCoach.id);
-        MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_comment_tapped", map);
+        MobclickAgent.onEvent(mView.getContext(), "coach_detail_page_comment_tapped", map);
     }
 
     public void clickShareCount() {
@@ -525,7 +525,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
             map.put("student_id", mUser.student.id);
         }
         map.put("coach_id", mCoach.id);
-        MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_share_coach_tapped", map);
+        MobclickAgent.onEvent(mView.getContext(), "coach_detail_page_share_coach_tapped", map);
     }
 
     public void clickShareSuccessCount(String shareChannel) {
@@ -536,7 +536,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         }
         map.put("coach_id", mCoach.id);
         map.put("share_channel", shareChannel);
-        MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_share_coach_succeed", map);
+        MobclickAgent.onEvent(mView.getContext(), "coach_detail_page_share_coach_succeed", map);
     }
 
     public void clickTrainFieldCount() {
@@ -546,7 +546,7 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
             map.put("student_id", mUser.student.id);
         }
         map.put("coach_id", mCoach.id);
-        MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_field_tapped", map);
+        MobclickAgent.onEvent(mView.getContext(), "coach_detail_page_field_tapped", map);
     }
 
     public void pageStartCount() {
@@ -556,11 +556,11 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
             map.put("student_id", mUser.student.id);
         }
         map.put("coach_id", mCoach.id);
-        MobclickAgent.onEvent(mCoachDetailView.getContext(), "coach_detail_page_viewed", map);
+        MobclickAgent.onEvent(mView.getContext(), "coach_detail_page_viewed", map);
     }
 
     public void clickPlatformAssurance() {
-        mCoachDetailView.navigationToPlatformAssurance(mCoach.skill_level.equals("1"), mCoach.has_cash_pledge == 1);
+        mView.navigationToPlatformAssurance(mCoach.skill_level.equals("1"), mCoach.has_cash_pledge == 1);
     }
 
     /**
@@ -570,9 +570,9 @@ public class CoachDetailPresenter implements Presenter<CoachDetailView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin() || !user.student.is_sales_agent) {
             //非代理
-            mCoachDetailView.navigateToStudentRefer();
+            mView.navigateToStudentRefer();
         } else {
-            mCoachDetailView.navigateToReferFriends();
+            mView.navigateToReferFriends();
         }
     }
 

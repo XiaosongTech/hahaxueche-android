@@ -7,26 +7,19 @@ import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseSuccess;
 import com.hahaxueche.model.base.BaseValid;
-import com.hahaxueche.model.base.City;
-import com.hahaxueche.model.base.ErrorResponse;
 import com.hahaxueche.model.user.IdCardUrl;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.student.Student;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.MyContractView;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
-import com.hahaxueche.util.Utils;
 import com.umeng.analytics.MobclickAgent;
 
-import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.util.HashMap;
 
-import okhttp3.ResponseBody;
-import retrofit2.Converter;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -37,20 +30,20 @@ import rx.functions.Func1;
  * Created by wangshirui on 2016/11/29.
  */
 
-public class MyContractPresenter implements Presenter<MyContractView> {
-    private MyContractView mMyContractView;
+public class MyContractPresenter extends HHBasePresenter implements Presenter<MyContractView> {
+    private MyContractView mView;
     private Subscription subscription;
     private HHBaseApplication application;
 
     @Override
     public void attachView(MyContractView view) {
-        this.mMyContractView = view;
-        application = HHBaseApplication.get(mMyContractView.getContext());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
     }
 
     @Override
     public void detachView() {
-        this.mMyContractView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
     }
@@ -60,8 +53,8 @@ public class MyContractPresenter implements Presenter<MyContractView> {
         if (user == null || !user.isLogin() ||
                 !user.student.hasPurchasedService() || !user.student.isUploadedIdInfo()) return;
         if (!TextUtils.isEmpty(user.student.agreement_url)) {
-            mMyContractView.setPdf(user.student.agreement_url, user.student.id);
-            mMyContractView.setSignEnable(false);
+            mView.setPdf(user.student.agreement_url, user.student.id);
+            mView.setSignEnable(false);
             myContractViewCount();
         } else {
             signContractViewCount();
@@ -73,24 +66,24 @@ public class MyContractPresenter implements Presenter<MyContractView> {
                         @Override
                         public void onStart() {
                             super.onStart();
-                            mMyContractView.showProgressDialog();
+                            mView.showProgressDialog();
                         }
 
                         @Override
                         public void onCompleted() {
-                            mMyContractView.dismissProgressDialog();
+                            mView.dismissProgressDialog();
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            mMyContractView.dismissProgressDialog();
+                            mView.dismissProgressDialog();
                             HHLog.e(e.getMessage());
                         }
 
                         @Override
                         public void onNext(Response<IdCardUrl> response) {
                             if (response.isSuccessful()) {
-                                mMyContractView.setPdf(response.body().agreement_url, user.student.id);
+                                mView.setPdf(response.body().agreement_url, user.student.id);
                             }
                         }
                     });
@@ -120,20 +113,20 @@ public class MyContractPresenter implements Presenter<MyContractView> {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mMyContractView.showProgressDialog();
+                        mView.showProgressDialog();
                     }
 
                     @Override
                     public void onCompleted() {
-                        mMyContractView.dismissProgressDialog();
-                        mMyContractView.showShare();
+                        mView.dismissProgressDialog();
+                        mView.showShare();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mMyContractView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                         if (ErrorUtil.isInvalidSession(e)) {
-                            mMyContractView.forceOffline();
+                            mView.forceOffline();
                         }
                         HHLog.e(e.getMessage());
                     }
@@ -170,20 +163,20 @@ public class MyContractPresenter implements Presenter<MyContractView> {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mMyContractView.showProgressDialog("邮件发送中，请稍后...");
+                        mView.showProgressDialog("邮件发送中，请稍后...");
                     }
 
                     @Override
                     public void onCompleted() {
-                        mMyContractView.dismissProgressDialog();
-                        mMyContractView.showMessage("协议已发送指定邮箱");
+                        mView.dismissProgressDialog();
+                        mView.showMessage("协议已发送指定邮箱");
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mMyContractView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                         if (ErrorUtil.isInvalidSession(e)) {
-                            mMyContractView.forceOffline();
+                            mView.forceOffline();
                         }
                         HHLog.e(e.getMessage());
                     }
@@ -200,7 +193,7 @@ public class MyContractPresenter implements Presenter<MyContractView> {
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
         }
-        MobclickAgent.onEvent(mMyContractView.getContext(), "my_contract_page_viewed", map);
+        MobclickAgent.onEvent(mView.getContext(), "my_contract_page_viewed", map);
     }
 
     public void signContractViewCount() {
@@ -209,7 +202,7 @@ public class MyContractPresenter implements Presenter<MyContractView> {
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
         }
-        MobclickAgent.onEvent(mMyContractView.getContext(), "sign_contract_page_viewed", map);
+        MobclickAgent.onEvent(mView.getContext(), "sign_contract_page_viewed", map);
     }
 
     public void clickAgreement() {
@@ -218,7 +211,7 @@ public class MyContractPresenter implements Presenter<MyContractView> {
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
         }
-        MobclickAgent.onEvent(mMyContractView.getContext(), "sign_contract_check_box_checked", map);
+        MobclickAgent.onEvent(mView.getContext(), "sign_contract_check_box_checked", map);
     }
 
     public void clickSettingIcon() {
@@ -227,7 +220,7 @@ public class MyContractPresenter implements Presenter<MyContractView> {
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
         }
-        MobclickAgent.onEvent(mMyContractView.getContext(), "my_contract_page_top_right_button_tapped", map);
+        MobclickAgent.onEvent(mView.getContext(), "my_contract_page_top_right_button_tapped", map);
     }
 
     public void clickSendAgreement() {
@@ -236,7 +229,7 @@ public class MyContractPresenter implements Presenter<MyContractView> {
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
         }
-        MobclickAgent.onEvent(mMyContractView.getContext(), "my_contract_page_send_by_email_tapped", map);
+        MobclickAgent.onEvent(mView.getContext(), "my_contract_page_send_by_email_tapped", map);
     }
 
     public void clickDownloadAgreement() {
@@ -245,10 +238,10 @@ public class MyContractPresenter implements Presenter<MyContractView> {
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
         }
-        MobclickAgent.onEvent(mMyContractView.getContext(), "my_contract_page_download_tapped", map);
+        MobclickAgent.onEvent(mView.getContext(), "my_contract_page_download_tapped", map);
     }
 
     public String getShareText() {
-        return mMyContractView.getContext().getResources().getString(R.string.sign_share_dialog_text);
+        return mView.getContext().getResources().getString(R.string.sign_share_dialog_text);
     }
 }

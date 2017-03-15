@@ -10,6 +10,7 @@ import com.hahaxueche.model.course.ScheduleEvent;
 import com.hahaxueche.model.responseList.ScheduleEventResponseList;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Review;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.ScheduleListView;
 import com.hahaxueche.util.ErrorUtil;
@@ -33,22 +34,22 @@ import rx.functions.Func1;
  * Created by wangshirui on 2016/11/5.
  */
 
-public class ScheduleListPresenter implements Presenter<ScheduleListView> {
+public class ScheduleListPresenter extends HHBasePresenter implements Presenter<ScheduleListView> {
     private static final int PAGE = 1;
     private static final int PER_PAGE = 10;
-    private ScheduleListView mScheduleListView;
+    private ScheduleListView mView;
     private Subscription subscription;
     private HHBaseApplication application;
     private String nextLink;
     private int booked = 0;//0:教练将来的；1:自己已经booked的了 default to 0
 
     public void attachView(ScheduleListView view) {
-        this.mScheduleListView = view;
-        application = HHBaseApplication.get(mScheduleListView.getContext());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
     }
 
     public void detachView() {
-        this.mScheduleListView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
     }
@@ -85,19 +86,19 @@ public class ScheduleListPresenter implements Presenter<ScheduleListView> {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mScheduleListView.showProgressDialog();
+                        mView.showProgressDialog();
                     }
 
                     @Override
                     public void onCompleted() {
-                        mScheduleListView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mScheduleListView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                         if (ErrorUtil.isInvalidSession(e)) {
-                            mScheduleListView.forceOffline();
+                            mView.forceOffline();
                         }
                         HHLog.e(e.getMessage());
                     }
@@ -105,9 +106,9 @@ public class ScheduleListPresenter implements Presenter<ScheduleListView> {
                     @Override
                     public void onNext(ScheduleEventResponseList responseList) {
                         if (responseList.data != null) {
-                            mScheduleListView.refreshScheduleList(responseList.data);
+                            mView.refreshScheduleList(responseList.data);
                             nextLink = responseList.links.next;
-                            mScheduleListView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
+                            mView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
                         }
                     }
                 });
@@ -137,19 +138,19 @@ public class ScheduleListPresenter implements Presenter<ScheduleListView> {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mScheduleListView.showProgressDialog();
+                        mView.showProgressDialog();
                     }
 
                     @Override
                     public void onCompleted() {
-                        mScheduleListView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mScheduleListView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                         if (ErrorUtil.isInvalidSession(e)) {
-                            mScheduleListView.forceOffline();
+                            mView.forceOffline();
                         }
                         HHLog.e(e.getMessage());
                     }
@@ -157,9 +158,9 @@ public class ScheduleListPresenter implements Presenter<ScheduleListView> {
                     @Override
                     public void onNext(ScheduleEventResponseList responseList) {
                         if (responseList.data != null) {
-                            mScheduleListView.addMoreScheduleList(responseList.data);
+                            mView.addMoreScheduleList(responseList.data);
                             nextLink = responseList.links.next;
-                            mScheduleListView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
+                            mView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
                         }
                     }
                 });
@@ -207,7 +208,7 @@ public class ScheduleListPresenter implements Presenter<ScheduleListView> {
             Date endTime = sdf.parse(schedule.end_time);
             SimpleDateFormat sdfDay = new SimpleDateFormat("yyyy年MM月dd日");
             SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
-            mScheduleListView.showBookDialog(sdfDay.format(startTime), sdfTime.format(startTime), sdfTime.format(endTime), getCourseName(schedule.service_type), schedule.id);
+            mView.showBookDialog(sdfDay.format(startTime), sdfTime.format(startTime), sdfTime.format(endTime), getCourseName(schedule.service_type), schedule.id);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -220,14 +221,14 @@ public class ScheduleListPresenter implements Presenter<ScheduleListView> {
             Date endTime = sdf.parse(schedule.end_time);
             SimpleDateFormat sdfDay = new SimpleDateFormat("yyyy年MM月dd日");
             SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
-            mScheduleListView.showCancelDialog(sdfDay.format(startTime), sdfTime.format(startTime), sdfTime.format(endTime), getCourseName(schedule.service_type), schedule.id);
+            mView.showCancelDialog(sdfDay.format(startTime), sdfTime.format(startTime), sdfTime.format(endTime), getCourseName(schedule.service_type), schedule.id);
         } catch (ParseException e) {
             e.printStackTrace();
         }
     }
 
     public void preReviewSchedule(ScheduleEvent schedule) {
-        mScheduleListView.showReviewDialog(schedule.id);
+        mView.showReviewDialog(schedule.id);
     }
 
     public void bookSchedule(final String scheduleEventId) {
@@ -254,22 +255,22 @@ public class ScheduleListPresenter implements Presenter<ScheduleListView> {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mScheduleListView.showProgressDialog("预约中，请稍后...");
+                        mView.showProgressDialog("预约中，请稍后...");
                     }
 
                     @Override
                     public void onCompleted() {
-                        mScheduleListView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                         fetchSchedules();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mScheduleListView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                         if (ErrorUtil.isInvalidSession(e)) {
-                            mScheduleListView.forceOffline();
+                            mView.forceOffline();
                         } else if (ErrorUtil.isHttp401(e)) {
-                            mScheduleListView.showUnFinishCourseDialog();
+                            mView.showUnFinishCourseDialog();
                         }
                         HHLog.e(e.getMessage());
                     }
@@ -304,20 +305,20 @@ public class ScheduleListPresenter implements Presenter<ScheduleListView> {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mScheduleListView.showProgressDialog("取消中，请稍后...");
+                        mView.showProgressDialog("取消中，请稍后...");
                     }
 
                     @Override
                     public void onCompleted() {
-                        mScheduleListView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                         fetchSchedules();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mScheduleListView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                         if (ErrorUtil.isInvalidSession(e)) {
-                            mScheduleListView.forceOffline();
+                            mView.forceOffline();
                         }
                         HHLog.e(e.getMessage());
                     }
@@ -352,20 +353,20 @@ public class ScheduleListPresenter implements Presenter<ScheduleListView> {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mScheduleListView.showProgressDialog();
+                        mView.showProgressDialog();
                     }
 
                     @Override
                     public void onCompleted() {
-                        mScheduleListView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                         fetchSchedules();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mScheduleListView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                         if (ErrorUtil.isInvalidSession(e)) {
-                            mScheduleListView.forceOffline();
+                            mView.forceOffline();
                         }
                         HHLog.e(e.getMessage());
                     }

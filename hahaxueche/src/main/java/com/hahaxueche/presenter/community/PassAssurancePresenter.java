@@ -12,6 +12,7 @@ import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.student.ExamResult;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.community.PassAssuranceView;
 import com.hahaxueche.util.ErrorUtil;
@@ -20,7 +21,6 @@ import com.hahaxueche.util.Utils;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 import okhttp3.OkHttpClient;
@@ -36,11 +36,10 @@ import rx.functions.Func1;
  * Created by wangshirui on 2016/12/1.
  */
 
-public class PassAssurancePresenter implements Presenter<PassAssuranceView> {
+public class PassAssurancePresenter extends HHBasePresenter implements Presenter<PassAssuranceView> {
     private PassAssuranceView mPassAssuranceView;
     private Subscription subscription;
     private HHBaseApplication application;
-    private static final String WEB_URL_GROUP_BUY = BuildConfig.MOBILE_URL + "/share/baoguoka";
     private String mQrCodeUrl;
 
     public void attachView(PassAssuranceView view) {
@@ -104,27 +103,6 @@ public class PassAssurancePresenter implements Presenter<PassAssuranceView> {
                         }
                     });
         }
-    }
-
-    public int getBonus() {
-        int cityId = 0;
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.student != null) {
-            cityId = user.student.city_id;
-        }
-        return application.getConstants().getCity(cityId).referer_bonus;
-    }
-
-    private String getShareDescription() {
-        ArrayList<String> codeList = new ArrayList<>();
-        codeList.add("AZ-521");
-        codeList.add("MDS-339");
-        codeList.add("TEK-071");
-        codeList.add("MIDE-295");
-        codeList.add("IDBD-692");
-        codeList.add("MIMK-039");
-        Collections.shuffle(codeList);//打乱顺序
-        return "科一挂科险免费送！考不过现金赔！【" + codeList.get(0) + "】哈哈老司机要开车了，捂脸~~内有惊喜";
     }
 
     private Observable<String> redirectUrl(final User user, int shareType) {

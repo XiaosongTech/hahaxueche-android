@@ -8,6 +8,7 @@ import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.responseList.ReferrerResponseList;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.student.Student;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.MyReferView;
 import com.hahaxueche.util.ErrorUtil;
@@ -27,28 +28,28 @@ import rx.functions.Func1;
  * Created by wangshirui on 2016/12/13.
  */
 
-public class MyReferPresenter implements Presenter<MyReferView> {
+public class MyReferPresenter extends HHBasePresenter implements Presenter<MyReferView> {
     private static final int PAGE = 1;
     private static final int PER_PAGE = 10;
-    private MyReferView mMyReferView;
+    private MyReferView mView;
     private Subscription subscription;
     private HHBaseApplication application;
     private String nextLink;
 
     public void attachView(MyReferView view) {
-        this.mMyReferView = view;
-        application = HHBaseApplication.get(mMyReferView.getContext());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             if (user.student.is_sales_agent) {
-                mMyReferView.showWithdraw(true);
-                mMyReferView.setWithdrawMoney(Utils.getMoney(user.student.bonus_balance));
+                mView.showWithdraw(true);
+                mView.setWithdrawMoney(Utils.getMoney(user.student.bonus_balance));
             }
         }
     }
 
     public void detachView() {
-        this.mMyReferView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
     }
@@ -56,7 +57,7 @@ public class MyReferPresenter implements Presenter<MyReferView> {
     public void fetchReferrers() {
         final User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
-            mMyReferView.showProgressDialog();
+            mView.showProgressDialog();
             final HHApiService apiService = application.getApiService();
             HashMap<String, Object> map = new HashMap<>();
             map.put("cell_phone", user.cell_phone);
@@ -76,14 +77,14 @@ public class MyReferPresenter implements Presenter<MyReferView> {
                     .subscribe(new Subscriber<ReferrerResponseList>() {
                         @Override
                         public void onCompleted() {
-                            mMyReferView.dismissProgressDialog();
+                            mView.dismissProgressDialog();
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            mMyReferView.dismissProgressDialog();
+                            mView.dismissProgressDialog();
                             if (ErrorUtil.isInvalidSession(e)) {
-                                mMyReferView.forceOffline();
+                                mView.forceOffline();
                             }
                             HHLog.e(e.getMessage());
                         }
@@ -91,21 +92,21 @@ public class MyReferPresenter implements Presenter<MyReferView> {
                         @Override
                         public void onNext(ReferrerResponseList referrerResponseList) {
                             if (referrerResponseList.data != null) {
-                                mMyReferView.refreshReferrerList(referrerResponseList.data);
+                                mView.refreshReferrerList(referrerResponseList.data);
                                 nextLink = referrerResponseList.links.next;
-                                mMyReferView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
+                                mView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
                             }
                         }
                     });
         } else {
-            mMyReferView.alertToLogin();
+            mView.alertToLogin();
         }
     }
 
     public void addMoreReferrers() {
         final User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
-            mMyReferView.showProgressDialog();
+            mView.showProgressDialog();
             final HHApiService apiService = application.getApiService();
             HashMap<String, Object> map = new HashMap<>();
             map.put("cell_phone", user.cell_phone);
@@ -125,14 +126,14 @@ public class MyReferPresenter implements Presenter<MyReferView> {
                     .subscribe(new Subscriber<ReferrerResponseList>() {
                         @Override
                         public void onCompleted() {
-                            mMyReferView.dismissProgressDialog();
+                            mView.dismissProgressDialog();
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            mMyReferView.dismissProgressDialog();
+                            mView.dismissProgressDialog();
                             if (ErrorUtil.isInvalidSession(e)) {
-                                mMyReferView.forceOffline();
+                                mView.forceOffline();
                             }
                             HHLog.e(e.getMessage());
                         }
@@ -140,14 +141,14 @@ public class MyReferPresenter implements Presenter<MyReferView> {
                         @Override
                         public void onNext(ReferrerResponseList referrerResponseList) {
                             if (referrerResponseList.data != null) {
-                                mMyReferView.addMoreReferrerList(referrerResponseList.data);
+                                mView.addMoreReferrerList(referrerResponseList.data);
                                 nextLink = referrerResponseList.links.next;
-                                mMyReferView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
+                                mView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
                             }
                         }
                     });
         } else {
-            mMyReferView.alertToLogin();
+            mView.alertToLogin();
         }
     }
 
@@ -178,7 +179,7 @@ public class MyReferPresenter implements Presenter<MyReferView> {
                     @Override
                     public void onError(Throwable e) {
                         if (ErrorUtil.isInvalidSession(e)) {
-                            mMyReferView.forceOffline();
+                            mView.forceOffline();
                         }
                         HHLog.e(e.getMessage());
                     }
@@ -186,7 +187,7 @@ public class MyReferPresenter implements Presenter<MyReferView> {
                     @Override
                     public void onNext(Student student) {
                         application.getSharedPrefUtil().updateStudent(student);
-                        mMyReferView.setWithdrawMoney(Utils.getMoney(student.bonus_balance));
+                        mView.setWithdrawMoney(Utils.getMoney(student.bonus_balance));
                     }
                 });
     }
@@ -196,11 +197,11 @@ public class MyReferPresenter implements Presenter<MyReferView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mMyReferView.getContext(), "refer_page_cash_tapped", map);
-            mMyReferView.navigateToWithdraw();
+            MobclickAgent.onEvent(mView.getContext(), "refer_page_cash_tapped", map);
+            mView.navigateToWithdraw();
         } else {
-            MobclickAgent.onEvent(mMyReferView.getContext(), "refer_page_cash_tapped");
-            mMyReferView.alertToLogin();
+            MobclickAgent.onEvent(mView.getContext(), "refer_page_cash_tapped");
+            mView.alertToLogin();
         }
     }
 

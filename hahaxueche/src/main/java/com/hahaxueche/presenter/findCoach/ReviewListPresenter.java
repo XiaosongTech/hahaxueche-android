@@ -6,6 +6,7 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.user.coach.Coach;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.ReviewListView;
 import com.hahaxueche.util.HHLog;
@@ -18,22 +19,22 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by wangshirui on 2016/10/8.
  */
 
-public class ReviewListPresenter implements Presenter<ReviewListView> {
+public class ReviewListPresenter extends HHBasePresenter implements Presenter<ReviewListView> {
     private static final int PAGE = 1;
     private static final int PER_PAGE = 10;
-    private ReviewListView mReviewListView;
+    private ReviewListView mView;
     private Subscription subscription;
     private HHBaseApplication application;
     private String nextLink;
     private Coach mCoach;
 
     public void attachView(ReviewListView view) {
-        this.mReviewListView = view;
-        application = HHBaseApplication.get(mReviewListView.getContext());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
     }
 
     public void detachView() {
-        this.mReviewListView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
     }
@@ -57,9 +58,9 @@ public class ReviewListPresenter implements Presenter<ReviewListView> {
                     @Override
                     public void onNext(ReviewResponseList reviewResponseList) {
                         if (reviewResponseList.data != null) {
-                            mReviewListView.refreshReviewList(reviewResponseList.data);
+                            mView.refreshReviewList(reviewResponseList.data);
                             nextLink = reviewResponseList.links.next;
-                            mReviewListView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
+                            mView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
                         }
 
                     }
@@ -85,9 +86,9 @@ public class ReviewListPresenter implements Presenter<ReviewListView> {
                     @Override
                     public void onNext(ReviewResponseList reviewResponseList) {
                         if (reviewResponseList.data != null) {
-                            mReviewListView.addMoreReviewList(reviewResponseList.data);
+                            mView.addMoreReviewList(reviewResponseList.data);
                             nextLink = reviewResponseList.links.next;
-                            mReviewListView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
+                            mView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
                         }
                     }
                 });
@@ -95,7 +96,7 @@ public class ReviewListPresenter implements Presenter<ReviewListView> {
 
     public void setCoach(Coach coach) {
         this.mCoach = coach;
-        mReviewListView.setReviewedCount("学员评价（" + mCoach.review_count + "）");
+        mView.setReviewedCount("学员评价（" + mCoach.review_count + "）");
         //综合得分
         float averageRating = 0;
         if (!TextUtils.isEmpty(mCoach.average_rating)) {
@@ -104,6 +105,6 @@ public class ReviewListPresenter implements Presenter<ReviewListView> {
         if (averageRating > 5) {
             averageRating = 5;
         }
-        mReviewListView.setAverageRating(averageRating);
+        mView.setAverageRating(averageRating);
     }
 }

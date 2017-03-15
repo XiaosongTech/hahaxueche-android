@@ -8,6 +8,7 @@ import com.hahaxueche.model.payment.InsurancePrices;
 import com.hahaxueche.model.payment.PaymentMethod;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.student.Student;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.PurchaseInsuranceView;
 import com.hahaxueche.util.Common;
@@ -32,8 +33,8 @@ import rx.functions.Func1;
  * Created by wangshirui on 2017/2/25.
  */
 
-public class PurchaseInsurancePresenter implements Presenter<PurchaseInsuranceView> {
-    private PurchaseInsuranceView mPurchaseInsuranceView;
+public class PurchaseInsurancePresenter extends HHBasePresenter implements Presenter<PurchaseInsuranceView> {
+    private PurchaseInsuranceView mView;
     private Subscription subscription;
     private HHBaseApplication application;
     private int mInsuranceType;
@@ -41,15 +42,15 @@ public class PurchaseInsurancePresenter implements Presenter<PurchaseInsuranceVi
 
     @Override
     public void attachView(PurchaseInsuranceView view) {
-        this.mPurchaseInsuranceView = view;
-        application = HHBaseApplication.get(mPurchaseInsuranceView.getContext());
-        mPurchaseInsuranceView.loadPaymentMethod(getPaymentMethod());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
+        mView.loadPaymentMethod(getPaymentMethod());
         mPaymentMethod = 0;//默认支付方式：支付宝
     }
 
     @Override
     public void detachView() {
-        this.mPurchaseInsuranceView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
     }
@@ -59,8 +60,8 @@ public class PurchaseInsurancePresenter implements Presenter<PurchaseInsuranceVi
         InsurancePrices ip = application.getConstants().insurance_prices;
         int amount = mInsuranceType == Common.PURCHASE_INSURANCE_TYPE_WITHOUT_COACH ?
                 ip.pay_without_coach_price : ip.pay_with_paid_coach_price;
-        mPurchaseInsuranceView.setPayAmount("总价：" + Utils.getMoney(amount));
-        mPurchaseInsuranceView.setNotice("注: 请确认您还未参加科目一考试");
+        mView.setPayAmount("总价：" + Utils.getMoney(amount));
+        mView.setNotice("注: 请确认您还未参加科目一考试");
     }
 
     /**
@@ -88,15 +89,15 @@ public class PurchaseInsurancePresenter implements Presenter<PurchaseInsuranceVi
     public void createCharge() {
         final User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) {
-            mPurchaseInsuranceView.alertToLogin();
+            mView.alertToLogin();
             return;
         }
         if (user.student.isPurchasedInsurance()) {
-            mPurchaseInsuranceView.showMessage("该学员已经购买过赔付宝");
+            mView.showMessage("该学员已经购买过赔付宝");
             return;
         }
         if (mPaymentMethod < 0) {
-            mPurchaseInsuranceView.showMessage("请选择支付方式");
+            mView.showMessage("请选择支付方式");
             return;
         }
         HHApiService apiService = application.getApiService();
@@ -122,17 +123,17 @@ public class PurchaseInsurancePresenter implements Presenter<PurchaseInsuranceVi
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mPurchaseInsuranceView.showProgressDialog("订单生成中，请稍后...");
+                        mView.showProgressDialog("订单生成中，请稍后...");
                     }
 
                     @Override
                     public void onCompleted() {
-                        mPurchaseInsuranceView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mPurchaseInsuranceView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                         HHLog.e(e.getMessage());
                     }
 
@@ -151,7 +152,7 @@ public class PurchaseInsurancePresenter implements Presenter<PurchaseInsuranceVi
                             e.printStackTrace();
                         }
                         String result = sb.toString();
-                        mPurchaseInsuranceView.callPingpp(result);
+                        mView.callPingpp(result);
                     }
                 });
     }
@@ -159,7 +160,7 @@ public class PurchaseInsurancePresenter implements Presenter<PurchaseInsuranceVi
     public void getStudentUtilHasInsurance() {
         final User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) {
-            mPurchaseInsuranceView.alertToLogin();
+            mView.alertToLogin();
             return;
         }
         final HHApiService apiService = application.getApiService();
@@ -183,7 +184,7 @@ public class PurchaseInsurancePresenter implements Presenter<PurchaseInsuranceVi
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mPurchaseInsuranceView.showProgressDialog();
+                        mView.showProgressDialog();
                     }
 
                     @Override
@@ -194,7 +195,7 @@ public class PurchaseInsurancePresenter implements Presenter<PurchaseInsuranceVi
                     @Override
                     public void onError(Throwable e) {
                         HHLog.e(e.getMessage());
-                        mPurchaseInsuranceView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                     }
 
                     @Override
@@ -202,9 +203,9 @@ public class PurchaseInsurancePresenter implements Presenter<PurchaseInsuranceVi
                         if (!student.isPurchasedInsurance()) {
                             getStudentUtilHasInsurance();
                         } else {
-                            mPurchaseInsuranceView.dismissProgressDialog();
+                            mView.dismissProgressDialog();
                             application.getSharedPrefUtil().updateStudent(student);
-                            mPurchaseInsuranceView.paySuccess();
+                            mView.paySuccess();
                         }
                     }
                 });

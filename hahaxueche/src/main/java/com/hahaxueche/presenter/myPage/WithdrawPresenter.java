@@ -8,6 +8,7 @@ import com.hahaxueche.model.base.BaseModel;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.WithdrawView;
 import com.hahaxueche.util.ErrorUtil;
@@ -26,24 +27,24 @@ import rx.functions.Func1;
  * Created by wangshirui on 2016/11/1.
  */
 
-public class WithdrawPresenter implements Presenter<WithdrawView> {
-    private WithdrawView mWithdrawView;
+public class WithdrawPresenter extends HHBasePresenter implements Presenter<WithdrawView> {
+    private WithdrawView mView;
     private Subscription subscription;
     private HHBaseApplication application;
 
     public void attachView(WithdrawView view) {
-        this.mWithdrawView = view;
-        application = HHBaseApplication.get(mWithdrawView.getContext());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             refreshStudent(user.student);
         } else {
-            mWithdrawView.alertToLogin();
+            mView.alertToLogin();
         }
     }
 
     public void detachView() {
-        this.mWithdrawView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
     }
@@ -51,7 +52,7 @@ public class WithdrawPresenter implements Presenter<WithdrawView> {
     public void fetchStudent() {
         final User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
-            mWithdrawView.startRefresh();
+            mView.startRefresh();
             final HHApiService apiService = application.getApiService();
             HashMap<String, Object> map = new HashMap<>();
             map.put("cell_phone", user.cell_phone);
@@ -71,14 +72,14 @@ public class WithdrawPresenter implements Presenter<WithdrawView> {
                     .subscribe(new Subscriber<Student>() {
                         @Override
                         public void onCompleted() {
-                            mWithdrawView.stopRefresh();
+                            mView.stopRefresh();
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            mWithdrawView.stopRefresh();
+                            mView.stopRefresh();
                             if (ErrorUtil.isInvalidSession(e)) {
-                                mWithdrawView.forceOffline();
+                                mView.forceOffline();
                             }
                             HHLog.e(e.getMessage());
                         }
@@ -93,25 +94,25 @@ public class WithdrawPresenter implements Presenter<WithdrawView> {
     }
 
     private void refreshStudent(Student student) {
-        mWithdrawView.setAvailableAmount(Utils.getMoney(student.bonus_balance));
-        mWithdrawView.setBankInfo(student.bank_card);
+        mView.setAvailableAmount(Utils.getMoney(student.bonus_balance));
+        mView.setBankInfo(student.bank_card);
     }
 
     public void withdraw(String withdrawAmount) {
         final User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) return;
         if (TextUtils.isEmpty(withdrawAmount)) {
-            mWithdrawView.showMessage("提现金额不能为空！");
+            mView.showMessage("提现金额不能为空！");
             return;
         }
         final double withdrawMoney = Double.parseDouble(withdrawAmount) * 100;
         if (Double.compare(withdrawMoney, 10000d) < 0) {
-            mWithdrawView.showMessage("提现金额不能低于100元");
+            mView.showMessage("提现金额不能低于100元");
             return;
         } else {
             int interval = Double.compare(withdrawMoney, user.student.bonus_balance);
             if (interval > 0) {
-                mWithdrawView.showMessage("提现金额不能大于可提现金额");
+                mView.showMessage("提现金额不能大于可提现金额");
                 return;
             }
         }
@@ -120,7 +121,7 @@ public class WithdrawPresenter implements Presenter<WithdrawView> {
         map.put("cell_phone", user.cell_phone);
         final HashMap<String, Object> mapParam = new HashMap<>();
         mapParam.put("amount", withdrawMoney);
-        mWithdrawView.showProgressDialog();
+        mView.showProgressDialog();
         subscription = apiService.isValidToken(user.session.access_token, map)
                 .flatMap(new Func1<BaseValid, Observable<BaseModel>>() {
                     @Override
@@ -137,15 +138,15 @@ public class WithdrawPresenter implements Presenter<WithdrawView> {
                 .subscribe(new Subscriber<BaseModel>() {
                     @Override
                     public void onCompleted() {
-                        mWithdrawView.dismissProgressDialog();
-                        mWithdrawView.back(true);
+                        mView.dismissProgressDialog();
+                        mView.back(true);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mWithdrawView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                         if (ErrorUtil.isInvalidSession(e)) {
-                            mWithdrawView.forceOffline();
+                            mView.forceOffline();
                         }
                         HHLog.e(e.getMessage());
                     }

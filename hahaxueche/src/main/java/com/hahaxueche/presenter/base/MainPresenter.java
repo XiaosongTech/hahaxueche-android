@@ -13,6 +13,7 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.identity.MarketingInfo;
 import com.hahaxueche.model.user.student.BookAddress;
 import com.hahaxueche.model.user.student.Contact;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.base.MainView;
 import com.hahaxueche.util.HHLog;
@@ -37,14 +38,14 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by wangshirui on 2016/11/1.
  */
 
-public class MainPresenter implements Presenter<MainView> {
-    private MainView mBaseView;
+public class MainPresenter extends HHBasePresenter implements Presenter<MainView> {
+    private MainView mView;
     private HHBaseApplication application;
     private Subscription subscription;
 
     public void attachView(MainView view) {
-        this.mBaseView = view;
-        application = HHBaseApplication.get(mBaseView.getContext());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
         loadVoucherShare();
         bindAliyun();
     }
@@ -67,7 +68,7 @@ public class MainPresenter implements Presenter<MainView> {
     }
 
     public void detachView() {
-        this.mBaseView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         this.application = null;
     }
@@ -78,9 +79,9 @@ public class MainPresenter implements Presenter<MainView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mBaseView.getContext(), "home_page_viewed", map);
+            MobclickAgent.onEvent(mView.getContext(), "home_page_viewed", map);
         } else {
-            MobclickAgent.onEvent(mBaseView.getContext(), "home_page_viewed");
+            MobclickAgent.onEvent(mView.getContext(), "home_page_viewed");
         }
     }
 
@@ -90,9 +91,9 @@ public class MainPresenter implements Presenter<MainView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mBaseView.getContext(), "find_coach_page_viewed", map);
+            MobclickAgent.onEvent(mView.getContext(), "find_coach_page_viewed", map);
         } else {
-            MobclickAgent.onEvent(mBaseView.getContext(), "find_coach_page_viewed");
+            MobclickAgent.onEvent(mView.getContext(), "find_coach_page_viewed");
         }
     }
 
@@ -102,9 +103,9 @@ public class MainPresenter implements Presenter<MainView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mBaseView.getContext(), "club_page_viewed", map);
+            MobclickAgent.onEvent(mView.getContext(), "club_page_viewed", map);
         } else {
-            MobclickAgent.onEvent(mBaseView.getContext(), "club_page_viewed");
+            MobclickAgent.onEvent(mView.getContext(), "club_page_viewed");
         }
     }
 
@@ -114,26 +115,26 @@ public class MainPresenter implements Presenter<MainView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mBaseView.getContext(), "my_page_viewed", map);
+            MobclickAgent.onEvent(mView.getContext(), "my_page_viewed", map);
         } else {
-            MobclickAgent.onEvent(mBaseView.getContext(), "my_page_viewed");
+            MobclickAgent.onEvent(mView.getContext(), "my_page_viewed");
         }
     }
 
     public void setMyPageBadge() {
         User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) {//未登录没有红点
-            mBaseView.setMyPageBadge(false);
+            mView.setMyPageBadge(false);
             return;
         }
         if (!user.student.hasPurchasedService()) {//未购买教练，挂科险的红点
-            mBaseView.setMyPageBadge(true);
+            mView.setMyPageBadge(true);
             return;
         }
         if (!user.student.isUploadedIdInfo() || !user.student.isSigned()) {//购买了，没有上传协议的
-            mBaseView.setMyPageBadge(true);
+            mView.setMyPageBadge(true);
         } else {
-            mBaseView.setMyPageBadge(false);
+            mView.setMyPageBadge(false);
         }
     }
 
@@ -141,7 +142,7 @@ public class MainPresenter implements Presenter<MainView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) return;
         if (user.student.hasPurchasedService() && (!user.student.isUploadedIdInfo() || !user.student.isSigned())) {
-            mBaseView.showSignDialog();
+            mView.showSignDialog();
         }
     }
 
@@ -151,11 +152,11 @@ public class MainPresenter implements Presenter<MainView> {
         if (!user.student.hasPurchasedService()) {
             return;
         } else if (!user.student.isUploadedIdInfo()) {
-            mBaseView.navigateToUploadIdCard();
+            mView.navigateToUploadIdCard();
         } else if (!user.student.isSigned()) {
-            mBaseView.navigateToSignContract();
+            mView.navigateToSignContract();
         } else {
-            mBaseView.navigateToMyContract();
+            mView.navigateToMyContract();
         }
     }
 
@@ -167,8 +168,8 @@ public class MainPresenter implements Presenter<MainView> {
             if (maxVoucher != null) {
                 //原url地址
                 String url = WebViewUrl.WEB_URL_DALIBAO;
-                mBaseView.initShareData(url);
-                mBaseView.showVoucherDialog(user.student.id, maxVoucher);
+                mView.initShareData(url);
+                mView.showVoucherDialog(user.student.id, maxVoucher);
             }
         }
     }
@@ -202,9 +203,9 @@ public class MainPresenter implements Presenter<MainView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mBaseView.getContext(), "home_page_voucher_popup_share_tapped", map);
+            MobclickAgent.onEvent(mView.getContext(), "home_page_voucher_popup_share_tapped", map);
         } else {
-            MobclickAgent.onEvent(mBaseView.getContext(), "home_page_voucher_popup_share_tapped");
+            MobclickAgent.onEvent(mView.getContext(), "home_page_voucher_popup_share_tapped");
         }
     }
 
@@ -216,7 +217,7 @@ public class MainPresenter implements Presenter<MainView> {
             map.put("student_id", user.student.id);
 
         }
-        MobclickAgent.onEvent(mBaseView.getContext(), "home_page_voucher_popup_share_succeed", map);
+        MobclickAgent.onEvent(mView.getContext(), "home_page_voucher_popup_share_succeed", map);
     }
 
     public void uploadContacts(ArrayList<Contact> contacts) {
@@ -287,14 +288,8 @@ public class MainPresenter implements Presenter<MainView> {
 
     private void shortenUrl(String url, final int shareType) {
         if (TextUtils.isEmpty(url)) return;
-        String longUrl = null;
         HHApiService apiService = application.getApiService();
-        try {
-            longUrl = " https://api.t.sina.com.cn/short_url/shorten.json?source=4186780524&url_long=" +
-                    URLEncoder.encode(url, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        String longUrl = getShortenUrlAddress(url);
         if (TextUtils.isEmpty(longUrl)) return;
         subscription = apiService.shortenUrl(longUrl)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -302,7 +297,7 @@ public class MainPresenter implements Presenter<MainView> {
                 .subscribe(new Subscriber<ArrayList<ShortenUrl>>() {
                     @Override
                     public void onCompleted() {
-                        mBaseView.startToShare(shareType);
+                        mView.startToShare(shareType);
                     }
 
                     @Override
@@ -313,7 +308,7 @@ public class MainPresenter implements Presenter<MainView> {
                     @Override
                     public void onNext(ArrayList<ShortenUrl> shortenUrls) {
                         if (shortenUrls != null && shortenUrls.size() > 0) {
-                            mBaseView.initShareData(shortenUrls.get(0).url_short);
+                            mView.initShareData(shortenUrls.get(0).url_short);
                         }
                     }
                 });
@@ -326,9 +321,9 @@ public class MainPresenter implements Presenter<MainView> {
         User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin() || !user.student.is_sales_agent) {
             //非代理
-            mBaseView.navigateToStudentRefer();
+            mView.navigateToStudentRefer();
         } else {
-            mBaseView.navigateToReferFriends();
+            mView.navigateToReferFriends();
         }
     }
 }

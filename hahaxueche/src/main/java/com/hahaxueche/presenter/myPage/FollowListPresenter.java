@@ -7,6 +7,7 @@ import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.responseList.CoachResponseList;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.FollowListView;
 import com.hahaxueche.util.HHLog;
@@ -23,23 +24,23 @@ import rx.functions.Func1;
  * Created by wangshirui on 2016/10/9.
  */
 
-public class FollowListPresenter implements Presenter<FollowListView> {
+public class FollowListPresenter extends HHBasePresenter implements Presenter<FollowListView> {
     private static final int PAGE = 1;
     private static final int PER_PAGE = 10;
-    private FollowListView mFollowListView;
+    private FollowListView mView;
     private Subscription subscription;
     private HHBaseApplication application;
     private String nextLink;
     private User mUser;
 
     public void attachView(FollowListView view) {
-        this.mFollowListView = view;
-        application = HHBaseApplication.get(mFollowListView.getContext());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
         mUser = application.getSharedPrefUtil().getUser();
     }
 
     public void detachView() {
-        this.mFollowListView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
         mUser = null;
@@ -76,9 +77,9 @@ public class FollowListPresenter implements Presenter<FollowListView> {
                     @Override
                     public void onNext(CoachResponseList coachResponseList) {
                         if (coachResponseList.data != null) {
-                            mFollowListView.refreshCoachList(coachResponseList.data);
+                            mView.refreshCoachList(coachResponseList.data);
                             nextLink = coachResponseList.links.next;
-                            mFollowListView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
+                            mView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
                         }
 
                     }
@@ -117,9 +118,9 @@ public class FollowListPresenter implements Presenter<FollowListView> {
                     @Override
                     public void onNext(CoachResponseList coachResponseList) {
                         if (coachResponseList.data != null) {
-                            mFollowListView.addMoreCoachList(coachResponseList.data);
+                            mView.addMoreCoachList(coachResponseList.data);
                             nextLink = coachResponseList.links.next;
-                            mFollowListView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
+                            mView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
                         }
                     }
                 });

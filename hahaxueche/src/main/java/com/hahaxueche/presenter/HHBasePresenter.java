@@ -7,6 +7,9 @@ import com.qiyukf.unicorn.api.ConsultSource;
 import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFUserInfo;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 /**
  * Created by wangshirui on 2017/3/15.
  */
@@ -33,5 +36,16 @@ public class HHBasePresenter {
                 title, // 聊天窗口的标题
                 source // 咨询的发起来源，包括发起咨询的url，title，描述信息等
         );
+    }
+
+    public String getShortenUrlAddress(String url) {
+        String urlAddress = null;
+        try {
+            urlAddress = " https://api.t.sina.com.cn/short_url/shorten.json?source=4186780524&url_long=" +
+                    URLEncoder.encode(url, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return urlAddress;
     }
 }

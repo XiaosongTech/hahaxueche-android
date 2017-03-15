@@ -6,6 +6,7 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.FieldFilterView;
 
@@ -17,17 +18,17 @@ import rx.Subscription;
  * Created by wangshirui on 2016/10/17.
  */
 
-public class FieldFilterPresenter implements Presenter<FieldFilterView> {
-    private FieldFilterView mFieldFilterView;
+public class FieldFilterPresenter extends HHBasePresenter implements Presenter<FieldFilterView> {
+    private FieldFilterView mView;
     private Subscription subscription;
     private ArrayList<Field> mSelectFields;
     HHBaseApplication application;
 
     @Override
     public void attachView(FieldFilterView view) {
-        this.mFieldFilterView = view;
-        application = HHBaseApplication.get(mFieldFilterView.getContext());
-        mFieldFilterView.setHints(Html.fromHtml(mFieldFilterView.getContext().getResources().getString(R.string.field_filter_hints)));
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
+        mView.setHints(Html.fromHtml(mView.getContext().getResources().getString(R.string.field_filter_hints)));
     }
 
     public void initMap() {
@@ -36,12 +37,12 @@ public class FieldFilterPresenter implements Presenter<FieldFilterView> {
         if (user != null && user.student != null) {
             cityId = user.student.city_id;
         }
-        mFieldFilterView.initMap(application.getConstants().getFields(cityId));
+        mView.initMap(application.getConstants().getFields(cityId));
     }
 
     @Override
     public void detachView() {
-        this.mFieldFilterView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
         mSelectFields = null;
@@ -53,7 +54,7 @@ public class FieldFilterPresenter implements Presenter<FieldFilterView> {
 
     public void setSelectFields(ArrayList<Field> fields) {
         this.mSelectFields = fields;
-        mFieldFilterView.setSelectFieldText(getSelectFieldText());
+        mView.setSelectFieldText(getSelectFieldText());
     }
 
     public boolean containsSelectField(Field field) {
@@ -74,16 +75,16 @@ public class FieldFilterPresenter implements Presenter<FieldFilterView> {
         if (mSelectFields == null) {
             mSelectFields = new ArrayList<>();
             mSelectFields.add(field);
-            mFieldFilterView.setSelectFieldText(getSelectFieldText());
+            mView.setSelectFieldText(getSelectFieldText());
             return true;
         }
         if (containsSelectField(field)) {
             removeSelectField(field);
-            mFieldFilterView.setSelectFieldText(getSelectFieldText());
+            mView.setSelectFieldText(getSelectFieldText());
             return false;
         } else {
             mSelectFields.add(field);
-            mFieldFilterView.setSelectFieldText(getSelectFieldText());
+            mView.setSelectFieldText(getSelectFieldText());
             return true;
         }
     }

@@ -5,14 +5,13 @@ import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.student.ExamResult;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
-import com.hahaxueche.ui.view.base.HHBaseView;
 import com.hahaxueche.ui.view.community.StartExamView;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.ExamLib;
 import com.hahaxueche.util.HHLog;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import rx.Observable;
@@ -25,29 +24,20 @@ import rx.functions.Func1;
  * Created by wangshirui on 2016/10/18.
  */
 
-public class StartExamPresenter implements Presenter<StartExamView> {
-    private StartExamView mStartExamView;
+public class StartExamPresenter extends HHBasePresenter implements Presenter<StartExamView> {
+    private StartExamView mView;
     private Subscription subscription;
     private HHBaseApplication application;
 
     public void attachView(StartExamView view) {
-        this.mStartExamView = view;
-        application = HHBaseApplication.get(mStartExamView.getContext());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
     }
 
     public void detachView() {
-        this.mStartExamView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
-    }
-
-    public int getBonus() {
-        int cityId = 0;
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.student != null) {
-            cityId = user.student.city_id;
-        }
-        return application.getConstants().getCity(cityId).referer_bonus;
     }
 
     public void submitExamResults(String examType, String score) {
@@ -86,7 +76,7 @@ public class StartExamPresenter implements Presenter<StartExamView> {
                     @Override
                     public void onError(Throwable e) {
                         if (ErrorUtil.isInvalidSession(e)) {
-                            mStartExamView.forceOffline();
+                            mView.forceOffline();
                         }
                         HHLog.e(e.getMessage());
                     }

@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.model.examLib.Question;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.community.ExamView;
 import com.hahaxueche.util.ExamLib;
@@ -21,23 +22,23 @@ import java.util.List;
  * Created by wangshirui on 2016/12/2.
  */
 
-public class ExamPresenter implements Presenter<ExamView> {
-    private ExamView mExamView;
+public class ExamPresenter extends HHBasePresenter implements Presenter<ExamView> {
+    private ExamView mView;
     private HHBaseApplication application;
 
     public void attachView(ExamView view) {
-        this.mExamView = view;
-        application = HHBaseApplication.get(mExamView.getContext());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
     }
 
     public void detachView() {
-        this.mExamView = null;
+        this.mView = null;
         application = null;
     }
 
     public ArrayList<Question> getQuestions(String examType) {
         Gson gson = new Gson();
-        return gson.fromJson(getJson(mExamView.getContext(),
+        return gson.fromJson(getJson(mView.getContext(),
                 ExamLib.EXAM_TYPE_1.equals(examType) ? "course1.json" : "course4.json"),
                 new TypeToken<List<Question>>() {
                 }.getType());

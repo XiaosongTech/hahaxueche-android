@@ -9,6 +9,7 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseModel;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.login.RegisterView;
 import com.hahaxueche.util.ErrorUtil;
@@ -23,41 +24,41 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by wangshirui on 16/9/10.
  */
-public class RegisterPresenter implements Presenter<RegisterView> {
-    private RegisterView mRegisterView;
+public class RegisterPresenter extends HHBasePresenter implements Presenter<RegisterView> {
+    private RegisterView mView;
     private Subscription subscription;
     private static final String SEND_AUTH_TYPE_RESET = "reset";
     private static final String SEND_AUTH_TYPE_REGISTER = "register";
     private static final String TYPE_STUDENT = "student";
 
     public void attachView(RegisterView view) {
-        this.mRegisterView = view;
+        this.mView = view;
     }
 
     public void detachView() {
-        this.mRegisterView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
     }
 
     public void getAuthCode(String cellPhone, final boolean isResetPwd) {
         if (TextUtils.isEmpty(cellPhone)) {
-            mRegisterView.showMessage("手机号不能为空");
+            mView.showMessage("手机号不能为空");
             return;
         }
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
         try {
             Phonenumber.PhoneNumber chNumberProto = phoneUtil.parse(cellPhone, "CN");
             if (!phoneUtil.isValidNumber(chNumberProto)) {
-                mRegisterView.showMessage("您的手机号码格式有误");
+                mView.showMessage("您的手机号码格式有误");
                 return;
             }
         } catch (NumberParseException e) {
-            mRegisterView.showMessage("您的手机号码格式有误");
+            mView.showMessage("您的手机号码格式有误");
             return;
         }
-        mRegisterView.disableButtons();
-        mRegisterView.showProgressDialog("验证码获取中,请稍后...");
-        HHBaseApplication application = HHBaseApplication.get(mRegisterView.getContext());
+        mView.disableButtons();
+        mView.showProgressDialog("验证码获取中,请稍后...");
+        HHBaseApplication application = HHBaseApplication.get(mView.getContext());
         HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", cellPhone);
@@ -72,24 +73,24 @@ public class RegisterPresenter implements Presenter<RegisterView> {
                 .subscribe(new Subscriber<BaseModel>() {
                     @Override
                     public void onCompleted() {
-                        mRegisterView.enableButtons();
-                        mRegisterView.dismissProgressDialog();
-                        mRegisterView.showViewAfterSendingAuthCode();
+                        mView.enableButtons();
+                        mView.dismissProgressDialog();
+                        mView.showViewAfterSendingAuthCode();
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         if (isResetPwd) {
                             if (ErrorUtil.isHttp404(e)) {
-                                mRegisterView.showMessage("该手机号未注册");
+                                mView.showMessage("该手机号未注册");
                             }
                         } else {
                             if (ErrorUtil.isHttp422(e)) {
-                                mRegisterView.showMessage("该手机号已经注册");
+                                mView.showMessage("该手机号已经注册");
                             }
                         }
-                        mRegisterView.enableButtons();
-                        mRegisterView.dismissProgressDialog();
+                        mView.enableButtons();
+                        mView.dismissProgressDialog();
                         HHLog.e(e.getMessage());
                     }
 
@@ -101,39 +102,39 @@ public class RegisterPresenter implements Presenter<RegisterView> {
 
     public void resetPassword(final String cellPhone, String authCode, final String password) {
         if (TextUtils.isEmpty(cellPhone)) {
-            mRegisterView.showMessage("手机号不能为空");
+            mView.showMessage("手机号不能为空");
             return;
         }
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
         try {
             Phonenumber.PhoneNumber chNumberProto = phoneUtil.parse(cellPhone, "CN");
             if (!phoneUtil.isValidNumber(chNumberProto)) {
-                mRegisterView.showMessage("您的手机号码格式有误");
+                mView.showMessage("您的手机号码格式有误");
                 return;
             }
         } catch (NumberParseException e) {
-            mRegisterView.showMessage("您的手机号码格式有误");
+            mView.showMessage("您的手机号码格式有误");
             return;
         }
         if (TextUtils.isEmpty(authCode)) {
-            mRegisterView.showMessage("短信验证码不能为空");
+            mView.showMessage("短信验证码不能为空");
             return;
         }
         if (TextUtils.isEmpty(password)) {
-            mRegisterView.showMessage("密码不能为空");
+            mView.showMessage("密码不能为空");
             return;
         }
         if (password.length() < 6) {
-            mRegisterView.showMessage("密码长度不能少于6位");
+            mView.showMessage("密码长度不能少于6位");
             return;
         }
         if (password.length() > 20) {
-            mRegisterView.showMessage("密码长度不能多于20位");
+            mView.showMessage("密码长度不能多于20位");
             return;
         }
-        mRegisterView.disableButtons();
-        mRegisterView.showProgressDialog();
-        HHBaseApplication application = HHBaseApplication.get(mRegisterView.getContext());
+        mView.disableButtons();
+        mView.showProgressDialog();
+        HHBaseApplication application = HHBaseApplication.get(mView.getContext());
         HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", cellPhone);
@@ -152,10 +153,10 @@ public class RegisterPresenter implements Presenter<RegisterView> {
                     @Override
                     public void onError(Throwable e) {
                         if (ErrorUtil.isHttp401(e)) {
-                            mRegisterView.showMessage("验证码错误");
+                            mView.showMessage("验证码错误");
                         }
-                        mRegisterView.enableButtons();
-                        mRegisterView.dismissProgressDialog();
+                        mView.enableButtons();
+                        mView.dismissProgressDialog();
                         HHLog.e(e.getMessage());
                     }
 
@@ -168,39 +169,39 @@ public class RegisterPresenter implements Presenter<RegisterView> {
 
     public void register(final String cellPhone, String authCode, final String password) {
         if (TextUtils.isEmpty(cellPhone)) {
-            mRegisterView.showMessage("手机号不能为空");
+            mView.showMessage("手机号不能为空");
             return;
         }
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
         try {
             Phonenumber.PhoneNumber chNumberProto = phoneUtil.parse(cellPhone, "CN");
             if (!phoneUtil.isValidNumber(chNumberProto)) {
-                mRegisterView.showMessage("您的手机号码格式有误");
+                mView.showMessage("您的手机号码格式有误");
                 return;
             }
         } catch (NumberParseException e) {
-            mRegisterView.showMessage("您的手机号码格式有误");
+            mView.showMessage("您的手机号码格式有误");
             return;
         }
         if (TextUtils.isEmpty(authCode)) {
-            mRegisterView.showMessage("短信验证码不能为空");
+            mView.showMessage("短信验证码不能为空");
             return;
         }
         if (TextUtils.isEmpty(password)) {
-            mRegisterView.showMessage("密码不能为空");
+            mView.showMessage("密码不能为空");
             return;
         }
         if (password.length() < 6) {
-            mRegisterView.showMessage("密码长度不能少于6位");
+            mView.showMessage("密码长度不能少于6位");
             return;
         }
         if (password.length() > 20) {
-            mRegisterView.showMessage("密码长度不能多于20位");
+            mView.showMessage("密码长度不能多于20位");
             return;
         }
-        mRegisterView.disableButtons();
-        mRegisterView.showProgressDialog();
-        final HHBaseApplication application = HHBaseApplication.get(mRegisterView.getContext());
+        mView.disableButtons();
+        mView.showProgressDialog();
+        final HHBaseApplication application = HHBaseApplication.get(mView.getContext());
         HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", cellPhone);
@@ -215,18 +216,18 @@ public class RegisterPresenter implements Presenter<RegisterView> {
                 .subscribe(new Subscriber<User>() {
                     @Override
                     public void onCompleted() {
-                        mRegisterView.enableButtons();
-                        mRegisterView.dismissProgressDialog();
-                        mRegisterView.navigateToCompleteInfo();
+                        mView.enableButtons();
+                        mView.dismissProgressDialog();
+                        mView.navigateToCompleteInfo();
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         if (ErrorUtil.isHttp401(e)) {
-                            mRegisterView.showMessage("验证码错误");
+                            mView.showMessage("验证码错误");
                         }
-                        mRegisterView.enableButtons();
-                        mRegisterView.dismissProgressDialog();
+                        mView.enableButtons();
+                        mView.dismissProgressDialog();
                         HHLog.e(e.getMessage());
                     }
 
@@ -248,7 +249,7 @@ public class RegisterPresenter implements Presenter<RegisterView> {
         map.put("cell_phone", cellPhone);
         map.put("password", password);
         map.put("type", TYPE_STUDENT);
-        final HHBaseApplication application = HHBaseApplication.get(mRegisterView.getContext());
+        final HHBaseApplication application = HHBaseApplication.get(mView.getContext());
         HHApiService apiService = application.getApiService();
         subscription = apiService.login(map)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -260,8 +261,8 @@ public class RegisterPresenter implements Presenter<RegisterView> {
 
                     @Override
                     public void onError(Throwable e) {
-                        mRegisterView.enableButtons();
-                        mRegisterView.dismissProgressDialog();
+                        mView.enableButtons();
+                        mView.dismissProgressDialog();
                         HHLog.e(e.getMessage());
                     }
 
@@ -269,13 +270,13 @@ public class RegisterPresenter implements Presenter<RegisterView> {
                     public void onNext(User user) {
                         application.getSharedPrefUtil().setUser(user);
                         if (!user.isCompleted()) {
-                            mRegisterView.enableButtons();
-                            mRegisterView.dismissProgressDialog();
-                            mRegisterView.navigateToCompleteInfo();
+                            mView.enableButtons();
+                            mView.dismissProgressDialog();
+                            mView.navigateToCompleteInfo();
                         } else {
-                            mRegisterView.enableButtons();
-                            mRegisterView.dismissProgressDialog();
-                            mRegisterView.navigateToHomepage();
+                            mView.enableButtons();
+                            mView.dismissProgressDialog();
+                            mView.navigateToHomepage();
                         }
                     }
                 });

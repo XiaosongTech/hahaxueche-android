@@ -10,6 +10,7 @@ import com.hahaxueche.model.user.coach.ClassType;
 import com.hahaxueche.model.user.student.Student;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Coach;
+import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.PurchaseCoachView;
 import com.hahaxueche.util.Common;
@@ -36,8 +37,8 @@ import rx.functions.Func1;
  * Created by wangshirui on 2016/10/11.
  */
 
-public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
-    private PurchaseCoachView mPurchaseCoachView;
+public class PurchaseCoachPresenter extends HHBasePresenter implements Presenter<PurchaseCoachView> {
+    private PurchaseCoachView mView;
     private Subscription subscription;
     private HHBaseApplication application;
     private Coach mCoach;
@@ -50,14 +51,14 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
 
     @Override
     public void attachView(PurchaseCoachView view) {
-        this.mPurchaseCoachView = view;
-        application = HHBaseApplication.get(mPurchaseCoachView.getContext());
+        this.mView = view;
+        application = HHBaseApplication.get(mView.getContext());
         mUser = application.getSharedPrefUtil().getUser();
     }
 
     @Override
     public void detachView() {
-        this.mPurchaseCoachView = null;
+        this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
         mCoach = null;
@@ -70,13 +71,13 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         this.mCoach = coach;
         this.mClassType = classType;
         if (mCoach == null || mClassType == null) return;
-        mPurchaseCoachView.loadCoachInfo(mCoach);
-        mPurchaseCoachView.setClassTypeName((classType.licenseType == Common.LICENSE_TYPE_C1 ? "C1" : "C2") + classType.name);
-        mPurchaseCoachView.setClassTypePrice(Utils.getMoney(classType.price));
+        mView.loadCoachInfo(mCoach);
+        mView.setClassTypeName((classType.licenseType == Common.LICENSE_TYPE_C1 ? "C1" : "C2") + classType.name);
+        mView.setClassTypePrice(Utils.getMoney(classType.price));
         calculateAmount();
         fetchCumulativeVouchers();//代金券
         fetchUnCumulativeVouchers();
-        mPurchaseCoachView.loadPaymentMethod(getPaymentMethod());
+        mView.loadPaymentMethod(getPaymentMethod());
         paymentMethod = 0;//默认支付方式：支付宝
         pageStartCount();
     }
@@ -85,10 +86,10 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         int voucherAmount = mSelectVoucher != null ? mSelectVoucher.amount : 0;
         int totalAmount = mClassType.price;
         if (voucherAmount > 0) {
-            mPurchaseCoachView.setTotalAmountWithVoucher("总价:" + Utils.getMoney(totalAmount) + " 立减:" + Utils.getMoney(voucherAmount),
+            mView.setTotalAmountWithVoucher("总价:" + Utils.getMoney(totalAmount) + " 立减:" + Utils.getMoney(voucherAmount),
                     Utils.getMoney(totalAmount - voucherAmount));
         } else {
-            mPurchaseCoachView.setTotalAmountText("总价: " + Utils.getMoney(totalAmount));
+            mView.setTotalAmountText("总价: " + Utils.getMoney(totalAmount));
         }
     }
 
@@ -117,11 +118,11 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
     public void createCharge() {
         clickPayCount();
         if (mUser.student.hasPurchasedService()) {
-            mPurchaseCoachView.showMessage("该学员已经购买过教练");
+            mView.showMessage("该学员已经购买过教练");
             return;
         }
         if (paymentMethod < 0) {
-            mPurchaseCoachView.showMessage("请选择支付方式");
+            mView.showMessage("请选择支付方式");
             return;
         }
         HHApiService apiService = application.getApiService();
@@ -152,17 +153,17 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mPurchaseCoachView.showProgressDialog("订单生成中，请稍后...");
+                        mView.showProgressDialog("订单生成中，请稍后...");
                     }
 
                     @Override
                     public void onCompleted() {
-                        mPurchaseCoachView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mPurchaseCoachView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                         HHLog.e(e.getMessage());
                     }
 
@@ -181,7 +182,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                             e.printStackTrace();
                         }
                         String result = sb.toString();
-                        mPurchaseCoachView.callPingpp(result);
+                        mView.callPingpp(result);
                     }
                 });
     }
@@ -208,7 +209,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        mPurchaseCoachView.showProgressDialog();
+                        mView.showProgressDialog();
                     }
 
                     @Override
@@ -219,7 +220,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                     @Override
                     public void onError(Throwable e) {
                         HHLog.e(e.getMessage());
-                        mPurchaseCoachView.dismissProgressDialog();
+                        mView.dismissProgressDialog();
                     }
 
                     @Override
@@ -227,9 +228,9 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                         if (!student.hasPurchasedService()) {
                             getStudentUtilHasCoach();
                         } else {
-                            mPurchaseCoachView.dismissProgressDialog();
+                            mView.dismissProgressDialog();
                             application.getSharedPrefUtil().updateStudent(student);
-                            mPurchaseCoachView.paySuccess();
+                            mView.paySuccess();
                         }
                     }
                 });
@@ -262,7 +263,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                     @Override
                     public void onError(Throwable e) {
                         if (ErrorUtil.isInvalidSession(e)) {
-                            mPurchaseCoachView.forceOffline();
+                            mView.forceOffline();
                         }
                         HHLog.e(e.getMessage());
                     }
@@ -301,7 +302,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
                     @Override
                     public void onError(Throwable e) {
                         if (ErrorUtil.isInvalidSession(e)) {
-                            mPurchaseCoachView.forceOffline();
+                            mView.forceOffline();
                         }
                         HHLog.e(e.getMessage());
                     }
@@ -337,23 +338,23 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
 
     private void loadUnCumulativeVoucher() {
         if (mUnCumulativeVoucherList == null || mUnCumulativeVoucherList.size() < 1) {
-            mPurchaseCoachView.showUnCumulativeVoucher(false);
+            mView.showUnCumulativeVoucher(false);
             return;
         }
-        mPurchaseCoachView.showUnCumulativeVoucher(true);
+        mView.showUnCumulativeVoucher(true);
         setSelectVoucher(mUnCumulativeVoucherList.get(0));
         if (mUnCumulativeVoucherList.size() == 1) {
             //有一张代金券，直接使用不选择
-            mPurchaseCoachView.setVoucherSelectable(false);
+            mView.setVoucherSelectable(false);
         } else {
-            mPurchaseCoachView.setVoucherSelectable(true);
+            mView.setVoucherSelectable(true);
         }
 
     }
 
     public void setSelectVoucher(Voucher voucher) {
         this.mSelectVoucher = voucher;
-        mPurchaseCoachView.setVoucher(mSelectVoucher);
+        mView.setVoucher(mSelectVoucher);
         calculateAmount();
     }
 
@@ -362,7 +363,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         User user = application.getSharedPrefUtil().getUser();
         map.put("student_id", user.student.id);
         map.put("student_id", mCoach.id);
-        MobclickAgent.onEvent(mPurchaseCoachView.getContext(), "pay_coach_status_page_viewed", map);
+        MobclickAgent.onEvent(mView.getContext(), "pay_coach_status_page_viewed", map);
     }
 
     public void clickPayCount() {
@@ -370,7 +371,7 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
         User user = application.getSharedPrefUtil().getUser();
         map.put("student_id", user.student.id);
         map.put("student_id", mCoach.id);
-        MobclickAgent.onEvent(mPurchaseCoachView.getContext(), "purchase_confirm_page_purchase_button_tapped", map);
+        MobclickAgent.onEvent(mView.getContext(), "purchase_confirm_page_purchase_button_tapped", map);
     }
 
     public ArrayList<Voucher> getUnCumulativeVoucherList() {
@@ -393,12 +394,12 @@ public class PurchaseCoachPresenter implements Presenter<PurchaseCoachView> {
      */
     private void loadCumulativeVoucher() {
         if (mCumulativeVoucherList == null || mCumulativeVoucherList.size() < 1) {
-            mPurchaseCoachView.showCumulativeVoucher(false);
+            mView.showCumulativeVoucher(false);
             return;
         }
-        mPurchaseCoachView.showCumulativeVoucher(true);
+        mView.showCumulativeVoucher(true);
         for (Voucher voucher : mCumulativeVoucherList) {
-            mPurchaseCoachView.addCumulativeVoucher(voucher.title, "-" + Utils.getMoney(voucher.amount));
+            mView.addCumulativeVoucher(voucher.title, "-" + Utils.getMoney(voucher.amount));
         }
         calculateAmount();
     }
