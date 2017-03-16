@@ -85,22 +85,7 @@ public class PurchaseInsuranceActivity extends HHBaseActivity implements Purchas
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_sure_pay:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("赔付宝购买提示");
-                builder.setMessage("请确认您还未参加考科目一考试，购买后，必须在预约第一次科目一考试的前一个工作日24点前，完成身份信息上传，否则无法获得理赔。");
-                builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mPresenter.createCharge();
-                    }
-                });
-                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                builder.create().show();
+                mPresenter.createCharge();
                 break;
             default:
                 break;
@@ -132,6 +117,20 @@ public class PurchaseInsuranceActivity extends HHBaseActivity implements Purchas
 
     @Override
     public void paySuccess() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("赔付宝购买提示");
+        builder.setMessage("请确认您还未参加考科目一考试，购买后，必须在预约第一次科目一考试的前一个工作日24点前，完成身份信息上传，否则无法获得理赔。");
+        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                paySuccessFinish();
+            }
+        });
+        builder.setCancelable(false);
+        builder.create().show();
+    }
+
+    private void paySuccessFinish() {
         setResult(RESULT_OK, null);
         finish();
     }
