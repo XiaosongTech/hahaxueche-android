@@ -121,9 +121,10 @@ public class UpdateManager {
                 interceptFlag = true;
             }
         });
+        builder.setCancelable(false);
         downloadDialog = builder.create();
         downloadDialog.show();
-
+a
         downloadApk();
     }
 
