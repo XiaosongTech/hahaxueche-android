@@ -124,7 +124,7 @@ public class UpdateManager {
         builder.setCancelable(false);
         downloadDialog = builder.create();
         downloadDialog.show();
-a
+
         downloadApk();
     }
 
