@@ -38,7 +38,7 @@ public class RegisterPresenter extends HHBasePresenter implements Presenter<Regi
     public void getAuthCode(String cellPhone, final boolean isResetPwd) {
         String phoneNumberError = validatePhoneNumber(cellPhone);
         if (!TextUtils.isEmpty(phoneNumberError)) {
-            mView.showMessage("phoneNumberError");
+            mView.showMessage(phoneNumberError);
             return;
         }
         mView.disableButtons();
@@ -88,7 +88,7 @@ public class RegisterPresenter extends HHBasePresenter implements Presenter<Regi
     public void resetPassword(final String cellPhone, String authCode, final String password) {
         String phoneNumberError = validatePhoneNumber(cellPhone);
         if (!TextUtils.isEmpty(phoneNumberError)) {
-            mView.showMessage("phoneNumberError");
+            mView.showMessage(phoneNumberError);
             return;
         }
         if (TextUtils.isEmpty(authCode)) {
@@ -145,7 +145,7 @@ public class RegisterPresenter extends HHBasePresenter implements Presenter<Regi
     public void register(final String cellPhone, String authCode, final String password) {
         String phoneNumberError = validatePhoneNumber(cellPhone);
         if (!TextUtils.isEmpty(phoneNumberError)) {
-            mView.showMessage("phoneNumberError");
+            mView.showMessage(phoneNumberError);
             return;
         }
         if (TextUtils.isEmpty(authCode)) {

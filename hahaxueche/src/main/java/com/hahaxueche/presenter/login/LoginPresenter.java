@@ -47,7 +47,7 @@ public class LoginPresenter extends HHBasePresenter implements Presenter<LoginVi
     public void getAuthCode(String cellPhone) {
         String phoneNumberError = validatePhoneNumber(cellPhone);
         if (!TextUtils.isEmpty(phoneNumberError)) {
-            mView.showMessage("phoneNumberError");
+            mView.showMessage(phoneNumberError);
             return;
         }
         HHApiService apiService = application.getApiService();
@@ -109,7 +109,7 @@ public class LoginPresenter extends HHBasePresenter implements Presenter<LoginVi
     public void login(String cellPhone, String authCode, String password) {
         String phoneNumberError = validatePhoneNumber(cellPhone);
         if (!TextUtils.isEmpty(phoneNumberError)) {
-            mView.showMessage("phoneNumberError");
+            mView.showMessage(phoneNumberError);
             return;
         }
         HashMap<String, Object> map = new HashMap<>();
