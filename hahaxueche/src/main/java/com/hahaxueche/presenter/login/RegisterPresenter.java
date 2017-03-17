@@ -12,6 +12,7 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.login.RegisterView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 
@@ -27,9 +28,6 @@ import rx.android.schedulers.AndroidSchedulers;
 public class RegisterPresenter extends HHBasePresenter implements Presenter<RegisterView> {
     private RegisterView mView;
     private Subscription subscription;
-    private static final String SEND_AUTH_TYPE_RESET = "reset";
-    private static final String SEND_AUTH_TYPE_REGISTER = "register";
-    private static final String TYPE_STUDENT = "student";
 
     public void attachView(RegisterView view) {
         this.mView = view;
@@ -63,9 +61,9 @@ public class RegisterPresenter extends HHBasePresenter implements Presenter<Regi
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", cellPhone);
         if (isResetPwd) {
-            map.put("type", SEND_AUTH_TYPE_RESET);
+            map.put("type", Common.SEND_AUTH_TYPE_RESET);
         } else {
-            map.put("type", SEND_AUTH_TYPE_REGISTER);
+            map.put("type", Common.SEND_AUTH_TYPE_REGISTER);
         }
         subscription = apiService.getAuthToken(map)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -208,7 +206,7 @@ public class RegisterPresenter extends HHBasePresenter implements Presenter<Regi
         map.put("auth_token", authCode);
         map.put("password", password);
         map.put("password_confirmation", password);
-        map.put("user_type", TYPE_STUDENT);
+        map.put("user_type", Common.USER_TYPE_STUDENT);
         map.put("source", 0);//从app注册
         subscription = apiService.createSession(map)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -248,7 +246,7 @@ public class RegisterPresenter extends HHBasePresenter implements Presenter<Regi
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", cellPhone);
         map.put("password", password);
-        map.put("type", TYPE_STUDENT);
+        map.put("type", Common.USER_TYPE_STUDENT);
         final HHBaseApplication application = HHBaseApplication.get(mView.getContext());
         HHApiService apiService = application.getApiService();
         subscription = apiService.login(map)

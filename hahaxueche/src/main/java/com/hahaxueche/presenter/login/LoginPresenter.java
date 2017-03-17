@@ -10,6 +10,7 @@ import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.login.LoginView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
@@ -28,14 +29,12 @@ public class LoginPresenter extends HHBasePresenter implements Presenter<LoginVi
     private Subscription subscription;
     private HHBaseApplication application;
     private String mLoginType;
-    private static final String LOGIN_TYPE_AUTH = "auth";
-    private static final String LOGIN_TYPE_PASSWORD = "password";
 
     public void attachView(LoginView view) {
         this.mView = view;
         application = HHBaseApplication.get(mView.getContext());
         //默认验证码登陆
-        mLoginType = LOGIN_TYPE_AUTH;
+        mLoginType = Common.LOGIN_TYPE_AUTH;
         mView.initAuthLogin();
     }
 
@@ -57,8 +56,9 @@ public class LoginPresenter extends HHBasePresenter implements Presenter<LoginVi
         HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", cellPhone);
-        map.put("type", "login");
+        map.put("type", Common.SEND_AUTH_TYPE_LOGIN);
         if (BuildConfig.DEBUG) {
+            //后门参数，验证码是手机号后六位
             map.put("back_door", 1);
         }
         subscription = apiService.getAuthToken(map)
@@ -100,11 +100,11 @@ public class LoginPresenter extends HHBasePresenter implements Presenter<LoginVi
      * 切换登陆方式
      */
     public void changeLoginType() {
-        if (LOGIN_TYPE_AUTH.equals(mLoginType)) {
-            mLoginType = LOGIN_TYPE_PASSWORD;
+        if (Common.LOGIN_TYPE_AUTH.equals(mLoginType)) {
+            mLoginType = Common.LOGIN_TYPE_PASSWORD;
             mView.initPasswordLogin();
         } else {
-            mLoginType = LOGIN_TYPE_AUTH;
+            mLoginType = Common.LOGIN_TYPE_AUTH;
             mView.initAuthLogin();
         }
     }
@@ -120,7 +120,7 @@ public class LoginPresenter extends HHBasePresenter implements Presenter<LoginVi
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", cellPhone);
-        if (LOGIN_TYPE_AUTH.equals(mLoginType)) {
+        if (Common.LOGIN_TYPE_AUTH.equals(mLoginType)) {
             if (TextUtils.isEmpty(authCode)) {
                 mView.showMessage("短信验证码不能为空");
                 return;
@@ -133,7 +133,7 @@ public class LoginPresenter extends HHBasePresenter implements Presenter<LoginVi
             }
             map.put("password", password);
         }
-        map.put("type", "student");
+        map.put("type", Common.USER_TYPE_STUDENT);
         final HHBaseApplication application = HHBaseApplication.get(mView.getContext());
         HHApiService apiService = application.getApiService();
         subscription = apiService.login(map)
@@ -156,7 +156,7 @@ public class LoginPresenter extends HHBasePresenter implements Presenter<LoginVi
                         mView.enableButtons();
                         mView.dismissProgressDialog();
                         if (ErrorUtil.isHttp401(e)) {
-                            if (LOGIN_TYPE_AUTH.equals(mLoginType)) {
+                            if (Common.LOGIN_TYPE_AUTH.equals(mLoginType)) {
                                 mView.showMessage("验证码错误");
                             } else {
                                 mView.showMessage("密码错误");

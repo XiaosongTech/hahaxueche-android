@@ -47,6 +47,17 @@ public class Common {
     public static final int START_PAGE = 1;
     //分页-每页显示数量
     public static final int PER_PAGE = 10;
-
+    //登陆方式-密码登陆
+    public static final String LOGIN_TYPE_PASSWORD = "password";
+    //登陆方式-验证码登陆
+    public static final String LOGIN_TYPE_AUTH = "auth";
+    //发送验证码类型-重置密码
+    public static final String SEND_AUTH_TYPE_RESET = "reset";
+    //发送验证码类型-注册
+    public static final String SEND_AUTH_TYPE_REGISTER = "register";
+    //发送验证码类型-短信登陆
+    public static final String SEND_AUTH_TYPE_LOGIN = "login";
+    //用户类型-学员
+    public static final String USER_TYPE_STUDENT = "student";
 
 }
