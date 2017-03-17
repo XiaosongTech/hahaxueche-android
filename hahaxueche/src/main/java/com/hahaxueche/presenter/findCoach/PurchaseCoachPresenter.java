@@ -97,7 +97,7 @@ public class PurchaseCoachPresenter extends HHBasePresenter implements Presenter
 
     public void createCharge() {
         clickPayCount();
-        if (mUser.student.hasPurchasedService()) {
+        if (mUser.student.isPurchasedService()) {
             mView.showMessage("该学员已经购买过教练");
             return;
         }
@@ -205,7 +205,7 @@ public class PurchaseCoachPresenter extends HHBasePresenter implements Presenter
 
                     @Override
                     public void onNext(Student student) {
-                        if (!student.hasPurchasedService()) {
+                        if (!student.isPurchasedService()) {
                             getStudentUtilHasCoach();
                         } else {
                             mView.dismissProgressDialog();

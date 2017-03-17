@@ -154,7 +154,7 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
         mTvStudentName.setText(student.name);
         mTvAccountBalance.setText(Utils.getMoney(student.getAccountBalance()));
         mTvPaymentStage.setText(student.getPaymentStageLabel());
-        if (student.hasPurchasedService()) {
+        if (student.isPurchasedService()) {
             mIvPaymentArrow.setVisibility(View.VISIBLE);
         } else {
             mIvPaymentArrow.setVisibility(View.GONE);

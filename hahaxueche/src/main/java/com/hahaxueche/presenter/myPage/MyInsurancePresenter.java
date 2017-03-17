@@ -9,9 +9,6 @@ import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.MyInsuranceView;
 import com.hahaxueche.util.Utils;
 import com.hahaxueche.util.WebViewUrl;
-import com.qiyukf.unicorn.api.ConsultSource;
-import com.qiyukf.unicorn.api.Unicorn;
-import com.qiyukf.unicorn.api.YSFUserInfo;
 
 import rx.Subscription;
 
@@ -35,7 +32,7 @@ public class MyInsurancePresenter extends HHBasePresenter implements Presenter<M
             mView.setWithoutCoachPayEnable(true);
         } else if (!user.student.isPurchasedInsurance()) {
             mView.setViewNoPurchase();
-            if (user.student.hasPurchasedService()) {
+            if (user.student.isPurchasedService()) {
                 mView.setWithPaidCoachPayEnable(true);
                 mView.setWithoutCoachPayEnable(false);
             } else {

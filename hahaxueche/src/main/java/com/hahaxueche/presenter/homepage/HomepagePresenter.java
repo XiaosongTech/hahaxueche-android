@@ -1,7 +1,5 @@
 package com.hahaxueche.presenter.homepage;
 
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -20,12 +18,8 @@ import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.homepage.HomepageView;
 import com.hahaxueche.util.HHLog;
-import com.hahaxueche.util.UpdateManager;
 import com.hahaxueche.util.Utils;
 import com.hahaxueche.util.WebViewUrl;
-import com.qiyukf.unicorn.api.ConsultSource;
-import com.qiyukf.unicorn.api.Unicorn;
-import com.qiyukf.unicorn.api.YSFUserInfo;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
@@ -154,7 +148,7 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
      */
     public void onlineAsk() {
         User user = application.getSharedPrefUtil().getUser();
-        super.onlineAsk(user,mView.getContext());
+        super.onlineAsk(user, mView.getContext());
     }
 
     public void phoneSupportCount() {
@@ -258,23 +252,9 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
         }
     }
 
-    /**
-     * 版本检测
-     */
     public void doVersionCheck() {
-        PackageManager pm = mView.getContext().getPackageManager();
-        try {
-            PackageInfo pi = pm.getPackageInfo(mView.getContext().getPackageName(), 0);
-            int versioncode = pi.versionCode;
-            Constants constants = application.getConstants();
-            if (constants.version_code > versioncode) {
-                //有版本更新时
-                UpdateManager updateManager = new UpdateManager(mView.getContext());
-                updateManager.checkUpdateInfo();
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+        Constants constants = application.getConstants();
+        super.doVersionCheck(mView.getContext(), constants.version_code);
     }
 
     public void clickTestLib() {

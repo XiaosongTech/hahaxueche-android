@@ -51,7 +51,7 @@ public class PaymentStagePresenter extends HHBasePresenter implements Presenter<
     public void fetchCoachInfo() {
         HHApiService apiService = application.getApiService();
         User user = application.getSharedPrefUtil().getUser();
-        if (user == null || !user.isLogin() || !user.student.hasPurchasedService()) return;
+        if (user == null || !user.isLogin() || !user.student.isPurchasedService()) return;
         subscription = apiService.getCoach(user.student.current_coach_id, user.student.id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
@@ -113,7 +113,7 @@ public class PaymentStagePresenter extends HHBasePresenter implements Presenter<
                         @Override
                         public void onNext(Student student) {
                             application.getSharedPrefUtil().updateStudent(student);
-                            if (student.hasPurchasedService()) {
+                            if (student.isPurchasedService()) {
                                 PurchasedService ps = student.purchased_services.get(0);
                                 mView.showPs(ps);
                                 mView.enablePayStage(ps.current_payment_stage != ps.payment_stages.size() + 1);
@@ -274,7 +274,7 @@ public class PaymentStagePresenter extends HHBasePresenter implements Presenter<
     public PaymentStage getCurrentPaymentStage() {
         PaymentStage paymentStage = new PaymentStage();
         User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin() && user.student.hasPurchasedService()) {
+        if (user != null && user.isLogin() && user.student.isPurchasedService()) {
             int currentStageNum = user.student.purchased_services.get(0).current_payment_stage;
             for (PaymentStage ps : user.student.purchased_services.get(0).payment_stages) {
                 if (ps.stage_number == currentStageNum) {

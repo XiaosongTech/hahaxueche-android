@@ -48,25 +48,17 @@ public class SoftwareInfoPresenter extends HHBasePresenter implements Presenter<
      * 版本检测
      */
     public void doVersionCheck() {
-        if (pi != null) {
-            int versioncode = pi.versionCode;
-            Constants constants = application.getConstants();
-            if (constants.version_code > versioncode) {
-                //有版本更新时
-                UpdateManager updateManager = new UpdateManager(mView.getContext());
-                updateManager.checkUpdateInfo();
-            } else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mView.getContext());
-                builder.setTitle("提醒");
-                builder.setMessage("您已经是最新版本了!");
-                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //nothing
-                    }
-                });
-                builder.create().show();
-            }
+        Constants constants = application.getConstants();
+        if (!super.doVersionCheck(mView.getContext(), constants.version_code)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mView.getContext());
+            builder.setTitle("提醒");
+            builder.setMessage("您已经是最新版本了!");
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
+            builder.create().show();
         }
     }
 

@@ -59,7 +59,6 @@ import me.shaohui.shareutil.share.SharePlatform;
 public class MainActivity extends HHBaseActivity implements MainView {
     private MainPresenter mPresenter;
     private FragmentTabHost mTabHost = null;
-    private View indicator = null;
     private View mViewBadgeMyPage;
     @BindView(R.id.lly_main)
     LinearLayout mLlyMain;
@@ -124,6 +123,7 @@ public class MainActivity extends HHBaseActivity implements MainView {
             }
         });
         mTabHost.getTabWidget().setDividerDrawable(null);
+        //LinkedME分享的东西
         Intent intent = getIntent();
         Bundle shareObject = intent.getBundleExtra("shareObject");
         if (shareObject != null) {

@@ -1,14 +1,18 @@
 package com.hahaxueche.presenter;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.text.TextUtils;
 
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.hahaxueche.R;
+import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.payment.PaymentMethod;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.util.UpdateManager;
 import com.qiyukf.unicorn.api.ConsultSource;
 import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFUserInfo;
@@ -88,5 +92,30 @@ public class HHBasePresenter {
             return "您的手机号码格式有误";
         }
         return "";
+    }
+
+    /**
+     * 版本检测
+     *
+     * @param context
+     * @param versionCode
+     * @return 是否需要更新
+     */
+    protected boolean doVersionCheck(Context context, int versionCode) {
+        boolean isNeedUpdate = false;
+        PackageManager pm = context.getPackageManager();
+        try {
+            PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
+            int versioncode = pi.versionCode;
+            if (versionCode > versioncode) {
+                isNeedUpdate = true;
+                //有版本更新时
+                UpdateManager updateManager = new UpdateManager(context);
+                updateManager.checkUpdateInfo();
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return isNeedUpdate;
     }
 }

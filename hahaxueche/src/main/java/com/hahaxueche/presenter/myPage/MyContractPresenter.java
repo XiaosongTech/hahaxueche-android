@@ -51,7 +51,7 @@ public class MyContractPresenter extends HHBasePresenter implements Presenter<My
     public void getAgreementUrl() {
         final User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin() ||
-                !user.student.hasPurchasedService() || !user.student.isUploadedIdInfo()) return;
+                !user.student.isPurchasedService() || !user.student.isUploadedIdInfo()) return;
         if (!TextUtils.isEmpty(user.student.agreement_url)) {
             mView.setPdf(user.student.agreement_url, user.student.id);
             mView.setSignEnable(false);

@@ -84,12 +84,8 @@ public class Student implements Parcelable {
         }
     }
 
-    public boolean hasPurchasedService() {
+    public boolean isPurchasedService() {
         return !TextUtils.isEmpty(current_coach_id) && purchased_services != null && purchased_services.size() > 0;
-    }
-
-    private boolean isPurchasedService() {
-        return purchased_services != null && purchased_services.size() > 0;
     }
 
     private PurchasedService getCurrentPS() {

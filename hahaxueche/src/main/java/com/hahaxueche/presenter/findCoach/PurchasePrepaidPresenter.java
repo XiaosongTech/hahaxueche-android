@@ -59,7 +59,7 @@ public class PurchasePrepaidPresenter extends HHBasePresenter implements Present
             mView.alertToLogin();
             return;
         }
-        if (user.student.hasPurchasedService()) {
+        if (user.student.isPurchasedService()) {
             mView.showMessage("该学员已经购买过教练");
             return;
         }

@@ -22,8 +22,6 @@ import com.hahaxueche.util.Utils;
 import com.hahaxueche.util.WebViewUrl;
 import com.umeng.analytics.MobclickAgent;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,10 +48,13 @@ public class MainPresenter extends HHBasePresenter implements Presenter<MainView
         bindAliyun();
     }
 
+    /**
+     * 绑定阿里云推送的标签
+     */
     private void bindAliyun() {
         User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) return;
-        if (user.student.hasPurchasedService()) {
+        if (user.student.isPurchasedService()) {
             CloudPushService pushService = PushServiceFactory.getCloudPushService();
             pushService.bindTag(1, new String[]{"purchased"}, "", new CommonCallback() {
                 @Override
@@ -127,7 +128,7 @@ public class MainPresenter extends HHBasePresenter implements Presenter<MainView
             mView.setMyPageBadge(false);
             return;
         }
-        if (!user.student.hasPurchasedService()) {//未购买教练，挂科险的红点
+        if (!user.student.isPurchasedService()) {//未购买教练，挂科险的红点
             mView.setMyPageBadge(true);
             return;
         }
@@ -141,7 +142,7 @@ public class MainPresenter extends HHBasePresenter implements Presenter<MainView
     public void controlSignDialog() {
         User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) return;
-        if (user.student.hasPurchasedService() && (!user.student.isUploadedIdInfo() || !user.student.isSigned())) {
+        if (user.student.isPurchasedService() && (!user.student.isUploadedIdInfo() || !user.student.isSigned())) {
             mView.showSignDialog();
         }
     }
@@ -149,7 +150,7 @@ public class MainPresenter extends HHBasePresenter implements Presenter<MainView
     public void clickMyContract() {
         User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) return;
-        if (!user.student.hasPurchasedService()) {
+        if (!user.student.isPurchasedService()) {
             return;
         } else if (!user.student.isUploadedIdInfo()) {
             mView.navigateToUploadIdCard();
@@ -163,7 +164,8 @@ public class MainPresenter extends HHBasePresenter implements Presenter<MainView
     private void loadVoucherShare() {
         User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) return;
-        if (!user.student.hasPurchasedService() && user.student.vouchers != null && user.student.vouchers.size() > 0) {
+        if (!user.student.isPurchasedService() && user.student.vouchers != null
+                && user.student.vouchers.size() > 0) {
             Voucher maxVoucher = getMaxVoucher(user.student.vouchers);
             if (maxVoucher != null) {
                 //原url地址
@@ -174,6 +176,12 @@ public class MainPresenter extends HHBasePresenter implements Presenter<MainView
         }
     }
 
+    /**
+     * 获得最大代金券
+     *
+     * @param vouchers
+     * @return
+     */
     private Voucher getMaxVoucher(ArrayList<Voucher> vouchers) {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Voucher maxVoucher = null;
@@ -220,6 +228,11 @@ public class MainPresenter extends HHBasePresenter implements Presenter<MainView
         MobclickAgent.onEvent(mView.getContext(), "home_page_voucher_popup_share_succeed", map);
     }
 
+    /**
+     * 上传通讯录
+     *
+     * @param contacts
+     */
     public void uploadContacts(ArrayList<Contact> contacts) {
         if (contacts == null || contacts.size() < 1) return;
         BookAddress bookAddress = new BookAddress();
@@ -246,6 +259,7 @@ public class MainPresenter extends HHBasePresenter implements Presenter<MainView
                     @Override
                     public void onError(Throwable e) {
                         HHLog.e(e.getMessage());
+                        e.printStackTrace();
                     }
 
                     @Override
@@ -303,6 +317,7 @@ public class MainPresenter extends HHBasePresenter implements Presenter<MainView
                     @Override
                     public void onError(Throwable e) {
                         HHLog.e(e.getMessage());
+                        e.printStackTrace();
                     }
 
                     @Override

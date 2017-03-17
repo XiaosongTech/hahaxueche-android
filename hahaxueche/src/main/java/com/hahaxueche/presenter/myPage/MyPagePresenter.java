@@ -17,9 +17,6 @@ import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.PhotoUtil;
 import com.hahaxueche.util.WebViewUrl;
-import com.qiyukf.unicorn.api.ConsultSource;
-import com.qiyukf.unicorn.api.Unicorn;
-import com.qiyukf.unicorn.api.YSFUserInfo;
 import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
@@ -226,7 +223,7 @@ public class MyPagePresenter extends HHBasePresenter implements Presenter<MyPage
         }
         if (user == null || !user.isLogin()) {
             mView.alertToLogin();
-        } else if (!user.student.hasPurchasedService()) {
+        } else if (!user.student.isPurchasedService()) {
             mView.showMessage("您还没有购买教练");
         } else {
             mView.toMyCoach(user.student.current_coach_id);
@@ -240,7 +237,7 @@ public class MyPagePresenter extends HHBasePresenter implements Presenter<MyPage
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
             MobclickAgent.onEvent(mView.getContext(), "my_page_pay_coach_status_tapped", map);
-            if (user.student.hasPurchasedService()) {
+            if (user.student.isPurchasedService()) {
                 mView.navigateToPaymentStage();
             }
         } else {
@@ -332,7 +329,7 @@ public class MyPagePresenter extends HHBasePresenter implements Presenter<MyPage
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
             MobclickAgent.onEvent(mView.getContext(), "my_page_my_course_tapped", map);
-            if (user.student.hasPurchasedService()) {
+            if (user.student.isPurchasedService()) {
                 mView.navigateToMyCourse();
             } else {
                 mView.navigateToNoCourse();
@@ -427,7 +424,7 @@ public class MyPagePresenter extends HHBasePresenter implements Presenter<MyPage
         }
         if (user == null || !user.isLogin()) {
             mView.alertToLogin();
-        } else if (!user.student.hasPurchasedService()) {
+        } else if (!user.student.isPurchasedService()) {
             mView.alertToFindCoach();
         } else if (!user.student.isUploadedIdInfo()) {
             mView.navigateToUploadIdCard();
@@ -441,7 +438,7 @@ public class MyPagePresenter extends HHBasePresenter implements Presenter<MyPage
     public void setContractBadge() {
         User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) return;
-        if (user.student.hasPurchasedService() && (!user.student.isUploadedIdInfo() || !user.student.isSigned())) {
+        if (user.student.isPurchasedService() && (!user.student.isUploadedIdInfo() || !user.student.isSigned())) {
             //已购买但是未签订协议或者上传资料
             mView.setContractBadge(true);
         } else {
@@ -451,7 +448,7 @@ public class MyPagePresenter extends HHBasePresenter implements Presenter<MyPage
 
     private void setPassEnsuranceBadge() {
         User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin() && user.student.hasPurchasedService()) {
+        if (user != null && user.isLogin() && user.student.isPurchasedService()) {
             mView.setPassEnsuranceBadge(false);
         } else {
             mView.setPassEnsuranceBadge(true);

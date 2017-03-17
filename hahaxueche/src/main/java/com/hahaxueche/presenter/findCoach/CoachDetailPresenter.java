@@ -469,7 +469,7 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
         if (mUser == null || !mUser.isLogin()) {
             mView.alertToLogin("注册登录后,才可以购买教练哦～\n注册获得更多学车咨询!～");
             return;
-        } else if (mUser.student.hasPurchasedService()) {
+        } else if (mUser.student.isPurchasedService()) {
             mView.showMessage("该学员已经购买过教练");
             return;
         }
@@ -576,6 +576,6 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
 
     public boolean isPurchasedService() {
         User user = application.getSharedPrefUtil().getUser();
-        return user != null && user.isLogin() && user.student.hasPurchasedService();
+        return user != null && user.isLogin() && user.student.isPurchasedService();
     }
 }
