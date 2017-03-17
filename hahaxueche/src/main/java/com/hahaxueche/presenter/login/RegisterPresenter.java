@@ -2,9 +2,6 @@ package com.hahaxueche.presenter.login;
 
 import android.text.TextUtils;
 
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseModel;
@@ -39,19 +36,9 @@ public class RegisterPresenter extends HHBasePresenter implements Presenter<Regi
     }
 
     public void getAuthCode(String cellPhone, final boolean isResetPwd) {
-        if (TextUtils.isEmpty(cellPhone)) {
-            mView.showMessage("手机号不能为空");
-            return;
-        }
-        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-        try {
-            Phonenumber.PhoneNumber chNumberProto = phoneUtil.parse(cellPhone, "CN");
-            if (!phoneUtil.isValidNumber(chNumberProto)) {
-                mView.showMessage("您的手机号码格式有误");
-                return;
-            }
-        } catch (NumberParseException e) {
-            mView.showMessage("您的手机号码格式有误");
+        String phoneNumberError = validatePhoneNumber(cellPhone);
+        if (!TextUtils.isEmpty(phoneNumberError)) {
+            mView.showMessage("phoneNumberError");
             return;
         }
         mView.disableButtons();
@@ -99,19 +86,9 @@ public class RegisterPresenter extends HHBasePresenter implements Presenter<Regi
     }
 
     public void resetPassword(final String cellPhone, String authCode, final String password) {
-        if (TextUtils.isEmpty(cellPhone)) {
-            mView.showMessage("手机号不能为空");
-            return;
-        }
-        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-        try {
-            Phonenumber.PhoneNumber chNumberProto = phoneUtil.parse(cellPhone, "CN");
-            if (!phoneUtil.isValidNumber(chNumberProto)) {
-                mView.showMessage("您的手机号码格式有误");
-                return;
-            }
-        } catch (NumberParseException e) {
-            mView.showMessage("您的手机号码格式有误");
+        String phoneNumberError = validatePhoneNumber(cellPhone);
+        if (!TextUtils.isEmpty(phoneNumberError)) {
+            mView.showMessage("phoneNumberError");
             return;
         }
         if (TextUtils.isEmpty(authCode)) {
@@ -166,19 +143,9 @@ public class RegisterPresenter extends HHBasePresenter implements Presenter<Regi
     }
 
     public void register(final String cellPhone, String authCode, final String password) {
-        if (TextUtils.isEmpty(cellPhone)) {
-            mView.showMessage("手机号不能为空");
-            return;
-        }
-        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-        try {
-            Phonenumber.PhoneNumber chNumberProto = phoneUtil.parse(cellPhone, "CN");
-            if (!phoneUtil.isValidNumber(chNumberProto)) {
-                mView.showMessage("您的手机号码格式有误");
-                return;
-            }
-        } catch (NumberParseException e) {
-            mView.showMessage("您的手机号码格式有误");
+        String phoneNumberError = validatePhoneNumber(cellPhone);
+        if (!TextUtils.isEmpty(phoneNumberError)) {
+            mView.showMessage("phoneNumberError");
             return;
         }
         if (TextUtils.isEmpty(authCode)) {

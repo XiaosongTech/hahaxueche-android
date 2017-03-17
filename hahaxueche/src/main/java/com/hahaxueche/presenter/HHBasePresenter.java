@@ -1,7 +1,11 @@
 package com.hahaxueche.presenter;
 
 import android.content.Context;
+import android.text.TextUtils;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import com.hahaxueche.R;
 import com.hahaxueche.model.payment.PaymentMethod;
 import com.hahaxueche.model.user.User;
@@ -68,5 +72,21 @@ public class HHBasePresenter {
         paymentMethods.add(cardPay);
         paymentMethods.add(fqlPay);
         return paymentMethods;
+    }
+
+    protected String validatePhoneNumber(String phoneNumber) {
+        if (TextUtils.isEmpty(phoneNumber)) {
+            return "手机号不能为空";
+        }
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+        try {
+            Phonenumber.PhoneNumber chNumberProto = phoneUtil.parse(phoneNumber, "CN");
+            if (!phoneUtil.isValidNumber(chNumberProto)) {
+                return "您的手机号码格式有误";
+            }
+        } catch (NumberParseException e) {
+            return "您的手机号码格式有误";
+        }
+        return "";
     }
 }
