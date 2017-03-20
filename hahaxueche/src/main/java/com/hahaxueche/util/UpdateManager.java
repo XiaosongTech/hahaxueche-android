@@ -80,7 +80,7 @@ public class UpdateManager {
     }
 
     //外部接口让主Activity调用
-    public void checkUpdateInfo() {
+    public void alertToUpdate() {
         showNoticeDialog();
     }
 

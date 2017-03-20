@@ -139,7 +139,7 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
                                     break;
                                 case 5:
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-                                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, RequestCode.PERMISSIONS_REQUEST_SEND_SMS);
+                                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, RequestCode.PERMISSIONS_REQUEST_SEND_SMS_FOR_SHARE);
                                     } else {
                                         shareToSms();
                                     }
@@ -520,7 +520,7 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
             case R.id.tv_contact:
                 mPresenter.clickContactCount();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE);
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH);
                     //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
                 } else {
                     callMyCoach(mPresenter.getPartner().phone);
@@ -553,14 +553,14 @@ public class PartnerDetailActivity extends HHBaseActivity implements PartnerDeta
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE) {
+        if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 callMyCoach(mPresenter.getPartner().phone);
             } else {
                 showMessage("请允许拨打电话权限，不然无法直接拨号联系教练");
             }
-        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_SEND_SMS) {
+        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_SEND_SMS_FOR_SHARE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 shareToSms();

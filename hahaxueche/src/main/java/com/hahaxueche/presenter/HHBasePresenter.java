@@ -95,27 +95,33 @@ public class HHBasePresenter {
     }
 
     /**
-     * 版本检测
+     * 版本检测，是否需要更新
      *
      * @param context
      * @param versionCode
-     * @return 是否需要更新
+     * @return
      */
-    protected boolean doVersionCheck(Context context, int versionCode) {
-        boolean isNeedUpdate = false;
+    public boolean isNeedUpdate(Context context, int versionCode) {
         PackageManager pm = context.getPackageManager();
         try {
             PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
             int versioncode = pi.versionCode;
             if (versionCode > versioncode) {
-                isNeedUpdate = true;
-                //有版本更新时
-                UpdateManager updateManager = new UpdateManager(context);
-                updateManager.checkUpdateInfo();
+                return true;
             }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        return isNeedUpdate;
+        return false;
+    }
+
+    /**
+     * 提示更新
+     *
+     * @param context
+     */
+    public void alertToUpdate(Context context) {
+        UpdateManager updateManager = new UpdateManager(context);
+        updateManager.alertToUpdate();
     }
 }

@@ -35,9 +35,13 @@ public class RequestCode {
     public static final int REQUEST_CODE_PURCHASE_PREPAID = 126;
     public static final int REQUEST_CODE_PREPAY_SUCCESS = 127;
     //permission request
-    public static final int PERMISSIONS_REQUEST_SEND_SMS = 600;
+    public static final int PERMISSIONS_REQUEST_SEND_SMS_FOR_SHARE = 600;
     public static final int PERMISSIONS_REQUEST_READ_CONTACTS = 601;
-    public static final int PERMISSIONS_REQUEST_CELL_PHONE = 602;
-    public static final int PERMISSIONS_REQUEST_SDCARD = 603;
+    public static final int PERMISSIONS_REQUEST_CELL_PHONE_FOR_CUSTOMER_SERVICE = 602;
+    public static final int PERMISSIONS_REQUEST_SDCARD_FOR_SAVE_IMG = 603;
     public static final int PERMISSIONS_REQUEST_LOCATION = 604;
+    public static final int PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH = 605;
+    public static final int PERMISSIONS_REQUEST_SDCARD_FOR_SAVE_APK = 606;
+    public static final int PERMISSIONS_REQUEST_SDCARD_FOR_SAVE_AVATAR = 607;
+    public static final int PERMISSIONS_REQUEST_SDCARD_CONTACTS_HOMEPAGE = 608;
 }

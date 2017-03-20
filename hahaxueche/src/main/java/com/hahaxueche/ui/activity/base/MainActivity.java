@@ -4,11 +4,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -18,7 +16,6 @@ import android.widget.Toast;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.payment.Voucher;
-import com.hahaxueche.model.user.student.Contact;
 import com.hahaxueche.presenter.base.MainPresenter;
 import com.hahaxueche.ui.activity.community.ArticleActivity;
 import com.hahaxueche.ui.activity.community.ExamLibraryActivity;
@@ -45,8 +42,6 @@ import com.hahaxueche.ui.widget.FragmentTabHost;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import me.shaohui.shareutil.ShareUtil;
@@ -159,11 +154,6 @@ public class MainActivity extends HHBaseActivity implements MainView {
                 startActivityForResult(new Intent(getContext(), MyInsuranceActivity.class), RequestCode.REQUEST_CODE_MY_INSURANCE);
             }
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, RequestCode.PERMISSIONS_REQUEST_READ_CONTACTS);
-        } else {
-            readContacts();
-        }
         controlMyPageBadge();
         mPresenter.controlSignDialog();
     }
@@ -197,7 +187,7 @@ public class MainActivity extends HHBaseActivity implements MainView {
                 break;
             case 5:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.SEND_SMS}, RequestCode.PERMISSIONS_REQUEST_SEND_SMS);
+                    requestPermissions(new String[]{Manifest.permission.SEND_SMS}, RequestCode.PERMISSIONS_REQUEST_SEND_SMS_FOR_SHARE);
                 } else {
                     shareToSms();
                 }
@@ -485,49 +475,14 @@ public class MainActivity extends HHBaseActivity implements MainView {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == RequestCode.PERMISSIONS_REQUEST_SEND_SMS) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == RequestCode.PERMISSIONS_REQUEST_SEND_SMS_FOR_SHARE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 shareToSms();
             } else {
                 Toast.makeText(MainActivity.this, "请允许发送短信权限，不然无法分享到短信", Toast.LENGTH_SHORT).show();
             }
-        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_READ_CONTACTS) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
-                readContacts();
-            }
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    /**
-     * 读取通讯录
-     */
-    private void readContacts() {
-        Cursor cursor = null;
-        ArrayList<Contact> contacts = new ArrayList<>();
-        try {
-            cursor = getContentResolver()
-                    .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
-            if (cursor != null) {
-                while (cursor.moveToNext()) {
-                    Contact contact = new Contact();
-                    contact.name = cursor.getString(cursor.getColumnIndex(
-                            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                    contact.number = cursor.getString(cursor.getColumnIndex(
-                            ContactsContract.CommonDataKinds.Phone.NUMBER)).replace(" ", "").replace("-", "");
-                    contacts.add(contact);
-                }
-            }
-        } catch (Exception e) {
-            HHLog.e(e.getMessage());
-            e.printStackTrace();
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-            mPresenter.uploadContacts(contacts);
         }
     }
 

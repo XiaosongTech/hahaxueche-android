@@ -228,47 +228,6 @@ public class MainPresenter extends HHBasePresenter implements Presenter<MainView
         MobclickAgent.onEvent(mView.getContext(), "home_page_voucher_popup_share_succeed", map);
     }
 
-    /**
-     * 上传通讯录
-     *
-     * @param contacts
-     */
-    public void uploadContacts(ArrayList<Contact> contacts) {
-        if (contacts == null || contacts.size() < 1) return;
-        BookAddress bookAddress = new BookAddress();
-        bookAddress.device_id = HahaCache.deviceId;
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            bookAddress.phone = user.cell_phone;
-        }
-        bookAddress.address_book = contacts;
-        HHApiService apiService = application.getApiService();
-        subscription = apiService.uploadContacts(bookAddress)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(application.defaultSubscribeScheduler())
-                .subscribe(new Subscriber<String>() {
-                    @Override
-                    public void onStart() {
-                        super.onStart();
-                    }
-
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        HHLog.e(e.getMessage());
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onNext(String ret) {
-
-                    }
-                });
-    }
-
     public void convertUrlForShare(final String url, final int shareType) {
         if (TextUtils.isEmpty(url)) return;
         if (shareType < 0 || shareType > 5) return;

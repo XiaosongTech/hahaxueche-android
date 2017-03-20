@@ -10,21 +10,28 @@ import android.text.style.ForegroundColorSpan;
 
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
+import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.base.Statistics;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.user.student.BookAddress;
+import com.hahaxueche.model.user.student.Contact;
 import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.homepage.HomepageView;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.HahaCache;
 import com.hahaxueche.util.Utils;
 import com.hahaxueche.util.WebViewUrl;
 import com.umeng.analytics.MobclickAgent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import rx.Subscriber;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by wangshirui on 16/9/17.
@@ -252,9 +259,9 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
         }
     }
 
-    public void doVersionCheck() {
+    public boolean isNeedUpdate() {
         Constants constants = application.getConstants();
-        super.doVersionCheck(mView.getContext(), constants.version_code);
+        return super.isNeedUpdate(mView.getContext(), constants.version_code);
     }
 
     public void clickTestLib() {
@@ -332,5 +339,46 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
         } else {
             mView.navigateToReferFriends();
         }
+    }
+
+    /**
+     * 上传通讯录
+     *
+     * @param contacts
+     */
+    public void uploadContacts(ArrayList<Contact> contacts) {
+        if (contacts == null || contacts.size() < 1) return;
+        BookAddress bookAddress = new BookAddress();
+        bookAddress.device_id = HahaCache.deviceId;
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            bookAddress.phone = user.cell_phone;
+        }
+        bookAddress.address_book = contacts;
+        HHApiService apiService = application.getApiService();
+        subscription = apiService.uploadContacts(bookAddress)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(String ret) {
+
+                    }
+                });
     }
 }

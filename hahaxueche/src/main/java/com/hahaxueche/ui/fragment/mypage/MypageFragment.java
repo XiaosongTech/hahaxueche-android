@@ -220,7 +220,7 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
                         @Override
                         public boolean call() {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                                requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE);
+                                requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CUSTOMER_SERVICE);
                                 //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
                             } else {
                                 // Android version is lesser than 6.0 or the permission is already granted.
@@ -260,7 +260,7 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
                                 || mActivity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                                 || mActivity.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
                     requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, RequestCode.PERMISSIONS_REQUEST_SDCARD);
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, RequestCode.PERMISSIONS_REQUEST_SDCARD_FOR_SAVE_AVATAR);
                     //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
                 } else {
                     // Android version is lesser than 6.0 or the permission is already granted.
@@ -476,14 +476,14 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE) {
+        if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CUSTOMER_SERVICE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 callMyConsultant(mPresenter.getAdviser().phone);
             } else {
                 showMessage("请允许拨打电话权限，不然无法直接拨号联系客服");
             }
-        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_SDCARD) {
+        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_SDCARD_FOR_SAVE_AVATAR) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 showAvatarDialog();

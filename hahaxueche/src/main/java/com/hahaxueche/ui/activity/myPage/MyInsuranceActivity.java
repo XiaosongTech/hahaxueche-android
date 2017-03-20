@@ -125,7 +125,7 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
             case R.id.tv_insurance_qrcode:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                         checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RequestCode.PERMISSIONS_REQUEST_SDCARD);
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RequestCode.PERMISSIONS_REQUEST_SDCARD_FOR_SAVE_IMG);
                 } else {
                     saveQrcodeImage();
                 }
@@ -292,7 +292,7 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
             @Override
             public void onClick(View widget) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE);
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CUSTOMER_SERVICE);
                     //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
                 } else {
                     // Android version is lesser than 6.0 or the permission is already granted.
@@ -344,13 +344,13 @@ public class MyInsuranceActivity extends HHBaseActivity implements MyInsuranceVi
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE) {
+        if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CUSTOMER_SERVICE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 contactService();
             } else {
                 showMessage("请允许拨打电话权限，不然无法直接拨号联系客服");
             }
-        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_SDCARD) {
+        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_SDCARD_FOR_SAVE_IMG) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 saveQrcodeImage();
             } else {
