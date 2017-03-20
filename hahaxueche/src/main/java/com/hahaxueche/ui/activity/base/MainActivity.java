@@ -498,6 +498,7 @@ public class MainActivity extends HHBaseActivity implements MainView {
                 readContacts();
             }
         }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     /**

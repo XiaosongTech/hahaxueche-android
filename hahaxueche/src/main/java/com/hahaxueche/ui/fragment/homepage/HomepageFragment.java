@@ -258,7 +258,9 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                 showMessage("请允许拨打电话权限，不然无法直接拨号联系客服");
             }
         } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_SDCARD) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 mPresenter.doVersionCheck();
             } else {
