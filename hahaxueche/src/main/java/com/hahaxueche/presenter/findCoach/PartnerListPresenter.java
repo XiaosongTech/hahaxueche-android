@@ -118,7 +118,7 @@ public class PartnerListPresenter extends HHBasePresenter implements Presenter<P
                 });
     }
 
-    public void addMorePartneres() {
+    public void addMorePartners() {
         if (TextUtils.isEmpty(nextLink)) return;
         HHApiService apiService = application.getApiService();
         subscription = apiService.getPartners(nextLink)

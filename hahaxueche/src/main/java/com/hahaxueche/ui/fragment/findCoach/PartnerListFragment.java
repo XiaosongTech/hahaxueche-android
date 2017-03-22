@@ -122,7 +122,7 @@ public class PartnerListFragment extends HHBaseFragment implements PartnerListVi
 
     @Override
     public void onLoadMore() {
-        mPresenter.addMorePartneres();
+        mPresenter.addMorePartners();
     }
 
     @Override
