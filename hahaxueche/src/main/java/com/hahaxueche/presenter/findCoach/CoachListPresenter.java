@@ -32,6 +32,7 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
     private Subscription subscription;
     private HHBaseApplication application;
     private String nextLink;
+    //-----筛选参数-----
     private String filterDistance;
     private String filterPrice;
     private String goldenCoachOnly;
@@ -40,11 +41,12 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
     private int cityId = 0;
     private int sortBy = 0;
     private ArrayList<Field> selectFields;
+    //-----end-----
 
     public void attachView(CoachListView view) {
         this.mView = view;
         application = HHBaseApplication.get(mView.getContext());
-        initFilters();
+        initDefaultFilters();
     }
 
     public void detachView() {
@@ -76,15 +78,12 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
         this.sortBy = sortBy;
     }
 
-    private void initFilters() {
+    private void initDefaultFilters() {
         HHBaseApplication application = HHBaseApplication.get(mView.getContext());
         User user = application.getSharedPrefUtil().getUser();
         if (user != null) {
             cityId = user.student.city_id;
         }
-        final City myCity = application.getConstants().getCity(cityId);
-        //String distance = String.valueOf(myCity.filters.radius[myCity.filters.radius.length - 1]);
-        //String price = String.valueOf(myCity.filters.prices[myCity.filters.prices.length - 1]);
         setFilters("", "", false, false, false, false);
     }
 

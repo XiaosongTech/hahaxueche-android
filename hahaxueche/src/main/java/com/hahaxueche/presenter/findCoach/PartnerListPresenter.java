@@ -29,15 +29,17 @@ public class PartnerListPresenter extends HHBasePresenter implements Presenter<P
     private Subscription subscription;
     private HHBaseApplication application;
     private String nextLink;
+    //-----筛选参数-----
     private String filterPrice;
     private String licenseType;
     private int cityId = 0;
     private int sortBy = 0;
+    //-----end-----
 
     public void attachView(PartnerListView view) {
         this.mView = view;
         application = HHBaseApplication.get(mView.getContext());
-        initFilters();
+        initDefaultFilters();
     }
 
     public void detachView() {
@@ -61,7 +63,7 @@ public class PartnerListPresenter extends HHBasePresenter implements Presenter<P
         this.sortBy = sortBy;
     }
 
-    private void initFilters() {
+    private void initDefaultFilters() {
         HHBaseApplication application = HHBaseApplication.get(mView.getContext());
         User user = application.getSharedPrefUtil().getUser();
         if (user != null) {
