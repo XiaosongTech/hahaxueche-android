@@ -12,9 +12,9 @@ public class WebViewUrl {
     public static final String WEB_URL_MY_STRENGTHS = "https://activity.hahaxueche.com/share/features";
     public static final String WEB_URL_PROCEDURE = BuildConfig.MOBILE_URL + "/xue-che-liu-cheng";
     public static final String URL_APP_STORE = "http://a.app.qq.com/o/simple.jsp?pkgname=com.hahaxueche";
-    public static final String WEB_URL_BEST_COACHES = BuildConfig.MOBILE_URL + "/share/best-coaches";
+    public static final String WEB_URL_BEST_COACHES = BuildConfig.MOBILE_URL + "/jiaolian";
     public static final String WEB_URL_FIND_ADVISER = BuildConfig.MOBILE_URL + "/share/zhaoguwen";
-    public static final String WEB_URL_FIND_DRIVING_SCHOOL = BuildConfig.MOBILE_URL + "/share/zhaojiaxiao";
+    public static final String WEB_URL_FIND_DRIVING_SCHOOL = BuildConfig.MOBILE_URL + "/jiaxiao";
     public static final String WEB_URL_PLATFORM_GUARD = BuildConfig.MOBILE_URL + "/assurance";
     public static final String WEB_URL_ACTIVATE_VOUCHER = BuildConfig.MOBILE_URL + "/share/jihuo";
     public static final String WEB_URL_DALIBAO = BuildConfig.MOBILE_URL + "/share/xin-ren-da-li-bao?promo_code=840157";
