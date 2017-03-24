@@ -23,4 +23,5 @@ public class WebViewUrl {
     public static final String WEB_URL_FREE_TRY = BuildConfig.MOBILE_URL + "/free_trial?promo_code=601811";
     public static final String WEB_URL_GROUP_BUY = BuildConfig.MOBILE_URL + "/share/tuan?promo_code=456134";
     public static final String WEB_URL_PEIFUBAO = BuildConfig.MOBILE_URL + "/pei-fu-bao";
+    public static final String WEB_URL_XUECHEBAO = BuildConfig.MOBILE_URL + "/xue-che-bao";
 }

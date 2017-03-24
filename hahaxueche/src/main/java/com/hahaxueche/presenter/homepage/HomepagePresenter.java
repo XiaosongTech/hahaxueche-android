@@ -108,11 +108,7 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
     }
 
     public void openFindAdviser() {
-        int cityId = 0;
         User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.student != null) {
-            cityId = user.student.city_id;
-        }
         //顾问页面点击
         HashMap<String, String> map = new HashMap();
         if (user != null && user.isLogin()) {
@@ -121,7 +117,7 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
         } else {
             MobclickAgent.onEvent(mView.getContext(), "homepage_advisor_tapped");
         }
-        mView.openWebView(WebViewUrl.WEB_URL_FIND_ADVISER + "?city_id=" + cityId);
+        mView.openWebView(WebViewUrl.WEB_URL_XUECHEBAO);
     }
 
     public void openFindDrivingSchool() {
