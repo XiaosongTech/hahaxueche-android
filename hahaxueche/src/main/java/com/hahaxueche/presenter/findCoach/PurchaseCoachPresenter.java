@@ -81,11 +81,18 @@ public class PurchaseCoachPresenter extends HHBasePresenter implements Presenter
     }
 
     private void calculateAmount() {
-        int voucherAmount = mSelectVoucher != null ? mSelectVoucher.amount : 0;
+        int umCumulativeVoucherAmount = mSelectVoucher != null ? mSelectVoucher.amount : 0;
         int totalAmount = mClassType.price;
-        if (voucherAmount > 0) {
-            mView.setTotalAmountWithVoucher("总价:" + Utils.getMoney(totalAmount) + " 立减:" + Utils.getMoney(voucherAmount),
-                    Utils.getMoney(totalAmount - voucherAmount));
+        int cumulativeVoucherAmount = 0;
+        if (mCumulativeVoucherList != null && mCumulativeVoucherList.size() > 0) {
+            for (Voucher voucher : mCumulativeVoucherList) {
+                cumulativeVoucherAmount += voucher.amount;
+            }
+        }
+        if (umCumulativeVoucherAmount > 0 || cumulativeVoucherAmount > 0) {
+            mView.setTotalAmountWithVoucher("总价:" + Utils.getMoney(totalAmount) + " 立减:" +
+                            Utils.getMoney(umCumulativeVoucherAmount + cumulativeVoucherAmount),
+                    Utils.getMoney(totalAmount - umCumulativeVoucherAmount - cumulativeVoucherAmount));
         } else {
             mView.setTotalAmountText("总价: " + Utils.getMoney(totalAmount));
         }
@@ -329,7 +336,7 @@ public class PurchaseCoachPresenter extends HHBasePresenter implements Presenter
         } else {
             mView.setVoucherSelectable(true);
         }
-
+        calculateAmount();
     }
 
     public void setSelectVoucher(Voucher voucher) {
