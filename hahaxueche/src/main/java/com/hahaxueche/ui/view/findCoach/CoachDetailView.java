@@ -5,13 +5,13 @@ import com.hahaxueche.model.user.coach.ClassType;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.ui.view.base.HHBaseView;
 
+import java.util.List;
+
 /**
  * Created by wangshirui on 16/10/5.
  */
 
 public interface CoachDetailView extends HHBaseView {
-    void showCoachDetail(Coach coach);
-
     void showMessage(String message);
 
     void showNoReview(String coachName);
@@ -55,4 +55,34 @@ public interface CoachDetailView extends HHBaseView {
     void showC1Tab(boolean isLight);
 
     void showC2Tab(boolean isLight);
+
+    void setCoachName(String name);
+
+    void setCoachBio(String bio);
+
+    void setCoachAvatar(String avatarUrl);
+
+    void setCoachImages(List<String> images);
+
+    void setCoachGolden(boolean isGolden);
+
+    void setCoachPledge(boolean hasPledge);
+
+    void setCoachSatisfaction(String satisfactionRate);
+
+    void setCoachSkillLevel(String skillLevel);
+
+    void setCoachAveragePassDays(String passDays);
+
+    void setCoachPassRate(String passRate);
+
+    void setTrainingLocation(String trainingLocation);
+
+    void setPeerCoaches(List<Coach> peerCoaches);
+
+    void setCommentCount(String commentCount);
+
+    void setCoachAverageRating(String averageRating);
+
+    void setDrivingSchool(String drivingSchool);
 }

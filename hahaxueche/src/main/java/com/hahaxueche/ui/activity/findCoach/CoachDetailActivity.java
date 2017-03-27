@@ -55,6 +55,7 @@ import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -364,42 +365,82 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     }
 
     @Override
-    public void showCoachDetail(Coach coach) {
-        mTvName.setText(coach.name);
-        mTvDescription.setText(coach.bio);
-        mIvAvatar.setImageURI(coach.avatar);
-        mIsImages.updateImages(coach.images);
+    public void setCoachName(String name) {
+        mTvName.setText(name);
+    }
+
+    @Override
+    public void setCoachBio(String bio) {
+        mTvDescription.setText(bio);
+    }
+
+    @Override
+    public void setCoachAvatar(String avatarUrl) {
+        mIvAvatar.setImageURI(avatarUrl);
+    }
+
+    @Override
+    public void setCoachImages(List<String> images) {
+        mIsImages.updateImages(images);
         int width = Utils.instence(this).getDm().widthPixels;
         int height = Math.round(width * 4 / 5);
         RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
         mIsImages.setLayoutParams(p);
-        RelativeLayout.LayoutParams paramAvatar = new RelativeLayout.LayoutParams(Utils.instence(this).dip2px(70), Utils.instence(this).dip2px(70));
+        RelativeLayout.LayoutParams paramAvatar = new RelativeLayout.LayoutParams(
+                Utils.instence(this).dip2px(70), Utils.instence(this).dip2px(70));
         paramAvatar.setMargins(Utils.instence(this).dip2px(30), height - Utils.instence(this).dip2px(35), 0, 0);
         mIvAvatar.setLayoutParams(paramAvatar);
-        RelativeLayout.LayoutParams paramLlyFlCd = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams paramLlyFlCd = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         paramLlyFlCd.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.iv_coach_avatar);
         paramLlyFlCd.addRule(RelativeLayout.RIGHT_OF, R.id.iv_coach_avatar);
         mRlyInfoLine.setLayoutParams(paramLlyFlCd);
-        //金牌教练显示
-        if (coach.skill_level.equals("1")) {
+    }
+
+    @Override
+    public void setCoachGolden(boolean isGolden) {
+        if (isGolden) {
             mIvGoldenCoach.setVisibility(View.VISIBLE);
-            mTvCoachLevel.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(this, R.drawable.ic_auth_golden), null);
+            mTvCoachLevel.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                    ContextCompat.getDrawable(this, R.drawable.ic_auth_golden), null);
         } else {
             mIvGoldenCoach.setVisibility(View.GONE);
             mTvCoachLevel.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         }
-        //保证金
-        if (coach.has_cash_pledge == 1) {
-            mIvCashPledge.setVisibility(View.VISIBLE);
-        } else {
-            mIvCashPledge.setVisibility(View.GONE);
-        }
-        mTvSatisfactionRate.setText(Utils.getRate(coach.satisfaction_rate));
-        mTvCoachLevel.setText(coach.skill_level_label);
-        mTvPassDays.setText(coach.average_pass_days + "天");
-        mTvPassRate.setText(Utils.getRate(coach.stage_three_pass_rate));
-        mTvTrainLocation.setText(mPresenter.getTrainingFieldName());
-        ArrayList<Coach> peerCoaches = coach.peer_coaches;
+    }
+
+    @Override
+    public void setCoachPledge(boolean hasPledge) {
+        mIvCashPledge.setVisibility(hasPledge ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setCoachSatisfaction(String satisfactionRate) {
+        mTvSatisfactionRate.setText(satisfactionRate);
+    }
+
+    @Override
+    public void setCoachSkillLevel(String skillLevel) {
+        mTvCoachLevel.setText(skillLevel);
+    }
+
+    @Override
+    public void setCoachAveragePassDays(String passDays) {
+        mTvPassDays.setText(passDays);
+    }
+
+    @Override
+    public void setCoachPassRate(String passRate) {
+        mTvPassRate.setText(passRate);
+    }
+
+    @Override
+    public void setTrainingLocation(String trainingLocation) {
+        mTvTrainLocation.setText(trainingLocation);
+    }
+
+    @Override
+    public void setPeerCoaches(List<Coach> peerCoaches) {
         if (peerCoaches != null && peerCoaches.size() > 0) {
             for (Coach peerCoach : peerCoaches) {
                 mLlyPeerCoaches.addView(getPeerCoachAdapter(peerCoach));
@@ -407,21 +448,34 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         } else {
             mLlyPeerCoaches.setVisibility(View.GONE);
         }
-        //学员评价数量
-        mTvCommentsCount.setText("学员评价（" + coach.review_count + "）");
+    }
+
+    @Override
+    public void setCommentCount(String commentCount) {
+        mTvCommentsCount.setText(commentCount);
+    }
+
+    @Override
+    public void setCoachAverageRating(String averageRating) {
         //综合得分
-        float averageRating = 0;
-        if (!TextUtils.isEmpty(coach.average_rating)) {
-            averageRating = Float.parseFloat(coach.average_rating);
+        float rating = 0;
+        try {
+            rating = Float.parseFloat(averageRating);
+            if (rating > 5) {
+                rating = 5;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if (averageRating > 5) {
-            averageRating = 5;
-        }
-        mRbCoachScore.setRating(averageRating);
+        mRbCoachScore.setRating(rating);
         mTvScore.setText(averageRating + "分");
-        if (!TextUtils.isEmpty(coach.driving_school)) {
+    }
+
+    @Override
+    public void setDrivingSchool(String drivingSchool) {
+        if (!TextUtils.isEmpty(drivingSchool)) {
             mLlyTrainSchool.setVisibility(View.VISIBLE);
-            mTvTrainSchoolName.setText(coach.driving_school);
+            mTvTrainSchoolName.setText(drivingSchool);
         } else {
             mLlyTrainSchool.setVisibility(View.GONE);
         }

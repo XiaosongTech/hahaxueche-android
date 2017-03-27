@@ -22,6 +22,7 @@ import com.hahaxueche.ui.view.findCoach.CoachDetailView;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.Utils;
 import com.hahaxueche.util.WebViewUrl;
 import com.umeng.analytics.MobclickAgent;
 
@@ -69,7 +70,21 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
         this.mCoach = coach;
         if (mCoach == null) return;
         setCoachLabel();
-        this.mView.showCoachDetail(mCoach);
+        mView.setCoachName(mCoach.name);
+        mView.setCoachBio(mCoach.bio);
+        mView.setCoachAvatar(mCoach.avatar);
+        mView.setCoachImages(mCoach.images);
+        mView.setCoachGolden(mCoach.skill_level.equals("1"));
+        mView.setCoachPledge(mCoach.has_cash_pledge == 1);
+        mView.setCoachSatisfaction(Utils.getRate(mCoach.satisfaction_rate));
+        mView.setCoachSkillLevel(mCoach.skill_level_label);
+        mView.setCoachAveragePassDays(mCoach.average_pass_days + "天");
+        mView.setCoachPassRate(Utils.getRate(mCoach.stage_three_pass_rate));
+        mView.setTrainingLocation(getTrainingFieldName());
+        mView.setPeerCoaches(mCoach.peer_coaches);
+        mView.setCommentCount("学员评价（" + mCoach.review_count + "）");
+        mView.setCoachAverageRating(mCoach.average_rating);
+        mView.setDrivingSchool(mCoach.driving_school);
         if (mCoach.coach_group.c2_price != 0 || mCoach.coach_group.c2_vip_price != 0) {
             mView.setLicenseTab(true, true);
         } else {
@@ -157,7 +172,7 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
      *
      * @return
      */
-    public String getTrainingFieldName() {
+    private String getTrainingFieldName() {
         String ret = "";
         if (mCoach == null) return ret;
         Constants constants = application.getConstants();
