@@ -69,15 +69,14 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
     public void setCoach(Coach coach) {
         this.mCoach = coach;
         if (mCoach == null) return;
-        setCoachLabel();
         mView.setCoachName(mCoach.name);
         mView.setCoachBio(mCoach.bio);
         mView.setCoachAvatar(mCoach.avatar);
         mView.setCoachImages(mCoach.images);
-        mView.setCoachGolden(mCoach.skill_level.equals("1"));
+        mView.setCoachGolden(mCoach.skill_level == Common.COACH_SKILL_LEVEL_GOLDEN);
         mView.setCoachPledge(mCoach.has_cash_pledge == 1);
         mView.setCoachSatisfaction(Utils.getRate(mCoach.satisfaction_rate));
-        mView.setCoachSkillLevel(mCoach.skill_level_label);
+        mView.setCoachSkillLevel(getSkillLevelLabel());
         mView.setCoachAveragePassDays(mCoach.average_pass_days + "天");
         mView.setCoachPassRate(Utils.getRate(mCoach.stage_three_pass_rate));
         mView.setTrainingLocation(getTrainingFieldName());
@@ -128,7 +127,7 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
         }
         //默认选择C1
         selectLicenseType(Common.LICENSE_TYPE_C1);
-        mView.setCoachBadge(coach.skill_level.equals("1"));
+        mView.setCoachBadge(mCoach.skill_level == Common.COACH_SKILL_LEVEL_GOLDEN);
         mView.setPayBadge(coach.has_cash_pledge == 1);
         this.mView.initShareData(mCoach);
         loadReviews();
@@ -157,14 +156,16 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
         return mCoach;
     }
 
-    private void setCoachLabel() {
+    private String getSkillLevelLabel() {
+        String ret = "";
         Constants constants = application.getConstants();
         for (BaseItemType skillLevel : constants.skill_levels) {
-            if (String.valueOf(skillLevel.id).equals(mCoach.skill_level)) {
-                mCoach.skill_level_label = skillLevel.readable_name;
+            if (skillLevel.id == mCoach.skill_level) {
+                ret = skillLevel.readable_name;
                 break;
             }
         }
+        return ret;
     }
 
     /**
@@ -573,7 +574,7 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
     }
 
     public void clickPlatformAssurance() {
-        mView.navigationToPlatformAssurance(mCoach.skill_level.equals("1"), mCoach.has_cash_pledge == 1);
+        mView.navigationToPlatformAssurance(mCoach.skill_level == Common.COACH_SKILL_LEVEL_GOLDEN, mCoach.has_cash_pledge == 1);
     }
 
     /**

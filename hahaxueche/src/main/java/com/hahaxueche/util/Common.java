@@ -59,5 +59,9 @@ public class Common {
     public static final String SEND_AUTH_TYPE_LOGIN = "login";
     //用户类型-学员
     public static final String USER_TYPE_STUDENT = "student";
+    //优秀教练
+    public static final int COACH_SKILL_LEVEL_COMMON = 0;
+    //普通教练
+    public static final int COACH_SKILL_LEVEL_GOLDEN = 1;
 
 }

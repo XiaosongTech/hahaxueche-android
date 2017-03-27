@@ -22,6 +22,7 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.ui.dialog.findCoach.MapDialog;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.DistanceUtil;
 import com.hahaxueche.util.Utils;
 
@@ -94,7 +95,7 @@ public class CoachAdapter extends BaseAdapter {
         if (coach.coach_group != null) {
             holder.tvCoachActualPrice.setText(Utils.getMoney(coach.coach_group.training_cost));
         }
-        holder.ivIsGoldenCoach.setVisibility(coach.skill_level.equals("1") ? View.VISIBLE : View.GONE);
+        holder.ivIsGoldenCoach.setVisibility(coach.skill_level == Common.COACH_SKILL_LEVEL_GOLDEN ? View.VISIBLE : View.GONE);
         holder.ivCashPledge.setVisibility(coach.has_cash_pledge == 1 ? View.VISIBLE : View.GONE);
         float score = Float.parseFloat(coach.average_rating);
         if (score > 5) {

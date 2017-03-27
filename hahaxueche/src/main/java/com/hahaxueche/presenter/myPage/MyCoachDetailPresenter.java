@@ -20,6 +20,7 @@ import com.hahaxueche.ui.view.myPage.MyCoachDetailView;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.Utils;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
@@ -84,8 +85,15 @@ public class MyCoachDetailPresenter extends HHBasePresenter implements Presenter
     public void setCoach(Coach coach) {
         this.mCoach = coach;
         if (mCoach == null) return;
-        setCoachLabel();
-        this.mView.showCoachDetail(mCoach);
+        mView.setCoachName(mCoach.name);
+        mView.setCoachBio(mCoach.bio);
+        mView.setCoachAvatar(mCoach.avatar);
+        mView.setCoachImages(mCoach.images);
+        mView.setCoachPhone(mCoach.cell_phone);
+        mView.setTrainingLocation(getTrainingFieldName());
+        mView.setPeerCoaches(mCoach.peer_coaches);
+        mView.setDrivingSchool(mCoach.driving_school);
+        mView.setCourseName(getServiceTypeLevel());
         loadFollow();
         loadApplaud();
         pageStartCount();
@@ -95,20 +103,16 @@ public class MyCoachDetailPresenter extends HHBasePresenter implements Presenter
         return mCoach;
     }
 
-    private void setCoachLabel() {
+    private String getServiceTypeLevel() {
+        String ret = "";
         Constants constants = application.getConstants();
-        for (BaseItemType skillLevel : constants.skill_levels) {
-            if (String.valueOf(skillLevel.id).equals(mCoach.skill_level)) {
-                mCoach.skill_level_label = skillLevel.readable_name;
-                break;
-            }
-        }
         for (BaseItemType serviceType : constants.service_types) {
-            if (String.valueOf(serviceType.id).equals(mCoach.service_type)) {
-                mCoach.service_type_label = serviceType.readable_name;
+            if (serviceType.id == mCoach.service_type) {
+                ret = serviceType.readable_name;
                 break;
             }
         }
+        return ret;
     }
 
     /**
@@ -116,7 +120,7 @@ public class MyCoachDetailPresenter extends HHBasePresenter implements Presenter
      *
      * @return
      */
-    public String getTrainingFieldName() {
+    private String getTrainingFieldName() {
         String ret = "";
         if (mCoach == null) return ret;
         Constants constants = application.getConstants();

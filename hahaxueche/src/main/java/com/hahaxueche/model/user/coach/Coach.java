@@ -24,11 +24,9 @@ public class Coach implements Parcelable {
     public String account_balance;
     public String commission_ratio;
     public int experiences;
-    public String skill_level;
-    public String skill_level_label;
+    public int skill_level;
     public String license_type;
-    public String service_type;
-    public String service_type_label;
+    public int service_type;
     public String satisfaction_rate;
     public String consultant;
     public CoachGroup coach_group;
@@ -59,11 +57,9 @@ public class Coach implements Parcelable {
         account_balance = in.readString();
         commission_ratio = in.readString();
         experiences = in.readInt();
-        skill_level = in.readString();
-        skill_level_label = in.readString();
+        skill_level = in.readInt();
         license_type = in.readString();
-        service_type = in.readString();
-        service_type_label = in.readString();
+        service_type = in.readInt();
         satisfaction_rate = in.readString();
         consultant = in.readString();
         coach_group = in.readParcelable(CoachGroup.class.getClassLoader());
@@ -98,39 +94,37 @@ public class Coach implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(cell_phone);
-        dest.writeString(name);
-        dest.writeInt(city_id);
-        dest.writeString(user_id);
-        dest.writeString(avatar);
-        dest.writeString(bio);
-        dest.writeString(review_count);
-        dest.writeString(average_rating);
-        dest.writeString(total_student_count);
-        dest.writeString(active_student_count);
-        dest.writeString(account_balance);
-        dest.writeString(commission_ratio);
-        dest.writeInt(experiences);
-        dest.writeString(skill_level);
-        dest.writeString(skill_level_label);
-        dest.writeString(license_type);
-        dest.writeString(service_type);
-        dest.writeString(service_type_label);
-        dest.writeString(satisfaction_rate);
-        dest.writeString(consultant);
-        dest.writeParcelable(coach_group, flags);
-        dest.writeTypedList(peer_coaches);
-        dest.writeStringList(images);
-        dest.writeString(assigned_coaches);
-        dest.writeInt(vip);
-        dest.writeInt(like_count);
-        dest.writeInt(liked);
-        dest.writeString(driving_school);
-        dest.writeString(stage_two_pass_rate);
-        dest.writeString(stage_three_pass_rate);
-        dest.writeString(average_pass_days);
-        dest.writeInt(has_cash_pledge);
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
+        parcel.writeString(cell_phone);
+        parcel.writeString(name);
+        parcel.writeInt(city_id);
+        parcel.writeString(user_id);
+        parcel.writeString(avatar);
+        parcel.writeString(bio);
+        parcel.writeString(review_count);
+        parcel.writeString(average_rating);
+        parcel.writeString(total_student_count);
+        parcel.writeString(active_student_count);
+        parcel.writeString(account_balance);
+        parcel.writeString(commission_ratio);
+        parcel.writeInt(experiences);
+        parcel.writeInt(skill_level);
+        parcel.writeString(license_type);
+        parcel.writeInt(service_type);
+        parcel.writeString(satisfaction_rate);
+        parcel.writeString(consultant);
+        parcel.writeParcelable(coach_group, i);
+        parcel.writeTypedList(peer_coaches);
+        parcel.writeStringList(images);
+        parcel.writeString(assigned_coaches);
+        parcel.writeInt(vip);
+        parcel.writeInt(like_count);
+        parcel.writeInt(liked);
+        parcel.writeString(driving_school);
+        parcel.writeString(stage_two_pass_rate);
+        parcel.writeString(stage_three_pass_rate);
+        parcel.writeString(average_pass_days);
+        parcel.writeInt(has_cash_pledge);
     }
 }

@@ -33,6 +33,7 @@ import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.activity.myPage.SelectVoucherActivity;
 import com.hahaxueche.ui.dialog.findCoach.SelectInsuranceDialog;
 import com.hahaxueche.ui.view.findCoach.PurchaseCoachView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.DistanceUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
@@ -163,7 +164,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     public void loadCoachInfo(Coach coach) {
         mIvCoachAvatar.setImageURI(coach.avatar);
         mTvCoachName.setText(coach.name);
-        mIvIsGoldenCoach.setVisibility(coach.skill_level.equals("1") ? View.VISIBLE : View.GONE);
+        mIvIsGoldenCoach.setVisibility(coach.skill_level== Common.COACH_SKILL_LEVEL_GOLDEN ? View.VISIBLE : View.GONE);
         mIvCashPledge.setVisibility(coach.has_cash_pledge == 1 ? View.VISIBLE : View.GONE);
         if (!TextUtils.isEmpty(coach.driving_school)) {
             mLlyTrainSchool.setVisibility(View.VISIBLE);

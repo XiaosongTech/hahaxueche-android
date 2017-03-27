@@ -41,6 +41,7 @@ import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -336,11 +337,23 @@ public class MyCoachDetailActivity extends HHBaseActivity implements MyCoachDeta
     }
 
     @Override
-    public void showCoachDetail(Coach coach) {
-        mTvName.setText(coach.name);
-        mTvDescription.setText(coach.bio);
-        mIvAvatar.setImageURI(coach.avatar);
-        mIsImages.updateImages(coach.images);
+    public void setCoachName(String name) {
+        mTvName.setText(name);
+    }
+
+    @Override
+    public void setCoachBio(String bio) {
+        mTvDescription.setText(bio);
+    }
+
+    @Override
+    public void setCoachAvatar(String avatarUrl) {
+        mIvAvatar.setImageURI(avatarUrl);
+    }
+
+    @Override
+    public void setCoachImages(List<String> images) {
+        mIsImages.updateImages(images);
         int width = Utils.instence(this).getDm().widthPixels;
         int height = Math.round(width * 4 / 5);
         RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
@@ -352,9 +365,20 @@ public class MyCoachDetailActivity extends HHBaseActivity implements MyCoachDeta
         paramLlyFlCd.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.iv_coach_avatar);
         paramLlyFlCd.addRule(RelativeLayout.RIGHT_OF, R.id.iv_coach_avatar);
         mRlyInfoLine.setLayoutParams(paramLlyFlCd);
-        mTvCoachPhone.setText(coach.cell_phone);
-        mTvTrainLocation.setText(mPresenter.getTrainingFieldName());
-        ArrayList<Coach> peerCoaches = coach.peer_coaches;
+    }
+
+    @Override
+    public void setCoachPhone(String phone) {
+        mTvCoachPhone.setText(phone);
+    }
+
+    @Override
+    public void setTrainingLocation(String trainingLocation) {
+        mTvTrainLocation.setText(trainingLocation);
+    }
+
+    @Override
+    public void setPeerCoaches(List<Coach> peerCoaches) {
         if (peerCoaches != null && peerCoaches.size() > 0) {
             for (Coach peerCoach : peerCoaches) {
                 mLlyPeerCoaches.addView(getPeerCoachAdapter(peerCoach));
@@ -362,13 +386,21 @@ public class MyCoachDetailActivity extends HHBaseActivity implements MyCoachDeta
         } else {
             mLlyPeerCoaches.setVisibility(View.GONE);
         }
-        if (!TextUtils.isEmpty(coach.driving_school)) {
+    }
+
+    @Override
+    public void setDrivingSchool(String drivingSchool) {
+        if (!TextUtils.isEmpty(drivingSchool)) {
             mLlyTrainSchool.setVisibility(View.VISIBLE);
-            mTvTrainSchoolName.setText(coach.driving_school);
+            mTvTrainSchoolName.setText(drivingSchool);
         } else {
             mLlyTrainSchool.setVisibility(View.GONE);
         }
-        mTvCourseName.setText(coach.service_type_label);
+    }
+
+    @Override
+    public void setCourseName(String courseName) {
+        mTvCourseName.setText(courseName);
     }
 
     @Override
