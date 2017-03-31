@@ -15,7 +15,7 @@ public class WebViewUrl {
     public static final String WEB_URL_BEST_COACHES = BuildConfig.MOBILE_URL + "/jiaolian";
     public static final String WEB_URL_FIND_ADVISER = BuildConfig.MOBILE_URL + "/share/zhaoguwen";
     public static final String WEB_URL_FIND_DRIVING_SCHOOL = BuildConfig.MOBILE_URL + "/jiaxiao";
-    public static final String WEB_URL_PLATFORM_GUARD = BuildConfig.MOBILE_URL + "/assurance";
+    public static final String WEB_URL_PLATFORM_GUARD = BuildConfig.MOBILE_URL + "/xue-che-bao?promo_code=772272";
     public static final String WEB_URL_ACTIVATE_VOUCHER = BuildConfig.MOBILE_URL + "/share/jihuo";
     public static final String WEB_URL_DALIBAO = BuildConfig.MOBILE_URL + "/share/xin-ren-da-li-bao?promo_code=840157";
     public static final String WEB_URL_REFER_FRIENDS = BuildConfig.MOBILE_URL + "/share/xin-ren-da-li-bao?promo_code=215362";
