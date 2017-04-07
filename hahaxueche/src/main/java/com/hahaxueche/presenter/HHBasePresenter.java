@@ -52,7 +52,7 @@ public class HHBasePresenter {
     protected String getShortenUrlAddress(String url) {
         String urlAddress = null;
         try {
-            urlAddress = " https://api.t.sina.com.cn/short_url/shorten.json?source=4186780524&url_long=" +
+            urlAddress = "https://api.t.sina.com.cn/short_url/shorten.json?source=4186780524&url_long=" +
                     URLEncoder.encode(url, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
