@@ -2,6 +2,7 @@ package com.hahaxueche.presenter.base;
 
 import android.os.Bundle;
 
+import com.hahaxueche.BuildConfig;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.Constants;
@@ -74,13 +75,10 @@ public class SplashPresenter extends HHBasePresenter implements Presenter<Splash
         if (user != null && user.isLogin()) {
             //已记录用户信息，自动登陆
             doAutoLogin(user);
-        } else if (mShareObject != null) {
-            //从外部分享而来，直接进入主页
+        } else {
+            //游客登陆，进入主页
             application.getSharedPrefUtil().createFakeUser();
             mView.navigateToHomepage(mShareObject);
-        } else {
-            //跳转至登陆页
-            mView.navigateToStartLogin();
         }
     }
 
