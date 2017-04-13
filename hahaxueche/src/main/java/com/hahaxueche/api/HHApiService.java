@@ -5,6 +5,7 @@ import com.hahaxueche.model.base.BaseBoolean;
 import com.hahaxueche.model.base.BaseModel;
 import com.hahaxueche.model.base.BaseSuccess;
 import com.hahaxueche.model.base.BaseValid;
+import com.hahaxueche.model.base.CityConstants;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.base.ShortenUrl;
 import com.hahaxueche.model.community.Article;
@@ -289,6 +290,9 @@ public interface HHApiService {
     @FormUrlEncoded
     @POST("groupons")
     Observable<ResponseBody> getPrepayCharge(@FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
+
+    @GET("cities/{id}")
+    Observable<CityConstants> getCityConstant(@Path("id") String cityId);
 
 
     class Factory {

@@ -12,11 +12,19 @@ import android.provider.ContactsContract;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -31,6 +39,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Banner;
 import com.hahaxueche.model.base.City;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.user.student.Contact;
 import com.hahaxueche.presenter.homepage.HomepagePresenter;
 import com.hahaxueche.ui.activity.ActivityCollector;
@@ -55,6 +64,7 @@ import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,16 +83,18 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     ConvenientBanner mHomepageBanner;
     @BindView(R.id.crl_main)
     CoordinatorLayout mClyMain;
-    @BindView(R.id.tv_driving_school_count)
-    TextView mTvDrivingSchoolCount;
     @BindView(R.id.tv_coach_count)
     TextView mTvCoachCount;
     @BindView(R.id.tv_paid_student_count)
     TextView mTvPaidStudentCount;
     @BindView(R.id.iv_free_try)
     SimpleDraweeView mIvFreeTry;
+    @BindView(R.id.rcy_hot_driving_school)
+    RecyclerView mRcyHotDrivingSchool;
 
     private CityChoseDialog mCityChoseDialog;
+    private List<DrivingSchool> mHotDrivingSchool;
+    private DrivingSchoolAdapter mAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,6 +118,8 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         mIvFreeTry.setController(draweeController);
         GenericDraweeHierarchy hierarchy = mIvFreeTry.getHierarchy();
         hierarchy.setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
+
+        mPresenter.getCityConstants();
 
         if (mPresenter.isNeedUpdate()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
@@ -188,6 +202,18 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     @Override
     public void navigateToMyInsurance() {
         startActivityForResult(new Intent(getContext(), MyInsuranceActivity.class), RequestCode.REQUEST_CODE_MY_INSURANCE);
+    }
+
+    @Override
+    public void loadHotDrivingSchools(List<DrivingSchool> drivingSchoolList) {
+        mHotDrivingSchool = drivingSchoolList;
+        // 创建一个线性布局管理器
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        // 设置布局管理器
+        mRcyHotDrivingSchool.setLayoutManager(layoutManager);
+        mAdapter = new DrivingSchoolAdapter();
+        mRcyHotDrivingSchool.setAdapter(mAdapter);
     }
 
     @OnClick({R.id.tv_procedure,
@@ -294,7 +320,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
 
     @Override
     public void setDrivingSchoolCountDisplay(SpannableString ss) {
-        mTvDrivingSchoolCount.setText(ss);
+
     }
 
     @Override
@@ -451,6 +477,45 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                 cursor.close();
             }
             mPresenter.uploadContacts(contacts);
+        }
+    }
+
+    class DrivingSchoolAdapter extends RecyclerView.Adapter<DrivingSchoolAdapter.DrivingSchoolHolder> {
+
+        @Override
+        public DrivingSchoolHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            DrivingSchoolHolder holder = new DrivingSchoolHolder(LayoutInflater.from(
+                    getContext()).inflate(R.layout.adapter_hot_driving_school, parent,
+                    false));
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(DrivingSchoolHolder holder, int position) {
+            String text = Utils.getMoney(mHotDrivingSchool.get(position).lowest_price) + "起";
+            SpannableString ss = new SpannableString(text);
+            ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.haha_gray)), text.indexOf("起"), text.indexOf("起") + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ss.setSpan(new AbsoluteSizeSpan(Utils.instence(getContext()).sp2px(12)), text.indexOf("起"), text.indexOf("起") + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.mTvPrice.setText(ss);
+            holder.mIvAvatar.setImageURI(mHotDrivingSchool.get(position).avatar);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mHotDrivingSchool.size();
+        }
+
+        class DrivingSchoolHolder extends RecyclerView.ViewHolder {
+
+            TextView mTvPrice;
+            SimpleDraweeView mIvAvatar;
+
+            public DrivingSchoolHolder(View view) {
+                super(view);
+
+                mTvPrice = (TextView) view.findViewById(R.id.tv_price);
+                mIvAvatar = (SimpleDraweeView) view.findViewById(R.id.iv_avatar);
+            }
         }
     }
 }

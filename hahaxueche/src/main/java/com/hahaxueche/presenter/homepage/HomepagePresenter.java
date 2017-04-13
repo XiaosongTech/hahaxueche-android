@@ -12,8 +12,10 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.City;
+import com.hahaxueche.model.base.CityConstants;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.base.Statistics;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.student.BookAddress;
 import com.hahaxueche.model.user.student.Contact;
@@ -28,6 +30,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -374,6 +377,34 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
                     @Override
                     public void onNext(String ret) {
 
+                    }
+                });
+    }
+
+    public void getCityConstants() {
+        HHApiService apiService = application.getApiService();
+        subscription = apiService.getCityConstant("0")
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<CityConstants>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(CityConstants cityConstants) {
+                        mView.loadHotDrivingSchools(cityConstants.driving_schools.subList(0, 8));
                     }
                 });
     }

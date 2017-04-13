@@ -3,9 +3,11 @@ package com.hahaxueche.ui.view.homepage;
 import android.text.SpannableString;
 
 import com.hahaxueche.model.base.Banner;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.ui.view.base.HHBaseView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by wangshirui on 16/9/17.
@@ -60,4 +62,6 @@ public interface HomepageView extends HHBaseView {
     void navigateToStudentRefer();
 
     void navigateToMyInsurance();
+
+    void loadHotDrivingSchools(List<DrivingSchool> drivingSchoolList);
 }
