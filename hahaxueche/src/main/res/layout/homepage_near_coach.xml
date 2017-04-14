@@ -4,7 +4,7 @@
     android:background="@color/haha_white">
 
     <FrameLayout
-        android:id="@+id/frl_driving_school_icon"
+        android:id="@+id/frl_coach_icon"
         android:layout_width="5dp"
         android:layout_height="18dp"
         android:layout_margin="10dp"
@@ -13,9 +13,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/frl_driving_school_icon"
-        android:layout_toRightOf="@id/frl_driving_school_icon"
-        android:text="热门驾校"
+        android:layout_alignBottom="@id/frl_coach_icon"
+        android:layout_toRightOf="@id/frl_coach_icon"
+        android:text="附近教练"
         android:textColor="@color/haha_gray_dark"
         android:textSize="16sp"
         android:textStyle="bold" />
@@ -23,7 +23,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/frl_driving_school_icon"
+        android:layout_alignBottom="@id/frl_coach_icon"
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
         android:drawablePadding="3dp"
@@ -32,10 +32,10 @@
         android:textColor="@color/app_theme_color" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rcy_hot_driving_school"
+        android:id="@+id/rcy_near_coach"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/frl_driving_school_icon"
+        android:layout_below="@id/frl_coach_icon"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"></android.support.v7.widget.RecyclerView>

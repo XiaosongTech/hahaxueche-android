@@ -1,16 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/haha_white"
-    android:orientation="vertical">
+    android:paddingBottom="15dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="15dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/iv_find_driving_school"
+        android:layout_width="160dp"
+        android:layout_height="40dp"
+        android:background="@color/haha_white"
+        android:src="@drawable/bt_chooseschool" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/iv_find_coach"
+        android:layout_width="160dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:background="@color/haha_white"
+        android:src="@drawable/bt_choosecoach" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="10dp"
+        android:layout_below="@id/iv_find_driving_school"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tv_map_find"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:drawablePadding="5dp"
+                android:drawableTop="@drawable/ic_mapsearch"
+                android:text="地图查找"
+                android:textColor="@color/haha_gray"
+                android:textSize="12sp" />
+        </FrameLayout>
 
         <FrameLayout
             android:layout_width="0dp"
@@ -23,8 +59,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:drawablePadding="5dp"
-                android:drawableTop="@drawable/ic_salewarn"
-                android:text="限时团购"
+                android:drawableTop="@drawable/ic_schoolsale"
+                android:text="驾校团购"
                 android:textColor="@color/haha_gray"
                 android:textSize="12sp" />
         </FrameLayout>
@@ -40,84 +76,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:drawablePadding="5dp"
-                android:drawableTop="@drawable/ic_test"
+                android:drawableTop="@drawable/ic_questionbank"
                 android:text="在线题库"
-                android:textColor="@color/haha_gray"
-                android:textSize="12sp" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/tv_insurance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:drawablePadding="5dp"
-                android:drawableTop="@drawable/ic_peifubaby"
-                android:text="赔付宝"
-                android:textColor="@color/haha_gray"
-                android:textSize="12sp" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/tv_platform_guard"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:drawablePadding="5dp"
-                android:drawableTop="@drawable/ic_safeguard"
-                android:text="平台保障"
-                android:textColor="@color/haha_gray"
-                android:textSize="12sp" />
-        </FrameLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="5dp"
-        android:orientation="horizontal">
-
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/tv_refer_friends"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:drawablePadding="5dp"
-                android:drawableTop="@drawable/ic_recommendation"
-                android:text="推荐好友"
-                android:textColor="@color/haha_gray"
-                android:textSize="12sp" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/tv_tel_ask"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:drawablePadding="5dp"
-                android:drawableTop="@drawable/ic_phone"
-                android:text="电话咨询"
                 android:textColor="@color/haha_gray"
                 android:textSize="12sp" />
         </FrameLayout>
@@ -138,22 +98,6 @@
                 android:textColor="@color/haha_gray"
                 android:textSize="12sp" />
         </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/tv_procedure"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:drawablePadding="5dp"
-                android:drawableTop="@drawable/ic_flow"
-                android:text="学车流程"
-                android:textColor="@color/haha_gray"
-                android:textSize="12sp" />
-        </FrameLayout>
     </LinearLayout>
-</LinearLayout>
+
+</RelativeLayout>

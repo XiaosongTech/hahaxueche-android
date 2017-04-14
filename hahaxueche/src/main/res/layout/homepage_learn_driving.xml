@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/haha_white"
+    android:paddingBottom="10dp">
+
+    <FrameLayout
+        android:id="@+id/frl_learning_driving_icon"
+        android:layout_width="5dp"
+        android:layout_height="18dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/rect_bg_appcolor"></FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/frl_learning_driving_icon"
+        android:layout_toRightOf="@id/frl_learning_driving_icon"
+        android:text="学车指南"
+        android:textColor="@color/haha_gray_dark"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/iv_new_policy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/frl_learning_driving_icon"
+        android:layout_below="@id/frl_learning_driving_icon"
+        android:src="@drawable/card_jiakaoxinzheng" />
+
+    <ImageView
+        android:id="@+id/iv_procedure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/iv_new_policy"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/card_xuecheliucheng" />
+
+    <ImageView
+        android:id="@+id/iv_enroll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/iv_new_policy"
+        android:layout_below="@id/iv_new_policy"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/card_baomingxuzhi" />
+
+    <ImageView
+        android:id="@+id/iv_driving_school_sort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/iv_enroll"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/card_jiaxiaopaiming" />
+</RelativeLayout>

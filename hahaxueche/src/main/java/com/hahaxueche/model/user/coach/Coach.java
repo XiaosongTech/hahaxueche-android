@@ -41,6 +41,7 @@ public class Coach implements Parcelable {
     public String stage_three_pass_rate;
     public String average_pass_days;
     public int has_cash_pledge;
+    public int distance;
 
     protected Coach(Parcel in) {
         id = in.readString();
@@ -74,6 +75,7 @@ public class Coach implements Parcelable {
         stage_three_pass_rate = in.readString();
         average_pass_days = in.readString();
         has_cash_pledge = in.readInt();
+        distance = in.readInt();
     }
 
     public static final Creator<Coach> CREATOR = new Creator<Coach>() {
@@ -126,5 +128,6 @@ public class Coach implements Parcelable {
         parcel.writeString(stage_three_pass_rate);
         parcel.writeString(average_pass_days);
         parcel.writeInt(has_cash_pledge);
+        parcel.writeInt(distance);
     }
 }

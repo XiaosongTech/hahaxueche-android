@@ -16,12 +16,14 @@ import com.hahaxueche.model.base.CityConstants;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.base.Statistics;
 import com.hahaxueche.model.drivingSchool.DrivingSchool;
+import com.hahaxueche.model.responseList.CoachResponseList;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.student.BookAddress;
 import com.hahaxueche.model.user.student.Contact;
 import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.homepage.HomepageView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.HahaCache;
 import com.hahaxueche.util.Utils;
@@ -51,8 +53,6 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
         application = HHBaseApplication.get(mView.getContext());
         constants = application.getConstants();
         if (constants != null) {
-            mView.initBanners(constants.new_home_page_banners);
-            loadStatistics();
             loadCityChoseDialog();
         }
     }
@@ -197,28 +197,6 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
         HHLog.v("free try url -> " + url);
         HHLog.v("free try share url -> " + shareUrl);
         mView.openWebView(url, shareUrl);
-    }
-
-    private void loadStatistics() {
-        Statistics statistics = application.getConstants().statistics;
-        String text = "已入驻" + Utils.getCount(statistics.driving_school_count) + "所";
-        SpannableString ss = new SpannableString(text);
-        ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mView.getContext(), R.color.haha_orange_text)), text.indexOf("驻") + 1, text.indexOf("所"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ss.setSpan(new AbsoluteSizeSpan(Utils.instence(mView.getContext()).sp2px(14)), text.indexOf("驻") + 1, text.indexOf("所"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mView.setDrivingSchoolCountDisplay(ss);
-
-        text = "已签约" + Utils.getCount(statistics.coach_count) + "名";
-        ss = new SpannableString(text);
-        ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mView.getContext(), R.color.haha_blue_text)), text.indexOf("约") + 1, text.indexOf("名"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ss.setSpan(new AbsoluteSizeSpan(Utils.instence(mView.getContext()).sp2px(14)), text.indexOf("约") + 1, text.indexOf("名"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mView.setCoachCountDisplay(ss);
-
-        text = "已帮助学员" + Utils.getCount(statistics.paid_student_count) + "名";
-        ss = new SpannableString(text);
-        ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mView.getContext(), R.color.haha_red_text)), text.indexOf("员") + 1, text.indexOf("名"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ss.setSpan(new AbsoluteSizeSpan(Utils.instence(mView.getContext()).sp2px(14)), text.indexOf("员") + 1, text.indexOf("名"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mView.setPaidStudentCountDisplay(ss);
-
     }
 
     public void loadCityChoseDialog() {
@@ -405,6 +383,33 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
                     @Override
                     public void onNext(CityConstants cityConstants) {
                         mView.loadHotDrivingSchools(cityConstants.driving_schools.subList(0, 8));
+                    }
+                });
+    }
+
+    public void getNearCoaches() {
+        HHApiService apiService = application.getApiService();
+        subscription = apiService.getCoaches(Common.START_PAGE, Common.MAX_NEAR_COACH_COUNT,
+                null, null, null, 0, null, "50", null, 1, 0, null)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<CoachResponseList>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(CoachResponseList coachResponseList) {
+                        if (coachResponseList.data != null) {
+                            mView.loadNearCoaches(coachResponseList.data);
+                        }
+
                     }
                 });
     }

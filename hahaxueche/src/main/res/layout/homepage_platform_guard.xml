@@ -1,0 +1,48 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/haha_white"
+    android:paddingBottom="10dp">
+
+    <FrameLayout
+        android:id="@+id/frl_platform_guard_icon"
+        android:layout_width="5dp"
+        android:layout_height="18dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/rect_bg_appcolor"></FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/frl_platform_guard_icon"
+        android:layout_toRightOf="@id/frl_platform_guard_icon"
+        android:text="平台保障"
+        android:textColor="@color/haha_gray_dark"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/iv_xuechebao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/frl_platform_guard_icon"
+        android:layout_below="@id/frl_platform_guard_icon"
+        android:src="@drawable/card_xuechebaby" />
+
+    <ImageView
+        android:id="@+id/iv_peifubao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/iv_xuechebao"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/card_peifubaby" />
+
+    <ImageView
+        android:id="@+id/iv_fenqibao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/iv_xuechebao"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/card_fenqibaby" />
+</RelativeLayout>

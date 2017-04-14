@@ -63,5 +63,9 @@ public class Common {
     public static final int COACH_SKILL_LEVEL_COMMON = 0;
     //普通教练
     public static final int COACH_SKILL_LEVEL_GOLDEN = 1;
+    //热门驾校数量
+    public static final int MAX_DRIVING_SCHOOL_COUNT = 8;
+    //附近驾校数量
+    public static final int MAX_NEAR_COACH_COUNT = 8;
 
 }
