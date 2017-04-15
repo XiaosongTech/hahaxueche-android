@@ -11,64 +11,48 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextUtils;
-import android.text.style.AbsoluteSizeSpan;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.bigkoo.convenientbanner.ConvenientBanner;
-import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
-import com.hahaxueche.model.base.Banner;
 import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.student.Contact;
 import com.hahaxueche.presenter.homepage.HomepagePresenter;
-import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.community.ExamLibraryActivity;
+import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.PaySuccessActivity;
-import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.activity.myPage.MyInsuranceActivity;
 import com.hahaxueche.ui.activity.myPage.PurchaseInsuranceActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.activity.myPage.StudentReferActivity;
 import com.hahaxueche.ui.activity.myPage.UploadIdCardActivity;
-import com.hahaxueche.ui.dialog.BaseAlertDialog;
+import com.hahaxueche.ui.adapter.homepage.HotDrivingSchoolAdapter;
+import com.hahaxueche.ui.adapter.homepage.NearCoachAdapter;
 import com.hahaxueche.ui.dialog.login.CityChoseDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.homepage.HomepageView;
-import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
-import com.hahaxueche.util.Utils;
+import com.hahaxueche.util.WebViewUrl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,9 +82,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     RecyclerView mRcyNearCoach;
 
     private CityChoseDialog mCityChoseDialog;
-    private List<DrivingSchool> mHotDrivingSchool;
-    private ArrayList<Coach> mNearCoaches;
-    private DrivingSchoolAdapter mDrivingSchoolAdapter;
+    private HotDrivingSchoolAdapter mDrivingSchoolAdapter;
     private NearCoachAdapter mNearCoachAdapter;
 
     //定位client
@@ -196,33 +178,58 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     }
 
     @Override
-    public void loadHotDrivingSchools(List<DrivingSchool> drivingSchoolList) {
-        mHotDrivingSchool = drivingSchoolList;
+    public void loadHotDrivingSchools(final List<DrivingSchool> drivingSchoolList) {
         // 创建一个线性布局管理器
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         // 设置布局管理器
         mRcyHotDrivingSchool.setLayoutManager(layoutManager);
-        mDrivingSchoolAdapter = new DrivingSchoolAdapter();
+        mDrivingSchoolAdapter = new HotDrivingSchoolAdapter(getContext(), drivingSchoolList, new HotDrivingSchoolAdapter.OnRecyclerViewItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                if (drivingSchoolList != null && drivingSchoolList.size() > 0 && position > -1 && position < drivingSchoolList.size()) {
+                    openWebView(WebViewUrl.WEB_URL_JIAXIAO + "/" + drivingSchoolList.get(position).id);
+                }
+            }
+        });
         mRcyHotDrivingSchool.setAdapter(mDrivingSchoolAdapter);
     }
 
     @Override
-    public void loadNearCoaches(ArrayList<Coach> coaches) {
-        mNearCoaches = coaches;
+    public void loadNearCoaches(final ArrayList<Coach> coaches) {
         // 创建一个线性布局管理器
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         // 设置布局管理器
         mRcyNearCoach.setLayoutManager(layoutManager);
-        mNearCoachAdapter = new NearCoachAdapter();
+        mNearCoachAdapter = new NearCoachAdapter(getContext(), coaches, new NearCoachAdapter.OnRecyclerViewItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                if (coaches != null && coaches.size() > 0 && position > -1 && position < coaches.size()) {
+                    Intent intent = new Intent(getContext(), CoachDetailActivity.class);
+                    intent.putExtra("coach", coaches.get(position));
+                    startActivity(intent);
+                }
+            }
+        });
         mRcyNearCoach.setAdapter(mNearCoachAdapter);
     }
 
     @OnClick({R.id.iv_procedure,
             R.id.tv_online_ask,
             R.id.tv_group_buy,
-            R.id.tv_test_lib})
+            R.id.tv_test_lib,
+            R.id.iv_new_policy,
+            R.id.iv_enroll,
+            R.id.iv_driving_school_sort,
+            R.id.lly_xuechebao,
+            R.id.lly_fenqibao,
+            R.id.lly_peifubao,
+            R.id.tv_more_hot_driving_school,
+            R.id.iv_find_driving_school,
+            R.id.iv_find_coach,
+            R.id.tv_more_near_coach
+    })
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_procedure:
@@ -236,6 +243,36 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                 break;
             case R.id.tv_test_lib:
                 mPresenter.clickTestLib();
+                break;
+            case R.id.iv_new_policy:
+                openWebView(WebViewUrl.WEB_URL_ZHENGCE);
+                break;
+            case R.id.iv_enroll:
+                openWebView(WebViewUrl.WEB_URL_BAOMING);
+                break;
+            case R.id.iv_driving_school_sort:
+                openWebView(WebViewUrl.WEB_URL_JIAXIAO);
+                break;
+            case R.id.lly_xuechebao:
+                openWebView(WebViewUrl.WEB_URL_XUECHEBAO);
+                break;
+            case R.id.lly_fenqibao:
+                openWebView(WebViewUrl.WEB_URL_PEIFUBAO);
+                break;
+            case R.id.lly_peifubao:
+                openWebView(WebViewUrl.WEB_URL_FENQIBAO);
+                break;
+            case R.id.tv_more_hot_driving_school:
+                openWebView(WebViewUrl.WEB_URL_JIAXIAO);
+                break;
+            case R.id.iv_find_driving_school:
+                openWebView(WebViewUrl.WEB_URL_JIAXIAO);
+                break;
+            case R.id.iv_find_coach:
+                mActivity.selectTab(1);
+                break;
+            case R.id.tv_more_near_coach:
+                mActivity.selectTab(1);
                 break;
             default:
                 break;
@@ -410,95 +447,6 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                 cursor.close();
             }
             mPresenter.uploadContacts(contacts);
-        }
-    }
-
-    class DrivingSchoolAdapter extends RecyclerView.Adapter<DrivingSchoolAdapter.DrivingSchoolHolder> {
-
-        @Override
-        public DrivingSchoolHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            DrivingSchoolHolder holder = new DrivingSchoolHolder(LayoutInflater.from(
-                    getContext()).inflate(R.layout.adapter_hot_driving_school, parent,
-                    false));
-            return holder;
-        }
-
-        @Override
-        public void onBindViewHolder(DrivingSchoolHolder holder, int position) {
-            String text = Utils.getMoney(mHotDrivingSchool.get(position).lowest_price) + "起";
-            SpannableString ss = new SpannableString(text);
-            ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.haha_gray)), text.indexOf("起"), text.indexOf("起") + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            ss.setSpan(new AbsoluteSizeSpan(Utils.instence(getContext()).sp2px(12)), text.indexOf("起"), text.indexOf("起") + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            holder.mTvPrice.setText(ss);
-            holder.mIvAvatar.setImageURI(mHotDrivingSchool.get(position).avatar);
-        }
-
-        @Override
-        public int getItemCount() {
-            return mHotDrivingSchool.size();
-        }
-
-        class DrivingSchoolHolder extends RecyclerView.ViewHolder {
-
-            TextView mTvPrice;
-            SimpleDraweeView mIvAvatar;
-
-            public DrivingSchoolHolder(View view) {
-                super(view);
-
-                mTvPrice = (TextView) view.findViewById(R.id.tv_price);
-                mIvAvatar = (SimpleDraweeView) view.findViewById(R.id.iv_avatar);
-            }
-        }
-    }
-
-    class NearCoachAdapter extends RecyclerView.Adapter<NearCoachAdapter.NearCoachHolder> {
-
-        @Override
-        public NearCoachHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            NearCoachHolder holder = new NearCoachHolder(LayoutInflater.from(
-                    getContext()).inflate(R.layout.adapter_near_coach, parent,
-                    false));
-            return holder;
-        }
-
-        @Override
-        public void onBindViewHolder(NearCoachHolder holder, int position) {
-            Coach coach = mNearCoaches.get(position);
-            holder.mTvPrice.setText(Utils.getMoney(coach.coach_group.training_cost));
-            holder.mIvAvatar.setImageURI(coach.avatar);
-            holder.mTvName.setText(coach.name);
-            if (!TextUtils.isEmpty(coach.distance)) {
-                String distance = "距您" + Utils.getDistance(Double.parseDouble(coach.distance));
-                SpannableString ss = new SpannableString(distance);
-                ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.app_theme_color)), distance.indexOf("距您") + 2, distance.indexOf("KM"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                holder.mTvLocation.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
-                holder.mTvLocation.setText(ss);
-            } else {
-                HHBaseApplication application = HHBaseApplication.get(getContext());
-                holder.mTvLocation.setText(application.getConstants().getSectionName(coach.coach_group.field_id));
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return mNearCoaches.size();
-        }
-
-        class NearCoachHolder extends RecyclerView.ViewHolder {
-
-            TextView mTvPrice;
-            SimpleDraweeView mIvAvatar;
-            TextView mTvName;
-            TextView mTvLocation;
-
-            public NearCoachHolder(View view) {
-                super(view);
-                mTvPrice = (TextView) view.findViewById(R.id.tv_price);
-                mIvAvatar = (SimpleDraweeView) view.findViewById(R.id.iv_avatar);
-                mTvName = (TextView) view.findViewById(R.id.tv_name);
-                mTvLocation = (TextView) view.findViewById(R.id.tv_location);
-            }
         }
     }
 

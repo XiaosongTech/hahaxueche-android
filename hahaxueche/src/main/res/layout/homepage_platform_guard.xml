@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/frl_platform_guard_icon"
         android:layout_toRightOf="@id/frl_platform_guard_icon"
-        android:text="平台保障"
+        android:text="学车保障"
         android:textColor="@color/haha_gray_dark"
         android:textSize="16sp"
         android:textStyle="bold" />
@@ -43,7 +43,7 @@
             android:layout_marginTop="5dp"
             android:text="学车宝"
             android:textColor="@color/haha_gray_dark"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -53,7 +53,9 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:text="分阶段打款\n不满意不打款" />
+            android:lineSpacingMultiplier="1.2"
+            android:text="分阶段打款\n不满意不打款"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -79,7 +81,7 @@
             android:layout_marginTop="5dp"
             android:text="赔付宝"
             android:textColor="@color/haha_gray_dark"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -89,7 +91,9 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:text="不过包赔付\n挂一科赔一科" />
+            android:lineSpacingMultiplier="1.2"
+            android:text="不过包赔付\n挂一科赔一科"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -116,7 +120,7 @@
             android:layout_marginTop="5dp"
             android:text="分期宝"
             android:textColor="@color/haha_gray_dark"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -126,7 +130,9 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:text="分期学车\n30天零利息" />
+            android:lineSpacingMultiplier="1.2"
+            android:text="分期学车\n30天零利息"
+            android:textSize="12sp" />
     </LinearLayout>
 
 </RelativeLayout>
