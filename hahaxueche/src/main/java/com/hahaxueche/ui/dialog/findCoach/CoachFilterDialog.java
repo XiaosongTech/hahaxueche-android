@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.City;
+import com.hahaxueche.model.base.LocalSettings;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.ui.widget.comboSeekBar.ComboSeekBar;
 import com.hahaxueche.util.Utils;
@@ -110,8 +111,9 @@ public class CoachFilterDialog {
         HHBaseApplication application = HHBaseApplication.get(mContext);
         User user = application.getSharedPrefUtil().getUser();
         int cityId = 0;//默认武汉
-        if (user != null) {
-            cityId = user.student.city_id;
+        LocalSettings localSettings = application.getSharedPrefUtil().getLocalSettings();
+        if (localSettings.cityId > -1) {
+            cityId = localSettings.cityId;
         }
         final City myCity = application.getConstants().getCity(cityId);
         /**********距离筛选**********/

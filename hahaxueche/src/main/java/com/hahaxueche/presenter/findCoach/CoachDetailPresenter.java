@@ -11,6 +11,7 @@ import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.base.Field;
+import com.hahaxueche.model.base.LocalSettings;
 import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.ClassType;
@@ -498,10 +499,11 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
         String url = WebViewUrl.WEB_URL_FREE_TRY;
         String shareUrl = url;
         url += "&coach_id=" + mCoach.id;
+        LocalSettings localSettings = application.getSharedPrefUtil().getLocalSettings();
+        if (localSettings.cityId > -1) {
+            url += "&city_id=" + localSettings.cityId;
+        }
         if (mUser != null && mUser.isLogin()) {
-            if (mUser.student.city_id >= 0) {
-                url += "&city_id=" + mUser.student.city_id;
-            }
             if (!TextUtils.isEmpty(mUser.student.name)) {
                 url += "&name=" + mUser.student.name;
             }

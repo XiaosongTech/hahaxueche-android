@@ -1,21 +1,13 @@
 package com.hahaxueche.presenter.homepage;
 
-import android.support.v4.content.ContextCompat;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.AbsoluteSizeSpan;
-import android.text.style.ForegroundColorSpan;
 
 import com.hahaxueche.HHBaseApplication;
-import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.base.CityConstants;
 import com.hahaxueche.model.base.Constants;
-import com.hahaxueche.model.base.Statistics;
-import com.hahaxueche.model.drivingSchool.DrivingSchool;
+import com.hahaxueche.model.base.LocalSettings;
 import com.hahaxueche.model.responseList.CoachResponseList;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.student.BookAddress;
@@ -26,13 +18,11 @@ import com.hahaxueche.ui.view.homepage.HomepageView;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.HahaCache;
-import com.hahaxueche.util.Utils;
 import com.hahaxueche.util.WebViewUrl;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -52,9 +42,19 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
         this.mView = view;
         application = HHBaseApplication.get(mView.getContext());
         constants = application.getConstants();
-        if (constants != null) {
-            loadCityChoseDialog();
+        LocalSettings localSettings = application.getSharedPrefUtil().getLocalSettings();
+        if (localSettings.cityId < 0) {
+            //本地化设置没有城市，默认用户的
+            User user = application.getSharedPrefUtil().getUser();
+            if (user != null && user.student != null && user.student.city_id > -1) {
+                localSettings.cityId = user.student.city_id;
+            } else {
+                //用户也没有城市信息，默认武汉
+                localSettings.cityId = 0;
+            }
+            application.getSharedPrefUtil().setLocalSettings(localSettings);
         }
+        mView.setCityName(application.getConstants().getCityName(localSettings.cityId));
     }
 
     public void detachView() {
@@ -157,27 +157,16 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
         super.onlineAsk(user, mView.getContext());
     }
 
-    public void phoneSupportCount() {
-        //客服电话点击
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "homepage_phone_support_tapped", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "homepage_phone_support_tapped");
-        }
-    }
-
     public void freeTry() {
         //免费试学URL
         String url = WebViewUrl.WEB_URL_FREE_TRY;
         String shareUrl = url;
         User user = application.getSharedPrefUtil().getUser();
+        LocalSettings localSettings = application.getSharedPrefUtil().getLocalSettings();
+        if (localSettings.cityId > -1) {
+            url += "&city_id=" + localSettings.cityId;
+        }
         if (user != null && user.isLogin()) {
-            if (user.student.city_id >= 0) {
-                url += "&city_id=" + user.student.city_id;
-            }
             if (!TextUtils.isEmpty(user.student.name)) {
                 url += "&name=" + user.student.name;
             }
@@ -199,16 +188,13 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
         mView.openWebView(url, shareUrl);
     }
 
-    public void loadCityChoseDialog() {
-        User user = application.getSharedPrefUtil().getUser();
-        if (user.student.city_id < 0) {
-            selectCity(0);//先默认为武汉
-            mView.showCityChoseDialog();
-        }
-    }
-
     public void selectCity(int cityId) {
-        application.getSharedPrefUtil().setUserCity(cityId);
+        LocalSettings localSettings = application.getSharedPrefUtil().getLocalSettings();
+        localSettings.cityId = cityId;
+        application.getSharedPrefUtil().setLocalSettings(localSettings);
+        mView.setCityName(application.getConstants().getCityName(cityId));
+        getNearCoaches();
+        getHotDrivingSchools();
     }
 
     public void bannerClick(int i) {
@@ -277,34 +263,6 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
         mView.openWebView(WebViewUrl.WEB_URL_PLATFORM_GUARD);
     }
 
-    public void clickReferFriends() {
-        User user = application.getSharedPrefUtil().getUser();
-        HashMap<String, String> map = new HashMap();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "home_page_refer_friends_tapped", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "home_page_refer_friends_tapped");
-        }
-        if (user == null || !user.isLogin() || !user.student.is_sales_agent) {
-            //非代理
-            mView.navigateToStudentRefer();
-        } else {
-            mView.navigateToReferFriends();
-        }
-    }
-
-    public String getShareText() {
-        int cityId = 0;
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.student != null) {
-            cityId = user.student.city_id;
-        }
-        String shareText = mView.getContext().getResources().getString(R.string.homepage_share_dialog_text);
-        City myCity = application.getConstants().getCity(cityId);
-        return String.format(shareText, Utils.getMoney(myCity.referer_bonus), Utils.getMoney(myCity.referee_bonus));
-    }
-
     /**
      * 推荐有奖跳转逻辑
      */
@@ -359,9 +317,14 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
                 });
     }
 
-    public void getCityConstants() {
+    public void getHotDrivingSchools() {
         HHApiService apiService = application.getApiService();
-        subscription = apiService.getCityConstant("0")
+        int cityId = 0;
+        LocalSettings localSettings = application.getSharedPrefUtil().getLocalSettings();
+        if (localSettings.cityId > -1) {
+            cityId = localSettings.cityId;
+        }
+        subscription = apiService.getCityConstant(cityId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<CityConstants>() {
@@ -389,13 +352,17 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
 
     public void getNearCoaches() {
         HHApiService apiService = application.getApiService();
-        ArrayList<String> locations = null;
+        int cityId = 0;
+        LocalSettings localSettings = application.getSharedPrefUtil().getLocalSettings();
+        if (localSettings.cityId > -1) {
+            cityId = localSettings.cityId;
+        }
         if (application.getMyLocation() != null) {
-            locations = new ArrayList<>();
+            ArrayList<String> locations = new ArrayList<>();
             locations.add(String.valueOf(application.getMyLocation().lat));
             locations.add(String.valueOf(application.getMyLocation().lng));
             subscription = apiService.getCoaches(Common.START_PAGE, Common.MAX_NEAR_COACH_COUNT,
-                    null, null, null, 0, null, null, locations, 1, 0, null)
+                    null, null, null, cityId, null, null, locations, 1, 0, null)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(application.defaultSubscribeScheduler())
                     .subscribe(new Subscriber<CoachResponseList>() {
@@ -419,7 +386,7 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
                     });
         } else {
             subscription = apiService.getCoaches(Common.START_PAGE, Common.MAX_NEAR_COACH_COUNT,
-                    null, null, null, 0, null, null, null, 5, 0, null)
+                    null, null, null, cityId, null, null, null, 5, 0, null)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(application.defaultSubscribeScheduler())
                     .subscribe(new Subscriber<CoachResponseList>() {

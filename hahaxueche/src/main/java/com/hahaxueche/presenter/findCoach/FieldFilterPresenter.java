@@ -5,6 +5,7 @@ import android.text.Html;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Field;
+import com.hahaxueche.model.base.LocalSettings;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
@@ -32,10 +33,10 @@ public class FieldFilterPresenter extends HHBasePresenter implements Presenter<F
     }
 
     public void initMap() {
-        User user = application.getSharedPrefUtil().getUser();
         int cityId = 0;
-        if (user != null && user.student != null) {
-            cityId = user.student.city_id;
+        LocalSettings localSettings = application.getSharedPrefUtil().getLocalSettings();
+        if (localSettings.cityId > -1) {
+            cityId = localSettings.cityId;
         }
         mView.initMap(application.getConstants().getFields(cityId));
     }

@@ -29,7 +29,6 @@
                     android:layout_marginTop="10dp"
                     android:drawablePadding="3dp"
                     android:drawableRight="@drawable/ic_triangle"
-                    android:text="武汉"
                     android:textColor="@color/haha_white"
                     android:textSize="14sp" />
 

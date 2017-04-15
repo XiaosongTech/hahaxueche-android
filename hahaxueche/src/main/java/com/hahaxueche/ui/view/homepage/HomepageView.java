@@ -34,4 +34,6 @@ public interface HomepageView extends HHBaseView {
     void loadHotDrivingSchools(List<DrivingSchool> drivingSchoolList);
 
     void loadNearCoaches(ArrayList<Coach> data);
+
+    void setCityName(String cityName);
 }

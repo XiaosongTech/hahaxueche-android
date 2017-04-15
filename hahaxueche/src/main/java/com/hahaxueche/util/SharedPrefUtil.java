@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.hahaxueche.model.base.Constants;
+import com.hahaxueche.model.base.LocalSettings;
 import com.hahaxueche.model.examLib.Question;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.student.Student;
@@ -168,5 +169,19 @@ public class SharedPrefUtil {
     public void setConstants(Constants constants) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         prefs.edit().putString("constantsSerialize", mGson.toJson(constants)).apply();
+    }
+
+    public LocalSettings getLocalSettings() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        LocalSettings localSettings = mGson.fromJson(prefs.getString("localSettingsSerialize", ""), LocalSettings.class);
+        if (localSettings == null) {
+            localSettings = new LocalSettings();
+        }
+        return localSettings;
+    }
+
+    public void setLocalSettings(LocalSettings localSettings) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        prefs.edit().putString("localSettingsSerialize", mGson.toJson(localSettings)).apply();
     }
 }

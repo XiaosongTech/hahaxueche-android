@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -80,6 +81,8 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     RecyclerView mRcyHotDrivingSchool;
     @BindView(R.id.rcy_near_coach)
     RecyclerView mRcyNearCoach;
+    @BindView(R.id.tv_city)
+    TextView mTvCityName;
 
     private CityChoseDialog mCityChoseDialog;
     private HotDrivingSchoolAdapter mDrivingSchoolAdapter;
@@ -122,7 +125,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         GenericDraweeHierarchy hyFindCoach = mIvFindCoach.getHierarchy();
         hyFindCoach.setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
 
-        mPresenter.getCityConstants();
+        mPresenter.getHotDrivingSchools();
 
         if (mPresenter.isNeedUpdate()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
@@ -215,6 +218,11 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         mRcyNearCoach.setAdapter(mNearCoachAdapter);
     }
 
+    @Override
+    public void setCityName(String cityName) {
+        mTvCityName.setText(cityName);
+    }
+
     @OnClick({R.id.iv_procedure,
             R.id.tv_online_ask,
             R.id.tv_group_buy,
@@ -228,7 +236,8 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             R.id.tv_more_hot_driving_school,
             R.id.iv_find_driving_school,
             R.id.iv_find_coach,
-            R.id.tv_more_near_coach
+            R.id.tv_more_near_coach,
+            R.id.tv_city,
     })
     public void onClick(View view) {
         switch (view.getId()) {
@@ -273,6 +282,9 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                 break;
             case R.id.tv_more_near_coach:
                 mActivity.selectTab(1);
+                break;
+            case R.id.tv_city:
+                showCityChoseDialog();
                 break;
             default:
                 break;

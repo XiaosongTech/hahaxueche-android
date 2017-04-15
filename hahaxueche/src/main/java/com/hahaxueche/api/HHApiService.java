@@ -292,7 +292,7 @@ public interface HHApiService {
     Observable<ResponseBody> getPrepayCharge(@FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
 
     @GET("cities/{id}")
-    Observable<CityConstants> getCityConstant(@Path("id") String cityId);
+    Observable<CityConstants> getCityConstant(@Path("id") int cityId);
 
 
     class Factory {

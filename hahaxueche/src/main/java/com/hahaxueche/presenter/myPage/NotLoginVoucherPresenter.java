@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.hahaxueche.BuildConfig;
 import com.hahaxueche.HHBaseApplication;
+import com.hahaxueche.model.base.LocalSettings;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
@@ -43,10 +44,11 @@ public class NotLoginVoucherPresenter extends HHBasePresenter implements Present
         //免费试学URL
         String url = WEB_URL_FREE_TRY;
         User user = application.getSharedPrefUtil().getUser();
+        LocalSettings localSettings = application.getSharedPrefUtil().getLocalSettings();
+        if (localSettings.cityId > -1) {
+            url += "&city_id=" + localSettings.cityId;
+        }
         if (user != null && user.isLogin()) {
-            if (user.student.city_id >= 0) {
-                url += "&city_id=" + user.student.city_id;
-            }
             if (!TextUtils.isEmpty(user.student.name)) {
                 url += "&name=" + user.student.name;
             }

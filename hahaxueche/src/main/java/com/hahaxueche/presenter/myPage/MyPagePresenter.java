@@ -6,6 +6,7 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseModel;
 import com.hahaxueche.model.base.BaseValid;
+import com.hahaxueche.model.base.LocalSettings;
 import com.hahaxueche.model.payment.Voucher;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.employee.Adviser;
@@ -462,9 +463,9 @@ public class MyPagePresenter extends HHBasePresenter implements Presenter<MyPage
 
     public void openFindAdviser() {
         int cityId = 0;
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.student != null) {
-            cityId = user.student.city_id;
+        LocalSettings localSettings = application.getSharedPrefUtil().getLocalSettings();
+        if (localSettings.cityId > -1) {
+            cityId = localSettings.cityId;
         }
         mView.openWebView(WebViewUrl.WEB_URL_FIND_ADVISER + "?city_id=" + cityId);
     }
