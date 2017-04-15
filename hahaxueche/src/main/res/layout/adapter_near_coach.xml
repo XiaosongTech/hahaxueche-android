@@ -9,13 +9,10 @@
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/iv_avatar"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp" />
+        android:layout_margin="5dp" />
 
     <TextView
         android:id="@+id/tv_name"
@@ -27,7 +24,8 @@
         android:background="@color/haha_half_trans"
         android:gravity="center"
         android:padding="2dp"
-        android:textColor="@color/haha_white" />
+        android:textColor="@color/haha_white"
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/tv_price"
@@ -35,8 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/iv_avatar"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/haha_orange"
-        android:textSize="16sp" />
+        android:textColor="@color/haha_orange" />
 
     <TextView
         android:id="@+id/tv_location"
@@ -47,5 +44,6 @@
         android:layout_marginBottom="5dp"
         android:drawableLeft="@drawable/ic_list_local_btn"
         android:drawablePadding="3dp"
-        android:textColor="@color/haha_gray" />
+        android:textColor="@color/haha_gray"
+        android:textSize="12sp" />
 </RelativeLayout>

@@ -183,7 +183,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
         }
         mRbCoachScore.setRating(averageRating);
         mTvCoachPoints.setText(coach.average_rating + " (" + coach.review_count + ")");
-        mTvCoachLocation.setText(application.getConstants().getSectionName(coach.coach_group.field_id));
+        mTvCoachLocation.setText(application.getConstants().getCitySectionName(coach.coach_group.field_id));
         final Field myField = application.getConstants().getField(coach.coach_group.field_id);
         if (application.getMyLocation() != null && myField != null) {
             String kmString = DistanceUtil.getDistanceKm(application.getMyLocation().lng, application.getMyLocation().lat, myField.lng, myField.lat);

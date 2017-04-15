@@ -19,6 +19,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
@@ -28,6 +29,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
@@ -36,6 +41,7 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Banner;
 import com.hahaxueche.model.base.City;
@@ -97,6 +103,11 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     private DrivingSchoolAdapter mDrivingSchoolAdapter;
     private NearCoachAdapter mNearCoachAdapter;
 
+    //定位client
+    public AMapLocationClient mLocationClient;
+    //定位回调监听器
+    public AMapLocationListener mLocationListener;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,28 +141,34 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         hyFindCoach.setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
 
         mPresenter.getCityConstants();
-        mPresenter.getNearCoaches();
 
         if (mPresenter.isNeedUpdate()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                     (mActivity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                             || mActivity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                             || mActivity.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
-                            || mActivity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED)) {
+                            || mActivity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
+                            || mActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                                 Manifest.permission.CAMERA,
-                                Manifest.permission.READ_CONTACTS},
-                        RequestCode.PERMISSIONS_REQUEST_SDCARD_CONTACTS_HOMEPAGE);
+                                Manifest.permission.READ_CONTACTS,
+                                Manifest.permission.ACCESS_FINE_LOCATION},
+                        RequestCode.PERMISSIONS_REQUEST_SDCARD_CONTACTS_LOCATIONS_HOMEPAGE);
             } else {
                 mPresenter.alertToUpdate(getContext());
                 readContacts();
+                startLocation();
             }
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, RequestCode.PERMISSIONS_REQUEST_READ_CONTACTS);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                    && (mActivity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
+                    || mActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS, Manifest.permission.ACCESS_FINE_LOCATION},
+                        RequestCode.PERMISSIONS_REQUEST_READ_CONTACTS_AND_LOCATIONS);
             } else {
                 readContacts();
+                startLocation();
             }
         }
 
@@ -227,11 +244,16 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == RequestCode.PERMISSIONS_REQUEST_READ_CONTACTS) {
+        if (requestCode == RequestCode.PERMISSIONS_REQUEST_READ_CONTACTS_AND_LOCATIONS) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 readContacts();
             }
-        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_SDCARD_CONTACTS_HOMEPAGE) {
+            if (grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                startLocation();
+            } else {
+                showMessage("请允许使用定位权限，不然我们无法为您推荐附近的教练");
+            }
+        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_SDCARD_CONTACTS_LOCATIONS_HOMEPAGE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED
                     && grantResults[1] == PackageManager.PERMISSION_GRANTED
                     && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
@@ -241,6 +263,11 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             }
             if (grantResults[3] == PackageManager.PERMISSION_GRANTED) {
                 readContacts();
+            }
+            if (grantResults[4] == PackageManager.PERMISSION_GRANTED) {
+                startLocation();
+            } else {
+                showMessage("请允许使用定位权限，不然我们无法为您推荐附近的教练");
             }
         }
     }
@@ -351,6 +378,9 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     public void onDestroy() {
         mPresenter.detachView();
         super.onDestroy();
+        if (null != mLocationClient) {
+            mLocationClient.onDestroy();//销毁定位客户端。
+        }
     }
 
     /**
@@ -438,7 +468,16 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             holder.mTvPrice.setText(Utils.getMoney(coach.coach_group.training_cost));
             holder.mIvAvatar.setImageURI(coach.avatar);
             holder.mTvName.setText(coach.name);
-            holder.mTvLocation.setText("洪山区");
+            if (!TextUtils.isEmpty(coach.distance)) {
+                String distance = "距您" + Utils.getDistance(Double.parseDouble(coach.distance));
+                SpannableString ss = new SpannableString(distance);
+                ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.app_theme_color)), distance.indexOf("距您") + 2, distance.indexOf("KM"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                holder.mTvLocation.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                holder.mTvLocation.setText(ss);
+            } else {
+                HHBaseApplication application = HHBaseApplication.get(getContext());
+                holder.mTvLocation.setText(application.getConstants().getSectionName(coach.coach_group.field_id));
+            }
         }
 
         @Override
@@ -461,5 +500,36 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                 mTvLocation = (TextView) view.findViewById(R.id.tv_location);
             }
         }
+    }
+
+    private void startLocation() {
+        //初始化定位
+        mLocationClient = new AMapLocationClient(getContext());
+        mLocationListener = new AMapLocationListener() {
+            @Override
+            public void onLocationChanged(AMapLocation amapLocation) {
+                if (amapLocation != null) {
+                    if (amapLocation.getErrorCode() == 0) {
+                        //定位成功回调信息，设置相关消息
+                        mPresenter.setLocation(amapLocation.getLatitude(), amapLocation.getLongitude());
+                    } else {
+                        String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
+                        HHLog.e(errText);
+                        mPresenter.getNearCoaches();
+                    }
+                }
+            }
+        };
+        mLocationClient.setLocationListener(mLocationListener);
+        //初始化定位参数
+        AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
+        //设置是否允许模拟位置,默认为false，不允许模拟位置
+        mLocationOption.setMockEnable(true);
+        //设置定位间隔,单位毫秒,默认为2000ms
+        mLocationOption.setInterval(1000 * 60);
+        //给定位客户端对象设置定位参数
+        mLocationClient.setLocationOption(mLocationOption);
+        HHLog.v("create location service");
+        mLocationClient.startLocation();
     }
 }

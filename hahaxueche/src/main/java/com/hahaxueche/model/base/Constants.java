@@ -40,12 +40,24 @@ public class Constants {
         return myCity;
     }
 
-    public String getSectionName(String fieldId) {
+    public String getCitySectionName(String fieldId) {
         String ret = "";
         if (fields == null || fields.size() < 1) return ret;
         for (Field field : fields) {
             if (field.id.equals(fieldId)) {
                 ret = getCityName(field.city_id) + field.section;
+                break;
+            }
+        }
+        return ret;
+    }
+
+    public String getSectionName(String fieldId) {
+        String ret = "";
+        if (fields == null || fields.size() < 1) return ret;
+        for (Field field : fields) {
+            if (field.id.equals(fieldId)) {
+                ret = field.section;
                 break;
             }
         }

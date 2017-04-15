@@ -103,7 +103,7 @@ public class CoachAdapter extends BaseAdapter {
         }
         holder.rbCoachScore.setRating(score);
         if (coach.coach_group != null) {
-            holder.tvCoachLocation.setText(application.getConstants().getSectionName(coach.coach_group.field_id));
+            holder.tvCoachLocation.setText(application.getConstants().getCitySectionName(coach.coach_group.field_id));
 
             final Field myField = application.getConstants().getField(coach.coach_group.field_id);
             if (application.getMyLocation() != null && myField != null) {

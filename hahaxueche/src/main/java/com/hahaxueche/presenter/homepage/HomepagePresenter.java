@@ -389,28 +389,63 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
 
     public void getNearCoaches() {
         HHApiService apiService = application.getApiService();
-        subscription = apiService.getCoaches(Common.START_PAGE, Common.MAX_NEAR_COACH_COUNT,
-                null, null, null, 0, null, "50", null, 1, 0, null)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(application.defaultSubscribeScheduler())
-                .subscribe(new Subscriber<CoachResponseList>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        HHLog.e(e.getMessage());
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onNext(CoachResponseList coachResponseList) {
-                        if (coachResponseList.data != null) {
-                            mView.loadNearCoaches(coachResponseList.data);
+        ArrayList<String> locations = null;
+        if (application.getMyLocation() != null) {
+            locations = new ArrayList<>();
+            locations.add(String.valueOf(application.getMyLocation().lat));
+            locations.add(String.valueOf(application.getMyLocation().lng));
+            subscription = apiService.getCoaches(Common.START_PAGE, Common.MAX_NEAR_COACH_COUNT,
+                    null, null, null, 0, null, null, locations, 1, 0, null)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(application.defaultSubscribeScheduler())
+                    .subscribe(new Subscriber<CoachResponseList>() {
+                        @Override
+                        public void onCompleted() {
                         }
 
-                    }
-                });
+                        @Override
+                        public void onError(Throwable e) {
+                            HHLog.e(e.getMessage());
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onNext(CoachResponseList coachResponseList) {
+                            if (coachResponseList.data != null) {
+                                mView.loadNearCoaches(coachResponseList.data);
+                            }
+
+                        }
+                    });
+        } else {
+            subscription = apiService.getCoaches(Common.START_PAGE, Common.MAX_NEAR_COACH_COUNT,
+                    null, null, null, 0, null, null, null, 5, 0, null)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(application.defaultSubscribeScheduler())
+                    .subscribe(new Subscriber<CoachResponseList>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            HHLog.e(e.getMessage());
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onNext(CoachResponseList coachResponseList) {
+                            if (coachResponseList.data != null) {
+                                mView.loadNearCoaches(coachResponseList.data);
+                            }
+
+                        }
+                    });
+        }
+    }
+
+    public void setLocation(double lat, double lng) {
+        application.setMyLocation(lat, lng);
+        getNearCoaches();
     }
 }
