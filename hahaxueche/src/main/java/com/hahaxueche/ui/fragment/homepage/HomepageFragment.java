@@ -39,6 +39,7 @@ import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.community.ExamLibraryActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
+import com.hahaxueche.ui.activity.findCoach.FieldFilterActivity;
 import com.hahaxueche.ui.activity.findCoach.PaySuccessActivity;
 import com.hahaxueche.ui.activity.myPage.MyInsuranceActivity;
 import com.hahaxueche.ui.activity.myPage.PurchaseInsuranceActivity;
@@ -238,6 +239,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             R.id.iv_find_coach,
             R.id.tv_more_near_coach,
             R.id.tv_city,
+            R.id.tv_map
     })
     public void onClick(View view) {
         switch (view.getId()) {
@@ -285,6 +287,9 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                 break;
             case R.id.tv_city:
                 showCityChoseDialog();
+                break;
+            case R.id.tv_map:
+                startActivity(new Intent(getContext(), FieldFilterActivity.class));
                 break;
             default:
                 break;

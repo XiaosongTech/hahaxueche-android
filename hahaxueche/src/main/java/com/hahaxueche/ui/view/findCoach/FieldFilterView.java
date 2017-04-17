@@ -1,20 +1,20 @@
 package com.hahaxueche.ui.view.findCoach;
 
-import android.text.Spanned;
-
 import com.hahaxueche.model.base.Field;
+import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.ui.view.base.HHBaseView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by wangshirui on 2016/10/17.
  */
 
 public interface FieldFilterView extends HHBaseView {
-    void initMap(ArrayList<Field> fields);
+    void initMap(List<Field> fields);
 
-    void setHints(Spanned hints);
+    void loadCoaches(ArrayList<Coach> coaches);
 
-    void setSelectFieldText(String text);
+    void showMessage(String message);
 }
