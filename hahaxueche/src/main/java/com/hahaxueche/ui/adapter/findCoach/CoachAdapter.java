@@ -153,7 +153,7 @@ public class CoachAdapter extends BaseAdapter {
         holder.llyTrainSchool.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openWebView(WebViewUrl.WEB_URL_JIAXIAO + "/" + coach.driving_school);
+                openWebView(WebViewUrl.WEB_URL_JIAXIAO + "/" + coach.driving_school_id);
             }
         });
         return view;

@@ -137,7 +137,7 @@ public class MapCoachAdapter extends RecyclerView.Adapter<MapCoachAdapter.ViewHo
             Coach coach = mCoachList.get(getAdapterPosition());
             switch (view.getId()) {
                 case R.id.lly_train_school:
-                    mOnItemClickListener.onDrivingSchoolClick(coach.driving_school);
+                    mOnItemClickListener.onDrivingSchoolClick(coach.driving_school_id);
                     break;
                 case R.id.tv_check_field:
                     mOnItemClickListener.onCheckFieldClick();
