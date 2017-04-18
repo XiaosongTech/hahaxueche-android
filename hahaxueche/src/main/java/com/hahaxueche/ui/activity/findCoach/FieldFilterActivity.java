@@ -279,20 +279,12 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
                                 R.drawable.ic_map_local_choseon)));
                 marker.showInfoWindow();
                 mPresenter.selectField(mSelectField);
-                GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "看过训练场才放心！",
-                        "输入手机号，教练立即带你看场地", "预约看场地", new GetUserIdentityDialog.OnIdentityGetListener() {
-                    @Override
-                    public void getCellPhone(String cellPhone) {
-                        mPresenter.getUserIdentity(cellPhone);
-                    }
-                });
-                dialog.show();
             }
             return true;
         }
     };
 
-    public void setFields(List<Field> fields) {
+    private void setFields(List<Field> fields) {
         ArrayList<MarkerOptions> markerOptionlst = new ArrayList<>();
         markerList = new ArrayList<>();
         for (Field field : fields) {
@@ -300,7 +292,6 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
             LatLng x = new LatLng(field.lat, field.lng);
             markerOption.position(x);
             markerOption.title(field.name).snippet(field.street);
-
             markerOption.draggable(false);
             markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                     .decodeResource(getResources(),
@@ -318,9 +309,9 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
 
     @Override
     public View getInfoWindow(Marker marker) {
+        HHLog.v("xxxxxx");
         View infoWindow = getLayoutInflater().inflate(
                 R.layout.info_window_field, null);
-
         render(marker, infoWindow);
         return infoWindow;
     }
@@ -333,19 +324,34 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
     /**
      * 自定义infowinfow窗口
      */
-    public void render(Marker marker, View view) {
+    private void render(Marker marker, View view) {
         Field field = (Field) marker.getObject();
         SimpleDraweeView mIvFieldAvatar = ButterKnife.findById(view, R.id.iv_field_avatar);
         mIvFieldAvatar.setImageURI(field.image);
         TextView tvFieldName = ButterKnife.findById(view, R.id.tv_field_name);
         tvFieldName.setText(field.name);
         TextView tvDisplayAddress = ButterKnife.findById(view, R.id.tv_display_address);
-        String text = TextUtils.isEmpty(field.display_address) ? "" : field.display_address +
+        String text = (TextUtils.isEmpty(field.display_address) ? "" : field.display_address) +
                 " (" + field.coach_count + "名教练)";
+        HHLog.v(text);
         SpannableString ss = new SpannableString(text);
         ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.haha_red_text)),
                 text.indexOf("(") + 1, text.indexOf("名教练"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         tvDisplayAddress.setText(ss);
+        TextView tvSendLocation = ButterKnife.findById(view, R.id.tv_send_location);
+        tvSendLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "看过训练场才放心！",
+                        "输入手机号，教练立即带你看场地", "预约看场地", new GetUserIdentityDialog.OnIdentityGetListener() {
+                    @Override
+                    public void getCellPhone(String cellPhone) {
+                        mPresenter.getUserIdentity(cellPhone);
+                    }
+                });
+                dialog.show();
+            }
+        });
     }
 
     /**

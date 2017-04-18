@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="300dp"
     android:layout_height="wrap_content"
     android:layout_marginLeft="15dp"
     android:layout_marginRight="15dp"
@@ -9,7 +9,7 @@
 
     <RelativeLayout
         android:id="@+id/rly_main"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <com.facebook.drawee.view.SimpleDraweeView
@@ -20,7 +20,7 @@
 
         <RelativeLayout
             android:id="@+id/rly_first_line"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/iv_coach_avatar"
             android:layout_marginRight="10dp"
@@ -57,19 +57,18 @@
                 layout="@layout/layout_train_school"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/width80dp"
-                android:layout_toRightOf="@id/tv_coach_name" />
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/rly_second_line"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/rly_first_line"
-            android:layout_alignRight="@id/rly_first_line"
             android:layout_below="@id/rly_first_line"
-            android:layout_marginTop="6dp">
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="6dp"
+            android:layout_toRightOf="@id/iv_coach_avatar">
 
             <RatingBar
                 android:id="@+id/rb_coach_score"
@@ -94,12 +93,12 @@
 
         <RelativeLayout
             android:id="@+id/rly_actual_price"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/rly_second_line"
-            android:layout_alignRight="@id/rly_second_line"
             android:layout_below="@id/rly_second_line"
-            android:layout_marginTop="6dp">
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="6dp"
+            android:layout_toRightOf="@id/iv_coach_avatar">
 
             <TextView
                 android:id="@+id/tv_actual_label"
@@ -136,18 +135,14 @@
     </RelativeLayout>
 
     <View
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/divider_width"
-        android:layout_alignLeft="@id/rly_main"
-        android:layout_alignRight="@id/rly_main"
         android:layout_below="@id/rly_main"
         android:background="@color/haha_gray_divider" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/rly_main"
-        android:layout_alignRight="@id/rly_main"
         android:layout_below="@id/rly_main"
         android:orientation="horizontal">
 
