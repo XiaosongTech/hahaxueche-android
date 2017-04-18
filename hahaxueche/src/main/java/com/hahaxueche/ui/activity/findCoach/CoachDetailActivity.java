@@ -1027,7 +1027,12 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         } else if (requestCode == RequestCode.REQUEST_CODE_CLASS_TYPE_INTRO) {
             if (resultCode == Activity.RESULT_OK) {
                 if (data != null) {
-                    mPresenter.purchaseCoach((ClassType) data.getParcelableExtra("classType"));
+                    if (data.getBooleanExtra("prepay", false)) {
+                        startActivityForResult(new Intent(getContext(), PurchasePrepaidActivity.class),
+                                RequestCode.REQUEST_CODE_PURCHASE_PREPAID);
+                    } else {
+                        mPresenter.purchaseCoach((ClassType) data.getParcelableExtra("classType"));
+                    }
                 }
             }
         } else if (requestCode == RequestCode.REQUEST_CODE_PURCHASE_PREPAID) {

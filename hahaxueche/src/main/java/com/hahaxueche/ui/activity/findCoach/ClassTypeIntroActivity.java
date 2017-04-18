@@ -178,12 +178,19 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
         super.onDestroy();
     }
 
-    @OnClick({R.id.tv_pay})
+    @OnClick({R.id.tv_pay,
+            R.id.tv_prepay})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_pay:
                 Intent intent = new Intent();
                 intent.putExtra("classType", mPresenter.mClassType);
+                setResult(RESULT_OK, intent);
+                ClassTypeIntroActivity.this.finish();
+                break;
+            case R.id.tv_prepay:
+                intent = new Intent();
+                intent.putExtra("prepay", true);
                 setResult(RESULT_OK, intent);
                 ClassTypeIntroActivity.this.finish();
                 break;
