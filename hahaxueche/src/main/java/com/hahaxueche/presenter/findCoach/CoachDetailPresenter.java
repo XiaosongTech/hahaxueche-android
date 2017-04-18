@@ -596,4 +596,12 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
         User user = application.getSharedPrefUtil().getUser();
         return user != null && user.isLogin() && user.student.isPurchasedService();
     }
+
+    /**
+     * 在线咨询
+     */
+    public void onlineAsk() {
+        User user = application.getSharedPrefUtil().getUser();
+        super.onlineAsk(user, mView.getContext());
+    }
 }

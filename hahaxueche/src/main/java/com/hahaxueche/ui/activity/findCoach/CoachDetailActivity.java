@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
@@ -53,6 +54,7 @@ import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
+import com.hahaxueche.util.WebViewUrl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -499,7 +501,10 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             R.id.rly_training_field,
             R.id.tv_free_try,
             R.id.lly_platform_assurance,
-            R.id.tv_prepay
+            R.id.fly_call_customer_service,
+            R.id.fly_online_ask,
+            R.id.fly_call_coach,
+            R.id.lly_train_school
     })
     public void onClick(View view) {
         switch (view.getId()) {
@@ -530,9 +535,29 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             case R.id.lly_platform_assurance:
                 mPresenter.clickPlatformAssurance();
                 break;
-            case R.id.tv_prepay:
-                startActivityForResult(new Intent(getContext(), PurchasePrepaidActivity.class),
-                        RequestCode.REQUEST_CODE_PURCHASE_PREPAID);
+            case R.id.fly_call_customer_service:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CUSTOMER_SERVICE);
+                    //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+                } else {
+                    // Android version is lesser than 6.0 or the permission is already granted.
+                    contactService();
+                }
+                break;
+            case R.id.fly_online_ask:
+                mPresenter.onlineAsk();
+                break;
+            case R.id.fly_call_coach:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH);
+                    //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+                } else {
+                    callMyCoach();
+                }
+                break;
+            case R.id.lly_train_school:
+                Coach coach = mPresenter.getCoach();
+                openWebView(WebViewUrl.WEB_URL_JIAXIAO + "/" + coach.driving_school);
                 break;
             default:
                 break;
@@ -869,12 +894,23 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         tvClassTypeName.setId(tvClassTypeNameId);
         rlyClassType.addView(tvClassTypeName);
 
+        TextView tvPrice = new TextView(this);
+        RelativeLayout.LayoutParams tvPriceParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvPriceParams.addRule(RelativeLayout.RIGHT_OF, tvClassTypeNameId);
+        tvPriceParams.addRule(RelativeLayout.ALIGN_TOP, tvClassTypeNameId);
+        tvPriceParams.setMargins(length10, length4, 0, 0);
+        tvPrice.setLayoutParams(tvPriceParams);
+        tvPrice.setText(Utils.getMoney(classType.price));
+        tvPrice.setTextColor(ContextCompat.getColor(this, R.color.haha_orange));
+        tvPrice.setTextSize(16);
+        rlyClassType.addView(tvPrice);
+
         ImageView ivArrow = new ImageView(this);
         RelativeLayout.LayoutParams ivArrowParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        ivArrowParams.addRule(RelativeLayout.RIGHT_OF, tvClassTypeNameId);
-        ivArrowParams.addRule(RelativeLayout.ALIGN_TOP, tvClassTypeNameId);
-        ivArrowParams.setMargins(length10, length4, 0, 0);
+        ivArrowParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+        ivArrowParams.addRule(RelativeLayout.ALIGN_BOTTOM, tvClassTypeNameId);
         ivArrow.setLayoutParams(ivArrowParams);
         ivArrow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_coachmsg_more_arrow));
         rlyClassType.addView(ivArrow);
@@ -905,17 +941,19 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         tvPurchase.setId(tvPurchaseId);
         rlyClassType.addView(tvPurchase);
 
-        TextView tvPrice = new TextView(this);
-        RelativeLayout.LayoutParams tvPriceParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+        TextView tvPrePay = new TextView(this);
+        RelativeLayout.LayoutParams tvPrePayParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        tvPriceParams.addRule(RelativeLayout.ALIGN_BOTTOM, tvClassTypeDescId);
-        tvPriceParams.addRule(RelativeLayout.LEFT_OF, tvPurchaseId);
-        tvPriceParams.setMargins(0, 0, length10, 0);
-        tvPrice.setLayoutParams(tvPriceParams);
-        tvPrice.setText(Utils.getMoney(classType.price));
-        tvPrice.setTextColor(ContextCompat.getColor(this, R.color.haha_orange));
-        tvPrice.setTextSize(16);
-        rlyClassType.addView(tvPrice);
+        tvPrePayParams.addRule(RelativeLayout.ALIGN_BOTTOM, tvPurchaseId);
+        tvPrePayParams.addRule(RelativeLayout.LEFT_OF, tvPurchaseId);
+        tvPrePayParams.setMargins(0, 0, length4, 0);
+        tvPrePay.setLayoutParams(tvPrePayParams);
+        tvPrePay.setBackgroundResource(R.drawable.rect_bg_appcolor_ssm);
+        tvPrePay.setPadding(length10, length2, length10, length2);
+        tvPrePay.setText("预付100");
+        tvPrePay.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
+        rlyClassType.addView(tvPrePay);
+
 
         //点击整行查看班别介绍
         rlyClassType.setOnClickListener(new View.OnClickListener() {
@@ -936,6 +974,14 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             @Override
             public void onClick(View v) {
                 mPresenter.purchaseCoach(classType);
+            }
+        });
+
+        tvPrePay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivityForResult(new Intent(getContext(), PurchasePrepaidActivity.class),
+                        RequestCode.REQUEST_CODE_PURCHASE_PREPAID);
             }
         });
 
@@ -1003,6 +1049,28 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         super.finish();
     }
 
+    private void contactService() {
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:4000016006"));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        startActivity(intent);
+    }
+
+    /**
+     * 联系教练
+     */
+    private void callMyCoach() {
+        Coach coach = mPresenter.getCoach();
+        if (TextUtils.isEmpty(coach.consult_phone))
+            return;
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + coach.consult_phone));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        startActivity(intent);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == RequestCode.PERMISSIONS_REQUEST_SEND_SMS_FOR_SHARE) {
@@ -1011,6 +1079,20 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 shareToSms();
             } else {
                 showMessage("请允许发送短信权限，不然无法分享到短信");
+            }
+        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                callMyCoach();
+            } else {
+                showMessage("请允许拨打电话权限，不然无法直接拨号联系教练");
+            }
+        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CUSTOMER_SERVICE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                contactService();
+            } else {
+                showMessage("请允许拨打电话权限，不然无法直接拨号联系客服");
             }
         }
     }
