@@ -13,4 +13,10 @@
     <dimen name="text_size_20sp">18sp</dimen>
     <dimen name="text_size_12sp">10sp</dimen>
     <dimen name="width_120dp">90dp</dimen>
+    <dimen name="margin_20dp">15dp</dimen>
+    <dimen name="margin_10dp">7dp</dimen>
+    <dimen name="margin_15dp">11dp</dimen>
+    <dimen name="width_68dp">51dp</dimen>
+    <dimen name="margin_5dp">3dp</dimen>
+    <dimen name="cardview_width_160dp">145dp</dimen>
 </resources>

@@ -224,13 +224,13 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         mTvCityName.setText(cityName);
     }
 
-    @OnClick({R.id.iv_procedure,
+    @OnClick({R.id.cv_procedure,
             R.id.tv_online_ask,
             R.id.tv_group_buy,
             R.id.tv_test_lib,
-            R.id.iv_new_policy,
-            R.id.iv_enroll,
-            R.id.iv_driving_school_sort,
+            R.id.cv_new_policy,
+            R.id.cv_enroll,
+            R.id.cv_driving_school_sort,
             R.id.lly_xuechebao,
             R.id.lly_fenqibao,
             R.id.lly_peifubao,
@@ -243,7 +243,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     })
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.iv_procedure:
+            case R.id.cv_procedure:
                 mPresenter.openProcedure();
                 break;
             case R.id.tv_online_ask:
@@ -255,13 +255,13 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             case R.id.tv_test_lib:
                 mPresenter.clickTestLib();
                 break;
-            case R.id.iv_new_policy:
+            case R.id.cv_new_policy:
                 openWebView(WebViewUrl.WEB_URL_ZHENGCE);
                 break;
-            case R.id.iv_enroll:
+            case R.id.cv_enroll:
                 openWebView(WebViewUrl.WEB_URL_BAOMING);
                 break;
-            case R.id.iv_driving_school_sort:
+            case R.id.cv_driving_school_sort:
                 openWebView(WebViewUrl.WEB_URL_JIAXIAO);
                 break;
             case R.id.lly_xuechebao:
