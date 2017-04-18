@@ -41,6 +41,7 @@ import com.hahaxueche.ui.activity.community.ExamLibraryActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.FieldFilterActivity;
 import com.hahaxueche.ui.activity.findCoach.PaySuccessActivity;
+import com.hahaxueche.ui.activity.findCoach.SearchCoachActivity;
 import com.hahaxueche.ui.activity.myPage.MyInsuranceActivity;
 import com.hahaxueche.ui.activity.myPage.PurchaseInsuranceActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
@@ -192,6 +193,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             @Override
             public void onItemClick(View view, int position) {
                 if (drivingSchoolList != null && drivingSchoolList.size() > 0 && position > -1 && position < drivingSchoolList.size()) {
+                    mPresenter.clickHotDrivingSchool(drivingSchoolList.get(position).id);
                     openWebView(WebViewUrl.WEB_URL_JIAXIAO + "/" + drivingSchoolList.get(position).id);
                 }
             }
@@ -210,6 +212,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             @Override
             public void onItemClick(View view, int position) {
                 if (coaches != null && coaches.size() > 0 && position > -1 && position < coaches.size()) {
+                    mPresenter.clickNearCoach(coaches.get(position).id);
                     Intent intent = new Intent(getContext(), CoachDetailActivity.class);
                     intent.putExtra("coach", coaches.get(position));
                     startActivity(intent);
@@ -239,7 +242,9 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             R.id.iv_find_coach,
             R.id.tv_more_near_coach,
             R.id.tv_city,
-            R.id.tv_map
+            R.id.tv_map,
+            R.id.tv_map_find,
+            R.id.fly_search
     })
     public void onClick(View view) {
         switch (view.getId()) {
@@ -256,40 +261,59 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                 mPresenter.clickTestLib();
                 break;
             case R.id.cv_new_policy:
+                mPresenter.addDataTrack("home_page_new_policy_tapped", getContext());
                 openWebView(WebViewUrl.WEB_URL_ZHENGCE);
                 break;
             case R.id.cv_enroll:
+                mPresenter.addDataTrack("home_page_application_notice_tapped", getContext());
                 openWebView(WebViewUrl.WEB_URL_BAOMING);
                 break;
             case R.id.cv_driving_school_sort:
                 openWebView(WebViewUrl.WEB_URL_JIAXIAO);
                 break;
             case R.id.lly_xuechebao:
+                mPresenter.addDataTrack("home_page_assurance_tapped", getContext());
                 openWebView(WebViewUrl.WEB_URL_XUECHEBAO);
                 break;
             case R.id.lly_fenqibao:
+                mPresenter.addDataTrack("home_page_installment_tapped", getContext());
                 openWebView(WebViewUrl.WEB_URL_PEIFUBAO);
                 break;
             case R.id.lly_peifubao:
+                mPresenter.addDataTrack("home_page_compensate_tapped", getContext());
                 openWebView(WebViewUrl.WEB_URL_FENQIBAO);
                 break;
             case R.id.tv_more_hot_driving_school:
+                mPresenter.addDataTrack("home_page_hot_school_more_tapped", getContext());
                 openWebView(WebViewUrl.WEB_URL_JIAXIAO);
                 break;
             case R.id.iv_find_driving_school:
+                mPresenter.addDataTrack("home_page_select_school_tapped", getContext());
                 openWebView(WebViewUrl.WEB_URL_JIAXIAO);
                 break;
             case R.id.iv_find_coach:
+                mPresenter.addDataTrack("home_page_select_coach_tapped", getContext());
                 mActivity.selectTab(1);
                 break;
             case R.id.tv_more_near_coach:
+                mPresenter.addDataTrack("home_page_hot_coach_more_tapped", getContext());
                 mActivity.selectTab(1);
                 break;
             case R.id.tv_city:
+                mPresenter.addDataTrack("home_navigation_city_tapped", getContext());
                 showCityChoseDialog();
                 break;
             case R.id.tv_map:
+                mPresenter.addDataTrack("home_navigation_map_tapped", getContext());
                 startActivity(new Intent(getContext(), FieldFilterActivity.class));
+                break;
+            case R.id.tv_map_find:
+                mPresenter.addDataTrack("home_page_map_view_tapped", getContext());
+                startActivity(new Intent(getContext(), FieldFilterActivity.class));
+                break;
+            case R.id.fly_search:
+                mPresenter.addDataTrack("home_navigation_search_tapped", getContext());
+                startActivity(new Intent(getContext(), SearchCoachActivity.class));
                 break;
             default:
                 break;
@@ -337,6 +361,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             mCityChoseDialog = new CityChoseDialog(getContext(), new CityChoseDialog.onConfirmListener() {
                 @Override
                 public boolean selectCity(City city) {
+                    mPresenter.addDataTrack("home_navigation_city_selected", getContext());
                     if (city != null) {
                         mPresenter.selectCity(city.id);
                     }

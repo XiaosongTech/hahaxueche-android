@@ -415,4 +415,24 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
         application.setMyLocation(lat, lng);
         getNearCoaches();
     }
+
+    public void clickHotDrivingSchool(int drivingSchoolId) {
+        User user = application.getSharedPrefUtil().getUser();
+        HashMap<String, String> map = new HashMap();
+        map.put("driving_school_id", String.valueOf(drivingSchoolId));
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mView.getContext(), "home_page_hot_school_tapped", map);
+        }
+    }
+
+    public void clickNearCoach(String coachId) {
+        User user = application.getSharedPrefUtil().getUser();
+        HashMap<String, String> map = new HashMap();
+        map.put("coach_id", coachId);
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mView.getContext(), "home_page_hot_coach_tapped", map);
+        }
+    }
 }

@@ -501,7 +501,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             R.id.rly_training_field,
             R.id.tv_free_try,
             R.id.lly_platform_assurance,
-            R.id.fly_call_customer_service,
+            R.id.fly_sms_coach,
             R.id.fly_online_ask,
             R.id.fly_call_coach,
             R.id.lly_train_school
@@ -535,19 +535,20 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             case R.id.lly_platform_assurance:
                 mPresenter.clickPlatformAssurance();
                 break;
-            case R.id.fly_call_customer_service:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CUSTOMER_SERVICE);
-                    //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+            case R.id.fly_sms_coach:
+                mPresenter.addDataTrack("coach_detail_page_text_tapped", getContext());
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.SEND_SMS}, RequestCode.PERMISSIONS_REQUEST_SEND_SMS_TO_COACH);
                 } else {
-                    // Android version is lesser than 6.0 or the permission is already granted.
-                    contactService();
+                    sendSmsToCoach();
                 }
                 break;
             case R.id.fly_online_ask:
+                mPresenter.addDataTrack("coach_detail_page_online_support_tapped", getContext());
                 mPresenter.onlineAsk();
                 break;
             case R.id.fly_call_coach:
+                mPresenter.addDataTrack("coach_detail_page_phone_support_tapped", getContext());
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH);
                     //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
@@ -672,6 +673,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         rly.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPresenter.addDataTrack("coach_detail_page_co-coach_tapped", getContext());
                 Intent intent = new Intent(getContext(), CoachDetailActivity.class);
                 intent.putExtra("coach_id", coach.id);
                 startActivity(intent);
@@ -959,6 +961,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         rlyClassType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPresenter.addDataTrack("coach_detail_page_price_detail_tapped", getContext());
                 Intent intent = new Intent(getContext(), ClassTypeIntroActivity.class);
                 intent.putExtra("totalAmount", classType.price);
                 intent.putExtra("coach", mPresenter.getCoach());
@@ -973,6 +976,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         tvPurchase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPresenter.addDataTrack("coach_detail_page_purchase_tapped", getContext());
                 mPresenter.purchaseCoach(classType);
             }
         });
@@ -980,6 +984,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         tvPrePay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mPresenter.addDataTrack("coach_detail_page_deposit_tapped", getContext());
                 startActivityForResult(new Intent(getContext(), PurchasePrepaidActivity.class),
                         RequestCode.REQUEST_CODE_PURCHASE_PREPAID);
             }
@@ -1099,12 +1104,26 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             } else {
                 showMessage("请允许拨打电话权限，不然无法直接拨号联系客服");
             }
+        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_SEND_SMS_TO_COACH) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                sendSmsToCoach();
+            } else {
+                showMessage("请允许发送短信权限，不然给教练发短信");
+            }
         }
     }
 
     private void shareToSms() {
         Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"));
         intent.putExtra("sms_body", mTitle + mDescription + mUrl);
+        startActivity(intent);
+    }
+
+    private void sendSmsToCoach() {
+        Coach coach = mPresenter.getCoach();
+        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + coach.consult_phone));
+        intent.putExtra("sms_body", coach.name + "教练，我在哈哈学车看到您的招生信息，我想详细了解一下。");
         startActivity(intent);
     }
 }

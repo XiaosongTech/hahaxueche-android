@@ -105,6 +105,7 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
         mTvSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mPresenter.addDataTrack("home_navigation_search_searched", getContext());
                 //搜索教练
                 mPresenter.searchCoach(mEtCoachName.getText().toString());
             }

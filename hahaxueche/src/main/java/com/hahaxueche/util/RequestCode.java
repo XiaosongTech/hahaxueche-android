@@ -44,4 +44,5 @@ public class RequestCode {
     public static final int PERMISSIONS_REQUEST_SDCARD_FOR_SAVE_APK = 606;
     public static final int PERMISSIONS_REQUEST_SDCARD_FOR_SAVE_AVATAR = 607;
     public static final int PERMISSIONS_REQUEST_SDCARD_CONTACTS_LOCATIONS_HOMEPAGE = 608;
+    public static final int PERMISSIONS_REQUEST_SEND_SMS_TO_COACH = 609;
 }

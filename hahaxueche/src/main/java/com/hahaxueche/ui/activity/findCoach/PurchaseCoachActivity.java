@@ -148,6 +148,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_sure_pay:
+                mPresenter.addDataTrack("purchase_confirm_page_purchased", getContext());
                 mPresenter.createCharge();
                 break;
             case R.id.rly_voucher:

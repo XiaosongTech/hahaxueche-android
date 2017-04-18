@@ -64,7 +64,7 @@
             android:background="#FD8B25" />
 
         <FrameLayout
-            android:id="@+id/fly_call_customer_service"
+            android:id="@+id/fly_online_ask"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -78,7 +78,7 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/fly_online_ask"
+            android:id="@+id/fly_sms_coach"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

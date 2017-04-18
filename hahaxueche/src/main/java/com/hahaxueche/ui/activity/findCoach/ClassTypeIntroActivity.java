@@ -183,12 +183,14 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_pay:
+                mPresenter.addDataTrack("price_detail_page_deposit_tapped", getContext());
                 Intent intent = new Intent();
                 intent.putExtra("classType", mPresenter.mClassType);
                 setResult(RESULT_OK, intent);
                 ClassTypeIntroActivity.this.finish();
                 break;
             case R.id.tv_prepay:
+                mPresenter.addDataTrack("price_detail_page_purchase_tapped", getContext());
                 intent = new Intent();
                 intent.putExtra("prepay", true);
                 setResult(RESULT_OK, intent);

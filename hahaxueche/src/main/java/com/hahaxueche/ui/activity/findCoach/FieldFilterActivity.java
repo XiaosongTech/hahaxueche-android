@@ -219,11 +219,13 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
         mapCoachAdapter = new MapCoachAdapter(this, coaches, new MapCoachAdapter.OnRecyclerViewItemClickListener() {
             @Override
             public void onDrivingSchoolClick(String drivingSchoolId) {
+                mPresenter.addDataTrack("map_view_page_check_school_tapped", getContext());
                 openWebView(WebViewUrl.WEB_URL_JIAXIAO + "/" + drivingSchoolId);
             }
 
             @Override
             public void onCoachDetailClick(Coach coach) {
+                mPresenter.addDataTrack("map_view_page_check_coach_tapped", getContext());
                 Intent intent = new Intent(getContext(), CoachDetailActivity.class);
                 intent.putExtra("coach", coach);
                 startActivity(intent);
@@ -231,10 +233,12 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
 
             @Override
             public void onCheckFieldClick() {
+                mPresenter.addDataTrack("map_view_page_check_site_tapped", getContext());
                 GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "轻松定位训练场",
                         "输入手机号，立即接收详细地址", "发我定位", new GetUserIdentityDialog.OnIdentityGetListener() {
                     @Override
                     public void getCellPhone(String cellPhone) {
+                        mPresenter.addDataTrack("map_view_page_check_site_confirmed", getContext());
                         mPresenter.getUserIdentity(cellPhone);
                     }
                 });
@@ -243,11 +247,13 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
 
             @Override
             public void onCustomerServiceClick() {
+                mPresenter.addDataTrack("map_view_page_online_support_tapped", getContext());
                 mPresenter.onlineAsk();
             }
 
             @Override
             public void onContactCoachClick(Coach coach) {
+                mPresenter.addDataTrack("map_view_page_contact_coach_tapped", getContext());
                 cellPhone = coach.consult_phone;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH);
@@ -342,10 +348,12 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
         tvSendLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mPresenter.addDataTrack("map_view_page_locate_tapped", getContext());
                 GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "看过训练场才放心！",
                         "输入手机号，教练立即带你看场地", "预约看场地", new GetUserIdentityDialog.OnIdentityGetListener() {
                     @Override
                     public void getCellPhone(String cellPhone) {
+                        mPresenter.addDataTrack("map_view_page_locate_confirmed", getContext());
                         mPresenter.getUserIdentity(cellPhone);
                     }
                 });
