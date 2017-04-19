@@ -193,7 +193,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             @Override
             public void onItemClick(View view, int position) {
                 if (drivingSchoolList != null && drivingSchoolList.size() > 0 && position > -1 && position < drivingSchoolList.size()) {
-                    mPresenter.clickHotDrivingSchool(drivingSchoolList.get(position).id);
+                    mPresenter.clickHotDrivingSchool(position);
                     openWebView(WebViewUrl.WEB_URL_JIAXIAO + "/" + drivingSchoolList.get(position).id);
                 }
             }
@@ -212,7 +212,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             @Override
             public void onItemClick(View view, int position) {
                 if (coaches != null && coaches.size() > 0 && position > -1 && position < coaches.size()) {
-                    mPresenter.clickNearCoach(coaches.get(position).id);
+                    mPresenter.clickNearCoach(position);
                     Intent intent = new Intent(getContext(), CoachDetailActivity.class);
                     intent.putExtra("coach", coaches.get(position));
                     startActivity(intent);
