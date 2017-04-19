@@ -114,6 +114,7 @@ public class FieldFilterPresenter extends HHBasePresenter implements Presenter<F
         HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();
         map.put("phone", cellPhone);
+        map.put("promo_code", "921434");
         subscription = apiService.getUserIdentity(map)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
