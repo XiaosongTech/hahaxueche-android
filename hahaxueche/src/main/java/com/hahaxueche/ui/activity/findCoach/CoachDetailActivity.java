@@ -551,7 +551,6 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 mPresenter.addDataTrack("coach_detail_page_phone_support_tapped", getContext());
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH);
-                    //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
                 } else {
                     callMyCoach();
                 }

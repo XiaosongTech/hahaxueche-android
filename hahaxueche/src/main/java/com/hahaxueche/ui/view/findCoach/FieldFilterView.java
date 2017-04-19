@@ -17,4 +17,8 @@ public interface FieldFilterView extends HHBaseView {
     void loadCoaches(ArrayList<Coach> coaches);
 
     void showMessage(String message);
+
+    void showCoachesView();
+
+    void hideCoachesView();
 }

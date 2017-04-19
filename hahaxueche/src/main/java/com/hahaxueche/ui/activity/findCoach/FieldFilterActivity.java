@@ -278,6 +278,7 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
             if (mSelectField != null && mSelectField.id.contains(field.id)) {
                 mSelectField = null;
                 marker.hideInfoWindow();
+                hideCoachesView();
             } else {
                 mSelectField = field;
                 marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
@@ -388,5 +389,15 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
     @Override
     public void showMessage(String message) {
         Snackbar.make(mRlyMain, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showCoachesView() {
+        mRcyMapCoach.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideCoachesView() {
+        mRcyMapCoach.setVisibility(View.GONE);
     }
 }

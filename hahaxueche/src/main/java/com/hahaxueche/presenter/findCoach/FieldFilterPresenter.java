@@ -105,6 +105,7 @@ public class FieldFilterPresenter extends HHBasePresenter implements Presenter<F
 
                     @Override
                     public void onNext(CoachResponseList coachResponseList) {
+                        mView.showCoachesView();
                         mView.loadCoaches(coachResponseList.data);
                     }
                 });

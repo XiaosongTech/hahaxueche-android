@@ -277,11 +277,11 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                 break;
             case R.id.lly_fenqibao:
                 mPresenter.addDataTrack("home_page_installment_tapped", getContext());
-                openWebView(WebViewUrl.WEB_URL_PEIFUBAO);
+                openWebView(WebViewUrl.WEB_URL_FENQIBAO);
                 break;
             case R.id.lly_peifubao:
                 mPresenter.addDataTrack("home_page_compensate_tapped", getContext());
-                openWebView(WebViewUrl.WEB_URL_FENQIBAO);
+                openWebView(WebViewUrl.WEB_URL_PEIFUBAO);
                 break;
             case R.id.tv_more_hot_driving_school:
                 mPresenter.addDataTrack("home_page_hot_school_more_tapped", getContext());

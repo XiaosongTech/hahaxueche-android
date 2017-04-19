@@ -255,7 +255,7 @@ public class RegisterPresenter extends HHBasePresenter implements Presenter<Regi
     private String getPromoCode() {
         HHLog.v("BuildConfig.FLAVOR -> " + BuildConfig.FLAVOR);
         if (BuildConfig.FLAVOR.equals("_360")) {
-            return "601891";
+            return "112116";
         } else if (BuildConfig.FLAVOR.equals("xiaomi")) {
             return "959265";
         } else if (BuildConfig.FLAVOR.equals("yingyongbao")) {
