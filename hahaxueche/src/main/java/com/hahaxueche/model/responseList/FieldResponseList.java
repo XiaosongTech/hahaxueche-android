@@ -11,4 +11,5 @@ import java.util.List;
 public class FieldResponseList {
     public int total;
     public List<Field> data;
+    public int cityId;
 }

@@ -12,7 +12,9 @@ import com.alibaba.sdk.android.push.register.MiPushRegister;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.Constants;
+import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.base.Location;
+import com.hahaxueche.model.responseList.FieldResponseList;
 import com.hahaxueche.ui.widget.FrescoImageLoader;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
@@ -26,6 +28,9 @@ import com.qiyukf.unicorn.api.YSFOptions;
 import com.taobao.hotfix.HotFixManager;
 import com.taobao.hotfix.PatchLoadStatusListener;
 import com.taobao.hotfix.util.PatchStatusCode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import me.shaohui.shareutil.ShareConfig;
 import me.shaohui.shareutil.ShareManager;
@@ -49,6 +54,7 @@ public class HHBaseApplication extends Application {
     private Subscription subscription;
     public static String appVersion;
     public static String appId;
+    private List<FieldResponseList> mFields;
 
     public static HHBaseApplication get(Context context) {
         return (HHBaseApplication) context.getApplicationContext();
@@ -247,5 +253,36 @@ public class HHBaseApplication extends Application {
                         }
                     }
                 }).initialize();
+    }
+
+    public FieldResponseList getCachedFieldByCityId(int cityId) {
+        if (mFields == null || mFields.size() < 1)
+            return null;
+        for (FieldResponseList field : mFields) {
+            if (field.cityId == cityId) {
+                return field;
+            }
+        }
+        return null;
+    }
+
+    public void cacheField(FieldResponseList fieldResponseList, int cityId) {
+        fieldResponseList.cityId = cityId;
+        if (mFields == null) {
+            mFields = new ArrayList<>();
+            mFields.add(fieldResponseList);
+            return;
+        }
+        boolean isExists = false;
+        for (FieldResponseList field : mFields) {
+            if (field.cityId == cityId) {
+                isExists = true;
+                field = fieldResponseList;
+                break;
+            }
+        }
+        if (!isExists) {
+            mFields.add(fieldResponseList);
+        }
     }
 }

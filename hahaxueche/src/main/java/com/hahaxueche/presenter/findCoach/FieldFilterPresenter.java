@@ -44,26 +44,33 @@ public class FieldFilterPresenter extends HHBasePresenter implements Presenter<F
         if (application.getSharedPrefUtil().getLocalSettings().cityId > -1) {
             cityId = application.getSharedPrefUtil().getLocalSettings().cityId;
         }
-        subscription = apiService.getFields(cityId, null)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(application.defaultSubscribeScheduler())
-                .subscribe(new Subscriber<FieldResponseList>() {
-                    @Override
-                    public void onCompleted() {
+        FieldResponseList cacheFields = application.getCachedFieldByCityId(cityId);
+        if (cacheFields != null) {
+            mView.initMap(cacheFields.data);
+        } else {
+            final int finalCityId = cityId;
+            subscription = apiService.getFields(cityId, null)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(application.defaultSubscribeScheduler())
+                    .subscribe(new Subscriber<FieldResponseList>() {
+                        @Override
+                        public void onCompleted() {
 
-                    }
+                        }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        HHLog.e(e.getMessage());
-                        e.printStackTrace();
-                    }
+                        @Override
+                        public void onError(Throwable e) {
+                            HHLog.e(e.getMessage());
+                            e.printStackTrace();
+                        }
 
-                    @Override
-                    public void onNext(FieldResponseList fieldResponseList) {
-                        mView.initMap(fieldResponseList.data);
-                    }
-                });
+                        @Override
+                        public void onNext(FieldResponseList fieldResponseList) {
+                            application.cacheField(fieldResponseList, finalCityId);
+                            mView.initMap(fieldResponseList.data);
+                        }
+                    });
+        }
     }
 
     @Override

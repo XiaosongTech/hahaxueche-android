@@ -315,7 +315,6 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
 
     @Override
     public View getInfoWindow(Marker marker) {
-        HHLog.v("xxxxxx");
         View infoWindow = getLayoutInflater().inflate(
                 R.layout.info_window_field, null);
         render(marker, infoWindow);
@@ -339,7 +338,6 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
         TextView tvDisplayAddress = ButterKnife.findById(view, R.id.tv_display_address);
         String text = (TextUtils.isEmpty(field.display_address) ? "" : field.display_address) +
                 " (" + field.coach_count + "名教练)";
-        HHLog.v(text);
         SpannableString ss = new SpannableString(text);
         ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.haha_red_text)),
                 text.indexOf("(") + 1, text.indexOf("名教练"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
