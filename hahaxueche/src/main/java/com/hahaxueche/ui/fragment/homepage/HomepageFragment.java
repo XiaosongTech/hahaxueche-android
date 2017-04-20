@@ -329,6 +329,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             if (grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 startLocation();
             } else {
+                mPresenter.getNearCoaches();
                 showMessage("请允许使用定位权限，不然我们无法为您推荐附近的教练");
             }
         } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_SDCARD_CONTACTS_LOCATIONS_HOMEPAGE) {
