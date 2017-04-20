@@ -48,8 +48,6 @@ import me.shaohui.shareutil.share.SharePlatform;
 public class StudentReferActivity extends HHBaseActivity implements StudentReferView {
     @BindView(R.id.sv_main)
     ScrollView mSvMain;
-    @BindView(R.id.tv_refer_secret)
-    TextView mTvReferSecret;
     private StudentReferPresenter mPresenter;
     /*****************
      * 分享
@@ -74,39 +72,6 @@ public class StudentReferActivity extends HHBaseActivity implements StudentRefer
         ButterKnife.bind(this);
         mPresenter.attachView(this);
         initActionBar();
-        String referDouble = mTvReferSecret.getText().toString();
-        SpannableString spReferDouble = new SpannableString(referDouble);
-        spReferDouble.setSpan(new ClickableSpan() {
-            @Override
-            public void onClick(View widget) {
-                if (mReferDetailDialog == null) {
-                    mReferDetailDialog = new ReferDetailDialog(getContext(), false,
-                            new ReferDetailDialog.OnButtonClickListener() {
-                                @Override
-                                public void callCustomerService() {
-                                    createCallCustomerService();
-                                }
-
-                                @Override
-                                public void onlineAsk() {
-                                    mPresenter.onlineAsk();
-                                }
-                            });
-                }
-                mReferDetailDialog.show();
-            }
-
-            @Override
-            public void updateDrawState(TextPaint ds) {
-                super.updateDrawState(ds);
-                ds.setColor(ContextCompat.getColor(getContext(), R.color.haha_red));
-                ds.setUnderlineText(false);
-                ds.clearShadowLayer();
-            }
-        }, referDouble.indexOf("详情"), referDouble.indexOf("详情") + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mTvReferSecret.setText(spReferDouble);
-        mTvReferSecret.setHighlightColor(ContextCompat.getColor(getContext(), R.color.haha_red));
-        mTvReferSecret.setMovementMethod(LinkMovementMethod.getInstance());
         Intent intent = getIntent();
         if (intent.getBooleanExtra("isFromLinkedMe", false)) {
             alertToLogin();
@@ -134,12 +99,15 @@ public class StudentReferActivity extends HHBaseActivity implements StudentRefer
         });
     }
 
-    @OnClick({R.id.tv_share})
+    @OnClick({R.id.tv_share,
+            R.id.tv_share2})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_share:
                 mPresenter.clickShareCount();
                 break;
+            case R.id.tv_share2:
+                mPresenter.clickShareCount();
             default:
                 break;
         }
