@@ -42,7 +42,7 @@ public class FieldFilterPresenter extends HHBasePresenter implements Presenter<F
 
     }
 
-    public void getFields(final Field selectField) {
+    public void getFields() {
         HHApiService apiService = application.getApiService();
         int cityId = 0;
         if (application.getSharedPrefUtil().getLocalSettings().cityId > -1) {
@@ -50,21 +50,7 @@ public class FieldFilterPresenter extends HHBasePresenter implements Presenter<F
         }
         final FieldResponseList cacheFields = application.getCachedFieldByCityId(cityId);
         if (cacheFields != null) {
-            if (selectField != null) {
-                boolean isExist = false;
-                for (Field field : cacheFields.data) {
-                    if (field.id.equals(selectField.id)) {
-                        mView.initMap(field);
-                        isExist = true;
-                        break;
-                    }
-                }
-                if (!isExist) {
-                    mView.initMap(selectField);
-                }
-            } else {
-                mView.initMap(cacheFields.data);
-            }
+            mView.initMap(cacheFields.data);
         } else {
             final int finalCityId = cityId;
             subscription = apiService.getFields(cityId, null)
@@ -85,21 +71,7 @@ public class FieldFilterPresenter extends HHBasePresenter implements Presenter<F
                         @Override
                         public void onNext(FieldResponseList fieldResponseList) {
                             application.cacheField(fieldResponseList, finalCityId);
-                            if (selectField != null) {
-                                boolean isExist = false;
-                                for (Field field : fieldResponseList.data) {
-                                    if (field.id.equals(selectField.id)) {
-                                        mView.initMap(field);
-                                        isExist = true;
-                                        break;
-                                    }
-                                }
-                                if (!isExist) {
-                                    mView.initMap(selectField);
-                                }
-                            } else {
-                                mView.initMap(fieldResponseList.data);
-                            }
+                            mView.initMap(fieldResponseList.data);
                         }
                     });
         }

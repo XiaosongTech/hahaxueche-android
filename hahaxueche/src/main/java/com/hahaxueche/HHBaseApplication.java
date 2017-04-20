@@ -267,10 +267,14 @@ public class HHBaseApplication extends Application {
     }
 
     public void cacheField(FieldResponseList fieldResponseList, int cityId) {
+        Constants constants = getConstants();
+        constants.fields = fieldResponseList.data;
+        setConstants(constants);
         fieldResponseList.cityId = cityId;
         if (mFields == null) {
             mFields = new ArrayList<>();
             mFields.add(fieldResponseList);
+
             return;
         }
         boolean isExists = false;

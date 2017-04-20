@@ -4,13 +4,14 @@ import com.hahaxueche.model.payment.InsurancePrices;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by wangshirui on 16/9/8.
  */
 public class Constants {
     public ArrayList<City> cities;
-    public ArrayList<Field> fields;
+    public List<Field> fields;
     public ArrayList<BaseItemType> license_types;
     public ArrayList<BaseItemType> service_types;
     public ArrayList<BaseItemType> product_types;

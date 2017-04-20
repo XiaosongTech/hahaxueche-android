@@ -77,6 +77,7 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
     private Field mSelectField;
     private ArrayList<Marker> markerList;
     private String cellPhone;
+    private boolean isFixField = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +94,12 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
         // 设置布局管理器
         mRcyMapCoach.setLayoutManager(layoutManager);
         Intent intent = getIntent();
-        mPresenter.getFields((Field) intent.getParcelableExtra("field"));
+        if (intent.getParcelableExtra("field") != null) {
+            isFixField = true;
+            initMap((Field) intent.getParcelableExtra("field"));
+        } else {
+            mPresenter.getFields();
+        }
     }
 
     private void initActionBar() {
@@ -157,7 +163,9 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
         if (mListener != null && amapLocation != null) {
             if (amapLocation != null
                     && amapLocation.getErrorCode() == 0) {
-                mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
+                if (!isFixField) {
+                    mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
+                }
                 mlocationClient.stopLocation();
             } else {
                 String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
@@ -208,15 +216,15 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
             aMap = mapView.getMap();
         }
         aMap.setOnMarkerClickListener(mMarkerClickListener);// 设置点击marker事件监听器
+        aMap.setInfoWindowAdapter(this);
         setFields(fields);
-        if (fields.size() > 1) {
+        if (!isFixField) {
             aMap.setLocationSource(this);// 设置定位监听
             aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
             aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
             // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
             aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
         }
-        aMap.setInfoWindowAdapter(this);
     }
 
     @Override
@@ -322,12 +330,20 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
             for (Marker marker : markerList) {
                 Field field = fields.get(markerList.indexOf(marker));
                 marker.setObject(field);
+                if (isFixField) {
+                    marker.showInfoWindow();
+                    marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                            .decodeResource(getResources(),
+                                    R.drawable.ic_map_local_choseon)));
+                }
             }
         }
-        if (fields.size() == 0) {
+        if (fields.size() == 1) {
             Field field = fields.get(0);
+            mSelectField = field;
             //设定初始可视区域
             aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(field.lat, field.lng), 14));
+            mPresenter.selectField(field);
         }
     }
 

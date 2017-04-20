@@ -181,8 +181,7 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
         if (mCoach == null) return ret;
         Constants constants = application.getConstants();
         Field field = constants.getField(mCoach.coach_group.field_id);
-        City city = constants.getCity(field.city_id);
-        return city.name + field.street + field.section;
+        return field.display_address;
     }
 
     public Field getTrainingField() {
