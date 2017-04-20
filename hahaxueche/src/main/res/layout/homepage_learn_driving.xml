@@ -190,7 +190,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/margin_5dp"
-                android:src="@drawable/pic_baomingxuzhi" />
+                android:src="@drawable/pic_jiaxiaopaiming" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </RelativeLayout>
