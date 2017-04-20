@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
@@ -30,8 +31,10 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.BuildConfig;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
+import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.responseList.ReviewResponseList;
+import com.hahaxueche.model.user.UserIdentityInfo;
 import com.hahaxueche.model.user.coach.ClassType;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.Review;
@@ -46,6 +49,7 @@ import com.hahaxueche.ui.activity.myPage.UploadIdCardActivity;
 import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
 import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.ShareDialog;
+import com.hahaxueche.ui.dialog.homepage.GetUserIdentityDialog;
 import com.hahaxueche.ui.view.findCoach.CoachDetailView;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
@@ -53,8 +57,10 @@ import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
+import com.hahaxueche.util.WebViewUrl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -63,6 +69,8 @@ import butterknife.OnClick;
 import me.shaohui.shareutil.ShareUtil;
 import me.shaohui.shareutil.share.ShareListener;
 import me.shaohui.shareutil.share.SharePlatform;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by wangshirui on 16/10/5.
@@ -147,6 +155,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     private String mDescription;
     private String mImageUrl;
     private String mUrl;
+    private String mShareSmsUrl;
 
     /*****************
      * end
@@ -179,7 +188,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         mTitle = "哈哈学车-选驾校，挑教练，上哈哈学车";
         mDescription = "好友力荐:\n哈哈学车优秀教练" + coach.name;
         mImageUrl = "https://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
-        mUrl = BuildConfig.SERVER_URL + "/share/coaches/" + coach.id;
+        mUrl = BuildConfig.MOBILE_URL + "/jiaolian/" + coach.id;
         HHLog.v("mUrl -> " + mUrl);
     }
 
@@ -205,31 +214,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                     shareDialog = new ShareDialog(getContext(), new ShareDialog.OnShareListener() {
                         @Override
                         public void onShare(int shareType) {
-                            switch (shareType) {
-                                case 0:
-                                    shareToWeixin();
-                                    break;
-                                case 1:
-                                    shareToFriendCircle();
-                                    break;
-                                case 2:
-                                    shareToQQ();
-                                    break;
-                                case 3:
-                                    shareToWeibo();
-                                    break;
-                                case 4:
-                                    shareToQZone();
-                                    break;
-                                case 5:
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-                                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, RequestCode.PERMISSIONS_REQUEST_SEND_SMS_FOR_SHARE);
-                                    } else {
-                                        shareToSms();
-                                    }
-                                default:
-                                    break;
-                            }
+                            mPresenter.shortenUrl(mUrl, shareType);
                         }
                     });
                 }
@@ -238,8 +223,38 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         });
     }
 
-    private void shareToQQ() {
-        ShareUtil.shareMedia(this, SharePlatform.QQ, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+    @Override
+    public void startToShare(int shareType, String shareUrl) {
+        switch (shareType) {
+            case 0:
+                shareToWeixin(shareUrl);
+                break;
+            case 1:
+                shareToFriendCircle(shareUrl);
+                break;
+            case 2:
+                shareToQQ(shareUrl);
+                break;
+            case 3:
+                shareToWeibo(shareUrl);
+                break;
+            case 4:
+                shareToQZone(shareUrl);
+                break;
+            case 5:
+                mShareSmsUrl = shareUrl;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.SEND_SMS}, RequestCode.PERMISSIONS_REQUEST_SEND_SMS_FOR_SHARE);
+                } else {
+                    shareToSms(shareUrl);
+                }
+            default:
+                break;
+        }
+    }
+
+    private void shareToQQ(String shareUrl) {
+        ShareUtil.shareMedia(this, SharePlatform.QQ, mTitle, mDescription, shareUrl, mImageUrl, new ShareListener() {
             @Override
             public void shareSuccess() {
                 if (shareDialog != null) {
@@ -262,8 +277,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         });
     }
 
-    private void shareToQZone() {
-        ShareUtil.shareMedia(this, SharePlatform.QZONE, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+    private void shareToQZone(String shareUrl) {
+        ShareUtil.shareMedia(this, SharePlatform.QZONE, mTitle, mDescription, shareUrl, mImageUrl, new ShareListener() {
             @Override
             public void shareSuccess() {
                 if (shareDialog != null) {
@@ -286,8 +301,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         });
     }
 
-    private void shareToWeibo() {
-        ShareUtil.shareMedia(this, SharePlatform.WEIBO, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+    private void shareToWeibo(String shareUrl) {
+        ShareUtil.shareMedia(this, SharePlatform.WEIBO, mTitle, mDescription, shareUrl, mImageUrl, new ShareListener() {
             @Override
             public void shareSuccess() {
                 if (shareDialog != null) {
@@ -310,8 +325,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         });
     }
 
-    private void shareToWeixin() {
-        ShareUtil.shareMedia(this, SharePlatform.WX, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+    private void shareToWeixin(String shareUrl) {
+        ShareUtil.shareMedia(this, SharePlatform.WX, mTitle, mDescription, shareUrl, mImageUrl, new ShareListener() {
             @Override
             public void shareSuccess() {
                 if (shareDialog != null) {
@@ -334,8 +349,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         });
     }
 
-    private void shareToFriendCircle() {
-        ShareUtil.shareMedia(this, SharePlatform.WX_TIMELINE, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+    private void shareToFriendCircle(String shareUrl) {
+        ShareUtil.shareMedia(this, SharePlatform.WX_TIMELINE, mTitle, mDescription, shareUrl, mImageUrl, new ShareListener() {
             @Override
             public void shareSuccess() {
                 if (shareDialog != null) {
@@ -499,7 +514,10 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             R.id.rly_training_field,
             R.id.tv_free_try,
             R.id.lly_platform_assurance,
-            R.id.tv_prepay
+            R.id.fly_sms_coach,
+            R.id.fly_online_ask,
+            R.id.fly_call_coach,
+            R.id.lly_train_school
     })
     public void onClick(View view) {
         switch (view.getId()) {
@@ -519,20 +537,48 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 mPresenter.clickTrainFieldCount();
                 Field field = mPresenter.getTrainingField();
                 if (field != null) {
-                    intent = new Intent(getContext(), FieldMapActivity.class);
+                    intent = new Intent(getContext(), FieldFilterActivity.class);
                     intent.putExtra("field", field);
                     startActivity(intent);
                 }
                 break;
             case R.id.tv_free_try:
                 mPresenter.freeTry();
+                GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "看过训练场才放心！",
+                        "输入手机号，教练立即带你看场地", "预约看场地", new GetUserIdentityDialog.OnIdentityGetListener() {
+                    @Override
+                    public void getCellPhone(String cellPhone) {
+                        mPresenter.getUserIdentity(cellPhone);
+                    }
+                });
+                dialog.show();
                 break;
             case R.id.lly_platform_assurance:
                 mPresenter.clickPlatformAssurance();
                 break;
-            case R.id.tv_prepay:
-                startActivityForResult(new Intent(getContext(), PurchasePrepaidActivity.class),
-                        RequestCode.REQUEST_CODE_PURCHASE_PREPAID);
+            case R.id.fly_sms_coach:
+                mPresenter.addDataTrack("coach_detail_page_text_tapped", getContext());
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.SEND_SMS}, RequestCode.PERMISSIONS_REQUEST_SEND_SMS_TO_COACH);
+                } else {
+                    sendSmsToCoach();
+                }
+                break;
+            case R.id.fly_online_ask:
+                mPresenter.addDataTrack("coach_detail_page_online_support_tapped", getContext());
+                mPresenter.onlineAsk();
+                break;
+            case R.id.fly_call_coach:
+                mPresenter.addDataTrack("coach_detail_page_phone_support_tapped", getContext());
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH);
+                } else {
+                    callMyCoach();
+                }
+                break;
+            case R.id.lly_train_school:
+                Coach coach = mPresenter.getCoach();
+                openWebView(WebViewUrl.WEB_URL_JIAXIAO + "/" + coach.driving_school_id);
                 break;
             default:
                 break;
@@ -647,6 +693,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         rly.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPresenter.addDataTrack("coach_detail_page_co-coach_tapped", getContext());
                 Intent intent = new Intent(getContext(), CoachDetailActivity.class);
                 intent.putExtra("coach_id", coach.id);
                 startActivity(intent);
@@ -869,12 +916,23 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         tvClassTypeName.setId(tvClassTypeNameId);
         rlyClassType.addView(tvClassTypeName);
 
+        TextView tvPrice = new TextView(this);
+        RelativeLayout.LayoutParams tvPriceParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvPriceParams.addRule(RelativeLayout.RIGHT_OF, tvClassTypeNameId);
+        tvPriceParams.addRule(RelativeLayout.ALIGN_TOP, tvClassTypeNameId);
+        tvPriceParams.setMargins(length10, length4, 0, 0);
+        tvPrice.setLayoutParams(tvPriceParams);
+        tvPrice.setText(Utils.getMoney(classType.price));
+        tvPrice.setTextColor(ContextCompat.getColor(this, R.color.haha_orange));
+        tvPrice.setTextSize(16);
+        rlyClassType.addView(tvPrice);
+
         ImageView ivArrow = new ImageView(this);
         RelativeLayout.LayoutParams ivArrowParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        ivArrowParams.addRule(RelativeLayout.RIGHT_OF, tvClassTypeNameId);
-        ivArrowParams.addRule(RelativeLayout.ALIGN_TOP, tvClassTypeNameId);
-        ivArrowParams.setMargins(length10, length4, 0, 0);
+        ivArrowParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+        ivArrowParams.addRule(RelativeLayout.ALIGN_BOTTOM, tvClassTypeNameId);
         ivArrow.setLayoutParams(ivArrowParams);
         ivArrow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_coachmsg_more_arrow));
         rlyClassType.addView(ivArrow);
@@ -905,22 +963,25 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         tvPurchase.setId(tvPurchaseId);
         rlyClassType.addView(tvPurchase);
 
-        TextView tvPrice = new TextView(this);
-        RelativeLayout.LayoutParams tvPriceParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+        TextView tvPrePay = new TextView(this);
+        RelativeLayout.LayoutParams tvPrePayParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        tvPriceParams.addRule(RelativeLayout.ALIGN_BOTTOM, tvClassTypeDescId);
-        tvPriceParams.addRule(RelativeLayout.LEFT_OF, tvPurchaseId);
-        tvPriceParams.setMargins(0, 0, length10, 0);
-        tvPrice.setLayoutParams(tvPriceParams);
-        tvPrice.setText(Utils.getMoney(classType.price));
-        tvPrice.setTextColor(ContextCompat.getColor(this, R.color.haha_orange));
-        tvPrice.setTextSize(16);
-        rlyClassType.addView(tvPrice);
+        tvPrePayParams.addRule(RelativeLayout.ALIGN_BOTTOM, tvPurchaseId);
+        tvPrePayParams.addRule(RelativeLayout.LEFT_OF, tvPurchaseId);
+        tvPrePayParams.setMargins(0, 0, length4, 0);
+        tvPrePay.setLayoutParams(tvPrePayParams);
+        tvPrePay.setBackgroundResource(R.drawable.rect_bg_appcolor_ssm);
+        tvPrePay.setPadding(length10, length2, length10, length2);
+        tvPrePay.setText("预付100");
+        tvPrePay.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
+        rlyClassType.addView(tvPrePay);
+
 
         //点击整行查看班别介绍
         rlyClassType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPresenter.addDataTrack("coach_detail_page_price_detail_tapped", getContext());
                 Intent intent = new Intent(getContext(), ClassTypeIntroActivity.class);
                 intent.putExtra("totalAmount", classType.price);
                 intent.putExtra("coach", mPresenter.getCoach());
@@ -935,7 +996,17 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         tvPurchase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPresenter.addDataTrack("coach_detail_page_purchase_tapped", getContext());
                 mPresenter.purchaseCoach(classType);
+            }
+        });
+
+        tvPrePay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPresenter.addDataTrack("coach_detail_page_deposit_tapped", getContext());
+                startActivityForResult(new Intent(getContext(), PurchasePrepaidActivity.class),
+                        RequestCode.REQUEST_CODE_PURCHASE_PREPAID);
             }
         });
 
@@ -981,7 +1052,12 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         } else if (requestCode == RequestCode.REQUEST_CODE_CLASS_TYPE_INTRO) {
             if (resultCode == Activity.RESULT_OK) {
                 if (data != null) {
-                    mPresenter.purchaseCoach((ClassType) data.getParcelableExtra("classType"));
+                    if (data.getBooleanExtra("prepay", false)) {
+                        startActivityForResult(new Intent(getContext(), PurchasePrepaidActivity.class),
+                                RequestCode.REQUEST_CODE_PURCHASE_PREPAID);
+                    } else {
+                        mPresenter.purchaseCoach((ClassType) data.getParcelableExtra("classType"));
+                    }
                 }
             }
         } else if (requestCode == RequestCode.REQUEST_CODE_PURCHASE_PREPAID) {
@@ -1003,21 +1079,71 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         super.finish();
     }
 
+    private void contactService() {
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:4000016006"));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        startActivity(intent);
+    }
+
+    /**
+     * 联系教练
+     */
+    private void callMyCoach() {
+        Coach coach = mPresenter.getCoach();
+        if (TextUtils.isEmpty(coach.consult_phone))
+            return;
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + coach.consult_phone));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        startActivity(intent);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == RequestCode.PERMISSIONS_REQUEST_SEND_SMS_FOR_SHARE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
-                shareToSms();
+                shareToSms(mShareSmsUrl);
             } else {
                 showMessage("请允许发送短信权限，不然无法分享到短信");
+            }
+        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                callMyCoach();
+            } else {
+                showMessage("请允许拨打电话权限，不然无法直接拨号联系教练");
+            }
+        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CUSTOMER_SERVICE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                contactService();
+            } else {
+                showMessage("请允许拨打电话权限，不然无法直接拨号联系客服");
+            }
+        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_SEND_SMS_TO_COACH) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                sendSmsToCoach();
+            } else {
+                showMessage("请允许发送短信权限，不然给教练发短信");
             }
         }
     }
 
-    private void shareToSms() {
+    private void shareToSms(String shareUrl) {
         Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"));
-        intent.putExtra("sms_body", mTitle + mDescription + mUrl);
+        intent.putExtra("sms_body", mTitle + mDescription + shareUrl);
+        startActivity(intent);
+    }
+
+    private void sendSmsToCoach() {
+        Coach coach = mPresenter.getCoach();
+        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + coach.consult_phone));
+        intent.putExtra("sms_body", coach.name + "教练，我在哈哈学车看到您的招生信息，我想详细了解一下。");
         startActivity(intent);
     }
 }

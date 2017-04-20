@@ -1,6 +1,8 @@
 package com.hahaxueche.ui.adapter.findCoach;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -21,10 +23,13 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.user.coach.Coach;
+import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.dialog.findCoach.MapDialog;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.DistanceUtil;
+import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
+import com.hahaxueche.util.WebViewUrl;
 
 import java.util.ArrayList;
 
@@ -87,7 +92,7 @@ public class CoachAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) view.getTag();
         }
-        Coach coach = mCoachList.get(position);
+        final Coach coach = mCoachList.get(position);
         holder.tvCoachName.setText(coach.name);
         holder.ivCoachAvatar.setImageURI(coach.avatar);
         holder.tvCoachTeachTime.setText(coach.experiences + "年教龄");
@@ -103,7 +108,7 @@ public class CoachAdapter extends BaseAdapter {
         }
         holder.rbCoachScore.setRating(score);
         if (coach.coach_group != null) {
-            holder.tvCoachLocation.setText(application.getConstants().getSectionName(coach.coach_group.field_id));
+            holder.tvCoachLocation.setText(application.getConstants().getCitySectionName(coach.coach_group.field_id));
 
             final Field myField = application.getConstants().getField(coach.coach_group.field_id);
             if (application.getMyLocation() != null && myField != null) {
@@ -145,7 +150,23 @@ public class CoachAdapter extends BaseAdapter {
         } else {
             holder.llyTrainSchool.setVisibility(View.GONE);
         }
+        holder.llyTrainSchool.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openWebView(WebViewUrl.WEB_URL_JIAXIAO + "/" + coach.driving_school_id);
+            }
+        });
         return view;
+    }
+
+    public void openWebView(String originUrl) {
+        Intent intent = new Intent(mContext, BaseWebViewActivity.class);
+        Bundle bundle = new Bundle();
+        HHLog.v("webview url -> " + originUrl);
+        bundle.putString("url", originUrl);
+        bundle.putString("shareUrl", originUrl);
+        intent.putExtras(bundle);
+        mContext.startActivity(intent);
     }
 
     static class ViewHolder {

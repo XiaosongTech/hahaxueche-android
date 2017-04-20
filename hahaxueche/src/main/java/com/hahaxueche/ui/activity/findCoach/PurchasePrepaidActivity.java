@@ -49,6 +49,7 @@ public class PurchasePrepaidActivity extends HHBaseActivity implements PurchaseP
         ButterKnife.bind(this);
         mPresenter.attachView(this);
         initActionBar();
+        mPresenter.addDataTrack("deposit_confirm_page_viewed", getContext());
     }
 
     private void initActionBar() {
@@ -76,6 +77,7 @@ public class PurchasePrepaidActivity extends HHBaseActivity implements PurchaseP
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_sure_pay:
+                mPresenter.addDataTrack("deposit_confirm_page_button_tapped", getContext());
                 mPresenter.createCharge();
                 break;
             default:
@@ -194,6 +196,7 @@ public class PurchasePrepaidActivity extends HHBaseActivity implements PurchaseP
         //支付页面返回处理
         if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
             if (resultCode == Activity.RESULT_OK) {
+                mPresenter.addDataTrack("deposit_confirm_page_purchased", getContext());
                 String result = data.getExtras().getString("pay_result");
                 /* 处理返回值
                  * "success" - 支付成功

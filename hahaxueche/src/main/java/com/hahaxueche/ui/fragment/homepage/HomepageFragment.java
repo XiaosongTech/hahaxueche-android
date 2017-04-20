@@ -11,17 +11,18 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
-import android.text.SpannableString;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bigkoo.convenientbanner.ConvenientBanner;
-import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -29,32 +30,35 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
-import com.hahaxueche.model.base.Banner;
 import com.hahaxueche.model.base.City;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
+import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.student.Contact;
 import com.hahaxueche.presenter.homepage.HomepagePresenter;
-import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.community.ExamLibraryActivity;
+import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
+import com.hahaxueche.ui.activity.findCoach.FieldFilterActivity;
 import com.hahaxueche.ui.activity.findCoach.PaySuccessActivity;
-import com.hahaxueche.ui.activity.login.StartLoginActivity;
+import com.hahaxueche.ui.activity.findCoach.SearchCoachActivity;
 import com.hahaxueche.ui.activity.myPage.MyInsuranceActivity;
 import com.hahaxueche.ui.activity.myPage.PurchaseInsuranceActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
 import com.hahaxueche.ui.activity.myPage.StudentReferActivity;
 import com.hahaxueche.ui.activity.myPage.UploadIdCardActivity;
-import com.hahaxueche.ui.dialog.BaseAlertDialog;
+import com.hahaxueche.ui.adapter.homepage.HotDrivingSchoolAdapter;
+import com.hahaxueche.ui.adapter.homepage.NearCoachAdapter;
 import com.hahaxueche.ui.dialog.login.CityChoseDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.homepage.HomepageView;
-import com.hahaxueche.ui.widget.bannerView.NetworkImageHolderView;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
-import com.hahaxueche.util.Utils;
+import com.hahaxueche.util.WebViewUrl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,20 +73,27 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     private MainActivity mActivity;
     private HomepagePresenter mPresenter;
 
-    @BindView(R.id.banner_homepage)
-    ConvenientBanner mHomepageBanner;
     @BindView(R.id.crl_main)
     CoordinatorLayout mClyMain;
-    @BindView(R.id.tv_driving_school_count)
-    TextView mTvDrivingSchoolCount;
-    @BindView(R.id.tv_coach_count)
-    TextView mTvCoachCount;
-    @BindView(R.id.tv_paid_student_count)
-    TextView mTvPaidStudentCount;
-    @BindView(R.id.iv_free_try)
-    SimpleDraweeView mIvFreeTry;
+    @BindView(R.id.iv_find_driving_school)
+    SimpleDraweeView mIvFindDrivingSchool;
+    @BindView(R.id.iv_find_coach)
+    SimpleDraweeView mIvFindCoach;
+    @BindView(R.id.rcy_hot_driving_school)
+    RecyclerView mRcyHotDrivingSchool;
+    @BindView(R.id.rcy_near_coach)
+    RecyclerView mRcyNearCoach;
+    @BindView(R.id.tv_city)
+    TextView mTvCityName;
 
     private CityChoseDialog mCityChoseDialog;
+    private HotDrivingSchoolAdapter mDrivingSchoolAdapter;
+    private NearCoachAdapter mNearCoachAdapter;
+
+    //定位client
+    public AMapLocationClient mLocationClient;
+    //定位回调监听器
+    public AMapLocationListener mLocationListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,36 +108,54 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
         ButterKnife.bind(this, view);
         mPresenter.attachView(this);
-        Uri uri = Uri.parse("res://com.hahaxueche)/" + R.drawable.button_freetry);
-        DraweeController draweeController =
+        Uri uriFindSchool = Uri.parse("res://com.hahaxueche)/" + R.drawable.bt_chooseschool);
+        DraweeController dcFindSchool =
                 Fresco.newDraweeControllerBuilder()
-                        .setUri(uri)
+                        .setUri(uriFindSchool)
                         .setAutoPlayAnimations(true) // 设置加载图片完成后是否直接进行播放
                         .build();
-        mIvFreeTry.setController(draweeController);
-        GenericDraweeHierarchy hierarchy = mIvFreeTry.getHierarchy();
-        hierarchy.setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
+        mIvFindDrivingSchool.setController(dcFindSchool);
+        GenericDraweeHierarchy hyFindDrivingSchool = mIvFindDrivingSchool.getHierarchy();
+        hyFindDrivingSchool.setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
+        Uri uriFindCoach = Uri.parse("res://com.hahaxueche)/" + R.drawable.bt_choosecoach);
+        DraweeController dcFindCoach =
+                Fresco.newDraweeControllerBuilder()
+                        .setUri(uriFindCoach)
+                        .setAutoPlayAnimations(true) // 设置加载图片完成后是否直接进行播放
+                        .build();
+        mIvFindCoach.setController(dcFindCoach);
+        GenericDraweeHierarchy hyFindCoach = mIvFindCoach.getHierarchy();
+        hyFindCoach.setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
+
+        mPresenter.getHotDrivingSchools();
 
         if (mPresenter.isNeedUpdate()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                     (mActivity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                             || mActivity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                             || mActivity.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
-                            || mActivity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED)) {
+                            || mActivity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
+                            || mActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                                 Manifest.permission.CAMERA,
-                                Manifest.permission.READ_CONTACTS},
-                        RequestCode.PERMISSIONS_REQUEST_SDCARD_CONTACTS_HOMEPAGE);
+                                Manifest.permission.READ_CONTACTS,
+                                Manifest.permission.ACCESS_FINE_LOCATION},
+                        RequestCode.PERMISSIONS_REQUEST_SDCARD_CONTACTS_LOCATIONS_HOMEPAGE);
             } else {
                 mPresenter.alertToUpdate(getContext());
                 readContacts();
+                startLocation();
             }
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, RequestCode.PERMISSIONS_REQUEST_READ_CONTACTS);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                    && (mActivity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
+                    || mActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS, Manifest.permission.ACCESS_FINE_LOCATION},
+                        RequestCode.PERMISSIONS_REQUEST_READ_CONTACTS_AND_LOCATIONS);
             } else {
                 readContacts();
+                startLocation();
             }
         }
 
@@ -134,45 +163,8 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     }
 
     @Override
-    public void initBanners(ArrayList<Banner> bannerArrayList) {
-        if (bannerArrayList != null && bannerArrayList.size() > 0) {
-            int screenWidth = Utils.instence(getContext()).getDm().widthPixels;
-            LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(screenWidth, screenWidth / 5 * 2);
-            mHomepageBanner.setLayoutParams(p);
-            ArrayList<String> networkImages = new ArrayList<>();
-            for (Banner banner : bannerArrayList) {
-                networkImages.add(banner.image_url);
-            }
-            mHomepageBanner.setPages(new CBViewHolderCreator<NetworkImageHolderView>() {
-                @Override
-                public NetworkImageHolderView createHolder() {
-                    return new NetworkImageHolderView();
-                }
-            }, networkImages)
-                    .setPageIndicator(new int[]{R.drawable.icon_point, R.drawable.icon_point_pre})
-                    .setOnItemClickListener(this);
-            mHomepageBanner.notifyDataSetChanged();
-        }
-    }
-
-    @Override
     public void navigateToReferFriends() {
         startActivity(new Intent(getContext(), ReferFriendsActivity.class));
-    }
-
-    @Override
-    public void alertToRegister() {
-        BaseAlertDialog dialog = new BaseAlertDialog(getContext(), "推荐好友", mPresenter.getShareText(), "去注册！",
-                new BaseAlertDialog.onButtonClickListener() {
-                    @Override
-                    public void sure() {
-                        ActivityCollector.finishAll();
-                        Intent intent = new Intent(getContext(), StartLoginActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    }
-                });
-        dialog.show();
     }
 
     @Override
@@ -190,45 +182,77 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         startActivityForResult(new Intent(getContext(), MyInsuranceActivity.class), RequestCode.REQUEST_CODE_MY_INSURANCE);
     }
 
-    @OnClick({R.id.tv_procedure,
-            R.id.tv_tel_ask,
-            R.id.cv_coach,
+    @Override
+    public void loadHotDrivingSchools(final List<DrivingSchool> drivingSchoolList) {
+        // 创建一个线性布局管理器
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        // 设置布局管理器
+        mRcyHotDrivingSchool.setLayoutManager(layoutManager);
+        mDrivingSchoolAdapter = new HotDrivingSchoolAdapter(getContext(), drivingSchoolList, new HotDrivingSchoolAdapter.OnRecyclerViewItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                if (drivingSchoolList != null && drivingSchoolList.size() > 0 && position > -1 && position < drivingSchoolList.size()) {
+                    mPresenter.clickHotDrivingSchool(position);
+                    openWebView(WebViewUrl.WEB_URL_JIAXIAO + "/" + drivingSchoolList.get(position).id);
+                }
+            }
+        });
+        mRcyHotDrivingSchool.setAdapter(mDrivingSchoolAdapter);
+    }
+
+    @Override
+    public void loadNearCoaches(final ArrayList<Coach> coaches) {
+        // 创建一个线性布局管理器
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        // 设置布局管理器
+        mRcyNearCoach.setLayoutManager(layoutManager);
+        mNearCoachAdapter = new NearCoachAdapter(getContext(), coaches, new NearCoachAdapter.OnRecyclerViewItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                if (coaches != null && coaches.size() > 0 && position > -1 && position < coaches.size()) {
+                    mPresenter.clickNearCoach(position);
+                    Intent intent = new Intent(getContext(), CoachDetailActivity.class);
+                    intent.putExtra("coach", coaches.get(position));
+                    startActivity(intent);
+                }
+            }
+        });
+        mRcyNearCoach.setAdapter(mNearCoachAdapter);
+    }
+
+    @Override
+    public void setCityName(String cityName) {
+        mTvCityName.setText(cityName);
+    }
+
+    @OnClick({R.id.cv_procedure,
             R.id.tv_online_ask,
-            R.id.iv_free_try,
-            R.id.cv_adviser,
-            R.id.cv_driving_school,
             R.id.tv_group_buy,
             R.id.tv_test_lib,
-            R.id.tv_insurance,
-            R.id.tv_platform_guard,
-            R.id.tv_refer_friends})
+            R.id.cv_new_policy,
+            R.id.cv_enroll,
+            R.id.cv_driving_school_sort,
+            R.id.lly_xuechebao,
+            R.id.lly_fenqibao,
+            R.id.lly_peifubao,
+            R.id.tv_more_hot_driving_school,
+            R.id.iv_find_driving_school,
+            R.id.iv_find_coach,
+            R.id.tv_more_near_coach,
+            R.id.tv_city,
+            R.id.tv_map,
+            R.id.tv_map_find,
+            R.id.fly_search
+    })
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.tv_procedure:
+            case R.id.cv_procedure:
                 mPresenter.openProcedure();
-                break;
-            case R.id.tv_tel_ask:
-                mPresenter.phoneSupportCount();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    mActivity.requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CUSTOMER_SERVICE);
-                } else {
-                    contactService();
-                }
-                break;
-            case R.id.cv_coach:
-                mPresenter.openBestCoaches();
                 break;
             case R.id.tv_online_ask:
                 mPresenter.onlineAsk();
-                break;
-            case R.id.iv_free_try:
-                mPresenter.freeTry();
-                break;
-            case R.id.cv_adviser:
-                mPresenter.openFindAdviser();
-                break;
-            case R.id.cv_driving_school:
-                mPresenter.openFindDrivingSchool();
                 break;
             case R.id.tv_group_buy:
                 mPresenter.openGroupBuy();
@@ -236,44 +260,79 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             case R.id.tv_test_lib:
                 mPresenter.clickTestLib();
                 break;
-            case R.id.tv_insurance:
-                mPresenter.clickInsurance();
+            case R.id.cv_new_policy:
+                mPresenter.addDataTrack("home_page_new_policy_tapped", getContext());
+                openWebView(WebViewUrl.WEB_URL_ZHENGCE);
                 break;
-            case R.id.tv_platform_guard:
-                mPresenter.clickPlatformGuard();
+            case R.id.cv_enroll:
+                mPresenter.addDataTrack("home_page_application_notice_tapped", getContext());
+                openWebView(WebViewUrl.WEB_URL_BAOMING);
                 break;
-            case R.id.tv_refer_friends:
-                mPresenter.clickReferFriends();
+            case R.id.cv_driving_school_sort:
+                openWebView(WebViewUrl.WEB_URL_JIAXIAO);
+                break;
+            case R.id.lly_xuechebao:
+                mPresenter.addDataTrack("home_page_assurance_tapped", getContext());
+                openWebView(WebViewUrl.WEB_URL_XUECHEBAO);
+                break;
+            case R.id.lly_fenqibao:
+                mPresenter.addDataTrack("home_page_installment_tapped", getContext());
+                openWebView(WebViewUrl.WEB_URL_FENQIBAO);
+                break;
+            case R.id.lly_peifubao:
+                mPresenter.addDataTrack("home_page_compensate_tapped", getContext());
+                openWebView(WebViewUrl.WEB_URL_PEIFUBAO);
+                break;
+            case R.id.tv_more_hot_driving_school:
+                mPresenter.addDataTrack("home_page_hot_school_more_tapped", getContext());
+                openWebView(WebViewUrl.WEB_URL_JIAXIAO);
+                break;
+            case R.id.iv_find_driving_school:
+                mPresenter.addDataTrack("home_page_select_school_tapped", getContext());
+                openWebView(WebViewUrl.WEB_URL_JIAXIAO);
+                break;
+            case R.id.iv_find_coach:
+                mPresenter.addDataTrack("home_page_select_coach_tapped", getContext());
+                mActivity.selectTab(1);
+                break;
+            case R.id.tv_more_near_coach:
+                mPresenter.addDataTrack("home_page_hot_coach_more_tapped", getContext());
+                mActivity.selectTab(1);
+                break;
+            case R.id.tv_city:
+                mPresenter.addDataTrack("home_navigation_city_tapped", getContext());
+                showCityChoseDialog();
+                break;
+            case R.id.tv_map:
+                mPresenter.addDataTrack("home_navigation_map_tapped", getContext());
+                startActivity(new Intent(getContext(), FieldFilterActivity.class));
+                break;
+            case R.id.tv_map_find:
+                mPresenter.addDataTrack("home_page_map_view_tapped", getContext());
+                startActivity(new Intent(getContext(), FieldFilterActivity.class));
+                break;
+            case R.id.fly_search:
+                mPresenter.addDataTrack("home_navigation_search_tapped", getContext());
+                startActivity(new Intent(getContext(), SearchCoachActivity.class));
                 break;
             default:
                 break;
         }
     }
 
-    /**
-     * 联系客服
-     */
-    private void contactService() {
-        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:4000016006"));
-        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        startActivity(intent);
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CUSTOMER_SERVICE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                contactService();
-            } else {
-                showMessage("请允许拨打电话权限，不然无法直接拨号联系客服");
-            }
-        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_READ_CONTACTS) {
+        if (requestCode == RequestCode.PERMISSIONS_REQUEST_READ_CONTACTS_AND_LOCATIONS) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 readContacts();
             }
-        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_SDCARD_CONTACTS_HOMEPAGE) {
+            if (grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                startLocation();
+            } else {
+                mPresenter.getNearCoaches();
+                showMessage("请允许使用定位权限，不然我们无法为您推荐附近的教练");
+            }
+        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_SDCARD_CONTACTS_LOCATIONS_HOMEPAGE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED
                     && grantResults[1] == PackageManager.PERMISSION_GRANTED
                     && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
@@ -284,6 +343,11 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             if (grantResults[3] == PackageManager.PERMISSION_GRANTED) {
                 readContacts();
             }
+            if (grantResults[4] == PackageManager.PERMISSION_GRANTED) {
+                startLocation();
+            } else {
+                showMessage("请允许使用定位权限，不然我们无法为您推荐附近的教练");
+            }
         }
     }
 
@@ -293,26 +357,12 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     }
 
     @Override
-    public void setDrivingSchoolCountDisplay(SpannableString ss) {
-        mTvDrivingSchoolCount.setText(ss);
-    }
-
-    @Override
-    public void setCoachCountDisplay(SpannableString ss) {
-        mTvCoachCount.setText(ss);
-    }
-
-    @Override
-    public void setPaidStudentCountDisplay(SpannableString ss) {
-        mTvPaidStudentCount.setText(ss);
-    }
-
-    @Override
     public void showCityChoseDialog() {
         if (mCityChoseDialog == null) {
             mCityChoseDialog = new CityChoseDialog(getContext(), new CityChoseDialog.onConfirmListener() {
                 @Override
                 public boolean selectCity(City city) {
+                    mPresenter.addDataTrack("home_navigation_city_selected", getContext());
                     if (city != null) {
                         mPresenter.selectCity(city.id);
                     }
@@ -405,23 +455,12 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        //停止翻页
-        mHomepageBanner.stopTurning();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        //开始自动翻页
-        mHomepageBanner.startTurning(2500);
-    }
-
-    @Override
     public void onDestroy() {
         mPresenter.detachView();
         super.onDestroy();
+        if (null != mLocationClient) {
+            mLocationClient.onDestroy();//销毁定位客户端。
+        }
     }
 
     /**
@@ -452,5 +491,36 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             }
             mPresenter.uploadContacts(contacts);
         }
+    }
+
+    private void startLocation() {
+        //初始化定位
+        mLocationClient = new AMapLocationClient(getContext());
+        mLocationListener = new AMapLocationListener() {
+            @Override
+            public void onLocationChanged(AMapLocation amapLocation) {
+                if (amapLocation != null) {
+                    if (amapLocation.getErrorCode() == 0) {
+                        //定位成功回调信息，设置相关消息
+                        mPresenter.setLocation(amapLocation.getLatitude(), amapLocation.getLongitude());
+                    } else {
+                        String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
+                        HHLog.e(errText);
+                        mPresenter.getNearCoaches();
+                    }
+                }
+            }
+        };
+        mLocationClient.setLocationListener(mLocationListener);
+        //初始化定位参数
+        AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
+        //设置是否允许模拟位置,默认为false，不允许模拟位置
+        mLocationOption.setMockEnable(true);
+        //设置定位间隔,单位毫秒,默认为2000ms
+        mLocationOption.setInterval(1000 * 60);
+        //给定位客户端对象设置定位参数
+        mLocationClient.setLocationOption(mLocationOption);
+        HHLog.v("create location service");
+        mLocationClient.startLocation();
     }
 }

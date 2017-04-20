@@ -76,7 +76,7 @@ public class CoachSortDialog {
                 case R.id.tv_sort_comment:
                     disAllViews();
                     mDialog.dismiss();
-                    setSortBy(2);
+                    setSortBy(5);
                     break;
                 case R.id.tv_sort_price:
                     disAllViews();

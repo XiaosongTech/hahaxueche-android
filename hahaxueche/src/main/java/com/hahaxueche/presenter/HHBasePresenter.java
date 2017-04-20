@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.payment.PaymentMethod;
@@ -16,10 +17,12 @@ import com.hahaxueche.util.UpdateManager;
 import com.qiyukf.unicorn.api.ConsultSource;
 import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFUserInfo;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by wangshirui on 2017/3/15.
@@ -123,5 +126,17 @@ public class HHBasePresenter {
     public void alertToUpdate(Context context) {
         UpdateManager updateManager = new UpdateManager(context);
         updateManager.alertToUpdate();
+    }
+
+    public void addDataTrack(String event, Context context) {
+        HHBaseApplication application = HHBaseApplication.get(context);
+        User user = application.getSharedPrefUtil().getUser();
+        HashMap<String, String> map = new HashMap();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(context, event, map);
+        } else {
+            MobclickAgent.onEvent(context, event);
+        }
     }
 }

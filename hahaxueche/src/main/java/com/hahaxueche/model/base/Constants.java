@@ -4,13 +4,14 @@ import com.hahaxueche.model.payment.InsurancePrices;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by wangshirui on 16/9/8.
  */
 public class Constants {
     public ArrayList<City> cities;
-    public ArrayList<Field> fields;
+    public List<Field> fields;
     public ArrayList<BaseItemType> license_types;
     public ArrayList<BaseItemType> service_types;
     public ArrayList<BaseItemType> product_types;
@@ -40,12 +41,24 @@ public class Constants {
         return myCity;
     }
 
-    public String getSectionName(String fieldId) {
+    public String getCitySectionName(String fieldId) {
         String ret = "";
         if (fields == null || fields.size() < 1) return ret;
         for (Field field : fields) {
             if (field.id.equals(fieldId)) {
                 ret = getCityName(field.city_id) + field.section;
+                break;
+            }
+        }
+        return ret;
+    }
+
+    public String getSectionName(String fieldId) {
+        String ret = "";
+        if (fields == null || fields.size() < 1) return ret;
+        for (Field field : fields) {
+            if (field.id.equals(fieldId)) {
+                ret = field.section;
                 break;
             }
         }

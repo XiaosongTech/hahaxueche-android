@@ -59,9 +59,9 @@
             layout="@layout/layout_train_school"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="6dp"
-            android:layout_toRightOf="@id/iv_is_cash_pledge" />
+            android:layout_marginRight="20dp" />
     </RelativeLayout>
 
     <TextView

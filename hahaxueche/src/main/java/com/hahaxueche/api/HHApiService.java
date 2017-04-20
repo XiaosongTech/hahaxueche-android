@@ -5,7 +5,9 @@ import com.hahaxueche.model.base.BaseBoolean;
 import com.hahaxueche.model.base.BaseModel;
 import com.hahaxueche.model.base.BaseSuccess;
 import com.hahaxueche.model.base.BaseValid;
+import com.hahaxueche.model.base.CityConstants;
 import com.hahaxueche.model.base.Constants;
+import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.base.ShortenUrl;
 import com.hahaxueche.model.community.Article;
 import com.hahaxueche.model.course.ScheduleEvent;
@@ -16,12 +18,14 @@ import com.hahaxueche.model.payment.Voucher;
 import com.hahaxueche.model.payment.WithdrawRecord;
 import com.hahaxueche.model.responseList.ArticleResponseList;
 import com.hahaxueche.model.responseList.CoachResponseList;
+import com.hahaxueche.model.responseList.FieldResponseList;
 import com.hahaxueche.model.responseList.PartnerResponseList;
 import com.hahaxueche.model.responseList.ReferrerResponseList;
 import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.responseList.ScheduleEventResponseList;
 import com.hahaxueche.model.user.IdCardUrl;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.user.UserIdentityInfo;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.Follow;
 import com.hahaxueche.model.user.coach.Partner;
@@ -35,6 +39,7 @@ import com.hahaxueche.util.HHLog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -290,6 +295,15 @@ public interface HHApiService {
     @POST("groupons")
     Observable<ResponseBody> getPrepayCharge(@FieldMap HashMap<String, Object> map, @Header("X-Access-Token") String accessToken);
 
+    @GET("cities/{id}")
+    Observable<CityConstants> getCityConstant(@Path("id") int cityId);
+
+    @GET("fields")
+    Observable<FieldResponseList> getFields(@Query("city_id") int cityId, @Query("driving_school_id") String drivingSchoolId);
+
+    @FormUrlEncoded
+    @POST("user_identities")
+    Observable<UserIdentityInfo> getUserIdentity(@FieldMap HashMap<String, Object> map);
 
     class Factory {
         public static Retrofit getRetrofit() {

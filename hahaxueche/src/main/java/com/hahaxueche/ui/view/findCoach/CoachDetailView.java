@@ -85,4 +85,6 @@ public interface CoachDetailView extends HHBaseView {
     void setCoachAverageRating(String averageRating);
 
     void setDrivingSchool(String drivingSchool);
+
+    void startToShare(int shareType, String shortenUrl);
 }

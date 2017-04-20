@@ -88,14 +88,16 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/haha_gray_text</item>
     </style>
+
     <style name="Theme.AppStartLoadTranslucent" parent="AppTheme">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowNoTitle">true</item>
     </style>
 
     <style name="SplashTheme" parent="@style/AppBaseThemeNoTitle">
-        <item name="android:windowBackground">@drawable/welcome</item>
+        <item name="android:background">@drawable/welcome</item>
     </style>
+
     <style name="ClickRatingStyle" parent="@android:style/Widget.RatingBar">
         <!-- 定义星星图片 -->
         <item name="android:progressDrawable">@drawable/click_rating_bar</item>
@@ -103,6 +105,7 @@
         <item name="android:minHeight">22dp</item>
         <item name="android:maxHeight">22dp</item>
     </style>
+
     <style name="RatingStyle" parent="@android:style/Widget.RatingBar">
         <!-- 定义星星图片 -->
         <item name="android:progressDrawable">@drawable/rating_bar</item>

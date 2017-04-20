@@ -1,18 +1,30 @@
 package com.hahaxueche.presenter.findCoach;
 
 import android.text.Html;
+import android.text.TextUtils;
 
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
+import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.Field;
+import com.hahaxueche.model.base.LocalSettings;
+import com.hahaxueche.model.responseList.CoachResponseList;
+import com.hahaxueche.model.responseList.FieldResponseList;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.user.UserIdentityInfo;
 import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.FieldFilterView;
+import com.hahaxueche.util.Common;
+import com.hahaxueche.util.HHLog;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
+import rx.Subscriber;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by wangshirui on 2016/10/17.
@@ -21,23 +33,48 @@ import rx.Subscription;
 public class FieldFilterPresenter extends HHBasePresenter implements Presenter<FieldFilterView> {
     private FieldFilterView mView;
     private Subscription subscription;
-    private ArrayList<Field> mSelectFields;
     HHBaseApplication application;
 
     @Override
     public void attachView(FieldFilterView view) {
         this.mView = view;
         application = HHBaseApplication.get(mView.getContext());
-        mView.setHints(Html.fromHtml(mView.getContext().getResources().getString(R.string.field_filter_hints)));
+
     }
 
-    public void initMap() {
-        User user = application.getSharedPrefUtil().getUser();
+    public void getFields() {
+        HHApiService apiService = application.getApiService();
         int cityId = 0;
-        if (user != null && user.student != null) {
-            cityId = user.student.city_id;
+        if (application.getSharedPrefUtil().getLocalSettings().cityId > -1) {
+            cityId = application.getSharedPrefUtil().getLocalSettings().cityId;
         }
-        mView.initMap(application.getConstants().getFields(cityId));
+        final FieldResponseList cacheFields = application.getCachedFieldByCityId(cityId);
+        if (cacheFields != null) {
+            mView.initMap(cacheFields.data);
+        } else {
+            final int finalCityId = cityId;
+            subscription = apiService.getFields(cityId, null)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(application.defaultSubscribeScheduler())
+                    .subscribe(new Subscriber<FieldResponseList>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            HHLog.e(e.getMessage());
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onNext(FieldResponseList fieldResponseList) {
+                            application.cacheField(fieldResponseList, finalCityId);
+                            mView.initMap(fieldResponseList.data);
+                        }
+                    });
+        }
     }
 
     @Override
@@ -45,65 +82,70 @@ public class FieldFilterPresenter extends HHBasePresenter implements Presenter<F
         this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
-        mSelectFields = null;
     }
 
-    public ArrayList<Field> getSelectFields() {
-        return mSelectFields;
-    }
-
-    public void setSelectFields(ArrayList<Field> fields) {
-        this.mSelectFields = fields;
-        mView.setSelectFieldText(getSelectFieldText());
-    }
-
-    public boolean containsSelectField(Field field) {
-        if (mSelectFields == null || mSelectFields.size() < 1) return false;
-        for (Field selectField : mSelectFields) {
-            if (selectField.id.equals(field.id)) {
-                return true;
-            }
+    public void selectField(Field field) {
+        int cityId = 0;
+        if (application.getSharedPrefUtil().getLocalSettings().cityId > -1) {
+            cityId = application.getSharedPrefUtil().getLocalSettings().cityId;
         }
-        return false;
+        ArrayList<String> fieldIds = new ArrayList<>();
+        fieldIds.add(field.id);
+        HHApiService apiService = application.getApiService();
+        subscription = apiService.getCoaches(Common.START_PAGE, 100, null, null, null, cityId, fieldIds, null, null, 5, 0, null)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<CoachResponseList>() {
+
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(CoachResponseList coachResponseList) {
+                        mView.showCoachesView();
+                        mView.loadCoaches(coachResponseList.data);
+                    }
+                });
+    }
+
+    public void getUserIdentity(String cellPhone) {
+        HHApiService apiService = application.getApiService();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("phone", cellPhone);
+        map.put("promo_code", "921434");
+        subscription = apiService.getUserIdentity(map)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<UserIdentityInfo>() {
+
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(UserIdentityInfo userIdentityInfo) {
+                    }
+                });
     }
 
     /**
-     * @param field
-     * @return true表示添加，false表示去除
+     * 在线咨询
      */
-    public boolean selectField(Field field) {
-        if (mSelectFields == null) {
-            mSelectFields = new ArrayList<>();
-            mSelectFields.add(field);
-            mView.setSelectFieldText(getSelectFieldText());
-            return true;
-        }
-        if (containsSelectField(field)) {
-            removeSelectField(field);
-            mView.setSelectFieldText(getSelectFieldText());
-            return false;
-        } else {
-            mSelectFields.add(field);
-            mView.setSelectFieldText(getSelectFieldText());
-            return true;
-        }
-    }
-
-    private boolean removeSelectField(Field field) {
-        if (mSelectFields == null || mSelectFields.size() < 1) return false;
-        for (Field selectField : mSelectFields) {
-            if (selectField.id.equals(field.id)) {
-                return mSelectFields.remove(selectField);
-            }
-        }
-        return false;
-    }
-
-    private String getSelectFieldText() {
-        if (mSelectFields != null && mSelectFields.size() > 0) {
-            return "查看训练场（已选" + mSelectFields.size() + "）个";
-        } else {
-            return "查看训练场教练";
-        }
+    public void onlineAsk() {
+        User user = application.getSharedPrefUtil().getUser();
+        super.onlineAsk(user, mView.getContext());
     }
 }

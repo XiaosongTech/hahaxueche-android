@@ -133,6 +133,21 @@ public class Utils {
         return ret;
     }
 
+    public static String getDistance(double distance) {
+        String ret = "";
+        DecimalFormat dfInt = new DecimalFormat("#####.##");
+        try {
+            if (distance > 50) {
+                ret = "50+ KM";
+            } else {
+                ret = dfInt.format(distance) + "KM";
+            }
+        } catch (Exception e) {
+            HHLog.e(e.getMessage());
+        }
+        return ret;
+    }
+
     public static String getLocalDate() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         return format.format(new java.util.Date());

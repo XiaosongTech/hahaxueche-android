@@ -1,0 +1,196 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/haha_white">
+
+    <FrameLayout
+        android:id="@+id/frl_learning_driving_icon"
+        android:layout_width="5dp"
+        android:layout_height="18dp"
+        android:layout_margin="@dimen/margin_10dp"
+        android:background="@drawable/rect_bg_appcolor"></FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/frl_learning_driving_icon"
+        android:layout_toRightOf="@id/frl_learning_driving_icon"
+        android:text="学车指南"
+        android:textColor="@color/haha_gray_dark"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_new_policy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/frl_learning_driving_icon"
+        android:layout_below="@id/frl_learning_driving_icon"
+        app:cardCornerRadius="5dp">
+
+        <RelativeLayout
+            android:layout_width="@dimen/cardview_width_160dp"
+            android:layout_height="68dp">
+
+            <TextView
+                android:id="@+id/tv_title1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_15dp"
+                android:layout_marginTop="@dimen/margin_15dp"
+                android:text="驾考新政"
+                android:textColor="@color/haha_gray_dark"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/tv_title1"
+                android:layout_below="@id/tv_title1"
+                android:layout_marginTop="5dp"
+                android:text="2017驾考新规"
+                android:textColor="@color/haha_gray"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/margin_5dp"
+                android:src="@drawable/pic_jiakaoxinzheng" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_procedure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/cv_new_policy"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/margin_10dp"
+        app:cardCornerRadius="5dp">
+
+        <RelativeLayout
+            android:layout_width="@dimen/cardview_width_160dp"
+            android:layout_height="68dp">
+
+            <TextView
+                android:id="@+id/tv_title2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_15dp"
+                android:layout_marginTop="@dimen/margin_15dp"
+                android:text="学车流程"
+                android:textColor="@color/haha_gray_dark"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/tv_title2"
+                android:layout_below="@id/tv_title2"
+                android:layout_marginTop="5dp"
+                android:text="45天拿到驾照"
+                android:textColor="@color/haha_gray"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/margin_5dp"
+                android:src="@drawable/pic_xhecheliucheng" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_enroll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/cv_new_policy"
+        android:layout_below="@id/cv_new_policy"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        app:cardCornerRadius="5dp">
+
+        <RelativeLayout
+            android:layout_width="@dimen/cardview_width_160dp"
+            android:layout_height="68dp">
+
+            <TextView
+                android:id="@+id/tv_title3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_15dp"
+                android:layout_marginTop="@dimen/margin_15dp"
+                android:text="报名须知"
+                android:textColor="@color/haha_gray_dark"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/tv_title3"
+                android:layout_below="@id/tv_title3"
+                android:layout_marginTop="5dp"
+                android:text="学车第一步"
+                android:textColor="@color/haha_gray"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/margin_5dp"
+                android:src="@drawable/pic_baomingxuzhi" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_driving_school_sort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/cv_enroll"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/margin_10dp"
+        app:cardCornerRadius="5dp">
+
+        <RelativeLayout
+            android:layout_width="@dimen/cardview_width_160dp"
+            android:layout_height="68dp">
+
+            <TextView
+                android:id="@+id/tv_title4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_15dp"
+                android:layout_marginTop="@dimen/margin_15dp"
+                android:text="驾校排名"
+                android:textColor="@color/haha_gray_dark"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/tv_title4"
+                android:layout_below="@id/tv_title4"
+                android:layout_marginTop="5dp"
+                android:text="驾校口碑查询"
+                android:textColor="@color/haha_gray"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/margin_5dp"
+                android:src="@drawable/pic_jiaxiaopaiming" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

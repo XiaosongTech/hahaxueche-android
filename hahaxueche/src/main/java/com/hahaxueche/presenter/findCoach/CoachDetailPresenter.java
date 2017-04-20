@@ -11,8 +11,11 @@ import com.hahaxueche.model.base.BaseValid;
 import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.base.Field;
+import com.hahaxueche.model.base.LocalSettings;
+import com.hahaxueche.model.base.ShortenUrl;
 import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.user.UserIdentityInfo;
 import com.hahaxueche.model.user.coach.ClassType;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.Follow;
@@ -178,8 +181,7 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
         if (mCoach == null) return ret;
         Constants constants = application.getConstants();
         Field field = constants.getField(mCoach.coach_group.field_id);
-        City city = constants.getCity(field.city_id);
-        return city.name + field.street + field.section;
+        return field.display_address;
     }
 
     public Field getTrainingField() {
@@ -494,22 +496,6 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
 
     public void freeTry() {
         if (mCoach == null) return;
-        //免费试学URL
-        String url = WebViewUrl.WEB_URL_FREE_TRY;
-        String shareUrl = url;
-        url += "&coach_id=" + mCoach.id;
-        if (mUser != null && mUser.isLogin()) {
-            if (mUser.student.city_id >= 0) {
-                url += "&city_id=" + mUser.student.city_id;
-            }
-            if (!TextUtils.isEmpty(mUser.student.name)) {
-                url += "&name=" + mUser.student.name;
-            }
-            if (!TextUtils.isEmpty(mUser.student.cell_phone)) {
-                url += "&phone=" + mUser.student.cell_phone;
-            }
-
-        }
         //免费试学点击
         HashMap<String, String> map = new HashMap();
         if (mUser != null && mUser.isLogin()) {
@@ -517,9 +503,6 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
         }
         map.put("coach_id", mCoach.id);
         MobclickAgent.onEvent(mView.getContext(), "coach_detail_page_free_trial_tapped", map);
-        HHLog.v("free try url -> " + url);
-        HHLog.v("free try share url -> " + shareUrl);
-        mView.openWebView(url, shareUrl);
     }
 
     public void clickCommentsCount() {
@@ -593,5 +576,66 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
     public boolean isPurchasedService() {
         User user = application.getSharedPrefUtil().getUser();
         return user != null && user.isLogin() && user.student.isPurchasedService();
+    }
+
+    /**
+     * 在线咨询
+     */
+    public void onlineAsk() {
+        User user = application.getSharedPrefUtil().getUser();
+        super.onlineAsk(user, mView.getContext());
+    }
+
+    public void getUserIdentity(String cellPhone) {
+        HHApiService apiService = application.getApiService();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("phone", cellPhone);
+        map.put("promo_code", "921434");
+        subscription = apiService.getUserIdentity(map)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<UserIdentityInfo>() {
+
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(UserIdentityInfo userIdentityInfo) {
+                    }
+                });
+    }
+
+    public void shortenUrl(String url, final int shareType) {
+        if (TextUtils.isEmpty(url)) return;
+        HHApiService apiService = application.getApiService();
+        String longUrl = getShortenUrlAddress(url);
+        if (TextUtils.isEmpty(longUrl)) return;
+        subscription = apiService.shortenUrl(longUrl)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<ArrayList<ShortenUrl>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<ShortenUrl> shortenUrls) {
+                        if (shortenUrls != null && shortenUrls.size() > 0) {
+                            mView.startToShare(shareType, shortenUrls.get(0).url_short);
+                        }
+                    }
+                });
     }
 }

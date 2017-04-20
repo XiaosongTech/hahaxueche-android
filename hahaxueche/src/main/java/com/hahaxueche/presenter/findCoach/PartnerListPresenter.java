@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
+import com.hahaxueche.model.base.LocalSettings;
 import com.hahaxueche.model.responseList.PartnerResponseList;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.HHBasePresenter;
@@ -64,10 +65,9 @@ public class PartnerListPresenter extends HHBasePresenter implements Presenter<P
     }
 
     private void initDefaultFilters() {
-        HHBaseApplication application = HHBaseApplication.get(mView.getContext());
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null) {
-            cityId = user.student.city_id;
+        LocalSettings localSettings = application.getSharedPrefUtil().getLocalSettings();
+        if (localSettings.cityId > -1) {
+            cityId = localSettings.cityId;
         }
         setFilters("", false, false);
     }

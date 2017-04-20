@@ -24,4 +24,6 @@
     <color name="haha_brown">#8b572a</color>
     <color name="haha_red">#ff5555</color>
     <color name="haha_floral_white">#FFFBF1</color>
+    <color name="haha_light_orange">#FDA84B</color>
+    <color name="haha_half_trans">#e0000000</color>
 </resources>

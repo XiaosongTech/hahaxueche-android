@@ -2,6 +2,7 @@ package com.hahaxueche.presenter.login;
 
 import android.text.TextUtils;
 
+import com.hahaxueche.BuildConfig;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseModel;
@@ -175,6 +176,10 @@ public class RegisterPresenter extends HHBasePresenter implements Presenter<Regi
         map.put("password_confirmation", password);
         map.put("user_type", Common.USER_TYPE_STUDENT);
         map.put("source", 0);//从app注册
+        String promoCode = getPromoCode();
+        if (!TextUtils.isEmpty(promoCode)) {
+            map.put("promo_code", promoCode);
+        }
         subscription = apiService.createSession(map)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
@@ -245,5 +250,37 @@ public class RegisterPresenter extends HHBasePresenter implements Presenter<Regi
                         }
                     }
                 });
+    }
+
+    private String getPromoCode() {
+        HHLog.v("BuildConfig.FLAVOR -> " + BuildConfig.FLAVOR);
+        if (BuildConfig.FLAVOR.equals("_360")) {
+            return "112116";
+        } else if (BuildConfig.FLAVOR.equals("xiaomi")) {
+            return "959265";
+        } else if (BuildConfig.FLAVOR.equals("yingyongbao")) {
+            return "147030";
+        } else if (BuildConfig.FLAVOR.equals("haha")) {
+            return "323435";
+        } else if (BuildConfig.FLAVOR.equals("_91")) {
+            return "508252";
+        } else if (BuildConfig.FLAVOR.equals("anzhuoshichang")) {
+            return "127156";
+        } else if (BuildConfig.FLAVOR.equals("baiduzhushou")) {
+            return "361009";
+        } else if (BuildConfig.FLAVOR.equals("huawei")) {
+            return "576445";
+        } else if (BuildConfig.FLAVOR.equals("vivo")) {
+            return "783531";
+        } else if (BuildConfig.FLAVOR.equals("meizu")) {
+            return "471551";
+        } else if (BuildConfig.FLAVOR.equals("sougou")) {
+            return "177202";
+        } else if (BuildConfig.FLAVOR.equals("oppo")) {
+            return "821238";
+        } else if (BuildConfig.FLAVOR.equals("aliapp")) {
+            return "484290";
+        }
+        return "";
     }
 }

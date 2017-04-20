@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/haha_white">
+
+    <FrameLayout
+        android:id="@+id/frl_driving_school_icon"
+        android:layout_width="5dp"
+        android:layout_height="18dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/rect_bg_appcolor"></FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/frl_driving_school_icon"
+        android:layout_toRightOf="@id/frl_driving_school_icon"
+        android:text="热门驾校"
+        android:textColor="@color/haha_gray_dark"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_more_hot_driving_school"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/frl_driving_school_icon"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:drawablePadding="3dp"
+        android:drawableRight="@drawable/ic_morearrow"
+        android:text="更多"
+        android:textColor="@color/app_theme_color" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rcy_hot_driving_school"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/frl_driving_school_icon"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"></android.support.v7.widget.RecyclerView>
+</RelativeLayout>

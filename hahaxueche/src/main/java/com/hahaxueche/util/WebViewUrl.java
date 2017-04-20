@@ -19,9 +19,13 @@ public class WebViewUrl {
     public static final String WEB_URL_ACTIVATE_VOUCHER = BuildConfig.MOBILE_URL + "/share/jihuo";
     public static final String WEB_URL_DALIBAO = BuildConfig.MOBILE_URL + "/share/xin-ren-da-li-bao?promo_code=840157";
     public static final String WEB_URL_REFER_FRIENDS = BuildConfig.MOBILE_URL + "/share/xin-ren-da-li-bao?promo_code=215362";
-    public static final String WEB_URL_BAOGUOKA = BuildConfig.MOBILE_URL + "/share/bao-guo-ka?promo_code=328170";
+    public static final String WEB_URL_BAOGUOKA = BuildConfig.MOBILE_URL + "/share/gua-ke-xian?promo_code=328170";
     public static final String WEB_URL_FREE_TRY = BuildConfig.MOBILE_URL + "/free_trial?promo_code=601811";
     public static final String WEB_URL_GROUP_BUY = BuildConfig.MOBILE_URL + "/share/tuan?promo_code=456134";
     public static final String WEB_URL_PEIFUBAO = BuildConfig.MOBILE_URL + "/pei-fu-bao";
     public static final String WEB_URL_XUECHEBAO = BuildConfig.MOBILE_URL + "/xue-che-bao";
+    public static final String WEB_URL_FENQIBAO = BuildConfig.MOBILE_URL + "/fen-qi-bao";
+    public static final String WEB_URL_ZHENGCE = BuildConfig.MOBILE_URL + "/bao-ming-xu-zhi";
+    public static final String WEB_URL_BAOMING = BuildConfig.MOBILE_URL + "/bao-ming-xu-zhi";
+    public static final String WEB_URL_JIAXIAO = BuildConfig.MOBILE_URL + "/jiaxiao";
 }

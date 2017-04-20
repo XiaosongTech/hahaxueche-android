@@ -1,0 +1,138 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/haha_white"
+    android:paddingBottom="10dp">
+
+    <FrameLayout
+        android:id="@+id/frl_platform_guard_icon"
+        android:layout_width="5dp"
+        android:layout_height="18dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/rect_bg_appcolor"></FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/frl_platform_guard_icon"
+        android:layout_toRightOf="@id/frl_platform_guard_icon"
+        android:text="学车保障"
+        android:textColor="@color/haha_gray_dark"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/lly_xuechebao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/frl_platform_guard_icon"
+        android:layout_marginLeft="@dimen/margin_20dp"
+        android:background="@drawable/rect_bg_trans_bd_gray_corner_ssm"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/ic_xuechebaby" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="学车宝"
+            android:textColor="@color/haha_gray_dark"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.2"
+            android:text="分阶段打款\n不满意不打款"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lly_peifubao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/frl_platform_guard_icon"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/rect_bg_trans_bd_gray_corner_ssm"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iv_peifubao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/ic_peifubaby" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="赔付宝"
+            android:textColor="@color/haha_gray_dark"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.2"
+            android:text="不过包赔付\n挂一科赔一科"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lly_fenqibao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/frl_platform_guard_icon"
+        android:layout_marginRight="@dimen/margin_20dp"
+        android:background="@drawable/rect_bg_trans_bd_gray_corner_ssm"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iv_fenqibao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/ic_fenqibaby" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="分期宝"
+            android:textColor="@color/haha_gray_dark"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.2"
+            android:text="分期学车\n30天零利息"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+</RelativeLayout>

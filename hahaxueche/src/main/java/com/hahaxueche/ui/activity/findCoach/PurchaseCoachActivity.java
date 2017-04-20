@@ -148,6 +148,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_sure_pay:
+                mPresenter.addDataTrack("purchase_confirm_page_purchased", getContext());
                 mPresenter.createCharge();
                 break;
             case R.id.rly_voucher:
@@ -183,7 +184,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
         }
         mRbCoachScore.setRating(averageRating);
         mTvCoachPoints.setText(coach.average_rating + " (" + coach.review_count + ")");
-        mTvCoachLocation.setText(application.getConstants().getSectionName(coach.coach_group.field_id));
+        mTvCoachLocation.setText(application.getConstants().getCitySectionName(coach.coach_group.field_id));
         final Field myField = application.getConstants().getField(coach.coach_group.field_id);
         if (application.getMyLocation() != null && myField != null) {
             String kmString = DistanceUtil.getDistanceKm(application.getMyLocation().lng, application.getMyLocation().lat, myField.lng, myField.lat);
