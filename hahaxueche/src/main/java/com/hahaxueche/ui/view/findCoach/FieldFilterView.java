@@ -14,6 +14,8 @@ import java.util.List;
 public interface FieldFilterView extends HHBaseView {
     void initMap(List<Field> fields);
 
+    void initMap(Field field);
+
     void loadCoaches(ArrayList<Coach> coaches);
 
     void showMessage(String message);

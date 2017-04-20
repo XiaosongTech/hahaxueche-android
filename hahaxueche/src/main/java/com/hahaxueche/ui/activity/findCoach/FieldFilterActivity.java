@@ -28,6 +28,7 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
@@ -91,6 +92,8 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         // 设置布局管理器
         mRcyMapCoach.setLayoutManager(layoutManager);
+        Intent intent = getIntent();
+        mPresenter.getFields((Field) intent.getParcelableExtra("field"));
     }
 
     private void initActionBar() {
@@ -206,12 +209,21 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
         }
         aMap.setOnMarkerClickListener(mMarkerClickListener);// 设置点击marker事件监听器
         setFields(fields);
-        aMap.setLocationSource(this);// 设置定位监听
-        aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
-        aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
-        // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
-        aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+        if (fields.size() > 1) {
+            aMap.setLocationSource(this);// 设置定位监听
+            aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
+            aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
+            // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
+            aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+        }
         aMap.setInfoWindowAdapter(this);
+    }
+
+    @Override
+    public void initMap(Field field) {
+        List<Field> fieldList = new ArrayList<>();
+        fieldList.add(field);
+        initMap(fieldList);
     }
 
     @Override
@@ -312,6 +324,11 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
                 marker.setObject(field);
             }
         }
+        if (fields.size() == 0) {
+            Field field = fields.get(0);
+            //设定初始可视区域
+            aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(field.lat, field.lng), 14));
+        }
     }
 
     @Override
@@ -333,6 +350,7 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
     private void render(Marker marker, View view) {
         Field field = (Field) marker.getObject();
         SimpleDraweeView mIvFieldAvatar = ButterKnife.findById(view, R.id.iv_field_avatar);
+        HHLog.v("field.image" + field.image);
         mIvFieldAvatar.setImageURI(field.image);
         TextView tvFieldName = ButterKnife.findById(view, R.id.tv_field_name);
         tvFieldName.setText(field.name);

@@ -39,14 +39,32 @@ public class FieldFilterPresenter extends HHBasePresenter implements Presenter<F
     public void attachView(FieldFilterView view) {
         this.mView = view;
         application = HHBaseApplication.get(mView.getContext());
+
+    }
+
+    public void getFields(final Field selectField) {
         HHApiService apiService = application.getApiService();
         int cityId = 0;
         if (application.getSharedPrefUtil().getLocalSettings().cityId > -1) {
             cityId = application.getSharedPrefUtil().getLocalSettings().cityId;
         }
-        FieldResponseList cacheFields = application.getCachedFieldByCityId(cityId);
+        final FieldResponseList cacheFields = application.getCachedFieldByCityId(cityId);
         if (cacheFields != null) {
-            mView.initMap(cacheFields.data);
+            if (selectField != null) {
+                boolean isExist = false;
+                for (Field field : cacheFields.data) {
+                    if (field.id.equals(selectField.id)) {
+                        mView.initMap(field);
+                        isExist = true;
+                        break;
+                    }
+                }
+                if (!isExist) {
+                    mView.initMap(selectField);
+                }
+            } else {
+                mView.initMap(cacheFields.data);
+            }
         } else {
             final int finalCityId = cityId;
             subscription = apiService.getFields(cityId, null)
@@ -67,7 +85,21 @@ public class FieldFilterPresenter extends HHBasePresenter implements Presenter<F
                         @Override
                         public void onNext(FieldResponseList fieldResponseList) {
                             application.cacheField(fieldResponseList, finalCityId);
-                            mView.initMap(fieldResponseList.data);
+                            if (selectField != null) {
+                                boolean isExist = false;
+                                for (Field field : fieldResponseList.data) {
+                                    if (field.id.equals(selectField.id)) {
+                                        mView.initMap(field);
+                                        isExist = true;
+                                        break;
+                                    }
+                                }
+                                if (!isExist) {
+                                    mView.initMap(selectField);
+                                }
+                            } else {
+                                mView.initMap(fieldResponseList.data);
+                            }
                         }
                     });
         }

@@ -537,7 +537,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 mPresenter.clickTrainFieldCount();
                 Field field = mPresenter.getTrainingField();
                 if (field != null) {
-                    intent = new Intent(getContext(), FieldMapActivity.class);
+                    intent = new Intent(getContext(), FieldFilterActivity.class);
                     intent.putExtra("field", field);
                     startActivity(intent);
                 }
