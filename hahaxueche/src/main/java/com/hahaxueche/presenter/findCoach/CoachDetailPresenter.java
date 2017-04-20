@@ -14,6 +14,7 @@ import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.base.LocalSettings;
 import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.user.UserIdentityInfo;
 import com.hahaxueche.model.user.coach.ClassType;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.Follow;
@@ -495,23 +496,6 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
 
     public void freeTry() {
         if (mCoach == null) return;
-        //免费试学URL
-        String url = WebViewUrl.WEB_URL_FREE_TRY;
-        String shareUrl = url;
-        url += "&coach_id=" + mCoach.id;
-        LocalSettings localSettings = application.getSharedPrefUtil().getLocalSettings();
-        if (localSettings.cityId > -1) {
-            url += "&city_id=" + localSettings.cityId;
-        }
-        if (mUser != null && mUser.isLogin()) {
-            if (!TextUtils.isEmpty(mUser.student.name)) {
-                url += "&name=" + mUser.student.name;
-            }
-            if (!TextUtils.isEmpty(mUser.student.cell_phone)) {
-                url += "&phone=" + mUser.student.cell_phone;
-            }
-
-        }
         //免费试学点击
         HashMap<String, String> map = new HashMap();
         if (mUser != null && mUser.isLogin()) {
@@ -519,9 +503,6 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
         }
         map.put("coach_id", mCoach.id);
         MobclickAgent.onEvent(mView.getContext(), "coach_detail_page_free_trial_tapped", map);
-        HHLog.v("free try url -> " + url);
-        HHLog.v("free try share url -> " + shareUrl);
-        mView.openWebView(url, shareUrl);
     }
 
     public void clickCommentsCount() {
@@ -603,5 +584,31 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
     public void onlineAsk() {
         User user = application.getSharedPrefUtil().getUser();
         super.onlineAsk(user, mView.getContext());
+    }
+
+    public void getUserIdentity(String cellPhone) {
+        HHApiService apiService = application.getApiService();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("phone", cellPhone);
+        map.put("promo_code", "921434");
+        subscription = apiService.getUserIdentity(map)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<UserIdentityInfo>() {
+
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(UserIdentityInfo userIdentityInfo) {
+                    }
+                });
     }
 }

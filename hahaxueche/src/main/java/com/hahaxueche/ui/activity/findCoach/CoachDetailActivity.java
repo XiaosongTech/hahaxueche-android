@@ -31,8 +31,10 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.BuildConfig;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
+import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.responseList.ReviewResponseList;
+import com.hahaxueche.model.user.UserIdentityInfo;
 import com.hahaxueche.model.user.coach.ClassType;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.Review;
@@ -47,6 +49,7 @@ import com.hahaxueche.ui.activity.myPage.UploadIdCardActivity;
 import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
 import com.hahaxueche.ui.dialog.BaseConfirmSimpleDialog;
 import com.hahaxueche.ui.dialog.ShareDialog;
+import com.hahaxueche.ui.dialog.homepage.GetUserIdentityDialog;
 import com.hahaxueche.ui.view.findCoach.CoachDetailView;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
@@ -57,6 +60,7 @@ import com.hahaxueche.util.Utils;
 import com.hahaxueche.util.WebViewUrl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -65,6 +69,8 @@ import butterknife.OnClick;
 import me.shaohui.shareutil.ShareUtil;
 import me.shaohui.shareutil.share.ShareListener;
 import me.shaohui.shareutil.share.SharePlatform;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by wangshirui on 16/10/5.
@@ -531,6 +537,14 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 break;
             case R.id.tv_free_try:
                 mPresenter.freeTry();
+                GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "看过训练场才放心！",
+                        "输入手机号，教练立即带你看场地", "预约看场地", new GetUserIdentityDialog.OnIdentityGetListener() {
+                    @Override
+                    public void getCellPhone(String cellPhone) {
+                        mPresenter.getUserIdentity(cellPhone);
+                    }
+                });
+                dialog.show();
                 break;
             case R.id.lly_platform_assurance:
                 mPresenter.clickPlatformAssurance();
