@@ -155,6 +155,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     private String mDescription;
     private String mImageUrl;
     private String mUrl;
+    private String mShareSmsUrl;
 
     /*****************
      * end
@@ -187,7 +188,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         mTitle = "哈哈学车-选驾校，挑教练，上哈哈学车";
         mDescription = "好友力荐:\n哈哈学车优秀教练" + coach.name;
         mImageUrl = "https://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
-        mUrl = BuildConfig.SERVER_URL + "/share/coaches/" + coach.id;
+        mUrl = BuildConfig.MOBILE_URL + "/jiaolian/" + coach.id;
         HHLog.v("mUrl -> " + mUrl);
     }
 
@@ -213,31 +214,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                     shareDialog = new ShareDialog(getContext(), new ShareDialog.OnShareListener() {
                         @Override
                         public void onShare(int shareType) {
-                            switch (shareType) {
-                                case 0:
-                                    shareToWeixin();
-                                    break;
-                                case 1:
-                                    shareToFriendCircle();
-                                    break;
-                                case 2:
-                                    shareToQQ();
-                                    break;
-                                case 3:
-                                    shareToWeibo();
-                                    break;
-                                case 4:
-                                    shareToQZone();
-                                    break;
-                                case 5:
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-                                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, RequestCode.PERMISSIONS_REQUEST_SEND_SMS_FOR_SHARE);
-                                    } else {
-                                        shareToSms();
-                                    }
-                                default:
-                                    break;
-                            }
+                            mPresenter.shortenUrl(mUrl, shareType);
                         }
                     });
                 }
@@ -246,8 +223,38 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         });
     }
 
-    private void shareToQQ() {
-        ShareUtil.shareMedia(this, SharePlatform.QQ, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+    @Override
+    public void startToShare(int shareType, String shareUrl) {
+        switch (shareType) {
+            case 0:
+                shareToWeixin(shareUrl);
+                break;
+            case 1:
+                shareToFriendCircle(shareUrl);
+                break;
+            case 2:
+                shareToQQ(shareUrl);
+                break;
+            case 3:
+                shareToWeibo(shareUrl);
+                break;
+            case 4:
+                shareToQZone(shareUrl);
+                break;
+            case 5:
+                mShareSmsUrl = shareUrl;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.SEND_SMS}, RequestCode.PERMISSIONS_REQUEST_SEND_SMS_FOR_SHARE);
+                } else {
+                    shareToSms(shareUrl);
+                }
+            default:
+                break;
+        }
+    }
+
+    private void shareToQQ(String shareUrl) {
+        ShareUtil.shareMedia(this, SharePlatform.QQ, mTitle, mDescription, shareUrl, mImageUrl, new ShareListener() {
             @Override
             public void shareSuccess() {
                 if (shareDialog != null) {
@@ -270,8 +277,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         });
     }
 
-    private void shareToQZone() {
-        ShareUtil.shareMedia(this, SharePlatform.QZONE, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+    private void shareToQZone(String shareUrl) {
+        ShareUtil.shareMedia(this, SharePlatform.QZONE, mTitle, mDescription, shareUrl, mImageUrl, new ShareListener() {
             @Override
             public void shareSuccess() {
                 if (shareDialog != null) {
@@ -294,8 +301,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         });
     }
 
-    private void shareToWeibo() {
-        ShareUtil.shareMedia(this, SharePlatform.WEIBO, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+    private void shareToWeibo(String shareUrl) {
+        ShareUtil.shareMedia(this, SharePlatform.WEIBO, mTitle, mDescription, shareUrl, mImageUrl, new ShareListener() {
             @Override
             public void shareSuccess() {
                 if (shareDialog != null) {
@@ -318,8 +325,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         });
     }
 
-    private void shareToWeixin() {
-        ShareUtil.shareMedia(this, SharePlatform.WX, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+    private void shareToWeixin(String shareUrl) {
+        ShareUtil.shareMedia(this, SharePlatform.WX, mTitle, mDescription, shareUrl, mImageUrl, new ShareListener() {
             @Override
             public void shareSuccess() {
                 if (shareDialog != null) {
@@ -342,8 +349,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         });
     }
 
-    private void shareToFriendCircle() {
-        ShareUtil.shareMedia(this, SharePlatform.WX_TIMELINE, mTitle, mDescription, mUrl, mImageUrl, new ShareListener() {
+    private void shareToFriendCircle(String shareUrl) {
+        ShareUtil.shareMedia(this, SharePlatform.WX_TIMELINE, mTitle, mDescription, shareUrl, mImageUrl, new ShareListener() {
             @Override
             public void shareSuccess() {
                 if (shareDialog != null) {
@@ -1099,7 +1106,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         if (requestCode == RequestCode.PERMISSIONS_REQUEST_SEND_SMS_FOR_SHARE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
-                shareToSms();
+                shareToSms(mShareSmsUrl);
             } else {
                 showMessage("请允许发送短信权限，不然无法分享到短信");
             }
@@ -1127,9 +1134,9 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         }
     }
 
-    private void shareToSms() {
+    private void shareToSms(String shareUrl) {
         Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"));
-        intent.putExtra("sms_body", mTitle + mDescription + mUrl);
+        intent.putExtra("sms_body", mTitle + mDescription + shareUrl);
         startActivity(intent);
     }
 

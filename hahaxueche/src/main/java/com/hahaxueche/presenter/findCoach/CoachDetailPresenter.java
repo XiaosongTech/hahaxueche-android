@@ -12,6 +12,7 @@ import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.base.LocalSettings;
+import com.hahaxueche.model.base.ShortenUrl;
 import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.UserIdentityInfo;
@@ -608,6 +609,33 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
 
                     @Override
                     public void onNext(UserIdentityInfo userIdentityInfo) {
+                    }
+                });
+    }
+
+    public void shortenUrl(String url, final int shareType) {
+        if (TextUtils.isEmpty(url)) return;
+        HHApiService apiService = application.getApiService();
+        String longUrl = getShortenUrlAddress(url);
+        if (TextUtils.isEmpty(longUrl)) return;
+        subscription = apiService.shortenUrl(longUrl)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<ArrayList<ShortenUrl>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<ShortenUrl> shortenUrls) {
+                        if (shortenUrls != null && shortenUrls.size() > 0) {
+                            mView.startToShare(shareType, shortenUrls.get(0).url_short);
+                        }
                     }
                 });
     }
