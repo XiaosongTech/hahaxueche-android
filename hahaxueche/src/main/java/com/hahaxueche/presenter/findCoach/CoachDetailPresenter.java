@@ -181,7 +181,7 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
         if (mCoach == null) return ret;
         Constants constants = application.getConstants();
         Field field = constants.getField(mCoach.coach_group.field_id);
-        return field.display_address;
+        return field != null ? field.display_address : "";
     }
 
     public Field getTrainingField() {

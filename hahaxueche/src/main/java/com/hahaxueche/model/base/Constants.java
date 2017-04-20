@@ -1,5 +1,7 @@
 package com.hahaxueche.model.base;
 
+import android.text.TextUtils;
+
 import com.hahaxueche.model.payment.InsurancePrices;
 
 import java.util.ArrayList;
@@ -46,7 +48,8 @@ public class Constants {
         if (fields == null || fields.size() < 1) return ret;
         for (Field field : fields) {
             if (field.id.equals(fieldId)) {
-                ret = getCityName(field.city_id) + field.section;
+                ret = getCityName(field.city_id) +
+                        (TextUtils.isEmpty(field.section) ? field.zone : field.section);
                 break;
             }
         }
@@ -58,7 +61,7 @@ public class Constants {
         if (fields == null || fields.size() < 1) return ret;
         for (Field field : fields) {
             if (field.id.equals(fieldId)) {
-                ret = field.section;
+                ret = (TextUtils.isEmpty(field.section) ? field.zone : field.section);
                 break;
             }
         }

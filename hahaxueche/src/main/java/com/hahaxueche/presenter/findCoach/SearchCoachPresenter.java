@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
+import com.hahaxueche.model.base.LocalSettings;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
@@ -49,8 +50,13 @@ public class SearchCoachPresenter extends HHBasePresenter implements Presenter<S
             return;
         }
         mView.disableButton();
+        int cityId = 0;
+        LocalSettings localSettings = application.getSharedPrefUtil().getLocalSettings();
+        if (localSettings.cityId > -1) {
+            cityId = localSettings.cityId;
+        }
         HHApiService apiService = application.getApiService();
-        subscription = apiService.getCoachesByKeyword(keyword)
+        subscription = apiService.getCoachesByKeyword(keyword, cityId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<ArrayList<Coach>>() {

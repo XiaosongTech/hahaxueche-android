@@ -119,7 +119,7 @@ public interface HHApiService {
     Observable<CoachResponseList> getCoaches(@Url String path);
 
     @GET("coaches")
-    Observable<ArrayList<Coach>> getCoachesByKeyword(@Query("keyword") String keyword);
+    Observable<ArrayList<Coach>> getCoachesByKeyword(@Query("keyword") String keyword, @Query("city_id") int cityId);
 
     @GET("coaches/{id}")
     Observable<Coach> getCoach(@Path("id") String coachId, @Query("student_id") String studentId);

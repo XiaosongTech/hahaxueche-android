@@ -186,7 +186,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     @Override
     public void initShareData(Coach coach) {
         mTitle = "哈哈学车-选驾校，挑教练，上哈哈学车";
-        mDescription = "好友力荐:\n哈哈学车优秀教练" + coach.name;
+        mDescription = "好友力荐:" + coach.name + "教练-" + coach.driving_school;
         mImageUrl = "https://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
         mUrl = BuildConfig.MOBILE_URL + "/jiaolian/" + coach.id;
         HHLog.v("mUrl -> " + mUrl);

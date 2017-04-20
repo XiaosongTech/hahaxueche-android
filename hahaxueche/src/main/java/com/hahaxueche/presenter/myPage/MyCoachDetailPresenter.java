@@ -1,5 +1,7 @@
 package com.hahaxueche.presenter.myPage;
 
+import android.text.TextUtils;
+
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseBoolean;
@@ -126,7 +128,7 @@ public class MyCoachDetailPresenter extends HHBasePresenter implements Presenter
         Constants constants = application.getConstants();
         Field field = constants.getField(mCoach.coach_group.field_id);
         City city = constants.getCity(field.city_id);
-        return city.name + field.street + field.section;
+        return city.name + field.street + (TextUtils.isEmpty(field.section) ? field.zone : field.section);
     }
 
     public Field getTrainingField() {
