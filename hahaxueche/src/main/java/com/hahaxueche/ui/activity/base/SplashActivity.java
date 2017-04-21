@@ -1,8 +1,16 @@
 package com.hahaxueche.ui.activity.base;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.widget.ImageView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.hahaxueche.R;
 import com.hahaxueche.presenter.base.SplashPresenter;
 import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
@@ -19,6 +27,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -27,6 +36,10 @@ import butterknife.ButterKnife;
 public class SplashActivity extends HHBaseActivity implements SplashView {
     private SplashPresenter mPresenter;
     private LinkedME linkedME;
+
+    @BindView(R.id.iv_welcome)
+    ImageView mIvWelcome;
+    AnimationDrawable animationDrawable;
 
     public void onStart() {
         super.onStart();
@@ -49,9 +62,20 @@ public class SplashActivity extends HHBaseActivity implements SplashView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash);
         mPresenter = new SplashPresenter();
         mPresenter.attachView(this);
         ButterKnife.bind(this);
+        mIvWelcome.setImageResource(R.drawable.splash_anim);
+        animationDrawable = (AnimationDrawable) mIvWelcome.getDrawable();
+        animationDrawable.start();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mPresenter.doLogin();
+            }
+        }, 3500);
         MobclickAgent.setDebugMode(false);
     }
 

@@ -95,7 +95,7 @@
     </style>
 
     <style name="SplashTheme" parent="@style/AppBaseThemeNoTitle">
-        <item name="android:background">@drawable/welcome</item>
+        <item name="android:background">@drawable/welcome0</item>
     </style>
 
     <style name="ClickRatingStyle" parent="@android:style/Widget.RatingBar">
