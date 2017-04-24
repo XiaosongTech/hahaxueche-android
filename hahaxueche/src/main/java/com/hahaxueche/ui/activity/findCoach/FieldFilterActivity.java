@@ -254,11 +254,11 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
             @Override
             public void onCheckFieldClick() {
                 mPresenter.addDataTrack("map_view_page_check_site_tapped", getContext());
-                GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "轻松定位训练场",
-                        "输入手机号，立即接收详细地址", "发我定位", new GetUserIdentityDialog.OnIdentityGetListener() {
+                GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "看过训练场才放心！",
+                        "输入手机号，教练立即带你看场地", "预约看场地", new GetUserIdentityDialog.OnIdentityGetListener() {
                     @Override
                     public void getCellPhone(String cellPhone) {
-                        mPresenter.addDataTrack("map_view_page_check_site_confirmed", getContext());
+                        mPresenter.addDataTrack("map_view_page_locate_confirmed", getContext());
                         mPresenter.getUserIdentity(cellPhone);
                     }
                 });
@@ -382,11 +382,11 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
             @Override
             public void onClick(View view) {
                 mPresenter.addDataTrack("map_view_page_locate_tapped", getContext());
-                GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "看过训练场才放心！",
-                        "输入手机号，教练立即带你看场地", "预约看场地", new GetUserIdentityDialog.OnIdentityGetListener() {
+                GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "轻松定位训练场",
+                        "输入手机号，立即接收详细地址", "发我定位", new GetUserIdentityDialog.OnIdentityGetListener() {
                     @Override
                     public void getCellPhone(String cellPhone) {
-                        mPresenter.addDataTrack("map_view_page_locate_confirmed", getContext());
+                        mPresenter.addDataTrack("map_view_page_check_site_confirmed", getContext());
                         mPresenter.getUserIdentity(cellPhone);
                     }
                 });
