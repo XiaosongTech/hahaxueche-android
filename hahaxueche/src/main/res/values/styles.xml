@@ -95,7 +95,8 @@
     </style>
 
     <style name="SplashTheme" parent="@style/AppBaseThemeNoTitle">
-        <item name="android:background">@drawable/welcome0</item>
+        <item name="android:windowBackground">@drawable/welcome0</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
 
     <style name="ClickRatingStyle" parent="@android:style/Widget.RatingBar">

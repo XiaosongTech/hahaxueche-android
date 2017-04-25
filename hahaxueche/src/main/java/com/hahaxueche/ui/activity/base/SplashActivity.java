@@ -5,6 +5,9 @@ import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -37,9 +40,11 @@ public class SplashActivity extends HHBaseActivity implements SplashView {
     private SplashPresenter mPresenter;
     private LinkedME linkedME;
 
-    @BindView(R.id.iv_welcome)
-    ImageView mIvWelcome;
-    AnimationDrawable animationDrawable;
+    @BindView(R.id.iv_logo)
+    ImageView mIvLogo;
+
+    @BindView(R.id.iv_background)
+    ImageView mIvBackground;
 
     public void onStart() {
         super.onStart();
@@ -66,17 +71,31 @@ public class SplashActivity extends HHBaseActivity implements SplashView {
         mPresenter = new SplashPresenter();
         mPresenter.attachView(this);
         ButterKnife.bind(this);
-        mIvWelcome.setImageResource(R.drawable.splash_anim);
-        animationDrawable = (AnimationDrawable) mIvWelcome.getDrawable();
-        animationDrawable.start();
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+        startAnim();
+        MobclickAgent.setDebugMode(false);
+    }
+
+    private void startAnim() {
+        Animation logoAnim = AnimationUtils.loadAnimation(this, R.anim.anim_splash_logo);
+        mIvLogo.startAnimation(logoAnim);
+        Animation backgroundAnim = AnimationUtils.loadAnimation(this, R.anim.anim_splash_background);
+        mIvBackground.startAnimation(backgroundAnim);
+        backgroundAnim.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void run() {
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
                 mPresenter.doLogin();
             }
-        }, 3500);
-        MobclickAgent.setDebugMode(false);
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 
     @Override
