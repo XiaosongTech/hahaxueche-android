@@ -60,6 +60,7 @@ public class HotDrivingSchoolAdapter extends RecyclerView.Adapter<HotDrivingScho
         ss.setSpan(new AbsoluteSizeSpan(Utils.instence(mContext).sp2px(12)), text.indexOf("起"), text.indexOf("起") + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         holder.mTvPrice.setText(ss);
         holder.mIvAvatar.setImageURI(drivingSchool.avatar);
+        holder.mTvName.setText(drivingSchool.name);
     }
 
     @Override
@@ -77,6 +78,8 @@ public class HotDrivingSchoolAdapter extends RecyclerView.Adapter<HotDrivingScho
         TextView mTvPrice;
         @BindView(R.id.iv_avatar)
         SimpleDraweeView mIvAvatar;
+        @BindView(R.id.tv_name)
+        TextView mTvName;
 
         public ViewHolder(View view) {
             super(view);
