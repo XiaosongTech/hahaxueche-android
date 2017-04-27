@@ -13,6 +13,7 @@ import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.base.LocalSettings;
 import com.hahaxueche.model.base.ShortenUrl;
+import com.hahaxueche.model.base.UserIdentityParam;
 import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.UserIdentityInfo;
@@ -588,10 +589,17 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
 
     public void getUserIdentity(String cellPhone) {
         HHApiService apiService = application.getApiService();
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("phone", cellPhone);
-        map.put("promo_code", "921434");
-        subscription = apiService.getUserIdentity(map)
+        UserIdentityParam param = new UserIdentityParam();
+        param.phone = cellPhone;
+        param.promo_code = "921434";
+        param.coach_id = mCoach.id;
+        param.field_id = mCoach.coach_group.field_id;
+        param.driving_school_id = mCoach.driving_school_id;
+        if (application.getMyLocation() != null) {
+            param.lng = application.getMyLocation().lng;
+            param.lat = application.getMyLocation().lat;
+        }
+        subscription = apiService.getUserIdentity(param)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<UserIdentityInfo>() {

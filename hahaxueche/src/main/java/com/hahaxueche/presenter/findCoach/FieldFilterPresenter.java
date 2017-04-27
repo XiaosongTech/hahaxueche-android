@@ -6,17 +6,21 @@ import android.text.TextUtils;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
+import com.hahaxueche.model.base.EventData;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.base.LocalSettings;
+import com.hahaxueche.model.base.UserIdentityParam;
 import com.hahaxueche.model.responseList.CoachResponseList;
 import com.hahaxueche.model.responseList.FieldResponseList;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.UserIdentityInfo;
+import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.FieldFilterView;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.WebViewUrl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -115,12 +119,35 @@ public class FieldFilterPresenter extends HHBasePresenter implements Presenter<F
                 });
     }
 
-    public void getUserIdentity(String cellPhone) {
+    public void sendLocation(String cellPhone, Field field) {
+        UserIdentityParam param = new UserIdentityParam();
+        param.phone = cellPhone;
+        param.promo_code = "921434";
+        param.field_id = field.id;
+        param.event_type = "1";
+        EventData eventData = new EventData();
+        eventData.link = WebViewUrl.WEB_URL_DITU + "?field_id=" + field.id;
+        eventData.field_id = field.id;
+        param.event_data = eventData;
+        getUserIdentity(param);
+    }
+
+    public void checkField(String cellPhone, Coach coach) {
+        UserIdentityParam param = new UserIdentityParam();
+        param.phone = cellPhone;
+        param.promo_code = "921434";
+        param.coach_id = coach.id;
+        param.field_id = coach.coach_group.field_id;
+        param.driving_school_id = coach.driving_school_id;
+    }
+
+    private void getUserIdentity(UserIdentityParam param) {
         HHApiService apiService = application.getApiService();
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("phone", cellPhone);
-        map.put("promo_code", "921434");
-        subscription = apiService.getUserIdentity(map)
+        if (application.getMyLocation() != null) {
+            param.lng = application.getMyLocation().lng;
+            param.lat = application.getMyLocation().lat;
+        }
+        subscription = apiService.getUserIdentity(param)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<UserIdentityInfo>() {
@@ -147,5 +174,9 @@ public class FieldFilterPresenter extends HHBasePresenter implements Presenter<F
     public void onlineAsk() {
         User user = application.getSharedPrefUtil().getUser();
         super.onlineAsk(user, mView.getContext());
+    }
+
+    public void setLocation(double lat, double lng) {
+        application.setMyLocation(lat, lng);
     }
 }

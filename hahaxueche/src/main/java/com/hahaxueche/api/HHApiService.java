@@ -9,6 +9,7 @@ import com.hahaxueche.model.base.CityConstants;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.base.ShortenUrl;
+import com.hahaxueche.model.base.UserIdentityParam;
 import com.hahaxueche.model.community.Article;
 import com.hahaxueche.model.course.ScheduleEvent;
 import com.hahaxueche.model.examLib.Question;
@@ -301,9 +302,8 @@ public interface HHApiService {
     @GET("fields")
     Observable<FieldResponseList> getFields(@Query("city_id") int cityId, @Query("driving_school_id") String drivingSchoolId);
 
-    @FormUrlEncoded
     @POST("user_identities")
-    Observable<UserIdentityInfo> getUserIdentity(@FieldMap HashMap<String, Object> map);
+    Observable<UserIdentityInfo> getUserIdentity(@Body UserIdentityParam param);
 
     class Factory {
         public static Retrofit getRetrofit() {
