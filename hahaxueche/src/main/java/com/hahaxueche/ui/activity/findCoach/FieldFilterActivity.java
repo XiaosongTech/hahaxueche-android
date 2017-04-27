@@ -15,7 +15,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
@@ -28,10 +27,12 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
@@ -53,7 +54,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by wangshirui on 2016/10/17.
@@ -77,7 +77,8 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
     private Field mSelectField;
     private ArrayList<Marker> markerList;
     private String cellPhone;
-    private boolean isFixField = false;
+
+    private ArrayList<Field> mHighlightFields = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,11 +96,10 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
         mRcyMapCoach.setLayoutManager(layoutManager);
         Intent intent = getIntent();
         if (intent.getParcelableExtra("field") != null) {
-            isFixField = true;
-            initMap((Field) intent.getParcelableExtra("field"));
-        } else {
-            mPresenter.getFields();
+            mHighlightFields.add((Field) intent.getParcelableExtra("field"));
+            mSelectField = intent.getParcelableExtra("field");
         }
+        mPresenter.getFields();
     }
 
     private void initActionBar() {
@@ -163,7 +163,7 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
         if (mListener != null && amapLocation != null) {
             if (amapLocation != null
                     && amapLocation.getErrorCode() == 0) {
-                if (!isFixField) {
+                if (mHighlightFields.size() == 0) {
                     mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
                 }
                 mlocationClient.stopLocation();
@@ -217,21 +217,24 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
         }
         aMap.setOnMarkerClickListener(mMarkerClickListener);// 设置点击marker事件监听器
         aMap.setInfoWindowAdapter(this);
-        setFields(fields);
-        if (!isFixField) {
+        aMap.setOnMapLoadedListener(new AMap.OnMapLoadedListener() {
+            @Override
+            public void onMapLoaded() {
+                if (mSelectField != null) {
+                    //设定初始可视区域
+                    aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mSelectField.lat, mSelectField.lng), 14));
+                    mPresenter.selectField(mSelectField);
+                }
+            }
+        });
+        initFields(fields);
+        if (mHighlightFields.size() == 0) {
             aMap.setLocationSource(this);// 设置定位监听
             aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
             aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
             // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
             aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
         }
-    }
-
-    @Override
-    public void initMap(Field field) {
-        List<Field> fieldList = new ArrayList<>();
-        fieldList.add(field);
-        initMap(fieldList);
     }
 
     @Override
@@ -290,12 +293,19 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
         @Override
         public boolean onMarkerClick(Marker marker) {
             for (Marker existMarker : markerList) {
-                existMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                        .decodeResource(getResources(),
-                                R.drawable.ic_map_local_choseoff)));
+                Field existField = (Field) existMarker.getObject();
+                if (isHighlightField(existField)) {
+                    existMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                            .decodeResource(getResources(),
+                                    R.drawable.ic_map_local_choseonly)));
+                } else {
+                    existMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                            .decodeResource(getResources(),
+                                    R.drawable.ic_map_local_choseoff)));
+                }
             }
             Field field = (Field) marker.getObject();
-            if (mSelectField != null && mSelectField.id.contains(field.id)) {
+            if (mSelectField != null && mSelectField.id.equals(field.id)) {
                 mSelectField = null;
                 marker.hideInfoWindow();
                 hideCoachesView();
@@ -306,20 +316,21 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
                                 R.drawable.ic_map_local_choseon)));
                 marker.showInfoWindow();
                 mPresenter.selectField(mSelectField);
+                aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(field.lat, field.lng), 14));
             }
             return true;
         }
     };
 
-    private void setFields(List<Field> fields) {
+    private void initFields(List<Field> fields) {
         ArrayList<MarkerOptions> markerOptionlst = new ArrayList<>();
         markerList = new ArrayList<>();
         for (Field field : fields) {
             MarkerOptions markerOption = new MarkerOptions();
             LatLng x = new LatLng(field.lat, field.lng);
             markerOption.position(x);
-            markerOption.title(field.name).snippet(field.street);
-            markerOption.draggable(false);
+            markerOption.title(field.name).snippet(field.display_address);
+            //markerOption.draggable(false);
             markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                     .decodeResource(getResources(),
                             R.drawable.ic_map_local_choseoff)));
@@ -330,20 +341,18 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
             for (Marker marker : markerList) {
                 Field field = fields.get(markerList.indexOf(marker));
                 marker.setObject(field);
-                if (isFixField) {
+                if (isHighlightField(field)) {
+                    marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                            .decodeResource(getResources(),
+                                    R.drawable.ic_map_local_choseonly)));
+                }
+                if (mSelectField != null && mSelectField.id.equals(field.id)) {
                     marker.showInfoWindow();
                     marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                             .decodeResource(getResources(),
                                     R.drawable.ic_map_local_choseon)));
                 }
             }
-        }
-        if (fields.size() == 1) {
-            Field field = fields.get(0);
-            mSelectField = field;
-            //设定初始可视区域
-            aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(field.lat, field.lng), 14));
-            mPresenter.selectField(field);
         }
     }
 
@@ -366,7 +375,6 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
     private void render(Marker marker, View view) {
         Field field = (Field) marker.getObject();
         SimpleDraweeView mIvFieldAvatar = ButterKnife.findById(view, R.id.iv_field_avatar);
-        HHLog.v("field.image" + field.image);
         mIvFieldAvatar.setImageURI(field.image);
         TextView tvFieldName = ButterKnife.findById(view, R.id.tv_field_name);
         tvFieldName.setText(field.name);
@@ -433,5 +441,18 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
     @Override
     public void hideCoachesView() {
         mRcyMapCoach.setVisibility(View.GONE);
+    }
+
+
+    private boolean isHighlightField(Field field) {
+        if (mHighlightFields.size() == 0) return false;
+        boolean isExist = false;
+        for (Field highlightField : mHighlightFields) {
+            if (highlightField.id.equals(field.id)) {
+                isExist = true;
+                break;
+            }
+        }
+        return isExist;
     }
 }
