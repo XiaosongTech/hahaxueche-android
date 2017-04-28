@@ -45,6 +45,10 @@ public class Coach implements Parcelable {
     public String distance;
     public String consult_phone;
 
+    public Coach() {
+
+    }
+
     protected Coach(Parcel in) {
         id = in.readString();
         cell_phone = in.readString();

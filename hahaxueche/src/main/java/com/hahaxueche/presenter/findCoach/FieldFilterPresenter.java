@@ -1,14 +1,9 @@
 package com.hahaxueche.presenter.findCoach;
 
-import android.text.Html;
-import android.text.TextUtils;
-
 import com.hahaxueche.HHBaseApplication;
-import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.EventData;
 import com.hahaxueche.model.base.Field;
-import com.hahaxueche.model.base.LocalSettings;
 import com.hahaxueche.model.base.UserIdentityParam;
 import com.hahaxueche.model.responseList.CoachResponseList;
 import com.hahaxueche.model.responseList.FieldResponseList;
@@ -23,8 +18,6 @@ import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.WebViewUrl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import rx.Subscriber;
 import rx.Subscription;

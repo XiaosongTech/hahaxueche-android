@@ -108,27 +108,9 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
         ButterKnife.bind(this, view);
         mPresenter.attachView(this);
-        Uri uriFindSchool = Uri.parse("res://com.hahaxueche)/" + R.drawable.bt_chooseschool);
-        DraweeController dcFindSchool =
-                Fresco.newDraweeControllerBuilder()
-                        .setUri(uriFindSchool)
-                        .setAutoPlayAnimations(true) // 设置加载图片完成后是否直接进行播放
-                        .build();
-        mIvFindDrivingSchool.setController(dcFindSchool);
-        GenericDraweeHierarchy hyFindDrivingSchool = mIvFindDrivingSchool.getHierarchy();
-        hyFindDrivingSchool.setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
-        Uri uriFindCoach = Uri.parse("res://com.hahaxueche)/" + R.drawable.bt_choosecoach);
-        DraweeController dcFindCoach =
-                Fresco.newDraweeControllerBuilder()
-                        .setUri(uriFindCoach)
-                        .setAutoPlayAnimations(true) // 设置加载图片完成后是否直接进行播放
-                        .build();
-        mIvFindCoach.setController(dcFindCoach);
-        GenericDraweeHierarchy hyFindCoach = mIvFindCoach.getHierarchy();
-        hyFindCoach.setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
-
+        initGif();
+        initCoachPlaceholder();
         mPresenter.getHotDrivingSchools();
-
         if (mPresenter.isNeedUpdate()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                     (mActivity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
@@ -160,6 +142,47 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         }
 
         return view;
+    }
+
+    private void initCoachPlaceholder() {
+        // 创建一个线性布局管理器
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        // 设置布局管理器
+        mRcyNearCoach.setLayoutManager(layoutManager);
+        ArrayList<Coach> coaches = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Coach fakeCoach = new Coach();
+            coaches.add(fakeCoach);
+        }
+        mNearCoachAdapter = new NearCoachAdapter(getContext(), coaches, new NearCoachAdapter.OnRecyclerViewItemClickListener() {
+            @Override
+            public void onItemClick(Coach coach, int position) {
+                return;
+            }
+        });
+        mRcyNearCoach.setAdapter(mNearCoachAdapter);
+    }
+
+    private void initGif() {
+        Uri uriFindSchool = Uri.parse("res://com.hahaxueche)/" + R.drawable.bt_chooseschool);
+        DraweeController dcFindSchool =
+                Fresco.newDraweeControllerBuilder()
+                        .setUri(uriFindSchool)
+                        .setAutoPlayAnimations(true) // 设置加载图片完成后是否直接进行播放
+                        .build();
+        mIvFindDrivingSchool.setController(dcFindSchool);
+        GenericDraweeHierarchy hyFindDrivingSchool = mIvFindDrivingSchool.getHierarchy();
+        hyFindDrivingSchool.setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
+        Uri uriFindCoach = Uri.parse("res://com.hahaxueche)/" + R.drawable.bt_choosecoach);
+        DraweeController dcFindCoach =
+                Fresco.newDraweeControllerBuilder()
+                        .setUri(uriFindCoach)
+                        .setAutoPlayAnimations(true) // 设置加载图片完成后是否直接进行播放
+                        .build();
+        mIvFindCoach.setController(dcFindCoach);
+        GenericDraweeHierarchy hyFindCoach = mIvFindCoach.getHierarchy();
+        hyFindCoach.setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
     }
 
     @Override
@@ -202,21 +225,14 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     }
 
     @Override
-    public void loadNearCoaches(final ArrayList<Coach> coaches) {
-        // 创建一个线性布局管理器
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        // 设置布局管理器
-        mRcyNearCoach.setLayoutManager(layoutManager);
+    public void loadNearCoaches(ArrayList<Coach> coaches) {
         mNearCoachAdapter = new NearCoachAdapter(getContext(), coaches, new NearCoachAdapter.OnRecyclerViewItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
-                if (coaches != null && coaches.size() > 0 && position > -1 && position < coaches.size()) {
-                    mPresenter.clickNearCoach(position);
-                    Intent intent = new Intent(getContext(), CoachDetailActivity.class);
-                    intent.putExtra("coach", coaches.get(position));
-                    startActivity(intent);
-                }
+            public void onItemClick(Coach coach, int position) {
+                mPresenter.clickNearCoach(position);
+                Intent intent = new Intent(getContext(), CoachDetailActivity.class);
+                intent.putExtra("coach", coach);
+                startActivity(intent);
             }
         });
         mRcyNearCoach.setAdapter(mNearCoachAdapter);
