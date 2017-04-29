@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/haha_white"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/margin_20dp"
+    android:paddingRight="@dimen/margin_20dp">
+
+    <TextView
+        android:id="@+id/tv_auto_sort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="综合排序"
+        android:textColor="@color/haha_gray" />
+
+    <View
+        android:id="@+id/vw_auto_sort"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_width"
+        android:background="@color/app_theme_color"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/tv_distance_sort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="距离最近"
+        android:textColor="@color/haha_gray" />
+
+    <View
+        android:id="@+id/vw_distance_sort"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_width"
+        android:background="@color/app_theme_color"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/tv_comment_sort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="评价最多"
+        android:textColor="@color/haha_gray" />
+
+    <View
+        android:id="@+id/vw_comment_sort"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_width"
+        android:background="@color/app_theme_color"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/tv_price_sort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="价格最低"
+        android:textColor="@color/haha_gray" />
+
+    <View
+        android:id="@+id/vw_price_sort"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_width"
+        android:background="@color/app_theme_color"
+        android:visibility="invisible" />
+</LinearLayout>

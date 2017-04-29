@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,10 @@ import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
@@ -28,9 +31,8 @@ import com.hahaxueche.presenter.findCoach.CoachListPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachAdapter;
-import com.hahaxueche.ui.dialog.findCoach.CoachFilterDialog;
-import com.hahaxueche.ui.dialog.findCoach.CoachSortDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
+import com.hahaxueche.ui.popupWindow.findCoach.SortPopupWindow;
 import com.hahaxueche.ui.view.findCoach.CoachListView;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
 import com.hahaxueche.util.HHLog;
@@ -55,18 +57,34 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     XListView mXlvCoaches;
     @BindView(R.id.tv_empty)
     TextView mTvEmpty;
-    @BindView(R.id.lly_main)
-    LinearLayout mLlyMain;
+    @BindView(R.id.rly_main)
+    RelativeLayout mRlyMain;
     @BindView(R.id.iv_red_bag)
     ImageView mIvRedBag;
+    @BindView(R.id.lly_filter)
+    LinearLayout mLlyFilter;
+    @BindView(R.id.fly_bg_half_trans)
+    FrameLayout mFlyBgHalfTrans;
+    @BindView(R.id.tv_zone)
+    TextView mTvZone;
+    @BindView(R.id.tv_price)
+    TextView mTvPrice;
+    @BindView(R.id.tv_type)
+    TextView mTvType;
+    @BindView(R.id.tv_sort)
+    TextView mTvSort;
     private CoachAdapter mCoachAdapter;
     private ArrayList<Coach> mCoachArrayList;
-    private CoachFilterDialog mFilterDialog;
-    private CoachSortDialog mSortDialog;
+    private SortPopupWindow mSortPopWindow;
     //定位client
     public AMapLocationClient mLocationClient;
     //定位回调监听器
     public AMapLocationListener mLocationListener;
+
+    private final int POP_ZONE = 0;
+    private final int POP_PRICE = 1;
+    private final int POP_TYPE = 2;
+    private final int POP_SORT = 3;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,7 +144,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
 
     @Override
     public void showMessage(String message) {
-        Snackbar.make(mLlyMain, message, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mRlyMain, message, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -154,39 +172,28 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
         }
     }
 
-    @OnClick({R.id.fly_filter,
-            R.id.fly_sort,
+    @OnClick({R.id.fly_sort,
             R.id.iv_red_bag})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.fly_filter:
-                mPresenter.clickFilterCount();
-                if (mFilterDialog == null) {
-                    mFilterDialog = new CoachFilterDialog(getContext(),
-                            new CoachFilterDialog.OnFilterListener() {
-                                @Override
-                                public void filter(String distance, String price, boolean isGoldenCoachOnly,
-                                                   boolean isVipOnly, boolean C1Checked, boolean C2Checked) {
-                                    mPresenter.setFilters(distance, price, isGoldenCoachOnly, isVipOnly, C1Checked, C2Checked);
-                                    mPresenter.fetchCoaches();
-                                }
-                            });
-                }
-                mFilterDialog.show();
-                break;
             case R.id.fly_sort:
-                if (mSortDialog == null) {
-                    mSortDialog = new CoachSortDialog(getContext(),
-                            new CoachSortDialog.OnSortListener() {
-                                @Override
-                                public void sort(int sortBy) {
-                                    mPresenter.clickSortCount(sortBy);
-                                    mPresenter.setSortBy(sortBy);
-                                    mPresenter.fetchCoaches();
-                                }
-                            });
+                if (mSortPopWindow == null) {
+                    mSortPopWindow = new SortPopupWindow(getActivity(), new SortPopupWindow.OnSortListener() {
+                        @Override
+                        public void sort(int sortBy) {
+                            mPresenter.clickSortCount(sortBy);
+                            mPresenter.setSortBy(sortBy);
+                            mPresenter.fetchCoaches();
+                        }
+
+                        @Override
+                        public void dismiss() {
+                            hidePopWindow();
+                        }
+                    });
                 }
-                mSortDialog.show();
+                mSortPopWindow.showAsDropDown(view);
+                showPopWindow(POP_SORT);
                 break;
             case R.id.iv_red_bag:
                 mPresenter.clickRedBag();
@@ -309,4 +316,42 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     private void showRedBag() {
         mIvRedBag.clearAnimation();
     }
+
+    /**
+     * 显示下拉窗口
+     *
+     * @param order
+     */
+    private void showPopWindow(int order) {
+        if (order == POP_ZONE) {
+            mTvZone.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                    ContextCompat.getDrawable(getContext(), R.drawable.list_arrow_orange), null);
+        } else if (order == POP_PRICE) {
+            mTvPrice.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                    ContextCompat.getDrawable(getContext(), R.drawable.list_arrow_orange), null);
+        } else if (order == POP_TYPE) {
+            mTvType.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                    ContextCompat.getDrawable(getContext(), R.drawable.list_arrow_orange), null);
+        } else if (order == POP_SORT) {
+            mTvSort.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                    ContextCompat.getDrawable(getContext(), R.drawable.list_arrow_orange), null);
+        }
+        mFlyBgHalfTrans.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 隐藏下拉窗口
+     */
+    private void hidePopWindow() {
+        mTvZone.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                ContextCompat.getDrawable(getContext(), R.drawable.list_arrow_gray), null);
+        mTvPrice.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                ContextCompat.getDrawable(getContext(), R.drawable.list_arrow_gray), null);
+        mTvType.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                ContextCompat.getDrawable(getContext(), R.drawable.list_arrow_gray), null);
+        mTvSort.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                ContextCompat.getDrawable(getContext(), R.drawable.list_arrow_gray), null);
+        mFlyBgHalfTrans.setVisibility(View.GONE);
+    }
+
 }
