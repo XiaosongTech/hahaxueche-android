@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
+import com.hahaxueche.model.base.CityConstants;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.base.LocalSettings;
 import com.hahaxueche.model.responseList.CoachResponseList;
@@ -242,5 +243,10 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
             MobclickAgent.onEvent(mView.getContext(), "find_coach_flying_envelop_tapped");
         }
         mView.openWebView(WebViewUrl.WEB_URL_DALIBAO);
+    }
+
+    public int[][] getPriceRanges() {
+        CityConstants cityConstants = application.getCityConstants();
+        return cityConstants.filters.prices;
     }
 }

@@ -33,6 +33,7 @@ import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachAdapter;
 import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
+import com.hahaxueche.ui.popupWindow.findCoach.PricePopupWindow;
 import com.hahaxueche.ui.popupWindow.findCoach.SortPopupWindow;
 import com.hahaxueche.ui.popupWindow.findCoach.TypePopupWindow;
 import com.hahaxueche.ui.view.findCoach.CoachListView;
@@ -80,6 +81,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     private ArrayList<Coach> mCoachArrayList;
     private SortPopupWindow mSortPopWindow;
     private TypePopupWindow mTypePopWindow;
+    private PricePopupWindow mPricePopWindow;
     //定位client
     public AMapLocationClient mLocationClient;
     //定位回调监听器
@@ -178,6 +180,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
 
     @OnClick({R.id.fly_sort,
             R.id.fly_type,
+            R.id.fly_price,
             R.id.iv_red_bag})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -231,6 +234,33 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                 }
                 mTypePopWindow.showAsDropDown(view);
                 showPopWindow(POP_TYPE);
+                break;
+            case R.id.fly_price:
+                if (mPricePopWindow == null) {
+                    mPricePopWindow = new PricePopupWindow(getActivity(), new PricePopupWindow.OnPriceClickListener() {
+                        @Override
+                        public void selectNoLimit() {
+
+                        }
+
+                        @Override
+                        public void selectPrice(int[] priceRange) {
+
+                        }
+
+                        @Override
+                        public void selectMaxPrice(int endMoney) {
+
+                        }
+
+                        @Override
+                        public void dismiss() {
+                            hidePopWindow();
+                        }
+                    }, mPresenter.getPriceRanges());
+                }
+                mPricePopWindow.showAsDropDown(view);
+                showPopWindow(POP_PRICE);
                 break;
             case R.id.iv_red_bag:
                 mPresenter.clickRedBag();
