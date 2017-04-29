@@ -11,6 +11,7 @@ import com.alibaba.sdk.android.push.register.HuaWeiRegister;
 import com.alibaba.sdk.android.push.register.MiPushRegister;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.hahaxueche.api.HHApiService;
+import com.hahaxueche.model.base.CityConstants;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.base.Location;
@@ -48,6 +49,7 @@ public class HHBaseApplication extends Application {
     private HHApiService apiServiceNoConverter;
     private Scheduler defaultSubscribeScheduler;
     private Constants constants;
+    private CityConstants cityConstants;
     private SharedPrefUtil spUtil;
     private Observable sessionObservable;
     private Location myLocation;
@@ -105,6 +107,20 @@ public class HHBaseApplication extends Application {
         this.constants = constants;
         SharedPrefUtil spUtil = new SharedPrefUtil(this);
         spUtil.setConstants(constants);
+    }
+
+    public CityConstants getCityConstants() {
+        if (cityConstants == null) {
+            SharedPrefUtil spUtil = new SharedPrefUtil(this);
+            cityConstants = spUtil.getCityConstants();
+        }
+        return cityConstants;
+    }
+
+    public void setCityConstants(CityConstants cityConstants) {
+        this.cityConstants = cityConstants;
+        SharedPrefUtil spUtil = new SharedPrefUtil(this);
+        spUtil.setCityConstants(cityConstants);
     }
 
     public SharedPrefUtil getSharedPrefUtil() {

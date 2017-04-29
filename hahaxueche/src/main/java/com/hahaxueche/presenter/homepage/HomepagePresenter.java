@@ -260,6 +260,7 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
 
                     @Override
                     public void onNext(CityConstants cityConstants) {
+                        application.setCityConstants(cityConstants);
                         mView.loadHotDrivingSchools(cityConstants.driving_schools.subList(0, 8));
                     }
                 });

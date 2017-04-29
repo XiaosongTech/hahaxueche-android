@@ -10,4 +10,5 @@ import java.util.List;
 
 public class CityConstants {
     public List<DrivingSchool> driving_schools;
+    public Filter filters;
 }
