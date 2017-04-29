@@ -54,7 +54,6 @@ public class SortPopupWindow extends PopupWindow {
     }
 
     private void initPopupWindow() {
-
         LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         contentView = inflater.inflate(R.layout.pop_driving_school_coach_sort, null);
         setContentView(contentView);
@@ -86,23 +85,23 @@ public class SortPopupWindow extends PopupWindow {
             switch (v.getId()) {
                 case R.id.tv_auto_sort:
                     disAllViews();
-                    dismiss();
                     setSortBy(0);
+                    dismiss();
                     break;
                 case R.id.tv_distance_sort:
                     disAllViews();
-                    dismiss();
                     setSortBy(1);
+                    dismiss();
                     break;
                 case R.id.tv_comment_sort:
                     disAllViews();
-                    dismiss();
                     setSortBy(5);
+                    dismiss();
                     break;
                 case R.id.tv_price_sort:
                     disAllViews();
-                    dismiss();
                     setSortBy(3);
+                    dismiss();
                     break;
                 default:
                     break;

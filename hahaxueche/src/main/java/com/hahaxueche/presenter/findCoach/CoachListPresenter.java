@@ -78,6 +78,16 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
         this.sortBy = sortBy;
     }
 
+    public void setLicenseType(int license) {
+        if (license == Common.LICENSE_TYPE_C1) {
+            licenseType = "1";
+        } else if (license == Common.LICENSE_TYPE_C2) {
+            licenseType = "2";
+        } else {
+            licenseType = "";
+        }
+    }
+
     private void initDefaultFilters() {
         LocalSettings localSettings = application.getSharedPrefUtil().getLocalSettings();
         if (localSettings.cityId > -1) {

@@ -67,5 +67,7 @@ public class Common {
     public static final int MAX_DRIVING_SCHOOL_COUNT = 8;
     //附近驾校数量
     public static final int MAX_NEAR_COACH_COUNT = 8;
+    //选择项-不限
+    public static final int NO_LIMIT = -1;
 
 }

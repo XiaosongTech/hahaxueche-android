@@ -31,10 +31,13 @@ import com.hahaxueche.presenter.findCoach.CoachListPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachAdapter;
+import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.popupWindow.findCoach.SortPopupWindow;
+import com.hahaxueche.ui.popupWindow.findCoach.TypePopupWindow;
 import com.hahaxueche.ui.view.findCoach.CoachListView;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
 
@@ -76,6 +79,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     private CoachAdapter mCoachAdapter;
     private ArrayList<Coach> mCoachArrayList;
     private SortPopupWindow mSortPopWindow;
+    private TypePopupWindow mTypePopWindow;
     //定位client
     public AMapLocationClient mLocationClient;
     //定位回调监听器
@@ -173,6 +177,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     }
 
     @OnClick({R.id.fly_sort,
+            R.id.fly_type,
             R.id.iv_red_bag})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -194,6 +199,38 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                 }
                 mSortPopWindow.showAsDropDown(view);
                 showPopWindow(POP_SORT);
+                break;
+            case R.id.fly_type:
+                if (mTypePopWindow == null) {
+                    mTypePopWindow = new TypePopupWindow(getActivity(), new TypePopupWindow.OnTypeClickListener() {
+                        @Override
+                        public void selectType(int licenseType) {
+                            mPresenter.setLicenseType(licenseType);
+                            mPresenter.fetchCoaches();
+                        }
+
+                        @Override
+                        public void clickQuestion(int licenseType) {
+                            if (licenseType == Common.LICENSE_TYPE_C1) {
+                                BaseAlertSimpleDialog dialog = new BaseAlertSimpleDialog(getContext(), "什么是C1手动档？",
+                                        "C1为手动挡小型车驾照，取得了C1类驾驶证的人可以驾驶C2类车");
+                                dialog.show();
+                            } else {
+                                BaseAlertSimpleDialog dialog = new BaseAlertSimpleDialog(getContext(), "什么是C2自动档？",
+                                        "C2为自动挡小型车驾照，取得了C2类驾驶证的人不可以驾驶C1类车。" +
+                                                "C2驾照培训费要稍贵于C1照。费用的差别主要是由于C2自动挡教练车数量比较少，使用过程中维修费用比较高所致。");
+                                dialog.show();
+                            }
+                        }
+
+                        @Override
+                        public void dismiss() {
+                            hidePopWindow();
+                        }
+                    });
+                }
+                mTypePopWindow.showAsDropDown(view);
+                showPopWindow(POP_TYPE);
                 break;
             case R.id.iv_red_bag:
                 mPresenter.clickRedBag();
