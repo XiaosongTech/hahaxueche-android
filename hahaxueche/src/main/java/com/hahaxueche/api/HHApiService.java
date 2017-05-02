@@ -110,11 +110,10 @@ public interface HHApiService {
     Observable<Student> uploadAvatar(@Path("id") String studentId, @Header("X-Access-Token") String accessToken, @Part MultipartBody.Part file);
 
     @GET("coaches")
-    Observable<CoachResponseList> getCoaches(@Query("page") int page, @Query("per_page") int perPage, @Query("golden_coach_only") String goldenCoachOnly,
-                                             @Query("license_type") String licenseType, @Query("price") String price, @Query("city_id") int cityId,
-                                             @Query("training_field_ids[]") ArrayList<String> fieldIdList, @Query("distance") String distance,
-                                             @Query("user_location[]") ArrayList<String> locations, @Query("sort_by") int sortBy, @Query("vip_only") int vipOnly,
-                                             @Query("student_id") String studentId);
+    Observable<CoachResponseList> getCoaches(@Query("page") int page, @Query("per_page") int perPage, @Query("license_type") String licenseType,
+                                             @Query("city_id") int cityId, @Query("training_field_ids[]") ArrayList<String> fieldIdList, @Query("distance") String distance,
+                                             @Query("user_location[]") ArrayList<String> locations, @Query("sort_by") int sortBy, @Query("student_id") String studentId,
+                                             @Query("price_from") String startMoney, @Query("price_to") String endMoney, @Query("zone") String zone);
 
     @GET("coaches")
     Observable<CoachResponseList> getNearCoaches(@Query("page") int page, @Query("per_page") int perPage, @Query("city_id") int cityId,

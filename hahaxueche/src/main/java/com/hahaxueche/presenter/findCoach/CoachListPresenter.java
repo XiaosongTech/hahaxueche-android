@@ -35,12 +35,12 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
     private String nextLink;
     //-----筛选参数-----
     private String filterDistance;
-    private String filterPrice;
-    private String goldenCoachOnly;
-    private int vipOnly = 0;
     private String licenseType;
     private int cityId = 0;
     private int sortBy = 0;
+    private String zone = "";
+    private int startMoney = Common.NO_LIMIT;
+    private int endMoney = Common.NO_LIMIT;
     private ArrayList<Field> selectFields;
     //-----end-----
 
@@ -54,25 +54,6 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
         this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
-    }
-
-    public void setFilters(String distance, String price, boolean isGoldenCoachOnly,
-                           boolean isVipOnly, boolean C1Checked, boolean C2Checked) {
-        filterDistance = distance;
-        filterPrice = price;
-        if (isGoldenCoachOnly) {
-            goldenCoachOnly = "1";
-        } else {
-            goldenCoachOnly = "";
-        }
-        vipOnly = isVipOnly ? 1 : 0;
-        if (C1Checked && C2Checked) {
-            licenseType = "";
-        } else if (C1Checked) {
-            licenseType = "1";
-        } else if (C2Checked) {
-            licenseType = "2";
-        }
     }
 
     public void setSortBy(int sortBy) {
@@ -94,7 +75,8 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
         if (localSettings.cityId > -1) {
             cityId = localSettings.cityId;
         }
-        setFilters("", "", false, false, false, false);
+        //默认价格最低
+        sortBy = 3;
     }
 
     public void fetchCoaches() {
@@ -118,11 +100,10 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
         }
         HHApiService apiService = application.getApiService();
         subscription = apiService.getCoaches(Common.START_PAGE, Common.PER_PAGE,
-                TextUtils.isEmpty(goldenCoachOnly) ? null : goldenCoachOnly,
-                TextUtils.isEmpty(licenseType) ? null : licenseType,
-                TextUtils.isEmpty(filterPrice) ? null : filterPrice, cityId,
+                TextUtils.isEmpty(licenseType) ? null : licenseType, cityId,
                 fieldIds, TextUtils.isEmpty(filterDistance) ? null : filterDistance,
-                locations, sortBy, vipOnly, studentId)
+                locations, sortBy, studentId, startMoney > 0 ? String.valueOf(startMoney) : null,
+                endMoney > 0 ? String.valueOf(endMoney) : null, TextUtils.isEmpty(zone) ? null : zone)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<CoachResponseList>() {
@@ -258,5 +239,24 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
     public int[] getRadius() {
         CityConstants cityConstants = application.getCityConstants();
         return cityConstants.filters.radius;
+    }
+
+    public void setPriceRange(int startMoney, int endMoney) {
+        this.startMoney = startMoney;
+        this.endMoney = endMoney;
+    }
+
+    public void setDistance(int distance) {
+        zone = "";
+        if (distance == Common.NO_LIMIT) {
+            filterDistance = "";
+        } else {
+            filterDistance = String.valueOf(distance);
+        }
+    }
+
+    public void setZone(String zone) {
+        filterDistance = "";
+        this.zone = zone;
     }
 }

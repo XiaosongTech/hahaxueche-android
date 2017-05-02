@@ -243,17 +243,20 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                     mPricePopWindow = new PricePopupWindow(getActivity(), new PricePopupWindow.OnPriceClickListener() {
                         @Override
                         public void selectNoLimit() {
-
+                            mPresenter.setPriceRange(Common.NO_LIMIT, Common.NO_LIMIT);
+                            mPresenter.fetchCoaches();
                         }
 
                         @Override
                         public void selectPrice(int[] priceRange) {
-
+                            mPresenter.setPriceRange(priceRange[0], priceRange[1]);
+                            mPresenter.fetchCoaches();
                         }
 
                         @Override
                         public void selectMaxPrice(int endMoney) {
-
+                            mPresenter.setPriceRange(endMoney, Common.NO_LIMIT);
+                            mPresenter.fetchCoaches();
                         }
 
                         @Override
@@ -270,17 +273,20 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                     mZonePopWindow = new ZonePopupWindow(getActivity(), new ZonePopupWindow.OnZoneClickListener() {
                         @Override
                         public void selectNoLimit() {
-
+                            mPresenter.setDistance(Common.NO_LIMIT);
+                            mPresenter.fetchCoaches();
                         }
 
                         @Override
                         public void selectZone(String zone) {
-
+                            mPresenter.setZone(zone);
+                            mPresenter.fetchCoaches();
                         }
 
                         @Override
                         public void selectDistance(int distance) {
-
+                            mPresenter.setDistance(distance);
+                            mPresenter.fetchCoaches();
                         }
 
                         @Override

@@ -300,8 +300,7 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
                         }
                     });
         } else {
-            subscription = apiService.getCoaches(Common.START_PAGE, Common.MAX_NEAR_COACH_COUNT,
-                    null, null, null, cityId, null, null, null, 5, 0, null)
+            subscription = apiService.getNearCoaches(Common.START_PAGE, Common.MAX_NEAR_COACH_COUNT, cityId, null, 5)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(application.defaultSubscribeScheduler())
                     .subscribe(new Subscriber<CoachResponseList>() {
