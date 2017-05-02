@@ -44,6 +44,7 @@ public class Coach implements Parcelable {
     public int has_cash_pledge;
     public String distance;
     public String consult_phone;
+    public int consult_count;
 
     public Coach() {
 
@@ -84,6 +85,7 @@ public class Coach implements Parcelable {
         has_cash_pledge = in.readInt();
         distance = in.readString();
         consult_phone = in.readString();
+        consult_count = in.readInt();
     }
 
     public static final Creator<Coach> CREATOR = new Creator<Coach>() {
@@ -139,5 +141,6 @@ public class Coach implements Parcelable {
         parcel.writeInt(has_cash_pledge);
         parcel.writeString(distance);
         parcel.writeString(consult_phone);
+        parcel.writeInt(consult_count);
     }
 }

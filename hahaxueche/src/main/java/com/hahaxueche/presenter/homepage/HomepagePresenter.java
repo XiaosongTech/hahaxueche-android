@@ -277,8 +277,7 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
             ArrayList<String> locations = new ArrayList<>();
             locations.add(String.valueOf(application.getMyLocation().lat));
             locations.add(String.valueOf(application.getMyLocation().lng));
-            subscription = apiService.getCoaches(Common.START_PAGE, Common.MAX_NEAR_COACH_COUNT,
-                    null, null, null, cityId, null, null, locations, 1, 0, null)
+            subscription = apiService.getNearCoaches(Common.START_PAGE, Common.MAX_NEAR_COACH_COUNT, cityId, locations, 1)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(application.defaultSubscribeScheduler())
                     .subscribe(new Subscriber<CoachResponseList>() {

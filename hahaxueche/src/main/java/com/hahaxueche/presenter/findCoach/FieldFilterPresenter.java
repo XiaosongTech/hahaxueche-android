@@ -89,7 +89,7 @@ public class FieldFilterPresenter extends HHBasePresenter implements Presenter<F
         ArrayList<String> fieldIds = new ArrayList<>();
         fieldIds.add(field.id);
         HHApiService apiService = application.getApiService();
-        subscription = apiService.getCoaches(Common.START_PAGE, 100, null, null, null, cityId, fieldIds, null, null, 5, 0, null)
+        subscription = apiService.getFieldCoaches(Common.START_PAGE, 100, cityId, fieldIds, 5)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<CoachResponseList>() {

@@ -116,6 +116,14 @@ public interface HHApiService {
                                              @Query("user_location[]") ArrayList<String> locations, @Query("sort_by") int sortBy, @Query("vip_only") int vipOnly,
                                              @Query("student_id") String studentId);
 
+    @GET("coaches")
+    Observable<CoachResponseList> getNearCoaches(@Query("page") int page, @Query("per_page") int perPage, @Query("city_id") int cityId,
+                                                 @Query("user_location[]") ArrayList<String> locations, @Query("sort_by") int sortBy);
+
+    @GET("coaches")
+    Observable<CoachResponseList> getFieldCoaches(@Query("page") int page, @Query("per_page") int perPage, @Query("city_id") int cityId,
+                                                  @Query("training_field_ids[]") ArrayList<String> fieldIdList, @Query("sort_by") int sortBy);
+
     @GET
     Observable<CoachResponseList> getCoaches(@Url String path);
 
