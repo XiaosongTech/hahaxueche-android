@@ -249,4 +249,14 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
         CityConstants cityConstants = application.getCityConstants();
         return cityConstants.filters.prices;
     }
+
+    public String[] getZones() {
+        CityConstants cityConstants = application.getCityConstants();
+        return cityConstants.zones;
+    }
+
+    public int[] getRadius() {
+        CityConstants cityConstants = application.getCityConstants();
+        return cityConstants.filters.radius;
+    }
 }

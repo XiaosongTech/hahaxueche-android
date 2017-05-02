@@ -36,6 +36,7 @@ import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.popupWindow.findCoach.PricePopupWindow;
 import com.hahaxueche.ui.popupWindow.findCoach.SortPopupWindow;
 import com.hahaxueche.ui.popupWindow.findCoach.TypePopupWindow;
+import com.hahaxueche.ui.popupWindow.findCoach.ZonePopupWindow;
 import com.hahaxueche.ui.view.findCoach.CoachListView;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
 import com.hahaxueche.util.Common;
@@ -82,6 +83,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     private SortPopupWindow mSortPopWindow;
     private TypePopupWindow mTypePopWindow;
     private PricePopupWindow mPricePopWindow;
+    private ZonePopupWindow mZonePopWindow;
     //定位client
     public AMapLocationClient mLocationClient;
     //定位回调监听器
@@ -181,6 +183,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     @OnClick({R.id.fly_sort,
             R.id.fly_type,
             R.id.fly_price,
+            R.id.fly_zone,
             R.id.iv_red_bag})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -261,6 +264,33 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                 }
                 mPricePopWindow.showAsDropDown(view);
                 showPopWindow(POP_PRICE);
+                break;
+            case R.id.fly_zone:
+                if (mZonePopWindow == null) {
+                    mZonePopWindow = new ZonePopupWindow(getActivity(), new ZonePopupWindow.OnZoneClickListener() {
+                        @Override
+                        public void selectNoLimit() {
+
+                        }
+
+                        @Override
+                        public void selectZone(String zone) {
+
+                        }
+
+                        @Override
+                        public void selectDistance(int distance) {
+
+                        }
+
+                        @Override
+                        public void dismiss() {
+                            hidePopWindow();
+                        }
+                    }, mPresenter.getZones(), mPresenter.getRadius());
+                }
+                mZonePopWindow.showAsDropDown(view);
+                showPopWindow(POP_ZONE);
                 break;
             case R.id.iv_red_bag:
                 mPresenter.clickRedBag();
