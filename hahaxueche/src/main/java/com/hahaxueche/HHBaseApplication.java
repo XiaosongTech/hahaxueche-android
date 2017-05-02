@@ -50,13 +50,13 @@ public class HHBaseApplication extends Application {
     private Scheduler defaultSubscribeScheduler;
     private Constants constants;
     private CityConstants cityConstants;
+    private FieldResponseList fieldResponseList;
     private SharedPrefUtil spUtil;
     private Observable sessionObservable;
     private Location myLocation;
     private Subscription subscription;
     public static String appVersion;
     public static String appId;
-    private List<FieldResponseList> mFields;
 
     public static HHBaseApplication get(Context context) {
         return (HHBaseApplication) context.getApplicationContext();
@@ -121,6 +121,20 @@ public class HHBaseApplication extends Application {
         this.cityConstants = cityConstants;
         SharedPrefUtil spUtil = new SharedPrefUtil(this);
         spUtil.setCityConstants(cityConstants);
+    }
+
+    public FieldResponseList getFieldResponseList() {
+        if (fieldResponseList == null) {
+            SharedPrefUtil spUtil = new SharedPrefUtil(this);
+            fieldResponseList = spUtil.getFieldResponseList();
+        }
+        return fieldResponseList;
+    }
+
+    public void setFieldResponseList(FieldResponseList fieldResponseList) {
+        this.fieldResponseList = fieldResponseList;
+        SharedPrefUtil spUtil = new SharedPrefUtil(this);
+        spUtil.setFieldResponseList(fieldResponseList);
     }
 
     public SharedPrefUtil getSharedPrefUtil() {
@@ -269,40 +283,5 @@ public class HHBaseApplication extends Application {
                         }
                     }
                 }).initialize();
-    }
-
-    public FieldResponseList getCachedFieldByCityId(int cityId) {
-        if (mFields == null || mFields.size() < 1)
-            return null;
-        for (FieldResponseList field : mFields) {
-            if (field.cityId == cityId) {
-                return field;
-            }
-        }
-        return null;
-    }
-
-    public void cacheField(FieldResponseList fieldResponseList, int cityId) {
-        Constants constants = getConstants();
-        constants.fields = fieldResponseList.data;
-        setConstants(constants);
-        fieldResponseList.cityId = cityId;
-        if (mFields == null) {
-            mFields = new ArrayList<>();
-            mFields.add(fieldResponseList);
-
-            return;
-        }
-        boolean isExists = false;
-        for (FieldResponseList field : mFields) {
-            if (field.cityId == cityId) {
-                isExists = true;
-                field = fieldResponseList;
-                break;
-            }
-        }
-        if (!isExists) {
-            mFields.add(fieldResponseList);
-        }
     }
 }

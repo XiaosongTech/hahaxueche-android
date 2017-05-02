@@ -9,12 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/lly_avatar"
             android:layout_width="@dimen/width_115dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/iv_coach_avatar"
@@ -25,27 +26,42 @@
                 fresco:roundAsCircle="true" />
 
             <FrameLayout
+                android:id="@+id/frl_call"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/iv_coach_avatar"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp">
+                android:layout_marginTop="10dp"
+                android:background="@drawable/rect_bg_appcolor_gradient_sm">
 
-                <include
-                    android:id="@+id/lly_train_school"
-                    layout="@layout/layout_train_school"
+                <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="2dp"
+                    android:drawableLeft="@drawable/list_ic_phone"
+                    android:drawablePadding="2dp"
+                    android:text="联系教练"
+                    android:textColor="@color/haha_white"
+                    android:textSize="12sp" />
             </FrameLayout>
 
-        </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_consultant_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/haha_gray"
+                android:textSize="12sp" />
+
+        </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/rly_first_line"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/lly_avatar"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="10dp"
             android:layout_toRightOf="@id/lly_avatar">
 
             <TextView
@@ -74,14 +90,19 @@
                 android:layout_toRightOf="@id/iv_is_golden_coach"
                 android:src="@drawable/ic_bao" />
 
-            <TextView
-                android:id="@+id/tv_coach_teach_time"
+            <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:textColor="@color/haha_gray"
-                android:textSize="14sp" />
+                android:layout_centerVertical="true">
+
+                <include
+                    android:id="@+id/lly_train_school"
+                    layout="@layout/layout_train_school"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </FrameLayout>
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -90,8 +111,8 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/rly_first_line"
             android:layout_below="@id/rly_first_line"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="6dp">
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="8dp">
 
             <RatingBar
                 android:id="@+id/rb_coach_score"
@@ -120,8 +141,8 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/rly_second_line"
             android:layout_below="@id/rly_second_line"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="6dp">
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="8dp">
 
             <TextView
                 android:id="@+id/tv_coach_location"
@@ -130,7 +151,7 @@
                 android:layout_centerVertical="true"
                 android:drawableLeft="@drawable/ic_list_local_btn"
                 android:drawablePadding="3dp"
-                android:ellipsize="end"
+                android:ellipsize="middle"
                 android:lines="1"
                 android:maxWidth="@dimen/width_160dp"
                 android:textColor="@color/haha_gray_text"
@@ -146,17 +167,13 @@
                 android:textColor="@color/haha_gray_text"
                 android:textSize="12sp" />
 
-            <TextView
-                android:id="@+id/tv_applaud_count"
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="6dp"
-                android:drawableLeft="@drawable/ic_list_best_small"
-                android:drawablePadding="3dp"
-                android:textColor="@color/app_theme_color"
-                android:textSize="14sp" />
+                android:src="@drawable/ic_coachmsg_more_arrow" />
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -165,7 +182,7 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/rly_third_line"
             android:layout_below="@id/rly_third_line"
-            android:layout_marginTop="6dp">
+            android:layout_marginTop="8dp">
 
             <View
                 android:layout_width="match_parent"
@@ -192,7 +209,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/tv_actual_label"
-                android:text="四人一车,性价比高"
+                android:text="快速拿证 性价比高"
                 android:textColor="@color/haha_gray_text"
                 android:textSize="12sp" />
 
@@ -201,9 +218,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="12dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="12dp"
                 android:textColor="@color/app_theme_color"
                 android:textSize="14sp" />
         </RelativeLayout>

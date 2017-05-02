@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -24,9 +26,7 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
-import com.hahaxueche.ui.dialog.findCoach.MapDialog;
 import com.hahaxueche.util.Common;
-import com.hahaxueche.util.DistanceUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
 import com.hahaxueche.util.WebViewUrl;
@@ -43,11 +43,17 @@ public class CoachAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<Coach> mCoachList;
     private HHBaseApplication application;
+    private OnCoachClickListener mOnCoachClickListener;
 
-    public CoachAdapter(Context context, ArrayList<Coach> coachList) {
+    public interface OnCoachClickListener {
+        void callCoach(String phone);
+    }
+
+    public CoachAdapter(Context context, ArrayList<Coach> coachList, OnCoachClickListener listener) {
         mContext = context;
         mCoachList = coachList;
         application = HHBaseApplication.get(mContext);
+        mOnCoachClickListener = listener;
     }
 
     @Override
@@ -74,7 +80,6 @@ public class CoachAdapter extends BaseAdapter {
             view = inflator.inflate(R.layout.adapter_coach, null);
             holder = new ViewHolder();
             holder.tvCoachName = ButterKnife.findById(view, R.id.tv_coach_name);
-            holder.tvCoachTeachTime = ButterKnife.findById(view, R.id.tv_coach_teach_time);
             holder.tvCoachPoints = ButterKnife.findById(view, R.id.tv_coach_points);
             holder.tvCoachActualPrice = ButterKnife.findById(view, R.id.tv_coach_actual_price);
             holder.ivCoachAvatar = ButterKnife.findById(view, R.id.iv_coach_avatar);
@@ -84,10 +89,11 @@ public class CoachAdapter extends BaseAdapter {
             holder.tvCoachLocation = ButterKnife.findById(view, R.id.tv_coach_location);
             holder.rlyCoachLocation = ButterKnife.findById(view, R.id.rly_third_line);
             holder.tvDistance = ButterKnife.findById(view, R.id.tv_distance);
-            holder.tvApplaudCount = ButterKnife.findById(view, R.id.tv_applaud_count);
             holder.tvTrainSchoolName = ButterKnife.findById(view, R.id.tv_train_school);
             holder.llyTrainSchool = ButterKnife.findById(view, R.id.lly_train_school);
             holder.rlyActualPrice = ButterKnife.findById(view, R.id.rly_actual_price);
+            holder.frlCall = ButterKnife.findById(view, R.id.frl_call);
+            holder.tvConsultantCount = ButterKnife.findById(view, R.id.tv_consultant_count);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -95,7 +101,6 @@ public class CoachAdapter extends BaseAdapter {
         final Coach coach = mCoachList.get(position);
         holder.tvCoachName.setText(coach.name);
         holder.ivCoachAvatar.setImageURI(coach.avatar);
-        holder.tvCoachTeachTime.setText(coach.experiences + "年教龄");
         holder.tvCoachPoints.setText(coach.average_rating + " (" + coach.review_count + ")");
         if (coach.coach_group != null) {
             holder.tvCoachActualPrice.setText(Utils.getMoney(coach.coach_group.training_cost));
@@ -107,43 +112,22 @@ public class CoachAdapter extends BaseAdapter {
             score = 5;
         }
         holder.rbCoachScore.setRating(score);
+        String text = Utils.getCount(coach.consult_count) + "人已咨询";
+        SpannableString ss = new SpannableString(text);
+        ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.app_theme_color)), 0, text.indexOf("人"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        holder.tvConsultantCount.setText(ss);
         if (coach.coach_group != null) {
-            holder.tvCoachLocation.setText(application.getConstants().getCitySectionName(coach.coach_group.field_id));
-
-            final Field myField = application.getConstants().getField(coach.coach_group.field_id);
-            if (application.getMyLocation() != null && myField != null) {
-                String kmString = DistanceUtil.getDistanceKm(application.getMyLocation().lng, application.getMyLocation().lat, myField.lng, myField.lat);
-                String infoText = "距您" + kmString + "km";
+            final Field field = application.getFieldResponseList().getFieldById(coach.coach_group.field_id);
+            if (field != null) {
+                holder.tvCoachLocation.setText(field.zone + " | " + field.name);
+            }
+            if (!TextUtils.isEmpty(coach.distance)) {
+                String infoText = "距您" + Utils.getDistance(Double.parseDouble(coach.distance));
                 SpannableStringBuilder style = new SpannableStringBuilder(infoText);
-                style.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.app_theme_color)), 2, 2 + kmString.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+                style.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.app_theme_color)), 2, infoText.indexOf("KM"), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
                 holder.tvDistance.setText(style);
             }
-            holder.rlyCoachLocation.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    MapDialog mapDialog = new MapDialog(mContext, R.style.map_dialog, myField, v, new MapDialog.MapDialogDismissListener() {
-                        @Override
-                        public boolean dialogDismiss() {
-                            RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-                            p.setMargins(0, Utils.instence(mContext).dip2px(6), 0, 0);
-                            p.addRule(RelativeLayout.ALIGN_LEFT, R.id.rly_third_line);
-                            p.addRule(RelativeLayout.BELOW, R.id.rly_third_line);
-                            holder.rlyActualPrice.setLayoutParams(p);
-                            return true;
-                        }
-                    });
-                    RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                            RelativeLayout.LayoutParams.WRAP_CONTENT);
-                    p.setMargins(0, Utils.instence(mContext).dip2px(200), 0, 0);
-                    p.addRule(RelativeLayout.ALIGN_LEFT, R.id.rly_third_line);
-                    p.addRule(RelativeLayout.BELOW, R.id.rly_third_line);
-                    holder.rlyActualPrice.setLayoutParams(p);
-                    mapDialog.show();
-                }
-            });
         }
-        holder.tvApplaudCount.setText(String.valueOf(coach.like_count));
         if (!TextUtils.isEmpty(coach.driving_school)) {
             holder.llyTrainSchool.setVisibility(View.VISIBLE);
             holder.tvTrainSchoolName.setText(coach.driving_school);
@@ -154,6 +138,14 @@ public class CoachAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 openWebView(WebViewUrl.WEB_URL_JIAXIAO + "/" + coach.driving_school_id);
+            }
+        });
+        holder.frlCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mOnCoachClickListener != null && !TextUtils.isEmpty(coach.consult_phone)) {
+                    mOnCoachClickListener.callCoach(coach.consult_phone);
+                }
             }
         });
         return view;
@@ -171,7 +163,6 @@ public class CoachAdapter extends BaseAdapter {
 
     static class ViewHolder {
         TextView tvCoachName;
-        TextView tvCoachTeachTime;
         TextView tvCoachPoints;
         TextView tvCoachActualPrice;
         SimpleDraweeView ivCoachAvatar;
@@ -181,9 +172,10 @@ public class CoachAdapter extends BaseAdapter {
         TextView tvCoachLocation;
         RelativeLayout rlyCoachLocation;
         TextView tvDistance;
-        TextView tvApplaudCount;
         TextView tvTrainSchoolName;
         LinearLayout llyTrainSchool;
         RelativeLayout rlyActualPrice;
+        FrameLayout frlCall;
+        TextView tvConsultantCount;
     }
 }

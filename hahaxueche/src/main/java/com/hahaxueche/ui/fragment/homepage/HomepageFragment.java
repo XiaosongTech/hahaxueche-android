@@ -110,37 +110,6 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         mPresenter.attachView(this);
         initGif();
         initCoachPlaceholder();
-        mPresenter.getHotDrivingSchools();
-        if (mPresenter.isNeedUpdate()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                    (mActivity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                            || mActivity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                            || mActivity.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
-                            || mActivity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
-                            || mActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.CAMERA,
-                                Manifest.permission.READ_CONTACTS,
-                                Manifest.permission.ACCESS_FINE_LOCATION},
-                        RequestCode.PERMISSIONS_REQUEST_SDCARD_CONTACTS_LOCATIONS_HOMEPAGE);
-            } else {
-                mPresenter.alertToUpdate(getContext());
-                readContacts();
-                startLocation();
-            }
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                    && (mActivity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
-                    || mActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
-                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS, Manifest.permission.ACCESS_FINE_LOCATION},
-                        RequestCode.PERMISSIONS_REQUEST_READ_CONTACTS_AND_LOCATIONS);
-            } else {
-                readContacts();
-                startLocation();
-            }
-        }
-
         return view;
     }
 
@@ -241,6 +210,39 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     @Override
     public void setCityName(String cityName) {
         mTvCityName.setText(cityName);
+    }
+
+    @Override
+    public void readyToLoadViews() {
+        if (mPresenter.isNeedUpdate()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                    (mActivity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                            || mActivity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                            || mActivity.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                            || mActivity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
+                            || mActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.CAMERA,
+                                Manifest.permission.READ_CONTACTS,
+                                Manifest.permission.ACCESS_FINE_LOCATION},
+                        RequestCode.PERMISSIONS_REQUEST_SDCARD_CONTACTS_LOCATIONS_HOMEPAGE);
+            } else {
+                mPresenter.alertToUpdate(getContext());
+                readContacts();
+                startLocation();
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                    && (mActivity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
+                    || mActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS, Manifest.permission.ACCESS_FINE_LOCATION},
+                        RequestCode.PERMISSIONS_REQUEST_READ_CONTACTS_AND_LOCATIONS);
+            } else {
+                readContacts();
+                startLocation();
+            }
+        }
     }
 
     @OnClick({R.id.cv_procedure,

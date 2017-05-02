@@ -21,6 +21,7 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
+import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.util.Utils;
 
@@ -77,7 +78,7 @@ public class NearCoachAdapter extends RecyclerView.Adapter<NearCoachAdapter.View
                 holder.mTvLocation.setText(ss);
             } else {
                 HHBaseApplication application = HHBaseApplication.get(mContext);
-                holder.mTvLocation.setText(application.getConstants().getSectionName(coach.coach_group.field_id));
+                holder.mTvLocation.setText(application.getFieldResponseList().getSectionName(coach.coach_group.field_id));
             }
         } else {
             holder.mIvAvatar.setVisibility(View.GONE);

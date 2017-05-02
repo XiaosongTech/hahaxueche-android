@@ -40,37 +40,9 @@ public class FieldFilterPresenter extends HHBasePresenter implements Presenter<F
     }
 
     public void getFields() {
-        HHApiService apiService = application.getApiService();
-        int cityId = 0;
-        if (application.getSharedPrefUtil().getLocalSettings().cityId > -1) {
-            cityId = application.getSharedPrefUtil().getLocalSettings().cityId;
-        }
-        final FieldResponseList cacheFields = application.getCachedFieldByCityId(cityId);
-        if (cacheFields != null) {
-            mView.initMap(cacheFields.data);
-        } else {
-            final int finalCityId = cityId;
-            subscription = apiService.getFields(cityId, null)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(application.defaultSubscribeScheduler())
-                    .subscribe(new Subscriber<FieldResponseList>() {
-                        @Override
-                        public void onCompleted() {
-
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            HHLog.e(e.getMessage());
-                            e.printStackTrace();
-                        }
-
-                        @Override
-                        public void onNext(FieldResponseList fieldResponseList) {
-                            application.cacheField(fieldResponseList, finalCityId);
-                            mView.initMap(fieldResponseList.data);
-                        }
-                    });
+        FieldResponseList fieldResponseList = application.getFieldResponseList();
+        if (fieldResponseList != null) {
+            mView.initMap(fieldResponseList.data);
         }
     }
 

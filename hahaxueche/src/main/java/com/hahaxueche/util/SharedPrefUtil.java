@@ -9,6 +9,7 @@ import com.hahaxueche.model.base.CityConstants;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.base.LocalSettings;
 import com.hahaxueche.model.examLib.Question;
+import com.hahaxueche.model.responseList.FieldResponseList;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.student.Student;
 
@@ -194,5 +195,15 @@ public class SharedPrefUtil {
     public void setLocalSettings(LocalSettings localSettings) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         prefs.edit().putString("localSettingsSerialize", mGson.toJson(localSettings)).apply();
+    }
+
+    public FieldResponseList getFieldResponseList() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        return mGson.fromJson(prefs.getString("fieldResponseListSerialize", ""), FieldResponseList.class);
+    }
+
+    public void setFieldResponseList(FieldResponseList fieldResponseList) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        prefs.edit().putString("fieldResponseListSerialize", mGson.toJson(fieldResponseList)).apply();
     }
 }

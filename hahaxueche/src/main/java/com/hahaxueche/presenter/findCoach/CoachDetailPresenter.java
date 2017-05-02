@@ -180,15 +180,13 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
     private String getTrainingFieldName() {
         String ret = "";
         if (mCoach == null) return ret;
-        Constants constants = application.getConstants();
-        Field field = constants.getField(mCoach.coach_group.field_id);
+        Field field = application.getFieldResponseList().getFieldById(mCoach.coach_group.field_id);
         return field != null ? field.display_address : "";
     }
 
     public Field getTrainingField() {
         if (mCoach == null) return null;
-        Constants constants = application.getConstants();
-        return constants.getField(mCoach.coach_group.field_id);
+        return application.getFieldResponseList().getFieldById(mCoach.coach_group.field_id);
     }
 
     public void setCoach(String coachId) {

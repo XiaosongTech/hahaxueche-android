@@ -1,11 +1,17 @@
 package com.hahaxueche.ui.activity.findCoach;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
@@ -23,6 +29,7 @@ import com.hahaxueche.presenter.findCoach.SearchCoachPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachAdapter;
 import com.hahaxueche.ui.view.findCoach.SearchCoachView;
+import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
@@ -44,6 +51,7 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
     @BindView(R.id.lly_history)
     LinearLayout mLlyHistory;
     private SearchCoachPresenter mPresenter;
+    private String mConsultantPhone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -194,7 +202,17 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
             FrameLayout.LayoutParams paramMain = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
             ListView listView = new ListView(this);
             listView.setLayoutParams(paramMain);
-            CoachAdapter coachItemAdapter = new CoachAdapter(this, coachList);
+            CoachAdapter coachItemAdapter = new CoachAdapter(this, coachList, new CoachAdapter.OnCoachClickListener() {
+                @Override
+                public void callCoach(String phone) {
+                    mConsultantPhone = phone;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH);
+                    } else {
+                        contactCoach();
+                    }
+                }
+            });
             listView.setAdapter(coachItemAdapter);
             listView.setDivider(ContextCompat.getDrawable(this, R.drawable.divider_left_20dp));
             listView.setDividerHeight(Utils.instence(this).dip2px(0.5f));
@@ -249,5 +267,30 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
     public void enableButton() {
         mIvClear.setClickable(true);
         mTvSearch.setClickable(true);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                contactCoach();
+            } else {
+                showMessage("请允许拨打电话权限，不然无法直接拨号联系教练");
+            }
+        }
+    }
+
+    /**
+     * 联系教练
+     */
+    private void contactCoach() {
+        if (TextUtils.isEmpty(mConsultantPhone))
+            return;
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mConsultantPhone));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        startActivity(intent);
     }
 }

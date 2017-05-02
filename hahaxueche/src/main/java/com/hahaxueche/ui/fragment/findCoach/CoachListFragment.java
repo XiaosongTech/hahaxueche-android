@@ -3,10 +3,13 @@ package com.hahaxueche.ui.fragment.findCoach;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,6 +97,8 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     private final int POP_TYPE = 2;
     private final int POP_SORT = 3;
 
+    private String mConsultantPhone;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,7 +143,17 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     @Override
     public void refreshCoachList(ArrayList<Coach> coachArrayList) {
         mCoachArrayList = coachArrayList;
-        mCoachAdapter = new CoachAdapter(getContext(), mCoachArrayList);
+        mCoachAdapter = new CoachAdapter(getContext(), mCoachArrayList, new CoachAdapter.OnCoachClickListener() {
+            @Override
+            public void callCoach(String phone) {
+                mConsultantPhone = phone;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH);
+                } else {
+                    contactCoach();
+                }
+            }
+        });
         mXlvCoaches.setAdapter(mCoachAdapter);
         mXlvCoaches.stopRefresh();
         mXlvCoaches.stopLoadMore();
@@ -336,7 +351,27 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
             } else {
                 showMessage("请允许使用定位权限，不然我们无法精确的为您推荐教练");
             }
+        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                contactCoach();
+            } else {
+                showMessage("请允许拨打电话权限，不然无法直接拨号联系教练");
+            }
         }
+    }
+
+    /**
+     * 联系教练
+     */
+    private void contactCoach() {
+        if (TextUtils.isEmpty(mConsultantPhone))
+            return;
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mConsultantPhone));
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        startActivity(intent);
     }
 
     private void startLocation() {

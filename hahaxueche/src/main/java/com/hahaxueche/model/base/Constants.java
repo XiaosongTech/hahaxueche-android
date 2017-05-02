@@ -13,7 +13,6 @@ import java.util.List;
  */
 public class Constants {
     public ArrayList<City> cities;
-    public List<Field> fields;
     public ArrayList<BaseItemType> license_types;
     public ArrayList<BaseItemType> service_types;
     public ArrayList<BaseItemType> product_types;
@@ -43,31 +42,6 @@ public class Constants {
         return myCity;
     }
 
-    public String getCitySectionName(String fieldId) {
-        String ret = "";
-        if (fields == null || fields.size() < 1) return ret;
-        for (Field field : fields) {
-            if (field.id.equals(fieldId)) {
-                ret = getCityName(field.city_id) +
-                        (TextUtils.isEmpty(field.section) ? field.zone : field.section);
-                break;
-            }
-        }
-        return ret;
-    }
-
-    public String getSectionName(String fieldId) {
-        String ret = "";
-        if (fields == null || fields.size() < 1) return ret;
-        for (Field field : fields) {
-            if (field.id.equals(fieldId)) {
-                ret = (TextUtils.isEmpty(field.section) ? field.zone : field.section);
-                break;
-            }
-        }
-        return ret;
-    }
-
     public String getCityName(int cityId) {
         String ret = "";
         if (cities == null || cities.size() < 1) return ret;
@@ -78,29 +52,6 @@ public class Constants {
             }
         }
         return ret;
-    }
-
-    public Field getField(String fieldId) {
-        Field ret = null;
-        if (fields != null && fields.size() > 0) {
-            for (Field field : fields) {
-                if (field.id.equals(fieldId)) {
-                    ret = field;
-                    break;
-                }
-            }
-        }
-        return ret;
-    }
-
-    public ArrayList<Field> getFields(int cityId) {
-        ArrayList<Field> retFields = new ArrayList<>();
-        for (Field field : fields) {
-            if (field.city_id == cityId) {
-                retFields.add(field);
-            }
-        }
-        return retFields;
     }
 
     public String getCourseName(int cityId, int courseId) {

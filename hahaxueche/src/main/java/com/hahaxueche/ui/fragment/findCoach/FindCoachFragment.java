@@ -20,6 +20,7 @@ import com.hahaxueche.ui.activity.findCoach.SearchCoachActivity;
 import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.findCoach.FindCoachView;
+import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
 
 import java.util.ArrayList;
@@ -52,12 +53,14 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        HHLog.v("find coach onCreate");
         mActivity = (MainActivity) getActivity();
         mPresenter = new FindCoachPresenter();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        HHLog.v("find coach onCreateView");
         View view = inflater.inflate(R.layout.fragment_find_coach, container, false);
         ButterKnife.bind(this, view);
         mPresenter.attachView(this);
