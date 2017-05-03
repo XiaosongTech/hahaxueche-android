@@ -56,8 +56,7 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
             }
             application.getSharedPrefUtil().setLocalSettings(localSettings);
         }
-        getCityConstants(localSettings.cityId);
-        getCityFields(localSettings.cityId);
+        initCityConstants(localSettings.cityId);
         mView.setCityName(application.getConstants().getCityName(localSettings.cityId));
     }
 
@@ -65,6 +64,69 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
         this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
+    }
+
+    /**
+     * 初始化城市常量
+     *
+     * @param cityId
+     */
+    private void initCityConstants(final int cityId) {
+        HHApiService apiService = application.getApiService();
+        subscription = apiService.getCityConstant(cityId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<CityConstants>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        mView.showProgressDialog();
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        initCityFields(cityId);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                        e.printStackTrace();
+                        mView.dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onNext(CityConstants cityConstants) {
+                        application.setCityConstants(cityConstants);
+                        mView.loadHotDrivingSchools(cityConstants.driving_schools.subList(0, 8));
+                    }
+                });
+    }
+
+    private void initCityFields(int cityId) {
+        HHApiService apiService = application.getApiService();
+        subscription = apiService.getFields(cityId, null)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<FieldResponseList>() {
+                    @Override
+                    public void onCompleted() {
+                        mView.readyToLoadViews();
+                        mView.dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                        e.printStackTrace();
+                        mView.dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onNext(FieldResponseList fieldResponseList) {
+                        application.setFieldResponseList(fieldResponseList);
+                    }
+                });
     }
 
     private void getCityFields(int cityId) {
@@ -75,7 +137,7 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
                 .subscribe(new Subscriber<FieldResponseList>() {
                     @Override
                     public void onCompleted() {
-                        mView.readyToLoadViews();
+                        getNearCoaches();
                         mView.dismissProgressDialog();
                     }
 

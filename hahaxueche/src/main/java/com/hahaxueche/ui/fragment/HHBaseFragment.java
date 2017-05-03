@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
+import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.view.base.HHBaseView;
 import com.hahaxueche.util.HHLog;
@@ -18,7 +19,6 @@ import com.hahaxueche.util.HHLog;
  * Created by wangshirui on 16/9/17.
  */
 public class HHBaseFragment extends Fragment implements HHBaseView {
-    private ProgressDialog progressDialog;//进度框
 
     @Override
     public void showError(String message) {
@@ -84,19 +84,25 @@ public class HHBaseFragment extends Fragment implements HHBaseView {
 
     @Override
     public void showProgressDialog() {
-        showProgressDialog("为学员保驾护航！");
+        HHBaseActivity activity = (HHBaseActivity) getActivity();
+        if (activity != null) {
+            activity.showProgressDialog();
+        }
     }
 
     @Override
     public void showProgressDialog(String message) {
-        dismissProgressDialog();
-        progressDialog = ProgressDialog.show(getContext(), null, message);
+        HHBaseActivity activity = (HHBaseActivity) getActivity();
+        if (activity != null) {
+            activity.showProgressDialog(message);
+        }
     }
 
     @Override
     public void dismissProgressDialog() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
+        HHBaseActivity activity = (HHBaseActivity) getActivity();
+        if (activity != null) {
+            activity.dismissProgressDialog();
         }
     }
 

@@ -36,7 +36,6 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
     //-----筛选参数-----
     private String filterDistance;
     private String licenseType;
-    private int cityId = 0;
     private int sortBy = 0;
     private String zone = "";
     private int startMoney = Common.NO_LIMIT;
@@ -71,15 +70,17 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
     }
 
     private void initDefaultFilters() {
-        LocalSettings localSettings = application.getSharedPrefUtil().getLocalSettings();
-        if (localSettings.cityId > -1) {
-            cityId = localSettings.cityId;
-        }
+
         //默认价格最低
         sortBy = 3;
     }
 
     public void fetchCoaches() {
+        int cityId = 0;
+        LocalSettings localSettings = application.getSharedPrefUtil().getLocalSettings();
+        if (localSettings.cityId > -1) {
+            cityId = localSettings.cityId;
+        }
         ArrayList<String> fieldIds = null;
         if (selectFields != null && selectFields.size() > 0) {
             fieldIds = new ArrayList<>();

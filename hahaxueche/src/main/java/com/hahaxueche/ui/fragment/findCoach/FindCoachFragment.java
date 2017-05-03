@@ -184,4 +184,11 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
                 break;
         }
     }
+
+    public void onCityChange() {
+        if (mCoachListFragment != null) {
+            //城市更改，刷新教练列表
+            mCoachListFragment.onRefresh();
+        }
+    }
 }

@@ -383,6 +383,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                     mPresenter.addDataTrack("home_navigation_city_selected", getContext());
                     if (city != null) {
                         mPresenter.selectCity(city.id);
+                        mActivity.onCityChange();
                     }
                     return true;
                 }

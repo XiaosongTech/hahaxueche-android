@@ -337,7 +337,7 @@ public class FragmentTabHost extends TabHost implements
                 }
             }
             if (newTab != null) {
-                if (newTab.fragment == null || newTab.tag.equals("myPage") || newTab.tag.equals("findCoach")) {
+                if (newTab.fragment == null || newTab.tag.equals("myPage")) {
                     newTab.fragment = Fragment.instantiate(mContext,
                             newTab.clss.getName(), newTab.args);
                     ft.add(mContainerId, newTab.fragment, newTab.tag);
