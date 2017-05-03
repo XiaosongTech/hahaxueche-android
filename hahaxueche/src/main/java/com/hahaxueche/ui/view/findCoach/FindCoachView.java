@@ -11,9 +11,9 @@ public interface FindCoachView extends HHBaseView {
 
     void unSelectCoach();
 
-    void selectPartner();
+    void selectDrivingSchool();
 
-    void unSelectPartner();
+    void unSelectDrivingSchool();
 
     void showLeftIconMap();
 
@@ -21,11 +21,7 @@ public interface FindCoachView extends HHBaseView {
 
     void showCoachListFragment();
 
-    void showPartnerListFragment();
-
-    void showPartnerInfoDialog();
+    void showDrivingSchoolListFragment();
 
     void navigateToSelectFields();
-
-    void showSearchIcon(boolean enable);
 }

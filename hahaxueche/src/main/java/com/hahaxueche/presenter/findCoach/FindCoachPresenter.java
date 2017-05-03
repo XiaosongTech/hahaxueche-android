@@ -18,14 +18,14 @@ import rx.Subscription;
 public class FindCoachPresenter extends HHBasePresenter implements Presenter<FindCoachView> {
     private FindCoachView mView;
     private Subscription subscription;
-    private int currentPage = 0;//0,驾校教练；1，陪练教练
+    private int currentPage = 0;//0,选驾校；1，挑教练
     private HHBaseApplication application;
 
     public void attachView(FindCoachView view) {
         this.mView = view;
         application = HHBaseApplication.get(mView.getContext());
-        //默认选中驾校教练
-        selectCoach();
+        //默认选驾校
+        selectDrivingSchool();
     }
 
     public void detachView() {
@@ -36,46 +36,31 @@ public class FindCoachPresenter extends HHBasePresenter implements Presenter<Fin
 
     public void selectCoach() {
         mView.selectCoach();
-        mView.unSelectPartner();
+        mView.unSelectDrivingSchool();
         mView.showLeftIconMap();
-        mView.showSearchIcon(true);
         mView.showCoachListFragment();
         currentPage = 0;
     }
 
-    public void selectPartner() {
-        mView.selectPartner();
+    public void selectDrivingSchool() {
+        mView.selectDrivingSchool();
         mView.unSelectCoach();
         mView.showLeftIconExplain();
-        mView.showSearchIcon(false);
-        mView.showPartnerListFragment();
+        mView.showDrivingSchoolListFragment();
         currentPage = 1;
     }
 
     public void clickLeftIcon() {
-        if (currentPage == 1) {
-            //陪练解释点击
-            HashMap<String, String> map = new HashMap();
-            User user = application.getSharedPrefUtil().getUser();
-            if (user != null && user.isLogin()) {
-                map.put("student_id", user.student.id);
-                MobclickAgent.onEvent(mView.getContext(), "find_coach_page_what_is_personal_coach_tapped", map);
-            } else {
-                MobclickAgent.onEvent(mView.getContext(), "find_coach_page_what_is_personal_coach_tapped");
-            }
-            mView.showPartnerInfoDialog();
+        //训练场地图点击
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+            MobclickAgent.onEvent(mView.getContext(), "find_coach_page_field_icon_tapped", map);
         } else {
-            //训练场地图点击
-            HashMap<String, String> map = new HashMap();
-            User user = application.getSharedPrefUtil().getUser();
-            if (user != null && user.isLogin()) {
-                map.put("student_id", user.student.id);
-                MobclickAgent.onEvent(mView.getContext(), "find_coach_page_field_icon_tapped", map);
-            } else {
-                MobclickAgent.onEvent(mView.getContext(), "find_coach_page_field_icon_tapped");
-            }
-            mView.navigateToSelectFields();
+            MobclickAgent.onEvent(mView.getContext(), "find_coach_page_field_icon_tapped");
         }
+        mView.navigateToSelectFields();
     }
 
     public void clickSearchCount() {
@@ -88,7 +73,6 @@ public class FindCoachPresenter extends HHBasePresenter implements Presenter<Fin
         } else {
             MobclickAgent.onEvent(mView.getContext(), "find_coach_page_search_tapped");
         }
-
     }
 
 }

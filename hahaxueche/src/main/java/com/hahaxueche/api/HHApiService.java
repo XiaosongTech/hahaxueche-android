@@ -19,6 +19,7 @@ import com.hahaxueche.model.payment.Voucher;
 import com.hahaxueche.model.payment.WithdrawRecord;
 import com.hahaxueche.model.responseList.ArticleResponseList;
 import com.hahaxueche.model.responseList.CoachResponseList;
+import com.hahaxueche.model.responseList.DrivingSchoolResponseList;
 import com.hahaxueche.model.responseList.FieldResponseList;
 import com.hahaxueche.model.responseList.PartnerResponseList;
 import com.hahaxueche.model.responseList.ReferrerResponseList;
@@ -311,6 +312,15 @@ public interface HHApiService {
 
     @POST("user_identities")
     Observable<UserIdentityInfo> getUserIdentity(@Body UserIdentityParam param);
+
+    @GET("driving_schools")
+    Observable<DrivingSchoolResponseList> getDrivingSchools(@Query("page") int page, @Query("per_page") int perPage, @Query("license_type") String licenseType,
+                                                            @Query("city_id") int cityId, @Query("distance") String distance, @Query("user_location[]") ArrayList<String> locations,
+                                                            @Query("sort_by") String sortBy, @Query("price_from") String startMoney, @Query("price_to") String endMoney,
+                                                            @Query("zone") String zone);
+
+    @GET
+    Observable<DrivingSchoolResponseList> getDrivingSchools(@Url String path);
 
     class Factory {
         public static Retrofit getRetrofit() {

@@ -5,31 +5,26 @@ import android.text.TextUtils;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.CityConstants;
-import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.base.LocalSettings;
-import com.hahaxueche.model.responseList.CoachResponseList;
-import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.responseList.DrivingSchoolResponseList;
 import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
-import com.hahaxueche.ui.view.findCoach.CoachListView;
+import com.hahaxueche.ui.view.findCoach.DrivingSchoolListView;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
-import com.hahaxueche.util.WebViewUrl;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * Created by wangshirui on 16/10/1.
+ * Created by wangshirui on 2017/5/3.
  */
 
-public class CoachListPresenter extends HHBasePresenter implements Presenter<CoachListView> {
-    private CoachListView mView;
+public class DrivingSchoolListPresenter extends HHBasePresenter implements Presenter<DrivingSchoolListView> {
+    private DrivingSchoolListView mView;
     private Subscription subscription;
     private HHBaseApplication application;
     private String nextLink;
@@ -40,10 +35,9 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
     private String zone = "";
     private int startMoney = Common.NO_LIMIT;
     private int endMoney = Common.NO_LIMIT;
-    private ArrayList<Field> selectFields;
     //-----end-----
 
-    public void attachView(CoachListView view) {
+    public void attachView(DrivingSchoolListView view) {
         this.mView = view;
         application = HHBaseApplication.get(mView.getContext());
         initDefaultFilters();
@@ -70,27 +64,15 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
     }
 
     private void initDefaultFilters() {
-        //默认价格最低
-        sortBy = 3;
+        //默认综合排序
+        sortBy = 0;
     }
 
-    public void fetchCoaches() {
+    public void fetchDrivingSchool() {
         int cityId = 0;
         LocalSettings localSettings = application.getSharedPrefUtil().getLocalSettings();
         if (localSettings.cityId > -1) {
             cityId = localSettings.cityId;
-        }
-        ArrayList<String> fieldIds = null;
-        if (selectFields != null && selectFields.size() > 0) {
-            fieldIds = new ArrayList<>();
-            for (Field field : selectFields) {
-                fieldIds.add(field.id);
-            }
-        }
-        String studentId = null;
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            studentId = user.student.id;
         }
         ArrayList<String> locations = null;
         if (application.getMyLocation() != null) {
@@ -99,14 +81,15 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
             locations.add(String.valueOf(application.getMyLocation().lng));
         }
         HHApiService apiService = application.getApiService();
-        subscription = apiService.getCoaches(Common.START_PAGE, Common.PER_PAGE,
+        subscription = apiService.getDrivingSchools(Common.START_PAGE, Common.PER_PAGE,
                 TextUtils.isEmpty(licenseType) ? null : licenseType, cityId,
-                fieldIds, TextUtils.isEmpty(filterDistance) ? null : filterDistance,
-                locations, sortBy, studentId, startMoney > 0 ? String.valueOf(startMoney) : null,
-                endMoney > 0 ? String.valueOf(endMoney) : null, TextUtils.isEmpty(zone) ? null : zone)
+                TextUtils.isEmpty(filterDistance) ? null : filterDistance, locations, null,
+                startMoney > 0 ? String.valueOf(startMoney) : null,
+                endMoney > 0 ? String.valueOf(endMoney) : null,
+                TextUtils.isEmpty(zone) ? null : zone)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
-                .subscribe(new Subscriber<CoachResponseList>() {
+                .subscribe(new Subscriber<DrivingSchoolResponseList>() {
                     @Override
                     public void onStart() {
                         super.onStart();
@@ -126,10 +109,10 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
                     }
 
                     @Override
-                    public void onNext(CoachResponseList coachResponseList) {
-                        if (coachResponseList.data != null) {
-                            mView.refreshCoachList(coachResponseList.data);
-                            nextLink = coachResponseList.links.next;
+                    public void onNext(DrivingSchoolResponseList drivingSchoolResponseList) {
+                        if (drivingSchoolResponseList.data != null) {
+                            mView.refreshDrivingSchoolList(drivingSchoolResponseList.data);
+                            nextLink = drivingSchoolResponseList.links.next;
                             mView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
                             mView.showHelp(true);
                         } else {
@@ -140,13 +123,13 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
                 });
     }
 
-    public void addMoreCoaches() {
+    public void addMoreDrivingSchools() {
         if (TextUtils.isEmpty(nextLink)) return;
         HHApiService apiService = application.getApiService();
-        subscription = apiService.getCoaches(nextLink)
+        subscription = apiService.getDrivingSchools(nextLink)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
-                .subscribe(new Subscriber<CoachResponseList>() {
+                .subscribe(new Subscriber<DrivingSchoolResponseList>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -157,73 +140,18 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
                     }
 
                     @Override
-                    public void onNext(CoachResponseList coachResponseList) {
-                        if (coachResponseList.data != null) {
-                            mView.addMoreCoachList(coachResponseList.data);
-                            nextLink = coachResponseList.links.next;
+                    public void onNext(DrivingSchoolResponseList drivingSchoolResponseList) {
+                        if (drivingSchoolResponseList.data != null) {
+                            mView.addMoreDrivingSchoolList(drivingSchoolResponseList.data);
+                            nextLink = drivingSchoolResponseList.links.next;
                             mView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
                         }
                     }
                 });
     }
 
-    public ArrayList<Field> getSelectFields() {
-        return selectFields;
-    }
-
-    public void setSelectFields(ArrayList<Field> selectFields) {
-        this.selectFields = selectFields;
-    }
-
     public void setLocation(double lat, double lng) {
         application.setMyLocation(lat, lng);
-    }
-
-    public void clickFilterCount() {
-        //筛选点击
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "find_coach_page_filter_tapped_tapped", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "find_coach_page_filter_tapped_tapped");
-        }
-
-    }
-
-    public void clickSortCount(int sortBy) {
-        //筛选点击
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-        }
-        map.put("sort_type", String.valueOf(sortBy));
-        MobclickAgent.onEvent(mView.getContext(), "find_coach_page_sort_tapped", map);
-    }
-
-    public void clickCoach(String coachId) {
-        //筛选点击
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-        }
-        map.put("coach_id", coachId);
-        MobclickAgent.onEvent(mView.getContext(), "find_coach_page_coach_tapped", map);
-    }
-
-    public void clickRedBag() {
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "find_coach_flying_envelop_tapped", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "find_coach_flying_envelop_tapped");
-        }
-        mView.openWebView(WebViewUrl.WEB_URL_DALIBAO);
     }
 
     public int[][] getPriceRanges() {
@@ -259,4 +187,5 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
         filterDistance = "";
         this.zone = zone;
     }
+
 }

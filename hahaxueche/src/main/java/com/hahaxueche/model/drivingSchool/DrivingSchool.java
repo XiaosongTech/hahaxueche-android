@@ -12,7 +12,7 @@ public class DrivingSchool {
     public int coach_count;
     public int field_count;
     public int lowest_price;
-    public double rating;
+    public float rating;
     public int review_count;
     public int like_count;
     public String pass_rate;
@@ -21,4 +21,6 @@ public class DrivingSchool {
     public List<String> zones;
     public int lowest_vip_price;
     public int consult_count;
+    public String consult_phone;
+    public String distance;
 }

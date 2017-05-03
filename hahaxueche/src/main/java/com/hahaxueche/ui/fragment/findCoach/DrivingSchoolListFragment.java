@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -27,41 +26,38 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.hahaxueche.R;
-import com.hahaxueche.model.base.Field;
-import com.hahaxueche.model.user.coach.Coach;
-import com.hahaxueche.presenter.findCoach.CoachListPresenter;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
+import com.hahaxueche.presenter.findCoach.DrivingSchoolListPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
-import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
-import com.hahaxueche.ui.adapter.findCoach.CoachAdapter;
+import com.hahaxueche.ui.adapter.findCoach.DrivingSchoolAdapter;
 import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.popupWindow.findCoach.PricePopupWindow;
 import com.hahaxueche.ui.popupWindow.findCoach.SortPopupWindow;
 import com.hahaxueche.ui.popupWindow.findCoach.TypePopupWindow;
 import com.hahaxueche.ui.popupWindow.findCoach.ZonePopupWindow;
-import com.hahaxueche.ui.view.findCoach.CoachListView;
+import com.hahaxueche.ui.view.findCoach.DrivingSchoolListView;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static android.app.Activity.RESULT_OK;
-
 /**
- * Created by wangshirui on 16/9/13.
+ * Created by wangshirui on 2017/5/3.
  */
-public class CoachListFragment extends HHBaseFragment implements CoachListView, XListView.IXListViewListener,
-        XListView.OnXScrollListener, AdapterView.OnItemClickListener {
+
+public class DrivingSchoolListFragment extends HHBaseFragment implements DrivingSchoolListView, XListView.IXListViewListener,
+        XListView.OnXScrollListener {
     private MainActivity mActivity;
-    private CoachListPresenter mPresenter;
-    @BindView(R.id.xlv_coaches)
-    XListView mXlvCoaches;
+    private DrivingSchoolListPresenter mPresenter;
+    @BindView(R.id.xlv_driving_schools)
+    XListView mXlvDrivingSchools;
     @BindView(R.id.tv_empty)
     TextView mTvEmpty;
     @BindView(R.id.rly_main)
@@ -78,8 +74,8 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     TextView mTvType;
     @BindView(R.id.tv_sort)
     TextView mTvSort;
-    private CoachAdapter mCoachAdapter;
-    private ArrayList<Coach> mCoachArrayList;
+    private DrivingSchoolAdapter mDrivingSchoolAdapter;
+    private List<DrivingSchool> mDrivingSchoolList;
     private SortPopupWindow mSortPopWindow;
     private TypePopupWindow mTypePopWindow;
     private PricePopupWindow mPricePopWindow;
@@ -100,21 +96,20 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = (MainActivity) getActivity();
-        mPresenter = new CoachListPresenter();
+        mPresenter = new DrivingSchoolListPresenter();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_coach_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_driving_school_list, container, false);
         ButterKnife.bind(this, view);
         mPresenter.attachView(this);
-        mXlvCoaches.setPullRefreshEnable(true);
-        mXlvCoaches.setPullLoadEnable(true);
-        mXlvCoaches.setAutoLoadEnable(true);
-        mXlvCoaches.setXListViewListener(this);
-        mXlvCoaches.setOnItemClickListener(this);
-        mXlvCoaches.setEmptyView(mTvEmpty);
-        mXlvCoaches.setOnScrollListener(this);
+        mXlvDrivingSchools.setPullRefreshEnable(true);
+        mXlvDrivingSchools.setPullLoadEnable(true);
+        mXlvDrivingSchools.setAutoLoadEnable(true);
+        mXlvDrivingSchools.setXListViewListener(this);
+        mXlvDrivingSchools.setEmptyView(mTvEmpty);
+        mXlvDrivingSchools.setOnScrollListener(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, RequestCode.PERMISSIONS_REQUEST_LOCATION);
         } else {
@@ -134,13 +129,13 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
 
     @Override
     public void setPullLoadEnable(boolean enable) {
-        mXlvCoaches.setPullLoadEnable(enable);
+        mXlvDrivingSchools.setPullLoadEnable(enable);
     }
 
     @Override
-    public void refreshCoachList(ArrayList<Coach> coachArrayList) {
-        mCoachArrayList = coachArrayList;
-        mCoachAdapter = new CoachAdapter(getContext(), mCoachArrayList, new CoachAdapter.OnCoachClickListener() {
+    public void refreshDrivingSchoolList(List<DrivingSchool> drivingSchools) {
+        mDrivingSchoolList = drivingSchools;
+        mDrivingSchoolAdapter = new DrivingSchoolAdapter(getContext(), mDrivingSchoolList, new DrivingSchoolAdapter.OnDrivingSchoolClickListener() {
             @Override
             public void callCoach(String phone) {
                 mConsultantPhone = phone;
@@ -151,15 +146,15 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                 }
             }
         });
-        mXlvCoaches.setAdapter(mCoachAdapter);
-        mXlvCoaches.stopRefresh();
-        mXlvCoaches.stopLoadMore();
+        mXlvDrivingSchools.setAdapter(mDrivingSchoolAdapter);
+        mXlvDrivingSchools.stopRefresh();
+        mXlvDrivingSchools.stopLoadMore();
     }
 
     @Override
-    public void addMoreCoachList(ArrayList<Coach> coachArrayList) {
-        mCoachArrayList.addAll(coachArrayList);
-        mCoachAdapter.notifyDataSetChanged();
+    public void addMoreDrivingSchoolList(List<DrivingSchool> drivingSchools) {
+        mDrivingSchoolList.addAll(drivingSchools);
+        mDrivingSchoolAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -174,22 +169,12 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
 
     @Override
     public void onRefresh() {
-        mPresenter.fetchCoaches();
+        mPresenter.fetchDrivingSchool();
     }
 
     @Override
     public void onLoadMore() {
-        mPresenter.addMoreCoaches();
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (mCoachArrayList != null && mCoachArrayList.size() > 0 && position > 0 && position - 1 < mCoachArrayList.size()) {
-            mPresenter.clickCoach(mCoachArrayList.get(position - 1).id);
-            Intent intent = new Intent(getContext(), CoachDetailActivity.class);
-            intent.putExtra("coach", mCoachArrayList.get(position - 1));
-            startActivityForResult(intent, RequestCode.REQUEST_CODE_COACH_DETAIL);
-        }
+        mPresenter.addMoreDrivingSchools();
     }
 
     @OnClick({R.id.fly_sort,
@@ -204,9 +189,8 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                     mSortPopWindow = new SortPopupWindow(getActivity(), new SortPopupWindow.OnSortListener() {
                         @Override
                         public void sort(int sortBy) {
-                            mPresenter.clickSortCount(sortBy);
                             mPresenter.setSortBy(sortBy);
-                            mPresenter.fetchCoaches();
+                            mPresenter.fetchDrivingSchool();
                         }
 
                         @Override
@@ -224,7 +208,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                         @Override
                         public void selectType(int licenseType) {
                             mPresenter.setLicenseType(licenseType);
-                            mPresenter.fetchCoaches();
+                            mPresenter.fetchDrivingSchool();
                         }
 
                         @Override
@@ -256,19 +240,19 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                         @Override
                         public void selectNoLimit() {
                             mPresenter.setPriceRange(Common.NO_LIMIT, Common.NO_LIMIT);
-                            mPresenter.fetchCoaches();
+                            mPresenter.fetchDrivingSchool();
                         }
 
                         @Override
                         public void selectPrice(int[] priceRange) {
                             mPresenter.setPriceRange(priceRange[0], priceRange[1]);
-                            mPresenter.fetchCoaches();
+                            mPresenter.fetchDrivingSchool();
                         }
 
                         @Override
                         public void selectMaxPrice(int endMoney) {
                             mPresenter.setPriceRange(endMoney, Common.NO_LIMIT);
-                            mPresenter.fetchCoaches();
+                            mPresenter.fetchDrivingSchool();
                         }
 
                         @Override
@@ -286,19 +270,19 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                         @Override
                         public void selectNoLimit() {
                             mPresenter.setDistance(Common.NO_LIMIT);
-                            mPresenter.fetchCoaches();
+                            mPresenter.fetchDrivingSchool();
                         }
 
                         @Override
                         public void selectZone(String zone) {
                             mPresenter.setZone(zone);
-                            mPresenter.fetchCoaches();
+                            mPresenter.fetchDrivingSchool();
                         }
 
                         @Override
                         public void selectDistance(int distance) {
                             mPresenter.setDistance(distance);
-                            mPresenter.fetchCoaches();
+                            mPresenter.fetchDrivingSchool();
                         }
 
                         @Override
@@ -316,28 +300,6 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
             default:
                 break;
         }
-
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RequestCode.REQUEST_CODE_COACH_DETAIL) {
-            if (resultCode == RESULT_OK && null != data) {
-                Coach retCoach = data.getParcelableExtra("coach");
-                if (retCoach != null) {
-                    for (Coach coach : mCoachArrayList) {
-                        if (coach.id.equals(retCoach.id)) {
-                            coach.like_count = retCoach.like_count;
-                            coach.liked = retCoach.liked;
-                            mCoachAdapter.notifyDataSetChanged();
-                            break;
-                        }
-                    }
-                }
-            }
-            mActivity.controlMyPageBadge();
-        }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -346,14 +308,14 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startLocation();
             } else {
-                showMessage("请允许使用定位权限，不然我们无法精确的为您推荐教练");
+                showMessage("请允许使用定位权限，不然我们无法精确的为您推荐驾校");
             }
         } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 contactCoach();
             } else {
-                showMessage("请允许拨打电话权限，不然无法直接拨号联系教练");
+                showMessage("请允许拨打电话权限，不然无法直接拨号联系驾校");
             }
         }
     }
@@ -399,16 +361,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
         mLocationClient.setLocationOption(mLocationOption);
         HHLog.v("create location service");
         mLocationClient.startLocation();
-        mPresenter.fetchCoaches();
-    }
-
-    public void setSelectFields(ArrayList<Field> selectFields) {
-        mPresenter.setSelectFields(selectFields);
-        mPresenter.fetchCoaches();
-    }
-
-    public ArrayList<Field> getSelectFields() {
-        return mPresenter.getSelectFields();
+        mPresenter.fetchDrivingSchool();
     }
 
     @Override
