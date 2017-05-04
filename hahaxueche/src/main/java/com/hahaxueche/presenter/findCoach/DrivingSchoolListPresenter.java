@@ -6,6 +6,7 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.CityConstants;
 import com.hahaxueche.model.base.LocalSettings;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.responseList.DrivingSchoolResponseList;
 import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
@@ -14,6 +15,7 @@ import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -188,4 +190,7 @@ public class DrivingSchoolListPresenter extends HHBasePresenter implements Prese
         this.zone = zone;
     }
 
+    public List<DrivingSchool> getHotDrivingSchools() {
+        return application.getCityConstants().driving_schools.subList(0, 8);
+    }
 }

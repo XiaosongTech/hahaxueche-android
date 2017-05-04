@@ -202,7 +202,7 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
             FrameLayout.LayoutParams paramMain = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
             ListView listView = new ListView(this);
             listView.setLayoutParams(paramMain);
-            CoachAdapter coachItemAdapter = new CoachAdapter(this, coachList, new CoachAdapter.OnCoachClickListener() {
+            CoachAdapter coachItemAdapter = new CoachAdapter(this, coachList, mPresenter.getHotDrivingSchools(), new CoachAdapter.OnCoachClickListener() {
                 @Override
                 public void callCoach(String phone) {
                     mConsultantPhone = phone;
@@ -211,6 +211,13 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
                     } else {
                         contactCoach();
                     }
+                }
+
+                @Override
+                public void clickCoach(Coach coach) {
+                    Intent intent = new Intent(getContext(), CoachDetailActivity.class);
+                    intent.putExtra("coach", coach);
+                    startActivity(intent);
                 }
             });
             listView.setAdapter(coachItemAdapter);
@@ -228,16 +235,6 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
             tvFooter.setLayoutParams(paramsTvFooter);
             listView.addFooterView(tvFooter);
             listView.setFooterDividersEnabled(false);
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (position < coachList.size()) {
-                        Intent intent = new Intent(getContext(), CoachDetailActivity.class);
-                        intent.putExtra("coach", coachList.get(position));
-                        startActivity(intent);
-                    }
-                }
-            });
             mFlyMain.addView(listView);
         } else {
             //未搜索到教练

@@ -57,7 +57,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by wangshirui on 16/9/13.
  */
 public class CoachListFragment extends HHBaseFragment implements CoachListView, XListView.IXListViewListener,
-        XListView.OnXScrollListener, AdapterView.OnItemClickListener {
+        XListView.OnXScrollListener {
     private MainActivity mActivity;
     private CoachListPresenter mPresenter;
     @BindView(R.id.xlv_coaches)
@@ -112,7 +112,6 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
         mXlvCoaches.setPullLoadEnable(true);
         mXlvCoaches.setAutoLoadEnable(true);
         mXlvCoaches.setXListViewListener(this);
-        mXlvCoaches.setOnItemClickListener(this);
         mXlvCoaches.setEmptyView(mTvEmpty);
         mXlvCoaches.setOnScrollListener(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -140,7 +139,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     @Override
     public void refreshCoachList(ArrayList<Coach> coachArrayList) {
         mCoachArrayList = coachArrayList;
-        mCoachAdapter = new CoachAdapter(getContext(), mCoachArrayList, new CoachAdapter.OnCoachClickListener() {
+        mCoachAdapter = new CoachAdapter(getContext(), mCoachArrayList, mPresenter.getHotDrivingSchools(), new CoachAdapter.OnCoachClickListener() {
             @Override
             public void callCoach(String phone) {
                 mConsultantPhone = phone;
@@ -149,6 +148,14 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                 } else {
                     contactCoach();
                 }
+            }
+
+            @Override
+            public void clickCoach(Coach coach) {
+                mPresenter.clickCoach(coach.id);
+                Intent intent = new Intent(getContext(), CoachDetailActivity.class);
+                intent.putExtra("coach", coach);
+                startActivityForResult(intent, RequestCode.REQUEST_CODE_COACH_DETAIL);
             }
         });
         mXlvCoaches.setAdapter(mCoachAdapter);
@@ -174,22 +181,14 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
 
     @Override
     public void onRefresh() {
-        mPresenter.fetchCoaches();
+        if (mPresenter != null) {
+            mPresenter.fetchCoaches();
+        }
     }
 
     @Override
     public void onLoadMore() {
         mPresenter.addMoreCoaches();
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (mCoachArrayList != null && mCoachArrayList.size() > 0 && position > 0 && position - 1 < mCoachArrayList.size()) {
-            mPresenter.clickCoach(mCoachArrayList.get(position - 1).id);
-            Intent intent = new Intent(getContext(), CoachDetailActivity.class);
-            intent.putExtra("coach", mCoachArrayList.get(position - 1));
-            startActivityForResult(intent, RequestCode.REQUEST_CODE_COACH_DETAIL);
-        }
     }
 
     @OnClick({R.id.fly_sort,

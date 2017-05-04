@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by wangshirui on 2016/10/9.
  */
 
-public class FollowListActivity extends HHBaseActivity implements FollowListView, XListView.IXListViewListener, AdapterView.OnItemClickListener {
+public class FollowListActivity extends HHBaseActivity implements FollowListView, XListView.IXListViewListener {
     private FollowListPresenter mPresenter;
     @BindView(R.id.xlv_coaches)
     XListView mXlvCoaches;
@@ -56,7 +56,6 @@ public class FollowListActivity extends HHBaseActivity implements FollowListView
         mXlvCoaches.setPullLoadEnable(true);
         mXlvCoaches.setAutoLoadEnable(true);
         mXlvCoaches.setXListViewListener(this);
-        mXlvCoaches.setOnItemClickListener(this);
         mXlvCoaches.setEmptyView(mTvEmpty);
         mPresenter.fetchCoaches();
     }
@@ -90,7 +89,7 @@ public class FollowListActivity extends HHBaseActivity implements FollowListView
     @Override
     public void refreshCoachList(ArrayList<Coach> CoachArrayList) {
         mCoachArrayList = CoachArrayList;
-        mCoachAdapter = new CoachAdapter(getContext(), mCoachArrayList, new CoachAdapter.OnCoachClickListener() {
+        mCoachAdapter = new CoachAdapter(getContext(), mCoachArrayList, mPresenter.getHotDrivingSchools(), new CoachAdapter.OnCoachClickListener() {
             @Override
             public void callCoach(String phone) {
                 mConsultantPhone = phone;
@@ -99,6 +98,13 @@ public class FollowListActivity extends HHBaseActivity implements FollowListView
                 } else {
                     contactCoach();
                 }
+            }
+
+            @Override
+            public void clickCoach(Coach coach) {
+                Intent intent = new Intent(getContext(), CoachDetailActivity.class);
+                intent.putExtra("coach", coach);
+                startActivity(intent);
             }
         });
         mXlvCoaches.setAdapter(mCoachAdapter);
@@ -111,16 +117,6 @@ public class FollowListActivity extends HHBaseActivity implements FollowListView
         mCoachArrayList.addAll(CoachArrayList);
         mCoachAdapter.notifyDataSetChanged();
     }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (mCoachArrayList != null && mCoachArrayList.size() > 0 && position > 0 && position - 1 < mCoachArrayList.size()) {
-            Intent intent = new Intent(getContext(), CoachDetailActivity.class);
-            intent.putExtra("coach", mCoachArrayList.get(position - 1));
-            startActivity(intent);
-        }
-    }
-
 
     @Override
     public void onRefresh() {

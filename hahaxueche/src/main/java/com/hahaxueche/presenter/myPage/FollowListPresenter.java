@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.BaseValid;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.responseList.CoachResponseList;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.HHBasePresenter;
@@ -14,6 +15,7 @@ import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 
 import java.util.HashMap;
+import java.util.List;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -125,5 +127,9 @@ public class FollowListPresenter extends HHBasePresenter implements Presenter<Fo
                         }
                     }
                 });
+    }
+
+    public List<DrivingSchool> getHotDrivingSchools() {
+        return application.getCityConstants().driving_schools.subList(0, 8);
     }
 }

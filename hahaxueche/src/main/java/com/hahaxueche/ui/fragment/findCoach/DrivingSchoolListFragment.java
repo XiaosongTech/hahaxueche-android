@@ -135,7 +135,7 @@ public class DrivingSchoolListFragment extends HHBaseFragment implements Driving
     @Override
     public void refreshDrivingSchoolList(List<DrivingSchool> drivingSchools) {
         mDrivingSchoolList = drivingSchools;
-        mDrivingSchoolAdapter = new DrivingSchoolAdapter(getContext(), mDrivingSchoolList, new DrivingSchoolAdapter.OnDrivingSchoolClickListener() {
+        mDrivingSchoolAdapter = new DrivingSchoolAdapter(getContext(), mDrivingSchoolList, mPresenter.getHotDrivingSchools(), new DrivingSchoolAdapter.OnDrivingSchoolClickListener() {
             @Override
             public void callCoach(String phone) {
                 mConsultantPhone = phone;
@@ -169,7 +169,9 @@ public class DrivingSchoolListFragment extends HHBaseFragment implements Driving
 
     @Override
     public void onRefresh() {
-        mPresenter.fetchDrivingSchool();
+        if (mPresenter != null) {
+            mPresenter.fetchDrivingSchool();
+        }
     }
 
     @Override

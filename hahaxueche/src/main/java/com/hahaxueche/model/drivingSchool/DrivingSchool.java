@@ -23,4 +23,5 @@ public class DrivingSchool {
     public int consult_count;
     public String consult_phone;
     public String distance;
+    public String closest_zone;
 }

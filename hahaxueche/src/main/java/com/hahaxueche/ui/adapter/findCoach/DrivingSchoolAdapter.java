@@ -7,6 +7,7 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +16,15 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.drivingSchool.DrivingSchool;
+import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
 
 import java.util.List;
@@ -34,18 +38,21 @@ import butterknife.ButterKnife;
 public class DrivingSchoolAdapter extends BaseAdapter {
     private Context mContext;
     private List<DrivingSchool> mDrivingSchoolList;
-    private HHBaseApplication application;
     private OnDrivingSchoolClickListener mOnDrivingSchoolClickListener;
+    private List<DrivingSchool> mHotDrivingSchoolList;
+    private boolean mIsHotViewAdded = false;
+    private int mInsertHotViewPosition = -1;
 
     public interface OnDrivingSchoolClickListener {
         void callCoach(String phone);
     }
 
-    public DrivingSchoolAdapter(Context context, List<DrivingSchool> drivingSchools, OnDrivingSchoolClickListener listener) {
+    public DrivingSchoolAdapter(Context context, List<DrivingSchool> drivingSchools, List<DrivingSchool> hotDrivingSchools, OnDrivingSchoolClickListener listener) {
         mContext = context;
         mDrivingSchoolList = drivingSchools;
-        application = HHBaseApplication.get(mContext);
+        mHotDrivingSchoolList = hotDrivingSchools;
         mOnDrivingSchoolClickListener = listener;
+        mInsertHotViewPosition = drivingSchools.size() > 3 ? 3 : drivingSchools.size() - 1;
     }
 
     @Override
@@ -102,11 +109,12 @@ public class DrivingSchoolAdapter extends BaseAdapter {
             SpannableStringBuilder style = new SpannableStringBuilder(infoText);
             style.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.app_theme_color)), infoText.indexOf("您") + 1, infoText.indexOf("KM"), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
             holder.mTvDistance.setText(style);
-            if (drivingSchool.zones != null && drivingSchool.zones.size() > 1) {
-                holder.mTvZone.setText(drivingSchool.zones.get(0));
-            }
         } else {
             holder.mTvDistance.setText("共有" + drivingSchool.field_count + "个训练场 点击查看最近 >");
+        }
+        if (!TextUtils.isEmpty(drivingSchool.closest_zone)) {
+            holder.mTvZone.setText(drivingSchool.closest_zone);
+        } else {
             holder.mTvZone.setVisibility(View.GONE);
         }
 
@@ -118,6 +126,19 @@ public class DrivingSchoolAdapter extends BaseAdapter {
                 }
             }
         });
+        if (position == mInsertHotViewPosition) {
+            if (!mIsHotViewAdded) {
+                holder.mLlyMain.addView(getHotDrivingSchoolView());
+                mIsHotViewAdded = true;
+            }
+            if (holder.mLlyMain.getChildCount() == 2) {
+                holder.mLlyMain.getChildAt(1).setVisibility(View.VISIBLE);
+            }
+        } else {
+            if (holder.mLlyMain.getChildCount() == 2) {
+                holder.mLlyMain.getChildAt(1).setVisibility(View.GONE);
+            }
+        }
         return view;
     }
 
@@ -136,4 +157,94 @@ public class DrivingSchoolAdapter extends BaseAdapter {
         RelativeLayout mRlyGroupBuy;
     }
 
+    private LinearLayout getHotDrivingSchoolView() {
+        int margin5dp = Utils.instence(mContext).dip2px(5);
+        int margin8dp = Utils.instence(mContext).dip2px(8);
+        int margin10dp = Utils.instence(mContext).dip2px(10);
+        int margin15dp = Utils.instence(mContext).dip2px(15);
+        int margin20dp = Utils.instence(mContext).dip2px(20);
+        int padding3dp = Utils.instence(mContext).dip2px(3);
+
+        LinearLayout llyHotDrivingSchool = new LinearLayout(mContext);
+        LinearLayout.LayoutParams llyHotDrivingSchoolParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        llyHotDrivingSchoolParam.setMargins(0, margin10dp, 0, margin10dp);
+        llyHotDrivingSchool.setLayoutParams(llyHotDrivingSchoolParam);
+        llyHotDrivingSchool.setBackgroundResource(R.color.haha_white);
+        llyHotDrivingSchool.setOrientation(LinearLayout.VERTICAL);
+
+        RelativeLayout rlyHotSearch = new RelativeLayout(mContext);
+        rlyHotSearch.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        TextView tvHotSearch = new TextView(mContext);
+        RelativeLayout.LayoutParams tvHotSearchParam = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvHotSearchParam.setMargins(margin20dp, margin15dp, 0, margin15dp);
+        tvHotSearch.setLayoutParams(tvHotSearchParam);
+        tvHotSearch.setText("大家都在搜");
+        tvHotSearch.setTextColor(ContextCompat.getColor(mContext, R.color.haha_gray_dark));
+        tvHotSearch.setTextSize(16);
+        int tvHotSearchId = Utils.generateViewId();
+        tvHotSearch.setId(tvHotSearchId);
+        rlyHotSearch.addView(tvHotSearch);
+        TextView tvHot = new TextView(mContext);
+        RelativeLayout.LayoutParams tvHotParam = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvHotParam.addRule(RelativeLayout.RIGHT_OF, tvHotSearchId);
+        tvHotParam.setMargins(margin5dp, margin10dp, 0, 0);
+        tvHot.setLayoutParams(tvHotParam);
+        tvHot.setText("hot!");
+        tvHot.setTextColor(ContextCompat.getColor(mContext, R.color.haha_red));
+        rlyHotSearch.addView(tvHot);
+        llyHotDrivingSchool.addView(rlyHotSearch);
+
+        View vwDivider = new View(mContext);
+        vwDivider.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                mContext.getResources().getDimensionPixelSize(R.dimen.divider_width)));
+        vwDivider.setBackgroundResource(R.color.haha_gray_divider);
+        llyHotDrivingSchool.addView(vwDivider);
+
+        TableLayout tbDrivingSchool = new TableLayout(mContext);
+        LinearLayout.LayoutParams tbDrivingSchoolParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        tbDrivingSchoolParam.setMargins(0, 0, 0, margin15dp);
+        tbDrivingSchool.setLayoutParams(tbDrivingSchoolParam);
+        tbDrivingSchool.setStretchAllColumns(true);
+
+        int maxColCount = 4;
+        for (int row = 0; row < mHotDrivingSchoolList.size() / maxColCount; row++) {
+            TableRow tr = new TableRow(mContext);
+            TableLayout.LayoutParams trParam = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            trParam.setMargins(0, margin10dp, 0, 0);
+            tr.setLayoutParams(trParam);
+            for (int col = 0; col < maxColCount; col++) {
+                if (row * maxColCount + col > mHotDrivingSchoolList.size() - 1) {
+                    break;
+                }
+                final DrivingSchool drivingSchool = mHotDrivingSchoolList.get(row * maxColCount + col);
+                TextView tvDrivingSchool = new TextView(mContext);
+                TableRow.LayoutParams tvDrivingSchoolParam = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+                tvDrivingSchoolParam.setMargins(margin8dp, 0, margin8dp, 0);
+                tvDrivingSchool.setLayoutParams(tvDrivingSchoolParam);
+                tvDrivingSchool.setBackgroundResource(R.drawable.rect_bg_gray_bd_gray_corner);
+                tvDrivingSchool.setGravity(Gravity.CENTER);
+                tvDrivingSchool.setPadding(0, padding3dp, 0, padding3dp);
+                tvDrivingSchool.setText(drivingSchool.name);
+                tvDrivingSchool.setTextColor(ContextCompat.getColor(mContext, R.color.app_theme_color));
+                tvDrivingSchool.setTextSize(12);
+                tvDrivingSchool.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        HHLog.v("click " + drivingSchool.name);
+                    }
+                });
+                tr.addView(tvDrivingSchool);
+            }
+            tbDrivingSchool.addView(tr);
+        }
+        llyHotDrivingSchool.addView(tbDrivingSchool);
+        return llyHotDrivingSchool;
+    }
 }

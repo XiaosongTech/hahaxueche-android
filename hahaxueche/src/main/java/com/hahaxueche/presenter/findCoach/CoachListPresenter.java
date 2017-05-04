@@ -7,6 +7,7 @@ import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.CityConstants;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.base.LocalSettings;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.responseList.CoachResponseList;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.HHBasePresenter;
@@ -19,6 +20,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -258,5 +260,9 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
     public void setZone(String zone) {
         filterDistance = "";
         this.zone = zone;
+    }
+
+    public List<DrivingSchool> getHotDrivingSchools() {
+        return application.getCityConstants().driving_schools.subList(0, 8);
     }
 }

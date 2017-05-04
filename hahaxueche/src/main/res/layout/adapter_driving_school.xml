@@ -4,12 +4,14 @@
     android:id="@+id/lly_main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/haha_white">
+    android:background="@color/haha_gray_background"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/rly_adapter"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/haha_white">
 
         <LinearLayout
             android:id="@+id/lly_avatar"
