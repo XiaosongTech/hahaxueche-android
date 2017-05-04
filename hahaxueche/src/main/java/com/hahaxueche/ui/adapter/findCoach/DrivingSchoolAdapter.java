@@ -21,7 +21,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.util.HHLog;

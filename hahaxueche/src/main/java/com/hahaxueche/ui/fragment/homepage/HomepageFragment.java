@@ -245,6 +245,11 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         }
     }
 
+    @Override
+    public void onCityChange() {
+        mActivity.onCityChange();
+    }
+
     @OnClick({R.id.cv_procedure,
             R.id.tv_online_ask,
             R.id.tv_group_buy,
@@ -383,7 +388,6 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                     mPresenter.addDataTrack("home_navigation_city_selected", getContext());
                     if (city != null) {
                         mPresenter.selectCity(city.id);
-                        mActivity.onCityChange();
                     }
                     return true;
                 }

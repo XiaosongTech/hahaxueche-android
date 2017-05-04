@@ -261,8 +261,4 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
         filterDistance = "";
         this.zone = zone;
     }
-
-    public List<DrivingSchool> getHotDrivingSchools() {
-        return application.getCityConstants().driving_schools.subList(0, 8);
-    }
 }

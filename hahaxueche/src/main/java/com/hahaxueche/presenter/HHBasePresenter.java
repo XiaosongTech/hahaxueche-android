@@ -11,8 +11,10 @@ import com.google.i18n.phonenumbers.Phonenumber;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Constants;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.payment.PaymentMethod;
 import com.hahaxueche.model.user.User;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.UpdateManager;
 import com.qiyukf.unicorn.api.ConsultSource;
 import com.qiyukf.unicorn.api.Unicorn;
@@ -23,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by wangshirui on 2017/3/15.
@@ -138,5 +141,10 @@ public class HHBasePresenter {
         } else {
             MobclickAgent.onEvent(context, event);
         }
+    }
+
+    public List<DrivingSchool> getHotDrivingSchools(Context context) {
+        HHBaseApplication application = HHBaseApplication.get(context);
+        return application.getCityConstants().driving_schools.subList(0, Common.MAX_DRIVING_SCHOOL_COUNT);
     }
 }

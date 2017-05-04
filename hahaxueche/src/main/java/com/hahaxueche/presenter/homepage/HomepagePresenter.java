@@ -98,7 +98,7 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
                     @Override
                     public void onNext(CityConstants cityConstants) {
                         application.setCityConstants(cityConstants);
-                        mView.loadHotDrivingSchools(cityConstants.driving_schools.subList(0, 8));
+                        mView.loadHotDrivingSchools(cityConstants.driving_schools.subList(0, Common.MAX_DRIVING_SCHOOL_COUNT));
                     }
                 });
     }
@@ -137,6 +137,7 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
                 .subscribe(new Subscriber<FieldResponseList>() {
                     @Override
                     public void onCompleted() {
+                        mView.onCityChange();
                         getNearCoaches();
                         mView.dismissProgressDialog();
                     }
@@ -322,7 +323,7 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
                     @Override
                     public void onNext(CityConstants cityConstants) {
                         application.setCityConstants(cityConstants);
-                        mView.loadHotDrivingSchools(cityConstants.driving_schools.subList(0, 8));
+                        mView.loadHotDrivingSchools(cityConstants.driving_schools.subList(0, Common.MAX_DRIVING_SCHOOL_COUNT));
                     }
                 });
     }

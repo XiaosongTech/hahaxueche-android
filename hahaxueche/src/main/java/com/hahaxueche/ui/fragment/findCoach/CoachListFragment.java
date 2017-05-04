@@ -139,7 +139,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     @Override
     public void refreshCoachList(ArrayList<Coach> coachArrayList) {
         mCoachArrayList = coachArrayList;
-        mCoachAdapter = new CoachAdapter(getContext(), mCoachArrayList, mPresenter.getHotDrivingSchools(), new CoachAdapter.OnCoachClickListener() {
+        mCoachAdapter = new CoachAdapter(getContext(), mCoachArrayList, mPresenter.getHotDrivingSchools(getContext()), new CoachAdapter.OnCoachClickListener() {
             @Override
             public void callCoach(String phone) {
                 mConsultantPhone = phone;

@@ -202,7 +202,7 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
             FrameLayout.LayoutParams paramMain = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
             ListView listView = new ListView(this);
             listView.setLayoutParams(paramMain);
-            CoachAdapter coachItemAdapter = new CoachAdapter(this, coachList, mPresenter.getHotDrivingSchools(), new CoachAdapter.OnCoachClickListener() {
+            CoachAdapter coachItemAdapter = new CoachAdapter(this, coachList, mPresenter.getHotDrivingSchools(this), new CoachAdapter.OnCoachClickListener() {
                 @Override
                 public void callCoach(String phone) {
                     mConsultantPhone = phone;

@@ -38,4 +38,6 @@ public interface HomepageView extends HHBaseView {
     void setCityName(String cityName);
 
     void readyToLoadViews();
+
+    void onCityChange();
 }

@@ -89,7 +89,7 @@ public class FollowListActivity extends HHBaseActivity implements FollowListView
     @Override
     public void refreshCoachList(ArrayList<Coach> CoachArrayList) {
         mCoachArrayList = CoachArrayList;
-        mCoachAdapter = new CoachAdapter(getContext(), mCoachArrayList, mPresenter.getHotDrivingSchools(), new CoachAdapter.OnCoachClickListener() {
+        mCoachAdapter = new CoachAdapter(getContext(), mCoachArrayList, mPresenter.getHotDrivingSchools(this), new CoachAdapter.OnCoachClickListener() {
             @Override
             public void callCoach(String phone) {
                 mConsultantPhone = phone;
