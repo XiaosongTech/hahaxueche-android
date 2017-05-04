@@ -15,7 +15,7 @@
 
         <LinearLayout
             android:id="@+id/lly_avatar"
-            android:layout_width="@dimen/width_115dp"
+            android:layout_width="@dimen/width_100dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="center_horizontal"
@@ -23,8 +23,8 @@
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/iv_avatar"
-                android:layout_width="60dp"
-                android:layout_height="60dp" />
+                android:layout_width="@dimen/width_60dp"
+                android:layout_height="@dimen/width_60dp" />
 
             <FrameLayout
                 android:id="@+id/frl_call"

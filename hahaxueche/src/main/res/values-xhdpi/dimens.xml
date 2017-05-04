@@ -19,4 +19,6 @@
     <dimen name="width_68dp">68dp</dimen>
     <dimen name="margin_5dp">5dp</dimen>
     <dimen name="cardview_width_160dp">160dp</dimen>
+    <dimen name="width_100dp">100dp</dimen>
+    <dimen name="width_60dp">60dp</dimen>
 </resources>
