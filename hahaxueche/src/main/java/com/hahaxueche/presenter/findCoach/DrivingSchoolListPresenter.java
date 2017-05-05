@@ -31,7 +31,8 @@ public class DrivingSchoolListPresenter extends HHBasePresenter implements Prese
     //-----筛选参数-----
     private String filterDistance;
     private String licenseType;
-    private int sortBy = 0;
+    private String sortBy = "";
+    private String order = "";
     private String zone = "";
     private int startMoney = Common.NO_LIMIT;
     private int endMoney = Common.NO_LIMIT;
@@ -50,7 +51,23 @@ public class DrivingSchoolListPresenter extends HHBasePresenter implements Prese
     }
 
     public void setSortBy(int sortBy) {
-        this.sortBy = sortBy;
+        if (sortBy == 1) {
+            //距离最近
+            this.sortBy = "distance";
+            this.order = "asc";
+        } else if (sortBy == 5) {
+            //评论最多
+            this.sortBy = "review_count";
+            this.order = "desc";
+        } else if (sortBy == 3) {
+            //价格最低
+            this.sortBy = "price";
+            this.order = "asc";
+        } else {
+            //综合排序
+            this.sortBy = "";
+            this.order = "asc";
+        }
     }
 
     public void setLicenseType(int license) {
@@ -65,7 +82,8 @@ public class DrivingSchoolListPresenter extends HHBasePresenter implements Prese
 
     private void initDefaultFilters() {
         //默认综合排序
-        sortBy = 0;
+        sortBy = "";
+        this.order = "asc";
     }
 
     public void fetchDrivingSchool() {
@@ -83,10 +101,11 @@ public class DrivingSchoolListPresenter extends HHBasePresenter implements Prese
         HHApiService apiService = application.getApiService();
         subscription = apiService.getDrivingSchools(Common.START_PAGE, Common.PER_PAGE,
                 TextUtils.isEmpty(licenseType) ? null : licenseType, cityId,
-                TextUtils.isEmpty(filterDistance) ? null : filterDistance, locations, null,
+                TextUtils.isEmpty(filterDistance) ? null : filterDistance, locations,
+                TextUtils.isEmpty(sortBy) ? null : sortBy,
                 startMoney > 0 ? String.valueOf(startMoney) : null,
                 endMoney > 0 ? String.valueOf(endMoney) : null,
-                TextUtils.isEmpty(zone) ? null : zone)
+                TextUtils.isEmpty(zone) ? null : zone, TextUtils.isEmpty(order) ? null : order)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<DrivingSchoolResponseList>() {

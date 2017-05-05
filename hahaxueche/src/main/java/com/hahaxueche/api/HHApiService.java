@@ -317,7 +317,7 @@ public interface HHApiService {
     Observable<DrivingSchoolResponseList> getDrivingSchools(@Query("page") int page, @Query("per_page") int perPage, @Query("license_type") String licenseType,
                                                             @Query("city_id") int cityId, @Query("distance") String distance, @Query("user_location[]") ArrayList<String> locations,
                                                             @Query("sort_by") String sortBy, @Query("price_from") String startMoney, @Query("price_to") String endMoney,
-                                                            @Query("zone") String zone);
+                                                            @Query("zone") String zone, @Query("order") String order);
 
     @GET
     Observable<DrivingSchoolResponseList> getDrivingSchools(@Url String path);
