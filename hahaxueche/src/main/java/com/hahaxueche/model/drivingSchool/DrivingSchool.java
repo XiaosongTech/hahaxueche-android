@@ -1,5 +1,7 @@
 package com.hahaxueche.model.drivingSchool;
 
+import com.hahaxueche.model.base.Field;
+
 import java.util.List;
 
 /**
@@ -24,4 +26,7 @@ public class DrivingSchool {
     public String consult_phone;
     public String distance;
     public String closest_zone;
+    public String bio;
+    public List<String> tag_list;
+    public List<Field> fields;
 }

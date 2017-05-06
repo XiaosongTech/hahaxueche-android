@@ -12,6 +12,7 @@ import com.hahaxueche.model.base.ShortenUrl;
 import com.hahaxueche.model.base.UserIdentityParam;
 import com.hahaxueche.model.community.Article;
 import com.hahaxueche.model.course.ScheduleEvent;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.examLib.Question;
 import com.hahaxueche.model.payment.BankCard;
 import com.hahaxueche.model.payment.PurchasedService;
@@ -321,6 +322,13 @@ public interface HHApiService {
 
     @GET
     Observable<DrivingSchoolResponseList> getDrivingSchools(@Url String path);
+
+    @GET("driving_schools/{id}/detail")
+    Observable<DrivingSchool> getDrivingSchoolDetail(@Path("id") int drivingSchoolId);
+
+    @GET("driving_schools/{id}/reviews")
+    Observable<ReviewResponseList> getDrivingSchoolReviews(@Path("id") int drivingSchoolId, @Query("page") int page, @Query("per_page") int perPage);
+
 
     class Factory {
         public static Retrofit getRetrofit() {
