@@ -23,6 +23,7 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/tv_consultant_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -44,6 +45,7 @@
         android:paddingRight="15dp">
 
         <TextView
+            android:id="@+id/tv_lowest_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
