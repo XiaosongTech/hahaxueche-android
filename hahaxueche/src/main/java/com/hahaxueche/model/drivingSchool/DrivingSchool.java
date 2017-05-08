@@ -29,4 +29,5 @@ public class DrivingSchool {
     public String bio;
     public List<String> tag_list;
     public List<Field> fields;
+    public int groupon_count;
 }

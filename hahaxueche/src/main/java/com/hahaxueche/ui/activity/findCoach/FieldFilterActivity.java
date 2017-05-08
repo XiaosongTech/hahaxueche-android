@@ -96,8 +96,10 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
         mRcyMapCoach.setLayoutManager(layoutManager);
         Intent intent = getIntent();
         if (intent.getParcelableExtra("field") != null) {
-            mHighlightFields.add((Field) intent.getParcelableExtra("field"));
             mSelectField = intent.getParcelableExtra("field");
+        }
+        if(intent.getParcelableArrayListExtra("hightlightFields")!=null){
+            mHighlightFields = intent.getParcelableArrayListExtra("hightlightFields");
         }
         mPresenter.getFields();
     }
@@ -298,7 +300,7 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
                 if (isHighlightField(existField)) {
                     existMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                             .decodeResource(getResources(),
-                                    R.drawable.ic_map_local_choseonly)));
+                                    R.drawable.ic_map_local_choseon)));
                 } else {
                     existMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                             .decodeResource(getResources(),
@@ -314,7 +316,7 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
                 mSelectField = field;
                 marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                         .decodeResource(getResources(),
-                                R.drawable.ic_map_local_choseon)));
+                                R.drawable.ic_map_local_choseonly)));
                 marker.showInfoWindow();
                 mPresenter.selectField(mSelectField);
                 aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(field.lat, field.lng), 14));
@@ -345,13 +347,13 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
                 if (isHighlightField(field)) {
                     marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                             .decodeResource(getResources(),
-                                    R.drawable.ic_map_local_choseonly)));
+                                    R.drawable.ic_map_local_choseon)));
                 }
                 if (mSelectField != null && mSelectField.id.equals(field.id)) {
                     marker.showInfoWindow();
                     marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                             .decodeResource(getResources(),
-                                    R.drawable.ic_map_local_choseon)));
+                                    R.drawable.ic_map_local_choseonly)));
                 }
             }
         }

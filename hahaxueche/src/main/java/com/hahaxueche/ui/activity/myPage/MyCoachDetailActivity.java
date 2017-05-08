@@ -37,6 +37,7 @@ import com.hahaxueche.ui.activity.findCoach.FieldMapActivity;
 import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.view.myPage.MyCoachDetailView;
 import com.hahaxueche.ui.widget.imageSwitcher.ImageSwitcher;
+import com.hahaxueche.util.Common;
 import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
 
@@ -311,7 +312,7 @@ public class MyCoachDetailActivity extends HHBaseActivity implements MyCoachDeta
             case R.id.rly_fee_detail:
                 Intent intent = new Intent(getContext(), ClassTypeIntroActivity.class);
                 intent.putExtra("totalAmount", mPresenter.getClassTypeByPs().price);
-                intent.putExtra("coach", mPresenter.getCoach());
+                intent.putExtra("isWuyouClass", mPresenter.getCoach().coach_group.group_type == Common.GROUP_TYPE_CHEYOU_WUYOU);
                 intent.putExtra("classType", mPresenter.getClassTypeByPs());
                 intent.putExtra("isShowPurchase", false);
                 startActivity(intent);

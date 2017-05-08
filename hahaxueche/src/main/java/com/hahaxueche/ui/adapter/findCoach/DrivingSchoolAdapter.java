@@ -1,6 +1,7 @@
 package com.hahaxueche.ui.adapter.findCoach;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
 import com.hahaxueche.model.drivingSchool.DrivingSchool;
+import com.hahaxueche.ui.activity.findCoach.DrivingSchoolDetailDetailActivity;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
 
@@ -44,6 +46,8 @@ public class DrivingSchoolAdapter extends BaseAdapter {
 
     public interface OnDrivingSchoolClickListener {
         void callCoach(String phone);
+
+        void clickDrivingSchool(DrivingSchool drivingSchool);
     }
 
     public DrivingSchoolAdapter(Context context, List<DrivingSchool> drivingSchools, List<DrivingSchool> hotDrivingSchools, OnDrivingSchoolClickListener listener) {
@@ -122,6 +126,14 @@ public class DrivingSchoolAdapter extends BaseAdapter {
             public void onClick(View view) {
                 if (mOnDrivingSchoolClickListener != null && !TextUtils.isEmpty(drivingSchool.consult_phone)) {
                     mOnDrivingSchoolClickListener.callCoach(drivingSchool.consult_phone);
+                }
+            }
+        });
+        holder.mRlyAdapter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mOnDrivingSchoolClickListener != null) {
+                    mOnDrivingSchoolClickListener.clickDrivingSchool(drivingSchool);
                 }
             }
         });

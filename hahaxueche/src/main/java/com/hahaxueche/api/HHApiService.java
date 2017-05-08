@@ -323,7 +323,7 @@ public interface HHApiService {
     @GET
     Observable<DrivingSchoolResponseList> getDrivingSchools(@Url String path);
 
-    @GET("driving_schools/{id}/detail")
+    @GET("driving_schools/{id}")
     Observable<DrivingSchool> getDrivingSchoolDetail(@Path("id") int drivingSchoolId);
 
     @GET("driving_schools/{id}/reviews")

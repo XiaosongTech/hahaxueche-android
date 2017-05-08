@@ -39,6 +39,7 @@ import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.community.ExamLibraryActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
+import com.hahaxueche.ui.activity.findCoach.DrivingSchoolDetailDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.FieldFilterActivity;
 import com.hahaxueche.ui.activity.findCoach.PaySuccessActivity;
 import com.hahaxueche.ui.activity.findCoach.SearchCoachActivity;
@@ -186,7 +187,9 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             public void onItemClick(View view, int position) {
                 if (drivingSchoolList != null && drivingSchoolList.size() > 0 && position > -1 && position < drivingSchoolList.size()) {
                     mPresenter.clickHotDrivingSchool(position);
-                    openWebView(WebViewUrl.WEB_URL_JIAXIAO + "/" + drivingSchoolList.get(position).id);
+                    Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
+                    intent.putExtra("drivingSchoolId", drivingSchoolList.get(position).id);
+                    startActivity(intent);
                 }
             }
         });

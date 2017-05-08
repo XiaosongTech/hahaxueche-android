@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/lly_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/haha_gray_background"
@@ -11,15 +13,17 @@
         android:layout_weight="1">
 
         <LinearLayout
+            android:id="@+id/lly_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <ImageView
+            <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/iv_image"
                 android:layout_width="match_parent"
-                android:layout_height="146dp"
-                android:scaleType="fitXY" />
+                android:layout_height="wrap_content"
+                fresco:viewAspectRatio="1.575"
+                fresco:actualImageScaleType="focusCrop" />
 
             <include layout="@layout/driving_school_detail_info" />
 
@@ -81,7 +85,6 @@
                     android:layout_marginRight="15dp"
                     android:drawablePadding="3dp"
                     android:drawableRight="@drawable/ic_coachmsg_more_arrow"
-                    android:text="42人已参与"
                     android:textColor="@color/haha_gray" />
             </RelativeLayout>
 
@@ -185,6 +188,7 @@
                     android:background="@color/haha_gray_divider" />
 
                 <View
+                    android:id="@+id/vw_click_more_comments"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/divider_width"
                     android:background="@color/haha_gray_divider" />
@@ -195,7 +199,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="15dp"
-                    android:text="查看更多训练场>>"
+                    android:text="点击查看更多>>"
                     android:textColor="@color/app_theme_color" />
             </LinearLayout>
 
@@ -217,16 +221,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
                     android:layout_below="@id/iv_group_buy_title"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_margin="15dp"
                     android:orientation="horizontal">
 
                     <EditText
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="3"
+                        android:background="@drawable/rect_bd_gray"
                         android:hint="请输入手机号"
                         android:inputType="number"
                         android:lines="1"

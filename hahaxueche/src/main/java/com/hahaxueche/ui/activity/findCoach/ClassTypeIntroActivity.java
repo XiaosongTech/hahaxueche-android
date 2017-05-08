@@ -95,12 +95,10 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
         ButterKnife.bind(this);
         mPresenter.attachView(this);
         Intent intent = getIntent();
-        if (intent.getParcelableExtra("coach") != null) {
-            mPresenter.setFeeDetail(intent.getIntExtra("totalAmount", 0),
-                    (ClassType) intent.getParcelableExtra("classType"),
-                    (Coach) intent.getParcelableExtra("coach"),
-                    intent.getBooleanExtra("isShowPurchase", true));
-        }
+        mPresenter.setFeeDetail(intent.getIntExtra("totalAmount", 0),
+                (ClassType) intent.getParcelableExtra("classType"),
+                intent.getBooleanExtra("isWuyouClass", false),
+                intent.getBooleanExtra("isShowPurchase", true));
         initActionBar();
         initCustomerService();
         mIvDash1.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
@@ -271,13 +269,13 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
     }
 
     @Override
-    public void setOtherFees(ArrayList<OtherFee> otherFees, boolean isForceInsurance, int coachGroupType) {
+    public void setOtherFees(ArrayList<OtherFee> otherFees, boolean isForceInsurance, boolean isWuyouClass) {
         if (otherFees == null || otherFees.size() < 1) return;
         int insertLine = 0;
         for (OtherFee otherFee : otherFees) {
             if (isForceInsurance && otherFee.name.contains("补考费"))
                 continue;
-            if (coachGroupType == Common.GROUP_TYPE_CHEYOU_WUYOU && otherFee.name.contains("模拟费"))
+            if (isWuyouClass && otherFee.name.contains("模拟费"))
                 continue;
             FrameLayout frTitle = new FrameLayout(this);
             LinearLayout.LayoutParams frTitleParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);

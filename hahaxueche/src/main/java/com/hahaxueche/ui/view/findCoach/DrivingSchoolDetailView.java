@@ -8,11 +8,13 @@ import com.hahaxueche.model.user.coach.ClassType;
 import com.hahaxueche.model.user.coach.Review;
 import com.hahaxueche.ui.view.base.HHBaseView;
 
+import java.util.List;
+
 /**
  * Created by wangshirui on 2017/5/7.
  */
 
-public interface DrivingSchoolView extends HHBaseView {
+public interface DrivingSchoolDetailView extends HHBaseView {
     void showMessage(String message);
 
     void showNoReview();
@@ -43,4 +45,5 @@ public interface DrivingSchoolView extends HHBaseView {
 
     void addFieldView(Field field);
 
+    void navigateToFieldFilter(List<Field> highlightFields, Field selectField);
 }

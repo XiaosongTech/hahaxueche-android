@@ -17,7 +17,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:text="武汉车友驾校"
             android:textColor="@color/haha_gray_dark"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -28,7 +27,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="已有xxx人咨询"
             android:textColor="@color/haha_gray"
             android:textSize="12sp" />
     </RelativeLayout>
@@ -50,7 +48,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:text="班别费用：¥2300起"
             android:textColor="@color/haha_gray" />
 
         <LinearLayout
@@ -63,8 +60,8 @@
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/iv_bell"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:background="@color/haha_white"
                 android:src="@drawable/ic_bell" />
 
@@ -96,7 +93,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:text="服务范围：共xx个训练场"
             android:textColor="@color/haha_gray" />
 
         <TextView
@@ -128,7 +124,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:text="通过率：90%"
             android:textColor="@color/haha_gray" />
 
         <TextView
@@ -136,7 +131,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="满意度：100%"
             android:textColor="@color/haha_gray" />
 
         <TextView
@@ -145,7 +139,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="教练人数：11"
             android:textColor="@color/haha_gray" />
     </RelativeLayout>
 
@@ -155,16 +148,17 @@
         android:layout_marginLeft="15dp"
         android:background="@color/haha_gray_divider" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingBottom="10dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         android:paddingTop="10dp">
 
         <TextView
+            android:id="@+id/tv_bio_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="驾校简介"
@@ -174,11 +168,25 @@
             android:id="@+id/tv_bio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/tv_bio_label"
             android:layout_marginTop="10dp"
+            android:ellipsize="end"
             android:lineSpacingMultiplier="1.2"
             android:maxLines="2"
             android:textColor="@color/haha_gray_text"
             android:textSize="12sp" />
-    </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_more_bio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/tv_bio"
+            android:paddingTop="5dp"
+            android:text="更多"
+            android:textColor="@color/haha_blue"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
 
 </LinearLayout>

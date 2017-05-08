@@ -538,6 +538,9 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 Field field = mPresenter.getTrainingField();
                 if (field != null) {
                     intent = new Intent(getContext(), FieldFilterActivity.class);
+                    ArrayList<Field> highlightFields = new ArrayList<>();
+                    highlightFields.add(field);
+                    intent.putParcelableArrayListExtra("hightlightFields", highlightFields);
                     intent.putExtra("field", field);
                     startActivity(intent);
                 }
@@ -984,7 +987,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 mPresenter.addDataTrack("coach_detail_page_price_detail_tapped", getContext());
                 Intent intent = new Intent(getContext(), ClassTypeIntroActivity.class);
                 intent.putExtra("totalAmount", classType.price);
-                intent.putExtra("coach", mPresenter.getCoach());
+                intent.putExtra("isWuyouClass", mPresenter.getCoach().coach_group.group_type == Common.GROUP_TYPE_CHEYOU_WUYOU);
                 intent.putExtra("classType", classType);
                 if (mPresenter.isPurchasedService()) {
                     intent.putExtra("isShowPurchase", false);
