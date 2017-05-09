@@ -759,7 +759,7 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
         int avatarLength = Utils.instence(this).dip2px(60);
 
         RelativeLayout rly = new RelativeLayout(this);
-        rly.setPadding(length10, 0, length10, 0);
+        rly.setPadding(length15, 0, length15, 0);
         LinearLayout.LayoutParams rlyParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         rly.setLayoutParams(rlyParams);
 
@@ -785,10 +785,13 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         tvNameParam.addRule(RelativeLayout.RIGHT_OF, ivAvatarId);
         tvNameParam.addRule(RelativeLayout.ALIGN_TOP, ivAvatarId);
-        tvNameParam.setMargins(length5, length5, 0, 0);
+        tvNameParam.setMargins(length10, length5, 0, 0);
         tvName.setLayoutParams(tvNameParam);
         tvName.setText(field.name);
         tvName.setTextColor(ContextCompat.getColor(this, R.color.haha_gray_dark));
+        tvName.setMaxLines(1);
+        tvName.setMaxWidth(getResources().getDimensionPixelSize(R.dimen.width_160dp));
+        tvName.setEllipsize(TextUtils.TruncateAt.END);
         int tvNameId = Utils.generateViewId();
         tvName.setId(tvNameId);
         rly.addView(tvName);
@@ -802,7 +805,7 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
         tvToField.setText("去现场看看 >");
         tvToField.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
         tvToField.setBackgroundResource(R.drawable.rect_bg_yellow_gradient);
-        tvToField.setPadding(length3, length5, length3, length5);
+        tvToField.setPadding(length5, length5, length5, length5);
         tvToField.setTextSize(12);
         int tvToFieldId = Utils.generateViewId();
         tvToField.setId(tvToFieldId);
@@ -821,6 +824,7 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
         tvLocation.setMaxLines(1);
         tvLocation.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
         tvLocation.setTextSize(12);
+        tvLocation.setEllipsize(TextUtils.TruncateAt.END);
         tvLocation.setText(field.zone + " | " + field.display_address);
         rly.addView(tvLocation);
 
