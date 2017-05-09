@@ -261,4 +261,12 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
         filterDistance = "";
         this.zone = zone;
     }
+
+    /**
+     * 在线咨询
+     */
+    public void onlineAsk() {
+        User user = application.getSharedPrefUtil().getUser();
+        super.onlineAsk(user, mView.getContext());
+    }
 }

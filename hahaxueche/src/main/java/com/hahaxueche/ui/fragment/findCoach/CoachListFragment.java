@@ -319,7 +319,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                 showPopWindow(POP_ZONE);
                 break;
             case R.id.iv_help:
-                //mPresenter.clickRedBag();
+                mPresenter.onlineAsk();
                 break;
             default:
                 break;

@@ -7,6 +7,7 @@ import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.CityConstants;
 import com.hahaxueche.model.base.LocalSettings;
 import com.hahaxueche.model.responseList.DrivingSchoolResponseList;
+import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.DrivingSchoolListView;
@@ -205,5 +206,13 @@ public class DrivingSchoolListPresenter extends HHBasePresenter implements Prese
     public void setZone(String zone) {
         filterDistance = "";
         this.zone = zone;
+    }
+
+    /**
+     * 在线咨询
+     */
+    public void onlineAsk() {
+        User user = application.getSharedPrefUtil().getUser();
+        super.onlineAsk(user, mView.getContext());
     }
 }
