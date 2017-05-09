@@ -295,7 +295,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                 openWebView(WebViewUrl.WEB_URL_BAOMING);
                 break;
             case R.id.cv_driving_school_sort:
-                openWebView(WebViewUrl.WEB_URL_JIAXIAO);
+                mActivity.selectTab(1);
                 break;
             case R.id.lly_xuechebao:
                 mPresenter.addDataTrack("home_page_assurance_tapped", getContext());
