@@ -37,7 +37,6 @@ public class FindCoachPresenter extends HHBasePresenter implements Presenter<Fin
     public void selectCoach() {
         mView.selectCoach();
         mView.unSelectDrivingSchool();
-        mView.showLeftIconMap();
         mView.showCoachListFragment();
         currentPage = 0;
     }
@@ -45,7 +44,6 @@ public class FindCoachPresenter extends HHBasePresenter implements Presenter<Fin
     public void selectDrivingSchool() {
         mView.selectDrivingSchool();
         mView.unSelectCoach();
-        mView.showLeftIconExplain();
         mView.showDrivingSchoolListFragment();
         currentPage = 1;
     }

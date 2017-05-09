@@ -15,10 +15,6 @@ public interface FindCoachView extends HHBaseView {
 
     void unSelectDrivingSchool();
 
-    void showLeftIconMap();
-
-    void showLeftIconExplain();
-
     void showCoachListFragment();
 
     void showDrivingSchoolListFragment();

@@ -87,16 +87,6 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
     }
 
     @Override
-    public void showLeftIconMap() {
-        mIvIconLeft.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_maplist_btn));
-    }
-
-    @Override
-    public void showLeftIconExplain() {
-        mIvIconLeft.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_explain));
-    }
-
-    @Override
     public void showCoachListFragment() {
         FragmentManager fm = getChildFragmentManager();
         // 开启Fragment事务
