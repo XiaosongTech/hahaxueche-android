@@ -30,6 +30,7 @@ import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
+import com.hahaxueche.ui.activity.findCoach.DrivingSchoolDetailDetailActivity;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
@@ -57,6 +58,8 @@ public class CoachAdapter extends BaseAdapter {
         void callCoach(String phone);
 
         void clickCoach(Coach coach);
+
+        void clickDrivingSchool(DrivingSchool drivingSchool);
     }
 
     public CoachAdapter(Context context, ArrayList<Coach> coachList, List<DrivingSchool> hotDrivingSchools, OnCoachClickListener listener) {
@@ -297,7 +300,9 @@ public class CoachAdapter extends BaseAdapter {
                 tvDrivingSchool.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        HHLog.v("click " + drivingSchool.name);
+                        if (mOnCoachClickListener != null) {
+                            mOnCoachClickListener.clickDrivingSchool(drivingSchool);
+                        }
                     }
                 });
                 tr.addView(tvDrivingSchool);

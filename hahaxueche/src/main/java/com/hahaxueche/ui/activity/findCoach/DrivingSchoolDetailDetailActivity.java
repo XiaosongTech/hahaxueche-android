@@ -1,10 +1,14 @@
 package com.hahaxueche.ui.activity.findCoach;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.text.SpannableString;
@@ -12,6 +16,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -25,17 +30,23 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.hahaxueche.BuildConfig;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.user.coach.ClassType;
+import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.Review;
 import com.hahaxueche.presenter.findCoach.DrivingSchoolDetailPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
+import com.hahaxueche.ui.dialog.ShareDialog;
+import com.hahaxueche.ui.dialog.homepage.GetUserIdentityDialog;
 import com.hahaxueche.ui.view.findCoach.DrivingSchoolDetailView;
 import com.hahaxueche.ui.widget.scoreView.ScoreView;
 import com.hahaxueche.util.HHLog;
+import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
+import com.hahaxueche.util.WebViewUrl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +54,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import me.shaohui.shareutil.ShareUtil;
+import me.shaohui.shareutil.share.ShareListener;
+import me.shaohui.shareutil.share.SharePlatform;
 
 /**
  * Created by wangshirui on 2017/5/8.
@@ -88,12 +102,30 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
     LinearLayout mLlyDetails;
     @BindView(R.id.tv_more_bio)
     TextView mTvMoreBio;
+    @BindView(R.id.et_get_group_buy)
+    EditText mEtGetGroupBuy;
+    @BindView(R.id.tv_comment_count)
+    TextView mTvCommentCount;
 
     private int mReviewStartLine = 2;
     private int mClassStartLine = 2;
     private int mFieldStartLine = 2;
 
     private boolean mIsBioExpand = false;
+
+    /*****************
+     * 分享
+     ******************/
+    private ShareDialog shareDialog;
+    private String mTitle;
+    private String mDescription;
+    private String mImageUrl;
+    private String mUrl;
+    private String mShareSmsUrl;
+
+    /*****************
+     * end
+     ******************/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +151,20 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
         mLlyDetails.addView(getHotDrivingSchoolView(), mLlyDetails.getChildCount());
     }
 
+    @Override
+    public void initShareData(DrivingSchool drivingSchool) {
+        mTitle = "哈哈学车-选驾校，挑教练，上哈哈学车";
+        mDescription = "好友力荐:" + drivingSchool.name;
+        mImageUrl = "https://haha-test.oss-cn-shanghai.aliyuncs.com/tmp%2Fhaha_240_240.jpg";
+        mUrl = WebViewUrl.WEB_URL_JIAXIAO + "/" + drivingSchool.id;
+        HHLog.v("mUrl -> " + mUrl);
+    }
+
+    @Override
+    public void setCommentCount(String text) {
+        mTvCommentCount.setText(text);
+    }
+
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setCustomView(R.layout.actionbar_base_share);
@@ -136,7 +182,160 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
         mIvShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (shareDialog == null) {
+                    shareDialog = new ShareDialog(getContext(), new ShareDialog.OnShareListener() {
+                        @Override
+                        public void onShare(int shareType) {
+                            mPresenter.shortenUrl(mUrl, shareType);
+                        }
+                    });
+                }
+                shareDialog.show();
+            }
+        });
+    }
 
+    @Override
+    public void startToShare(int shareType, String shareUrl) {
+        switch (shareType) {
+            case 0:
+                shareToWeixin(shareUrl);
+                break;
+            case 1:
+                shareToFriendCircle(shareUrl);
+                break;
+            case 2:
+                shareToQQ(shareUrl);
+                break;
+            case 3:
+                shareToWeibo(shareUrl);
+                break;
+            case 4:
+                shareToQZone(shareUrl);
+                break;
+            case 5:
+                mShareSmsUrl = shareUrl;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.SEND_SMS}, RequestCode.PERMISSIONS_REQUEST_SEND_SMS_FOR_SHARE);
+                } else {
+                    shareToSms(shareUrl);
+                }
+            default:
+                break;
+        }
+    }
+
+    private void shareToQQ(String shareUrl) {
+        ShareUtil.shareMedia(this, SharePlatform.QQ, mTitle, mDescription, shareUrl, mImageUrl, new ShareListener() {
+            @Override
+            public void shareSuccess() {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
+                showMessage("分享成功");
+            }
+
+            @Override
+            public void shareFailure(Exception e) {
+                showMessage("分享失败");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void shareCancel() {
+                showMessage("取消分享");
+            }
+        });
+    }
+
+    private void shareToQZone(String shareUrl) {
+        ShareUtil.shareMedia(this, SharePlatform.QZONE, mTitle, mDescription, shareUrl, mImageUrl, new ShareListener() {
+            @Override
+            public void shareSuccess() {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
+                showMessage("分享成功");
+            }
+
+            @Override
+            public void shareFailure(Exception e) {
+                showMessage("分享失败");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void shareCancel() {
+                showMessage("取消分享");
+            }
+        });
+    }
+
+    private void shareToWeibo(String shareUrl) {
+        ShareUtil.shareMedia(this, SharePlatform.WEIBO, mTitle, mDescription, shareUrl, mImageUrl, new ShareListener() {
+            @Override
+            public void shareSuccess() {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
+                showMessage("分享成功");
+            }
+
+            @Override
+            public void shareFailure(Exception e) {
+                showMessage("分享失败");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void shareCancel() {
+                showMessage("取消分享");
+            }
+        });
+    }
+
+    private void shareToWeixin(String shareUrl) {
+        ShareUtil.shareMedia(this, SharePlatform.WX, mTitle, mDescription, shareUrl, mImageUrl, new ShareListener() {
+            @Override
+            public void shareSuccess() {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
+                showMessage("分享成功");
+            }
+
+            @Override
+            public void shareFailure(Exception e) {
+                showMessage("分享失败");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void shareCancel() {
+                showMessage("取消分享");
+            }
+        });
+    }
+
+    private void shareToFriendCircle(String shareUrl) {
+        ShareUtil.shareMedia(this, SharePlatform.WX_TIMELINE, mTitle, mDescription, shareUrl, mImageUrl, new ShareListener() {
+            @Override
+            public void shareSuccess() {
+                if (shareDialog != null) {
+                    shareDialog.dismiss();
+                }
+                showMessage("分享成功");
+            }
+
+            @Override
+            public void shareFailure(Exception e) {
+                showMessage("分享失败");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void shareCancel() {
+                showMessage("取消分享");
             }
         });
     }
@@ -150,7 +349,16 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
     @OnClick({R.id.tv_near_fields,
             R.id.tv_more_fields,
             R.id.tv_click_more_fields,
-            R.id.tv_more_bio})
+            R.id.tv_more_bio,
+            R.id.fly_sms_coach,
+            R.id.fly_online_ask,
+            R.id.fly_call_coach,
+            R.id.tv_free_try,
+            R.id.tv_more_comments,
+            R.id.tv_click_more_comments,
+            R.id.rly_group_buy,
+            R.id.tv_get_group_buy,
+            R.id.tv_notice_me})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_near_fields:
@@ -165,6 +373,58 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
             case R.id.tv_more_bio:
                 clickMoreBio();
                 break;
+            case R.id.tv_free_try:
+                GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "看过训练场才放心！",
+                        "输入手机号，教练立即带你看场地", "预约看场地", new GetUserIdentityDialog.OnIdentityGetListener() {
+                    @Override
+                    public void getCellPhone(String cellPhone) {
+                        mPresenter.getUserIdentity(cellPhone);
+                    }
+                });
+                dialog.show();
+                break;
+            case R.id.fly_sms_coach:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.SEND_SMS}, RequestCode.PERMISSIONS_REQUEST_SEND_SMS_TO_COACH);
+                } else {
+                    sendSmsToCoach();
+                }
+                break;
+            case R.id.fly_online_ask:
+                mPresenter.onlineAsk();
+                break;
+            case R.id.fly_call_coach:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH);
+                } else {
+                    callMyCoach();
+                }
+                break;
+            case R.id.tv_more_comments:
+                Intent intent = new Intent(getContext(), ReviewListActivity.class);
+                intent.putExtra("drivingSchool", mPresenter.getDrivingSchool());
+                startActivity(intent);
+                break;
+            case R.id.tv_click_more_comments:
+                intent = new Intent(getContext(), ReviewListActivity.class);
+                intent.putExtra("drivingSchool", mPresenter.getDrivingSchool());
+                startActivity(intent);
+                break;
+            case R.id.rly_group_buy:
+                openWebView(WebViewUrl.WEB_URL_GROUP_BUY);
+                break;
+            case R.id.tv_get_group_buy:
+                mPresenter.getGroupBuy(mEtGetGroupBuy.getText().toString());
+                break;
+            case R.id.tv_notice_me:
+                dialog = new GetUserIdentityDialog(getContext(), "我们将为您保密个人信息！",
+                        "填写手机号，立即订阅降价通知", "立即订阅", new GetUserIdentityDialog.OnIdentityGetListener() {
+                    @Override
+                    public void getCellPhone(String cellPhone) {
+                        mPresenter.getUserIdentity(cellPhone);
+                    }
+                });
+                dialog.show();
             default:
                 break;
         }
@@ -265,6 +525,59 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
         Intent intent = new Intent(getContext(), FieldFilterActivity.class);
         intent.putParcelableArrayListExtra("hightlightFields", (ArrayList<? extends Parcelable>) highlightFields);
         intent.putExtra("field", selectField);
+        startActivity(intent);
+    }
+
+    /**
+     * 联系教练
+     */
+    private void callMyCoach() {
+        DrivingSchool drivingSchool = mPresenter.getDrivingSchool();
+        if (TextUtils.isEmpty(drivingSchool.consult_phone))
+            return;
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + drivingSchool.consult_phone));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        startActivity(intent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == RequestCode.PERMISSIONS_REQUEST_SEND_SMS_FOR_SHARE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                shareToSms(mShareSmsUrl);
+            } else {
+                showMessage("请允许发送短信权限，不然无法分享到短信");
+            }
+        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                callMyCoach();
+            } else {
+                showMessage("请允许拨打电话权限，不然无法直接拨号联系教练");
+            }
+        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_SEND_SMS_TO_COACH) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                sendSmsToCoach();
+            } else {
+                showMessage("请允许发送短信权限，不然给教练发短信");
+            }
+        }
+    }
+
+    private void shareToSms(String shareUrl) {
+        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"));
+        intent.putExtra("sms_body", mTitle + mDescription + shareUrl);
+        startActivity(intent);
+    }
+
+    private void sendSmsToCoach() {
+        DrivingSchool drivingSchool = mPresenter.getDrivingSchool();
+        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + drivingSchool.consult_phone));
+        intent.putExtra("sms_body", drivingSchool.name + "，我在哈哈学车看到您的招生信息，我想详细了解一下。");
         startActivity(intent);
     }
 
@@ -430,6 +743,7 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
                 intent.putExtra("isWuyouClass", false);
                 intent.putExtra("classType", classType);
                 intent.putExtra("isShowPurchase", false);
+                intent.putExtra("isReadOnly", true);
                 startActivity(intent);
             }
         });
@@ -514,6 +828,19 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
             @Override
             public void onClick(View view) {
                 mPresenter.clickToFields(field);
+            }
+        });
+        tvToField.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "看过训练场才放心！",
+                        "输入手机号，教练立即带你看场地", "预约看场地", new GetUserIdentityDialog.OnIdentityGetListener() {
+                    @Override
+                    public void getCellPhone(String cellPhone) {
+                        mPresenter.getUserIdentity(cellPhone);
+                    }
+                });
+                dialog.show();
             }
         });
 
@@ -601,7 +928,9 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
                 tvDrivingSchool.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        HHLog.v("click " + drivingSchool.name);
+                        Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
+                        intent.putExtra("drivingSchoolId", drivingSchool.id);
+                        startActivity(intent);
                     }
                 });
                 tr.addView(tvDrivingSchool);

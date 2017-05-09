@@ -28,10 +28,12 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Field;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.findCoach.CoachListPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
+import com.hahaxueche.ui.activity.findCoach.DrivingSchoolDetailDetailActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachAdapter;
 import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
@@ -156,6 +158,13 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                 Intent intent = new Intent(getContext(), CoachDetailActivity.class);
                 intent.putExtra("coach", coach);
                 startActivityForResult(intent, RequestCode.REQUEST_CODE_COACH_DETAIL);
+            }
+
+            @Override
+            public void clickDrivingSchool(DrivingSchool drivingSchool) {
+                Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
+                intent.putExtra("drivingSchoolId", drivingSchool.id);
+                startActivity(intent);
             }
         });
         mXlvCoaches.setAdapter(mCoachAdapter);

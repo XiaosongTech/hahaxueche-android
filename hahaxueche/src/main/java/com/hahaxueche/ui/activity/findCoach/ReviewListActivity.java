@@ -9,6 +9,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.Review;
 import com.hahaxueche.presenter.findCoach.ReviewListPresenter;
@@ -48,12 +49,14 @@ public class ReviewListActivity extends HHBaseActivity implements ReviewListView
         Intent intent = getIntent();
         if (intent.getParcelableExtra("coach") != null) {
             mPresenter.setCoach((Coach) intent.getParcelableExtra("coach"));
-            mXlvReviews.setPullRefreshEnable(true);
-            mXlvReviews.setPullLoadEnable(true);
-            mXlvReviews.setAutoLoadEnable(true);
-            mXlvReviews.setXListViewListener(this);
-            mPresenter.fetchReviews();
+        }else {
+            mPresenter.setDrivingSchool((DrivingSchool) intent.getParcelableExtra("drivingSchool"));
         }
+        mXlvReviews.setPullRefreshEnable(true);
+        mXlvReviews.setPullLoadEnable(true);
+        mXlvReviews.setAutoLoadEnable(true);
+        mXlvReviews.setXListViewListener(this);
+        mPresenter.fetchReviews();
     }
 
     private void initActionBar() {

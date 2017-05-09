@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.findCoach.SearchCoachPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
@@ -217,6 +218,13 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
                 public void clickCoach(Coach coach) {
                     Intent intent = new Intent(getContext(), CoachDetailActivity.class);
                     intent.putExtra("coach", coach);
+                    startActivity(intent);
+                }
+
+                @Override
+                public void clickDrivingSchool(DrivingSchool drivingSchool) {
+                    Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
+                    intent.putExtra("drivingSchoolId", drivingSchool.id);
                     startActivity(intent);
                 }
             });

@@ -28,4 +28,6 @@ public interface ClassTypeIntroView extends HHBaseView {
     void hidePurchase();
 
     void showMoniInFeeDetail();
+
+    void hidePayView();
 }

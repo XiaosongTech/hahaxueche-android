@@ -104,6 +104,7 @@ public class FieldFilterPresenter extends HHBasePresenter implements Presenter<F
         param.coach_id = coach.id;
         param.field_id = coach.coach_group.field_id;
         param.driving_school_id = coach.driving_school_id;
+        getUserIdentity(param);
     }
 
     private void getUserIdentity(UserIdentityParam param) {

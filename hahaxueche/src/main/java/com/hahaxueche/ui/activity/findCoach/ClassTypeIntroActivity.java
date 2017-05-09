@@ -86,6 +86,8 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
     LinearLayout mLlyMoni;
     @BindView(R.id.tv_pay)
     TextView mTvPay;
+    @BindView(R.id.lly_pay)
+    LinearLayout mLlyPay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +100,8 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
         mPresenter.setFeeDetail(intent.getIntExtra("totalAmount", 0),
                 (ClassType) intent.getParcelableExtra("classType"),
                 intent.getBooleanExtra("isWuyouClass", false),
-                intent.getBooleanExtra("isShowPurchase", true));
+                intent.getBooleanExtra("isShowPurchase", true),
+                intent.getBooleanExtra("isReadOnly", false));
         initActionBar();
         initCustomerService();
         mIvDash1.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
@@ -354,5 +357,10 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
     @Override
     public void showMoniInFeeDetail() {
         mLlyMoni.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hidePayView() {
+        mLlyPay.setVisibility(View.GONE);
     }
 }

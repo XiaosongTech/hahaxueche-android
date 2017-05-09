@@ -5,6 +5,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 
@@ -12,8 +13,12 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.Field;
+import com.hahaxueche.model.base.ShortenUrl;
+import com.hahaxueche.model.base.UserIdentityParam;
 import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.responseList.ReviewResponseList;
+import com.hahaxueche.model.user.User;
+import com.hahaxueche.model.user.UserIdentityInfo;
 import com.hahaxueche.model.user.coach.ClassType;
 import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
@@ -21,6 +26,8 @@ import com.hahaxueche.ui.view.findCoach.DrivingSchoolDetailView;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
+
+import java.util.ArrayList;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -78,6 +85,7 @@ public class DrivingSchoolDetailPresenter extends HHBasePresenter implements Pre
                     @Override
                     public void onNext(DrivingSchool drivingSchool) {
                         mDrivingSchool = drivingSchool;
+                        mView.initShareData(mDrivingSchool);
                     }
                 });
         subscription = apiService.getDrivingSchoolReviews(drivingSchoolId, Common.START_PAGE, Common.PER_PAGE)
@@ -173,9 +181,90 @@ public class DrivingSchoolDetailPresenter extends HHBasePresenter implements Pre
                 mView.addFieldView(mDrivingSchool.fields.get(i));
             }
         }
+        mView.setCommentCount("学员点评（" + mDrivingSchool.review_count + "）");
     }
 
     public void clickToFields(Field selectField) {
         mView.navigateToFieldFilter(mDrivingSchool.fields, selectField);
+    }
+
+    public void shortenUrl(String url, final int shareType) {
+        if (TextUtils.isEmpty(url)) return;
+        HHApiService apiService = application.getApiService();
+        String longUrl = getShortenUrlAddress(url);
+        if (TextUtils.isEmpty(longUrl)) return;
+        subscription = apiService.shortenUrl(longUrl)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<ArrayList<ShortenUrl>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<ShortenUrl> shortenUrls) {
+                        if (shortenUrls != null && shortenUrls.size() > 0) {
+                            mView.startToShare(shareType, shortenUrls.get(0).url_short);
+                        }
+                    }
+                });
+    }
+
+    public DrivingSchool getDrivingSchool() {
+        return mDrivingSchool;
+    }
+
+    public void getUserIdentity(String cellPhone) {
+        HHApiService apiService = application.getApiService();
+        UserIdentityParam param = new UserIdentityParam();
+        param.phone = cellPhone;
+        param.promo_code = "921434";
+        param.driving_school_id = String.valueOf(mDrivingSchool.id);
+        if (application.getMyLocation() != null) {
+            param.lng = application.getMyLocation().lng;
+            param.lat = application.getMyLocation().lat;
+        }
+        subscription = apiService.getUserIdentity(param)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<UserIdentityInfo>() {
+
+                    @Override
+                    public void onCompleted() {
+                        mView.showMessage("发送成功～");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(UserIdentityInfo userIdentityInfo) {
+                    }
+                });
+    }
+
+    /**
+     * 在线咨询
+     */
+    public void onlineAsk() {
+        User user = application.getSharedPrefUtil().getUser();
+        super.onlineAsk(user, mView.getContext());
+    }
+
+    public void getGroupBuy(String cellPhone) {
+        String phoneNumberError = validatePhoneNumber(cellPhone);
+        if (!TextUtils.isEmpty(phoneNumberError)) {
+            mView.showMessage(phoneNumberError);
+            return;
+        }
+        getUserIdentity(cellPhone);
     }
 }

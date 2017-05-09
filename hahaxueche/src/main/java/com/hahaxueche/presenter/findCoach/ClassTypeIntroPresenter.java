@@ -37,7 +37,7 @@ public class ClassTypeIntroPresenter extends HHBasePresenter implements Presente
         application = null;
     }
 
-    public void setFeeDetail(int totalAmount, ClassType classType, boolean isWuyouClass, boolean isShowPurchase) {
+    public void setFeeDetail(int totalAmount, ClassType classType, boolean isWuyouClass, boolean isShowPurchase, boolean isReadOnly) {
         mClassType = classType;
         if (classType.type == Common.CLASS_TYPE_NORMAL_C1 || classType.type == Common.CLASS_TYPE_NORMAL_C2) {
             //超值班
@@ -71,6 +71,9 @@ public class ClassTypeIntroPresenter extends HHBasePresenter implements Presente
         mView.setTotalAmount(Utils.getMoney(totalAmount));
         if (!isShowPurchase) {
             mView.hidePurchase();
+        }
+        if (isReadOnly) {
+            mView.hidePayView();
         }
     }
 

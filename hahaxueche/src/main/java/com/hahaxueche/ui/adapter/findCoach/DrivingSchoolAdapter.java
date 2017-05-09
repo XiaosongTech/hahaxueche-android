@@ -248,7 +248,9 @@ public class DrivingSchoolAdapter extends BaseAdapter {
                 tvDrivingSchool.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        HHLog.v("click " + drivingSchool.name);
+                        if (mOnDrivingSchoolClickListener != null) {
+                            mOnDrivingSchoolClickListener.clickDrivingSchool(drivingSchool);
+                        }
                     }
                 });
                 tr.addView(tvDrivingSchool);

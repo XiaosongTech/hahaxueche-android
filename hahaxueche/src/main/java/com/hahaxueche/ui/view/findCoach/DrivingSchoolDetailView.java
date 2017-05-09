@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.text.SpannableString;
 
 import com.hahaxueche.model.base.Field;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.user.coach.ClassType;
 import com.hahaxueche.model.user.coach.Review;
 import com.hahaxueche.ui.view.base.HHBaseView;
@@ -46,4 +47,10 @@ public interface DrivingSchoolDetailView extends HHBaseView {
     void addFieldView(Field field);
 
     void navigateToFieldFilter(List<Field> highlightFields, Field selectField);
+
+    void startToShare(int shareType, String shortenUrl);
+
+    void initShareData(DrivingSchool mDrivingSchool);
+
+    void setCommentCount(String text);
 }

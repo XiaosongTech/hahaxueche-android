@@ -16,10 +16,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hahaxueche.R;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.myPage.FollowListPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
+import com.hahaxueche.ui.activity.findCoach.DrivingSchoolDetailDetailActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachAdapter;
 import com.hahaxueche.ui.view.myPage.FollowListView;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
@@ -104,6 +106,13 @@ public class FollowListActivity extends HHBaseActivity implements FollowListView
             public void clickCoach(Coach coach) {
                 Intent intent = new Intent(getContext(), CoachDetailActivity.class);
                 intent.putExtra("coach", coach);
+                startActivity(intent);
+            }
+
+            @Override
+            public void clickDrivingSchool(DrivingSchool drivingSchool) {
+                Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
+                intent.putExtra("drivingSchoolId", drivingSchool.id);
                 startActivity(intent);
             }
         });
