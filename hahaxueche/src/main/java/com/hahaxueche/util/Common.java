@@ -69,5 +69,8 @@ public class Common {
     public static final int MAX_NEAR_COACH_COUNT = 8;
     //选择项-不限
     public static final int NO_LIMIT = -1;
-
+    //搜索类型-驾校
+    public static final int SEARCH_TYPE_DRIVING_SCHOOL = 1;
+    //搜索类型-教练
+    public static final int SEARCH_TYPE_COACH = 2;
 }

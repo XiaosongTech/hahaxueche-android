@@ -329,6 +329,10 @@ public interface HHApiService {
     @GET("driving_schools/{id}/reviews")
     Observable<ReviewResponseList> getDrivingSchoolReviews(@Path("id") int drivingSchoolId, @Query("page") int page, @Query("per_page") int perPage);
 
+    @GET("driving_schools")
+    Observable<DrivingSchoolResponseList> getDrivingSchoolsByKeyword(@Query("name") String keyword, @Query("city_id") int cityId,
+                                                                     @Query("page") int page, @Query("per_page") int perPage);
+
 
     class Factory {
         public static Retrofit getRetrofit() {

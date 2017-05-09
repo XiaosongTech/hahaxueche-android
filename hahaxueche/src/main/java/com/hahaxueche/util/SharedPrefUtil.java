@@ -78,13 +78,13 @@ public class SharedPrefUtil {
     }
 
     /**
-     * 增加历史搜索记录
+     * 增加教练历史搜索记录
      *
      * @param coachName
      */
-    public void addSearchHistory(String coachName) {
+    public void addSearchCoachHistory(String coachName) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        LinkedList<String> searchHistoryList = getSearchHistory();
+        LinkedList<String> searchHistoryList = getSearchCoachHistory();
         if (searchHistoryList != null) {
             if (searchHistoryList.contains(coachName)) return;
             if (searchHistoryList.size() >= 4) {
@@ -94,17 +94,47 @@ public class SharedPrefUtil {
             searchHistoryList = new LinkedList<>();
         }
         searchHistoryList.addLast(coachName);
-        prefs.edit().putString("searchHistorySerialize", mGson.toJson(searchHistoryList)).apply();
+        prefs.edit().putString("searchCoachHistorySerialize", mGson.toJson(searchHistoryList)).apply();
     }
 
-    public LinkedList getSearchHistory() {
+    public LinkedList getSearchCoachHistory() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return mGson.fromJson(prefs.getString("searchHistorySerialize", ""), LinkedList.class);
+        return mGson.fromJson(prefs.getString("searchCoachHistorySerialize", ""), LinkedList.class);
     }
 
-    public void clearSearchHistory() {
+    public void clearSearchCoachHistory() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        prefs.edit().putString("searchHistorySerialize", null).apply();
+        prefs.edit().putString("searchCoachHistorySerialize", null).apply();
+    }
+
+    /**
+     * 增加驾校历史搜索记录
+     *
+     * @param drivingSchool
+     */
+    public void addSearchDrivingSchoolHistory(String drivingSchool) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        LinkedList<String> searchHistoryList = getSearchDrivingSchoolHistory();
+        if (searchHistoryList != null) {
+            if (searchHistoryList.contains(drivingSchool)) return;
+            if (searchHistoryList.size() >= 4) {
+                searchHistoryList.removeFirst();
+            }
+        } else {
+            searchHistoryList = new LinkedList<>();
+        }
+        searchHistoryList.addLast(drivingSchool);
+        prefs.edit().putString("searchDrivingSchoolHistorySerialize", mGson.toJson(searchHistoryList)).apply();
+    }
+
+    public LinkedList getSearchDrivingSchoolHistory() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        return mGson.fromJson(prefs.getString("searchDrivingSchoolHistorySerialize", ""), LinkedList.class);
+    }
+
+    public void clearSearchDrivingSchoolHistory() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        prefs.edit().putString("searchDrivingSchoolHistorySerialize", null).apply();
     }
 
     public void setExamPosition(String examType, int position) {
