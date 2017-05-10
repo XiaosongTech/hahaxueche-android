@@ -57,7 +57,7 @@ public class HotDrivingSchoolAdapter extends RecyclerView.Adapter<HotDrivingScho
         String text = Utils.getMoney(drivingSchool.lowest_price) + "起";
         SpannableString ss = new SpannableString(text);
         ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.haha_gray)), text.indexOf("起"), text.indexOf("起") + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ss.setSpan(new AbsoluteSizeSpan(Utils.instence(mContext).sp2px(12)), text.indexOf("起"), text.indexOf("起") + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(new AbsoluteSizeSpan(Utils.instence(mContext).sp2px(10)), text.indexOf("起"), text.indexOf("起") + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         holder.mTvPrice.setText(ss);
         holder.mIvAvatar.setImageURI(drivingSchool.avatar);
         holder.mTvName.setText(drivingSchool.name);

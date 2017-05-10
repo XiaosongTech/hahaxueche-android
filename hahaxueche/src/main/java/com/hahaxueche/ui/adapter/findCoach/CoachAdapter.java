@@ -120,7 +120,13 @@ public class CoachAdapter extends BaseAdapter {
         holder.ivCoachAvatar.setImageURI(coach.avatar);
         holder.tvCoachPoints.setText(coach.average_rating + " (" + coach.review_count + ")");
         if (coach.coach_group != null) {
-            holder.tvCoachActualPrice.setText(Utils.getMoney(coach.coach_group.training_cost));
+
+            if (coach.coach_group.group_type == Common.GROUP_TYPE_CHEYOU_WUYOU) {
+                int insuranceWithNewCoachPrice = application.getConstants().insurance_prices.pay_with_new_coach_price;
+                holder.tvCoachActualPrice.setText(Utils.getMoney(coach.coach_group.training_cost + insuranceWithNewCoachPrice));
+            } else {
+                holder.tvCoachActualPrice.setText(Utils.getMoney(coach.coach_group.training_cost));
+            }
         }
         holder.ivIsGoldenCoach.setVisibility(coach.skill_level == Common.COACH_SKILL_LEVEL_GOLDEN ? View.VISIBLE : View.GONE);
         holder.ivCashPledge.setVisibility(coach.has_cash_pledge == 1 ? View.VISIBLE : View.GONE);
