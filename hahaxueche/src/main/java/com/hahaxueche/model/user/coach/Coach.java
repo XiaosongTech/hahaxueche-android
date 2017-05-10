@@ -37,13 +37,18 @@ public class Coach implements Parcelable {
     public int like_count;
     public int liked;
     public String driving_school;
-    public String driving_school_id;
+    public int driving_school_id;
     public String stage_two_pass_rate;
     public String stage_three_pass_rate;
     public String average_pass_days;
     public int has_cash_pledge;
     public String distance;
     public String consult_phone;
+    public int consult_count;
+
+    public Coach() {
+
+    }
 
     protected Coach(Parcel in) {
         id = in.readString();
@@ -73,13 +78,14 @@ public class Coach implements Parcelable {
         like_count = in.readInt();
         liked = in.readInt();
         driving_school = in.readString();
-        driving_school_id = in.readString();
+        driving_school_id = in.readInt();
         stage_two_pass_rate = in.readString();
         stage_three_pass_rate = in.readString();
         average_pass_days = in.readString();
         has_cash_pledge = in.readInt();
         distance = in.readString();
         consult_phone = in.readString();
+        consult_count = in.readInt();
     }
 
     public static final Creator<Coach> CREATOR = new Creator<Coach>() {
@@ -128,12 +134,13 @@ public class Coach implements Parcelable {
         parcel.writeInt(like_count);
         parcel.writeInt(liked);
         parcel.writeString(driving_school);
-        parcel.writeString(driving_school_id);
+        parcel.writeInt(driving_school_id);
         parcel.writeString(stage_two_pass_rate);
         parcel.writeString(stage_three_pass_rate);
         parcel.writeString(average_pass_days);
         parcel.writeInt(has_cash_pledge);
         parcel.writeString(distance);
         parcel.writeString(consult_phone);
+        parcel.writeInt(consult_count);
     }
 }

@@ -126,15 +126,18 @@ public class MyCoachDetailPresenter extends HHBasePresenter implements Presenter
         String ret = "";
         if (mCoach == null) return ret;
         Constants constants = application.getConstants();
-        Field field = constants.getField(mCoach.coach_group.field_id);
-        City city = constants.getCity(field.city_id);
-        return city.name + field.street + (TextUtils.isEmpty(field.section) ? field.zone : field.section);
+        Field field = application.getFieldResponseList().getFieldById(mCoach.coach_group.field_id);
+        if (field != null) {
+            City city = constants.getCity(field.city_id);
+            return city.name + field.street + (TextUtils.isEmpty(field.section) ? field.zone : field.section);
+        } else {
+            return "";
+        }
     }
 
     public Field getTrainingField() {
         if (mCoach == null) return null;
-        Constants constants = application.getConstants();
-        return constants.getField(mCoach.coach_group.field_id);
+        return application.getFieldResponseList().getFieldById(mCoach.coach_group.field_id);
     }
 
     private void loadFollow() {

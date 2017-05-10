@@ -11,21 +11,13 @@ public interface FindCoachView extends HHBaseView {
 
     void unSelectCoach();
 
-    void selectPartner();
+    void selectDrivingSchool();
 
-    void unSelectPartner();
-
-    void showLeftIconMap();
-
-    void showLeftIconExplain();
+    void unSelectDrivingSchool();
 
     void showCoachListFragment();
 
-    void showPartnerListFragment();
-
-    void showPartnerInfoDialog();
+    void showDrivingSchoolListFragment();
 
     void navigateToSelectFields();
-
-    void showSearchIcon(boolean enable);
 }

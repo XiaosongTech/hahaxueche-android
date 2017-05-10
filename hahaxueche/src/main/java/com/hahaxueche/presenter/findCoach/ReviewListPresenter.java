@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.responseList.ReviewResponseList;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.HHBasePresenter;
@@ -26,6 +27,7 @@ public class ReviewListPresenter extends HHBasePresenter implements Presenter<Re
     private HHBaseApplication application;
     private String nextLink;
     private Coach mCoach;
+    private DrivingSchool mDrivingSchool;
 
     public void attachView(ReviewListView view) {
         this.mView = view;
@@ -39,31 +41,56 @@ public class ReviewListPresenter extends HHBasePresenter implements Presenter<Re
     }
 
     public void fetchReviews() {
-        if (mCoach == null) return;
         HHApiService apiService = application.getApiService();
-        subscription = apiService.getReviews(mCoach.user_id, Common.START_PAGE, Common.PER_PAGE)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(application.defaultSubscribeScheduler())
-                .subscribe(new Subscriber<ReviewResponseList>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        HHLog.e(e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(ReviewResponseList reviewResponseList) {
-                        if (reviewResponseList.data != null) {
-                            mView.refreshReviewList(reviewResponseList.data);
-                            nextLink = reviewResponseList.links.next;
-                            mView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
+        if (mCoach != null) {
+            subscription = apiService.getReviews(mCoach.user_id, Common.START_PAGE, Common.PER_PAGE)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(application.defaultSubscribeScheduler())
+                    .subscribe(new Subscriber<ReviewResponseList>() {
+                        @Override
+                        public void onCompleted() {
                         }
 
-                    }
-                });
+                        @Override
+                        public void onError(Throwable e) {
+                            HHLog.e(e.getMessage());
+                        }
+
+                        @Override
+                        public void onNext(ReviewResponseList reviewResponseList) {
+                            if (reviewResponseList.data != null) {
+                                mView.refreshReviewList(reviewResponseList.data);
+                                nextLink = reviewResponseList.links.next;
+                                mView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
+                            }
+
+                        }
+                    });
+        } else {
+            subscription = apiService.getDrivingSchoolReviews(mDrivingSchool.id, Common.START_PAGE, Common.PER_PAGE)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(application.defaultSubscribeScheduler())
+                    .subscribe(new Subscriber<ReviewResponseList>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            HHLog.e(e.getMessage());
+                        }
+
+                        @Override
+                        public void onNext(ReviewResponseList reviewResponseList) {
+                            if (reviewResponseList.data != null) {
+                                mView.refreshReviewList(reviewResponseList.data);
+                                nextLink = reviewResponseList.links.next;
+                                mView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
+                            }
+
+                        }
+                    });
+        }
     }
 
     public void addMoreReviews() {
@@ -105,5 +132,12 @@ public class ReviewListPresenter extends HHBasePresenter implements Presenter<Re
             averageRating = 5;
         }
         mView.setAverageRating(averageRating);
+    }
+
+    public void setDrivingSchool(DrivingSchool drivingSchool) {
+        mDrivingSchool = drivingSchool;
+        mView.setReviewedCount("学员评价（" + mDrivingSchool.review_count + "）");
+        //综合得分
+        mView.setAverageRating(mDrivingSchool.rating > 5 ? 5 : mDrivingSchool.rating);
     }
 }

@@ -3,6 +3,10 @@ package com.hahaxueche.model.base;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.hahaxueche.model.user.coach.Coach;
+
+import java.util.List;
+
 /**
  * Created by wangshirui on 16/9/8.
  */
@@ -27,6 +31,10 @@ public class Field implements Parcelable {
     public String zone;
     public String consult_phone;
     public String display_address;
+    public int lowest_price;
+    public List<String> schools;
+    public List<String> business_areas;
+    public List<Coach> coaches;
 
     protected Field(Parcel in) {
         id = in.readString();
@@ -49,6 +57,10 @@ public class Field implements Parcelable {
         zone = in.readString();
         consult_phone = in.readString();
         display_address = in.readString();
+        lowest_price = in.readInt();
+        schools = in.createStringArrayList();
+        business_areas = in.createStringArrayList();
+        coaches = in.createTypedArrayList(Coach.CREATOR);
     }
 
     public static final Creator<Field> CREATOR = new Creator<Field>() {
@@ -90,5 +102,9 @@ public class Field implements Parcelable {
         parcel.writeString(zone);
         parcel.writeString(consult_phone);
         parcel.writeString(display_address);
+        parcel.writeInt(lowest_price);
+        parcel.writeStringList(schools);
+        parcel.writeStringList(business_areas);
+        parcel.writeTypedList(coaches);
     }
 }

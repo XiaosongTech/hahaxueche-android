@@ -96,8 +96,10 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
         mRcyMapCoach.setLayoutManager(layoutManager);
         Intent intent = getIntent();
         if (intent.getParcelableExtra("field") != null) {
-            mHighlightFields.add((Field) intent.getParcelableExtra("field"));
             mSelectField = intent.getParcelableExtra("field");
+        }
+        if (intent.getParcelableArrayListExtra("hightlightFields") != null) {
+            mHighlightFields = intent.getParcelableArrayListExtra("hightlightFields");
         }
         mPresenter.getFields();
     }
@@ -166,6 +168,7 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
                 if (mHighlightFields.size() == 0) {
                     mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
                 }
+                mPresenter.setLocation(amapLocation.getLatitude(), amapLocation.getLongitude());
                 mlocationClient.stopLocation();
             } else {
                 String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
@@ -241,9 +244,11 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
     public void loadCoaches(ArrayList<Coach> coaches) {
         mapCoachAdapter = new MapCoachAdapter(this, coaches, new MapCoachAdapter.OnRecyclerViewItemClickListener() {
             @Override
-            public void onDrivingSchoolClick(String drivingSchoolId) {
+            public void onDrivingSchoolClick(int drivingSchoolId) {
                 mPresenter.addDataTrack("map_view_page_check_school_tapped", getContext());
-                openWebView(WebViewUrl.WEB_URL_JIAXIAO + "/" + drivingSchoolId);
+                Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
+                intent.putExtra("drivingSchoolId", drivingSchoolId);
+                startActivity(intent);
             }
 
             @Override
@@ -255,14 +260,14 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
             }
 
             @Override
-            public void onCheckFieldClick() {
+            public void onCheckFieldClick(final Coach coach) {
                 mPresenter.addDataTrack("map_view_page_check_site_tapped", getContext());
                 GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "看过训练场才放心！",
                         "输入手机号，教练立即带你看场地", "预约看场地", new GetUserIdentityDialog.OnIdentityGetListener() {
                     @Override
                     public void getCellPhone(String cellPhone) {
                         mPresenter.addDataTrack("map_view_page_locate_confirmed", getContext());
-                        mPresenter.getUserIdentity(cellPhone);
+                        mPresenter.checkField(cellPhone, coach);
                     }
                 });
                 dialog.show();
@@ -297,7 +302,7 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
                 if (isHighlightField(existField)) {
                     existMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                             .decodeResource(getResources(),
-                                    R.drawable.ic_map_local_choseonly)));
+                                    R.drawable.ic_map_local_choseon)));
                 } else {
                     existMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                             .decodeResource(getResources(),
@@ -313,7 +318,7 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
                 mSelectField = field;
                 marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                         .decodeResource(getResources(),
-                                R.drawable.ic_map_local_choseon)));
+                                R.drawable.ic_map_local_choseonly)));
                 marker.showInfoWindow();
                 mPresenter.selectField(mSelectField);
                 aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(field.lat, field.lng), 14));
@@ -344,13 +349,13 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
                 if (isHighlightField(field)) {
                     marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                             .decodeResource(getResources(),
-                                    R.drawable.ic_map_local_choseonly)));
+                                    R.drawable.ic_map_local_choseon)));
                 }
                 if (mSelectField != null && mSelectField.id.equals(field.id)) {
                     marker.showInfoWindow();
                     marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                             .decodeResource(getResources(),
-                                    R.drawable.ic_map_local_choseon)));
+                                    R.drawable.ic_map_local_choseonly)));
                 }
             }
         }
@@ -373,7 +378,7 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
      * 自定义infowinfow窗口
      */
     private void render(Marker marker, View view) {
-        Field field = (Field) marker.getObject();
+        final Field field = (Field) marker.getObject();
         SimpleDraweeView mIvFieldAvatar = ButterKnife.findById(view, R.id.iv_field_avatar);
         mIvFieldAvatar.setImageURI(field.image);
         TextView tvFieldName = ButterKnife.findById(view, R.id.tv_field_name);
@@ -395,7 +400,7 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
                     @Override
                     public void getCellPhone(String cellPhone) {
                         mPresenter.addDataTrack("map_view_page_check_site_confirmed", getContext());
-                        mPresenter.getUserIdentity(cellPhone);
+                        mPresenter.sendLocation(cellPhone, field);
                     }
                 });
                 dialog.show();

@@ -28,5 +28,5 @@ public interface CoachListView extends HHBaseView {
 
     void showMessage(String message);
 
-    void showRedBag(boolean isShow);
+    void showHelp(boolean isShow);
 }

@@ -234,7 +234,7 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
                 break;
             case R.id.rly_FAQ:
                 mPresenter.clickFAQCount();
-                startActivity(new Intent(getContext(), FAQActivity.class));
+                openWebView(WebViewUrl.WEB_URL_PROCEDURE);
                 break;
             case R.id.rly_support_haha:
                 mPresenter.clickSupportHahaCount();

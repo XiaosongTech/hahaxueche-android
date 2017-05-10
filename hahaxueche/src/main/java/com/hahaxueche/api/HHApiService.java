@@ -9,8 +9,10 @@ import com.hahaxueche.model.base.CityConstants;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.base.ShortenUrl;
+import com.hahaxueche.model.base.UserIdentityParam;
 import com.hahaxueche.model.community.Article;
 import com.hahaxueche.model.course.ScheduleEvent;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.examLib.Question;
 import com.hahaxueche.model.payment.BankCard;
 import com.hahaxueche.model.payment.PurchasedService;
@@ -18,6 +20,7 @@ import com.hahaxueche.model.payment.Voucher;
 import com.hahaxueche.model.payment.WithdrawRecord;
 import com.hahaxueche.model.responseList.ArticleResponseList;
 import com.hahaxueche.model.responseList.CoachResponseList;
+import com.hahaxueche.model.responseList.DrivingSchoolResponseList;
 import com.hahaxueche.model.responseList.FieldResponseList;
 import com.hahaxueche.model.responseList.PartnerResponseList;
 import com.hahaxueche.model.responseList.ReferrerResponseList;
@@ -109,11 +112,18 @@ public interface HHApiService {
     Observable<Student> uploadAvatar(@Path("id") String studentId, @Header("X-Access-Token") String accessToken, @Part MultipartBody.Part file);
 
     @GET("coaches")
-    Observable<CoachResponseList> getCoaches(@Query("page") int page, @Query("per_page") int perPage, @Query("golden_coach_only") String goldenCoachOnly,
-                                             @Query("license_type") String licenseType, @Query("price") String price, @Query("city_id") int cityId,
-                                             @Query("training_field_ids[]") ArrayList<String> fieldIdList, @Query("distance") String distance,
-                                             @Query("user_location[]") ArrayList<String> locations, @Query("sort_by") int sortBy, @Query("vip_only") int vipOnly,
-                                             @Query("student_id") String studentId);
+    Observable<CoachResponseList> getCoaches(@Query("page") int page, @Query("per_page") int perPage, @Query("license_type") String licenseType,
+                                             @Query("city_id") int cityId, @Query("training_field_ids[]") ArrayList<String> fieldIdList, @Query("distance") String distance,
+                                             @Query("user_location[]") ArrayList<String> locations, @Query("sort_by") int sortBy, @Query("student_id") String studentId,
+                                             @Query("price_from") String startMoney, @Query("price_to") String endMoney, @Query("zone") String zone);
+
+    @GET("coaches")
+    Observable<CoachResponseList> getNearCoaches(@Query("page") int page, @Query("per_page") int perPage, @Query("city_id") int cityId,
+                                                 @Query("user_location[]") ArrayList<String> locations, @Query("sort_by") int sortBy);
+
+    @GET("coaches")
+    Observable<CoachResponseList> getFieldCoaches(@Query("page") int page, @Query("per_page") int perPage, @Query("city_id") int cityId,
+                                                  @Query("training_field_ids[]") ArrayList<String> fieldIdList, @Query("sort_by") int sortBy);
 
     @GET
     Observable<CoachResponseList> getCoaches(@Url String path);
@@ -301,9 +311,28 @@ public interface HHApiService {
     @GET("fields")
     Observable<FieldResponseList> getFields(@Query("city_id") int cityId, @Query("driving_school_id") String drivingSchoolId);
 
-    @FormUrlEncoded
     @POST("user_identities")
-    Observable<UserIdentityInfo> getUserIdentity(@FieldMap HashMap<String, Object> map);
+    Observable<UserIdentityInfo> getUserIdentity(@Body UserIdentityParam param);
+
+    @GET("driving_schools")
+    Observable<DrivingSchoolResponseList> getDrivingSchools(@Query("page") int page, @Query("per_page") int perPage, @Query("license_type") String licenseType,
+                                                            @Query("city_id") int cityId, @Query("distance") String distance, @Query("user_location[]") ArrayList<String> locations,
+                                                            @Query("sort_by") String sortBy, @Query("price_from") String startMoney, @Query("price_to") String endMoney,
+                                                            @Query("zone") String zone, @Query("order") String order);
+
+    @GET
+    Observable<DrivingSchoolResponseList> getDrivingSchools(@Url String path);
+
+    @GET("driving_schools/{id}")
+    Observable<DrivingSchool> getDrivingSchoolDetail(@Path("id") int drivingSchoolId);
+
+    @GET("driving_schools/{id}/reviews")
+    Observable<ReviewResponseList> getDrivingSchoolReviews(@Path("id") int drivingSchoolId, @Query("page") int page, @Query("per_page") int perPage);
+
+    @GET("driving_schools")
+    Observable<DrivingSchoolResponseList> getDrivingSchoolsByKeyword(@Query("name") String keyword, @Query("city_id") int cityId,
+                                                                     @Query("page") int page, @Query("per_page") int perPage);
+
 
     class Factory {
         public static Retrofit getRetrofit() {

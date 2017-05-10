@@ -56,7 +56,7 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
             }
             application.getSharedPrefUtil().setLocalSettings(localSettings);
         }
-        cacheCity(localSettings.cityId);
+        initCityConstants(localSettings.cityId);
         mView.setCityName(application.getConstants().getCityName(localSettings.cityId));
     }
 
@@ -66,27 +66,92 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
         application = null;
     }
 
-    private void cacheCity(int cityId) {
+    /**
+     * 初始化城市常量
+     *
+     * @param cityId
+     */
+    private void initCityConstants(final int cityId) {
         HHApiService apiService = application.getApiService();
-        final int finalCityId = cityId;
-        subscription = apiService.getFields(finalCityId, null)
+        subscription = apiService.getCityConstant(cityId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
-                .subscribe(new Subscriber<FieldResponseList>() {
+                .subscribe(new Subscriber<CityConstants>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        mView.showProgressDialog();
+                    }
+
                     @Override
                     public void onCompleted() {
-
+                        initCityFields(cityId);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         HHLog.e(e.getMessage());
                         e.printStackTrace();
+                        mView.dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onNext(CityConstants cityConstants) {
+                        application.setCityConstants(cityConstants);
+                        mView.loadHotDrivingSchools(cityConstants.driving_schools.subList(0, Common.MAX_DRIVING_SCHOOL_COUNT));
+                    }
+                });
+    }
+
+    private void initCityFields(int cityId) {
+        HHApiService apiService = application.getApiService();
+        subscription = apiService.getFields(cityId, null)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<FieldResponseList>() {
+                    @Override
+                    public void onCompleted() {
+                        mView.readyToLoadViews();
+                        mView.dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                        e.printStackTrace();
+                        mView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onNext(FieldResponseList fieldResponseList) {
-                        application.cacheField(fieldResponseList, finalCityId);
+                        application.setFieldResponseList(fieldResponseList);
+                    }
+                });
+    }
+
+    private void getCityFields(int cityId) {
+        HHApiService apiService = application.getApiService();
+        subscription = apiService.getFields(cityId, null)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<FieldResponseList>() {
+                    @Override
+                    public void onCompleted() {
+                        mView.onCityChange();
+                        getNearCoaches();
+                        mView.dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                        e.printStackTrace();
+                        mView.dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onNext(FieldResponseList fieldResponseList) {
+                        application.setFieldResponseList(fieldResponseList);
                     }
                 });
     }
@@ -132,8 +197,7 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
         application.getSharedPrefUtil().setLocalSettings(localSettings);
         mView.setCityName(application.getConstants().getCityName(cityId));
         getNearCoaches();
-        getHotDrivingSchools();
-        cacheCity(cityId);
+        getCityConstants(cityId);
     }
 
     public void bannerClick(int i) {
@@ -232,13 +296,8 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
                 });
     }
 
-    public void getHotDrivingSchools() {
+    public void getCityConstants(final int cityId) {
         HHApiService apiService = application.getApiService();
-        int cityId = 0;
-        LocalSettings localSettings = application.getSharedPrefUtil().getLocalSettings();
-        if (localSettings.cityId > -1) {
-            cityId = localSettings.cityId;
-        }
         subscription = apiService.getCityConstant(cityId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
@@ -246,21 +305,25 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
                     @Override
                     public void onStart() {
                         super.onStart();
+                        mView.showProgressDialog();
                     }
 
                     @Override
                     public void onCompleted() {
+                        getCityFields(cityId);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         HHLog.e(e.getMessage());
                         e.printStackTrace();
+                        mView.dismissProgressDialog();
                     }
 
                     @Override
                     public void onNext(CityConstants cityConstants) {
-                        mView.loadHotDrivingSchools(cityConstants.driving_schools.subList(0, 8));
+                        application.setCityConstants(cityConstants);
+                        mView.loadHotDrivingSchools(cityConstants.driving_schools.subList(0, Common.MAX_DRIVING_SCHOOL_COUNT));
                     }
                 });
     }
@@ -276,8 +339,7 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
             ArrayList<String> locations = new ArrayList<>();
             locations.add(String.valueOf(application.getMyLocation().lat));
             locations.add(String.valueOf(application.getMyLocation().lng));
-            subscription = apiService.getCoaches(Common.START_PAGE, Common.MAX_NEAR_COACH_COUNT,
-                    null, null, null, cityId, null, null, locations, 1, 0, null)
+            subscription = apiService.getNearCoaches(Common.START_PAGE, Common.MAX_NEAR_COACH_COUNT, cityId, locations, 1)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(application.defaultSubscribeScheduler())
                     .subscribe(new Subscriber<CoachResponseList>() {
@@ -300,8 +362,7 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
                         }
                     });
         } else {
-            subscription = apiService.getCoaches(Common.START_PAGE, Common.MAX_NEAR_COACH_COUNT,
-                    null, null, null, cityId, null, null, null, 5, 0, null)
+            subscription = apiService.getNearCoaches(Common.START_PAGE, Common.MAX_NEAR_COACH_COUNT, cityId, null, 5)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(application.defaultSubscribeScheduler())
                     .subscribe(new Subscriber<CoachResponseList>() {

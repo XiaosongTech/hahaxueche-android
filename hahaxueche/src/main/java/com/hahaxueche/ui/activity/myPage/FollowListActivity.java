@@ -1,21 +1,31 @@
 package com.hahaxueche.ui.activity.myPage;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hahaxueche.R;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.myPage.FollowListPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
+import com.hahaxueche.ui.activity.findCoach.DrivingSchoolDetailDetailActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachAdapter;
 import com.hahaxueche.ui.view.myPage.FollowListView;
 import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
+import com.hahaxueche.util.RequestCode;
 
 import java.util.ArrayList;
 
@@ -26,7 +36,7 @@ import butterknife.ButterKnife;
  * Created by wangshirui on 2016/10/9.
  */
 
-public class FollowListActivity extends HHBaseActivity implements FollowListView, XListView.IXListViewListener, AdapterView.OnItemClickListener {
+public class FollowListActivity extends HHBaseActivity implements FollowListView, XListView.IXListViewListener {
     private FollowListPresenter mPresenter;
     @BindView(R.id.xlv_coaches)
     XListView mXlvCoaches;
@@ -34,6 +44,7 @@ public class FollowListActivity extends HHBaseActivity implements FollowListView
     TextView mTvEmpty;
     private CoachAdapter mCoachAdapter;
     private ArrayList<Coach> mCoachArrayList;
+    private String mConsultantPhone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +58,6 @@ public class FollowListActivity extends HHBaseActivity implements FollowListView
         mXlvCoaches.setPullLoadEnable(true);
         mXlvCoaches.setAutoLoadEnable(true);
         mXlvCoaches.setXListViewListener(this);
-        mXlvCoaches.setOnItemClickListener(this);
         mXlvCoaches.setEmptyView(mTvEmpty);
         mPresenter.fetchCoaches();
     }
@@ -81,7 +91,31 @@ public class FollowListActivity extends HHBaseActivity implements FollowListView
     @Override
     public void refreshCoachList(ArrayList<Coach> CoachArrayList) {
         mCoachArrayList = CoachArrayList;
-        mCoachAdapter = new CoachAdapter(getContext(), mCoachArrayList);
+        mCoachAdapter = new CoachAdapter(getContext(), mCoachArrayList, mPresenter.getHotDrivingSchools(this), new CoachAdapter.OnCoachClickListener() {
+            @Override
+            public void callCoach(String phone) {
+                mConsultantPhone = phone;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH);
+                } else {
+                    contactCoach();
+                }
+            }
+
+            @Override
+            public void clickCoach(Coach coach) {
+                Intent intent = new Intent(getContext(), CoachDetailActivity.class);
+                intent.putExtra("coach", coach);
+                startActivity(intent);
+            }
+
+            @Override
+            public void clickDrivingSchool(int drivingSchoolId) {
+                Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
+                intent.putExtra("drivingSchoolId", drivingSchoolId);
+                startActivity(intent);
+            }
+        });
         mXlvCoaches.setAdapter(mCoachAdapter);
         mXlvCoaches.stopRefresh();
         mXlvCoaches.stopLoadMore();
@@ -94,16 +128,6 @@ public class FollowListActivity extends HHBaseActivity implements FollowListView
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (mCoachArrayList != null && mCoachArrayList.size() > 0 && position > 0 && position - 1 < mCoachArrayList.size()) {
-            Intent intent = new Intent(getContext(), CoachDetailActivity.class);
-            intent.putExtra("coach", mCoachArrayList.get(position - 1));
-            startActivity(intent);
-        }
-    }
-
-
-    @Override
     public void onRefresh() {
         mPresenter.fetchCoaches();
     }
@@ -111,5 +135,30 @@ public class FollowListActivity extends HHBaseActivity implements FollowListView
     @Override
     public void onLoadMore() {
         mPresenter.addMoreCoaches();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                contactCoach();
+            } else {
+                Toast.makeText(this, "请允许拨打电话权限，不然无法直接拨号联系教练", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**
+     * 联系教练
+     */
+    private void contactCoach() {
+        if (TextUtils.isEmpty(mConsultantPhone))
+            return;
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mConsultantPhone));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        startActivity(intent);
     }
 }

@@ -39,6 +39,7 @@ import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.community.ExamLibraryActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
+import com.hahaxueche.ui.activity.findCoach.DrivingSchoolDetailDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.FieldFilterActivity;
 import com.hahaxueche.ui.activity.findCoach.PaySuccessActivity;
 import com.hahaxueche.ui.activity.findCoach.SearchCoachActivity;
@@ -108,6 +109,32 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
         ButterKnife.bind(this, view);
         mPresenter.attachView(this);
+        initGif();
+        initCoachPlaceholder();
+        return view;
+    }
+
+    private void initCoachPlaceholder() {
+        // 创建一个线性布局管理器
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        // 设置布局管理器
+        mRcyNearCoach.setLayoutManager(layoutManager);
+        ArrayList<Coach> coaches = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Coach fakeCoach = new Coach();
+            coaches.add(fakeCoach);
+        }
+        mNearCoachAdapter = new NearCoachAdapter(getContext(), coaches, new NearCoachAdapter.OnRecyclerViewItemClickListener() {
+            @Override
+            public void onItemClick(Coach coach, int position) {
+                return;
+            }
+        });
+        mRcyNearCoach.setAdapter(mNearCoachAdapter);
+    }
+
+    private void initGif() {
         Uri uriFindSchool = Uri.parse("res://com.hahaxueche)/" + R.drawable.bt_chooseschool);
         DraweeController dcFindSchool =
                 Fresco.newDraweeControllerBuilder()
@@ -126,40 +153,6 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         mIvFindCoach.setController(dcFindCoach);
         GenericDraweeHierarchy hyFindCoach = mIvFindCoach.getHierarchy();
         hyFindCoach.setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
-
-        mPresenter.getHotDrivingSchools();
-
-        if (mPresenter.isNeedUpdate()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                    (mActivity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                            || mActivity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                            || mActivity.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
-                            || mActivity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
-                            || mActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.CAMERA,
-                                Manifest.permission.READ_CONTACTS,
-                                Manifest.permission.ACCESS_FINE_LOCATION},
-                        RequestCode.PERMISSIONS_REQUEST_SDCARD_CONTACTS_LOCATIONS_HOMEPAGE);
-            } else {
-                mPresenter.alertToUpdate(getContext());
-                readContacts();
-                startLocation();
-            }
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                    && (mActivity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
-                    || mActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
-                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS, Manifest.permission.ACCESS_FINE_LOCATION},
-                        RequestCode.PERMISSIONS_REQUEST_READ_CONTACTS_AND_LOCATIONS);
-            } else {
-                readContacts();
-                startLocation();
-            }
-        }
-
-        return view;
     }
 
     @Override
@@ -194,7 +187,9 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
             public void onItemClick(View view, int position) {
                 if (drivingSchoolList != null && drivingSchoolList.size() > 0 && position > -1 && position < drivingSchoolList.size()) {
                     mPresenter.clickHotDrivingSchool(position);
-                    openWebView(WebViewUrl.WEB_URL_JIAXIAO + "/" + drivingSchoolList.get(position).id);
+                    Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
+                    intent.putExtra("drivingSchoolId", drivingSchoolList.get(position).id);
+                    startActivity(intent);
                 }
             }
         });
@@ -202,21 +197,14 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     }
 
     @Override
-    public void loadNearCoaches(final ArrayList<Coach> coaches) {
-        // 创建一个线性布局管理器
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        // 设置布局管理器
-        mRcyNearCoach.setLayoutManager(layoutManager);
+    public void loadNearCoaches(ArrayList<Coach> coaches) {
         mNearCoachAdapter = new NearCoachAdapter(getContext(), coaches, new NearCoachAdapter.OnRecyclerViewItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
-                if (coaches != null && coaches.size() > 0 && position > -1 && position < coaches.size()) {
-                    mPresenter.clickNearCoach(position);
-                    Intent intent = new Intent(getContext(), CoachDetailActivity.class);
-                    intent.putExtra("coach", coaches.get(position));
-                    startActivity(intent);
-                }
+            public void onItemClick(Coach coach, int position) {
+                mPresenter.clickNearCoach(position);
+                Intent intent = new Intent(getContext(), CoachDetailActivity.class);
+                intent.putExtra("coach", coach);
+                startActivity(intent);
             }
         });
         mRcyNearCoach.setAdapter(mNearCoachAdapter);
@@ -225,6 +213,44 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     @Override
     public void setCityName(String cityName) {
         mTvCityName.setText(cityName);
+    }
+
+    @Override
+    public void readyToLoadViews() {
+        if (mPresenter.isNeedUpdate()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                    (mActivity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                            || mActivity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                            || mActivity.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                            || mActivity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
+                            || mActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.CAMERA,
+                                Manifest.permission.READ_CONTACTS,
+                                Manifest.permission.ACCESS_FINE_LOCATION},
+                        RequestCode.PERMISSIONS_REQUEST_SDCARD_CONTACTS_LOCATIONS_HOMEPAGE);
+            } else {
+                mPresenter.alertToUpdate(getContext());
+                readContacts();
+                startLocation();
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                    && (mActivity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
+                    || mActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS, Manifest.permission.ACCESS_FINE_LOCATION},
+                        RequestCode.PERMISSIONS_REQUEST_READ_CONTACTS_AND_LOCATIONS);
+            } else {
+                readContacts();
+                startLocation();
+            }
+        }
+    }
+
+    @Override
+    public void onCityChange() {
+        mActivity.onCityChange();
     }
 
     @OnClick({R.id.cv_procedure,
@@ -269,7 +295,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                 openWebView(WebViewUrl.WEB_URL_BAOMING);
                 break;
             case R.id.cv_driving_school_sort:
-                openWebView(WebViewUrl.WEB_URL_JIAXIAO);
+                mActivity.selectTab(1);
                 break;
             case R.id.lly_xuechebao:
                 mPresenter.addDataTrack("home_page_assurance_tapped", getContext());
@@ -285,11 +311,11 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                 break;
             case R.id.tv_more_hot_driving_school:
                 mPresenter.addDataTrack("home_page_hot_school_more_tapped", getContext());
-                openWebView(WebViewUrl.WEB_URL_JIAXIAO);
+                mActivity.selectTab(1);
                 break;
             case R.id.iv_find_driving_school:
                 mPresenter.addDataTrack("home_page_select_school_tapped", getContext());
-                openWebView(WebViewUrl.WEB_URL_JIAXIAO);
+                mActivity.selectTab(1);
                 break;
             case R.id.iv_find_coach:
                 mPresenter.addDataTrack("home_page_select_coach_tapped", getContext());

@@ -25,7 +25,8 @@ public class WebViewUrl {
     public static final String WEB_URL_PEIFUBAO = BuildConfig.MOBILE_URL + "/pei-fu-bao";
     public static final String WEB_URL_XUECHEBAO = BuildConfig.MOBILE_URL + "/xue-che-bao";
     public static final String WEB_URL_FENQIBAO = BuildConfig.MOBILE_URL + "/fen-qi-bao";
-    public static final String WEB_URL_ZHENGCE = BuildConfig.MOBILE_URL + "/bao-ming-xu-zhi";
+    public static final String WEB_URL_ZHENGCE = BuildConfig.MOBILE_URL + "/share/jia-kao-xin-zheng";
     public static final String WEB_URL_BAOMING = BuildConfig.MOBILE_URL + "/bao-ming-xu-zhi";
     public static final String WEB_URL_JIAXIAO = BuildConfig.MOBILE_URL + "/jiaxiao";
+    public static final String WEB_URL_DITU = BuildConfig.MOBILE_URL + "/ditu";
 }

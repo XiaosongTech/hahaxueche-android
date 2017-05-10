@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -490,5 +491,12 @@ public class MainActivity extends HHBaseActivity implements MainView {
         Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"));
         intent.putExtra("sms_body", "［哈哈学车］" + mDescription + mUrl);
         startActivity(intent);
+    }
+
+    public void onCityChange() {
+        FindCoachFragment findCoachFragment = (FindCoachFragment) getSupportFragmentManager().findFragmentByTag("findCoach");
+        if (findCoachFragment != null) {
+            findCoachFragment.onCityChange();
+        }
     }
 }

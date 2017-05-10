@@ -4,8 +4,10 @@ import android.text.TextUtils;
 
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
+import com.hahaxueche.model.base.CityConstants;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.base.LocalSettings;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.responseList.CoachResponseList;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.HHBasePresenter;
@@ -18,6 +20,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -34,12 +37,11 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
     private String nextLink;
     //-----筛选参数-----
     private String filterDistance;
-    private String filterPrice;
-    private String goldenCoachOnly;
-    private int vipOnly = 0;
     private String licenseType;
-    private int cityId = 0;
     private int sortBy = 0;
+    private String zone = "";
+    private int startMoney = Common.NO_LIMIT;
+    private int endMoney = Common.NO_LIMIT;
     private ArrayList<Field> selectFields;
     //-----end-----
 
@@ -55,38 +57,31 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
         application = null;
     }
 
-    public void setFilters(String distance, String price, boolean isGoldenCoachOnly,
-                           boolean isVipOnly, boolean C1Checked, boolean C2Checked) {
-        filterDistance = distance;
-        filterPrice = price;
-        if (isGoldenCoachOnly) {
-            goldenCoachOnly = "1";
-        } else {
-            goldenCoachOnly = "";
-        }
-        vipOnly = isVipOnly ? 1 : 0;
-        if (C1Checked && C2Checked) {
-            licenseType = "";
-        } else if (C1Checked) {
-            licenseType = "1";
-        } else if (C2Checked) {
-            licenseType = "2";
-        }
-    }
-
     public void setSortBy(int sortBy) {
         this.sortBy = sortBy;
     }
 
+    public void setLicenseType(int license) {
+        if (license == Common.LICENSE_TYPE_C1) {
+            licenseType = "1";
+        } else if (license == Common.LICENSE_TYPE_C2) {
+            licenseType = "2";
+        } else {
+            licenseType = "";
+        }
+    }
+
     private void initDefaultFilters() {
+        //默认价格最低
+        sortBy = 3;
+    }
+
+    public void fetchCoaches() {
+        int cityId = 0;
         LocalSettings localSettings = application.getSharedPrefUtil().getLocalSettings();
         if (localSettings.cityId > -1) {
             cityId = localSettings.cityId;
         }
-        setFilters("", "", false, false, false, false);
-    }
-
-    public void fetchCoaches() {
         ArrayList<String> fieldIds = null;
         if (selectFields != null && selectFields.size() > 0) {
             fieldIds = new ArrayList<>();
@@ -107,11 +102,10 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
         }
         HHApiService apiService = application.getApiService();
         subscription = apiService.getCoaches(Common.START_PAGE, Common.PER_PAGE,
-                TextUtils.isEmpty(goldenCoachOnly) ? null : goldenCoachOnly,
-                TextUtils.isEmpty(licenseType) ? null : licenseType,
-                TextUtils.isEmpty(filterPrice) ? null : filterPrice, cityId,
+                TextUtils.isEmpty(licenseType) ? null : licenseType, cityId,
                 fieldIds, TextUtils.isEmpty(filterDistance) ? null : filterDistance,
-                locations, sortBy, vipOnly, studentId)
+                locations, sortBy, studentId, startMoney > 0 ? String.valueOf(startMoney) : null,
+                endMoney > 0 ? String.valueOf(endMoney) : null, TextUtils.isEmpty(zone) ? null : zone)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<CoachResponseList>() {
@@ -130,7 +124,7 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
                     public void onError(Throwable e) {
                         HHLog.e(e.getMessage());
                         mView.dismissProgressDialog();
-                        mView.showRedBag(false);
+                        mView.showHelp(false);
                     }
 
                     @Override
@@ -139,9 +133,9 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
                             mView.refreshCoachList(coachResponseList.data);
                             nextLink = coachResponseList.links.next;
                             mView.setPullLoadEnable(!TextUtils.isEmpty(nextLink));
-                            mView.showRedBag(true);
+                            mView.showHelp(true);
                         } else {
-                            mView.showRedBag(false);
+                            mView.showHelp(false);
                         }
 
                     }
@@ -232,5 +226,47 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
             MobclickAgent.onEvent(mView.getContext(), "find_coach_flying_envelop_tapped");
         }
         mView.openWebView(WebViewUrl.WEB_URL_DALIBAO);
+    }
+
+    public int[][] getPriceRanges() {
+        CityConstants cityConstants = application.getCityConstants();
+        return cityConstants.filters.prices;
+    }
+
+    public String[] getZones() {
+        CityConstants cityConstants = application.getCityConstants();
+        return cityConstants.zones;
+    }
+
+    public int[] getRadius() {
+        CityConstants cityConstants = application.getCityConstants();
+        return cityConstants.filters.radius;
+    }
+
+    public void setPriceRange(int startMoney, int endMoney) {
+        this.startMoney = startMoney;
+        this.endMoney = endMoney;
+    }
+
+    public void setDistance(int distance) {
+        zone = "";
+        if (distance == Common.NO_LIMIT) {
+            filterDistance = "";
+        } else {
+            filterDistance = String.valueOf(distance);
+        }
+    }
+
+    public void setZone(String zone) {
+        filterDistance = "";
+        this.zone = zone;
+    }
+
+    /**
+     * 在线咨询
+     */
+    public void onlineAsk() {
+        User user = application.getSharedPrefUtil().getUser();
+        super.onlineAsk(user, mView.getContext());
     }
 }

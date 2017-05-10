@@ -34,11 +34,11 @@ public class MapCoachAdapter extends RecyclerView.Adapter<MapCoachAdapter.ViewHo
     private Context mContext;
 
     public interface OnRecyclerViewItemClickListener {
-        void onDrivingSchoolClick(String drivingSchoolId);
+        void onDrivingSchoolClick(int drivingSchoolId);
 
         void onCoachDetailClick(Coach coach);
 
-        void onCheckFieldClick();
+        void onCheckFieldClick(Coach coach);
 
         void onCustomerServiceClick();
 
@@ -140,7 +140,7 @@ public class MapCoachAdapter extends RecyclerView.Adapter<MapCoachAdapter.ViewHo
                     mOnItemClickListener.onDrivingSchoolClick(coach.driving_school_id);
                     break;
                 case R.id.tv_check_field:
-                    mOnItemClickListener.onCheckFieldClick();
+                    mOnItemClickListener.onCheckFieldClick(coach);
                     break;
                 case R.id.tv_online_ask:
                     mOnItemClickListener.onCustomerServiceClick();

@@ -3,6 +3,7 @@ package com.hahaxueche.presenter.findCoach;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.base.Constants;
+import com.hahaxueche.model.base.LocalSettings;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.ClassType;
 import com.hahaxueche.model.user.coach.Coach;
@@ -23,8 +24,6 @@ public class ClassTypeIntroPresenter extends HHBasePresenter implements Presente
     private ClassTypeIntroView mView;
     private HHBaseApplication application;
     public ClassType mClassType;
-    public Coach mCoach;
-
 
     @Override
     public void attachView(ClassTypeIntroView view) {
@@ -38,9 +37,8 @@ public class ClassTypeIntroPresenter extends HHBasePresenter implements Presente
         application = null;
     }
 
-    public void setFeeDetail(int totalAmount, ClassType classType, Coach coach, boolean isShowPurchase) {
+    public void setFeeDetail(int totalAmount, ClassType classType, boolean isWuyouClass, boolean isShowPurchase, boolean isReadOnly) {
         mClassType = classType;
-        mCoach = coach;
         if (classType.type == Common.CLASS_TYPE_NORMAL_C1 || classType.type == Common.CLASS_TYPE_NORMAL_C2) {
             //超值班
             mView.setServiceContentNormal();
@@ -52,14 +50,19 @@ public class ClassTypeIntroPresenter extends HHBasePresenter implements Presente
             mView.setServiceContentWuyou();
         }
         int insuranceWithNewCoachPrice = application.getConstants().insurance_prices.pay_with_new_coach_price;
-        if (mCoach.coach_group.group_type == Common.GROUP_TYPE_CHEYOU_WUYOU) {
+        if (isWuyouClass) {
             mView.showMoniInFeeDetail();
         }
         Constants constants = application.getConstants();
-        City city = constants.getCity(coach.city_id);
+        int cityId = 0;
+        LocalSettings localSettings = application.getSharedPrefUtil().getLocalSettings();
+        if (localSettings.cityId > -1) {
+            cityId = localSettings.cityId;
+        }
+        City city = constants.getCity(cityId);
         mView.setFixedFees(city.fixed_cost_itemizer);
         if (city.other_fee != null) {
-            mView.setOtherFees(city.other_fee, classType.isForceInsurance, mCoach.coach_group.group_type);
+            mView.setOtherFees(city.other_fee, classType.isForceInsurance, isWuyouClass);
         }
         //培训费计算
         int totalFixedFee = city.getTotalFixedFee();
@@ -68,6 +71,9 @@ public class ClassTypeIntroPresenter extends HHBasePresenter implements Presente
         mView.setTotalAmount(Utils.getMoney(totalAmount));
         if (!isShowPurchase) {
             mView.hidePurchase();
+        }
+        if (isReadOnly) {
+            mView.hidePayView();
         }
     }
 

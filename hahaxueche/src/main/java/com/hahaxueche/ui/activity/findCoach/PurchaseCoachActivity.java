@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
+import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.payment.PaymentMethod;
 import com.hahaxueche.model.payment.Voucher;
@@ -165,7 +166,7 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
     public void loadCoachInfo(Coach coach) {
         mIvCoachAvatar.setImageURI(coach.avatar);
         mTvCoachName.setText(coach.name);
-        mIvIsGoldenCoach.setVisibility(coach.skill_level== Common.COACH_SKILL_LEVEL_GOLDEN ? View.VISIBLE : View.GONE);
+        mIvIsGoldenCoach.setVisibility(coach.skill_level == Common.COACH_SKILL_LEVEL_GOLDEN ? View.VISIBLE : View.GONE);
         mIvCashPledge.setVisibility(coach.has_cash_pledge == 1 ? View.VISIBLE : View.GONE);
         if (!TextUtils.isEmpty(coach.driving_school)) {
             mLlyTrainSchool.setVisibility(View.VISIBLE);
@@ -184,8 +185,9 @@ public class PurchaseCoachActivity extends HHBaseActivity implements PurchaseCoa
         }
         mRbCoachScore.setRating(averageRating);
         mTvCoachPoints.setText(coach.average_rating + " (" + coach.review_count + ")");
-        mTvCoachLocation.setText(application.getConstants().getCitySectionName(coach.coach_group.field_id));
-        final Field myField = application.getConstants().getField(coach.coach_group.field_id);
+        final Field myField = application.getFieldResponseList().getFieldById(coach.coach_group.field_id);
+        mTvCoachLocation.setText(application.getConstants().getCityName(coach.city_id) +
+                application.getFieldResponseList().getSectionName(coach.coach_group.field_id));
         if (application.getMyLocation() != null && myField != null) {
             String kmString = DistanceUtil.getDistanceKm(application.getMyLocation().lng, application.getMyLocation().lat, myField.lng, myField.lat);
             String infoText = "距您" + kmString + "km";

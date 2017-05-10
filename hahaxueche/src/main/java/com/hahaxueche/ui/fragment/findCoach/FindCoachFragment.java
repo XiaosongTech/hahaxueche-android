@@ -12,23 +12,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
-import com.hahaxueche.model.base.Field;
 import com.hahaxueche.presenter.findCoach.FindCoachPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.findCoach.FieldFilterActivity;
 import com.hahaxueche.ui.activity.findCoach.SearchCoachActivity;
-import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.findCoach.FindCoachView;
-import com.hahaxueche.util.RequestCode;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by wangshirui on 2016/10/19.
@@ -39,15 +32,14 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
     private FindCoachPresenter mPresenter;
     @BindView(R.id.iv_icon_left)
     ImageView mIvIconLeft;
+    @BindView(R.id.tv_select_driving_school)
+    TextView mTvSelectDrivingSchool;
     @BindView(R.id.tv_select_coach)
     TextView mTvSelectCoach;
-    @BindView(R.id.tv_select_partner)
-    TextView mTvSelectPartner;
     @BindView(R.id.iv_search)
     ImageView mIvSearch;
     private CoachListFragment mCoachListFragment;
-    private PartnerListFragment mPartnerListFragment;
-    private BaseAlertSimpleDialog mAlertDialog;
+    private DrivingSchoolListFragment mDrivingSchoolListFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,25 +75,15 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
     }
 
     @Override
-    public void selectPartner() {
-        mTvSelectPartner.setBackgroundResource(R.color.haha_white);
-        mTvSelectPartner.setTextColor(ContextCompat.getColor(getContext(), R.color.app_theme_color));
+    public void selectDrivingSchool() {
+        mTvSelectDrivingSchool.setBackgroundResource(R.color.haha_white);
+        mTvSelectDrivingSchool.setTextColor(ContextCompat.getColor(getContext(), R.color.app_theme_color));
     }
 
     @Override
-    public void unSelectPartner() {
-        mTvSelectPartner.setBackgroundResource(R.color.app_theme_color);
-        mTvSelectPartner.setTextColor(ContextCompat.getColor(getContext(), R.color.haha_white));
-    }
-
-    @Override
-    public void showLeftIconMap() {
-        mIvIconLeft.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_maplist_btn));
-    }
-
-    @Override
-    public void showLeftIconExplain() {
-        mIvIconLeft.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_explain));
+    public void unSelectDrivingSchool() {
+        mTvSelectDrivingSchool.setBackgroundResource(R.color.app_theme_color);
+        mTvSelectDrivingSchool.setTextColor(ContextCompat.getColor(getContext(), R.color.haha_white));
     }
 
     @Override
@@ -112,40 +94,32 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
         if (mCoachListFragment == null) {
             mCoachListFragment = new CoachListFragment();
         }
-        if (mPartnerListFragment == null) {
-            mPartnerListFragment = new PartnerListFragment();
+        if (mDrivingSchoolListFragment == null) {
+            mDrivingSchoolListFragment = new DrivingSchoolListFragment();
         }
         if (!mCoachListFragment.isAdded()) {//先判断是否被add过
-            transaction.hide(mPartnerListFragment).add(R.id.id_content, mCoachListFragment).commit();//隐藏当前的fragment，add下一个到Activity中
+            transaction.hide(mDrivingSchoolListFragment).add(R.id.id_content, mCoachListFragment).show(mCoachListFragment).commit();//隐藏当前的fragment，add下一个到Activity中
         } else {
-            transaction.hide(mPartnerListFragment).show(mCoachListFragment).commit();//隐藏当前的fragment，显示下一个
+            transaction.hide(mDrivingSchoolListFragment).show(mCoachListFragment).commit();//隐藏当前的fragment，显示下一个
         }
     }
 
     @Override
-    public void showPartnerListFragment() {
+    public void showDrivingSchoolListFragment() {
         FragmentManager fm = getChildFragmentManager();
         // 开启Fragment事务
         FragmentTransaction transaction = fm.beginTransaction();
         if (mCoachListFragment == null) {
             mCoachListFragment = new CoachListFragment();
         }
-        if (mPartnerListFragment == null) {
-            mPartnerListFragment = new PartnerListFragment();
+        if (mDrivingSchoolListFragment == null) {
+            mDrivingSchoolListFragment = new DrivingSchoolListFragment();
         }
-        if (!mPartnerListFragment.isAdded()) {//先判断是否被add过
-            transaction.hide(mCoachListFragment).add(R.id.id_content, mPartnerListFragment).show(mPartnerListFragment).commit();//隐藏当前的fragment，add下一个到Activity中
+        if (!mDrivingSchoolListFragment.isAdded()) {//先判断是否被add过
+            transaction.hide(mCoachListFragment).add(R.id.id_content, mDrivingSchoolListFragment).commit();//隐藏当前的fragment，add下一个到Activity中
         } else {
-            transaction.hide(mCoachListFragment).show(mPartnerListFragment).commit();//隐藏当前的fragment，显示下一个
+            transaction.hide(mCoachListFragment).show(mDrivingSchoolListFragment).commit();//隐藏当前的fragment，显示下一个
         }
-    }
-
-    @Override
-    public void showPartnerInfoDialog() {
-        if (mAlertDialog == null) {
-            mAlertDialog = new BaseAlertSimpleDialog(getContext(), "什么是陪练教练？", getString(R.string.partnerExplain));
-        }
-        mAlertDialog.show();
     }
 
     @Override
@@ -153,22 +127,17 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
         startActivity(new Intent(getContext(), FieldFilterActivity.class));
     }
 
-    @Override
-    public void showSearchIcon(boolean enable) {
-        mIvSearch.setVisibility(enable ? View.VISIBLE : View.GONE);
-    }
-
-    @OnClick({R.id.tv_select_coach,
-            R.id.tv_select_partner,
+    @OnClick({R.id.tv_select_driving_school,
+            R.id.tv_select_coach,
             R.id.iv_icon_left,
             R.id.iv_search})
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.tv_select_driving_school:
+                mPresenter.selectDrivingSchool();
+                break;
             case R.id.tv_select_coach:
                 mPresenter.selectCoach();
-                break;
-            case R.id.tv_select_partner:
-                mPresenter.selectPartner();
                 break;
             case R.id.iv_icon_left:
                 mPresenter.clickLeftIcon();
@@ -179,6 +148,16 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
                 break;
             default:
                 break;
+        }
+    }
+
+    public void onCityChange() {
+        //城市更改，刷新练列表
+        if (mCoachListFragment != null) {
+            mCoachListFragment.onRefresh();
+        }
+        if (mDrivingSchoolListFragment != null) {
+            mDrivingSchoolListFragment.onRefresh();
         }
     }
 }
