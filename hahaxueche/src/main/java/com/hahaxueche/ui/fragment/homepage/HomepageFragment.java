@@ -311,11 +311,11 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                 break;
             case R.id.tv_more_hot_driving_school:
                 mPresenter.addDataTrack("home_page_hot_school_more_tapped", getContext());
-                openWebView(WebViewUrl.WEB_URL_JIAXIAO);
+                mActivity.selectTab(1);
                 break;
             case R.id.iv_find_driving_school:
                 mPresenter.addDataTrack("home_page_select_school_tapped", getContext());
-                openWebView(WebViewUrl.WEB_URL_JIAXIAO);
+                mActivity.selectTab(1);
                 break;
             case R.id.iv_find_coach:
                 mPresenter.addDataTrack("home_page_select_coach_tapped", getContext());

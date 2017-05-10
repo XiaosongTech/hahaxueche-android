@@ -263,9 +263,9 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
                 }
 
                 @Override
-                public void clickDrivingSchool(DrivingSchool drivingSchool) {
+                public void clickDrivingSchool(int drivingSchoolId) {
                     Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
-                    intent.putExtra("drivingSchoolId", drivingSchool.id);
+                    intent.putExtra("drivingSchoolId", drivingSchoolId);
                     startActivity(intent);
                 }
             });

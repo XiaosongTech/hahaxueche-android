@@ -53,4 +53,6 @@ public interface DrivingSchoolDetailView extends HHBaseView {
     void initShareData(DrivingSchool mDrivingSchool);
 
     void setCommentCount(String text);
+
+    void setGroupBuyPhone(String cellPhone);
 }

@@ -182,6 +182,10 @@ public class DrivingSchoolDetailPresenter extends HHBasePresenter implements Pre
             }
         }
         mView.setCommentCount("学员点评（" + mDrivingSchool.review_count + "）");
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            mView.setGroupBuyPhone(user.student.cell_phone);
+        }
     }
 
     public void clickToFields(Field selectField) {

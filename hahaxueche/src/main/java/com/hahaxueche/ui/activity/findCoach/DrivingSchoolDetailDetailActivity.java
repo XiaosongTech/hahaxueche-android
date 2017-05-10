@@ -165,6 +165,11 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
         mTvCommentCount.setText(text);
     }
 
+    @Override
+    public void setGroupBuyPhone(String cellPhone) {
+        mEtGetGroupBuy.setText(cellPhone);
+    }
+
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setCustomView(R.layout.actionbar_base_share);

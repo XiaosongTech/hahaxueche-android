@@ -98,7 +98,7 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
         if (intent.getParcelableExtra("field") != null) {
             mSelectField = intent.getParcelableExtra("field");
         }
-        if(intent.getParcelableArrayListExtra("hightlightFields")!=null){
+        if (intent.getParcelableArrayListExtra("hightlightFields") != null) {
             mHighlightFields = intent.getParcelableArrayListExtra("hightlightFields");
         }
         mPresenter.getFields();
@@ -244,9 +244,11 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
     public void loadCoaches(ArrayList<Coach> coaches) {
         mapCoachAdapter = new MapCoachAdapter(this, coaches, new MapCoachAdapter.OnRecyclerViewItemClickListener() {
             @Override
-            public void onDrivingSchoolClick(String drivingSchoolId) {
+            public void onDrivingSchoolClick(int drivingSchoolId) {
                 mPresenter.addDataTrack("map_view_page_check_school_tapped", getContext());
-                openWebView(WebViewUrl.WEB_URL_JIAXIAO + "/" + drivingSchoolId);
+                Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
+                intent.putExtra("drivingSchoolId", drivingSchoolId);
+                startActivity(intent);
             }
 
             @Override

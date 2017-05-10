@@ -592,7 +592,7 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
         param.promo_code = "921434";
         param.coach_id = mCoach.id;
         param.field_id = mCoach.coach_group.field_id;
-        param.driving_school_id = mCoach.driving_school_id;
+        param.driving_school_id = String.valueOf(mCoach.driving_school_id);
         if (application.getMyLocation() != null) {
             param.lng = application.getMyLocation().lng;
             param.lat = application.getMyLocation().lat;

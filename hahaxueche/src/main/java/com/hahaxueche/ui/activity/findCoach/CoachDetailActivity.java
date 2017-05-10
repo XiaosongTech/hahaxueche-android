@@ -581,7 +581,9 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 break;
             case R.id.lly_train_school:
                 Coach coach = mPresenter.getCoach();
-                openWebView(WebViewUrl.WEB_URL_JIAXIAO + "/" + coach.driving_school_id);
+                intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
+                intent.putExtra("drivingSchoolId", coach.driving_school_id);
+                startActivity(intent);
                 break;
             default:
                 break;

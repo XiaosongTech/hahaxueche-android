@@ -34,7 +34,7 @@ public class MapCoachAdapter extends RecyclerView.Adapter<MapCoachAdapter.ViewHo
     private Context mContext;
 
     public interface OnRecyclerViewItemClickListener {
-        void onDrivingSchoolClick(String drivingSchoolId);
+        void onDrivingSchoolClick(int drivingSchoolId);
 
         void onCoachDetailClick(Coach coach);
 

@@ -144,6 +144,53 @@
                     android:textColor="@color/app_theme_color" />
             </LinearLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/section_margin_top"
+                android:background="@color/haha_white">
+
+                <ImageView
+                    android:id="@+id/iv_group_buy_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="15dp"
+                    android:src="@drawable/ic_schooldetails_tg_title" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_below="@id/iv_group_buy_title"
+                    android:layout_margin="15dp"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/et_get_group_buy"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:background="@drawable/rect_bd_gray"
+                        android:hint="请输入手机号"
+                        android:inputType="number"
+                        android:lines="1"
+                        android:paddingLeft="10dp"
+                        android:textColor="@color/app_theme_color"
+                        android:textColorHint="@color/haha_gray_text"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tv_get_group_buy"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:background="@drawable/rect_bg_appcolor_gradient"
+                        android:gravity="center"
+                        android:text="获取最新团购"
+                        android:textColor="@color/haha_white" />
+                </LinearLayout>
+            </RelativeLayout>
+
             <LinearLayout
                 android:id="@+id/lly_comments"
                 android:layout_width="match_parent"
@@ -203,53 +250,6 @@
                     android:text="点击查看更多>>"
                     android:textColor="@color/app_theme_color" />
             </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/section_margin_top"
-                android:background="@color/haha_white">
-
-                <ImageView
-                    android:id="@+id/iv_group_buy_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="15dp"
-                    android:src="@drawable/ic_schooldetails_tg_title" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:layout_below="@id/iv_group_buy_title"
-                    android:layout_margin="15dp"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/et_get_group_buy"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="3"
-                        android:background="@drawable/rect_bd_gray"
-                        android:hint="请输入手机号"
-                        android:inputType="number"
-                        android:lines="1"
-                        android:paddingLeft="10dp"
-                        android:textColor="@color/app_theme_color"
-                        android:textColorHint="@color/haha_gray_text"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/tv_get_group_buy"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:background="@drawable/rect_bg_appcolor_gradient"
-                        android:gravity="center"
-                        android:text="获取最新团购"
-                        android:textColor="@color/haha_white" />
-                </LinearLayout>
-            </RelativeLayout>
         </LinearLayout>
     </ScrollView>
 

@@ -59,7 +59,7 @@ public class CoachAdapter extends BaseAdapter {
 
         void clickCoach(Coach coach);
 
-        void clickDrivingSchool(DrivingSchool drivingSchool);
+        void clickDrivingSchool(int drivingSchoolId);
     }
 
     public CoachAdapter(Context context, ArrayList<Coach> coachList, List<DrivingSchool> hotDrivingSchools, OnCoachClickListener listener) {
@@ -154,7 +154,9 @@ public class CoachAdapter extends BaseAdapter {
         holder.llyTrainSchool.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openWebView(WebViewUrl.WEB_URL_JIAXIAO + "/" + coach.driving_school_id);
+                if (mOnCoachClickListener != null) {
+                    mOnCoachClickListener.clickDrivingSchool(coach.driving_school_id);
+                }
             }
         });
         holder.frlCall.setOnClickListener(new View.OnClickListener() {
@@ -301,7 +303,7 @@ public class CoachAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View view) {
                         if (mOnCoachClickListener != null) {
-                            mOnCoachClickListener.clickDrivingSchool(drivingSchool);
+                            mOnCoachClickListener.clickDrivingSchool(drivingSchool.id);
                         }
                     }
                 });
