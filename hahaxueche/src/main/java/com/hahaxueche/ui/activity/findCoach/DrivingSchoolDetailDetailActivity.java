@@ -34,6 +34,7 @@ import com.hahaxueche.BuildConfig;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.drivingSchool.DrivingSchool;
+import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.ClassType;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.Review;
@@ -47,8 +48,10 @@ import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
 import com.hahaxueche.util.WebViewUrl;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -367,28 +370,34 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_near_fields:
+                mPresenter.addDataTrack("school_detail_check_fields_tapped", getContext());
                 mPresenter.clickToFields(null);
                 break;
             case R.id.tv_more_fields:
+                mPresenter.addDataTrack("school_detail_more_fields_tapped", getContext());
                 mPresenter.clickToFields(null);
                 break;
             case R.id.tv_click_more_fields:
+                mPresenter.addDataTrack("school_detail_more_fields_tapped", getContext());
                 mPresenter.clickToFields(null);
                 break;
             case R.id.tv_more_bio:
                 clickMoreBio();
                 break;
             case R.id.tv_free_try:
+                mPresenter.addDataTrack("school_detail_bot_free_trial_tapped", getContext());
                 GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "看过训练场才放心！",
                         "输入手机号，教练立即带你看场地", "预约看场地", new GetUserIdentityDialog.OnIdentityGetListener() {
                     @Override
                     public void getCellPhone(String cellPhone) {
+                        mPresenter.addDataTrack("school_detail_bot_free_trial_confirmed", getContext());
                         mPresenter.getUserIdentity(cellPhone);
                     }
                 });
                 dialog.show();
                 break;
             case R.id.fly_sms_coach:
+                mPresenter.addDataTrack("school_detail_bot_SMS_tapped", getContext());
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.SEND_SMS}, RequestCode.PERMISSIONS_REQUEST_SEND_SMS_TO_COACH);
                 } else {
@@ -396,9 +405,11 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
                 }
                 break;
             case R.id.fly_online_ask:
+                mPresenter.addDataTrack("school_detail_bot_online_support_tapped", getContext());
                 mPresenter.onlineAsk();
                 break;
             case R.id.fly_call_coach:
+                mPresenter.addDataTrack("school_detail_bot_call_school_tapped", getContext());
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH);
                 } else {
@@ -406,11 +417,13 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
                 }
                 break;
             case R.id.tv_more_comments:
+                mPresenter.addDataTrack("school_detail_more_review_tapped", getContext());
                 Intent intent = new Intent(getContext(), ReviewListActivity.class);
                 intent.putExtra("drivingSchool", mPresenter.getDrivingSchool());
                 startActivity(intent);
                 break;
             case R.id.tv_click_more_comments:
+                mPresenter.addDataTrack("school_detail_more_review_tapped", getContext());
                 intent = new Intent(getContext(), ReviewListActivity.class);
                 intent.putExtra("drivingSchool", mPresenter.getDrivingSchool());
                 startActivity(intent);
@@ -419,13 +432,16 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
                 openWebView(WebViewUrl.WEB_URL_GROUP_BUY);
                 break;
             case R.id.tv_get_group_buy:
+                mPresenter.addDataTrack("school_detail_groupon_web_tapped", getContext());
                 mPresenter.getGroupBuy(mEtGetGroupBuy.getText().toString());
                 break;
             case R.id.tv_notice_me:
+                mPresenter.addDataTrack("school_detail_price_notification_tapped", getContext());
                 dialog = new GetUserIdentityDialog(getContext(), "我们将为您保密个人信息！",
                         "填写手机号，立即订阅降价通知", "立即订阅", new GetUserIdentityDialog.OnIdentityGetListener() {
                     @Override
                     public void getCellPhone(String cellPhone) {
+                        mPresenter.addDataTrack("school_detail_price_notification_confirmed", getContext());
                         mPresenter.getUserIdentity(cellPhone);
                     }
                 });
@@ -743,6 +759,7 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
         rly.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mPresenter.addDataTrack("school_detail_price_detail_tapped", getContext());
                 Intent intent = new Intent(getContext(), ClassTypeIntroActivity.class);
                 intent.putExtra("totalAmount", classType.price);
                 intent.putExtra("isWuyouClass", false);
@@ -836,16 +853,19 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
         rly.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mPresenter.addDataTrack("school_detail_single_field_tapped", getContext());
                 mPresenter.clickToFields(field);
             }
         });
         tvToField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mPresenter.addDataTrack("school_detail_see_field_tapped", getContext());
                 GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "看过训练场才放心！",
                         "输入手机号，教练立即带你看场地", "预约看场地", new GetUserIdentityDialog.OnIdentityGetListener() {
                     @Override
                     public void getCellPhone(String cellPhone) {
+                        mPresenter.addDataTrack("school_detail_see_field_confirmed", getContext());
                         mPresenter.getUserIdentity(cellPhone);
                     }
                 });
@@ -922,7 +942,8 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
                 if (row * maxColCount + col > hotDrivingSchoolList.size() - 1) {
                     break;
                 }
-                final DrivingSchool drivingSchool = hotDrivingSchoolList.get(row * maxColCount + col);
+                final int position = row * maxColCount + col;
+                final DrivingSchool drivingSchool = hotDrivingSchoolList.get(position);
                 TextView tvDrivingSchool = new TextView(this);
                 TableRow.LayoutParams tvDrivingSchoolParam = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -937,6 +958,10 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
                 tvDrivingSchool.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        //事件纪录
+                        HashMap<String, String> map = new HashMap();
+                        map.put("index", String.valueOf(position));
+                        MobclickAgent.onEvent(getContext(), "school_detail_hot_school_tapped");
                         Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
                         intent.putExtra("drivingSchoolId", drivingSchool.id);
                         startActivity(intent);

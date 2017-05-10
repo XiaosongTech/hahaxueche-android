@@ -181,17 +181,15 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
         application.setMyLocation(lat, lng);
     }
 
-    public void clickFilterCount() {
+    public void clickFilterCount(int index) {
         //筛选点击
         HashMap<String, String> map = new HashMap();
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "find_coach_page_filter_tapped_tapped", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "find_coach_page_filter_tapped_tapped");
         }
-
+        map.put("index", String.valueOf(index));
+        MobclickAgent.onEvent(mView.getContext(), "find_coach_filter_tapped");
     }
 
     public void clickSortCount(int sortBy) {
@@ -214,18 +212,6 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
         }
         map.put("coach_id", coachId);
         MobclickAgent.onEvent(mView.getContext(), "find_coach_page_coach_tapped", map);
-    }
-
-    public void clickRedBag() {
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "find_coach_flying_envelop_tapped", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "find_coach_flying_envelop_tapped");
-        }
-        mView.openWebView(WebViewUrl.WEB_URL_DALIBAO);
     }
 
     public int[][] getPriceRanges() {

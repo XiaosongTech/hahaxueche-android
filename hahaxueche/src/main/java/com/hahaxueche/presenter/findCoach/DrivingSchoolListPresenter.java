@@ -13,8 +13,10 @@ import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.DrivingSchoolListView;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -214,5 +216,16 @@ public class DrivingSchoolListPresenter extends HHBasePresenter implements Prese
     public void onlineAsk() {
         User user = application.getSharedPrefUtil().getUser();
         super.onlineAsk(user, mView.getContext());
+    }
+
+    public void clickFilterCount(int index) {
+        //筛选点击
+        HashMap<String, String> map = new HashMap();
+        User user = application.getSharedPrefUtil().getUser();
+        if (user != null && user.isLogin()) {
+            map.put("student_id", user.student.id);
+        }
+        map.put("index", String.valueOf(index));
+        MobclickAgent.onEvent(mView.getContext(), "find_school_filter_tapped");
     }
 }

@@ -27,6 +27,7 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.hahaxueche.R;
 import com.hahaxueche.model.drivingSchool.DrivingSchool;
+import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.findCoach.DrivingSchoolListPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.findCoach.DrivingSchoolDetailDetailActivity;
@@ -42,7 +43,9 @@ import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
+import com.umeng.analytics.MobclickAgent;
 
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -141,6 +144,7 @@ public class DrivingSchoolListFragment extends HHBaseFragment implements Driving
                 new DrivingSchoolAdapter.OnDrivingSchoolClickListener() {
                     @Override
                     public void callCoach(String phone) {
+                        mPresenter.addDataTrack("find_school_call_school_tapped", getContext());
                         mConsultantPhone = phone;
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                             requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH);
@@ -151,6 +155,9 @@ public class DrivingSchoolListFragment extends HHBaseFragment implements Driving
 
                     @Override
                     public void clickDrivingSchool(DrivingSchool drivingSchool) {
+                        HashMap<String, String> map = new HashMap();
+                        map.put("school_id", String.valueOf(drivingSchool.id));
+                        MobclickAgent.onEvent(getContext(), "find_school_school_tapped");
                         Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
                         intent.putExtra("drivingSchoolId", drivingSchool.id);
                         startActivity(intent);
@@ -197,6 +204,7 @@ public class DrivingSchoolListFragment extends HHBaseFragment implements Driving
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fly_sort:
+                mPresenter.clickFilterCount(3);
                 if (mSortPopWindow == null) {
                     mSortPopWindow = new SortPopupWindow(getActivity(), new SortPopupWindow.OnSortListener() {
                         @Override
@@ -215,6 +223,7 @@ public class DrivingSchoolListFragment extends HHBaseFragment implements Driving
                 showPopWindow(POP_SORT);
                 break;
             case R.id.fly_type:
+                mPresenter.clickFilterCount(2);
                 if (mTypePopWindow == null) {
                     mTypePopWindow = new TypePopupWindow(getActivity(), new TypePopupWindow.OnTypeClickListener() {
                         @Override
@@ -247,6 +256,7 @@ public class DrivingSchoolListFragment extends HHBaseFragment implements Driving
                 showPopWindow(POP_TYPE);
                 break;
             case R.id.fly_price:
+                mPresenter.clickFilterCount(1);
                 if (mPricePopWindow == null) {
                     mPricePopWindow = new PricePopupWindow(getActivity(), new PricePopupWindow.OnPriceClickListener() {
                         @Override
@@ -277,6 +287,7 @@ public class DrivingSchoolListFragment extends HHBaseFragment implements Driving
                 showPopWindow(POP_PRICE);
                 break;
             case R.id.fly_zone:
+                mPresenter.clickFilterCount(0);
                 if (mZonePopWindow == null) {
                     mZonePopWindow = new ZonePopupWindow(getActivity(), new ZonePopupWindow.OnZoneClickListener() {
                         @Override
@@ -307,6 +318,7 @@ public class DrivingSchoolListFragment extends HHBaseFragment implements Driving
                 showPopWindow(POP_ZONE);
                 break;
             case R.id.iv_help:
+                mPresenter.addDataTrack("find_coach_find_for_me_tapped", getContext());
                 mPresenter.onlineAsk();
                 break;
             default:

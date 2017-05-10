@@ -38,8 +38,10 @@ import com.hahaxueche.ui.popupWindow.findCoach.SearchPopupWindow;
 import com.hahaxueche.ui.view.findCoach.SearchCoachView;
 import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -247,6 +249,7 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
             CoachAdapter coachItemAdapter = new CoachAdapter(this, coachList, mPresenter.getHotDrivingSchools(this), new CoachAdapter.OnCoachClickListener() {
                 @Override
                 public void callCoach(String phone) {
+                    mPresenter.addDataTrack("search_page_call_coach_tapped", getContext());
                     mConsultantPhone = phone;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                         requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH);
@@ -257,6 +260,10 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
 
                 @Override
                 public void clickCoach(Coach coach) {
+                    //事件纪录
+                    HashMap<String, String> map = new HashMap();
+                    map.put("coach_id", coach.id);
+                    MobclickAgent.onEvent(getContext(), "search_page_coach_tapped");
                     Intent intent = new Intent(getContext(), CoachDetailActivity.class);
                     intent.putExtra("coach", coach);
                     startActivity(intent);
@@ -330,6 +337,7 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
                     new DrivingSchoolAdapter.OnDrivingSchoolClickListener() {
                         @Override
                         public void callCoach(String phone) {
+                            mPresenter.addDataTrack("search_page_call_school_tapped", getContext());
                             mConsultantPhone = phone;
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                                 requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH);
@@ -340,6 +348,10 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
 
                         @Override
                         public void clickDrivingSchool(DrivingSchool drivingSchool) {
+                            //事件纪录
+                            HashMap<String, String> map = new HashMap();
+                            map.put("school_id", String.valueOf(drivingSchool.id));
+                            MobclickAgent.onEvent(getContext(), "search_page_hot_school_tapped");
                             Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
                             intent.putExtra("drivingSchoolId", drivingSchool.id);
                             startActivity(intent);
@@ -463,7 +475,8 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
                 if (row * maxColCount + col > hotDrivingSchoolList.size() - 1) {
                     break;
                 }
-                final DrivingSchool drivingSchool = hotDrivingSchoolList.get(row * maxColCount + col);
+                final int position = row * maxColCount + col;
+                final DrivingSchool drivingSchool = hotDrivingSchoolList.get(position);
                 TextView tvDrivingSchool = new TextView(this);
                 TableRow.LayoutParams tvDrivingSchoolParam = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -478,6 +491,10 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
                 tvDrivingSchool.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        //事件纪录
+                        HashMap<String, String> map = new HashMap();
+                        map.put("index", String.valueOf(position));
+                        MobclickAgent.onEvent(getContext(), "search_page_hot_school_tapped");
                         Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
                         intent.putExtra("drivingSchoolId", drivingSchool.id);
                         startActivity(intent);

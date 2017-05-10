@@ -28,15 +28,16 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.drivingSchool.DrivingSchool;
+import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.ui.activity.base.BaseWebViewActivity;
-import com.hahaxueche.ui.activity.findCoach.DrivingSchoolDetailDetailActivity;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
-import com.hahaxueche.util.WebViewUrl;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -160,6 +161,13 @@ public class CoachAdapter extends BaseAdapter {
         holder.llyTrainSchool.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                HashMap<String, String> map = new HashMap();
+                User user = application.getSharedPrefUtil().getUser();
+                if (user != null && user.isLogin()) {
+                    map.put("student_id", user.student.id);
+                }
+                map.put("driving_school_id", String.valueOf(coach.driving_school_id));
+                MobclickAgent.onEvent(mContext, "find_coach_driving_school_tapped");
                 if (mOnCoachClickListener != null) {
                     mOnCoachClickListener.clickDrivingSchool(coach.driving_school_id);
                 }
@@ -281,7 +289,7 @@ public class CoachAdapter extends BaseAdapter {
         tbDrivingSchool.setLayoutParams(tbDrivingSchoolParam);
         tbDrivingSchool.setStretchAllColumns(true);
 
-        int maxColCount = 4;
+        final int maxColCount = 4;
         for (int row = 0; row < mHotDrivingSchoolList.size() / maxColCount; row++) {
             TableRow tr = new TableRow(mContext);
             TableLayout.LayoutParams trParam = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -292,7 +300,8 @@ public class CoachAdapter extends BaseAdapter {
                 if (row * maxColCount + col > mHotDrivingSchoolList.size() - 1) {
                     break;
                 }
-                final DrivingSchool drivingSchool = mHotDrivingSchoolList.get(row * maxColCount + col);
+                final int position = row * maxColCount + col;
+                final DrivingSchool drivingSchool = mHotDrivingSchoolList.get(position);
                 HHLog.v("drivingSchool -> " + drivingSchool.name);
                 TextView tvDrivingSchool = new TextView(mContext);
                 TableRow.LayoutParams tvDrivingSchoolParam = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -308,6 +317,14 @@ public class CoachAdapter extends BaseAdapter {
                 tvDrivingSchool.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        //事件纪录
+                        HashMap<String, String> map = new HashMap();
+                        User user = application.getSharedPrefUtil().getUser();
+                        if (user != null && user.isLogin()) {
+                            map.put("student_id", user.student.id);
+                        }
+                        map.put("index", String.valueOf(position));
+                        MobclickAgent.onEvent(mContext, "find_coach_hot_school_tapped");
                         if (mOnCoachClickListener != null) {
                             mOnCoachClickListener.clickDrivingSchool(drivingSchool.id);
                         }

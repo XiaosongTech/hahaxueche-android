@@ -144,6 +144,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
         mCoachAdapter = new CoachAdapter(getContext(), mCoachArrayList, mPresenter.getHotDrivingSchools(getContext()), new CoachAdapter.OnCoachClickListener() {
             @Override
             public void callCoach(String phone) {
+                mPresenter.addDataTrack("find_coach_call_coach_tapped", getContext());
                 mConsultantPhone = phone;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mActivity.checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH);
@@ -208,6 +209,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fly_sort:
+                mPresenter.clickFilterCount(3);
                 if (mSortPopWindow == null) {
                     mSortPopWindow = new SortPopupWindow(getActivity(), new SortPopupWindow.OnSortListener() {
                         @Override
@@ -227,6 +229,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                 showPopWindow(POP_SORT);
                 break;
             case R.id.fly_type:
+                mPresenter.clickFilterCount(2);
                 if (mTypePopWindow == null) {
                     mTypePopWindow = new TypePopupWindow(getActivity(), new TypePopupWindow.OnTypeClickListener() {
                         @Override
@@ -259,6 +262,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                 showPopWindow(POP_TYPE);
                 break;
             case R.id.fly_price:
+                mPresenter.clickFilterCount(1);
                 if (mPricePopWindow == null) {
                     mPricePopWindow = new PricePopupWindow(getActivity(), new PricePopupWindow.OnPriceClickListener() {
                         @Override
@@ -289,6 +293,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                 showPopWindow(POP_PRICE);
                 break;
             case R.id.fly_zone:
+                mPresenter.clickFilterCount(0);
                 if (mZonePopWindow == null) {
                     mZonePopWindow = new ZonePopupWindow(getActivity(), new ZonePopupWindow.OnZoneClickListener() {
                         @Override
@@ -319,6 +324,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                 showPopWindow(POP_ZONE);
                 break;
             case R.id.iv_help:
+                mPresenter.addDataTrack("find_coach_find_for_me_tapped", getContext());
                 mPresenter.onlineAsk();
                 break;
             default:

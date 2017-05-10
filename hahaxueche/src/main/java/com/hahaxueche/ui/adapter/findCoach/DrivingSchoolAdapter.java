@@ -22,12 +22,16 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.drivingSchool.DrivingSchool;
+import com.hahaxueche.model.user.User;
 import com.hahaxueche.ui.activity.findCoach.DrivingSchoolDetailDetailActivity;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
+import com.umeng.analytics.MobclickAgent;
 
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -43,6 +47,7 @@ public class DrivingSchoolAdapter extends BaseAdapter {
     private List<DrivingSchool> mHotDrivingSchoolList;
     private boolean mIsHotViewAdded = false;
     private int mInsertHotViewPosition = -1;
+    private HHBaseApplication application;
 
     public interface OnDrivingSchoolClickListener {
         void callCoach(String phone);
@@ -55,6 +60,7 @@ public class DrivingSchoolAdapter extends BaseAdapter {
         mDrivingSchoolList = drivingSchools;
         mHotDrivingSchoolList = hotDrivingSchools;
         mOnDrivingSchoolClickListener = listener;
+        application = HHBaseApplication.get(mContext);
         mInsertHotViewPosition = drivingSchools.size() > 3 ? 3 : drivingSchools.size() - 1;
     }
 
@@ -74,7 +80,7 @@ public class DrivingSchoolAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View view = convertView;
         final ViewHolder holder;
         if (view == null) {
@@ -233,7 +239,8 @@ public class DrivingSchoolAdapter extends BaseAdapter {
                 if (row * maxColCount + col > mHotDrivingSchoolList.size() - 1) {
                     break;
                 }
-                final DrivingSchool drivingSchool = mHotDrivingSchoolList.get(row * maxColCount + col);
+                final int position = row * maxColCount + col;
+                final DrivingSchool drivingSchool = mHotDrivingSchoolList.get(position);
                 TextView tvDrivingSchool = new TextView(mContext);
                 TableRow.LayoutParams tvDrivingSchoolParam = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -248,6 +255,14 @@ public class DrivingSchoolAdapter extends BaseAdapter {
                 tvDrivingSchool.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        //事件纪录
+                        HashMap<String, String> map = new HashMap();
+                        User user = application.getSharedPrefUtil().getUser();
+                        if (user != null && user.isLogin()) {
+                            map.put("student_id", user.student.id);
+                        }
+                        map.put("index", String.valueOf(position));
+                        MobclickAgent.onEvent(mContext, "find_school_hot_school_tapped");
                         if (mOnDrivingSchoolClickListener != null) {
                             mOnDrivingSchoolClickListener.clickDrivingSchool(drivingSchool);
                         }
