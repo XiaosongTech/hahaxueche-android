@@ -18,6 +18,4 @@ public interface FindCoachView extends HHBaseView {
     void showCoachListFragment();
 
     void showDrivingSchoolListFragment();
-
-    void navigateToSelectFields();
 }

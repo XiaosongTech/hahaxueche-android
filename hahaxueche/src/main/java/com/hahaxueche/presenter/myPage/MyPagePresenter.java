@@ -18,7 +18,6 @@ import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.PhotoUtil;
 import com.hahaxueche.util.WebViewUrl;
-import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
 import java.util.HashMap;
@@ -213,15 +212,8 @@ public class MyPagePresenter extends HHBasePresenter implements Presenter<MyPage
     }
 
     public void toMyCoach() {
+        addDataTrack("my_page_my_coach_tapped", mView.getContext());
         User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            //我的教练点击
-            HashMap<String, String> map = new HashMap();
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "my_page_my_coach_tapped", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "my_page_my_coach_tapped");
-        }
         if (user == null || !user.isLogin()) {
             mView.alertToLogin();
         } else if (!user.student.isPurchasedService()) {
@@ -233,110 +225,40 @@ public class MyPagePresenter extends HHBasePresenter implements Presenter<MyPage
 
     public void clickPaymentStage() {
         //打款状态点击
-        HashMap<String, String> map = new HashMap();
+        addDataTrack("my_page_pay_coach_status_tapped", mView.getContext());
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "my_page_pay_coach_status_tapped", map);
             if (user.student.isPurchasedService()) {
                 mView.navigateToPaymentStage();
             }
         } else {
-            MobclickAgent.onEvent(mView.getContext(), "my_page_pay_coach_status_tapped");
             mView.alertToLogin();
-        }
-    }
-
-    public void clickMyFollowCount() {
-        //我关注教练点击
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "my_page_my_followed_coach_tapped", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "my_page_my_followed_coach_tapped");
-        }
-    }
-
-    public void clickMyAdviserCount() {
-        //我的顾问点击
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "my_page_my_advisor_tapped", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "my_page_my_advisor_tapped");
-        }
-    }
-
-    public void clickFAQCount() {
-        //常见问题点击
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "my_page_FAQ_tapped", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "my_page_FAQ_tapped");
-        }
-    }
-
-    public void clickSupportHahaCount() {
-        //支持小哈点击
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "my_page_rate_us_tapped", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "my_page_rate_us_tapped");
-        }
-    }
-
-    public void clickSoftwareInfoCount() {
-        //软件信息点击
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "my_page_version_check_tapped", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "my_page_version_check_tapped");
         }
     }
 
     public void clickReferCount() {
         //推荐有奖点击
-        HashMap<String, String> map = new HashMap();
+        addDataTrack("my_page_refer_tapped", mView.getContext());
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "my_page_refer_tapped", map);
             if (user.student.is_sales_agent) {
                 mView.navigateToReferFriends();
                 return;
             }
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "my_page_refer_tapped");
         }
         mView.navigateToStudentRefer();
     }
 
     public void clickMyCourse() {
-        HashMap<String, String> map = new HashMap();
+        addDataTrack("my_page_my_course_tapped", mView.getContext());
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "my_page_my_course_tapped", map);
             if (user.student.isPurchasedService()) {
                 mView.navigateToMyCourse();
             } else {
                 mView.navigateToNoCourse();
             }
         } else {
-            MobclickAgent.onEvent(mView.getContext(), "my_page_my_course_tapped");
             mView.alertToLogin();
         }
     }
@@ -415,14 +337,8 @@ public class MyPagePresenter extends HHBasePresenter implements Presenter<MyPage
     }
 
     public void clickMyContract() {
+        addDataTrack("my_page_contract_tapped", mView.getContext());
         User user = application.getSharedPrefUtil().getUser();
-        HashMap<String, String> map = new HashMap();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "my_page_contract_tapped", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "my_page_contract_tapped");
-        }
         if (user == null || !user.isLogin()) {
             mView.alertToLogin();
         } else if (!user.student.isPurchasedService()) {

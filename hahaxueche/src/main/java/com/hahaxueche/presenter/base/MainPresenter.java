@@ -11,22 +11,17 @@ import com.hahaxueche.model.base.ShortenUrl;
 import com.hahaxueche.model.payment.Voucher;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.identity.MarketingInfo;
-import com.hahaxueche.model.user.student.BookAddress;
-import com.hahaxueche.model.user.student.Contact;
 import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.base.MainView;
 import com.hahaxueche.util.HHLog;
-import com.hahaxueche.util.HahaCache;
 import com.hahaxueche.util.Utils;
 import com.hahaxueche.util.WebViewUrl;
-import com.umeng.analytics.MobclickAgent;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -72,54 +67,6 @@ public class MainPresenter extends HHBasePresenter implements Presenter<MainView
         this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         this.application = null;
-    }
-
-    public void viewHomepageCount() {
-        //首页展现
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "home_page_viewed", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "home_page_viewed");
-        }
-    }
-
-    public void viewFindCoachCount() {
-        //寻找教练展现
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "find_coach_page_viewed", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "find_coach_page_viewed");
-        }
-    }
-
-    public void viewCommunityCount() {
-        //俱乐部展现
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "club_page_viewed", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "club_page_viewed");
-        }
-    }
-
-    public void viewMyPageCount() {
-        //我的页面展现
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "my_page_viewed", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "my_page_viewed");
-        }
     }
 
     public void setMyPageBadge() {
@@ -204,28 +151,6 @@ public class MainPresenter extends HHBasePresenter implements Presenter<MainView
         }
         return maxVoucher;
 
-    }
-
-    public void clickPopShareCount() {
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "home_page_voucher_popup_share_tapped", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "home_page_voucher_popup_share_tapped");
-        }
-    }
-
-    public void clickShareSuccessCount(String shareChannel) {
-        HashMap<String, String> map = new HashMap();
-        map.put("share_channel", shareChannel);
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-
-        }
-        MobclickAgent.onEvent(mView.getContext(), "home_page_voucher_popup_share_succeed", map);
     }
 
     public void convertUrlForShare(final String url, final int shareType) {

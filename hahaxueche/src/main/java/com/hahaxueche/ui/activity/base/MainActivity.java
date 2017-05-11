@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -21,7 +20,6 @@ import com.hahaxueche.presenter.base.MainPresenter;
 import com.hahaxueche.ui.activity.community.ArticleActivity;
 import com.hahaxueche.ui.activity.community.ExamLibraryActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
-import com.hahaxueche.ui.activity.findCoach.PartnerDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.PaySuccessActivity;
 import com.hahaxueche.ui.activity.myPage.MyContractActivity;
 import com.hahaxueche.ui.activity.myPage.MyInsuranceActivity;
@@ -43,6 +41,8 @@ import com.hahaxueche.ui.widget.FragmentTabHost;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import me.shaohui.shareutil.ShareUtil;
@@ -94,7 +94,7 @@ public class MainActivity extends HHBaseActivity implements MainView {
         mViewBadgeMyPage = myPageIndicator.findViewById(R.id.view_badge_my_page);
         mTabHost.addTab(mTabHost.newTabSpec("myPage").setIndicator(myPageIndicator), MypageFragment.class, null);
 
-        mPresenter.viewHomepageCount();
+        mPresenter.addDataTrack("home_page_viewed", getContext());
 
         mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
@@ -102,16 +102,16 @@ public class MainActivity extends HHBaseActivity implements MainView {
                 mPresenter.setMyPageBadge();
                 switch (tabId) {
                     case "homepage":
-                        mPresenter.viewHomepageCount();
+                        mPresenter.addDataTrack("home_page_viewed", getContext());
                         break;
                     case "findCoach":
-                        mPresenter.viewFindCoachCount();
+                        mPresenter.addDataTrack("find_coach_page_viewed", getContext());
                         break;
                     case "community":
-                        mPresenter.viewCommunityCount();
+                        mPresenter.addDataTrack("club_page_viewed", getContext());
                         break;
                     case "myPage":
-                        mPresenter.viewMyPageCount();
+                        mPresenter.addDataTrack("my_page_viewed", getContext());
                         break;
                     default:
                         break;
@@ -127,10 +127,6 @@ public class MainActivity extends HHBaseActivity implements MainView {
                 if (shareObject.getString("type", "").equals("coach_detail")) {
                     Intent startIntent = new Intent(getContext(), CoachDetailActivity.class);
                     startIntent.putExtra("coach_id", shareObject.getString("objectId", ""));
-                    startActivity(startIntent);
-                } else if (shareObject.getString("type", "").equals("training_partner_detail")) {
-                    Intent startIntent = new Intent(getContext(), PartnerDetailActivity.class);
-                    startIntent.putExtra("partnerId", shareObject.getString("objectId", ""));
                     startActivity(startIntent);
                 } else if (shareObject.getString("type", "").equals("article")) {
                     Intent startIntent = new Intent(getContext(), ArticleActivity.class);
@@ -264,7 +260,7 @@ public class MainActivity extends HHBaseActivity implements MainView {
                 new MainShareDialog.OnButtonClickListener() {
                     @Override
                     public void shareToFriends() {
-                        mPresenter.clickPopShareCount();
+                        mPresenter.addDataTrack("home_page_voucher_popup_share_tapped", getContext());
                         if (TextUtils.isEmpty(mUrl)) return;
                         if (shareDialog == null) {
                             shareDialog = new ShareReferDialog(getContext(), mUrl, new ShareDialog.OnShareListener() {
@@ -361,7 +357,9 @@ public class MainActivity extends HHBaseActivity implements MainView {
                 if (shareDialog != null) {
                     shareDialog.dismiss();
                 }
-                mPresenter.clickShareSuccessCount("QQ_friend");
+                HashMap<String, String> map = new HashMap();
+                map.put("share_channel", "QQ_friend");
+                mPresenter.addDataTrack("home_page_voucher_popup_share_succeed", getContext(), map);
                 Toast.makeText(MainActivity.this, "分享成功", Toast.LENGTH_SHORT).show();
             }
 
@@ -385,7 +383,9 @@ public class MainActivity extends HHBaseActivity implements MainView {
                 if (shareDialog != null) {
                     shareDialog.dismiss();
                 }
-                mPresenter.clickShareSuccessCount("qzone");
+                HashMap<String, String> map = new HashMap();
+                map.put("share_channel", "qzone");
+                mPresenter.addDataTrack("home_page_voucher_popup_share_succeed", getContext(), map);
                 Toast.makeText(MainActivity.this, "分享成功", Toast.LENGTH_SHORT).show();
             }
 
@@ -409,7 +409,9 @@ public class MainActivity extends HHBaseActivity implements MainView {
                 if (shareDialog != null) {
                     shareDialog.dismiss();
                 }
-                mPresenter.clickShareSuccessCount("weibo");
+                HashMap<String, String> map = new HashMap();
+                map.put("share_channel", "weibo");
+                mPresenter.addDataTrack("home_page_voucher_popup_share_succeed", getContext(), map);
                 Toast.makeText(MainActivity.this, "分享成功", Toast.LENGTH_SHORT).show();
             }
 
@@ -433,7 +435,9 @@ public class MainActivity extends HHBaseActivity implements MainView {
                 if (shareDialog != null) {
                     shareDialog.dismiss();
                 }
-                mPresenter.clickShareSuccessCount("wechat_friend");
+                HashMap<String, String> map = new HashMap();
+                map.put("share_channel", "wechat_friend");
+                mPresenter.addDataTrack("home_page_voucher_popup_share_succeed", getContext(), map);
                 Toast.makeText(MainActivity.this, "分享成功", Toast.LENGTH_SHORT).show();
             }
 
@@ -457,7 +461,9 @@ public class MainActivity extends HHBaseActivity implements MainView {
                 if (shareDialog != null) {
                     shareDialog.dismiss();
                 }
-                mPresenter.clickShareSuccessCount("wechat_friend_zone");
+                HashMap<String, String> map = new HashMap();
+                map.put("share_channel", "wechat_friend_zone");
+                mPresenter.addDataTrack("home_page_voucher_popup_share_succeed", getContext(), map);
                 Toast.makeText(MainActivity.this, "分享成功", Toast.LENGTH_SHORT).show();
             }
 

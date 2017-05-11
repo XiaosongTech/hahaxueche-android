@@ -15,7 +15,6 @@ import com.hahaxueche.util.Common;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
 
@@ -193,14 +192,11 @@ public class MyReferPresenter extends HHBasePresenter implements Presenter<MyRef
     }
 
     public void clickWithdraw() {
-        HashMap<String, String> map = new HashMap();
+        addDataTrack("refer_page_cash_tapped", mView.getContext());
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "refer_page_cash_tapped", map);
             mView.navigateToWithdraw();
         } else {
-            MobclickAgent.onEvent(mView.getContext(), "refer_page_cash_tapped");
             mView.alertToLogin();
         }
     }

@@ -72,7 +72,7 @@ public class CommunityFragment extends HHBaseFragment implements CommunityView {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rly_test_lib:
-                mPresenter.clickTestLibCount();
+                mPresenter.addDataTrack("club_page_online_test_tapped", getContext());
                 startActivityForResult(new Intent(getContext(), ExamLibraryActivity.class), RequestCode.REQUEST_CODE_EXAM_LIBRARY);
                 break;
             case R.id.rly_group_buy:

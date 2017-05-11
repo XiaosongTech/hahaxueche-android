@@ -16,7 +16,6 @@ import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -38,7 +37,6 @@ import com.hahaxueche.ui.popupWindow.findCoach.SearchPopupWindow;
 import com.hahaxueche.ui.view.findCoach.SearchCoachView;
 import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -263,7 +261,7 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
                     //事件纪录
                     HashMap<String, String> map = new HashMap();
                     map.put("coach_id", coach.id);
-                    MobclickAgent.onEvent(getContext(), "search_page_coach_tapped");
+                    mPresenter.addDataTrack("search_page_coach_tapped", getContext(), map);
                     Intent intent = new Intent(getContext(), CoachDetailActivity.class);
                     intent.putExtra("coach", coach);
                     startActivity(intent);
@@ -351,7 +349,7 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
                             //事件纪录
                             HashMap<String, String> map = new HashMap();
                             map.put("school_id", String.valueOf(drivingSchool.id));
-                            MobclickAgent.onEvent(getContext(), "search_page_hot_school_tapped");
+                            mPresenter.addDataTrack("search_page_hot_school_tapped", getContext(), map);
                             Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
                             intent.putExtra("drivingSchoolId", drivingSchool.id);
                             startActivity(intent);
@@ -494,7 +492,7 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
                         //事件纪录
                         HashMap<String, String> map = new HashMap();
                         map.put("index", String.valueOf(position));
-                        MobclickAgent.onEvent(getContext(), "search_page_hot_school_tapped");
+                        mPresenter.addDataTrack("search_page_hot_school_tapped", getContext(), map);
                         Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
                         intent.putExtra("drivingSchoolId", drivingSchool.id);
                         startActivity(intent);

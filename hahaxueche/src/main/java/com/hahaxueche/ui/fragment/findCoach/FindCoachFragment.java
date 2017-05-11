@@ -122,11 +122,6 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
         }
     }
 
-    @Override
-    public void navigateToSelectFields() {
-        startActivity(new Intent(getContext(), FieldFilterActivity.class));
-    }
-
     @OnClick({R.id.tv_select_driving_school,
             R.id.tv_select_coach,
             R.id.iv_icon_left,
@@ -140,10 +135,11 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
                 mPresenter.selectCoach();
                 break;
             case R.id.iv_icon_left:
-                mPresenter.clickLeftIcon();
+                mPresenter.addDataTrack("find_coach_page_field_icon_tapped", getContext());
+                startActivity(new Intent(getContext(), FieldFilterActivity.class));
                 break;
             case R.id.iv_search:
-                mPresenter.clickSearchCount();
+                mPresenter.addDataTrack("find_coach_page_search_tapped", getContext());
                 startActivity(new Intent(getContext(), SearchCoachActivity.class));
                 break;
             default:

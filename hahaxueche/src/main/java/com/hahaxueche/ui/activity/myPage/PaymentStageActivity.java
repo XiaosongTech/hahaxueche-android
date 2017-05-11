@@ -266,7 +266,7 @@ public class PaymentStageActivity extends HHBaseActivity implements PaymentStage
             ivMessage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mPresenter.clickICount();
+                    mPresenter.addDataTrack("pay_coach_status_page_i_tapped", getContext());
                     PaymentStageInfoDialog dialog = new PaymentStageInfoDialog(getContext(), paymentStage.stage_name, paymentStage.description, !TextUtils.isEmpty(paymentStage.paid_at));
                     dialog.show();
                 }
@@ -344,7 +344,7 @@ public class PaymentStageActivity extends HHBaseActivity implements PaymentStage
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_sure_transfer:
-                mPresenter.clickPayCount();
+                mPresenter.addDataTrack("pay_coach_status_page_pay_coach_tapped", getContext());
                 TransferConfirmDialog dialog = new TransferConfirmDialog(this, mPresenter.getCurrentPaymentStage().description
                         , new TransferConfirmDialog.OnBtnClickListener() {
                     @Override

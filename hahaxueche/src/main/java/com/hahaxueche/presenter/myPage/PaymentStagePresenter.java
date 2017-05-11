@@ -17,7 +17,6 @@ import com.hahaxueche.ui.view.myPage.PaymentStageView;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
 
@@ -60,7 +59,7 @@ public class PaymentStagePresenter extends HHBasePresenter implements Presenter<
                     public void onCompleted() {
                         mView.setCoachInfo(mCoach);
                         refreshData();
-                        pageStartCount();
+                        addDataTrack("pay_coach_status_page_viewed", mView.getContext());
                     }
 
                     @Override
@@ -135,15 +134,9 @@ public class PaymentStagePresenter extends HHBasePresenter implements Presenter<
     }
 
     public void makeReview(String paymentStage, String rating, String comment) {
+        addDataTrack("pay_coach_status_page_comment_tapped", mView.getContext());
         final User user = application.getSharedPrefUtil().getUser();
         if (user == null || !user.isLogin()) return;
-        final HashMap<String, String> countMap = new HashMap();
-        if (user != null && user.isLogin()) {
-            countMap.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "pay_coach_status_page_comment_tapped", countMap);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "pay_coach_status_page_comment_tapped");
-        }
         final HHApiService apiService = application.getApiService();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cell_phone", user.cell_phone);
@@ -167,7 +160,7 @@ public class PaymentStagePresenter extends HHBasePresenter implements Presenter<
                 .subscribe(new Subscriber<Review>() {
                     @Override
                     public void onCompleted() {
-                        MobclickAgent.onEvent(mView.getContext(), "pay_coach_status_page_comment_succeed", countMap);
+                        addDataTrack("pay_coach_status_page_comment_succeed", mView.getContext());
                         refreshData();
                         mView.showShareAppDialog();
                     }
@@ -216,7 +209,7 @@ public class PaymentStagePresenter extends HHBasePresenter implements Presenter<
 
                     @Override
                     public void onCompleted() {
-                        clickPaySuccessCount();
+                        addDataTrack("pay_coach_status_page_pay_coach_succeed", mView.getContext());
                         if (getCurrentPaymentStage().reviewable) {
                             mView.showReview(true, getCurrentPaymentStage(), true);
                         }
@@ -238,39 +231,6 @@ public class PaymentStagePresenter extends HHBasePresenter implements Presenter<
                 });
     }
 
-    public void clickICount() {
-        final User user = application.getSharedPrefUtil().getUser();
-        final HashMap<String, String> countMap = new HashMap();
-        if (user != null && user.isLogin()) {
-            countMap.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "pay_coach_status_page_i_tapped", countMap);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "pay_coach_status_page_i_tapped");
-        }
-    }
-
-    public void clickPayCount() {
-        final User user = application.getSharedPrefUtil().getUser();
-        final HashMap<String, String> countMap = new HashMap();
-        if (user != null && user.isLogin()) {
-            countMap.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "pay_coach_status_page_pay_coach_tapped", countMap);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "pay_coach_status_page_pay_coach_tapped");
-        }
-    }
-
-    public void clickPaySuccessCount() {
-        final User user = application.getSharedPrefUtil().getUser();
-        final HashMap<String, String> countMap = new HashMap();
-        if (user != null && user.isLogin()) {
-            countMap.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "pay_coach_status_page_pay_coach_succeed", countMap);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "pay_coach_status_page_pay_coach_succeed");
-        }
-    }
-
     public PaymentStage getCurrentPaymentStage() {
         PaymentStage paymentStage = new PaymentStage();
         User user = application.getSharedPrefUtil().getUser();
@@ -284,16 +244,5 @@ public class PaymentStagePresenter extends HHBasePresenter implements Presenter<
             }
         }
         return paymentStage;
-    }
-
-    public void pageStartCount() {
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "pay_coach_status_page_viewed", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "pay_coach_status_page_viewed");
-        }
     }
 }

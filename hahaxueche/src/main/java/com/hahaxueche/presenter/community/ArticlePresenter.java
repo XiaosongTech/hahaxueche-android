@@ -15,7 +15,6 @@ import com.hahaxueche.ui.view.community.ArticleView;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -191,11 +190,8 @@ public class ArticlePresenter extends HHBasePresenter implements Presenter<Artic
         //评论点击
         HashMap<String, String> map = new HashMap();
         User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-        }
         map.put("article_id", mArticle.id);
-        MobclickAgent.onEvent(mView.getContext(), "article_detail_page_comment_tapped", map);
+        addDataTrack("article_detail_page_comment_tapped", mView.getContext(), map);
         if (user != null && user.isLogin()) {
             mView.showCommentDialog();
         } else {
@@ -214,12 +210,9 @@ public class ArticlePresenter extends HHBasePresenter implements Presenter<Artic
         //like unlike 点击
         final User user = application.getSharedPrefUtil().getUser();
         HashMap<String, String> countMap = new HashMap();
-        if (user != null && user.isLogin()) {
-            countMap.put("student_id", user.student.id);
-        }
         countMap.put("article_id", mArticle.id);
         countMap.put("like", isApplaud ? "0" : "1");
-        MobclickAgent.onEvent(mView.getContext(), "article_detail_page_like_unlike_tapped", countMap);
+        addDataTrack("article_detail_page_like_unlike_tapped", mView.getContext(), countMap);
         if (user == null || !user.isLogin()) {
             mView.alertToLogin("注册登录后,才可以点赞文章哦～\n注册获得更多学车咨询!～");
             return;
@@ -309,44 +302,28 @@ public class ArticlePresenter extends HHBasePresenter implements Presenter<Artic
 
     public void clickShareCount() {
         //分享点击
-        User user = application.getSharedPrefUtil().getUser();
         HashMap<String, String> map = new HashMap();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-        }
         map.put("article_id", mArticle.id);
-        MobclickAgent.onEvent(mView.getContext(), "article_detail_page_share_article_tapped", map);
+        addDataTrack("article_detail_page_share_article_tapped", mView.getContext(), map);
     }
 
     public void clickShareSuccessCount(String shareChannel) {
         //分享成功
-        User user = application.getSharedPrefUtil().getUser();
         HashMap<String, String> map = new HashMap();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-        }
         map.put("article_id", mArticle.id);
         map.put("share_channel", shareChannel);
-        MobclickAgent.onEvent(mView.getContext(), "article_detail_page_share_article_succeed", map);
+        addDataTrack("article_detail_page_share_article_succeed", mView.getContext(), map);
     }
 
     public void pageStartCount() {
         HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
         map.put("article_id", mArticle.id);
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-        }
-        MobclickAgent.onEvent(mView.getContext(), "article_detail_page_viewed", map);
+        addDataTrack("article_detail_page_viewed", mView.getContext(), map);
     }
 
     public void clickCommentCount() {
         HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
         map.put("article_id", mArticle.id);
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-        }
-        MobclickAgent.onEvent(mView.getContext(), "article_detail_page_view_comment_tapped", map);
+        addDataTrack("article_detail_page_view_comment_tapped", mView.getContext(), map);
     }
 }

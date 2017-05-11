@@ -13,13 +13,7 @@ import com.hahaxueche.ui.view.myPage.ReferFriendsView;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
 import com.hahaxueche.util.WebViewUrl;
-import com.qiyukf.unicorn.api.ConsultSource;
-import com.qiyukf.unicorn.api.Unicorn;
-import com.qiyukf.unicorn.api.YSFUserInfo;
-import com.umeng.analytics.MobclickAgent;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -57,39 +51,20 @@ public class ReferFriendsPresenter extends HHBasePresenter implements Presenter<
 
     public void clickShareCount() {
         //分享点击
-        HashMap<String, String> map = new HashMap();
+        addDataTrack("refer_page_share_pic_tapped", mView.getContext());
         User user = application.getSharedPrefUtil().getUser();
         if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "refer_page_share_pic_tapped", map);
             mView.showShareDialog();
         } else {
-            MobclickAgent.onEvent(mView.getContext(), "refer_page_share_pic_tapped");
             mView.alertToLogin();
         }
-
     }
 
     public void clickShareSuccessCount(String shareChannel) {
         //分享成功
         HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-        }
         map.put("share_channel", shareChannel);
-        MobclickAgent.onEvent(mView.getContext(), "refer_page_share_pic_succeed", map);
-    }
-
-    public void pageStartCount() {
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "refer_page_viewed", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "refer_page_viewed");
-        }
+        addDataTrack("refer_page_share_pic_succeed", mView.getContext(), map);
     }
 
     public void clickWithdraw() {

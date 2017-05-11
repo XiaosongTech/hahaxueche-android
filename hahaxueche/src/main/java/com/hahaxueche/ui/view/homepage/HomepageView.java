@@ -25,8 +25,6 @@ public interface HomepageView extends HHBaseView {
 
     void navigateToReferFriends();
 
-    void navigateToExamLibrary();
-
     void navigateToStudentRefer();
 
     void navigateToMyInsurance();

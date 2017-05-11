@@ -7,7 +7,6 @@ import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.CityConstants;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.base.LocalSettings;
-import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.responseList.CoachResponseList;
 import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.HHBasePresenter;
@@ -15,12 +14,9 @@ import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.findCoach.CoachListView;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
-import com.hahaxueche.util.WebViewUrl;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -184,34 +180,22 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
     public void clickFilterCount(int index) {
         //筛选点击
         HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-        }
         map.put("index", String.valueOf(index));
-        MobclickAgent.onEvent(mView.getContext(), "find_coach_filter_tapped");
+        addDataTrack("find_coach_filter_tapped", mView.getContext(), map);
     }
 
     public void clickSortCount(int sortBy) {
         //筛选点击
         HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-        }
         map.put("sort_type", String.valueOf(sortBy));
-        MobclickAgent.onEvent(mView.getContext(), "find_coach_page_sort_tapped", map);
+        addDataTrack("find_coach_page_sort_tapped", mView.getContext(), map);
     }
 
     public void clickCoach(String coachId) {
         //筛选点击
         HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-        }
         map.put("coach_id", coachId);
-        MobclickAgent.onEvent(mView.getContext(), "find_coach_page_coach_tapped", map);
+        addDataTrack("find_coach_page_coach_tapped", mView.getContext(), map);
     }
 
     public int[][] getPriceRanges() {

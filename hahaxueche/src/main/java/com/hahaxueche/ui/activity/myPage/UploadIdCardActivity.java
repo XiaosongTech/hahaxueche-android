@@ -160,7 +160,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                 }
                 break;
             case R.id.tv_submit:
-                mPresenter.clickUploadInfo();
+                mPresenter.addDataTrack("upload_id_page_confirm_tapped", getContext());
                 if (TextUtils.isEmpty(imageUrlA)) {
                     showMessage("请上传身份证正面");
                     return;
@@ -172,7 +172,7 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                 }
                 break;
             case R.id.tv_later_submit:
-                mPresenter.clickLaterSubmit();
+                mPresenter.addDataTrack("upload_id_page_cancel_tapped", getContext());
                 showLaterSubmitDialog();
                 break;
             default:
@@ -260,12 +260,12 @@ public class UploadIdCardActivity extends HHBaseActivity implements UploadIdCard
                 new BaseConfirmSimpleDialog.onClickListener() {
                     @Override
                     public void clickConfirm() {
-                        mPresenter.clickConfirmPop();
+                        mPresenter.addDataTrack("upload_id_page_popup_confirm_tapped", getContext());
                     }
 
                     @Override
                     public void clickCancel() {
-                        mPresenter.clickCancelPop();
+                        mPresenter.addDataTrack("upload_id_page_popup_cancel_tapped", getContext());
                         showShareDialog();
                     }
                 });

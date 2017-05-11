@@ -10,12 +10,6 @@ import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.NotLoginVoucherView;
 import com.hahaxueche.util.HHLog;
-import com.qiyukf.unicorn.api.ConsultSource;
-import com.qiyukf.unicorn.api.Unicorn;
-import com.qiyukf.unicorn.api.YSFUserInfo;
-import com.umeng.analytics.MobclickAgent;
-
-import java.util.HashMap;
 
 import rx.Subscription;
 
@@ -41,6 +35,7 @@ public class NotLoginVoucherPresenter extends HHBasePresenter implements Present
     }
 
     public void freeTry() {
+        addDataTrack("homepage_free_trial_tapped", mView.getContext());
         //免费试学URL
         String url = WEB_URL_FREE_TRY;
         User user = application.getSharedPrefUtil().getUser();
@@ -56,14 +51,6 @@ public class NotLoginVoucherPresenter extends HHBasePresenter implements Present
                 url += "&phone=" + user.student.cell_phone;
             }
 
-        }
-        //免费试学点击
-        HashMap<String, String> map = new HashMap();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "homepage_free_trial_tapped", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "homepage_free_trial_tapped");
         }
         HHLog.v("free try url -> " + url);
         mView.openWebView(url);

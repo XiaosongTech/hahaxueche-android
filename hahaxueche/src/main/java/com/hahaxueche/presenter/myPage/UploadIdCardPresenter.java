@@ -16,10 +16,6 @@ import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.myPage.UploadIdCardView;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
-import com.qiyukf.unicorn.api.ConsultSource;
-import com.qiyukf.unicorn.api.Unicorn;
-import com.qiyukf.unicorn.api.YSFUserInfo;
-import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +49,7 @@ public class UploadIdCardPresenter extends HHBasePresenter implements Presenter<
     public void attachView(UploadIdCardView view) {
         this.mView = view;
         application = HHBaseApplication.get(mView.getContext());
-        pageStartCount();
+        addDataTrack("upload_id_page_viewed", mView.getContext());
         if (mIsInsurance) {
             mView.setUploadHints(mView.getContext().getResources()
                     .getString(R.string.upload_id_card_hints_insurance));
@@ -268,51 +264,6 @@ public class UploadIdCardPresenter extends HHBasePresenter implements Presenter<
     public void onlineAsk() {
         User user = application.getSharedPrefUtil().getUser();
         super.onlineAsk(user, mView.getContext());
-    }
-
-    public void pageStartCount() {
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-        }
-        MobclickAgent.onEvent(mView.getContext(), "upload_id_page_viewed", map);
-    }
-
-    public void clickLaterSubmit() {
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-        }
-        MobclickAgent.onEvent(mView.getContext(), "upload_id_page_cancel_tapped", map);
-    }
-
-    public void clickCancelPop() {
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-        }
-        MobclickAgent.onEvent(mView.getContext(), "upload_id_page_popup_cancel_tapped", map);
-    }
-
-    public void clickConfirmPop() {
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-        }
-        MobclickAgent.onEvent(mView.getContext(), "upload_id_page_popup_confirm_tapped", map);
-    }
-
-    public void clickUploadInfo() {
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-        }
-        MobclickAgent.onEvent(mView.getContext(), "upload_id_page_confirm_tapped", map);
     }
 
     public void manualUpload(String name, String idCardNumber) {

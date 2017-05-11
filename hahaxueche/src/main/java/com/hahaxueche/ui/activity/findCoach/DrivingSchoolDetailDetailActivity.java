@@ -961,7 +961,7 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
                         //事件纪录
                         HashMap<String, String> map = new HashMap();
                         map.put("index", String.valueOf(position));
-                        MobclickAgent.onEvent(getContext(), "school_detail_hot_school_tapped");
+                        mPresenter.addDataTrack("school_detail_hot_school_tapped", getContext(), map);
                         Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
                         intent.putExtra("drivingSchoolId", drivingSchool.id);
                         startActivity(intent);

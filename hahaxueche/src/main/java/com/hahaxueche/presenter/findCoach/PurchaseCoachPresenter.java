@@ -15,7 +15,6 @@ import com.hahaxueche.util.Common;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
-import com.umeng.analytics.MobclickAgent;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -349,16 +348,16 @@ public class PurchaseCoachPresenter extends HHBasePresenter implements Presenter
         HashMap<String, String> map = new HashMap();
         User user = application.getSharedPrefUtil().getUser();
         map.put("student_id", user.student.id);
-        map.put("student_id", mCoach.id);
-        MobclickAgent.onEvent(mView.getContext(), "pay_coach_status_page_viewed", map);
+        map.put("coach_id", mCoach.id);
+        addDataTrack("pay_coach_status_page_viewed", mView.getContext(), map);
     }
 
     public void clickPayCount() {
         HashMap<String, String> map = new HashMap();
         User user = application.getSharedPrefUtil().getUser();
         map.put("student_id", user.student.id);
-        map.put("student_id", mCoach.id);
-        MobclickAgent.onEvent(mView.getContext(), "purchase_confirm_page_purchase_button_tapped", map);
+        map.put("coach_id", mCoach.id);
+        addDataTrack("purchase_confirm_page_purchase_button_tapped", mView.getContext(), map);
     }
 
     public ArrayList<Voucher> getUnCumulativeVoucherList() {

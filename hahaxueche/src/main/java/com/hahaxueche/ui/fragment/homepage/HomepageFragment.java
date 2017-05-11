@@ -161,11 +161,6 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
     }
 
     @Override
-    public void navigateToExamLibrary() {
-        startActivityForResult(new Intent(getContext(), ExamLibraryActivity.class), RequestCode.REQUEST_CODE_EXAM_LIBRARY);
-    }
-
-    @Override
     public void navigateToStudentRefer() {
         startActivity(new Intent(getContext(), StudentReferActivity.class));
     }
@@ -284,7 +279,8 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                 mPresenter.openGroupBuy();
                 break;
             case R.id.tv_test_lib:
-                mPresenter.clickTestLib();
+                mPresenter.addDataTrack("home_page_online_test_tapped", getContext());
+                startActivityForResult(new Intent(getContext(), ExamLibraryActivity.class), RequestCode.REQUEST_CODE_EXAM_LIBRARY);
                 break;
             case R.id.cv_new_policy:
                 mPresenter.addDataTrack("home_page_new_policy_tapped", getContext());

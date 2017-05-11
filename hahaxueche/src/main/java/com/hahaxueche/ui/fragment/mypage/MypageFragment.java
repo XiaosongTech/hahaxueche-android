@@ -202,7 +202,7 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
                 mPresenter.onlineAsk();
                 break;
             case R.id.rly_my_follow_coach:
-                mPresenter.clickMyFollowCount();
+                mPresenter.addDataTrack("my_page_my_followed_coach_tapped", getContext());
                 if (!mPresenter.isLogin()) {
                     alertToLogin();
                     return;
@@ -210,7 +210,7 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
                 startActivity(new Intent(getContext(), FollowListActivity.class));
                 break;
             case R.id.rly_my_consultant:
-                mPresenter.clickMyAdviserCount();
+                mPresenter.addDataTrack("my_page_my_advisor_tapped", getContext());
                 if (!mPresenter.isLogin()) {
                     mPresenter.openFindAdviser();
                     return;
@@ -233,17 +233,17 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
                 mConsultantDialog.show();
                 break;
             case R.id.rly_FAQ:
-                mPresenter.clickFAQCount();
+                mPresenter.addDataTrack("my_page_FAQ_tapped", getContext());
                 openWebView(WebViewUrl.WEB_URL_PROCEDURE);
                 break;
             case R.id.rly_support_haha:
-                mPresenter.clickSupportHahaCount();
+                mPresenter.addDataTrack("my_page_rate_us_tapped", getContext());
                 Uri uri = Uri.parse(WebViewUrl.URL_APP_STORE);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
                 break;
             case R.id.rly_software_info:
-                mPresenter.clickSoftwareInfoCount();
+                mPresenter.addDataTrack("my_page_version_check_tapped", getContext());
                 startActivity(new Intent(getContext(), SoftwareInfoActivity.class));
                 break;
             case R.id.rly_referer_friends:

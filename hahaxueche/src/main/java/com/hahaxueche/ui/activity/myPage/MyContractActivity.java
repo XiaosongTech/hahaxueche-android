@@ -66,7 +66,7 @@ public class MyContractActivity extends HHBaseActivity implements MyContractView
         if (intent != null && !TextUtils.isEmpty(intent.getStringExtra("pdfUrl"))
                 && !TextUtils.isEmpty(intent.getStringExtra("studentId"))) {
             setPdf(intent.getStringExtra("pdfUrl"), intent.getStringExtra("studentId"));
-            mPresenter.signContractViewCount();
+            mPresenter.addDataTrack("sign_contract_page_viewed", getContext());
         } else {
             mPresenter.getAgreementUrl();
         }
@@ -89,7 +89,7 @@ public class MyContractActivity extends HHBaseActivity implements MyContractView
         mIvSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.clickSettingIcon();
+                mPresenter.addDataTrack("my_contract_page_top_right_button_tapped", getContext());
                 MyContractDialog dialog = new MyContractDialog(MyContractActivity.this);
                 dialog.show();
             }
@@ -116,7 +116,7 @@ public class MyContractActivity extends HHBaseActivity implements MyContractView
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    mPresenter.clickAgreement();
+                    mPresenter.addDataTrack("sign_contract_check_box_checked", getContext());
                     mPresenter.sign();
                 }
             }
@@ -150,7 +150,7 @@ public class MyContractActivity extends HHBaseActivity implements MyContractView
     }
 
     public void openPdf() {
-        mPresenter.clickDownloadAgreement();
+        mPresenter.addDataTrack("my_contract_page_download_tapped", getContext());
         try {
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -165,7 +165,7 @@ public class MyContractActivity extends HHBaseActivity implements MyContractView
     }
 
     public void sendEmail() {
-        mPresenter.clickSendAgreement();
+        mPresenter.addDataTrack("my_contract_page_send_by_email_tapped", getContext());
         EnterEmailDialog dialog = new EnterEmailDialog(getContext(), new EnterEmailDialog.OnButtonClickListener() {
             @Override
             public void send(String email) {

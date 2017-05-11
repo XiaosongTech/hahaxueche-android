@@ -22,8 +22,6 @@ import com.hahaxueche.ui.view.myPage.MyCoachDetailView;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
-import com.hahaxueche.util.Utils;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
 
@@ -371,32 +369,23 @@ public class MyCoachDetailPresenter extends HHBasePresenter implements Presenter
     public void clickShareCount() {
         //分享点击
         HashMap<String, String> map = new HashMap();
-        if (mUser != null && mUser.isLogin()) {
-            map.put("student_id", mUser.student.id);
-        }
         map.put("coach_id", mCoach.id);
-        MobclickAgent.onEvent(mView.getContext(), "my_coach_page_share_coach_tapped", map);
+        addDataTrack("my_coach_page_share_coach_tapped", mView.getContext(), map);
     }
 
     public void clickShareSuccessCount(String shareChannel) {
         //分享成功
         HashMap<String, String> map = new HashMap();
-        if (mUser != null && mUser.isLogin()) {
-            map.put("student_id", mUser.student.id);
-        }
         map.put("coach_id", mCoach.id);
         map.put("share_channel", shareChannel);
-        MobclickAgent.onEvent(mView.getContext(), "my_coach_page_share_coach_succeed", map);
+        addDataTrack("my_coach_page_share_coach_succeed", mView.getContext(), map);
     }
 
     public void pageStartCount() {
         //教练详情展现
         HashMap<String, String> map = new HashMap();
-        if (mUser != null && mUser.isLogin()) {
-            map.put("student_id", mUser.student.id);
-        }
         map.put("coach_id", mCoach.id);
-        MobclickAgent.onEvent(mView.getContext(), "my_coach_page_viewed", map);
+        addDataTrack("my_coach_page_viewed", mView.getContext(), map);
     }
 
     public ClassType getClassTypeByPs() {

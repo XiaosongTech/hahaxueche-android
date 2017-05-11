@@ -4,10 +4,8 @@ import android.text.TextUtils;
 
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
-import com.hahaxueche.model.base.City;
 import com.hahaxueche.model.base.CityConstants;
 import com.hahaxueche.model.base.Constants;
-import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.base.LocalSettings;
 import com.hahaxueche.model.responseList.CoachResponseList;
 import com.hahaxueche.model.responseList.FieldResponseList;
@@ -21,7 +19,6 @@ import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.HahaCache;
 import com.hahaxueche.util.WebViewUrl;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -158,27 +155,13 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
 
     public void openProcedure() {
         //学车流程点击
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "homepage_process_tapped", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "homepage_process_tapped");
-        }
+        addDataTrack("homepage_process_tapped", mView.getContext());
         mView.openWebView(WebViewUrl.WEB_URL_PROCEDURE);
     }
 
     public void openGroupBuy() {
         //团购点击
-        HashMap<String, String> map = new HashMap();
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "homepage_group_purchase_tapped", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "homepage_group_purchase_tapped");
-        }
+        addDataTrack("homepage_group_purchase_tapped", mView.getContext());
         mView.openWebView(WebViewUrl.WEB_URL_GROUP_BUY);
     }
 
@@ -202,23 +185,13 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
 
     public void bannerClick(int i) {
         try {
-            User user = application.getSharedPrefUtil().getUser();
             HashMap<String, String> map = new HashMap();
             if (!TextUtils.isEmpty(constants.new_home_page_banners.get(i).target_url)) {
                 map.put("URL", constants.new_home_page_banners.get(i).target_url);
-                if (user != null && user.isLogin()) {
-                    map.put("student_id", user.student.id);
-                    MobclickAgent.onEvent(mView.getContext(), "home_page_banner_tapped", map);
-                }
-                MobclickAgent.onEvent(mView.getContext(), "home_page_banner_tapped", map);
+                addDataTrack("home_page_banner_tapped", mView.getContext(), map);
                 mView.openWebView(constants.new_home_page_banners.get(i).target_url);
             } else {
-                if (user != null && user.isLogin()) {
-                    map.put("student_id", user.student.id);
-                    MobclickAgent.onEvent(mView.getContext(), "home_page_banner_tapped", map);
-                } else {
-                    MobclickAgent.onEvent(mView.getContext(), "home_page_banner_tapped");
-                }
+                addDataTrack("home_page_banner_tapped", mView.getContext());
             }
         } catch (Exception e) {
             HHLog.e(e.getMessage());
@@ -228,18 +201,6 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
     public boolean isNeedUpdate() {
         Constants constants = application.getConstants();
         return super.isNeedUpdate(mView.getContext(), constants.version_code);
-    }
-
-    public void clickTestLib() {
-        User user = application.getSharedPrefUtil().getUser();
-        HashMap<String, String> map = new HashMap();
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "home_page_online_test_tapped", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "home_page_online_test_tapped");
-        }
-        mView.navigateToExamLibrary();
     }
 
     /**
@@ -393,22 +354,14 @@ public class HomepagePresenter extends HHBasePresenter implements Presenter<Home
     }
 
     public void clickHotDrivingSchool(int index) {
-        User user = application.getSharedPrefUtil().getUser();
         HashMap<String, String> map = new HashMap();
         map.put("index", String.valueOf(index));
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "home_page_hot_school_tapped", map);
-        }
+        addDataTrack("home_page_hot_school_tapped", mView.getContext(), map);
     }
 
     public void clickNearCoach(int index) {
-        User user = application.getSharedPrefUtil().getUser();
         HashMap<String, String> map = new HashMap();
         map.put("index", String.valueOf(index));
-        if (user != null && user.isLogin()) {
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "home_page_hot_coach_tapped", map);
-        }
+        addDataTrack("home_page_hot_coach_tapped", mView.getContext(), map);
     }
 }

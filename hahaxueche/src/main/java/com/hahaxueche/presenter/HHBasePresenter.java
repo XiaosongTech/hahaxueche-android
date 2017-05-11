@@ -132,14 +132,22 @@ public class HHBasePresenter {
     }
 
     public void addDataTrack(String event, Context context) {
+        this.addDataTrack(event, context, null);
+    }
+
+    public void addDataTrack(String event, Context context, HashMap<String, String> map) {
         HHBaseApplication application = HHBaseApplication.get(context);
         User user = application.getSharedPrefUtil().getUser();
-        HashMap<String, String> map = new HashMap();
         if (user != null && user.isLogin()) {
+            if (map == null) {
+                map = new HashMap<>();
+            }
             map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(context, event, map);
-        } else {
+        }
+        if (map == null) {
             MobclickAgent.onEvent(context, event);
+        } else {
+            MobclickAgent.onEvent(context, event, map);
         }
     }
 

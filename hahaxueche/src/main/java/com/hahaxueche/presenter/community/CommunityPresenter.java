@@ -10,10 +10,8 @@ import com.hahaxueche.presenter.Presenter;
 import com.hahaxueche.ui.view.community.CommunityView;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.WebViewUrl;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -48,28 +46,8 @@ public class CommunityPresenter extends HHBasePresenter implements Presenter<Com
 
     public void clickGroupBuyCount() {
         //团购点击
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            HashMap<String, String> map = new HashMap();
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "club_page_group_purchase_tapped", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "club_page_group_purchase_tapped");
-        }
+        addDataTrack("club_page_group_purchase_tapped", mView.getContext());
         mView.openWebView(WebViewUrl.WEB_URL_GROUP_BUY);
-    }
-
-    public void clickTestLibCount() {
-        //在线题库点击
-        User user = application.getSharedPrefUtil().getUser();
-        if (user != null && user.isLogin()) {
-            HashMap<String, String> map = new HashMap();
-            map.put("student_id", user.student.id);
-            MobclickAgent.onEvent(mView.getContext(), "club_page_online_test_tapped", map);
-        } else {
-            MobclickAgent.onEvent(mView.getContext(), "club_page_online_test_tapped");
-        }
-
     }
 
     public void getHeadline() {

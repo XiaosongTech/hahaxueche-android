@@ -27,7 +27,6 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.hahaxueche.R;
 import com.hahaxueche.model.drivingSchool.DrivingSchool;
-import com.hahaxueche.model.user.User;
 import com.hahaxueche.presenter.findCoach.DrivingSchoolListPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.findCoach.DrivingSchoolDetailDetailActivity;
@@ -43,7 +42,6 @@ import com.hahaxueche.ui.widget.pullToRefreshView.XListView;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
 import java.util.List;
@@ -157,7 +155,7 @@ public class DrivingSchoolListFragment extends HHBaseFragment implements Driving
                     public void clickDrivingSchool(DrivingSchool drivingSchool) {
                         HashMap<String, String> map = new HashMap();
                         map.put("school_id", String.valueOf(drivingSchool.id));
-                        MobclickAgent.onEvent(getContext(), "find_school_school_tapped");
+                        mPresenter.addDataTrack("find_school_school_tapped", getContext(), map);
                         Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
                         intent.putExtra("drivingSchoolId", drivingSchool.id);
                         startActivity(intent);
