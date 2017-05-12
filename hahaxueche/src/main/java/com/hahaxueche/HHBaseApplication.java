@@ -13,7 +13,6 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.CityConstants;
 import com.hahaxueche.model.base.Constants;
-import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.base.Location;
 import com.hahaxueche.model.responseList.FieldResponseList;
 import com.hahaxueche.ui.widget.FrescoImageLoader;
@@ -26,19 +25,12 @@ import com.qiyukf.unicorn.api.SavePowerConfig;
 import com.qiyukf.unicorn.api.StatusBarNotificationConfig;
 import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFOptions;
-import com.taobao.hotfix.HotFixManager;
-import com.taobao.hotfix.PatchLoadStatusListener;
-import com.taobao.hotfix.util.PatchStatusCode;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import me.shaohui.shareutil.ShareConfig;
 import me.shaohui.shareutil.ShareManager;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscriber;
-import rx.Subscription;
 import rx.schedulers.Schedulers;
 
 /**
@@ -54,7 +46,6 @@ public class HHBaseApplication extends Application {
     private SharedPrefUtil spUtil;
     private Observable sessionObservable;
     private Location myLocation;
-    private Subscription subscription;
     public static String appVersion;
     public static String appId;
 
@@ -148,7 +139,6 @@ public class HHBaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         initApp();
-        initHotfix();
         //aliyun push
         initCloudChannel(this);
         //fresco
@@ -198,26 +188,7 @@ public class HHBaseApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        try {
-            MultiDex.install(this);
-        } catch (RuntimeException multiDexException) {
-            // Work around Robolectric causing multi dex installation to fail, see
-            // https://code.google.com/p/android/issues/detail?id=82007.
-            boolean isUnderUnitTest;
-
-            try {
-                Class<?> robolectric = Class.forName("org.robolectric.Robolectric");
-                isUnderUnitTest = (robolectric != null);
-            } catch (ClassNotFoundException e) {
-                isUnderUnitTest = false;
-            }
-
-            if (!isUnderUnitTest) {
-                // Re-throw if this does not seem to be triggered by Robolectric.
-                throw multiDexException;
-            }
-        }
-
+        MultiDex.install(this);
     }
 
     /**
@@ -254,34 +225,5 @@ public class HHBaseApplication extends Application {
         } catch (Exception e) {
             this.appVersion = "1.0.0";
         }
-    }
-
-    /**
-     * 建议在Application.onCreate方法中执行initialize和queryNewHotPatch操作, 尽可能早的执行
-     * 本demo只是为了测试的方便, 所以把这两个操作放在了Activity中
-     */
-    private void initHotfix() {
-        //此处不再需要调用queryNewHotPatch方法, initialize方法内部会调用queryNewHotPatch方法.
-        HotFixManager.getInstance().setContext(this)
-                .setAppVersion(appVersion)
-                .setAppId(appId)
-                .setSupportHotpatch(true)
-                .setEnableDebug(true)
-                .setPatchLoadStatusStub(new PatchLoadStatusListener() {
-                    @Override
-                    public void onload(final int mode, final int code, final String info, final int handlePatchVersion) {
-                        // 补丁加载回调通知
-                        if (code == PatchStatusCode.CODE_SUCCESS_LOAD) {
-                            HHLog.v("patch load success");
-                        } else if (code == PatchStatusCode.CODE_ERROR_NEEDRESTART) {
-                            // TODO: 10/24/16 表明新补丁生效需要重启. 业务方可自行实现逻辑, 提示用户或者强制重启, 建议: 用户可以监听进入后台事件, 然后应用自杀
-                        } else if (code == PatchStatusCode.CODE_ERROR_INNERENGINEFAIL) {
-                            // 内部引擎加载异常, 推荐此时清空本地补丁, 但是不清空本地版本号, 防止失败补丁重复加载
-                            HotFixManager.getInstance().cleanPatches(false);
-                        } else {
-                            //其它错误信息, 查看PatchStatusCode类说明
-                        }
-                    }
-                }).initialize();
     }
 }
