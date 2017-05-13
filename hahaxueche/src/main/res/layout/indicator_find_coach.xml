@@ -14,7 +14,7 @@
         android:drawablePadding="4dp"
         android:drawableTop="@drawable/bottom_find_coach_selector"
         android:focusable="true"
-        android:text="寻找教练"
+        android:text="驾校教练"
         android:textColor="@drawable/bottom_text_selector"
         android:textSize="10sp" />
 </LinearLayout>

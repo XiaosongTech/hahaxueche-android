@@ -45,7 +45,7 @@ public class HHBaseActivity extends AppCompatActivity implements HHBaseView {
 
     @Override
     public void showProgressDialog() {
-        showProgressDialog("为学员保驾护航！");
+        showProgressDialog("选驾校, 挑教练");
     }
 
     @Override

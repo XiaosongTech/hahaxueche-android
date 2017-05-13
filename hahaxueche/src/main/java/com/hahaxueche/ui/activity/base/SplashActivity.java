@@ -1,19 +1,8 @@
 package com.hahaxueche.ui.activity.base;
 
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.hahaxueche.R;
 import com.hahaxueche.presenter.base.SplashPresenter;
 import com.hahaxueche.ui.activity.ActivityCollector;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
@@ -30,7 +19,6 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -39,12 +27,6 @@ import butterknife.ButterKnife;
 public class SplashActivity extends HHBaseActivity implements SplashView {
     private SplashPresenter mPresenter;
     private LinkedME linkedME;
-
-    @BindView(R.id.iv_logo)
-    ImageView mIvLogo;
-
-    @BindView(R.id.iv_background)
-    ImageView mIvBackground;
 
     public void onStart() {
         super.onStart();
@@ -67,35 +49,10 @@ public class SplashActivity extends HHBaseActivity implements SplashView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
         mPresenter = new SplashPresenter();
         mPresenter.attachView(this);
         ButterKnife.bind(this);
-        startAnim();
         MobclickAgent.setDebugMode(false);
-    }
-
-    private void startAnim() {
-        Animation logoAnim = AnimationUtils.loadAnimation(this, R.anim.anim_splash_logo);
-        mIvLogo.startAnimation(logoAnim);
-        Animation backgroundAnim = AnimationUtils.loadAnimation(this, R.anim.anim_splash_background);
-        mIvBackground.startAnimation(backgroundAnim);
-        backgroundAnim.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                mPresenter.doLogin();
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
     }
 
     @Override

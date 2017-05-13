@@ -49,7 +49,7 @@ public class SplashPresenter extends HHBasePresenter implements Presenter<Splash
                 .subscribe(new Subscriber<Constants>() {
                     @Override
                     public void onCompleted() {
-                        //doLogin();
+                        doLogin();
                     }
 
                     @Override
@@ -70,7 +70,7 @@ public class SplashPresenter extends HHBasePresenter implements Presenter<Splash
     /**
      * 登陆
      */
-    public void doLogin() {
+    private void doLogin() {
         if (application.getConstants() == null)
             return;
         User user = application.getSharedPrefUtil().getUser();
