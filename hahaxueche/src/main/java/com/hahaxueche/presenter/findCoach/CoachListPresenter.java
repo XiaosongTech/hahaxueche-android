@@ -198,21 +198,6 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
         addDataTrack("find_coach_page_coach_tapped", mView.getContext(), map);
     }
 
-    public int[][] getPriceRanges() {
-        CityConstants cityConstants = application.getCityConstants();
-        return cityConstants.filters.prices;
-    }
-
-    public String[] getZones() {
-        CityConstants cityConstants = application.getCityConstants();
-        return cityConstants.zones;
-    }
-
-    public int[] getRadius() {
-        CityConstants cityConstants = application.getCityConstants();
-        return cityConstants.filters.radius;
-    }
-
     public void setPriceRange(int startMoney, int endMoney) {
         this.startMoney = startMoney;
         this.endMoney = endMoney;

@@ -40,9 +40,9 @@ import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.community.ExamLibraryActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.DrivingSchoolDetailDetailActivity;
-import com.hahaxueche.ui.activity.findCoach.FieldFilterActivity;
 import com.hahaxueche.ui.activity.findCoach.PaySuccessActivity;
 import com.hahaxueche.ui.activity.findCoach.SearchCoachActivity;
+import com.hahaxueche.ui.activity.homepage.MapSearchActivity;
 import com.hahaxueche.ui.activity.myPage.MyInsuranceActivity;
 import com.hahaxueche.ui.activity.myPage.PurchaseInsuranceActivity;
 import com.hahaxueche.ui.activity.myPage.ReferFriendsActivity;
@@ -327,11 +327,11 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                 break;
             case R.id.tv_map:
                 mPresenter.addDataTrack("home_navigation_map_tapped", getContext());
-                startActivity(new Intent(getContext(), FieldFilterActivity.class));
+                startActivity(new Intent(getContext(), MapSearchActivity.class));
                 break;
             case R.id.tv_map_find:
                 mPresenter.addDataTrack("home_page_map_view_tapped", getContext());
-                startActivity(new Intent(getContext(), FieldFilterActivity.class));
+                startActivity(new Intent(getContext(), MapSearchActivity.class));
                 break;
             case R.id.fly_search:
                 mPresenter.addDataTrack("home_navigation_search_tapped", getContext());

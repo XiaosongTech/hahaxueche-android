@@ -333,7 +333,10 @@
             android:name=".ui.activity.findCoach.DrivingSchoolDetailDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
-
+        <activity
+            android:name=".ui.activity.homepage.MapSearchActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

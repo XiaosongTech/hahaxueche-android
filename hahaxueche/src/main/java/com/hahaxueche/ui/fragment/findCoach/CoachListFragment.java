@@ -287,7 +287,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                         public void dismiss() {
                             hidePopWindow();
                         }
-                    }, mPresenter.getPriceRanges());
+                    }, mPresenter.getPriceRanges(getContext()));
                 }
                 mPricePopWindow.showAsDropDown(view);
                 showPopWindow(POP_PRICE);
@@ -318,7 +318,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                         public void dismiss() {
                             hidePopWindow();
                         }
-                    }, mPresenter.getZones(), mPresenter.getRadius());
+                    }, mPresenter.getZones(getContext()), mPresenter.getRadius(getContext()));
                 }
                 mZonePopWindow.showAsDropDown(view);
                 showPopWindow(POP_ZONE);

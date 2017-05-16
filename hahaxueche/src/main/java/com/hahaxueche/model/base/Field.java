@@ -35,6 +35,7 @@ public class Field implements Parcelable {
     public List<String> schools;
     public List<String> business_areas;
     public List<Coach> coaches;
+    public int[] driving_school_ids;
 
     protected Field(Parcel in) {
         id = in.readString();
@@ -61,6 +62,7 @@ public class Field implements Parcelable {
         schools = in.createStringArrayList();
         business_areas = in.createStringArrayList();
         coaches = in.createTypedArrayList(Coach.CREATOR);
+        driving_school_ids = in.createIntArray();
     }
 
     public static final Creator<Field> CREATOR = new Creator<Field>() {
@@ -106,5 +108,6 @@ public class Field implements Parcelable {
         parcel.writeStringList(schools);
         parcel.writeStringList(business_areas);
         parcel.writeTypedList(coaches);
+        parcel.writeIntArray(driving_school_ids);
     }
 }
