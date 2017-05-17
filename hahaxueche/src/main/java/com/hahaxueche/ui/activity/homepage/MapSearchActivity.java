@@ -3,7 +3,13 @@ package com.hahaxueche.ui.activity.homepage;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.BitmapFactory;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,13 +37,16 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
-import com.amap.api.maps.model.BitmapDescriptorFactory;
-import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
-import com.amap.api.maps.model.MarkerOptions;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Field;
+import com.hahaxueche.model.cluster.Cluster;
+import com.hahaxueche.model.cluster.ClusterClickListener;
+import com.hahaxueche.model.cluster.ClusterOverlay;
+import com.hahaxueche.model.cluster.ClusterRender;
+import com.hahaxueche.model.cluster.FieldItem;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.homepage.MapSearchPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
@@ -51,9 +60,12 @@ import com.hahaxueche.ui.view.homepage.MapSearchView;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
+import com.hahaxueche.util.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,7 +76,8 @@ import butterknife.OnClick;
  */
 
 public class MapSearchActivity extends HHBaseActivity implements MapSearchView, LocationSource,
-        AMapLocationListener, AMap.InfoWindowAdapter {
+        AMapLocationListener, AMap.InfoWindowAdapter, ClusterRender,
+        AMap.OnMapLoadedListener, ClusterClickListener {
     private MapSearchPresenter mPresenter;
     private OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
@@ -86,6 +99,8 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
     private MapCoachAdapter mapCoachAdapter;
     private ZonePopupWindow mZonePopWindow;
     private DrivingSchoolPopupWindow mDrivingSchoolPopWindow;
+    private Map<Integer, Drawable> mBackDrawAbles = new HashMap<>();
+    private ClusterOverlay mClusterOverlay;
 
     private ArrayList<Marker> markerList;
     private String cellPhone;
@@ -106,10 +121,17 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         // 设置布局管理器
         mRcyMapCoach.setLayoutManager(layoutManager);
+        initMap();
         //地图初始化
+
+        mPresenter.getFields();
+    }
+
+    private void initMap() {
         if (aMap == null) {
             aMap = mapView.getMap();
         }
+        aMap.setOnMapLoadedListener(this);
         aMap.setInfoWindowAdapter(this);
         aMap.setOnMapLoadedListener(new AMap.OnMapLoadedListener() {
             @Override
@@ -124,7 +146,6 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
-        mPresenter.getFields();
     }
 
     private void initActionBar() {
@@ -181,6 +202,7 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
     protected void onDestroy() {
         mPresenter.detachView();
         super.onDestroy();
+        mClusterOverlay.onDestroy();
         mapView.onDestroy();
         if (null != mlocationClient) {
             mlocationClient.onDestroy();
@@ -313,8 +335,11 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
     }
 
     @Override
-    public void loadFields(List<Field> fields) {
-        ArrayList<MarkerOptions> markerOptionlst = new ArrayList<>();
+    public void loadFields(List<FieldItem> fieldItems) {
+        mClusterOverlay = new ClusterOverlay(aMap, fieldItems, getContext());
+        mClusterOverlay.setClusterRenderer(this);
+        mClusterOverlay.setOnClusterClickListener(this);
+        /*ArrayList<MarkerOptions> markerOptionlst = new ArrayList<>();
         markerList = new ArrayList<>();
         for (Field field : fields) {
             MarkerOptions markerOption = new MarkerOptions();
@@ -329,7 +354,7 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
         }
         if (aMap != null) {
             markerList = aMap.addMarkers(markerOptionlst, true);
-        }
+        }*/
     }
 
     @Override
@@ -405,34 +430,37 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
      * 自定义infowinfow窗口
      */
     private void render(Marker marker, View view) {
-        final Field field = (Field) marker.getObject();
-        SimpleDraweeView mIvFieldAvatar = ButterKnife.findById(view, R.id.iv_field_avatar);
-        mIvFieldAvatar.setImageURI(field.image);
-        TextView tvFieldName = ButterKnife.findById(view, R.id.tv_field_name);
-        tvFieldName.setText(field.name);
-        TextView tvDisplayAddress = ButterKnife.findById(view, R.id.tv_display_address);
-        String text = (TextUtils.isEmpty(field.display_address) ? "" : field.display_address) +
-                " (" + field.coach_count + "名教练)";
-        SpannableString ss = new SpannableString(text);
-        ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.haha_red_text)),
-                text.indexOf("(") + 1, text.indexOf("名教练"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tvDisplayAddress.setText(ss);
-        TextView tvSendLocation = ButterKnife.findById(view, R.id.tv_send_location);
-        tvSendLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mPresenter.addDataTrack("map_view_page_locate_tapped", getContext());
-                GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "轻松定位训练场",
-                        "输入手机号，立即接收详细地址", "发我定位", new GetUserIdentityDialog.OnIdentityGetListener() {
-                    @Override
-                    public void getCellPhone(String cellPhone) {
-                        mPresenter.addDataTrack("map_view_page_check_site_confirmed", getContext());
-                        mPresenter.sendLocation(cellPhone, field);
-                    }
-                });
-                dialog.show();
-            }
-        });
+        Cluster cluster = (Cluster) marker.getObject();
+        if (cluster.isFieldPoint()) {
+            final Field field = cluster.getFieldItems().get(0).getField();
+            SimpleDraweeView mIvFieldAvatar = ButterKnife.findById(view, R.id.iv_field_avatar);
+            mIvFieldAvatar.setImageURI(field.image);
+            TextView tvFieldName = ButterKnife.findById(view, R.id.tv_field_name);
+            tvFieldName.setText(field.name);
+            TextView tvDisplayAddress = ButterKnife.findById(view, R.id.tv_display_address);
+            String text = (TextUtils.isEmpty(field.display_address) ? "" : field.display_address) +
+                    " (" + field.coach_count + "名教练)";
+            SpannableString ss = new SpannableString(text);
+            ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.haha_red_text)),
+                    text.indexOf("(") + 1, text.indexOf("名教练"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            tvDisplayAddress.setText(ss);
+            TextView tvSendLocation = ButterKnife.findById(view, R.id.tv_send_location);
+            tvSendLocation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mPresenter.addDataTrack("map_view_page_locate_tapped", getContext());
+                    GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "轻松定位训练场",
+                            "输入手机号，立即接收详细地址", "发我定位", new GetUserIdentityDialog.OnIdentityGetListener() {
+                        @Override
+                        public void getCellPhone(String cellPhone) {
+                            mPresenter.addDataTrack("map_view_page_check_site_confirmed", getContext());
+                            mPresenter.sendLocation(cellPhone, field);
+                        }
+                    });
+                    dialog.show();
+                }
+            });
+        }
     }
 
     /**
@@ -485,5 +513,59 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
         mTvDrivingSchool.setCompoundDrawablesWithIntrinsicBounds(null, null,
                 ContextCompat.getDrawable(getContext(), R.drawable.list_arrow_gray), null);
         mFlyBgHalfTrans.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onMapLoaded() {
+
+    }
+
+    @Override
+    public Drawable getDrawAble(int clusterNum, String clusterName, boolean isFieldPoint) {
+        int radius = Utils.instence(this).dip2px(80);
+        if (isFieldPoint) {
+            Drawable bitmapDrawable = mBackDrawAbles.get(1);
+            if (bitmapDrawable == null) {
+                bitmapDrawable =
+                        getApplication().getResources().getDrawable(
+                                R.drawable.ic_map_local_choseon);
+                mBackDrawAbles.put(1, bitmapDrawable);
+            }
+            return bitmapDrawable;
+        } else {
+            Drawable bitmapDrawable = mBackDrawAbles.get(2);
+            if (bitmapDrawable == null) {
+                bitmapDrawable = new BitmapDrawable(null, drawCircle(radius,
+                        Color.argb(255, 249, 111, 109)));
+                mBackDrawAbles.put(2, bitmapDrawable);
+            }
+            return bitmapDrawable;
+        }
+    }
+
+    @Override
+    public void onClick(Marker marker, Cluster cluster) {
+        if (cluster.isFieldPoint()) {
+            marker.showInfoWindow();
+            aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cluster.getFieldItems().get(0).getPosition(), 14));
+            mPresenter.selectField(cluster.getFieldItems().get(0).getField());
+        } else {
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            for (FieldItem fieldItem : cluster.getFieldItems()) {
+                builder.include(fieldItem.getPosition());
+            }
+            LatLngBounds latLngBounds = builder.build();
+            aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, Utils.instence(this).dip2px(20)));
+        }
+    }
+
+    private Bitmap drawCircle(int radius, int color) {
+        Bitmap bitmap = Bitmap.createBitmap(radius * 2, radius * 2, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Paint paint = new Paint();
+        RectF rectF = new RectF(0, 0, radius * 2, radius * 2);
+        paint.setColor(color);
+        canvas.drawArc(rectF, 0, 360, true, paint);
+        return bitmap;
     }
 }

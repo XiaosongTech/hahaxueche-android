@@ -10,6 +10,7 @@ import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.EventData;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.base.UserIdentityParam;
+import com.hahaxueche.model.cluster.FieldItem;
 import com.hahaxueche.model.responseList.CoachResponseList;
 import com.hahaxueche.model.responseList.FieldResponseList;
 import com.hahaxueche.model.user.User;
@@ -23,7 +24,6 @@ import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.WebViewUrl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import rx.Subscriber;
@@ -53,7 +53,7 @@ public class MapSearchPresenter extends HHBasePresenter implements Presenter<Map
         FieldResponseList fieldResponseList = application.getFieldResponseList();
         if (fieldResponseList != null) {
             filterFields(fieldResponseList.data);
-            mView.loadFields(mFilteredFields);
+            mView.loadFields(convertFieldList());
         }
     }
 
@@ -228,5 +228,15 @@ public class MapSearchPresenter extends HHBasePresenter implements Presenter<Map
             builder.include(new LatLng(field.lat, field.lng));
         }
         return builder.build();
+    }
+
+    private List<FieldItem> convertFieldList() {
+        List<FieldItem> fieldItems = new ArrayList<>();
+        for (Field field : mFilteredFields) {
+            LatLng latLng = new LatLng(field.lat, field.lng);
+            FieldItem fieldItem = new FieldItem(latLng, field);
+            fieldItems.add(fieldItem);
+        }
+        return fieldItems;
     }
 }
