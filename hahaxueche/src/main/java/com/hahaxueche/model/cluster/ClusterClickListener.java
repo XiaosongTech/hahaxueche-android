@@ -1,6 +1,7 @@
 package com.hahaxueche.model.cluster;
 
 import com.amap.api.maps.model.Marker;
+import com.hahaxueche.model.base.Field;
 
 /**
  * Created by wangshirui on 2017/5/16.
@@ -10,5 +11,12 @@ public interface ClusterClickListener {
     /**
      * 点击聚合点的回调处理函数
      */
-    public void onClick(Marker marker, Cluster cluster);
+    void onClickCluster(Marker marker, Cluster cluster);
+
+    /**
+     * 点击训练场坐标点回调处理函数
+     *
+     * @param field
+     */
+    void onClickField(Field field, boolean isSelect);
 }

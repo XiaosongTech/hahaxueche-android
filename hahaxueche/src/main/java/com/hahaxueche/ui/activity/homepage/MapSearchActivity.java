@@ -62,7 +62,6 @@ import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,8 +75,7 @@ import butterknife.OnClick;
  */
 
 public class MapSearchActivity extends HHBaseActivity implements MapSearchView, LocationSource,
-        AMapLocationListener, AMap.InfoWindowAdapter, ClusterRender,
-        AMap.OnMapLoadedListener, ClusterClickListener {
+        AMapLocationListener, AMap.InfoWindowAdapter, ClusterRender, ClusterClickListener {
     private MapSearchPresenter mPresenter;
     private OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
@@ -102,7 +100,6 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
     private Map<Integer, Drawable> mBackDrawAbles = new HashMap<>();
     private ClusterOverlay mClusterOverlay;
 
-    private ArrayList<Marker> markerList;
     private String cellPhone;
     private final int POP_ZONE = 0;
     private final int POP_DRIVING_SCHOOL = 1;
@@ -131,7 +128,6 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
         if (aMap == null) {
             aMap = mapView.getMap();
         }
-        aMap.setOnMapLoadedListener(this);
         aMap.setInfoWindowAdapter(this);
         aMap.setOnMapLoadedListener(new AMap.OnMapLoadedListener() {
             @Override
@@ -339,22 +335,6 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
         mClusterOverlay = new ClusterOverlay(aMap, fieldItems, getContext());
         mClusterOverlay.setClusterRenderer(this);
         mClusterOverlay.setOnClusterClickListener(this);
-        /*ArrayList<MarkerOptions> markerOptionlst = new ArrayList<>();
-        markerList = new ArrayList<>();
-        for (Field field : fields) {
-            MarkerOptions markerOption = new MarkerOptions();
-            LatLng x = new LatLng(field.lat, field.lng);
-            markerOption.position(x);
-            markerOption.title(field.name).snippet(field.display_address);
-            //markerOption.draggable(false);
-            markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                    .decodeResource(getResources(),
-                            R.drawable.ic_map_local_choseon)));
-            markerOptionlst.add(markerOption);
-        }
-        if (aMap != null) {
-            markerList = aMap.addMarkers(markerOptionlst, true);
-        }*/
     }
 
     @Override
@@ -516,11 +496,6 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
     }
 
     @Override
-    public void onMapLoaded() {
-
-    }
-
-    @Override
     public Drawable getDrawAble(int clusterNum, String clusterName, boolean isFieldPoint) {
         int radius = Utils.instence(this).dip2px(80);
         if (isFieldPoint) {
@@ -544,18 +519,21 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
     }
 
     @Override
-    public void onClick(Marker marker, Cluster cluster) {
-        if (cluster.isFieldPoint()) {
-            marker.showInfoWindow();
-            aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cluster.getFieldItems().get(0).getPosition(), 14));
-            mPresenter.selectField(cluster.getFieldItems().get(0).getField());
+    public void onClickCluster(Marker marker, Cluster cluster) {
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (FieldItem fieldItem : cluster.getFieldItems()) {
+            builder.include(fieldItem.getPosition());
+        }
+        LatLngBounds latLngBounds = builder.build();
+        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, Utils.instence(this).dip2px(20)));
+    }
+
+    @Override
+    public void onClickField(Field field, boolean isSelect) {
+        if (isSelect) {
+            mPresenter.selectField(field);
         } else {
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            for (FieldItem fieldItem : cluster.getFieldItems()) {
-                builder.include(fieldItem.getPosition());
-            }
-            LatLngBounds latLngBounds = builder.build();
-            aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, Utils.instence(this).dip2px(20)));
+            hideCoachesView();
         }
     }
 
