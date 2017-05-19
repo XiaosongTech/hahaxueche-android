@@ -13,7 +13,6 @@ import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
-import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.animation.AlphaAnimation;
@@ -38,7 +37,9 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener,
     private ClusterRender mClusterRender;
     private List<Marker> mAddMarkers = new ArrayList<>();
     private float maxZoomLevel = 12;
+    private float mCurrentZoomLevel = -1;
     private Field mSelectField;
+    private Marker mSelectFieldMarker;
 
     /**
      * 构造函数,批量添加聚合元素时,调用此构造函数
@@ -94,15 +95,23 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener,
 
     @Override
     public void onCameraChangeFinish(CameraPosition arg0) {
-        assignClusters();
+        if (mCurrentZoomLevel != mAMap.getCameraPosition().zoom) {
+            mCurrentZoomLevel = mAMap.getCameraPosition().zoom;
+            if (mSelectFieldMarker != null && mCurrentZoomLevel <= maxZoomLevel) {
+                selectMarker(mSelectFieldMarker, false);
+                Cluster cluster = (Cluster) mSelectFieldMarker.getObject();
+                Field field = cluster.getFieldItems().get(0).getField();
+                mClusterClickListener.onClickField(field, false);
+                mSelectFieldMarker = null;
+                mSelectField = null;
+            }
+            assignClusters();
+        }
     }
 
     //点击事件
     @Override
     public boolean onMarkerClick(Marker marker) {
-        if (mClusterClickListener == null) {
-            return true;
-        }
         Cluster cluster = (Cluster) marker.getObject();
         if (cluster != null) {
             if (cluster.isFieldPoint()) {
@@ -112,6 +121,12 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener,
                     mSelectField = null;
                 } else {
                     mSelectField = field;
+                    if (mSelectFieldMarker != null) {
+                        mSelectFieldMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                                .decodeResource(mContext.getResources(),
+                                        R.drawable.ic_map_local_choseon)));
+                    }
+                    mSelectFieldMarker = marker;
                 }
                 boolean isSelect = mSelectField != null && mSelectField.id.equals(field.id);
                 selectMarker(marker, isSelect);
@@ -131,12 +146,8 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener,
         //1.先删掉之前的marker点
         ArrayList<Marker> removeMarkers = new ArrayList<>();
         removeMarkers.addAll(mAddMarkers);
-        AlphaAnimation alphaAnimation = new AlphaAnimation(1, 0);
-        MyAnimationListener myAnimationListener = new MyAnimationListener(removeMarkers);
         for (Marker marker : removeMarkers) {
-            marker.setAnimation(alphaAnimation);
-            marker.setAnimationListener(myAnimationListener);
-            marker.startAnimation();
+            marker.remove();
         }
         //2.再添加新的marker
         for (Cluster cluster : clusters) {
@@ -196,23 +207,19 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener,
 
     private void calculateClusters() {
         mClusters.clear();
-        LatLngBounds visibleBounds = mAMap.getProjection().getVisibleRegion().latLngBounds;
         for (FieldItem fieldItem : mFieldItems) {
-            LatLng latlng = fieldItem.getPosition();
-            if (visibleBounds.contains(latlng)) {
-                Cluster cluster;
-                if (mAMap.getCameraPosition().zoom > maxZoomLevel) {
-                    cluster = new Cluster(fieldItem, true);
+            Cluster cluster;
+            if (mAMap.getCameraPosition().zoom > maxZoomLevel) {
+                cluster = new Cluster(fieldItem, true);
+                mClusters.add(cluster);
+            } else {
+                cluster = getCluster(fieldItem, mClusters);
+                if (cluster == null) {
+                    cluster = new Cluster(fieldItem, false);
                     mClusters.add(cluster);
-                } else {
-                    cluster = getCluster(fieldItem, mClusters);
-                    if (cluster == null) {
-                        cluster = new Cluster(fieldItem, false);
-                        mClusters.add(cluster);
-                    }
                 }
-                cluster.addFieldItem(fieldItem);
             }
+            cluster.addFieldItem(fieldItem);
         }
 
         //复制一份数据，规避同步
@@ -258,7 +265,7 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener,
         return BitmapDescriptorFactory.fromView(textView);
     }
 
-    //-----------------------辅助内部类用---------------------------------------------
+//-----------------------辅助内部类用---------------------------------------------
 
     /**
      * marker渐变动画，动画结束后将Marker删除
