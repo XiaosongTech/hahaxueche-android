@@ -13,9 +13,12 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.util.Common;
+import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
 
 import java.util.List;
@@ -32,6 +35,8 @@ public class MapCoachAdapter extends RecyclerView.Adapter<MapCoachAdapter.ViewHo
     private List<Coach> mCoachList;
     private OnRecyclerViewItemClickListener mOnItemClickListener;
     private Context mContext;
+    private int[] mDrivingSchoolIds;
+    private HHBaseApplication application;
 
     public interface OnRecyclerViewItemClickListener {
         void onDrivingSchoolClick(int drivingSchoolId);
@@ -45,11 +50,13 @@ public class MapCoachAdapter extends RecyclerView.Adapter<MapCoachAdapter.ViewHo
         void onContactCoachClick(Coach coach);
     }
 
-    public MapCoachAdapter(Context context, List<Coach> coachList, OnRecyclerViewItemClickListener listener) {
+    public MapCoachAdapter(Context context, List<Coach> coachList, int[] drivingSchoolIds, OnRecyclerViewItemClickListener listener) {
         inflater = LayoutInflater.from(context);
         mCoachList = coachList;
         mOnItemClickListener = listener;
         mContext = context;
+        mDrivingSchoolIds = drivingSchoolIds;
+        application = HHBaseApplication.get(mContext);
     }
 
     @Override
@@ -63,7 +70,16 @@ public class MapCoachAdapter extends RecyclerView.Adapter<MapCoachAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         Coach coach = mCoachList.get(position);
         holder.tvCoachName.setText(coach.name);
-        holder.ivCoachAvatar.setImageURI(coach.avatar);
+        if (mDrivingSchoolIds.length > 1) {
+            List<DrivingSchool> drivingSchools = application.getCityConstants().driving_schools;
+            for (DrivingSchool drivingSchool : drivingSchools) {
+                if (drivingSchool.id == coach.driving_school_id) {
+                    holder.ivCoachAvatar.setImageURI(drivingSchool.avatar);
+                }
+            }
+        } else {
+            holder.ivCoachAvatar.setImageURI(coach.avatar);
+        }
         holder.tvCoachPoints.setText(coach.average_rating + " (" + coach.review_count + ")");
         if (coach.coach_group != null) {
             holder.tvCoachActualPrice.setText(Utils.getMoney(coach.coach_group.training_cost));

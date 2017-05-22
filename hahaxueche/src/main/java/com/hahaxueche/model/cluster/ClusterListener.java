@@ -7,7 +7,7 @@ import com.hahaxueche.model.base.Field;
  * Created by wangshirui on 2017/5/16.
  */
 
-public interface ClusterClickListener {
+public interface ClusterListener {
     /**
      * 点击聚合点的回调处理函数
      */
@@ -19,4 +19,16 @@ public interface ClusterClickListener {
      * @param field
      */
     void onClickField(Field field, boolean isSelect);
+
+    /**
+     * 放大到全城
+     */
+    void onZoomToCity();
+
+    /**
+     * 显示info window
+     *
+     * @param marker
+     */
+    void showInfoWindow(Marker marker);
 }

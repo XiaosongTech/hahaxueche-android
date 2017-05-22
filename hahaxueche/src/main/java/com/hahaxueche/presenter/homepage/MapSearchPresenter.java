@@ -5,12 +5,14 @@ import android.text.TextUtils;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
+import com.amap.api.maps.model.Marker;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.EventData;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.base.UserIdentityParam;
 import com.hahaxueche.model.cluster.FieldItem;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.responseList.CoachResponseList;
 import com.hahaxueche.model.responseList.FieldResponseList;
 import com.hahaxueche.model.user.User;
@@ -64,8 +66,8 @@ public class MapSearchPresenter extends HHBasePresenter implements Presenter<Map
         application = null;
     }
 
-    public void setDrivingSchoolId(int drivingSchoolIdd) {
-        mSelectDrivingSchoolId = drivingSchoolIdd;
+    public void setDrivingSchoolId(int drivingSchoolId) {
+        mSelectDrivingSchoolId = drivingSchoolId;
         getFields();
     }
 
@@ -81,7 +83,7 @@ public class MapSearchPresenter extends HHBasePresenter implements Presenter<Map
         getFields();
     }
 
-    public void selectField(Field field) {
+    public void selectField(final Field field) {
         int cityId = 0;
         if (application.getSharedPrefUtil().getLocalSettings().cityId > -1) {
             cityId = application.getSharedPrefUtil().getLocalSettings().cityId;
@@ -107,7 +109,7 @@ public class MapSearchPresenter extends HHBasePresenter implements Presenter<Map
                     @Override
                     public void onNext(CoachResponseList coachResponseList) {
                         mView.showCoachesView();
-                        mView.loadCoaches(coachResponseList.data);
+                        mView.loadCoaches(coachResponseList.data, field.driving_school_ids);
                     }
                 });
     }
@@ -182,6 +184,10 @@ public class MapSearchPresenter extends HHBasePresenter implements Presenter<Map
         }
         List<Field> retList = new ArrayList<>();
         for (Field field : fieldList) {
+            //通过驾校筛选
+            boolean isSchoolFiltered = true;
+            //通过距离、区域筛选
+            boolean isZoneFiltered = true;
             if (mSelectDrivingSchoolId >= 0) {
                 //选择驾校
                 boolean isExist = false;
@@ -191,16 +197,11 @@ public class MapSearchPresenter extends HHBasePresenter implements Presenter<Map
                         break;
                     }
                 }
-                if (isExist) {
-                    retList.add(field);
-                    continue;
-                }
-            } else if (!TextUtils.isEmpty(mSelectZone)) {
+                isSchoolFiltered = isExist;
+            }
+            if (!TextUtils.isEmpty(mSelectZone)) {
                 //选择区域
-                if (field.zone.equals(mSelectZone)) {
-                    retList.add(field);
-                    continue;
-                }
+                isZoneFiltered = field.zone.equals(mSelectZone);
             } else if (mSelectDistance != Common.NO_LIMIT) {
                 //选择距离
                 if (application.getMyLocation() != null) {
@@ -208,26 +209,14 @@ public class MapSearchPresenter extends HHBasePresenter implements Presenter<Map
                     LatLng myLocation = new LatLng(application.getMyLocation().lat, application.getMyLocation().lng);
                     LatLng fieldLocation = new LatLng(field.lat, field.lng);
                     double distance = AMapUtils.calculateLineDistance(myLocation, fieldLocation);
-                    if (distance < mSelectDistance * 1000) {
-                        retList.add(field);
-                        continue;
-                    }
-                } else {
-                    //没有定位信息，直接当成无限距离
-                    retList.add(field);
-                    continue;
+                    isZoneFiltered = distance < mSelectDistance * 1000;
                 }
+            }
+            if (isSchoolFiltered && isZoneFiltered) {
+                retList.add(field);
             }
         }
         mFilteredFields = retList;
-    }
-
-    public LatLngBounds getFieldBounds() {
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (Field field : mFilteredFields) {
-            builder.include(new LatLng(field.lat, field.lng));
-        }
-        return builder.build();
     }
 
     private List<FieldItem> convertFieldList() {
@@ -238,5 +227,19 @@ public class MapSearchPresenter extends HHBasePresenter implements Presenter<Map
             fieldItems.add(fieldItem);
         }
         return fieldItems;
+    }
+
+    public String getSelectZone() {
+        return mSelectZone;
+    }
+
+    public void getDrivingSchool(int drivingSchoolId, Marker marker) {
+        List<DrivingSchool> drivingSchools = getDrivingSchools(mView.getContext());
+        for (DrivingSchool drivingSchool : drivingSchools) {
+            if (drivingSchool.id == drivingSchoolId) {
+                mView.setInfoWindowDrivingSchool(drivingSchool, marker);
+                break;
+            }
+        }
     }
 }

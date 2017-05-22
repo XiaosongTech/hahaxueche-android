@@ -53,7 +53,7 @@ public class FieldFilterPresenter extends HHBasePresenter implements Presenter<F
         application = null;
     }
 
-    public void selectField(Field field) {
+    public void selectField(final Field field) {
         int cityId = 0;
         if (application.getSharedPrefUtil().getLocalSettings().cityId > -1) {
             cityId = application.getSharedPrefUtil().getLocalSettings().cityId;
@@ -79,7 +79,7 @@ public class FieldFilterPresenter extends HHBasePresenter implements Presenter<F
                     @Override
                     public void onNext(CoachResponseList coachResponseList) {
                         mView.showCoachesView();
-                        mView.loadCoaches(coachResponseList.data);
+                        mView.loadCoaches(coachResponseList.data, field.driving_school_ids);
                     }
                 });
     }

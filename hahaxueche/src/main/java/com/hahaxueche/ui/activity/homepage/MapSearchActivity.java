@@ -34,24 +34,24 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
-import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
-import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.cluster.Cluster;
-import com.hahaxueche.model.cluster.ClusterClickListener;
+import com.hahaxueche.model.cluster.ClusterListener;
 import com.hahaxueche.model.cluster.ClusterOverlay;
 import com.hahaxueche.model.cluster.ClusterRender;
 import com.hahaxueche.model.cluster.FieldItem;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.homepage.MapSearchPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.DrivingSchoolDetailDetailActivity;
+import com.hahaxueche.ui.activity.findCoach.SearchCoachActivity;
 import com.hahaxueche.ui.adapter.homepage.MapCoachAdapter;
 import com.hahaxueche.ui.dialog.homepage.GetUserIdentityDialog;
 import com.hahaxueche.ui.popupWindow.findCoach.ZonePopupWindow;
@@ -75,7 +75,7 @@ import butterknife.OnClick;
  */
 
 public class MapSearchActivity extends HHBaseActivity implements MapSearchView, LocationSource,
-        AMapLocationListener, AMap.InfoWindowAdapter, ClusterRender, ClusterClickListener {
+        AMapLocationListener, AMap.InfoWindowAdapter, ClusterRender, ClusterListener {
     private MapSearchPresenter mPresenter;
     private OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
@@ -103,6 +103,7 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
     private String cellPhone;
     private final int POP_ZONE = 0;
     private final int POP_DRIVING_SCHOOL = 1;
+    private DrivingSchool mInfoWindowDrivingSchool;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,15 +130,6 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
             aMap = mapView.getMap();
         }
         aMap.setInfoWindowAdapter(this);
-        aMap.setOnMapLoadedListener(new AMap.OnMapLoadedListener() {
-            @Override
-            public void onMapLoaded() {
-                //设定初始可视区域
-                aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(mPresenter.getFieldBounds(), 0));
-                //aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mSelectField.lat, mSelectField.lng), 14));
-                //mPresenter.selectField(mSelectField);
-            }
-        });
         aMap.setLocationSource(this);// 设置定位监听
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
@@ -146,7 +138,7 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
 
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setCustomView(R.layout.actionbar_base);
+        actionBar.setCustomView(R.layout.actionbar_map_search);
         ImageView mIvBack = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
         TextView mTvTitle = ButterKnife.findById(actionBar.getCustomView(), R.id.tv_title);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -157,11 +149,11 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
                 MapSearchActivity.this.finish();
             }
         });
-        ImageView mIvSearch = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_back);
+        ImageView mIvSearch = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_search);
         mIvSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //todo 搜索页面
+                startActivity(new Intent(getContext(), SearchCoachActivity.class));
             }
         });
     }
@@ -332,14 +324,17 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
 
     @Override
     public void loadFields(List<FieldItem> fieldItems) {
-        mClusterOverlay = new ClusterOverlay(aMap, fieldItems, getContext());
+        boolean isInitLoadPoint = !TextUtils.isEmpty(mPresenter.getSelectZone());
+        mClusterOverlay = new ClusterOverlay(aMap, fieldItems, getContext(), isInitLoadPoint);
         mClusterOverlay.setClusterRenderer(this);
-        mClusterOverlay.setOnClusterClickListener(this);
+        mClusterOverlay.setClusterListener(this);
+        mClusterOverlay.calculateClusters();
+        mClusterOverlay.moveCamera();
     }
 
     @Override
-    public void loadCoaches(List<Coach> coaches) {
-        mapCoachAdapter = new MapCoachAdapter(this, coaches, new MapCoachAdapter.OnRecyclerViewItemClickListener() {
+    public void loadCoaches(List<Coach> coaches, int[] drivingSchoolIds) {
+        mapCoachAdapter = new MapCoachAdapter(this, coaches, drivingSchoolIds, new MapCoachAdapter.OnRecyclerViewItemClickListener() {
             @Override
             public void onDrivingSchoolClick(int drivingSchoolId) {
                 mPresenter.addDataTrack("map_view_page_check_school_tapped", getContext());
@@ -406,6 +401,12 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
         mRcyMapCoach.setVisibility(View.GONE);
     }
 
+    @Override
+    public void setInfoWindowDrivingSchool(DrivingSchool drivingSchool, Marker marker) {
+        mInfoWindowDrivingSchool = drivingSchool;
+        marker.showInfoWindow();
+    }
+
     /**
      * 自定义infowinfow窗口
      */
@@ -414,9 +415,17 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
         if (cluster.isFieldPoint()) {
             final Field field = cluster.getFieldItems().get(0).getField();
             SimpleDraweeView mIvFieldAvatar = ButterKnife.findById(view, R.id.iv_field_avatar);
-            mIvFieldAvatar.setImageURI(field.image);
+            if (mInfoWindowDrivingSchool != null) {
+                mIvFieldAvatar.setImageURI(mInfoWindowDrivingSchool.avatar);
+            } else {
+                mIvFieldAvatar.setImageURI(field.image);
+            }
             TextView tvFieldName = ButterKnife.findById(view, R.id.tv_field_name);
-            tvFieldName.setText(field.name);
+            if (mInfoWindowDrivingSchool != null) {
+                tvFieldName.setText(mInfoWindowDrivingSchool.name);
+            } else {
+                tvFieldName.setText(field.name);
+            }
             TextView tvDisplayAddress = ButterKnife.findById(view, R.id.tv_display_address);
             String text = (TextUtils.isEmpty(field.display_address) ? "" : field.display_address) +
                     " (" + field.coach_count + "名教练)";
@@ -520,12 +529,8 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
 
     @Override
     public void onClickCluster(Marker marker, Cluster cluster) {
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (FieldItem fieldItem : cluster.getFieldItems()) {
-            builder.include(fieldItem.getPosition());
-        }
-        LatLngBounds latLngBounds = builder.build();
-        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, Utils.instence(this).dip2px(20)));
+        String zone = cluster.getZoneName();
+        mPresenter.setZone(zone);
     }
 
     @Override
@@ -537,13 +542,41 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
         }
     }
 
+    @Override
+    public void onZoomToCity() {
+        mPresenter.setDistance(Common.NO_LIMIT);
+    }
+
+    @Override
+    public void showInfoWindow(Marker marker) {
+        Cluster cluster = (Cluster) marker.getObject();
+        if (cluster.isFieldPoint()) {
+            Field field = cluster.getFieldItems().get(0).getField();
+            if (field.driving_school_ids.length == 1) {
+                //训练场的驾校数==1，info window显示驾校
+                mInfoWindowDrivingSchool = null;
+                mPresenter.getDrivingSchool(field.driving_school_ids[0], marker);
+                return;
+            }
+        }
+        marker.showInfoWindow();
+    }
+
     private Bitmap drawCircle(int radius, int color) {
         Bitmap bitmap = Bitmap.createBitmap(radius * 2, radius * 2, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
+
         Paint paint = new Paint();
         RectF rectF = new RectF(0, 0, radius * 2, radius * 2);
         paint.setColor(color);
         canvas.drawArc(rectF, 0, 360, true, paint);
+
+        Paint paintWhite = new Paint();
+        paintWhite.setColor(ContextCompat.getColor(this, R.color.haha_white));
+        paintWhite.setStyle(Paint.Style.STROKE);
+        paintWhite.setStrokeWidth(Utils.instence(this).dip2px(2));
+        canvas.drawArc(rectF, 0, 360, false, paintWhite);
+
         return bitmap;
     }
 }

@@ -27,12 +27,10 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
-import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
-import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
@@ -47,7 +45,6 @@ import com.hahaxueche.ui.dialog.homepage.GetUserIdentityDialog;
 import com.hahaxueche.ui.view.findCoach.FieldFilterView;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
-import com.hahaxueche.util.WebViewUrl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -241,8 +238,8 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
     }
 
     @Override
-    public void loadCoaches(ArrayList<Coach> coaches) {
-        mapCoachAdapter = new MapCoachAdapter(this, coaches, new MapCoachAdapter.OnRecyclerViewItemClickListener() {
+    public void loadCoaches(ArrayList<Coach> coaches, int[] drivingSchoolIds) {
+        mapCoachAdapter = new MapCoachAdapter(this, coaches, drivingSchoolIds, new MapCoachAdapter.OnRecyclerViewItemClickListener() {
             @Override
             public void onDrivingSchoolClick(int drivingSchoolId) {
                 mPresenter.addDataTrack("map_view_page_check_school_tapped", getContext());
