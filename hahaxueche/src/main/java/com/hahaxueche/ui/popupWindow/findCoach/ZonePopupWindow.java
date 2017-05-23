@@ -69,7 +69,7 @@ public class ZonePopupWindow extends PopupWindow {
         LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         contentView = inflater.inflate(R.layout.pop_driving_school_coach_zone, null);
         setContentView(contentView);
-        //setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        setHeight(Utils.instence(mActivity).dip2px(300));
         setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         setOutsideTouchable(true);  //默认设置outside点击无响应
         setFocusable(true);

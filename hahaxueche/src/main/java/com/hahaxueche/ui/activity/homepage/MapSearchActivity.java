@@ -517,7 +517,7 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
 
     @Override
     public Drawable getDrawAble(int clusterNum, String clusterName, boolean isFieldPoint) {
-        int radius = Utils.instence(this).dip2px(80);
+        int radius = getResources().getDimensionPixelSize(R.dimen.cluster_radius);
         if (isFieldPoint) {
             Drawable bitmapDrawable = mBackDrawAbles.get(1);
             if (bitmapDrawable == null) {

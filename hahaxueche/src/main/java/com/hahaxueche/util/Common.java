@@ -74,5 +74,5 @@ public class Common {
     //搜索类型-教练
     public static final int SEARCH_TYPE_COACH = 2;
     //地图不聚合的最大level
-    public static final double CLUSTER_MAX_ZOOM_LEVEL = 11;
+    public static final double CLUSTER_MAX_ZOOM_LEVEL = 10.7;
 }

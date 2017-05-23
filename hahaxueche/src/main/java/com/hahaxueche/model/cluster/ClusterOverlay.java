@@ -291,5 +291,6 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener,
     @Override
     public void onMapLoaded() {
         mCurrentZoomLevel = mAMap.getCameraPosition().zoom;
+        moveCamera();
     }
 }

@@ -21,4 +21,5 @@
     <dimen name="cardview_width_160dp">145dp</dimen>
     <dimen name="width_100dp">75dp</dimen>
     <dimen name="width_60dp">45dp</dimen>
+    <dimen name="cluster_radius">50dp</dimen>
 </resources>
