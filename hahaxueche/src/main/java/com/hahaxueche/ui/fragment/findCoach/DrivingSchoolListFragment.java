@@ -29,7 +29,7 @@ import com.hahaxueche.R;
 import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.presenter.findCoach.DrivingSchoolListPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
-import com.hahaxueche.ui.activity.findCoach.DrivingSchoolDetailDetailActivity;
+import com.hahaxueche.ui.activity.findCoach.DrivingSchoolDetailActivity;
 import com.hahaxueche.ui.adapter.findCoach.DrivingSchoolAdapter;
 import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
@@ -156,7 +156,7 @@ public class DrivingSchoolListFragment extends HHBaseFragment implements Driving
                         HashMap<String, String> map = new HashMap();
                         map.put("school_id", String.valueOf(drivingSchool.id));
                         mPresenter.addDataTrack("find_school_school_tapped", getContext(), map);
-                        Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
+                        Intent intent = new Intent(getContext(), DrivingSchoolDetailActivity.class);
                         intent.putExtra("drivingSchoolId", drivingSchool.id);
                         startActivity(intent);
                     }

@@ -330,7 +330,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.activity.findCoach.DrivingSchoolDetailDetailActivity"
+            android:name=".ui.activity.findCoach.DrivingSchoolDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
         <activity

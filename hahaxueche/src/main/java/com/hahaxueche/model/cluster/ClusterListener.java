@@ -31,4 +31,6 @@ public interface ClusterListener {
      * @param marker
      */
     void showInfoWindow(Marker marker);
+
+    void setInfoDrivingSchoolNull();
 }

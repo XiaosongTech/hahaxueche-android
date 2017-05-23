@@ -14,8 +14,8 @@ import android.widget.TextView;
 import com.hahaxueche.R;
 import com.hahaxueche.presenter.findCoach.FindCoachPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
-import com.hahaxueche.ui.activity.findCoach.FieldFilterActivity;
 import com.hahaxueche.ui.activity.findCoach.SearchCoachActivity;
+import com.hahaxueche.ui.activity.homepage.MapSearchActivity;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
 import com.hahaxueche.ui.view.findCoach.FindCoachView;
 
@@ -136,7 +136,7 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
                 break;
             case R.id.iv_icon_left:
                 mPresenter.addDataTrack("find_coach_page_field_icon_tapped", getContext());
-                startActivity(new Intent(getContext(), FieldFilterActivity.class));
+                startActivity(new Intent(getContext(), MapSearchActivity.class));
                 break;
             case R.id.iv_search:
                 mPresenter.addDataTrack("find_coach_page_search_tapped", getContext());

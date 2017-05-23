@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -28,12 +27,11 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Field;
-import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.findCoach.CoachListPresenter;
 import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
-import com.hahaxueche.ui.activity.findCoach.DrivingSchoolDetailDetailActivity;
+import com.hahaxueche.ui.activity.findCoach.DrivingSchoolDetailActivity;
 import com.hahaxueche.ui.adapter.findCoach.CoachAdapter;
 import com.hahaxueche.ui.dialog.BaseAlertSimpleDialog;
 import com.hahaxueche.ui.fragment.HHBaseFragment;
@@ -163,7 +161,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
 
             @Override
             public void clickDrivingSchool(int drivingSchoolId) {
-                Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
+                Intent intent = new Intent(getContext(), DrivingSchoolDetailActivity.class);
                 intent.putExtra("drivingSchoolId", drivingSchoolId);
                 startActivity(intent);
             }

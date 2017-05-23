@@ -50,7 +50,7 @@ import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.homepage.MapSearchPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
 import com.hahaxueche.ui.activity.findCoach.CoachDetailActivity;
-import com.hahaxueche.ui.activity.findCoach.DrivingSchoolDetailDetailActivity;
+import com.hahaxueche.ui.activity.findCoach.DrivingSchoolDetailActivity;
 import com.hahaxueche.ui.activity.findCoach.SearchCoachActivity;
 import com.hahaxueche.ui.adapter.homepage.MapCoachAdapter;
 import com.hahaxueche.ui.dialog.homepage.GetUserIdentityDialog;
@@ -119,10 +119,14 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         // 设置布局管理器
         mRcyMapCoach.setLayoutManager(layoutManager);
-        initMap();
         //地图初始化
-
-        mPresenter.getFields();
+        initMap();
+        int drivingSchoolId = getIntent().getIntExtra("drivingSchoolId", -1);
+        if (drivingSchoolId >= 0) {
+            mPresenter.setDrivingSchoolId(drivingSchoolId);
+        } else {
+            mPresenter.getFields();
+        }
     }
 
     private void initMap() {
@@ -338,7 +342,7 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
             @Override
             public void onDrivingSchoolClick(int drivingSchoolId) {
                 mPresenter.addDataTrack("map_view_page_check_school_tapped", getContext());
-                Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
+                Intent intent = new Intent(getContext(), DrivingSchoolDetailActivity.class);
                 intent.putExtra("drivingSchoolId", drivingSchoolId);
                 startActivity(intent);
             }
@@ -366,9 +370,16 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
             }
 
             @Override
-            public void onCustomerServiceClick() {
-                mPresenter.addDataTrack("map_view_page_online_support_tapped", getContext());
-                mPresenter.onlineAsk();
+            public void onSendLocationClick(final Coach coach) {
+                GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "轻松定位训练场",
+                        "输入手机号，立即接收详细地址", "发我定位", new GetUserIdentityDialog.OnIdentityGetListener() {
+                    @Override
+                    public void getCellPhone(String cellPhone) {
+                        mPresenter.addDataTrack("map_view_page_check_site_confirmed", getContext());
+                        mPresenter.checkField(cellPhone, coach);
+                    }
+                });
+                dialog.show();
             }
 
             @Override
@@ -560,6 +571,11 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
             }
         }
         marker.showInfoWindow();
+    }
+
+    @Override
+    public void setInfoDrivingSchoolNull() {
+        mInfoWindowDrivingSchool = null;
     }
 
     private Bitmap drawCircle(int radius, int color) {

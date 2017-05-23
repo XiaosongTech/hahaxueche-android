@@ -269,7 +269,7 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
 
                 @Override
                 public void clickDrivingSchool(int drivingSchoolId) {
-                    Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
+                    Intent intent = new Intent(getContext(), DrivingSchoolDetailActivity.class);
                     intent.putExtra("drivingSchoolId", drivingSchoolId);
                     startActivity(intent);
                 }
@@ -350,7 +350,7 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
                             HashMap<String, String> map = new HashMap();
                             map.put("school_id", String.valueOf(drivingSchool.id));
                             mPresenter.addDataTrack("search_page_hot_school_tapped", getContext(), map);
-                            Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
+                            Intent intent = new Intent(getContext(), DrivingSchoolDetailActivity.class);
                             intent.putExtra("drivingSchoolId", drivingSchool.id);
                             startActivity(intent);
                         }
@@ -493,7 +493,7 @@ public class SearchCoachActivity extends HHBaseActivity implements SearchCoachVi
                         HashMap<String, String> map = new HashMap();
                         map.put("index", String.valueOf(position));
                         mPresenter.addDataTrack("search_page_hot_school_tapped", getContext(), map);
-                        Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
+                        Intent intent = new Intent(getContext(), DrivingSchoolDetailActivity.class);
                         intent.putExtra("drivingSchoolId", drivingSchool.id);
                         startActivity(intent);
                     }

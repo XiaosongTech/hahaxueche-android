@@ -243,7 +243,7 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
             @Override
             public void onDrivingSchoolClick(int drivingSchoolId) {
                 mPresenter.addDataTrack("map_view_page_check_school_tapped", getContext());
-                Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
+                Intent intent = new Intent(getContext(), DrivingSchoolDetailActivity.class);
                 intent.putExtra("drivingSchoolId", drivingSchoolId);
                 startActivity(intent);
             }
@@ -271,9 +271,16 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
             }
 
             @Override
-            public void onCustomerServiceClick() {
-                mPresenter.addDataTrack("map_view_page_online_support_tapped", getContext());
-                mPresenter.onlineAsk();
+            public void onSendLocationClick(final Coach coach) {
+                GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "轻松定位训练场",
+                        "输入手机号，立即接收详细地址", "发我定位", new GetUserIdentityDialog.OnIdentityGetListener() {
+                    @Override
+                    public void getCellPhone(String cellPhone) {
+                        mPresenter.addDataTrack("map_view_page_check_site_confirmed", getContext());
+                        mPresenter.checkField(cellPhone, coach);
+                    }
+                });
+                dialog.show();
             }
 
             @Override
@@ -303,7 +310,7 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
                 } else {
                     existMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                             .decodeResource(getResources(),
-                                    R.drawable.ic_map_local_choseoff)));
+                                    R.drawable.ic_map_local_choseon)));
                 }
             }
             Field field = (Field) marker.getObject();
@@ -335,7 +342,7 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
             //markerOption.draggable(false);
             markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                     .decodeResource(getResources(),
-                            R.drawable.ic_map_local_choseoff)));
+                            R.drawable.ic_map_local_choseon)));
             markerOptionlst.add(markerOption);
         }
         if (aMap != null) {

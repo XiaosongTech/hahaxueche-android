@@ -211,6 +211,7 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener,
     }
 
     private void selectMarker(Marker marker, boolean isSelect) {
+        mClusterListener.setInfoDrivingSchoolNull();
         if (isSelect) {
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                     .decodeResource(mContext.getResources(),
