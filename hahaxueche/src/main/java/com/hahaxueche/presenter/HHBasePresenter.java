@@ -10,6 +10,7 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
+import com.hahaxueche.model.base.CityConstants;
 import com.hahaxueche.model.base.Constants;
 import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.payment.PaymentMethod;
@@ -154,5 +155,28 @@ public class HHBasePresenter {
     public List<DrivingSchool> getHotDrivingSchools(Context context) {
         HHBaseApplication application = HHBaseApplication.get(context);
         return application.getCityConstants().driving_schools.subList(0, Common.MAX_DRIVING_SCHOOL_COUNT);
+    }
+
+    public int[][] getPriceRanges(Context context) {
+        HHBaseApplication application = HHBaseApplication.get(context);
+        CityConstants cityConstants = application.getCityConstants();
+        return cityConstants.filters.prices;
+    }
+
+    public String[] getZones(Context context) {
+        HHBaseApplication application = HHBaseApplication.get(context);
+        CityConstants cityConstants = application.getCityConstants();
+        return cityConstants.zones;
+    }
+
+    public int[] getRadius(Context context) {
+        HHBaseApplication application = HHBaseApplication.get(context);
+        CityConstants cityConstants = application.getCityConstants();
+        return cityConstants.filters.radius;
+    }
+
+    public List<DrivingSchool> getDrivingSchools(Context context) {
+        HHBaseApplication application = HHBaseApplication.get(context);
+        return application.getCityConstants().driving_schools;
     }
 }

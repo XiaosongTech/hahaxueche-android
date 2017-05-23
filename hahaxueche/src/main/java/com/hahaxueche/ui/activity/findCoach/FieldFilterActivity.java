@@ -27,12 +27,10 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
-import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
-import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
@@ -47,7 +45,6 @@ import com.hahaxueche.ui.dialog.homepage.GetUserIdentityDialog;
 import com.hahaxueche.ui.view.findCoach.FieldFilterView;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
-import com.hahaxueche.util.WebViewUrl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -241,12 +238,12 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
     }
 
     @Override
-    public void loadCoaches(ArrayList<Coach> coaches) {
-        mapCoachAdapter = new MapCoachAdapter(this, coaches, new MapCoachAdapter.OnRecyclerViewItemClickListener() {
+    public void loadCoaches(ArrayList<Coach> coaches, int[] drivingSchoolIds) {
+        mapCoachAdapter = new MapCoachAdapter(this, coaches, drivingSchoolIds, new MapCoachAdapter.OnRecyclerViewItemClickListener() {
             @Override
             public void onDrivingSchoolClick(int drivingSchoolId) {
                 mPresenter.addDataTrack("map_view_page_check_school_tapped", getContext());
-                Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
+                Intent intent = new Intent(getContext(), DrivingSchoolDetailActivity.class);
                 intent.putExtra("drivingSchoolId", drivingSchoolId);
                 startActivity(intent);
             }
@@ -274,9 +271,16 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
             }
 
             @Override
-            public void onCustomerServiceClick() {
-                mPresenter.addDataTrack("map_view_page_online_support_tapped", getContext());
-                mPresenter.onlineAsk();
+            public void onSendLocationClick(final Coach coach) {
+                GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "轻松定位训练场",
+                        "输入手机号，立即接收详细地址", "发我定位", new GetUserIdentityDialog.OnIdentityGetListener() {
+                    @Override
+                    public void getCellPhone(String cellPhone) {
+                        mPresenter.addDataTrack("map_view_page_check_site_confirmed", getContext());
+                        mPresenter.checkField(cellPhone, coach);
+                    }
+                });
+                dialog.show();
             }
 
             @Override
@@ -306,7 +310,7 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
                 } else {
                     existMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                             .decodeResource(getResources(),
-                                    R.drawable.ic_map_local_choseoff)));
+                                    R.drawable.ic_map_local_choseon)));
                 }
             }
             Field field = (Field) marker.getObject();
@@ -338,7 +342,7 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
             //markerOption.draggable(false);
             markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                     .decodeResource(getResources(),
-                            R.drawable.ic_map_local_choseoff)));
+                            R.drawable.ic_map_local_choseon)));
             markerOptionlst.add(markerOption);
         }
         if (aMap != null) {

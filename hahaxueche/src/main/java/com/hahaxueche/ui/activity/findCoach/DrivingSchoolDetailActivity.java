@@ -30,16 +30,14 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.hahaxueche.BuildConfig;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.drivingSchool.DrivingSchool;
-import com.hahaxueche.model.user.User;
 import com.hahaxueche.model.user.coach.ClassType;
-import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.model.user.coach.Review;
 import com.hahaxueche.presenter.findCoach.DrivingSchoolDetailPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
+import com.hahaxueche.ui.activity.homepage.MapSearchActivity;
 import com.hahaxueche.ui.dialog.ShareDialog;
 import com.hahaxueche.ui.dialog.homepage.GetUserIdentityDialog;
 import com.hahaxueche.ui.view.findCoach.DrivingSchoolDetailView;
@@ -48,7 +46,6 @@ import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
 import com.hahaxueche.util.Utils;
 import com.hahaxueche.util.WebViewUrl;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,7 +62,7 @@ import me.shaohui.shareutil.share.SharePlatform;
  * Created by wangshirui on 2017/5/8.
  */
 
-public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements DrivingSchoolDetailView {
+public class DrivingSchoolDetailActivity extends HHBaseActivity implements DrivingSchoolDetailView {
     private DrivingSchoolDetailPresenter mPresenter;
     @BindView(R.id.lly_main)
     LinearLayout mLlyMain;
@@ -183,7 +180,7 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DrivingSchoolDetailDetailActivity.this.finish();
+                DrivingSchoolDetailActivity.this.finish();
             }
         });
         ImageView mIvShare = ButterKnife.findById(actionBar.getCustomView(), R.id.iv_share);
@@ -371,15 +368,15 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
         switch (view.getId()) {
             case R.id.tv_near_fields:
                 mPresenter.addDataTrack("school_detail_check_fields_tapped", getContext());
-                mPresenter.clickToFields(null);
+                mPresenter.clickToFields();
                 break;
             case R.id.tv_more_fields:
                 mPresenter.addDataTrack("school_detail_more_fields_tapped", getContext());
-                mPresenter.clickToFields(null);
+                mPresenter.clickToFields();
                 break;
             case R.id.tv_click_more_fields:
                 mPresenter.addDataTrack("school_detail_more_fields_tapped", getContext());
-                mPresenter.clickToFields(null);
+                mPresenter.clickToFields();
                 break;
             case R.id.tv_more_bio:
                 clickMoreBio();
@@ -542,10 +539,9 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
     }
 
     @Override
-    public void navigateToFieldFilter(List<Field> highlightFields, Field selectField) {
-        Intent intent = new Intent(getContext(), FieldFilterActivity.class);
-        intent.putParcelableArrayListExtra("hightlightFields", (ArrayList<? extends Parcelable>) highlightFields);
-        intent.putExtra("field", selectField);
+    public void navigateToMapSearch(int drivingSchoolId) {
+        Intent intent = new Intent(getContext(), MapSearchActivity.class);
+        intent.putExtra("drivingSchoolId", drivingSchoolId);
         startActivity(intent);
     }
 
@@ -854,7 +850,7 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
             @Override
             public void onClick(View view) {
                 mPresenter.addDataTrack("school_detail_single_field_tapped", getContext());
-                mPresenter.clickToFields(field);
+                mPresenter.clickToFields();
             }
         });
         tvToField.setOnClickListener(new View.OnClickListener() {
@@ -962,7 +958,7 @@ public class DrivingSchoolDetailDetailActivity extends HHBaseActivity implements
                         HashMap<String, String> map = new HashMap();
                         map.put("index", String.valueOf(position));
                         mPresenter.addDataTrack("school_detail_hot_school_tapped", getContext(), map);
-                        Intent intent = new Intent(getContext(), DrivingSchoolDetailDetailActivity.class);
+                        Intent intent = new Intent(getContext(), DrivingSchoolDetailActivity.class);
                         intent.putExtra("drivingSchoolId", drivingSchool.id);
                         startActivity(intent);
                     }

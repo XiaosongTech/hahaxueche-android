@@ -46,8 +46,6 @@ public interface DrivingSchoolDetailView extends HHBaseView {
 
     void addFieldView(Field field);
 
-    void navigateToFieldFilter(List<Field> highlightFields, Field selectField);
-
     void startToShare(int shareType, String shortenUrl);
 
     void initShareData(DrivingSchool mDrivingSchool);
@@ -55,4 +53,6 @@ public interface DrivingSchoolDetailView extends HHBaseView {
     void setCommentCount(String text);
 
     void setGroupBuyPhone(String cellPhone);
+
+    void navigateToMapSearch(int drivingSchoolId);
 }

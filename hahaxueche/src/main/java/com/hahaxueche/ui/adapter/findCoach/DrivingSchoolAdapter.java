@@ -1,7 +1,6 @@
 package com.hahaxueche.ui.adapter.findCoach;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -26,8 +25,6 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.user.User;
-import com.hahaxueche.ui.activity.findCoach.DrivingSchoolDetailDetailActivity;
-import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
 import com.umeng.analytics.MobclickAgent;
 

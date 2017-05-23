@@ -1,10 +1,18 @@
-package com.hahaxueche.presenter.findCoach;
+package com.hahaxueche.presenter.homepage;
 
+import android.text.TextUtils;
+
+import com.amap.api.maps.AMapUtils;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.LatLngBounds;
+import com.amap.api.maps.model.Marker;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.EventData;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.base.UserIdentityParam;
+import com.hahaxueche.model.cluster.FieldItem;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.responseList.CoachResponseList;
 import com.hahaxueche.model.responseList.FieldResponseList;
 import com.hahaxueche.model.user.User;
@@ -12,37 +20,42 @@ import com.hahaxueche.model.user.UserIdentityInfo;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.HHBasePresenter;
 import com.hahaxueche.presenter.Presenter;
-import com.hahaxueche.ui.view.findCoach.FieldFilterView;
+import com.hahaxueche.ui.view.homepage.MapSearchView;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.WebViewUrl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * Created by wangshirui on 2016/10/17.
+ * Created by wangshirui on 2017/5/16.
  */
 
-public class FieldFilterPresenter extends HHBasePresenter implements Presenter<FieldFilterView> {
-    private FieldFilterView mView;
+public class MapSearchPresenter extends HHBasePresenter implements Presenter<MapSearchView> {
+    private MapSearchView mView;
     private Subscription subscription;
     HHBaseApplication application;
+    private int mSelectDrivingSchoolId = -1;
+    private String mSelectZone = "";
+    private int mSelectDistance = Common.NO_LIMIT;
+    private List<Field> mFilteredFields;
 
     @Override
-    public void attachView(FieldFilterView view) {
+    public void attachView(MapSearchView view) {
         this.mView = view;
         application = HHBaseApplication.get(mView.getContext());
-
     }
 
     public void getFields() {
         FieldResponseList fieldResponseList = application.getFieldResponseList();
         if (fieldResponseList != null) {
-            mView.initMap(fieldResponseList.data);
+            filterFields(fieldResponseList.data);
+            mView.loadFields(convertFieldList());
         }
     }
 
@@ -51,6 +64,23 @@ public class FieldFilterPresenter extends HHBasePresenter implements Presenter<F
         this.mView = null;
         if (subscription != null) subscription.unsubscribe();
         application = null;
+    }
+
+    public void setDrivingSchoolId(int drivingSchoolId) {
+        mSelectDrivingSchoolId = drivingSchoolId;
+        getFields();
+    }
+
+    public void setZone(String zone) {
+        mSelectDistance = Common.NO_LIMIT;
+        mSelectZone = zone;
+        getFields();
+    }
+
+    public void setDistance(int distance) {
+        mSelectZone = "";
+        mSelectDistance = distance;
+        getFields();
     }
 
     public void selectField(final Field field) {
@@ -144,5 +174,72 @@ public class FieldFilterPresenter extends HHBasePresenter implements Presenter<F
 
     public void setLocation(double lat, double lng) {
         application.setMyLocation(lat, lng);
+    }
+
+    private void filterFields(List<Field> fieldList) {
+        //没有筛选条件，直接返回全部
+        if (mSelectDrivingSchoolId < 0 && TextUtils.isEmpty(mSelectZone) && mSelectDistance == Common.NO_LIMIT) {
+            mFilteredFields = fieldList;
+            return;
+        }
+        List<Field> retList = new ArrayList<>();
+        for (Field field : fieldList) {
+            //通过驾校筛选
+            boolean isSchoolFiltered = true;
+            //通过距离、区域筛选
+            boolean isZoneFiltered = true;
+            if (mSelectDrivingSchoolId >= 0) {
+                //选择驾校
+                boolean isExist = false;
+                for (int fieldDrivingSchoolId : field.driving_school_ids) {
+                    if (fieldDrivingSchoolId == mSelectDrivingSchoolId) {
+                        isExist = true;
+                        break;
+                    }
+                }
+                isSchoolFiltered = isExist;
+            }
+            if (!TextUtils.isEmpty(mSelectZone)) {
+                //选择区域
+                isZoneFiltered = field.zone.equals(mSelectZone);
+            } else if (mSelectDistance != Common.NO_LIMIT) {
+                //选择距离
+                if (application.getMyLocation() != null) {
+                    //如果有定位信息，再计算
+                    LatLng myLocation = new LatLng(application.getMyLocation().lat, application.getMyLocation().lng);
+                    LatLng fieldLocation = new LatLng(field.lat, field.lng);
+                    double distance = AMapUtils.calculateLineDistance(myLocation, fieldLocation);
+                    isZoneFiltered = distance < mSelectDistance * 1000;
+                }
+            }
+            if (isSchoolFiltered && isZoneFiltered) {
+                retList.add(field);
+            }
+        }
+        mFilteredFields = retList;
+    }
+
+    private List<FieldItem> convertFieldList() {
+        List<FieldItem> fieldItems = new ArrayList<>();
+        for (Field field : mFilteredFields) {
+            LatLng latLng = new LatLng(field.lat, field.lng);
+            FieldItem fieldItem = new FieldItem(latLng, field);
+            fieldItems.add(fieldItem);
+        }
+        return fieldItems;
+    }
+
+    public String getSelectZone() {
+        return mSelectZone;
+    }
+
+    public void getDrivingSchool(int drivingSchoolId, Marker marker) {
+        List<DrivingSchool> drivingSchools = getDrivingSchools(mView.getContext());
+        for (DrivingSchool drivingSchool : drivingSchools) {
+            if (drivingSchool.id == drivingSchoolId) {
+                mView.setInfoWindowDrivingSchool(drivingSchool, marker);
+                break;
+            }
+        }
     }
 }

@@ -2,18 +2,18 @@ package com.hahaxueche.ui.adapter.homepage;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.Utils;
@@ -32,6 +32,8 @@ public class MapCoachAdapter extends RecyclerView.Adapter<MapCoachAdapter.ViewHo
     private List<Coach> mCoachList;
     private OnRecyclerViewItemClickListener mOnItemClickListener;
     private Context mContext;
+    private int[] mDrivingSchoolIds;
+    private HHBaseApplication application;
 
     public interface OnRecyclerViewItemClickListener {
         void onDrivingSchoolClick(int drivingSchoolId);
@@ -40,16 +42,18 @@ public class MapCoachAdapter extends RecyclerView.Adapter<MapCoachAdapter.ViewHo
 
         void onCheckFieldClick(Coach coach);
 
-        void onCustomerServiceClick();
+        void onSendLocationClick(Coach coach);
 
         void onContactCoachClick(Coach coach);
     }
 
-    public MapCoachAdapter(Context context, List<Coach> coachList, OnRecyclerViewItemClickListener listener) {
+    public MapCoachAdapter(Context context, List<Coach> coachList, int[] drivingSchoolIds, OnRecyclerViewItemClickListener listener) {
         inflater = LayoutInflater.from(context);
         mCoachList = coachList;
         mOnItemClickListener = listener;
         mContext = context;
+        mDrivingSchoolIds = drivingSchoolIds;
+        application = HHBaseApplication.get(mContext);
     }
 
     @Override
@@ -63,7 +67,16 @@ public class MapCoachAdapter extends RecyclerView.Adapter<MapCoachAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         Coach coach = mCoachList.get(position);
         holder.tvCoachName.setText(coach.name);
-        holder.ivCoachAvatar.setImageURI(coach.avatar);
+        if (mDrivingSchoolIds.length > 1) {
+            List<DrivingSchool> drivingSchools = application.getCityConstants().driving_schools;
+            for (DrivingSchool drivingSchool : drivingSchools) {
+                if (drivingSchool.id == coach.driving_school_id) {
+                    holder.ivCoachAvatar.setImageURI(drivingSchool.avatar);
+                }
+            }
+        } else {
+            holder.ivCoachAvatar.setImageURI(coach.avatar);
+        }
         holder.tvCoachPoints.setText(coach.average_rating + " (" + coach.review_count + ")");
         if (coach.coach_group != null) {
             holder.tvCoachActualPrice.setText(Utils.getMoney(coach.coach_group.training_cost));
@@ -75,12 +88,6 @@ public class MapCoachAdapter extends RecyclerView.Adapter<MapCoachAdapter.ViewHo
             score = 5;
         }
         holder.rbCoachScore.setRating(score);
-        if (!TextUtils.isEmpty(coach.driving_school)) {
-            holder.llyTrainSchool.setVisibility(View.VISIBLE);
-            holder.tvTrainSchoolName.setText(coach.driving_school);
-        } else {
-            holder.llyTrainSchool.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -102,10 +109,6 @@ public class MapCoachAdapter extends RecyclerView.Adapter<MapCoachAdapter.ViewHo
         ImageView ivIsGoldenCoach;
         @BindView(R.id.iv_is_cash_pledge)
         ImageView ivCashPledge;
-        @BindView(R.id.tv_train_school)
-        TextView tvTrainSchoolName;
-        @BindView(R.id.lly_train_school)
-        LinearLayout llyTrainSchool;
         @BindView(R.id.rb_coach_score)
         RatingBar rbCoachScore;
         @BindView(R.id.tv_coach_points)
@@ -114,8 +117,8 @@ public class MapCoachAdapter extends RecyclerView.Adapter<MapCoachAdapter.ViewHo
         TextView tvCoachActualPrice;
         @BindView(R.id.tv_check_field)
         TextView tvCheckField;
-        @BindView(R.id.tv_online_ask)
-        TextView tvOnlineAsk;
+        @BindView(R.id.tv_send_location)
+        TextView tvSendLocation;
         @BindView(R.id.fly_contact_coach)
         FrameLayout flyContactCoach;
         @BindView(R.id.tv_more)
@@ -124,10 +127,8 @@ public class MapCoachAdapter extends RecyclerView.Adapter<MapCoachAdapter.ViewHo
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-
-            llyTrainSchool.setOnClickListener(this);
             tvCheckField.setOnClickListener(this);
-            tvOnlineAsk.setOnClickListener(this);
+            tvSendLocation.setOnClickListener(this);
             flyContactCoach.setOnClickListener(this);
             tvMore.setOnClickListener(this);
         }
@@ -136,14 +137,11 @@ public class MapCoachAdapter extends RecyclerView.Adapter<MapCoachAdapter.ViewHo
         public void onClick(View view) {
             Coach coach = mCoachList.get(getAdapterPosition());
             switch (view.getId()) {
-                case R.id.lly_train_school:
-                    mOnItemClickListener.onDrivingSchoolClick(coach.driving_school_id);
-                    break;
                 case R.id.tv_check_field:
                     mOnItemClickListener.onCheckFieldClick(coach);
                     break;
-                case R.id.tv_online_ask:
-                    mOnItemClickListener.onCustomerServiceClick();
+                case R.id.tv_send_location:
+                    mOnItemClickListener.onSendLocationClick(coach);
                     break;
                 case R.id.fly_contact_coach:
                     mOnItemClickListener.onContactCoachClick(coach);
