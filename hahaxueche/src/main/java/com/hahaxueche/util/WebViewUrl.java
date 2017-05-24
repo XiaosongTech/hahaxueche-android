@@ -30,4 +30,5 @@ public class WebViewUrl {
     public static final String WEB_URL_JIAXIAO = BuildConfig.MOBILE_URL + "/jiaxiao";
     public static final String WEB_URL_DITU = BuildConfig.MOBILE_URL + "/ditu";
     public static final String WEB_URL_PAIMING = BuildConfig.MOBILE_URL + "/share/jia-xiao-pai-ming";
+    public static final String WEB_URL_ARTICLES = BuildConfig.MOBILE_URL + "/wenzhang";
 }

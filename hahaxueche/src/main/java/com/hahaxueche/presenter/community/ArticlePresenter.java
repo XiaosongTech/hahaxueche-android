@@ -15,6 +15,7 @@ import com.hahaxueche.ui.view.community.ArticleView;
 import com.hahaxueche.util.ErrorUtil;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
+import com.hahaxueche.util.WebViewUrl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -98,7 +99,7 @@ public class ArticlePresenter extends HHBasePresenter implements Presenter<Artic
 
     public void setArticle(Article article) {
         this.mArticle = article;
-        String articleUrl = BuildConfig.MOBILE_URL + "/articles/" + mArticle.id + "?view=raw";
+        String articleUrl = WebViewUrl.WEB_URL_ARTICLES + "/" + mArticle.id + "?view=raw";
         HHLog.v(articleUrl);
         mView.setWebViewUrl(articleUrl);
         shortenUrl(mArticle);
@@ -107,7 +108,7 @@ public class ArticlePresenter extends HHBasePresenter implements Presenter<Artic
     }
 
     public void shortenUrl(final Article article) {
-        String url = BuildConfig.MOBILE_URL + "/articles/" + article.id;
+        String url = WebViewUrl.WEB_URL_ARTICLES + "/" + article.id;
         HHApiService apiService = application.getApiService();
         String longUrl = getShortenUrlAddress(url);
         if (TextUtils.isEmpty(longUrl)) return;
