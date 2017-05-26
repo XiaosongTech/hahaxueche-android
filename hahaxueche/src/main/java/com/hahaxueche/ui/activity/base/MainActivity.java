@@ -505,4 +505,30 @@ public class MainActivity extends HHBaseActivity implements MainView {
             findCoachFragment.onCityChange();
         }
     }
+
+    /**
+     * 跳转到驾校列表
+     */
+    public void toDrivingSchools() {
+        if (mTabHost != null) {
+            mTabHost.setCurrentTab(1);
+        }
+        FindCoachFragment findCoachFragment = (FindCoachFragment) getSupportFragmentManager().findFragmentByTag("findCoach");
+        if (findCoachFragment != null) {
+            findCoachFragment.setDrivingSchoolsView();
+        }
+    }
+
+    /**
+     * 跳转到教练列表
+     */
+    public void toCoaches() {
+        if (mTabHost != null) {
+            mTabHost.setCurrentTab(1);
+        }
+        FindCoachFragment findCoachFragment = (FindCoachFragment) getSupportFragmentManager().findFragmentByTag("findCoach");
+        if (findCoachFragment != null) {
+            findCoachFragment.setCoachesView();
+        }
+    }
 }

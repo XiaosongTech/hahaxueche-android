@@ -156,4 +156,12 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
             mDrivingSchoolListFragment.onRefresh();
         }
     }
+
+    public void setCoachesView() {
+        mPresenter.selectCoach();
+    }
+
+    public void setDrivingSchoolsView() {
+        mPresenter.selectDrivingSchool();
+    }
 }

@@ -307,19 +307,19 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                 break;
             case R.id.tv_more_hot_driving_school:
                 mPresenter.addDataTrack("home_page_hot_school_more_tapped", getContext());
-                mActivity.selectTab(1);
+                mActivity.toDrivingSchools();
                 break;
             case R.id.iv_find_driving_school:
                 mPresenter.addDataTrack("home_page_select_school_tapped", getContext());
-                mActivity.selectTab(1);
+                mActivity.toDrivingSchools();
                 break;
             case R.id.iv_find_coach:
                 mPresenter.addDataTrack("home_page_select_coach_tapped", getContext());
-                mActivity.selectTab(1);
+                mActivity.toCoaches();
                 break;
             case R.id.tv_more_near_coach:
                 mPresenter.addDataTrack("home_page_hot_coach_more_tapped", getContext());
-                mActivity.selectTab(1);
+                mActivity.toCoaches();
                 break;
             case R.id.tv_city:
                 mPresenter.addDataTrack("home_navigation_city_tapped", getContext());
@@ -419,7 +419,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
         } else if (requestCode == RequestCode.REQUEST_CODE_EXAM_LIBRARY) {
             if (resultCode == RESULT_OK && null != data) {
                 if (data.getBooleanExtra("toFindCoach", false)) {
-                    mActivity.selectTab(1);
+                    mActivity.toCoaches();
                 }
             }
         } else if (requestCode == RequestCode.REQUEST_CODE_MY_INSURANCE) {
@@ -430,7 +430,7 @@ public class HomepageFragment extends HHBaseFragment implements ViewPager.OnPage
                     intent.putExtra("isInsurance", true);
                     startActivityForResult(intent, RequestCode.REQUEST_CODE_UPLOAD_ID_CARD);
                 } else if (data.getBooleanExtra("toFindCoach", false)) {
-                    mActivity.selectTab(1);
+                    mActivity.toCoaches();
                 } else {
                     Intent intent = new Intent(getContext(), PurchaseInsuranceActivity.class);
                     intent.putExtra("insuranceType", data.getIntExtra("insuranceType", Common.PURCHASE_INSURANCE_TYPE_WITHOUT_COACH));
