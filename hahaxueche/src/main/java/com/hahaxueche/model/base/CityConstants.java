@@ -12,4 +12,5 @@ public class CityConstants {
     public String[] zones;
     public List<DrivingSchool> driving_schools;
     public Filter filters;
+    public List<ZoneDetail> zone_details;
 }

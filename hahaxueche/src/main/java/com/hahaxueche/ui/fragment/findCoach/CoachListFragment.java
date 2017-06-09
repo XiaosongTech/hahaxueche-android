@@ -301,9 +301,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                         }
 
                         @Override
-                        public void selectZone(String zone) {
-                            mPresenter.setZone(zone);
-                            mPresenter.fetchCoaches();
+                        public void selectBusinessArea(String businessArea) {
                         }
 
                         @Override
@@ -316,7 +314,7 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                         public void dismiss() {
                             hidePopWindow();
                         }
-                    }, mPresenter.getZones(getContext()), mPresenter.getRadius(getContext()));
+                    }, mPresenter.getZoneDetails(getContext()), mPresenter.getRadius(getContext()));
                 }
                 mZonePopWindow.showAsDropDown(view);
                 showPopWindow(POP_ZONE);

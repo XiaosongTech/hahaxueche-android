@@ -180,16 +180,6 @@ public class DrivingSchoolListPresenter extends HHBasePresenter implements Prese
         return cityConstants.filters.prices;
     }
 
-    public String[] getZones() {
-        CityConstants cityConstants = application.getCityConstants();
-        return cityConstants.zones;
-    }
-
-    public int[] getRadius() {
-        CityConstants cityConstants = application.getCityConstants();
-        return cityConstants.filters.radius;
-    }
-
     public void setPriceRange(int startMoney, int endMoney) {
         this.startMoney = startMoney;
         this.endMoney = endMoney;

@@ -15,6 +15,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.hahaxueche.R;
+import com.hahaxueche.model.base.ZoneDetail;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.Utils;
 
@@ -37,25 +38,29 @@ public class ZonePopupWindow extends PopupWindow {
     private List<TextView> mTvZoneList = new ArrayList<>();
     private List<TextView> mTVDistanceList = new ArrayList<>();
     private List<View> mVwDistanceList = new ArrayList<>();
+    private List<TextView> mTvBusinessAreaList = new ArrayList<>();
+    private List<TextView> mVwBusinessAreaList = new ArrayList<>();
     private OnZoneClickListener mOnZoneClickListener;
+    private int[] mRadius;
 
     public interface OnZoneClickListener {
         void selectNoLimit();
 
-        void selectZone(String zone);
+        void selectBusinessArea(String businessArea);
 
         void selectDistance(int distance);
 
         void dismiss();
     }
 
-    public ZonePopupWindow(Activity activity, OnZoneClickListener listener, String[] zones, int[] radius) {
+    public ZonePopupWindow(Activity activity, OnZoneClickListener listener, List<ZoneDetail> zoneDetails, int[] radius) {
         super(activity);
         this.mActivity = activity;
         this.mOnZoneClickListener = listener;
+        mRadius = radius;
         initPopupWindow();
-        addZoneView(zones);
-        addDistanceView(radius);
+        addZoneView(zoneDetails);
+        addDistanceView();
         initEvent();
         setOnDismissListener(new OnDismissListener() {
             @Override
@@ -80,19 +85,18 @@ public class ZonePopupWindow extends PopupWindow {
         mTvNear = ButterKnife.findById(contentView, R.id.tv_near);
     }
 
-    private void addZoneView(String[] zones) {
+    private void addZoneView(List<ZoneDetail> zoneDetails) {
         int startLine = 1;
         int margin20dp = mActivity.getResources().getDimensionPixelSize(R.dimen.margin_20dp);
         int padding15dp = Utils.instence(mActivity).dip2px(15);
-        for (int i = 0; i < zones.length; i++) {
-            String zone = zones[i];
+        for (ZoneDetail zoneDetail : zoneDetails) {
             TextView tvZone = new TextView(mActivity);
             tvZone.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT));
             tvZone.setPadding(margin20dp, padding15dp, margin20dp, padding15dp);
             tvZone.setTextColor(ContextCompat.getColor(mActivity, R.color.haha_gray));
-            tvZone.setText(zone);
-            tvZone.setTag(zone);
+            tvZone.setText(zoneDetail.zone);
+            tvZone.setTag(zoneDetail);
             tvZone.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -101,9 +105,8 @@ public class ZonePopupWindow extends PopupWindow {
                     tvZone.setTextColor(ContextCompat.getColor(mActivity, R.color.app_theme_color));
                     tvZone.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.haha_white));
                     tvZone.setTypeface(Typeface.DEFAULT_BOLD);
-                    String zone = (String) tvZone.getTag();
-                    mOnZoneClickListener.selectZone(zone);
-                    dismiss();
+                    ZoneDetail zoneDetail = (ZoneDetail) tvZone.getTag();
+                    addBusinessAreaView(zoneDetail.business_areas);
                 }
             });
             mTvZoneList.add(tvZone);
@@ -111,8 +114,57 @@ public class ZonePopupWindow extends PopupWindow {
         }
     }
 
+    private void addBusinessAreaView(String[] businessAreas) {
+        mLlyDistance.removeAllViews();
+        int margin20dp = mActivity.getResources().getDimensionPixelSize(R.dimen.margin_20dp);
+        int padding15dp = Utils.instence(mActivity).dip2px(15);
+        for (int i = 0; i < businessAreas.length; i++) {
+            String businessArea = businessAreas[i];
+
+            TextView tvBusinessArea = new TextView(mActivity);
+            LinearLayout.LayoutParams tvBusinessAreaParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            tvBusinessAreaParam.setMargins(margin20dp, 0, margin20dp, 0);
+            tvBusinessArea.setLayoutParams(tvBusinessAreaParam);
+            tvBusinessArea.setPadding(0, padding15dp, 0, padding15dp);
+            tvBusinessArea.setTextColor(ContextCompat.getColor(mActivity, R.color.haha_gray));
+            tvBusinessArea.setText(businessArea);
+            tvBusinessArea.setTag(businessArea);
+            tvBusinessArea.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    disAllBusinessAreaViews();
+                    TextView tvBusinessArea = (TextView) view;
+                    tvBusinessArea.setTextColor(ContextCompat.getColor(mActivity, R.color.app_theme_color));
+                    tvBusinessArea.setTypeface(Typeface.DEFAULT_BOLD);
+                    for (View vwBusinessArea : mVwBusinessAreaList) {
+                        if (vwBusinessArea.getTag() == tvBusinessArea.getTag()) {
+                            vwBusinessArea.setVisibility(View.VISIBLE);
+                            break;
+                        }
+                    }
+                    String businessArea = (String) tvBusinessArea.getTag();
+                    mOnZoneClickListener.selectBusinessArea(businessArea);
+                    dismiss();
+                }
+            });
+            mTVDistanceList.add(tvBusinessArea);
+            mLlyDistance.addView(tvBusinessArea);
+
+            View vwBusinessArea = new View(mActivity);
+            LinearLayout.LayoutParams vwBusinessAreaParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    mActivity.getResources().getDimensionPixelSize(R.dimen.divider_width));
+            vwBusinessAreaParam.setMargins(margin20dp, 0, margin20dp, 0);
+            vwBusinessArea.setLayoutParams(vwBusinessAreaParam);
+            vwBusinessArea.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.app_theme_color));
+            vwBusinessArea.setVisibility(View.INVISIBLE);
+            vwBusinessArea.setTag(businessArea);
+            mVwDistanceList.add(vwBusinessArea);
+            mLlyDistance.addView(vwBusinessArea);
+        }
+    }
+
     private void disAllZoneViews() {
-        mSvDistance.setVisibility(View.GONE);
         mTvNear.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.haha_gray_background));
         for (TextView tvZone : mTvZoneList) {
             tvZone.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.haha_gray_background));
@@ -121,11 +173,12 @@ public class ZonePopupWindow extends PopupWindow {
         }
     }
 
-    private void addDistanceView(int[] radius) {
+    private void addDistanceView() {
+        mLlyDistance.removeAllViews();
         int margin20dp = mActivity.getResources().getDimensionPixelSize(R.dimen.margin_20dp);
         int padding15dp = Utils.instence(mActivity).dip2px(15);
-        for (int i = 0; i < radius.length; i++) {
-            int distance = radius[i];
+        for (int i = 0; i < mRadius.length; i++) {
+            int distance = mRadius[i];
 
             TextView tvDistance = new TextView(mActivity);
             LinearLayout.LayoutParams tvDistanceParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -220,13 +273,23 @@ public class ZonePopupWindow extends PopupWindow {
         }
     }
 
+    private void disAllBusinessAreaViews() {
+        for (TextView tvBusinessArea : mTvBusinessAreaList) {
+            tvBusinessArea.setTextColor(ContextCompat.getColor(mActivity, R.color.haha_gray));
+            tvBusinessArea.setTypeface(Typeface.DEFAULT);
+        }
+        for (View vwBusinessArea : mVwBusinessAreaList) {
+            vwBusinessArea.setVisibility(View.INVISIBLE);
+        }
+    }
+
     private void initEvent() {
         mTvNear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 disAllZoneViews();
-                mSvDistance.setVisibility(View.VISIBLE);
                 mTvNear.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.haha_white));
+                addDistanceView();
             }
         });
     }

@@ -295,9 +295,7 @@ public class DrivingSchoolListFragment extends HHBaseFragment implements Driving
                         }
 
                         @Override
-                        public void selectZone(String zone) {
-                            mPresenter.setZone(zone);
-                            mPresenter.fetchDrivingSchool();
+                        public void selectBusinessArea(String businessArea) {
                         }
 
                         @Override
@@ -310,7 +308,7 @@ public class DrivingSchoolListFragment extends HHBaseFragment implements Driving
                         public void dismiss() {
                             hidePopWindow();
                         }
-                    }, mPresenter.getZones(), mPresenter.getRadius());
+                    }, mPresenter.getZoneDetails(getContext()), mPresenter.getRadius(getContext()));
                 }
                 mZonePopWindow.showAsDropDown(view);
                 showPopWindow(POP_ZONE);
