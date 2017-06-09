@@ -302,6 +302,8 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
 
                         @Override
                         public void selectBusinessArea(String businessArea) {
+                            mPresenter.setBusinessArea(businessArea);
+                            mPresenter.fetchCoaches();
                         }
 
                         @Override

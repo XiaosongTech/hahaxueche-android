@@ -296,6 +296,8 @@ public class DrivingSchoolListFragment extends HHBaseFragment implements Driving
 
                         @Override
                         public void selectBusinessArea(String businessArea) {
+                            mPresenter.setBusinessArea(businessArea);
+                            mPresenter.fetchDrivingSchool();
                         }
 
                         @Override

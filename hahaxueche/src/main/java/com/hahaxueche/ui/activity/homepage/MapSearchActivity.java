@@ -215,6 +215,7 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
 
                         @Override
                         public void selectBusinessArea(String businessArea) {
+                            mPresenter.setBusinessArea(businessArea);
                         }
 
                         @Override
@@ -554,7 +555,7 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
 
     @Override
     public void onZoomToCity() {
-        mPresenter.setDistance(Common.NO_LIMIT);
+        mPresenter.zoomToCity();
     }
 
     @Override

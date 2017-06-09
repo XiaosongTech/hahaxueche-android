@@ -8,9 +8,11 @@ import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
+import com.hahaxueche.model.base.CityConstants;
 import com.hahaxueche.model.base.EventData;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.base.UserIdentityParam;
+import com.hahaxueche.model.base.ZoneDetail;
 import com.hahaxueche.model.cluster.FieldItem;
 import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.responseList.CoachResponseList;
@@ -44,6 +46,7 @@ public class MapSearchPresenter extends HHBasePresenter implements Presenter<Map
     private String mSelectZone = "";
     private int mSelectDistance = Common.NO_LIMIT;
     private List<Field> mFilteredFields;
+    private String mSelectBusinessArea = "";
 
     @Override
     public void attachView(MapSearchView view) {
@@ -74,12 +77,22 @@ public class MapSearchPresenter extends HHBasePresenter implements Presenter<Map
     public void setZone(String zone) {
         mSelectDistance = Common.NO_LIMIT;
         mSelectZone = zone;
+        mSelectBusinessArea = "";
         getFields();
     }
 
     public void setDistance(int distance) {
         mSelectZone = "";
+        mSelectBusinessArea = "";
         mSelectDistance = distance;
+        getFields();
+    }
+
+    public void zoomToCity() {
+        mSelectZone = "";
+        mSelectBusinessArea = "";
+        mSelectDistance = Common.NO_LIMIT;
+        mSelectDrivingSchoolId = -1;
         getFields();
     }
 
@@ -178,7 +191,8 @@ public class MapSearchPresenter extends HHBasePresenter implements Presenter<Map
 
     private void filterFields(List<Field> fieldList) {
         //没有筛选条件，直接返回全部
-        if (mSelectDrivingSchoolId < 0 && TextUtils.isEmpty(mSelectZone) && mSelectDistance == Common.NO_LIMIT) {
+        if (mSelectDrivingSchoolId < 0 && TextUtils.isEmpty(mSelectZone)
+                && TextUtils.isEmpty(mSelectBusinessArea) && mSelectDistance == Common.NO_LIMIT) {
             mFilteredFields = fieldList;
             return;
         }
@@ -199,7 +213,17 @@ public class MapSearchPresenter extends HHBasePresenter implements Presenter<Map
                 }
                 isSchoolFiltered = isExist;
             }
-            if (!TextUtils.isEmpty(mSelectZone)) {
+            if (!TextUtils.isEmpty(mSelectBusinessArea)) {
+                //选择商圈
+                boolean isExist = false;
+                for (int i = 0; i < field.business_areas.length; i++) {
+                    if (mSelectBusinessArea.equals(field.business_areas[i])) {
+                        isExist = true;
+                        break;
+                    }
+                }
+                isZoneFiltered = isExist;
+            } else if (!TextUtils.isEmpty(mSelectZone)) {
                 //选择区域
                 isZoneFiltered = field.zone.equals(mSelectZone);
             } else if (mSelectDistance != Common.NO_LIMIT) {
@@ -241,5 +265,19 @@ public class MapSearchPresenter extends HHBasePresenter implements Presenter<Map
                 break;
             }
         }
+    }
+
+    public void setBusinessArea(String businessArea) {
+        mSelectBusinessArea = businessArea;
+        //选择商圈的时候，区域选择条件也加上
+        CityConstants cityConstants = application.getCityConstants();
+        for (ZoneDetail zoneDetail : cityConstants.zone_details) {
+            if (zoneDetail.business_areas.equals(businessArea)) {
+                mSelectZone = zoneDetail.zone;
+                break;
+            }
+        }
+        mSelectDistance = Common.NO_LIMIT;
+        getFields();
     }
 }

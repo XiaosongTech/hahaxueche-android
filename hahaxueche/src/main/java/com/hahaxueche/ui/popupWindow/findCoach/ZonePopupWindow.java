@@ -31,7 +31,6 @@ import butterknife.ButterKnife;
 public class ZonePopupWindow extends PopupWindow {
     private Activity mActivity;
     private View contentView;
-    private ScrollView mSvDistance;
     private LinearLayout mLlyZone;
     private LinearLayout mLlyDistance;
     private TextView mTvNear;
@@ -39,7 +38,7 @@ public class ZonePopupWindow extends PopupWindow {
     private List<TextView> mTVDistanceList = new ArrayList<>();
     private List<View> mVwDistanceList = new ArrayList<>();
     private List<TextView> mTvBusinessAreaList = new ArrayList<>();
-    private List<TextView> mVwBusinessAreaList = new ArrayList<>();
+    private List<View> mVwBusinessAreaList = new ArrayList<>();
     private OnZoneClickListener mOnZoneClickListener;
     private int[] mRadius;
 
@@ -79,7 +78,6 @@ public class ZonePopupWindow extends PopupWindow {
         setOutsideTouchable(true);  //默认设置outside点击无响应
         setFocusable(true);
         setBackgroundDrawable(new BitmapDrawable(mActivity.getResources(), (Bitmap) null));
-        mSvDistance = ButterKnife.findById(contentView, R.id.sv_distance);
         mLlyZone = ButterKnife.findById(contentView, R.id.lly_zone);
         mLlyDistance = ButterKnife.findById(contentView, R.id.lly_distance);
         mTvNear = ButterKnife.findById(contentView, R.id.tv_near);
@@ -148,7 +146,7 @@ public class ZonePopupWindow extends PopupWindow {
                     dismiss();
                 }
             });
-            mTVDistanceList.add(tvBusinessArea);
+            mTvBusinessAreaList.add(tvBusinessArea);
             mLlyDistance.addView(tvBusinessArea);
 
             View vwBusinessArea = new View(mActivity);
@@ -159,7 +157,7 @@ public class ZonePopupWindow extends PopupWindow {
             vwBusinessArea.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.app_theme_color));
             vwBusinessArea.setVisibility(View.INVISIBLE);
             vwBusinessArea.setTag(businessArea);
-            mVwDistanceList.add(vwBusinessArea);
+            mVwBusinessAreaList.add(vwBusinessArea);
             mLlyDistance.addView(vwBusinessArea);
         }
     }
