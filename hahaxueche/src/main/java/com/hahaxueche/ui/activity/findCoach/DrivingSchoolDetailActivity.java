@@ -3,6 +3,7 @@ package com.hahaxueche.ui.activity.findCoach;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -92,8 +93,6 @@ public class DrivingSchoolDetailActivity extends HHBaseActivity implements Drivi
     TextView mTvBio;
     @BindView(R.id.lly_classes)
     LinearLayout mLlyClasses;
-    @BindView(R.id.tv_group_buy_count)
-    TextView mTvGroupBuyCount;
     @BindView(R.id.lly_fields)
     LinearLayout mLlyFields;
     @BindView(R.id.iv_bell)
@@ -361,7 +360,6 @@ public class DrivingSchoolDetailActivity extends HHBaseActivity implements Drivi
             R.id.tv_free_try,
             R.id.tv_more_comments,
             R.id.tv_click_more_comments,
-            R.id.rly_group_buy,
             R.id.tv_get_group_buy,
             R.id.tv_notice_me})
     public void onClick(View view) {
@@ -424,9 +422,6 @@ public class DrivingSchoolDetailActivity extends HHBaseActivity implements Drivi
                 intent = new Intent(getContext(), ReviewListActivity.class);
                 intent.putExtra("drivingSchool", mPresenter.getDrivingSchool());
                 startActivity(intent);
-                break;
-            case R.id.rly_group_buy:
-                openWebView(WebViewUrl.WEB_URL_GROUP_BUY);
                 break;
             case R.id.tv_get_group_buy:
                 mPresenter.addDataTrack("school_detail_groupon_web_tapped", getContext());
@@ -524,13 +519,139 @@ public class DrivingSchoolDetailActivity extends HHBaseActivity implements Drivi
     }
 
     @Override
-    public void addClassType(ClassType classType) {
-        mLlyClasses.addView(getClassTypeAdapter(classType, mClassStartLine == 2), mClassStartLine++);
-    }
+    public void addClassType(final ClassType classType) {
+        int length20 = Utils.instence(this).dip2px(20);
+        int length10 = Utils.instence(this).dip2px(10);
+        int length2 = Utils.instence(this).dip2px(2);
+        int length4 = Utils.instence(this).dip2px(4);
 
-    @Override
-    public void setGroupBuyCount(SpannableString text) {
-        mTvGroupBuyCount.setText(text);
+        View vwDivider = new View(this);
+        LinearLayout.LayoutParams viewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                getResources().getDimensionPixelSize(R.dimen.divider_width));
+        viewParams.setMargins(length20, 0, 0, 0);
+        vwDivider.setLayoutParams(viewParams);
+        vwDivider.setBackgroundResource(R.color.haha_gray_divider);
+        mLlyClasses.addView(vwDivider);
+
+        RelativeLayout rly = new RelativeLayout(this);
+        LinearLayout.LayoutParams rlyParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        rly.setLayoutParams(rlyParams);
+        rly.setPadding(length20, length20, length20, length20);
+
+
+        TextView tvClassTypeName = new TextView(this);
+        tvClassTypeName.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        tvClassTypeName.setBackgroundResource(R.drawable.rect_bg_trans_bd_appcolor_ssm);
+        tvClassTypeName.setPadding(length4, length2, length4, length2);
+        tvClassTypeName.setText(classType.name);
+        tvClassTypeName.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
+        tvClassTypeName.setTextSize(12);
+        int tvClassTypeNameId = Utils.generateViewId();
+        tvClassTypeName.setId(tvClassTypeNameId);
+        rly.addView(tvClassTypeName);
+
+        TextView tvPrice = new TextView(this);
+        RelativeLayout.LayoutParams tvPriceParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvPriceParams.addRule(RelativeLayout.RIGHT_OF, tvClassTypeNameId);
+        tvPriceParams.addRule(RelativeLayout.ALIGN_TOP, tvClassTypeNameId);
+        tvPriceParams.setMargins(length10, length4, 0, 0);
+        tvPrice.setLayoutParams(tvPriceParams);
+        tvPrice.setText(Utils.getMoney(classType.price));
+        tvPrice.setTextColor(ContextCompat.getColor(this, R.color.haha_orange));
+        tvPrice.setTextSize(16);
+        rly.addView(tvPrice);
+
+        ImageView ivArrow = new ImageView(this);
+        RelativeLayout.LayoutParams ivArrowParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        ivArrowParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+        ivArrowParams.addRule(RelativeLayout.ALIGN_BOTTOM, tvClassTypeNameId);
+        ivArrow.setLayoutParams(ivArrowParams);
+        ivArrow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_coachmsg_more_arrow));
+        rly.addView(ivArrow);
+
+        TextView tvClassTypeDesc = new TextView(this);
+        RelativeLayout.LayoutParams tvClassTypeDescParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvClassTypeDescParams.addRule(RelativeLayout.BELOW, tvClassTypeNameId);
+        tvClassTypeDescParams.setMargins(0, length10, 0, 0);
+        tvClassTypeDesc.setLayoutParams(tvClassTypeDescParams);
+        tvClassTypeDesc.setText(classType.desc);
+        tvClassTypeDesc.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
+        int tvClassTypeDescId = Utils.generateViewId();
+        tvClassTypeDesc.setId(tvClassTypeDescId);
+        rly.addView(tvClassTypeDesc);
+
+        TextView tvContact = new TextView(this);
+        RelativeLayout.LayoutParams tvPurchaseParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvPurchaseParams.addRule(RelativeLayout.ALIGN_BOTTOM, tvClassTypeDescId);
+        tvPurchaseParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+        tvContact.setLayoutParams(tvPurchaseParams);
+        tvContact.setBackgroundResource(R.drawable.rect_bg_orange_ssm);
+        tvContact.setPadding(length10, length2, length10, length2);
+        tvContact.setText("报名");
+        tvContact.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
+        int tvPurchaseId = Utils.generateViewId();
+        tvContact.setId(tvPurchaseId);
+        rly.addView(tvContact);
+
+        TextView tvNotice = new TextView(this);
+        RelativeLayout.LayoutParams tvPrePayParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvPrePayParams.addRule(RelativeLayout.ALIGN_BOTTOM, tvPurchaseId);
+        tvPrePayParams.addRule(RelativeLayout.LEFT_OF, tvPurchaseId);
+        tvPrePayParams.setMargins(0, 0, length4, 0);
+        tvNotice.setLayoutParams(tvPrePayParams);
+        tvNotice.setBackgroundResource(R.drawable.rect_bg_appcolor_ssm);
+        tvNotice.setPadding(length10, length2, length10, length2);
+        tvNotice.setText("降价通知");
+        tvNotice.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
+        rly.addView(tvNotice);
+
+        rly.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPresenter.addDataTrack("school_detail_price_detail_tapped", getContext());
+                Intent intent = new Intent(getContext(), ClassTypeIntroActivity.class);
+                intent.putExtra("totalAmount", classType.price);
+                intent.putExtra("isWuyouClass", false);
+                intent.putExtra("classType", classType);
+                intent.putExtra("drivingSchool", mPresenter.getDrivingSchool());
+                startActivity(intent);
+            }
+        });
+
+        tvNotice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "我们将为您保密个人信息！",
+                        "填写手机号，立即订阅降价通知", "立即订阅", new GetUserIdentityDialog.OnIdentityGetListener() {
+                    @Override
+                    public void getCellPhone(String cellPhone) {
+                        mPresenter.addDataTrack("school_detail_price_notification_confirmed", getContext());
+                        mPresenter.getUserIdentity(cellPhone);
+                    }
+                });
+                dialog.show();
+            }
+        });
+
+        tvContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH);
+                } else {
+                    callMyCoach();
+                }
+            }
+        });
+
+        mLlyClasses.addView(rly);
     }
 
     @Override
@@ -683,92 +804,6 @@ public class DrivingSchoolDetailActivity extends HHBaseActivity implements Drivi
         return rly;
     }
 
-    private View getClassTypeAdapter(final ClassType classType, boolean isFirstLine) {
-        int length20 = Utils.instence(this).dip2px(20);
-        int length10 = Utils.instence(this).dip2px(10);
-        int length2 = Utils.instence(this).dip2px(2);
-        int length4 = Utils.instence(this).dip2px(4);
-        RelativeLayout rly = new RelativeLayout(this);
-        LinearLayout.LayoutParams rlyParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        rly.setLayoutParams(rlyParams);
-
-        if (!isFirstLine) {
-            View divider = new View(this);
-            RelativeLayout.LayoutParams dividerParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.divider_width));
-            dividerParams.setMargins(length20, 0, 0, 0);
-            divider.setLayoutParams(dividerParams);
-            divider.setBackgroundColor(ContextCompat.getColor(this, R.color.haha_gray_divider));
-            rly.addView(divider);
-        }
-
-        TextView tvClassTypeName = new TextView(this);
-        RelativeLayout.LayoutParams tvClassTypeNameParam = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        tvClassTypeNameParam.setMargins(length20, length20, 0, length20);
-        tvClassTypeName.setLayoutParams(tvClassTypeNameParam);
-        tvClassTypeName.setBackgroundResource(R.drawable.rect_bg_trans_bd_appcolor_ssm);
-        tvClassTypeName.setPadding(length4, length2, length4, length2);
-        tvClassTypeName.setText(classType.name);
-        tvClassTypeName.setTextColor(ContextCompat.getColor(this, R.color.app_theme_color));
-        tvClassTypeName.setTextSize(12);
-        int tvClassTypeNameId = Utils.generateViewId();
-        tvClassTypeName.setId(tvClassTypeNameId);
-        rly.addView(tvClassTypeName);
-
-        TextView tvClassTypeDesc = new TextView(this);
-        RelativeLayout.LayoutParams tvClassTypeDescParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        tvClassTypeDescParams.addRule(RelativeLayout.RIGHT_OF, tvClassTypeNameId);
-        tvClassTypeDescParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-        tvClassTypeDescParams.setMargins(length10, 0, 0, 0);
-        tvClassTypeDesc.setLayoutParams(tvClassTypeDescParams);
-        tvClassTypeDesc.setText(classType.desc);
-        tvClassTypeDesc.setTextColor(ContextCompat.getColor(this, R.color.haha_gray));
-        int tvClassTypeDescId = Utils.generateViewId();
-        tvClassTypeDesc.setId(tvClassTypeDescId);
-        rly.addView(tvClassTypeDesc);
-
-        ImageView ivArrow = new ImageView(this);
-        RelativeLayout.LayoutParams ivArrowParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        ivArrowParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-        ivArrowParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-        ivArrowParams.setMargins(0, 0, length20, 0);
-        ivArrow.setLayoutParams(ivArrowParams);
-        ivArrow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_coachmsg_more_arrow));
-        int ivArrowId = Utils.generateViewId();
-        ivArrow.setId(ivArrowId);
-        rly.addView(ivArrow);
-
-        TextView tvPrice = new TextView(this);
-        RelativeLayout.LayoutParams tvPriceParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        tvPriceParams.addRule(RelativeLayout.LEFT_OF, ivArrowId);
-        tvPriceParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-        tvPriceParams.setMargins(0, length10, length10, 0);
-        tvPrice.setLayoutParams(tvPriceParams);
-        tvPrice.setText(Utils.getMoney(classType.price));
-        tvPrice.setTextColor(ContextCompat.getColor(this, R.color.haha_orange));
-        tvPrice.setTextSize(16);
-        rly.addView(tvPrice);
-
-        rly.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mPresenter.addDataTrack("school_detail_price_detail_tapped", getContext());
-                Intent intent = new Intent(getContext(), ClassTypeIntroActivity.class);
-                intent.putExtra("totalAmount", classType.price);
-                intent.putExtra("isWuyouClass", false);
-                intent.putExtra("classType", classType);
-                intent.putExtra("isShowPurchase", false);
-                intent.putExtra("isReadOnly", true);
-                startActivity(intent);
-            }
-        });
-
-        return rly;
-    }
-
     private View getFieldAdapter(final Field field, boolean isFirstLine) {
         int length3 = Utils.instence(this).dip2px(3);
         int length5 = Utils.instence(this).dip2px(5);
@@ -845,6 +880,32 @@ public class DrivingSchoolDetailActivity extends HHBaseActivity implements Drivi
         tvLocation.setEllipsize(TextUtils.TruncateAt.END);
         tvLocation.setText(field.zone + " | " + field.display_address);
         rly.addView(tvLocation);
+
+        TextView tvSendLocation = new TextView(this);
+        RelativeLayout.LayoutParams tvSendLocationParam = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvSendLocationParam.addRule(RelativeLayout.BELOW, tvToFieldId);
+        tvSendLocationParam.addRule(RelativeLayout.ALIGN_RIGHT, tvToFieldId);
+        tvSendLocationParam.setMargins(0, length5, 0, 0);
+        tvSendLocation.setLayoutParams(tvSendLocationParam);
+        tvSendLocation.setTextColor(ContextCompat.getColor(this, R.color.haha_blue));
+        tvSendLocation.setTextSize(12);
+        tvSendLocation.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
+        tvSendLocation.setText("发我定位");
+        tvSendLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "轻松定位训练场",
+                        "输入手机号，立即接收详细地址", "发我定位", new GetUserIdentityDialog.OnIdentityGetListener() {
+                    @Override
+                    public void getCellPhone(String cellPhone) {
+                        mPresenter.sendLocation(cellPhone, field);
+                    }
+                });
+                dialog.show();
+            }
+        });
+        rly.addView(tvSendLocation);
 
         rly.setOnClickListener(new View.OnClickListener() {
             @Override

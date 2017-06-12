@@ -44,49 +44,7 @@
                     android:text="班别费用"
                     android:textColor="@color/app_theme_color"
                     android:textSize="14sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/divider_width"
-                    android:background="@color/haha_gray_divider" />
             </LinearLayout>
-
-            <RelativeLayout
-                android:id="@+id/rly_group_buy"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/section_margin_top"
-                android:background="@color/haha_white">
-
-                <ImageView
-                    android:id="@+id/iv_group_buy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="10dp"
-                    android:src="@drawable/ic_schooldetails_tg_hui" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="5dp"
-                    android:layout_toRightOf="@id/iv_group_buy"
-                    android:text="本月组团优惠火热报名中～"
-                    android:textColor="@color/haha_orange" />
-
-                <TextView
-                    android:id="@+id/tv_group_buy_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:drawablePadding="3dp"
-                    android:drawableRight="@drawable/ic_coachmsg_more_arrow"
-                    android:textColor="@color/haha_gray" />
-            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/lly_fields"

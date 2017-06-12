@@ -42,8 +42,6 @@ public interface DrivingSchoolDetailView extends HHBaseView {
 
     void addClassType(ClassType classType);
 
-    void setGroupBuyCount(SpannableString text);
-
     void addFieldView(Field field);
 
     void startToShare(int shareType, String shortenUrl);
