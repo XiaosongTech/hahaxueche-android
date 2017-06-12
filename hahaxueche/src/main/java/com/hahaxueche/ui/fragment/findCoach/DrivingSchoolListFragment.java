@@ -307,6 +307,12 @@ public class DrivingSchoolListFragment extends HHBaseFragment implements Driving
                         }
 
                         @Override
+                        public void selectZone(String zone) {
+                            mPresenter.setZone(zone);
+                            mPresenter.fetchDrivingSchool();
+                        }
+
+                        @Override
                         public void dismiss() {
                             hidePopWindow();
                         }

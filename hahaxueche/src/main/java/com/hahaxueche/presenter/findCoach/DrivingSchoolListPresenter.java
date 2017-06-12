@@ -36,6 +36,7 @@ public class DrivingSchoolListPresenter extends HHBasePresenter implements Prese
     private String sortBy = "";
     private String order = "";
     private String businessArea = "";
+    private String zone = "";
     private int startMoney = Common.NO_LIMIT;
     private int endMoney = Common.NO_LIMIT;
     //-----end-----
@@ -107,7 +108,9 @@ public class DrivingSchoolListPresenter extends HHBasePresenter implements Prese
                 TextUtils.isEmpty(sortBy) ? null : sortBy,
                 startMoney > 0 ? String.valueOf(startMoney) : null,
                 endMoney > 0 ? String.valueOf(endMoney) : null,
-                TextUtils.isEmpty(businessArea) ? null : businessArea, TextUtils.isEmpty(order) ? null : order)
+                TextUtils.isEmpty(businessArea) ? null : businessArea,
+                TextUtils.isEmpty(zone) ? null : zone,
+                TextUtils.isEmpty(order) ? null : order)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<DrivingSchoolResponseList>() {
@@ -187,6 +190,7 @@ public class DrivingSchoolListPresenter extends HHBasePresenter implements Prese
 
     public void setDistance(int distance) {
         businessArea = "";
+        zone = "";
         if (distance == Common.NO_LIMIT) {
             filterDistance = "";
         } else {
@@ -196,6 +200,7 @@ public class DrivingSchoolListPresenter extends HHBasePresenter implements Prese
 
     public void setBusinessArea(String businessArea) {
         filterDistance = "";
+        zone = "";
         this.businessArea = businessArea;
     }
 
@@ -212,5 +217,11 @@ public class DrivingSchoolListPresenter extends HHBasePresenter implements Prese
         HashMap<String, String> map = new HashMap();
         map.put("index", String.valueOf(index));
         addDataTrack("find_school_filter_tapped", mView.getContext(), map);
+    }
+
+    public void setZone(String zone) {
+        filterDistance = "";
+        businessArea = "";
+        this.zone = zone;
     }
 }

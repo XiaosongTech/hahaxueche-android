@@ -39,6 +39,7 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
     private int endMoney = Common.NO_LIMIT;
     private ArrayList<Field> selectFields;
     private String businessArea;
+    private String zone;
     //-----end-----
 
     public void attachView(CoachListView view) {
@@ -101,7 +102,8 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
                 TextUtils.isEmpty(licenseType) ? null : licenseType, cityId,
                 fieldIds, TextUtils.isEmpty(filterDistance) ? null : filterDistance,
                 locations, sortBy, studentId, startMoney > 0 ? String.valueOf(startMoney) : null,
-                endMoney > 0 ? String.valueOf(endMoney) : null, TextUtils.isEmpty(businessArea) ? null : businessArea)
+                endMoney > 0 ? String.valueOf(endMoney) : null,
+                TextUtils.isEmpty(businessArea) ? null : businessArea, TextUtils.isEmpty(zone) ? null : zone)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<CoachResponseList>() {
@@ -205,6 +207,7 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
 
     public void setDistance(int distance) {
         businessArea = "";
+        zone = "";
         if (distance == Common.NO_LIMIT) {
             filterDistance = "";
         } else {
@@ -214,7 +217,14 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
 
     public void setBusinessArea(String businessArea) {
         filterDistance = "";
+        zone = "";
         this.businessArea = businessArea;
+    }
+
+    public void setZone(String zone) {
+        filterDistance = "";
+        businessArea = "";
+        this.zone = zone;
     }
 
     /**

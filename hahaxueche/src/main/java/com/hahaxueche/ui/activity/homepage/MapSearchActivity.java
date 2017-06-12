@@ -224,6 +224,11 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
                         }
 
                         @Override
+                        public void selectZone(String zone) {
+                            mPresenter.setZone(zone);
+                        }
+
+                        @Override
                         public void dismiss() {
                             hidePopWindow();
                         }

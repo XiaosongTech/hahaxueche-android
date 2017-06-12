@@ -313,6 +313,12 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                         }
 
                         @Override
+                        public void selectZone(String zone) {
+                            mPresenter.setZone(zone);
+                            mPresenter.fetchCoaches();
+                        }
+
+                        @Override
                         public void dismiss() {
                             hidePopWindow();
                         }

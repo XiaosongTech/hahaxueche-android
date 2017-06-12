@@ -49,6 +49,8 @@ public class ZonePopupWindow extends PopupWindow {
 
         void selectDistance(int distance);
 
+        void selectZone(String zone);
+
         void dismiss();
     }
 
@@ -104,7 +106,7 @@ public class ZonePopupWindow extends PopupWindow {
                     tvZone.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.haha_white));
                     tvZone.setTypeface(Typeface.DEFAULT_BOLD);
                     ZoneDetail zoneDetail = (ZoneDetail) tvZone.getTag();
-                    addBusinessAreaView(zoneDetail.business_areas);
+                    addBusinessAreaView(zoneDetail.zone, zoneDetail.business_areas);
                 }
             });
             mTvZoneList.add(tvZone);
@@ -112,10 +114,54 @@ public class ZonePopupWindow extends PopupWindow {
         }
     }
 
-    private void addBusinessAreaView(String[] businessAreas) {
+    private void addBusinessAreaView(String zone, String[] businessAreas) {
         mLlyDistance.removeAllViews();
         int margin20dp = mActivity.getResources().getDimensionPixelSize(R.dimen.margin_20dp);
         int padding15dp = Utils.instence(mActivity).dip2px(15);
+
+        //添加全区
+        TextView tvAllZone = new TextView(mActivity);
+        LinearLayout.LayoutParams tvAllZoneParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvAllZoneParam.setMargins(margin20dp, 0, margin20dp, 0);
+        tvAllZone.setLayoutParams(tvAllZoneParam);
+        tvAllZone.setPadding(0, padding15dp, 0, padding15dp);
+        tvAllZone.setTextColor(ContextCompat.getColor(mActivity, R.color.haha_gray));
+        tvAllZone.setText("全部" + zone);
+        tvAllZone.setTag(zone);
+        tvAllZone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                disAllBusinessAreaViews();
+                TextView tvAllZone = (TextView) view;
+                tvAllZone.setTextColor(ContextCompat.getColor(mActivity, R.color.app_theme_color));
+                tvAllZone.setTypeface(Typeface.DEFAULT_BOLD);
+                for (View vwBusinessArea : mVwBusinessAreaList) {
+                    if (vwBusinessArea.getTag() == tvAllZone.getTag()) {
+                        vwBusinessArea.setVisibility(View.VISIBLE);
+                        break;
+                    }
+                }
+                String zone = (String) tvAllZone.getTag();
+                mOnZoneClickListener.selectZone(zone);
+                dismiss();
+            }
+        });
+        mTvBusinessAreaList.add(tvAllZone);
+        mLlyDistance.addView(tvAllZone);
+
+        View vwAllZone = new View(mActivity);
+        LinearLayout.LayoutParams vwAllZoneParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                mActivity.getResources().getDimensionPixelSize(R.dimen.divider_width));
+        vwAllZoneParam.setMargins(margin20dp, 0, margin20dp, 0);
+        vwAllZone.setLayoutParams(vwAllZoneParam);
+        vwAllZone.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.app_theme_color));
+        vwAllZone.setVisibility(View.INVISIBLE);
+        vwAllZone.setTag(zone);
+        mVwBusinessAreaList.add(vwAllZone);
+        mLlyDistance.addView(vwAllZone);
+
+        //添加商圈
         for (int i = 0; i < businessAreas.length; i++) {
             String businessArea = businessAreas[i];
 
