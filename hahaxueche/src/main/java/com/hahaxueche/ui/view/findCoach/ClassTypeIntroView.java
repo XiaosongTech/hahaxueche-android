@@ -25,9 +25,5 @@ public interface ClassTypeIntroView extends HHBaseView {
 
     void setTotalAmount(String cost);
 
-    void hidePurchase();
-
     void showMoniInFeeDetail();
-
-    void hidePayView();
 }

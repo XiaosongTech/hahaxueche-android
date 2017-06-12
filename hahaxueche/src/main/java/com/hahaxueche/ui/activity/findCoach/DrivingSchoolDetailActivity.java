@@ -593,7 +593,8 @@ public class DrivingSchoolDetailActivity extends HHBaseActivity implements Drivi
         tvContact.setLayoutParams(tvPurchaseParams);
         tvContact.setBackgroundResource(R.drawable.rect_bg_orange_ssm);
         tvContact.setPadding(length10, length2, length10, length2);
-        tvContact.setText("报名");
+        tvContact.setText("联系驾校");
+        tvContact.setTextSize(12);
         tvContact.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
         int tvPurchaseId = Utils.generateViewId();
         tvContact.setId(tvPurchaseId);
@@ -609,6 +610,7 @@ public class DrivingSchoolDetailActivity extends HHBaseActivity implements Drivi
         tvNotice.setBackgroundResource(R.drawable.rect_bg_appcolor_ssm);
         tvNotice.setPadding(length10, length2, length10, length2);
         tvNotice.setText("降价通知");
+        tvNotice.setTextSize(12);
         tvNotice.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
         rly.addView(tvNotice);
 
@@ -632,7 +634,6 @@ public class DrivingSchoolDetailActivity extends HHBaseActivity implements Drivi
                         "填写手机号，立即订阅降价通知", "立即订阅", new GetUserIdentityDialog.OnIdentityGetListener() {
                     @Override
                     public void getCellPhone(String cellPhone) {
-                        mPresenter.addDataTrack("school_detail_price_notification_confirmed", getContext());
                         mPresenter.getUserIdentity(cellPhone);
                     }
                 });
