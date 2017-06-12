@@ -1,5 +1,7 @@
 package com.hahaxueche.presenter.findCoach;
 
+import android.os.Parcelable;
+
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.EventData;
@@ -18,6 +20,7 @@ import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.WebViewUrl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -36,13 +39,25 @@ public class FieldFilterPresenter extends HHBasePresenter implements Presenter<F
     public void attachView(FieldFilterView view) {
         this.mView = view;
         application = HHBaseApplication.get(mView.getContext());
-
     }
 
-    public void getFields() {
+    public void getFields(ArrayList<Field> highlightFields) {
         FieldResponseList fieldResponseList = application.getFieldResponseList();
         if (fieldResponseList != null) {
-            mView.initMap(fieldResponseList.data);
+            if (highlightFields != null && highlightFields.size() > 0) {
+                List<Field> fields = new ArrayList<>();
+                for (Field field : fieldResponseList.data) {
+                    for (Field highlightField : highlightFields) {
+                        if (field.id.equals(highlightField.id)) {
+                            fields.add(field);
+                            break;
+                        }
+                    }
+                }
+                mView.initMap(fields);
+            } else {
+                mView.initMap(fieldResponseList.data);
+            }
         }
     }
 
@@ -144,5 +159,18 @@ public class FieldFilterPresenter extends HHBasePresenter implements Presenter<F
 
     public void setLocation(double lat, double lng) {
         application.setMyLocation(lat, lng);
+    }
+
+    public Field parseField(Field oldField) {
+        FieldResponseList fieldResponseList = application.getFieldResponseList();
+        if (fieldResponseList != null) {
+            for (Field field : fieldResponseList.data) {
+                if (field.id.equals(oldField.id)) {
+                    return field;
+                }
+            }
+
+        }
+        return oldField;
     }
 }

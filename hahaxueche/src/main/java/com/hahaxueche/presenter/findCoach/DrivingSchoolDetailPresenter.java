@@ -189,8 +189,8 @@ public class DrivingSchoolDetailPresenter extends HHBasePresenter implements Pre
         }
     }
 
-    public void clickToFields() {
-        mView.navigateToMapSearch(mDrivingSchool.id);
+    public void clickToFields(Field selectField) {
+        mView.navigateToFieldFilter(mDrivingSchool.fields, selectField);
     }
 
     public void shortenUrl(String url, final int shareType) {

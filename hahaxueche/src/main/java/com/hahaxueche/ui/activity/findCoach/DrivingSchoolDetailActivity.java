@@ -366,15 +366,15 @@ public class DrivingSchoolDetailActivity extends HHBaseActivity implements Drivi
         switch (view.getId()) {
             case R.id.tv_near_fields:
                 mPresenter.addDataTrack("school_detail_check_fields_tapped", getContext());
-                mPresenter.clickToFields();
+                mPresenter.clickToFields(null);
                 break;
             case R.id.tv_more_fields:
                 mPresenter.addDataTrack("school_detail_more_fields_tapped", getContext());
-                mPresenter.clickToFields();
+                mPresenter.clickToFields(null);
                 break;
             case R.id.tv_click_more_fields:
                 mPresenter.addDataTrack("school_detail_more_fields_tapped", getContext());
-                mPresenter.clickToFields();
+                mPresenter.clickToFields(null);
                 break;
             case R.id.tv_more_bio:
                 clickMoreBio();
@@ -661,9 +661,10 @@ public class DrivingSchoolDetailActivity extends HHBaseActivity implements Drivi
     }
 
     @Override
-    public void navigateToMapSearch(int drivingSchoolId) {
-        Intent intent = new Intent(getContext(), MapSearchActivity.class);
-        intent.putExtra("drivingSchoolId", drivingSchoolId);
+    public void navigateToFieldFilter(List<Field> highlightFields, Field selectField) {
+        Intent intent = new Intent(getContext(), FieldFilterActivity.class);
+        intent.putParcelableArrayListExtra("hightlightFields", (ArrayList<? extends Parcelable>) highlightFields);
+        intent.putExtra("field", selectField);
         startActivity(intent);
     }
 
@@ -912,7 +913,7 @@ public class DrivingSchoolDetailActivity extends HHBaseActivity implements Drivi
             @Override
             public void onClick(View view) {
                 mPresenter.addDataTrack("school_detail_single_field_tapped", getContext());
-                mPresenter.clickToFields();
+                mPresenter.clickToFields(field);
             }
         });
         tvToField.setOnClickListener(new View.OnClickListener() {

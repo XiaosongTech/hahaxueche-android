@@ -52,5 +52,5 @@ public interface DrivingSchoolDetailView extends HHBaseView {
 
     void setGroupBuyPhone(String cellPhone);
 
-    void navigateToMapSearch(int drivingSchoolId);
+    void navigateToFieldFilter(List<Field> highlightFields, Field selectField);
 }

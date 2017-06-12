@@ -551,7 +551,6 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                     intent = new Intent(getContext(), FieldFilterActivity.class);
                     ArrayList<Field> highlightFields = new ArrayList<>();
                     highlightFields.add(field);
-                    intent.putParcelableArrayListExtra("hightlightFields", highlightFields);
                     intent.putExtra("field", field);
                     startActivity(intent);
                 }
