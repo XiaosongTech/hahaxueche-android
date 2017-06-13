@@ -94,8 +94,6 @@ public class DrivingSchoolAdapter extends BaseAdapter {
             holder.mRbScore = ButterKnife.findById(view, R.id.rb_score);
             holder.mTvPoints = ButterKnife.findById(view, R.id.tv_points);
             holder.mTvDistance = ButterKnife.findById(view, R.id.tv_distance);
-            holder.mTvZone = ButterKnife.findById(view, R.id.tv_zone);
-            holder.mRlyGroupBuy = ButterKnife.findById(view, R.id.rly_group_buy);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -110,19 +108,11 @@ public class DrivingSchoolAdapter extends BaseAdapter {
         SpannableString ss = new SpannableString(text);
         ss.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.app_theme_color)), 0, text.indexOf("人"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         holder.mTvConsultantCount.setText(ss);
-        if (!TextUtils.isEmpty(drivingSchool.distance)) {
-            String infoText = "最近训练场距您" + Utils.getDistance(Double.parseDouble(drivingSchool.distance));
-            SpannableStringBuilder style = new SpannableStringBuilder(infoText);
-            style.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.app_theme_color)), infoText.indexOf("您") + 1, infoText.indexOf("KM"), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-            holder.mTvDistance.setText(style);
-        } else {
-            holder.mTvDistance.setText("共有" + drivingSchool.field_count + "个训练场 点击查看最近 >");
-        }
-        if (!TextUtils.isEmpty(drivingSchool.closest_zone)) {
-            holder.mTvZone.setText(drivingSchool.closest_zone);
-        } else {
-            holder.mTvZone.setVisibility(View.GONE);
-        }
+        String fieldCountText = "共有" + drivingSchool.field_count + "个训练场";
+        SpannableString fieldCountSS = new SpannableString(fieldCountText);
+        fieldCountSS.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.app_theme_color)),
+                fieldCountText.indexOf("有") + 1, fieldCountText.indexOf("个"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        holder.mTvDistance.setText(fieldCountSS);
 
         holder.mFrlCall.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,8 +157,6 @@ public class DrivingSchoolAdapter extends BaseAdapter {
         RatingBar mRbScore;
         TextView mTvPoints;
         TextView mTvDistance;
-        TextView mTvZone;
-        RelativeLayout mRlyGroupBuy;
     }
 
     private LinearLayout getHotDrivingSchoolView() {

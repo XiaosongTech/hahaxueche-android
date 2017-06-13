@@ -151,6 +151,6 @@ public class ArticleListPresenter extends HHBasePresenter implements Presenter<A
 
     public void clickRedBag() {
         addDataTrack("club_page_flying_envelop_tapped", mView.getContext());
-        mView.openWebView(WebViewUrl.WEB_URL_DALIBAO);
+        mView.openWebView(WebViewUrl.WEB_URL_BAOGUOKA);
     }
 }
