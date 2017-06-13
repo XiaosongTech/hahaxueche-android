@@ -71,6 +71,13 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
     private void initDefaultFilters() {
         //默认价格最低
         sortBy = 3;
+        filterDistance = "";
+        licenseType = "";
+        startMoney = Common.NO_LIMIT;
+        endMoney = Common.NO_LIMIT;
+        selectFields = null;
+        businessArea = "";
+        zone = "";
     }
 
     public void fetchCoaches() {
@@ -233,5 +240,10 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
     public void onlineAsk() {
         User user = application.getSharedPrefUtil().getUser();
         super.onlineAsk(user, mView.getContext());
+    }
+
+    public void resetFilter() {
+        initDefaultFilters();
+        fetchCoaches();
     }
 }

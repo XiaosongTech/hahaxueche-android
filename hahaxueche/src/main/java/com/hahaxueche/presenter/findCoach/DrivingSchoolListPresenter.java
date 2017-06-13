@@ -87,6 +87,12 @@ public class DrivingSchoolListPresenter extends HHBasePresenter implements Prese
         //默认综合排序
         sortBy = "";
         this.order = "asc";
+        filterDistance = "";
+        licenseType = "";
+        businessArea = "";
+        zone = "";
+        startMoney = Common.NO_LIMIT;
+        endMoney = Common.NO_LIMIT;
     }
 
     public void fetchDrivingSchool() {
@@ -223,5 +229,10 @@ public class DrivingSchoolListPresenter extends HHBasePresenter implements Prese
         filterDistance = "";
         businessArea = "";
         this.zone = zone;
+    }
+
+    public void resetFilter() {
+        initDefaultFilters();
+        fetchDrivingSchool();
     }
 }

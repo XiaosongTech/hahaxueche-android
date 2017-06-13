@@ -150,10 +150,10 @@ public class FindCoachFragment extends HHBaseFragment implements FindCoachView {
     public void onCityChange() {
         //城市更改，刷新练列表
         if (mCoachListFragment != null) {
-            mCoachListFragment.onRefresh();
+            mCoachListFragment.resetFilter();
         }
         if (mDrivingSchoolListFragment != null) {
-            mDrivingSchoolListFragment.onRefresh();
+            mDrivingSchoolListFragment.resetFilter();
         }
     }
 

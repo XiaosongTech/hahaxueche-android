@@ -469,4 +469,14 @@ public class DrivingSchoolListFragment extends HHBaseFragment implements Driving
                 ContextCompat.getDrawable(getContext(), R.drawable.list_arrow_gray), null);
         mFlyBgHalfTrans.setVisibility(View.GONE);
     }
+
+    public void resetFilter() {
+        mSortPopWindow = null;
+        mTypePopWindow = null;
+        mPricePopWindow = null;
+        mZonePopWindow = null;
+        if (mPresenter != null) {
+            mPresenter.resetFilter();
+        }
+    }
 }
