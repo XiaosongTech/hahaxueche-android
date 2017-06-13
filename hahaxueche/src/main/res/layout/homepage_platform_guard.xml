@@ -54,7 +54,7 @@
             android:layout_marginTop="5dp"
             android:gravity="center"
             android:lineSpacingMultiplier="1.2"
-            android:text="分阶段打款\n不满意不打款"
+            android:text="专业学车顾问\n真实驾考咨询"
             android:textSize="12sp" />
     </LinearLayout>
 
