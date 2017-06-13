@@ -301,8 +301,8 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                         }
 
                         @Override
-                        public void selectZone(String zone) {
-                            mPresenter.setZone(zone);
+                        public void selectBusinessArea(String businessArea) {
+                            mPresenter.setBusinessArea(businessArea);
                             mPresenter.fetchCoaches();
                         }
 
@@ -313,10 +313,16 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
                         }
 
                         @Override
+                        public void selectZone(String zone) {
+                            mPresenter.setZone(zone);
+                            mPresenter.fetchCoaches();
+                        }
+
+                        @Override
                         public void dismiss() {
                             hidePopWindow();
                         }
-                    }, mPresenter.getZones(getContext()), mPresenter.getRadius(getContext()));
+                    }, mPresenter.getZoneDetails(getContext()), mPresenter.getRadius(getContext()));
                 }
                 mZonePopWindow.showAsDropDown(view);
                 showPopWindow(POP_ZONE);
@@ -499,5 +505,15 @@ public class CoachListFragment extends HHBaseFragment implements CoachListView, 
         mTvSort.setCompoundDrawablesWithIntrinsicBounds(null, null,
                 ContextCompat.getDrawable(getContext(), R.drawable.list_arrow_gray), null);
         mFlyBgHalfTrans.setVisibility(View.GONE);
+    }
+
+    public void resetFilter() {
+        mSortPopWindow = null;
+        mTypePopWindow = null;
+        mPricePopWindow = null;
+        mZonePopWindow = null;
+        if (mPresenter != null) {
+            mPresenter.resetFilter();
+        }
     }
 }

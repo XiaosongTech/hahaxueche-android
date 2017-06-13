@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
@@ -16,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -28,7 +28,6 @@ import com.hahaxueche.ui.activity.base.MainActivity;
 import com.hahaxueche.ui.activity.findCoach.PaySuccessActivity;
 import com.hahaxueche.ui.activity.login.StartLoginActivity;
 import com.hahaxueche.ui.activity.myPage.CourseActivity;
-import com.hahaxueche.ui.activity.myPage.FAQActivity;
 import com.hahaxueche.ui.activity.myPage.FollowListActivity;
 import com.hahaxueche.ui.activity.myPage.MyCoachDetailActivity;
 import com.hahaxueche.ui.activity.myPage.MyContractActivity;
@@ -61,7 +60,6 @@ import java.io.File;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import me.grantland.widget.AutofitTextView;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -86,10 +84,6 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
     TextView mTvStudentPhase;
     @BindView(R.id.iv_payment_stage)
     ImageView mIvPaymentArrow;
-    @BindView(R.id.view_badge)
-    View mViewBadge;
-    @BindView(R.id.iv_more_voucher)
-    ImageView mIvMoreVoucher;
     @BindView(R.id.view_badge_contract)
     View mViewBadgeContract;
     @BindView(R.id.iv_more_contract)
@@ -102,10 +96,8 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
     View mViewBadgePassEnsurance;
     @BindView(R.id.iv_more_pass_ensurance)
     ImageView mIvMorePassEnsurance;
-    @BindView(R.id.crl_main)
-    CoordinatorLayout mCrlMain;
-    @BindView(R.id.tv_refer_friends)
-    AutofitTextView mTvReferFriends;
+    @BindView(R.id.lly_main)
+    LinearLayout mLlyMain;
 
     private MyPagePresenter mPresenter;
     private MainActivity mActivity;
@@ -183,14 +175,11 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
             R.id.rly_FAQ,
             R.id.rly_support_haha,
             R.id.rly_software_info,
-            R.id.rly_referer_friends,
             R.id.iv_my_avatar,
             R.id.tv_logout,
             R.id.rly_my_coach,
             R.id.rly_payment_stage,
-            R.id.rly_my_course,
             R.id.iv_edit_username,
-            R.id.rly_my_voucher,
             R.id.rly_my_contract,
             R.id.tv_login,
             R.id.tv_to_login,
@@ -246,9 +235,6 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
                 mPresenter.addDataTrack("my_page_version_check_tapped", getContext());
                 startActivity(new Intent(getContext(), SoftwareInfoActivity.class));
                 break;
-            case R.id.rly_referer_friends:
-                mPresenter.clickReferCount();
-                break;
             case R.id.iv_my_avatar:
                 if (!mPresenter.isLogin()) {
                     alertToLogin();
@@ -291,9 +277,6 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
             case R.id.rly_payment_stage:
                 mPresenter.clickPaymentStage();
                 break;
-            case R.id.rly_my_course:
-                mPresenter.clickMyCourse();
-                break;
             case R.id.iv_edit_username:
                 if (mEditUsernameDialog == null) {
                     mEditUsernameDialog = new EditUsernameDialog(getContext(), new EditUsernameDialog.OnButtonClickListener() {
@@ -304,9 +287,6 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
                     });
                 }
                 mEditUsernameDialog.show();
-                break;
-            case R.id.rly_my_voucher:
-                mPresenter.clickMyVoucher();
                 break;
             case R.id.rly_my_contract:
                 mPresenter.clickMyContract();
@@ -344,7 +324,7 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
 
     @Override
     public void showMessage(String message) {
-        Snackbar.make(mCrlMain, message, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mLlyMain, message, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -381,13 +361,6 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
 
     @Override
     public void setVoucherBadge(boolean hasBadge) {
-        if (hasBadge) {
-            mViewBadge.setVisibility(View.VISIBLE);
-            mIvMoreVoucher.setVisibility(View.GONE);
-        } else {
-            mViewBadge.setVisibility(View.GONE);
-            mIvMoreVoucher.setVisibility(View.VISIBLE);
-        }
     }
 
     @Override
@@ -456,7 +429,6 @@ public class MypageFragment extends HHBaseFragment implements MyPageView {
 
     @Override
     public void setReferText(String text) {
-        mTvReferFriends.setText(text);
     }
 
     @Override

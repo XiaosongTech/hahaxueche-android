@@ -33,7 +33,7 @@ public class Field implements Parcelable {
     public String display_address;
     public int lowest_price;
     public List<String> schools;
-    public List<String> business_areas;
+    public String[] business_areas;
     public List<Coach> coaches;
     public int[] driving_school_ids;
     public double zone_center_lng;
@@ -62,7 +62,7 @@ public class Field implements Parcelable {
         display_address = in.readString();
         lowest_price = in.readInt();
         schools = in.createStringArrayList();
-        business_areas = in.createStringArrayList();
+        business_areas = in.createStringArray();
         coaches = in.createTypedArrayList(Coach.CREATOR);
         driving_school_ids = in.createIntArray();
         zone_center_lng = in.readDouble();
@@ -87,33 +87,33 @@ public class Field implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeString(name);
-        parcel.writeString(description);
-        parcel.writeString(section);
-        parcel.writeString(street);
-        parcel.writeString(province);
-        parcel.writeString(zip_code);
-        parcel.writeDouble(lat);
-        parcel.writeDouble(lng);
-        parcel.writeString(deleted_at);
-        parcel.writeByte((byte) (active ? 1 : 0));
-        parcel.writeString(created_at);
-        parcel.writeString(updated_at);
-        parcel.writeInt(city_id);
-        parcel.writeString(image);
-        parcel.writeString(location);
-        parcel.writeInt(coach_count);
-        parcel.writeString(zone);
-        parcel.writeString(consult_phone);
-        parcel.writeString(display_address);
-        parcel.writeInt(lowest_price);
-        parcel.writeStringList(schools);
-        parcel.writeStringList(business_areas);
-        parcel.writeTypedList(coaches);
-        parcel.writeIntArray(driving_school_ids);
-        parcel.writeDouble(zone_center_lng);
-        parcel.writeDouble(zone_center_lat);
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(description);
+        dest.writeString(section);
+        dest.writeString(street);
+        dest.writeString(province);
+        dest.writeString(zip_code);
+        dest.writeDouble(lat);
+        dest.writeDouble(lng);
+        dest.writeString(deleted_at);
+        dest.writeByte((byte) (active ? 1 : 0));
+        dest.writeString(created_at);
+        dest.writeString(updated_at);
+        dest.writeInt(city_id);
+        dest.writeString(image);
+        dest.writeString(location);
+        dest.writeInt(coach_count);
+        dest.writeString(zone);
+        dest.writeString(consult_phone);
+        dest.writeString(display_address);
+        dest.writeInt(lowest_price);
+        dest.writeStringList(schools);
+        dest.writeStringArray(business_areas);
+        dest.writeTypedList(coaches);
+        dest.writeIntArray(driving_school_ids);
+        dest.writeDouble(zone_center_lng);
+        dest.writeDouble(zone_center_lat);
     }
 }

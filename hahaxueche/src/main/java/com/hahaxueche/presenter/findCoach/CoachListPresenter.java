@@ -35,10 +35,11 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
     private String filterDistance;
     private String licenseType;
     private int sortBy = 0;
-    private String zone = "";
     private int startMoney = Common.NO_LIMIT;
     private int endMoney = Common.NO_LIMIT;
     private ArrayList<Field> selectFields;
+    private String businessArea;
+    private String zone;
     //-----end-----
 
     public void attachView(CoachListView view) {
@@ -70,6 +71,13 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
     private void initDefaultFilters() {
         //默认价格最低
         sortBy = 3;
+        filterDistance = "";
+        licenseType = "";
+        startMoney = Common.NO_LIMIT;
+        endMoney = Common.NO_LIMIT;
+        selectFields = null;
+        businessArea = "";
+        zone = "";
     }
 
     public void fetchCoaches() {
@@ -101,7 +109,8 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
                 TextUtils.isEmpty(licenseType) ? null : licenseType, cityId,
                 fieldIds, TextUtils.isEmpty(filterDistance) ? null : filterDistance,
                 locations, sortBy, studentId, startMoney > 0 ? String.valueOf(startMoney) : null,
-                endMoney > 0 ? String.valueOf(endMoney) : null, TextUtils.isEmpty(zone) ? null : zone)
+                endMoney > 0 ? String.valueOf(endMoney) : null,
+                TextUtils.isEmpty(businessArea) ? null : businessArea, TextUtils.isEmpty(zone) ? null : zone)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<CoachResponseList>() {
@@ -204,6 +213,7 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
     }
 
     public void setDistance(int distance) {
+        businessArea = "";
         zone = "";
         if (distance == Common.NO_LIMIT) {
             filterDistance = "";
@@ -212,8 +222,15 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
         }
     }
 
+    public void setBusinessArea(String businessArea) {
+        filterDistance = "";
+        zone = "";
+        this.businessArea = businessArea;
+    }
+
     public void setZone(String zone) {
         filterDistance = "";
+        businessArea = "";
         this.zone = zone;
     }
 
@@ -223,5 +240,10 @@ public class CoachListPresenter extends HHBasePresenter implements Presenter<Coa
     public void onlineAsk() {
         User user = application.getSharedPrefUtil().getUser();
         super.onlineAsk(user, mView.getContext());
+    }
+
+    public void resetFilter() {
+        initDefaultFilters();
+        fetchCoaches();
     }
 }

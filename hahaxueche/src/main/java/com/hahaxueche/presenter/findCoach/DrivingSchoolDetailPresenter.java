@@ -12,6 +12,7 @@ import android.text.style.ForegroundColorSpan;
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.api.HHApiService;
+import com.hahaxueche.model.base.EventData;
 import com.hahaxueche.model.base.Field;
 import com.hahaxueche.model.base.ShortenUrl;
 import com.hahaxueche.model.base.UserIdentityParam;
@@ -26,6 +27,7 @@ import com.hahaxueche.ui.view.findCoach.DrivingSchoolDetailView;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.Utils;
+import com.hahaxueche.util.WebViewUrl;
 
 import java.util.ArrayList;
 
@@ -160,7 +162,6 @@ public class DrivingSchoolDetailPresenter extends HHBasePresenter implements Pre
         SpannableString ssGroupBuyCount = new SpannableString(groupBuyCountText);
         ssGroupBuyCount.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mView.getContext(), R.color.app_theme_color)),
                 0, groupBuyCountText.indexOf("人"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mView.setGroupBuyCount(ssGroupBuyCount);
         if (mDrivingSchool.lowest_price != 0) {
             mView.addClassType(new ClassType(Common.CLASS_TYPE_NORMAL_NAME, Common.CLASS_TYPE_NORMAL_C1,
                     mDrivingSchool.lowest_price, false, Common.CLASS_TYPE_NORMAL_DESC, Common.LICENSE_TYPE_C1));
@@ -188,8 +189,8 @@ public class DrivingSchoolDetailPresenter extends HHBasePresenter implements Pre
         }
     }
 
-    public void clickToFields() {
-        mView.navigateToMapSearch(mDrivingSchool.id);
+    public void clickToFields(Field selectField) {
+        mView.navigateToFieldFilter(mDrivingSchool.fields, selectField);
     }
 
     public void shortenUrl(String url, final int shareType) {
@@ -270,5 +271,45 @@ public class DrivingSchoolDetailPresenter extends HHBasePresenter implements Pre
             return;
         }
         getUserIdentity(cellPhone);
+    }
+
+    public void sendLocation(String cellPhone, Field field) {
+        UserIdentityParam param = new UserIdentityParam();
+        param.phone = cellPhone;
+        param.promo_code = "921434";
+        param.field_id = field.id;
+        param.event_type = "1";
+        EventData eventData = new EventData();
+        eventData.link = WebViewUrl.WEB_URL_DITU + "?field_id=" + field.id;
+        eventData.field_id = field.id;
+        param.event_data = eventData;
+        getUserIdentity(param);
+    }
+
+    private void getUserIdentity(UserIdentityParam param) {
+        HHApiService apiService = application.getApiService();
+        if (application.getMyLocation() != null) {
+            param.lng = application.getMyLocation().lng;
+            param.lat = application.getMyLocation().lat;
+        }
+        subscription = apiService.getUserIdentity(param)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(application.defaultSubscribeScheduler())
+                .subscribe(new Subscriber<UserIdentityInfo>() {
+
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HHLog.e(e.getMessage());
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(UserIdentityInfo userIdentityInfo) {
+                    }
+                });
     }
 }

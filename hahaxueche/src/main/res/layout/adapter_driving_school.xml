@@ -46,14 +46,6 @@
                     android:textColor="@color/haha_white"
                     android:textSize="12sp" />
             </FrameLayout>
-
-            <TextView
-                android:id="@+id/tv_consultant_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:textColor="@color/haha_gray"
-                android:textSize="12sp" />
         </LinearLayout>
 
         <RelativeLayout
@@ -127,6 +119,15 @@
                 android:layout_toRightOf="@id/rb_score"
                 android:textColor="@color/app_theme_color"
                 android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_consultant_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:textColor="@color/haha_gray"
+                android:textSize="12sp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -138,11 +139,20 @@
             android:layout_marginRight="@dimen/margin_20dp"
             android:layout_marginTop="8dp">
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_width"
+                android:background="@color/haha_gray_divider" />
+
             <TextView
                 android:id="@+id/tv_distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:layout_marginBottom="14dp"
+                android:layout_marginTop="14dp"
+                android:drawableLeft="@drawable/ic_list_local_btn"
+                android:drawablePadding="@dimen/margin_5dp"
                 android:textColor="@color/haha_gray" />
 
             <TextView
@@ -150,53 +160,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:drawableLeft="@drawable/ic_list_local_btn"
-                android:drawablePadding="@dimen/margin_5dp"
+                android:layout_centerVertical="true"
                 android:drawableRight="@drawable/ic_coachmsg_more_arrow"
+                android:text="点击查看最近 "
                 android:textColor="@color/haha_gray" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/rly_group_buy"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/rly_third_line"
-            android:layout_below="@id/rly_third_line"
-            android:layout_marginRight="@dimen/margin_20dp"
-            android:layout_marginTop="8dp">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/divider_width"
-                android:background="@color/haha_gray_divider" />
-
-            <TextView
-                android:id="@+id/tv_tuan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="14dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginTop="14dp"
-                android:background="@drawable/rect_bd_red_ssm"
-                android:padding="2dp"
-                android:text="团"
-                android:textColor="@color/haha_red"
-                android:textSize="12sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/tv_tuan"
-                android:text="八校联名降价 组团立减¥200"
-                android:textColor="@color/haha_gray" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_coachmsg_more_arrow" />
         </RelativeLayout>
     </RelativeLayout>
 </LinearLayout>

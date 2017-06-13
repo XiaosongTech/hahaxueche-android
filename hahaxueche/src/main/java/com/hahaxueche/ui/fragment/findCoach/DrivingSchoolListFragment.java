@@ -295,8 +295,8 @@ public class DrivingSchoolListFragment extends HHBaseFragment implements Driving
                         }
 
                         @Override
-                        public void selectZone(String zone) {
-                            mPresenter.setZone(zone);
+                        public void selectBusinessArea(String businessArea) {
+                            mPresenter.setBusinessArea(businessArea);
                             mPresenter.fetchDrivingSchool();
                         }
 
@@ -307,10 +307,16 @@ public class DrivingSchoolListFragment extends HHBaseFragment implements Driving
                         }
 
                         @Override
+                        public void selectZone(String zone) {
+                            mPresenter.setZone(zone);
+                            mPresenter.fetchDrivingSchool();
+                        }
+
+                        @Override
                         public void dismiss() {
                             hidePopWindow();
                         }
-                    }, mPresenter.getZones(), mPresenter.getRadius());
+                    }, mPresenter.getZoneDetails(getContext()), mPresenter.getRadius(getContext()));
                 }
                 mZonePopWindow.showAsDropDown(view);
                 showPopWindow(POP_ZONE);
@@ -462,5 +468,15 @@ public class DrivingSchoolListFragment extends HHBaseFragment implements Driving
         mTvSort.setCompoundDrawablesWithIntrinsicBounds(null, null,
                 ContextCompat.getDrawable(getContext(), R.drawable.list_arrow_gray), null);
         mFlyBgHalfTrans.setVisibility(View.GONE);
+    }
+
+    public void resetFilter() {
+        mSortPopWindow = null;
+        mTypePopWindow = null;
+        mPricePopWindow = null;
+        mZonePopWindow = null;
+        if (mPresenter != null) {
+            mPresenter.resetFilter();
+        }
     }
 }

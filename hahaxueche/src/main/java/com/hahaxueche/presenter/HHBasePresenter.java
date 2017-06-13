@@ -12,6 +12,7 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.CityConstants;
 import com.hahaxueche.model.base.Constants;
+import com.hahaxueche.model.base.ZoneDetail;
 import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.payment.PaymentMethod;
 import com.hahaxueche.model.user.User;
@@ -163,10 +164,10 @@ public class HHBasePresenter {
         return cityConstants.filters.prices;
     }
 
-    public String[] getZones(Context context) {
+    public List<ZoneDetail> getZoneDetails(Context context) {
         HHBaseApplication application = HHBaseApplication.get(context);
         CityConstants cityConstants = application.getCityConstants();
-        return cityConstants.zones;
+        return cityConstants.zone_details;
     }
 
     public int[] getRadius(Context context) {

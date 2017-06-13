@@ -14,6 +14,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
@@ -27,11 +28,13 @@ import android.widget.TextView;
 
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.FixedCostItem;
+import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.payment.OtherFee;
 import com.hahaxueche.model.user.coach.ClassType;
 import com.hahaxueche.model.user.coach.Coach;
 import com.hahaxueche.presenter.findCoach.ClassTypeIntroPresenter;
 import com.hahaxueche.ui.activity.base.HHBaseActivity;
+import com.hahaxueche.ui.dialog.homepage.GetUserIdentityDialog;
 import com.hahaxueche.ui.view.findCoach.ClassTypeIntroView;
 import com.hahaxueche.util.Common;
 import com.hahaxueche.util.HHLog;
@@ -84,10 +87,11 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
     ImageView mIvDash6;
     @BindView(R.id.lly_moni)
     LinearLayout mLlyMoni;
-    @BindView(R.id.tv_pay)
-    TextView mTvPay;
-    @BindView(R.id.lly_pay)
-    LinearLayout mLlyPay;
+    @BindView(R.id.tv_contact)
+    TextView mTvContact;
+    private Coach mCoach;
+    private DrivingSchool mDrivingSchool;
+    private String mCellPhone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,9 +103,7 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
         Intent intent = getIntent();
         mPresenter.setFeeDetail(intent.getIntExtra("totalAmount", 0),
                 (ClassType) intent.getParcelableExtra("classType"),
-                intent.getBooleanExtra("isWuyouClass", false),
-                intent.getBooleanExtra("isShowPurchase", true),
-                intent.getBooleanExtra("isReadOnly", false));
+                intent.getBooleanExtra("isWuyouClass", false));
         initActionBar();
         initCustomerService();
         mIvDash1.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
@@ -110,6 +112,13 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
         mIvDash4.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mIvDash5.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mIvDash6.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        mCoach = intent.getParcelableExtra("coach");
+        mDrivingSchool = intent.getParcelableExtra("drivingSchool");
+        if (mCoach != null) {
+            mTvContact.setText("联系教练");
+        } else {
+            mTvContact.setText("联系驾校");
+        }
     }
 
     private void initActionBar() {
@@ -179,23 +188,31 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
         super.onDestroy();
     }
 
-    @OnClick({R.id.tv_pay,
-            R.id.tv_prepay})
+    @OnClick({R.id.tv_notice,
+            R.id.tv_contact})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.tv_pay:
-                mPresenter.addDataTrack("price_detail_page_deposit_tapped", getContext());
-                Intent intent = new Intent();
-                intent.putExtra("classType", mPresenter.mClassType);
-                setResult(RESULT_OK, intent);
-                ClassTypeIntroActivity.this.finish();
+            case R.id.tv_notice:
+                GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "我们将为您保密个人信息！",
+                        "填写手机号，立即订阅降价通知", "立即订阅", new GetUserIdentityDialog.OnIdentityGetListener() {
+                    @Override
+                    public void getCellPhone(String cellPhone) {
+                        mPresenter.getUserIdentity(cellPhone, mCoach, mDrivingSchool);
+                    }
+                });
+                dialog.show();
                 break;
-            case R.id.tv_prepay:
-                mPresenter.addDataTrack("price_detail_page_purchase_tapped", getContext());
-                intent = new Intent();
-                intent.putExtra("prepay", true);
-                setResult(RESULT_OK, intent);
-                ClassTypeIntroActivity.this.finish();
+            case R.id.tv_contact:
+                if (mCoach != null) {
+                    mCellPhone = mCoach.consult_phone;
+                } else {
+                    mCellPhone = mDrivingSchool.consult_phone;
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH);
+                } else {
+                    callMyCoach();
+                }
                 break;
             default:
                 break;
@@ -225,6 +242,13 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
                 contactService();
             } else {
                 showMessage("请允许拨打电话权限，不然无法直接拨号联系客服");
+            }
+        } else if (requestCode == RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                callMyCoach();
+            } else {
+                showMessage("请允许拨打电话权限");
             }
         }
     }
@@ -350,17 +374,20 @@ public class ClassTypeIntroActivity extends HHBaseActivity implements ClassTypeI
     }
 
     @Override
-    public void hidePurchase() {
-        mTvPay.setVisibility(View.GONE);
-    }
-
-    @Override
     public void showMoniInFeeDetail() {
         mLlyMoni.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public void hidePayView() {
-        mLlyPay.setVisibility(View.GONE);
+    /**
+     * 联系教练
+     */
+    private void callMyCoach() {
+        if (TextUtils.isEmpty(mCellPhone))
+            return;
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mCellPhone));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        startActivity(intent);
     }
 }

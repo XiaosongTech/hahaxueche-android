@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -140,6 +141,8 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
     FrameLayout mFrlC2;
     @BindView(R.id.lly_class_type)
     LinearLayout mLlyClassType;
+    @BindView(R.id.tv_send_location)
+    TextView mTvSendLocation;
     /*****************
      * 分享
      ******************/
@@ -175,6 +178,20 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             }
             mPresenter.setCoach(coach_id);
         }
+        mTvSendLocation.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
+        mTvSendLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "轻松定位训练场",
+                        "输入手机号，立即接收详细地址", "发我定位", new GetUserIdentityDialog.OnIdentityGetListener() {
+                    @Override
+                    public void getCellPhone(String cellPhone) {
+                        mPresenter.getUserIdentity(cellPhone);
+                    }
+                });
+                dialog.show();
+            }
+        });
     }
 
     @Override
@@ -534,7 +551,6 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                     intent = new Intent(getContext(), FieldFilterActivity.class);
                     ArrayList<Field> highlightFields = new ArrayList<>();
                     highlightFields.add(field);
-                    intent.putParcelableArrayListExtra("hightlightFields", highlightFields);
                     intent.putExtra("field", field);
                     startActivity(intent);
                 }
@@ -948,32 +964,34 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
         tvClassTypeDesc.setId(tvClassTypeDescId);
         rlyClassType.addView(tvClassTypeDesc);
 
-        TextView tvPurchase = new TextView(this);
+        TextView tvContact = new TextView(this);
         RelativeLayout.LayoutParams tvPurchaseParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         tvPurchaseParams.addRule(RelativeLayout.ALIGN_BOTTOM, tvClassTypeDescId);
         tvPurchaseParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-        tvPurchase.setLayoutParams(tvPurchaseParams);
-        tvPurchase.setBackgroundResource(R.drawable.rect_bg_orange_ssm);
-        tvPurchase.setPadding(length10, length2, length10, length2);
-        tvPurchase.setText("报名");
-        tvPurchase.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
+        tvContact.setLayoutParams(tvPurchaseParams);
+        tvContact.setBackgroundResource(R.drawable.rect_bg_orange_ssm);
+        tvContact.setPadding(length10, length2, length10, length2);
+        tvContact.setText("联系教练");
+        tvContact.setTextSize(12);
+        tvContact.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
         int tvPurchaseId = Utils.generateViewId();
-        tvPurchase.setId(tvPurchaseId);
-        rlyClassType.addView(tvPurchase);
+        tvContact.setId(tvPurchaseId);
+        rlyClassType.addView(tvContact);
 
-        TextView tvPrePay = new TextView(this);
+        TextView tvNotice = new TextView(this);
         RelativeLayout.LayoutParams tvPrePayParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         tvPrePayParams.addRule(RelativeLayout.ALIGN_BOTTOM, tvPurchaseId);
         tvPrePayParams.addRule(RelativeLayout.LEFT_OF, tvPurchaseId);
         tvPrePayParams.setMargins(0, 0, length4, 0);
-        tvPrePay.setLayoutParams(tvPrePayParams);
-        tvPrePay.setBackgroundResource(R.drawable.rect_bg_appcolor_ssm);
-        tvPrePay.setPadding(length10, length2, length10, length2);
-        tvPrePay.setText("预付100");
-        tvPrePay.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
-        rlyClassType.addView(tvPrePay);
+        tvNotice.setLayoutParams(tvPrePayParams);
+        tvNotice.setBackgroundResource(R.drawable.rect_bg_appcolor_ssm);
+        tvNotice.setPadding(length10, length2, length10, length2);
+        tvNotice.setText("降价通知");
+        tvNotice.setTextSize(12);
+        tvNotice.setTextColor(ContextCompat.getColor(this, R.color.haha_white));
+        rlyClassType.addView(tvNotice);
 
 
         //点击整行查看班别介绍
@@ -985,14 +1003,12 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                 intent.putExtra("totalAmount", classType.price);
                 intent.putExtra("isWuyouClass", mPresenter.getCoach().coach_group.group_type == Common.GROUP_TYPE_CHEYOU_WUYOU);
                 intent.putExtra("classType", classType);
-                if (mPresenter.isPurchasedService()) {
-                    intent.putExtra("isShowPurchase", false);
-                }
-                startActivityForResult(intent, RequestCode.REQUEST_CODE_CLASS_TYPE_INTRO);
+                intent.putExtra("coach", mPresenter.getCoach());
+                startActivity(intent);
             }
         });
         //点击购买
-        tvPurchase.setOnClickListener(new View.OnClickListener() {
+        tvContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPresenter.addDataTrack("coach_detail_page_purchase_tapped", getContext());
@@ -1000,12 +1016,28 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             }
         });
 
-        tvPrePay.setOnClickListener(new View.OnClickListener() {
+        tvNotice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPresenter.addDataTrack("coach_detail_page_deposit_tapped", getContext());
-                startActivityForResult(new Intent(getContext(), PurchasePrepaidActivity.class),
-                        RequestCode.REQUEST_CODE_PURCHASE_PREPAID);
+                GetUserIdentityDialog dialog = new GetUserIdentityDialog(getContext(), "我们将为您保密个人信息！",
+                        "填写手机号，立即订阅降价通知", "立即订阅", new GetUserIdentityDialog.OnIdentityGetListener() {
+                    @Override
+                    public void getCellPhone(String cellPhone) {
+                        mPresenter.getUserIdentity(cellPhone);
+                    }
+                });
+                dialog.show();
+            }
+        });
+
+        tvContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, RequestCode.PERMISSIONS_REQUEST_CELL_PHONE_FOR_CONTACT_COACH);
+                } else {
+                    callMyCoach();
+                }
             }
         });
 
@@ -1048,17 +1080,6 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
             startActivityForResult(intent, RequestCode.REQUEST_CODE_UPLOAD_ID_CARD);
         } else if (requestCode == RequestCode.REQUEST_CODE_UPLOAD_ID_CARD) {
             mPresenter.toReferFriends();
-        } else if (requestCode == RequestCode.REQUEST_CODE_CLASS_TYPE_INTRO) {
-            if (resultCode == Activity.RESULT_OK) {
-                if (data != null) {
-                    if (data.getBooleanExtra("prepay", false)) {
-                        startActivityForResult(new Intent(getContext(), PurchasePrepaidActivity.class),
-                                RequestCode.REQUEST_CODE_PURCHASE_PREPAID);
-                    } else {
-                        mPresenter.purchaseCoach((ClassType) data.getParcelableExtra("classType"));
-                    }
-                }
-            }
         } else if (requestCode == RequestCode.REQUEST_CODE_PURCHASE_PREPAID) {
             if (resultCode == Activity.RESULT_OK) {
                 startActivityForResult(new Intent(getContext(), PrepaySuccessActivity.class),

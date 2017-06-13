@@ -42,8 +42,6 @@ public interface DrivingSchoolDetailView extends HHBaseView {
 
     void addClassType(ClassType classType);
 
-    void setGroupBuyCount(SpannableString text);
-
     void addFieldView(Field field);
 
     void startToShare(int shareType, String shortenUrl);
@@ -54,5 +52,5 @@ public interface DrivingSchoolDetailView extends HHBaseView {
 
     void setGroupBuyPhone(String cellPhone);
 
-    void navigateToMapSearch(int drivingSchoolId);
+    void navigateToFieldFilter(List<Field> highlightFields, Field selectField);
 }

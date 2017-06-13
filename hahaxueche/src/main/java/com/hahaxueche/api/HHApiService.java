@@ -115,7 +115,8 @@ public interface HHApiService {
     Observable<CoachResponseList> getCoaches(@Query("page") int page, @Query("per_page") int perPage, @Query("license_type") String licenseType,
                                              @Query("city_id") int cityId, @Query("training_field_ids[]") ArrayList<String> fieldIdList, @Query("distance") String distance,
                                              @Query("user_location[]") ArrayList<String> locations, @Query("sort_by") int sortBy, @Query("student_id") String studentId,
-                                             @Query("price_from") String startMoney, @Query("price_to") String endMoney, @Query("zone") String zone);
+                                             @Query("price_from") String startMoney, @Query("price_to") String endMoney, @Query("business_area") String businessArea,
+                                             @Query("zone") String zone);
 
     @GET("coaches")
     Observable<CoachResponseList> getNearCoaches(@Query("page") int page, @Query("per_page") int perPage, @Query("city_id") int cityId,
@@ -318,7 +319,7 @@ public interface HHApiService {
     Observable<DrivingSchoolResponseList> getDrivingSchools(@Query("page") int page, @Query("per_page") int perPage, @Query("license_type") String licenseType,
                                                             @Query("city_id") int cityId, @Query("distance") String distance, @Query("user_location[]") ArrayList<String> locations,
                                                             @Query("sort_by") String sortBy, @Query("price_from") String startMoney, @Query("price_to") String endMoney,
-                                                            @Query("zone") String zone, @Query("order") String order);
+                                                            @Query("business_area") String businessArea, @Query("zone") String zone, @Query("order") String order);
 
     @GET
     Observable<DrivingSchoolResponseList> getDrivingSchools(@Url String path);

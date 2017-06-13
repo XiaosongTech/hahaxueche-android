@@ -35,6 +35,7 @@ public class DrivingSchoolListPresenter extends HHBasePresenter implements Prese
     private String licenseType;
     private String sortBy = "";
     private String order = "";
+    private String businessArea = "";
     private String zone = "";
     private int startMoney = Common.NO_LIMIT;
     private int endMoney = Common.NO_LIMIT;
@@ -86,6 +87,12 @@ public class DrivingSchoolListPresenter extends HHBasePresenter implements Prese
         //默认综合排序
         sortBy = "";
         this.order = "asc";
+        filterDistance = "";
+        licenseType = "";
+        businessArea = "";
+        zone = "";
+        startMoney = Common.NO_LIMIT;
+        endMoney = Common.NO_LIMIT;
     }
 
     public void fetchDrivingSchool() {
@@ -107,7 +114,9 @@ public class DrivingSchoolListPresenter extends HHBasePresenter implements Prese
                 TextUtils.isEmpty(sortBy) ? null : sortBy,
                 startMoney > 0 ? String.valueOf(startMoney) : null,
                 endMoney > 0 ? String.valueOf(endMoney) : null,
-                TextUtils.isEmpty(zone) ? null : zone, TextUtils.isEmpty(order) ? null : order)
+                TextUtils.isEmpty(businessArea) ? null : businessArea,
+                TextUtils.isEmpty(zone) ? null : zone,
+                TextUtils.isEmpty(order) ? null : order)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
                 .subscribe(new Subscriber<DrivingSchoolResponseList>() {
@@ -180,22 +189,13 @@ public class DrivingSchoolListPresenter extends HHBasePresenter implements Prese
         return cityConstants.filters.prices;
     }
 
-    public String[] getZones() {
-        CityConstants cityConstants = application.getCityConstants();
-        return cityConstants.zones;
-    }
-
-    public int[] getRadius() {
-        CityConstants cityConstants = application.getCityConstants();
-        return cityConstants.filters.radius;
-    }
-
     public void setPriceRange(int startMoney, int endMoney) {
         this.startMoney = startMoney;
         this.endMoney = endMoney;
     }
 
     public void setDistance(int distance) {
+        businessArea = "";
         zone = "";
         if (distance == Common.NO_LIMIT) {
             filterDistance = "";
@@ -204,9 +204,10 @@ public class DrivingSchoolListPresenter extends HHBasePresenter implements Prese
         }
     }
 
-    public void setZone(String zone) {
+    public void setBusinessArea(String businessArea) {
         filterDistance = "";
-        this.zone = zone;
+        zone = "";
+        this.businessArea = businessArea;
     }
 
     /**
@@ -222,5 +223,16 @@ public class DrivingSchoolListPresenter extends HHBasePresenter implements Prese
         HashMap<String, String> map = new HashMap();
         map.put("index", String.valueOf(index));
         addDataTrack("find_school_filter_tapped", mView.getContext(), map);
+    }
+
+    public void setZone(String zone) {
+        filterDistance = "";
+        businessArea = "";
+        this.zone = zone;
+    }
+
+    public void resetFilter() {
+        initDefaultFilters();
+        fetchDrivingSchool();
     }
 }

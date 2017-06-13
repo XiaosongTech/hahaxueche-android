@@ -93,12 +93,12 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
         mRcyMapCoach.setLayoutManager(layoutManager);
         Intent intent = getIntent();
         if (intent.getParcelableExtra("field") != null) {
-            mSelectField = intent.getParcelableExtra("field");
+            mSelectField = mPresenter.parseField((Field) intent.getParcelableExtra("field"));
         }
         if (intent.getParcelableArrayListExtra("hightlightFields") != null) {
             mHighlightFields = intent.getParcelableArrayListExtra("hightlightFields");
         }
-        mPresenter.getFields();
+        mPresenter.getFields(mHighlightFields);
     }
 
     private void initActionBar() {

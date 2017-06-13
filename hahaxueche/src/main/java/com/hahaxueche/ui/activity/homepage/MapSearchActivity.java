@@ -214,8 +214,8 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
                         }
 
                         @Override
-                        public void selectZone(String zone) {
-                            mPresenter.setZone(zone);
+                        public void selectBusinessArea(String businessArea) {
+                            mPresenter.setBusinessArea(businessArea);
                         }
 
                         @Override
@@ -224,10 +224,15 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
                         }
 
                         @Override
+                        public void selectZone(String zone) {
+                            mPresenter.setZone(zone);
+                        }
+
+                        @Override
                         public void dismiss() {
                             hidePopWindow();
                         }
-                    }, mPresenter.getZones(getContext()), mPresenter.getRadius(getContext()));
+                    }, mPresenter.getZoneDetails(getContext()), mPresenter.getRadius(getContext()));
                 }
                 mZonePopWindow.showAsDropDown(view);
                 showPopWindow(POP_ZONE);
@@ -555,7 +560,7 @@ public class MapSearchActivity extends HHBaseActivity implements MapSearchView, 
 
     @Override
     public void onZoomToCity() {
-        mPresenter.setDistance(Common.NO_LIMIT);
+        mPresenter.zoomToCity();
     }
 
     @Override
