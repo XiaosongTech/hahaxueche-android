@@ -12,6 +12,9 @@ import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.R;
 import com.hahaxueche.model.base.CityConstants;
 import com.hahaxueche.model.base.Constants;
+import com.hahaxueche.model.base.EventData;
+import com.hahaxueche.model.base.Location;
+import com.hahaxueche.model.base.UserIdentityParam;
 import com.hahaxueche.model.base.ZoneDetail;
 import com.hahaxueche.model.drivingSchool.DrivingSchool;
 import com.hahaxueche.model.payment.PaymentMethod;
@@ -179,5 +182,57 @@ public class HHBasePresenter {
     public List<DrivingSchool> getDrivingSchools(Context context) {
         HHBaseApplication application = HHBaseApplication.get(context);
         return application.getCityConstants().driving_schools;
+    }
+
+    /**
+     * @param cellPhone
+     * @param coachId
+     * @param fieldId
+     * @param drivingSchoolId
+     * @param location
+     * @param event_type      event_type=3时，表示线索希望免费试学。
+     *                        <p>
+     *                        event_type=4时，表示线索希望组团看场地。
+     *                        <p>
+     *                        event_type=5时，表示线索希望我们发送场地定位信息。
+     *                        <p>
+     *                        event_type=6时，表示线索希望获得降价通知。
+     *                        <p>
+     *                        event_type=7时，表示线索希望获得团购优惠信息。
+     *                        <p>
+     *                        event_type=8时，表示线索希望通过电话咨询。
+     * @return
+     */
+    protected UserIdentityParam getUserIdentityParam(String cellPhone, String coachId,
+                                                     String fieldId, String drivingSchoolId,
+                                                     Location location, String event_type, String link) {
+        UserIdentityParam param = new UserIdentityParam();
+        param.phone = cellPhone;
+        param.promo_code = "921434";
+        if (location != null) {
+            param.lng = location.lng;
+            param.lat = location.lat;
+        }
+        EventData eventData = new EventData();
+        if (!TextUtils.isEmpty(coachId)) {
+            param.coach_id = coachId;
+            eventData.coach_id = coachId;
+        }
+        if (!TextUtils.isEmpty(fieldId)) {
+            param.field_id = fieldId;
+            eventData.field_id = fieldId;
+        }
+        if (!TextUtils.isEmpty(drivingSchoolId)) {
+            param.driving_school_id = drivingSchoolId;
+            eventData.driving_school_id = drivingSchoolId;
+        }
+        if (!TextUtils.isEmpty(link)) {
+            eventData.link = link;
+        }
+        if (!TextUtils.isEmpty(event_type)) {
+            param.event_type = event_type;
+            param.event_data = eventData;
+        }
+        return param;
     }
 }

@@ -45,6 +45,7 @@ import com.hahaxueche.ui.dialog.homepage.GetUserIdentityDialog;
 import com.hahaxueche.ui.view.findCoach.FieldFilterView;
 import com.hahaxueche.util.HHLog;
 import com.hahaxueche.util.RequestCode;
+import com.hahaxueche.util.WebViewUrl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -264,7 +265,9 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
                     @Override
                     public void getCellPhone(String cellPhone) {
                         mPresenter.addDataTrack("map_view_page_locate_confirmed", getContext());
-                        mPresenter.checkField(cellPhone, coach);
+                        mPresenter.getUserIdentity(cellPhone, coach.id, String.valueOf(coach.driving_school_id),
+                                coach.coach_group.field_id,
+                                "4", "");
                     }
                 });
                 dialog.show();
@@ -277,7 +280,9 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
                     @Override
                     public void getCellPhone(String cellPhone) {
                         mPresenter.addDataTrack("map_view_page_check_site_confirmed", getContext());
-                        mPresenter.checkField(cellPhone, coach);
+                        mPresenter.getUserIdentity(cellPhone, coach.id, String.valueOf(coach.driving_school_id),
+                                coach.coach_group.field_id,
+                                "5", WebViewUrl.WEB_URL_DITU + "?field_id=" + coach.coach_group.field_id);
                     }
                 });
                 dialog.show();
@@ -404,7 +409,8 @@ public class FieldFilterActivity extends HHBaseActivity implements FieldFilterVi
                     @Override
                     public void getCellPhone(String cellPhone) {
                         mPresenter.addDataTrack("map_view_page_check_site_confirmed", getContext());
-                        mPresenter.sendLocation(cellPhone, field);
+                        mPresenter.getUserIdentity(cellPhone, "", "", field.id,
+                                "5", WebViewUrl.WEB_URL_DITU + "?field_id=" + field.id);
                     }
                 });
                 dialog.show();

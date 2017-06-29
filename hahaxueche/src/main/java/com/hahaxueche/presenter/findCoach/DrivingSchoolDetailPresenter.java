@@ -224,16 +224,15 @@ public class DrivingSchoolDetailPresenter extends HHBasePresenter implements Pre
         return mDrivingSchool;
     }
 
-    public void getUserIdentity(String cellPhone) {
-        HHApiService apiService = application.getApiService();
-        UserIdentityParam param = new UserIdentityParam();
-        param.phone = cellPhone;
-        param.promo_code = "921434";
-        param.driving_school_id = String.valueOf(mDrivingSchool.id);
-        if (application.getMyLocation() != null) {
-            param.lng = application.getMyLocation().lng;
-            param.lat = application.getMyLocation().lat;
+    public void getUserIdentity(String cellPhone, String eventType, String link, String fieldId) {
+        String phoneNumberError = validatePhoneNumber(cellPhone);
+        if (!TextUtils.isEmpty(phoneNumberError)) {
+            mView.showMessage(phoneNumberError);
+            return;
         }
+        HHApiService apiService = application.getApiService();
+        UserIdentityParam param = getUserIdentityParam(cellPhone, "", fieldId, String.valueOf(mDrivingSchool.id),
+                application.getMyLocation(), eventType, link);
         subscription = apiService.getUserIdentity(param)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())
@@ -264,16 +263,7 @@ public class DrivingSchoolDetailPresenter extends HHBasePresenter implements Pre
         super.onlineAsk(user, mView.getContext());
     }
 
-    public void getGroupBuy(String cellPhone) {
-        String phoneNumberError = validatePhoneNumber(cellPhone);
-        if (!TextUtils.isEmpty(phoneNumberError)) {
-            mView.showMessage(phoneNumberError);
-            return;
-        }
-        getUserIdentity(cellPhone);
-    }
-
-    public void sendLocation(String cellPhone, Field field) {
+    /*public void sendLocation(String cellPhone, Field field) {
         UserIdentityParam param = new UserIdentityParam();
         param.phone = cellPhone;
         param.promo_code = "921434";
@@ -284,32 +274,5 @@ public class DrivingSchoolDetailPresenter extends HHBasePresenter implements Pre
         eventData.field_id = field.id;
         param.event_data = eventData;
         getUserIdentity(param);
-    }
-
-    private void getUserIdentity(UserIdentityParam param) {
-        HHApiService apiService = application.getApiService();
-        if (application.getMyLocation() != null) {
-            param.lng = application.getMyLocation().lng;
-            param.lat = application.getMyLocation().lat;
-        }
-        subscription = apiService.getUserIdentity(param)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(application.defaultSubscribeScheduler())
-                .subscribe(new Subscriber<UserIdentityInfo>() {
-
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        HHLog.e(e.getMessage());
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onNext(UserIdentityInfo userIdentityInfo) {
-                    }
-                });
-    }
+    }*/
 }
