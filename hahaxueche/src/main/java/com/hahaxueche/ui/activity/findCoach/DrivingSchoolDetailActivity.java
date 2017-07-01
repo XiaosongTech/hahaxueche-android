@@ -386,7 +386,7 @@ public class DrivingSchoolDetailActivity extends HHBaseActivity implements Drivi
                     @Override
                     public void getCellPhone(String cellPhone) {
                         mPresenter.addDataTrack("school_detail_bot_free_trial_confirmed", getContext());
-                        mPresenter.getUserIdentity(cellPhone);
+                        mPresenter.getUserIdentity(cellPhone, "4", "", "");
                     }
                 });
                 dialog.show();
@@ -425,7 +425,7 @@ public class DrivingSchoolDetailActivity extends HHBaseActivity implements Drivi
                 break;
             case R.id.tv_get_group_buy:
                 mPresenter.addDataTrack("school_detail_groupon_web_tapped", getContext());
-                mPresenter.getGroupBuy(mEtGetGroupBuy.getText().toString());
+                mPresenter.getUserIdentity(mEtGetGroupBuy.getText().toString(), "7", "", "");
                 break;
             case R.id.tv_notice_me:
                 mPresenter.addDataTrack("school_detail_price_notification_tapped", getContext());
@@ -434,7 +434,7 @@ public class DrivingSchoolDetailActivity extends HHBaseActivity implements Drivi
                     @Override
                     public void getCellPhone(String cellPhone) {
                         mPresenter.addDataTrack("school_detail_price_notification_confirmed", getContext());
-                        mPresenter.getUserIdentity(cellPhone);
+                        mPresenter.getUserIdentity(cellPhone, "6", "", "");
                     }
                 });
                 dialog.show();
@@ -634,7 +634,7 @@ public class DrivingSchoolDetailActivity extends HHBaseActivity implements Drivi
                         "填写手机号，立即订阅降价通知", "立即订阅", new GetUserIdentityDialog.OnIdentityGetListener() {
                     @Override
                     public void getCellPhone(String cellPhone) {
-                        mPresenter.getUserIdentity(cellPhone);
+                        mPresenter.getUserIdentity(cellPhone, "6", "", "");
                     }
                 });
                 dialog.show();
@@ -901,7 +901,8 @@ public class DrivingSchoolDetailActivity extends HHBaseActivity implements Drivi
                         "输入手机号，立即接收详细地址", "发我定位", new GetUserIdentityDialog.OnIdentityGetListener() {
                     @Override
                     public void getCellPhone(String cellPhone) {
-                        mPresenter.sendLocation(cellPhone, field);
+                        mPresenter.getUserIdentity(cellPhone, "5",
+                                WebViewUrl.WEB_URL_DITU + "?field_id=" + field.id, field.id);
                     }
                 });
                 dialog.show();
@@ -925,7 +926,7 @@ public class DrivingSchoolDetailActivity extends HHBaseActivity implements Drivi
                     @Override
                     public void getCellPhone(String cellPhone) {
                         mPresenter.addDataTrack("school_detail_see_field_confirmed", getContext());
-                        mPresenter.getUserIdentity(cellPhone);
+                        mPresenter.getUserIdentity(cellPhone, "4", "", field.id);
                     }
                 });
                 dialog.show();

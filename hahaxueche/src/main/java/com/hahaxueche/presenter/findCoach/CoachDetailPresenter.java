@@ -560,18 +560,15 @@ public class CoachDetailPresenter extends HHBasePresenter implements Presenter<C
         super.onlineAsk(user, mView.getContext());
     }
 
-    public void getUserIdentity(String cellPhone) {
-        HHApiService apiService = application.getApiService();
-        UserIdentityParam param = new UserIdentityParam();
-        param.phone = cellPhone;
-        param.promo_code = "921434";
-        param.coach_id = mCoach.id;
-        param.field_id = mCoach.coach_group.field_id;
-        param.driving_school_id = String.valueOf(mCoach.driving_school_id);
-        if (application.getMyLocation() != null) {
-            param.lng = application.getMyLocation().lng;
-            param.lat = application.getMyLocation().lat;
+    public void getUserIdentity(String cellPhone, String eventType) {
+        String phoneNumberError = validatePhoneNumber(cellPhone);
+        if (!TextUtils.isEmpty(phoneNumberError)) {
+            mView.showMessage(phoneNumberError);
+            return;
         }
+        HHApiService apiService = application.getApiService();
+        UserIdentityParam param = getUserIdentityParam(cellPhone, mCoach.id, mCoach.coach_group.field_id,
+                String.valueOf(mCoach.driving_school_id), application.getMyLocation(), eventType, "");
         subscription = apiService.getUserIdentity(param)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())

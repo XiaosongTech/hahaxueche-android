@@ -127,35 +127,16 @@ public class MapSearchPresenter extends HHBasePresenter implements Presenter<Map
                 });
     }
 
-    public void sendLocation(String cellPhone, Field field) {
-        UserIdentityParam param = new UserIdentityParam();
-        param.phone = cellPhone;
-        param.promo_code = "921434";
-        param.field_id = field.id;
-        param.event_type = "1";
-        EventData eventData = new EventData();
-        eventData.link = WebViewUrl.WEB_URL_DITU + "?field_id=" + field.id;
-        eventData.field_id = field.id;
-        param.event_data = eventData;
-        getUserIdentity(param);
-    }
-
-    public void checkField(String cellPhone, Coach coach) {
-        UserIdentityParam param = new UserIdentityParam();
-        param.phone = cellPhone;
-        param.promo_code = "921434";
-        param.coach_id = coach.id;
-        param.field_id = coach.coach_group.field_id;
-        param.driving_school_id = String.valueOf(coach.driving_school_id);
-        getUserIdentity(param);
-    }
-
-    private void getUserIdentity(UserIdentityParam param) {
-        HHApiService apiService = application.getApiService();
-        if (application.getMyLocation() != null) {
-            param.lng = application.getMyLocation().lng;
-            param.lat = application.getMyLocation().lat;
+    public void getUserIdentity(String cellPhone, String coachId, String drivingSchoolId, String fieldId,
+                                String eventType, String link) {
+        String phoneNumberError = validatePhoneNumber(cellPhone);
+        if (!TextUtils.isEmpty(phoneNumberError)) {
+            mView.showMessage(phoneNumberError);
+            return;
         }
+        UserIdentityParam param = getUserIdentityParam(cellPhone, coachId, fieldId, drivingSchoolId,
+                application.getMyLocation(), eventType, link);
+        HHApiService apiService = application.getApiService();
         subscription = apiService.getUserIdentity(param)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(application.defaultSubscribeScheduler())

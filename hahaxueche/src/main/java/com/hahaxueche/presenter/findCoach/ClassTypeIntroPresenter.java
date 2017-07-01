@@ -1,5 +1,7 @@
 package com.hahaxueche.presenter.findCoach;
 
+import android.text.TextUtils;
+
 import com.hahaxueche.HHBaseApplication;
 import com.hahaxueche.api.HHApiService;
 import com.hahaxueche.model.base.City;
@@ -91,20 +93,21 @@ public class ClassTypeIntroPresenter extends HHBasePresenter implements Presente
     }
 
     public void getUserIdentity(String cellPhone, Coach mCoach, DrivingSchool mDrivingSchool) {
+        String phoneNumberError = validatePhoneNumber(cellPhone);
+        if (!TextUtils.isEmpty(phoneNumberError)) {
+            return;
+        }
         HHApiService apiService = application.getApiService();
-        UserIdentityParam param = new UserIdentityParam();
-        param.phone = cellPhone;
-        param.promo_code = "921434";
+        UserIdentityParam param = null;
         if (mCoach != null) {
             param.coach_id = mCoach.id;
             param.field_id = mCoach.coach_group.field_id;
             param.driving_school_id = String.valueOf(mCoach.driving_school_id);
+            param = getUserIdentityParam(cellPhone, mCoach.id, mCoach.coach_group.field_id,
+                    String.valueOf(mCoach.driving_school_id), application.getMyLocation(), "6", "");
         } else {
-            param.driving_school_id = String.valueOf(mDrivingSchool.id);
-        }
-        if (application.getMyLocation() != null) {
-            param.lng = application.getMyLocation().lng;
-            param.lat = application.getMyLocation().lat;
+            param = getUserIdentityParam(cellPhone, "", "", String.valueOf(mDrivingSchool.id),
+                    application.getMyLocation(), "6", "");
         }
         subscription = apiService.getUserIdentity(param)
                 .observeOn(AndroidSchedulers.mainThread())

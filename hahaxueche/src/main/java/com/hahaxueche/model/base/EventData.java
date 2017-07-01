@@ -7,4 +7,6 @@ package com.hahaxueche.model.base;
 public class EventData {
     public String link;
     public String field_id;
+    public String driving_school_id;
+    public String coach_id;
 }

@@ -23,8 +23,8 @@ android {
         applicationId "com.hahaxueche"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 48
-        versionName "4.2.0"
+        versionCode 49
+        versionName "4.3.0"
         multiDexEnabled true
         manifestPlaceholders = [
                 qq_id: "1104872131"

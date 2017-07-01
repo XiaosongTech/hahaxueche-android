@@ -186,7 +186,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                         "输入手机号，立即接收详细地址", "发我定位", new GetUserIdentityDialog.OnIdentityGetListener() {
                     @Override
                     public void getCellPhone(String cellPhone) {
-                        mPresenter.getUserIdentity(cellPhone);
+                        mPresenter.getUserIdentity(cellPhone, "5");
                     }
                 });
                 dialog.show();
@@ -561,7 +561,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                         "输入手机号，教练立即带你看场地", "预约看场地", new GetUserIdentityDialog.OnIdentityGetListener() {
                     @Override
                     public void getCellPhone(String cellPhone) {
-                        mPresenter.getUserIdentity(cellPhone);
+                        mPresenter.getUserIdentity(cellPhone, "4");
                     }
                 });
                 dialog.show();
@@ -1023,7 +1023,7 @@ public class CoachDetailActivity extends HHBaseActivity implements CoachDetailVi
                         "填写手机号，立即订阅降价通知", "立即订阅", new GetUserIdentityDialog.OnIdentityGetListener() {
                     @Override
                     public void getCellPhone(String cellPhone) {
-                        mPresenter.getUserIdentity(cellPhone);
+                        mPresenter.getUserIdentity(cellPhone, "6");
                     }
                 });
                 dialog.show();
